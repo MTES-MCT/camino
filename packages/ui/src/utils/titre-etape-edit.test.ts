@@ -1,13 +1,14 @@
 import { etapeEditFormat } from './titre-etape-edit'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 import { describe, expect, test } from 'vitest'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 // dateFormat
 describe('etapeEditFormat', () => {
   test("formate une étape pour l'éditer", () => {
     expect(
+      // @ts-ignore
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
       })
     ).toEqual({
@@ -19,14 +20,24 @@ describe('etapeEditFormat', () => {
       groupes: [],
       substances: [],
       contenu: {},
-      incertitudes: {},
+      incertitudes: {
+        amodiataires: false,
+        date: false,
+        dateDebut: false,
+        dateFin: false,
+        duree: false,
+        points: false,
+        substances: false,
+        surface: false,
+        titulaires: false,
+      },
       documents: [],
       justificatifs: [],
     })
 
     expect(
+      // @ts-ignore
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
         points: [
           {
@@ -70,20 +81,30 @@ describe('etapeEditFormat', () => {
       ],
       substances: [],
       contenu: {},
-      incertitudes: {},
+      incertitudes: {
+        amodiataires: false,
+        date: false,
+        dateDebut: false,
+        dateFin: false,
+        duree: false,
+        points: false,
+        substances: false,
+        surface: false,
+        titulaires: false,
+      },
       documents: [],
       justificatifs: [{ id: 'toto', nom: 'name' }],
     })
 
     expect(
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
-        type: { id: 'etape-type-id' },
+        type: { id: 'aac', nom: 'plop' },
+        // @ts-ignore
         statutId: 'etape-statut-id',
         duree: 240,
-        administrations: ['administration'],
-        titulaires: [{ id: 'titulaire-id', prop: 'titulaire-prop' }],
+        administrations: ['aut-97300-01'],
+        titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
         points: [
           {
             id: 'point-id-111',
@@ -129,17 +150,27 @@ describe('etapeEditFormat', () => {
           },
         ],
         contenu: { 'prop-id': 'prop-value' },
-        incertitudes: { amodiataires: true },
+        incertitudes: {
+          amodiataires: true,
+          date: false,
+          dateDebut: false,
+          dateFin: false,
+          duree: false,
+          points: false,
+          substances: false,
+          surface: false,
+          titulaires: false,
+        },
         substances: ['auru'],
-        documents: [{ type: { id: 'act' } }],
+        documents: [{ type: { id: 'aac' } }],
       })
     ).toEqual({
       id: 'etape-id',
-      type: { id: 'etape-type-id' },
+      type: { id: 'aac', nom: 'plop' },
       statutId: 'etape-statut-id',
       duree: 240,
       amodiataires: [],
-      titulaires: [{ id: 'titulaire-id', operateur: undefined }],
+      titulaires: [{ id: 'titulaire-id', operateur: false }],
       geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
       geoSystemeOpposableId: undefined,
       groupes: [
@@ -170,8 +201,18 @@ describe('etapeEditFormat', () => {
       ],
       substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
-      incertitudes: { amodiataires: true },
-      documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'act' } }],
+      incertitudes: {
+        amodiataires: true,
+        date: false,
+        dateDebut: false,
+        dateFin: false,
+        duree: false,
+        points: false,
+        substances: false,
+        surface: false,
+        titulaires: false,
+      },
+      documents: [{ fichierNouveau: null, typeId: 'aac', type: { id: 'aac' } }],
       justificatifs: [],
     })
   })

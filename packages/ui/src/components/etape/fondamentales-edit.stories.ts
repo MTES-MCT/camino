@@ -1,4 +1,4 @@
-import FondatementalesEditComponent from './fondamentales-edit.vue'
+import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, Story } from '@storybook/vue3'
 import { EtapeFondamentale } from 'camino-common/src/etape'
 import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
@@ -10,7 +10,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
-  component: FondatementalesEditComponent,
+  component: FondamentalesEdit,
   argTypes: {},
 }
 export default meta
@@ -24,6 +24,7 @@ type Props = {
 }
 
 const etape: EtapeFondamentale = {
+  id: 'id',
   type: {
     id: 'mfr',
     nom: 'demande',
@@ -76,7 +77,7 @@ const etape: EtapeFondamentale = {
   },
 }
 const Template: Story<Props> = (args: Props) => ({
-  components: { FondatementalesEditComponent },
+  components: { FondamentalesEdit },
   setup() {
     return { args }
   },
@@ -89,7 +90,7 @@ const Template: Story<Props> = (args: Props) => ({
       immediate: true,
     },
   },
-  template: '<FondatementalesEditComponent v-bind="args" :etape="etapeData"/>',
+  template: '<FondamentalesEdit v-bind="args" :etape="etapeData"/>',
 })
 
 export const ArmDemandeONF = Template.bind(

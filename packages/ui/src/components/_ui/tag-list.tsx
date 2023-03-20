@@ -1,9 +1,9 @@
-import { FunctionalComponent } from 'vue'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Tag } from './tag'
 
-export interface Props {
+export type Props = {
   elements: string[]
-}
+} & HTMLAttributes
 
 export const TagList: FunctionalComponent<Props> = props => {
   return (

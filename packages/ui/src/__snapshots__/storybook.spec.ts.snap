@@ -4679,12 +4679,12 @@ exports[`Storybook Tests > Components/Etape/AutoCompleteEntreprise > WithEntitie
 
 exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`] = `
 "<div>
-  <!--v-if-->
-  <!--v-if-->
-  <!--v-if-->
+  <!---->
+  <!---->
+  <!---->
   <h3 class=\\"mb-s\\">Titulaires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
@@ -4700,11 +4700,12 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`
         <!---->
       </div>
     </div>
-    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-    <!--v-if-->
+    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!---->
+    <!---->
   </div>
   <hr>
-  <!--v-if-->
+  <!---->
   <div>
     <h3 class=\\"mb-s\\">Substances</h3>
     <div class=\\"mb-s\\">
@@ -4713,8 +4714,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -4723,11 +4725,11 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`
 
 exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeOperateur 1`] = `
 "<div>
-  <!--v-if-->
-  <!--v-if-->
-  <!--v-if-->
-  <!--v-if-->
-  <!--v-if-->
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  <!---->
   <div>
     <h3 class=\\"mb-s\\">Substances</h3>
     <div class=\\"mb-s\\">
@@ -4736,8 +4738,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeOperat
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -4746,7 +4749,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeOperat
 
 exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] = `
 "<div>
-  <!--v-if-->
+  <!---->
   <div class=\\"tablet-blobs\\">
     <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
       <h5 class=\\"mb-0\\">Date de début</h5>
@@ -4772,8 +4775,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
           </select></div>
         <div class=\\"blob-mini-1-3\\"><input type=\\"number\\" min=\\"1750\\" max=\\"2099\\" placeholder=\\"année\\" class=\\"text-right p-s\\"></div>
       </div>
-      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-      <!--v-if-->
+      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+      <!---->
+      <!---->
     </div>
   </div>
   <hr>
@@ -4803,14 +4807,15 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
           </select></div>
         <div class=\\"blob-mini-1-3\\"><input type=\\"number\\" min=\\"1750\\" max=\\"2099\\" placeholder=\\"année\\" class=\\"text-right p-s\\"></div>
       </div>
-      <!--v-if-->
-      <!--v-if-->
+      <!---->
+      <!---->
+      <!---->
     </div>
   </div>
   <hr>
   <h3 class=\\"mb-s\\">Titulaires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
@@ -4826,11 +4831,12 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
         <!---->
       </div>
     </div>
-    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-    <!--v-if-->
+    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!---->
+    <!---->
   </div>
   <hr>
-  <!--v-if-->
+  <!---->
   <div>
     <h3 class=\\"mb-s\\">Substances</h3>
     <div class=\\"mb-s\\">
@@ -4839,8 +4845,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -4852,23 +4859,24 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > AxmDemandeONF 1`
   <div class=\\"tablet-blobs\\">
     <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
       <h5 class=\\"mb-0\\">Durée (années / mois)</h5>
-      <!--v-if-->
+      <!---->
     </div>
     <div class=\\"mb-s tablet-blob-2-3\\">
       <div class=\\"blobs-mini\\">
         <div class=\\"blob-mini-1-2\\"><input type=\\"text\\" pattern=\\"([0-9]{1,3}[\\\\s]?)*([.,][0-9]*)?\\" class=\\"p-s text-right py-s mb-s\\" placeholder=\\"années\\"></div>
         <div class=\\"blob-mini-1-2\\"><input type=\\"text\\" pattern=\\"([0-9]{1,3}[\\\\s]?)*([.,][0-9]*)?\\" class=\\"p-s text-right p-s\\" placeholder=\\"mois\\"></div>
       </div>
-      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-      <!--v-if-->
+      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+      <!---->
+      <!---->
     </div>
     <hr>
   </div>
-  <!--v-if-->
-  <!--v-if-->
+  <!---->
+  <!---->
   <h3 class=\\"mb-s\\">Titulaires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
@@ -4884,11 +4892,12 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > AxmDemandeONF 1`
         <!---->
       </div>
     </div>
-    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-    <!--v-if-->
+    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!---->
+    <!---->
   </div>
   <hr>
-  <!--v-if-->
+  <!---->
   <div>
     <h3 class=\\"mb-s\\">Substances</h3>
     <div class=\\"mb-s\\">
@@ -4897,8 +4906,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > AxmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -4917,8 +4927,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
         <div class=\\"blob-mini-1-2\\"><input type=\\"text\\" pattern=\\"([0-9]{1,3}[\\\\s]?)*([.,][0-9]*)?\\" class=\\"p-s text-right py-s mb-s\\" placeholder=\\"années\\"></div>
         <div class=\\"blob-mini-1-2\\"><input type=\\"text\\" pattern=\\"([0-9]{1,3}[\\\\s]?)*([.,][0-9]*)?\\" class=\\"p-s text-right p-s\\" placeholder=\\"mois\\"></div>
       </div>
-      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-      <!--v-if-->
+      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+      <!---->
+      <!---->
     </div>
     <hr>
   </div>
@@ -4947,8 +4958,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
           </select></div>
         <div class=\\"blob-mini-1-3\\"><input type=\\"number\\" min=\\"1750\\" max=\\"2099\\" placeholder=\\"année\\" class=\\"text-right p-s\\"></div>
       </div>
-      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-      <!--v-if-->
+      <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+      <!---->
+      <!---->
     </div>
   </div>
   <hr>
@@ -4978,14 +4990,15 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
           </select></div>
         <div class=\\"blob-mini-1-3\\"><input type=\\"number\\" min=\\"1750\\" max=\\"2099\\" placeholder=\\"année\\" class=\\"text-right p-s\\"></div>
       </div>
-      <!--v-if-->
-      <!--v-if-->
+      <!---->
+      <!---->
+      <!---->
     </div>
   </div>
   <hr>
   <h3 class=\\"mb-s\\">Titulaires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
@@ -5001,14 +5014,15 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
         <!---->
       </div>
     </div>
-    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-    <!--v-if-->
+    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!---->
+    <!---->
   </div>
   <hr>
   <hr>
   <h3 class=\\"mb-s\\">Amodiataires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
         <div class=\\"flex typeahead-wrapper\\">
@@ -5018,9 +5032,10 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
       </div>
     </div>
     <div class=\\"h6 mt-s\\">
-      <!--v-if-->
+      <!---->
     </div>
-    <!--v-if-->
+    <!---->
+    <!---->
   </div>
   <hr>
   <div>
@@ -5031,8 +5046,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -5041,12 +5057,12 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
 
 exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDePerimetreONF 1`] = `
 "<div>
-  <!--v-if-->
-  <!--v-if-->
-  <!--v-if-->
+  <!---->
+  <!---->
+  <!---->
   <h3 class=\\"mb-s\\">Titulaires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
@@ -5062,14 +5078,15 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
         <!---->
       </div>
     </div>
-    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div>
-    <!--v-if-->
+    <div class=\\"h6 mt-s\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!---->
+    <!---->
   </div>
   <hr>
   <hr>
   <h3 class=\\"mb-s\\">Amodiataires</h3>
   <p class=\\"h6 italic\\">Optionnel</p>
-  <div class=\\"mb-s\\" isarray=\\"true\\">
+  <div class=\\"mb-s\\">
     <div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
         <div class=\\"flex typeahead-wrapper\\">
@@ -5079,9 +5096,10 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
       </div>
     </div>
     <div class=\\"h6 mt-s\\">
-      <!--v-if-->
+      <!---->
     </div>
-    <!--v-if-->
+    <!---->
+    <!---->
   </div>
   <hr>
   <div>
@@ -5092,8 +5110,9 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
-      </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+        <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">étape précédente</span> (01-01-2022)</p>
+      </div>
+      <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
   <hr>
@@ -5189,8 +5208,9 @@ exports[`Storybook Tests > Components/Etape/SubstancesEdit > AvecHeritage 1`] = 
         <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
       </ul>
       <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-      <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">Demande</span> (01-01-2020) </p>
-    </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
+      <p class=\\"h6 italic mb-s\\">Hérité de :<span class=\\"cap-first\\">Demande</span> (01-01-2020)</p>
+    </div>
+    <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
   </div>
 </div>"
 `;
@@ -5290,15 +5310,16 @@ exports[`Storybook Tests > Components/Etape/SubstancesEdit > SansHeritage 1`] = 
           <option value=\\"zinc\\">zinc</option>
           <option value=\\"zirc\\">zirconium</option>
         </select>
-        <!--v-if-->
-        <!--v-if--><button class=\\"rnd-l-xs btn py-s px-m rnd-r-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+        <!---->
+        <!----><button class=\\"btn py-s px-m rnd-r-xs rnd-l-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-minus\\"></use>
           </svg></button>
       </div>
     </div><button class=\\"btn small rnd-xs py-s px-m full-x flex mb-s\\"><span class=\\"mt-xxs\\">Ajouter une substance</span><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"flex-right\\">
         <use href=\\"#icon-plus\\"></use>
       </svg></button>
-    <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\"> Incertain </label></div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Hériter de l'étape précédente</button>
+    <div class=\\"h6\\"><label><input type=\\"checkbox\\" class=\\"mr-xs\\">Incertain</label></div>
+    <!----><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Hériter de l'étape précédente</button>
   </div>
 </div>"
 `;
