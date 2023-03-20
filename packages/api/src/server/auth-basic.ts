@@ -1,4 +1,6 @@
 import express from 'express'
+import { Request } from 'express-jwt'
+
 import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'
 
@@ -27,7 +29,7 @@ const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   return valid ? user : null
 }
 
-export const authBasic = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const authBasic = async (req: Request, res: express.Response, next: express.NextFunction) => {
   try {
     // basic auth est activé que pour la route titres_qgis
     if (req.url.includes('titres_qgis')) {
@@ -50,7 +52,7 @@ export const authBasic = async (req: express.Request, res: express.Response, nex
       }
 
       // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
-      req.user = { email: user.email, family_name: user.nom, given_name: user.prenom }
+      req.auth = { email: user.email, family_name: user.nom, given_name: user.prenom }
       next()
 
       return

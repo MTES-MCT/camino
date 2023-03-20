@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vérifie l’arbre d’octroi d’ARM > ne peut pas créer 2 "mfr" 1`] = `"Error: cannot execute step: '{\\"etapeTypeId\\":\\"mfr\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2020-01-03\\"}' after '[\\"mfr_fai\\",\\"mdp_fai\\"]'. The event {\\"type\\":\\"FAIRE_DEMANDE\\",\\"mecanise\\":false,\\"franchissements\\":null} should be one of 'MODIFIER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,CLASSER_SANS_SUITE,PAYER_FRAIS_DE_DOSSIER'"`;
 

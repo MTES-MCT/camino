@@ -1,6 +1,5 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs.js'
-import express from 'express'
-import { CustomResponse } from './express-type.js'
+import { CaminoRequest, CustomResponse } from './express-type.js'
 import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter.js'
@@ -15,8 +14,8 @@ import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 
-export const isSubscribedToNewsletter = async (req: express.Request<{ id?: string }>, res: CustomResponse<boolean>) => {
-  const user = req.user as User
+export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+  const user = req.auth
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -31,8 +30,8 @@ export const isSubscribedToNewsletter = async (req: express.Request<{ id?: strin
     }
   }
 }
-export const updateUtilisateurPermission = async (req: express.Request<{ id?: string }>, res: CustomResponse<void>) => {
-  const user = req.user as User
+export const updateUtilisateurPermission = async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const user = req.auth
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -67,8 +66,8 @@ export const updateUtilisateurPermission = async (req: express.Request<{ id?: st
     }
   }
 }
-export const deleteUtilisateur = async (req: express.Request<{ id?: string }>, res: CustomResponse<void>) => {
-  const user = req.user as User
+export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const user = req.auth
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -101,9 +100,9 @@ export const deleteUtilisateur = async (req: express.Request<{ id?: string }>, r
   }
 }
 
-export const moi = async (req: express.Request<{ id?: string }>, res: CustomResponse<User>) => {
+export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
   res.clearCookie('shouldBeConnected')
-  const user = req.user as User
+  const user = req.auth
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
   } else {
@@ -119,8 +118,8 @@ export const moi = async (req: express.Request<{ id?: string }>, res: CustomResp
   }
 }
 
-export const manageNewsletterSubscription = async (req: express.Request<{ id?: string }>, res: CustomResponse<boolean>) => {
-  const user = req.user as User
+export const manageNewsletterSubscription = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+  const user = req.auth
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -142,8 +141,8 @@ export const manageNewsletterSubscription = async (req: express.Request<{ id?: s
   }
 }
 
-export const generateQgisToken = async (req: express.Request, res: CustomResponse<QGISToken>) => {
-  const user = req.user as User
+export const generateQgisToken = async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
+  const user = req.auth
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)

@@ -1,12 +1,14 @@
 import express from 'express'
+import { CaminoRequest } from '../api/rest/express-type'
+
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { isDefault, User } from 'camino-common/src/roles.js'
+import { isDefault } from 'camino-common/src/roles.js'
 
 // Téléversement REST
-const uploadAllowedMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const uploadAllowedMiddleware = async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   try {
-    if (isDefault(req.user as User)) {
+    if (isDefault(req.auth)) {
       res.sendStatus(403)
 
       return
@@ -18,11 +20,10 @@ const uploadAllowedMiddleware = async (req: express.Request, res: express.Respon
 }
 
 const restUpload = () => {
-  const tmp = '/files/tmp'
-  const server = new Server()
   // nous passons à travers un proxy
   const relativeLocation = true
-  server.datastore = new FileStore({ path: tmp, relativeLocation })
+  const server = new Server({ path: '/files', relativeLocation })
+  server.datastore = new FileStore({ directory: './files/tmp' })
 
   const uploadServer = express()
   uploadServer.disable('x-powered-by')

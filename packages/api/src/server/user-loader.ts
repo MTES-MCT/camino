@@ -1,4 +1,5 @@
 import express from 'express'
+import { Request as JWTRequest } from 'express-jwt'
 import { knex } from '../knex.js'
 import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
 import { userByEmailGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
@@ -6,9 +7,9 @@ import { emailsSend } from '../tools/api-mailjet/emails.js'
 import { formatUser } from '../types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 
-export const userLoader = async (req: express.Request, _res: express.Response, next: express.NextFunction) => {
+export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string }>, _res: express.Response, next: express.NextFunction) => {
   try {
-    const reqUser = req.user as { email?: string; family_name?: string; given_name?: string } | undefined
+    const reqUser = req.auth
     if (reqUser?.email) {
       let user = await userByEmailGet(reqUser.email)
       if (!user) {
@@ -43,7 +44,7 @@ export const userLoader = async (req: express.Request, _res: express.Response, n
         user.prenom = reqUser.given_name
       }
 
-      req.user = formatUser(user)
+      req.auth = formatUser(user)
     }
 
     next()

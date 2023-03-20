@@ -1,7 +1,6 @@
-import express from 'express'
-import { CustomResponse } from './express-type'
+import { CaminoRequest, CustomResponse } from './express-type'
 
-export const logout = async (req: express.Request, res: CustomResponse<string>) => {
+export const logout = async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
     res.status(403)
@@ -19,7 +18,7 @@ export const logout = async (req: express.Request, res: CustomResponse<string>) 
     res.redirect(oauthLogoutUrl.href)
   }
 }
-export const resetPassword = async (req: express.Request, res: CustomResponse<string>) => {
+export const resetPassword = async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
     res.status(403)

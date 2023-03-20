@@ -1,10 +1,7 @@
 import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
 import { Section } from 'camino-common/src/titres.js'
-import express from 'express'
-
-import { CustomResponse } from './express-type.js'
-import { User } from 'camino-common/src/roles.js'
+import { CaminoRequest, CustomResponse } from './express-type.js'
 
 /**
  * @deprecated utiliser titreSectionsGet
@@ -155,14 +152,14 @@ export const titreSectionsGet = ({
   return sections
 }
 
-export const getTitresSections = async (req: express.Request, res: CustomResponse<Section[]>): Promise<void> => {
+export const getTitresSections = async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
   try {
     const titreId: string | undefined = req.params.titreId
     if (!titreId) {
       throw new Error('le paramètre titreId est obligatoire')
     }
 
-    const user = req.user as User
+    const user = req.auth
 
     let result: Section[] = []
     const titre = await titreGet(

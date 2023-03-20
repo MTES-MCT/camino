@@ -12,7 +12,7 @@ import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import { CaminoConfig } from 'camino-common/src/static/config.js'
-import { CustomResponse } from '../api/rest/express-type.js'
+import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 const contentTypes = {
@@ -44,9 +44,9 @@ type IRestResolver = (
 
 export const rest = express.Router()
 
-type ExpressRoute = (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>
+type ExpressRoute = (req: CaminoRequest, res: express.Response, next: express.NextFunction) => Promise<void>
 
-const restCatcher = (expressCall: ExpressRoute) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const restCatcher = (expressCall: ExpressRoute) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   try {
     await expressCall(req, res, next)
   } catch (e) {
@@ -55,10 +55,9 @@ const restCatcher = (expressCall: ExpressRoute) => async (req: express.Request, 
   }
 }
 
-const restDownload = (resolver: IRestResolver) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   try {
-    // TODO 2022-10-12 mieux typer
-    const user = req.user as User
+    const user = req.auth
 
     const result = await resolver({ query: req.query, params: req.params }, user)
 
@@ -99,7 +98,7 @@ const restDownload = (resolver: IRestResolver) => async (req: express.Request, r
   }
 }
 
-export const config = async (_req: express.Request, res: CustomResponse<CaminoConfig>) => {
+export const config = async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const config: CaminoConfig = {
     sentryDsn: process.env.SENTRY_DSN,
     caminoStage: process.env.CAMINO_STAGE,
@@ -148,7 +147,7 @@ rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
 rest.get('/deconnecter', restCatcher(logout))
 rest.get('/changerMotDePasse', restCatcher(resetPassword))
 
-rest.use((err: Error, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+rest.use((err: Error, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   if (err) {
     res.status(500)
     res.send({ error: err.message })
