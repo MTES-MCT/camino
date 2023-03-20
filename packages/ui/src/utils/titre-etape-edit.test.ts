@@ -166,11 +166,11 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      type: { id: 'aac' },
+      type: { id: 'aac', nom: 'plop' },
       statutId: 'etape-statut-id',
       duree: 240,
       amodiataires: [],
-      titulaires: [{ id: 'titulaire-id', operateur: undefined }],
+      titulaires: [{ id: 'titulaire-id', operateur: false }],
       geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
       geoSystemeOpposableId: undefined,
       groupes: [
@@ -212,7 +212,7 @@ describe('etapeEditFormat', () => {
         surface: false,
         titulaires: false,
       },
-      documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'aac' } }],
+      documents: [{ fichierNouveau: null, typeId: 'aac', type: { id: 'aac' } }],
       justificatifs: [],
     })
   })
