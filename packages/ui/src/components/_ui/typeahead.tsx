@@ -1,6 +1,7 @@
 import { computed, Ref, ref, watch } from 'vue'
 import { Chip } from './chip'
 import styles from './typeahead.module.css'
+import './typeahead.css'
 import { isEventWithTarget, caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
@@ -142,7 +143,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
     }
     return () => (
       <div id={wrapperId.value} class={styles.typeahead}>
-        <div class={`flex ${styles['typeahead-wrapper']} p-xs`}>
+        <div class={['flex', 'typeahead-wrapper']}>
           {props.props.type === 'multiple' ? (
             <>
               {selectedItems.value.map(item => {
@@ -155,7 +156,8 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
             ref={myTypeaheadInput}
             value={input.value}
             type="text"
-            class={styles['typeahead-input']}
+            name={id}
+            class={[styles['typeahead-input'], 'fr-input']}
             placeholder={props.props.placeholder}
             autocomplete="off"
             onInput={onInput}

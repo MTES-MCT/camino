@@ -30,7 +30,8 @@ export const Simple: Story = () => (
     ]}
     onSearch={onSearch}
     onSelectedTitre={onSelectedTitre}
+    id={'typeahead_id'}
   />
 )
 
-export const Empty: Story = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} />
+export const Empty: Story = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} id={'typeahead_id'} />

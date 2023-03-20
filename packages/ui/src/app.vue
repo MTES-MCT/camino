@@ -6,11 +6,7 @@
       <component :is="menu.component" v-if="menu.component" />
     </Transition>
 
-    <header class="header">
-      <div class="container">
-        <Header :loaded="loaded" />
-      </div>
-    </header>
+    <Header :user="user" :currentMenuSection="currentMenuSection" :trackEvent="trackEvent" />
 
     <main class="main">
       <div class="container">
@@ -54,6 +50,10 @@
 </template>
 
 <script lang="ts" setup>
+import '@gouvfr/dsfr/dist/core/core.module'
+import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
+import '@gouvfr/dsfr/dist/component/modal/modal.module'
+import '@gouvfr/dsfr/dist/component/header/header.module'
 import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
@@ -63,9 +63,12 @@ import { IconSprite } from './components/_ui/iconSprite'
 import { Error } from './components/error'
 import { computed, inject } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { TrackEventFunction } from '@/utils/matomo'
 
 const store = useStore()
 const matomo = inject('matomo', null)
+const route = useRoute()
 
 const user = computed(() => store.state.user.element)
 
@@ -83,10 +86,20 @@ const loading = computed(() => store.state.loading.length > 0)
 
 const fileLoading = computed(() => store.state.fileLoading)
 
+const currentMenuSection = computed(() => route.meta?.menuSection)
+
 if (matomo) {
   // @ts-ignore
   matomo.customVariableVisitUser(user)
   // @ts-ignore
   matomo.trackPageView()
+}
+
+// TODO 2023-03-16 typer l’instance matomo dans un .d.ts
+const trackEvent: TrackEventFunction = (segment, subSegment, event) => {
+  if (matomo) {
+    // @ts-ignore
+    matomo.trackEvent(segment, subSegment, event)
+  }
 }
 </script>

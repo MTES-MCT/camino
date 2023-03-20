@@ -2,7 +2,7 @@ import { PureFooter } from './footer'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/Pages/Footer',
+  title: 'Components/Page/Footer',
   component: PureFooter,
   argTypes: {},
 }

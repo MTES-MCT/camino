@@ -4644,8 +4644,8 @@ exports[`Storybook Tests > Components/Error > Warning 1`] = `"<div class=\\"mb p
 exports[`Storybook Tests > Components/Etape/AutoCompleteEntreprise > Default 1`] = `
 "<div>
   <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-      <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
+    <div class=\\"flex typeahead-wrapper\\">
+      <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
@@ -4669,8 +4669,8 @@ exports[`Storybook Tests > Components/Etape/AutoCompleteEntreprise > WithEntitie
     </div>
   </div>
   <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-      <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
+    <div class=\\"flex typeahead-wrapper\\">
+      <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
@@ -4694,8 +4694,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`
         </div>
       </div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -4820,8 +4820,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
         </div>
       </div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -4878,8 +4878,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > AxmDemandeONF 1`
         </div>
       </div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -4995,8 +4995,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
         </div>
       </div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5011,8 +5011,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
   <div class=\\"mb-s\\" isarray=\\"true\\">
     <div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un amodiataire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un amodiataire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5056,8 +5056,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
         </div>
       </div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un titulaire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5072,8 +5072,8 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
   <div class=\\"mb-s\\" isarray=\\"true\\">
     <div>
       <div id=\\"autocomplete_entreprise_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Sélectionner un amodiataire\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Sélectionner un amodiataire\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5311,8 +5311,8 @@ exports[`Storybook Tests > Components/Etape/TypeEdit > DemandeAvecUnSeulStatut 1
     </div>
     <div class=\\"mb tablet-blob-2-3\\">
       <div id=\\"select-etape-type_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"select-etape-type\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"select-etape-type\\" type=\\"text\\" name=\\"select-etape-type\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5342,8 +5342,8 @@ exports[`Storybook Tests > Components/Etape/TypeEdit > DemandeEnConstruction 1`]
     </div>
     <div class=\\"mb tablet-blob-2-3\\">
       <div id=\\"select-etape-type_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"select-etape-type\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"select-etape-type\\" type=\\"text\\" name=\\"select-etape-type\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5362,8 +5362,8 @@ exports[`Storybook Tests > Components/Etape/TypeEdit > DemandeSansStatut 1`] = `
     </div>
     <div class=\\"mb tablet-blob-2-3\\">
       <div id=\\"select-etape-type_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"select-etape-type\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"select-etape-type\\" type=\\"text\\" name=\\"select-etape-type\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5394,8 +5394,8 @@ exports[`Storybook Tests > Components/Etape/TypeEdit > Simple 1`] = `
     </div>
     <div class=\\"mb tablet-blob-2-3\\">
       <div id=\\"select-etape-type_wrapper\\" class=\\"_typeahead_8eddf1\\">
-        <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-          <!----><input id=\\"select-etape-type\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"\\" autocomplete=\\"off\\">
+        <div class=\\"flex typeahead-wrapper\\">
+          <!----><input id=\\"select-etape-type\\" type=\\"text\\" name=\\"select-etape-type\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"\\" autocomplete=\\"off\\">
         </div>
         <!---->
       </div>
@@ -5418,25 +5418,7 @@ exports[`Storybook Tests > Components/Etape/TypeEdit > Simple 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/Page/QuickAccessTitre > Empty 1`] = `
-"<div id=\\"quick-access-titre_wrapper\\" class=\\"_typeahead_8eddf1\\">
-  <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-    <!----><input id=\\"quick-access-titre\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
-  </div>
-  <!---->
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Page/QuickAccessTitre > Simple 1`] = `
-"<div id=\\"quick-access-titre_wrapper\\" class=\\"_typeahead_8eddf1\\">
-  <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-    <!----><input id=\\"quick-access-titre\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
-  </div>
-  <!---->
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Pages/Footer > AvecNewsletter 1`] = `
+exports[`Storybook Tests > Components/Page/Footer > AvecNewsletter 1`] = `
 "<footer class=\\"dsfr\\" role=\\"contentinfo\\" id=\\"footer\\">
   <div class=\\"fr-footer\\">
     <div class=\\"fr-footer__top\\">
@@ -5530,7 +5512,7 @@ exports[`Storybook Tests > Components/Pages/Footer > AvecNewsletter 1`] = `
 </footer>"
 `;
 
-exports[`Storybook Tests > Components/Pages/Footer > SansNewsletter 1`] = `
+exports[`Storybook Tests > Components/Page/Footer > SansNewsletter 1`] = `
 "<footer class=\\"dsfr\\" role=\\"contentinfo\\" id=\\"footer\\">
   <div class=\\"fr-footer\\">
     <div class=\\"fr-footer__top\\">
@@ -5596,6 +5578,601 @@ exports[`Storybook Tests > Components/Pages/Footer > SansNewsletter 1`] = `
     </div>
   </div>
 </footer>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Admin 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Tableau de bord</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Travaux</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Activités</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-5\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-5\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-5-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-5-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-5-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > BureauDEtudes 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Tableau de bord</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-3\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-3\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Deconnecte 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a class=\\"fr-btn fr-icon-lock-fill\\" href=\\"/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F\\">Se connecter / S’enregistrer</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a class=\\"fr-btn fr-icon-lock-fill\\" href=\\"/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F\\">Se connecter / S’enregistrer</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-2\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-2\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-2-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-2-1\\">Administrations</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Defaut 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-2\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-2\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-2-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-2-1\\">Administrations</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Editeur 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Tableau de bord</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Travaux</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-4\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-4\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Entreprise 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Tableau de bord</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Activités</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-4\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-4\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Lecteur 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Travaux</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-3\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-3\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-3-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/Header > Super 1`] = `
+"<div class=\\"dsfr\\" style=\\"padding-bottom: 20px;\\">
+  <header role=\\"banner\\" class=\\"fr-header\\">
+    <div class=\\"fr-header__body\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-header__body-row\\">
+          <div class=\\"fr-header__brand fr-enlarge-link\\">
+            <div class=\\"fr-header__brand-top\\">
+              <div class=\\"fr-header__logo\\">
+                <p class=\\"fr-logo\\">République<br>française</p>
+              </div>
+              <div class=\\"fr-header__navbar\\"><button class=\\"fr-btn--search fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerSearchModalId\\" id=\\"button-475\\" title=\\"Rechercher\\">Rechercher</button><button class=\\"fr-btn--menu fr-btn\\" data-fr-opened=\\"false\\" aria-controls=\\"headerNavigationModalId\\" aria-haspopup=\\"menu\\" id=\\"button-477\\" title=\\"Menu\\">Menu</button></div>
+            </div>
+            <div class=\\"fr-header__service\\"><a href=\\"/\\" title=\\"Accueil - Camino - République Française\\">
+                <p class=\\"fr-header__service-title\\">Camino</p>
+              </a>
+              <p class=\\"fr-header__service-tagline\\">Le cadastre minier numérique</p>
+            </div>
+          </div>
+          <div class=\\"fr-header__tools\\">
+            <div class=\\"fr-header__tools-links\\">
+              <ul class=\\"fr-btns-group\\">
+                <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+                <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div class=\\"fr-header__search fr-modal\\" id=\\"headerSearchModalId\\">
+              <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerSearchModalId\\" title=\\"Fermer\\">Fermer</button>
+                <div class=\\"fr-search-bar\\" id=\\"search-473\\" role=\\"search\\"><label class=\\"fr-label\\" for=\\"search-473-input\\">Rechercher</label>
+                  <div id=\\"search-473-input_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex typeahead-wrapper\\">
+                      <!----><input id=\\"search-473-input\\" type=\\"text\\" name=\\"search-473-input\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+                    </div>
+                    <!---->
+                  </div><button class=\\"fr-btn\\" title=\\"Rechercher\\">Rechercher</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-header__menu fr-modal\\" id=\\"headerNavigationModalId\\" aria-labelledby=\\"button-477\\">
+      <div class=\\"fr-container\\"><button class=\\"fr-btn--close fr-btn\\" aria-controls=\\"headerNavigationModalId\\" title=\\"Fermer\\">Fermer</button>
+        <div class=\\"fr-header__menu-links\\">
+          <ul class=\\"fr-btns-group\\">
+            <li><a type=\\"primary\\" class=\\"fr-btn fr-icon-account-fill\\" to=\\"/utilisateurs/id\\">nom prenom</a></li>
+            <li><a class=\\"fr-btn fr-icon-lock-line\\" href=\\"/apiUrl/deconnecter\\">Se déconnecter</a></li>
+          </ul>
+        </div>
+        <nav class=\\"fr-nav\\" id=\\"headerNavigationId\\" role=\\"navigation\\" aria-label=\\"Menu principal\\">
+          <ul class=\\"fr-nav__list\\">
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Titres et autorisations</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Démarches</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Travaux</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Activités</a></li>
+            <li class=\\"fr-nav__item\\"><button class=\\"fr-nav__btn\\" aria-expanded=\\"false\\" aria-controls=\\"collapse-4\\" aria-current=\\"true\\">Annuaire</button>
+              <div class=\\"fr-collapse fr-menu\\" id=\\"collapse-4\\">
+                <ul class=\\"fr-menu__list\\">
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-0\\">Entreprises</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-1\\">Administrations</a></li>
+                  <li><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\" id=\\"nav-4-2\\">Utilisateurs</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Métas</a></li>
+            <li class=\\"fr-nav__item\\"><a type=\\"primary\\" class=\\"fr-nav__link\\" to=\\"[object Object]\\" target=\\"_self\\">Journaux</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/QuickAccessTitre > Empty 1`] = `
+"<div id=\\"typeahead_id_wrapper\\" class=\\"_typeahead_8eddf1\\">
+  <div class=\\"flex typeahead-wrapper\\">
+    <!----><input id=\\"typeahead_id\\" type=\\"text\\" name=\\"typeahead_id\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+  </div>
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Page/QuickAccessTitre > Simple 1`] = `
+"<div id=\\"typeahead_id_wrapper\\" class=\\"_typeahead_8eddf1\\">
+  <div class=\\"flex typeahead-wrapper\\">
+    <!----><input id=\\"typeahead_id\\" type=\\"text\\" name=\\"typeahead_id\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Rechercher un titre\\" autocomplete=\\"off\\">
+  </div>
+  <!---->
+</div>"
 `;
 
 exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > Loading 1`] = `
@@ -7297,8 +7874,8 @@ exports[`Storybook Tests > Components/Titre/Territoires > OnlySurface 1`] = `
 exports[`Storybook Tests > Components/Titre/TitresLink > AXM 1`] = `
 "<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-      <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
+    <div class=\\"flex typeahead-wrapper\\">
+      <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" name=\\"titre-link-typeahead\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
@@ -7310,8 +7887,8 @@ exports[`Storybook Tests > Components/Titre/TitresLink > AXM 1`] = `
 exports[`Storybook Tests > Components/Titre/TitresLink > AXMWithAlreadySelectedTitre 1`] = `
 "<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-      <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
+    <div class=\\"flex typeahead-wrapper\\">
+      <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" name=\\"titre-link-typeahead\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
@@ -7323,7 +7900,7 @@ exports[`Storybook Tests > Components/Titre/TitresLink > AXMWithAlreadySelectedT
 exports[`Storybook Tests > Components/Titre/TitresLink > DemarcheFusion 1`] = `
 "<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
+    <div class=\\"flex typeahead-wrapper\\"><input id=\\"titre-link-typeahead\\" type=\\"text\\" name=\\"titre-link-typeahead\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
     <!---->
   </div>
   <!---->
@@ -7334,7 +7911,7 @@ exports[`Storybook Tests > Components/Titre/TitresLink > DemarcheFusion 1`] = `
 exports[`Storybook Tests > Components/Titre/TitresLink > DemarcheFusionWithAlreadySelectedTitre 1`] = `
 "<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Abttis Coucou <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Affluent Crique Saint Bernard <span>x</span></button><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
+    <div class=\\"flex typeahead-wrapper\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Abttis Coucou <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Affluent Crique Saint Bernard <span>x</span></button><input id=\\"titre-link-typeahead\\" type=\\"text\\" name=\\"titre-link-typeahead\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
     <!---->
   </div>
   <!---->
@@ -8016,22 +8593,22 @@ exports[`Storybook Tests > Components/UI/Tag > Normal 1`] = `"<span class=\\"bol
 
 exports[`Storybook Tests > Components/UI/TypeAhead > Multiple 1`] = `
 "<div id=\\"plop_wrapper\\" class=\\"_typeahead_8eddf1\\">
-  <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"plop\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\"></div>
+  <div class=\\"flex typeahead-wrapper\\"><input id=\\"plop\\" type=\\"text\\" name=\\"plop\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\"></div>
   <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/UI/TypeAhead > MultipleWithInitialItems 1`] = `
 "<div id=\\"plop_wrapper\\" class=\\"_typeahead_8eddf1\\">
-  <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">titreItem1 <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">titreItem2 <span>x</span></button><input id=\\"plop\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\"></div>
+  <div class=\\"flex typeahead-wrapper\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">titreItem1 <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">titreItem2 <span>x</span></button><input id=\\"plop\\" type=\\"text\\" name=\\"plop\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\"></div>
   <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/UI/TypeAhead > Single 1`] = `
 "<div id=\\"ello_wrapper\\" class=\\"_typeahead_8eddf1\\">
-  <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
-    <!----><input id=\\"ello\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
+  <div class=\\"flex typeahead-wrapper\\">
+    <!----><input id=\\"ello\\" type=\\"text\\" name=\\"ello\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
   </div>
   <!---->
 </div>"
@@ -8380,7 +8957,7 @@ exports[`Storybook Tests > Components/Ui/InputAutocomplete > Default 1`] = `
   <h5>Items</h5>
   <hr class=\\"mb-s\\">
   <div id=\\"filters_autocomplete_Items_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"filters_autocomplete_Items\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Items\\" autocomplete=\\"off\\"></div>
+    <div class=\\"flex typeahead-wrapper\\"><input id=\\"filters_autocomplete_Items\\" type=\\"text\\" name=\\"filters_autocomplete_Items\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"Items\\" autocomplete=\\"off\\"></div>
     <!---->
   </div>
 </div>"
