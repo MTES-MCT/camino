@@ -5,14 +5,14 @@ import rootValue from '../api/graphql/resolvers.js'
 import schema from '../api/graphql/schemas.js'
 
 interface IAuthRequestHttp extends http.IncomingMessage {
-  user?: {
+  auth?: {
     [id: string]: string
   }
 }
 
 export const graphql = graphqlHTTP(async (req: IAuthRequestHttp, res) => {
   return {
-    context: { user: req.user, res },
+    context: { user: req.auth, res },
     customFormatErrorFn: err => ({
       locations: err.locations,
       message: err.message,

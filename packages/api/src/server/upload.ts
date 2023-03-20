@@ -1,5 +1,5 @@
 import express from 'express'
-import { Request } from "express-jwt";
+import { Request } from 'express-jwt'
 
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
@@ -20,11 +20,10 @@ const uploadAllowedMiddleware = async (req: Request<User>, res: express.Response
 }
 
 const restUpload = () => {
-  const tmp = '/files/tmp'
-  const server = new Server()
   // nous passons à travers un proxy
   const relativeLocation = true
-  server.datastore = new FileStore({ path: tmp, relativeLocation })
+  const server = new Server({ path: '/files', relativeLocation })
+  server.datastore = new FileStore({ directory: './files/tmp' })
 
   const uploadServer = express()
   uploadServer.disable('x-powered-by')
