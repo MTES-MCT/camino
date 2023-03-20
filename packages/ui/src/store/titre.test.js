@@ -12,9 +12,6 @@ vi.mock('../api/titres', () => ({
   titreMetas: vi.fn(),
   titre: vi.fn(),
   titreCreer: vi.fn(),
-  titreModifier: vi.fn(),
-  titreSupprimer: vi.fn(),
-  utilisateurTitreAbonner: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -98,37 +95,6 @@ describe('état du titre sélectionné', () => {
     api.titreCreer.mockRejectedValue(new Error('erreur api'))
     await store.dispatch('titre/add', { id: 83, nom: 'marne' })
 
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
-  test('met à jour un titre', async () => {
-    store = createStore({ modules: { titre }, actions, mutations })
-    api.titreModifier.mockResolvedValue({ id: 83, nom: 'marne' })
-    await store.dispatch('titre/update', { id: 83, nom: 'marne' })
-
-    expect(mutations.popupClose).toHaveBeenCalled()
-    expect(actions.reload).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la mise à jour d'un titre", async () => {
-    api.titreModifier.mockRejectedValue(new Error('erreur api'))
-    await store.dispatch('titre/update', { id: 83, nom: 'marne' })
-
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
-  test('supprime un titre', async () => {
-    const apiMock = api.titreSupprimer.mockResolvedValue(true)
-    await store.dispatch('titre/remove', 83)
-
-    expect(apiMock).toHaveBeenCalledWith({ id: 83 })
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la suppression d'un titre", async () => {
-    const apiMock = api.titreSupprimer.mockRejectedValue(new Error("error de l'api"))
-    await store.dispatch('titre/remove', 83)
-
-    expect(apiMock).toHaveBeenCalledWith({ id: 83 })
     expect(mutations.popupMessageAdd).toHaveBeenCalled()
   })
 

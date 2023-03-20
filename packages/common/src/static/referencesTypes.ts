@@ -1,3 +1,6 @@
+export const REFERENCES_TYPES_KEYS = ['brg', 'dea', 'deb', 'dge', 'ifr', 'irs', 'nus', 'onf', 'ptm', 'rnt'] as const
+export type ReferenceTypeId = (typeof REFERENCES_TYPES_KEYS)[number]
+
 export const REFERENCES_TYPES_IDS = {
   BRGM: 'brg',
   DEAL: 'dea',
@@ -9,9 +12,8 @@ export const REFERENCES_TYPES_IDS = {
   ONF: 'onf',
   PTMG: 'ptm',
   RNTM: 'rnt',
-} as const
+} as const satisfies Record<string, ReferenceTypeId>
 
-export type ReferenceTypeId = (typeof REFERENCES_TYPES_IDS)[keyof typeof REFERENCES_TYPES_IDS]
 export type ReferenceType<T = ReferenceTypeId> = {
   id: T
   nom: string

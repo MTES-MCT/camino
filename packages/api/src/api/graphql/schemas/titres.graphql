@@ -136,19 +136,6 @@ input InputTitreCreation {
   references: [InputReference]
 }
 
-"Titre minier"
-input InputTitreModification {
-  """
-  Id composée de la concaténation:
-  - du type en 3 lettres
-  - du slug du nom du titre
-  - de l'année d'octroi
-  """
-  id: ID!
-  nom: String!
-  references: [InputReference]
-}
-
 input InputId {
   id: ID
 }

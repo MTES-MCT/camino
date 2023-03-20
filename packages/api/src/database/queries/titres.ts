@@ -1,4 +1,4 @@
-import { raw, RawBuilder, Transaction } from 'objection'
+import { raw, RawBuilder } from 'objection'
 
 import { IColonne, IFields, Index, ITitre, ITitreColonneId } from '../../types.js'
 
@@ -16,6 +16,7 @@ import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
+import { EditableTitre } from 'camino-common/src/titres.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -302,12 +303,8 @@ export const titreArchive = async (id: string) => {
   await TitresEtapes.query().patch({ archive: true }).whereIn('titreDemarcheId', TitresDemarches.query().select('id').where('titreId', id))
 }
 
-const titreUpsert = async (titre: ITitre, { fields }: { fields?: IFields }, tr?: Transaction) => {
-  const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
-
-  const q = Titres.query(tr).withGraphFetched(graph)
-
-  return q.upsertGraph(titre, options.titres.update)
+export const titreUpsert = async (titre: EditableTitre) => {
+  return Titres.query().upsertGraph(titre, options.titres.update)
 }
 
-export { titreGet, titresGet, titresCount, titreUpdate, titreCreate, titreUpsert }
+export { titreGet, titresGet, titresCount, titreUpdate, titreCreate }

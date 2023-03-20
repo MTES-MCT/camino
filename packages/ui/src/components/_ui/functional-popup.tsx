@@ -68,7 +68,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['title', 'content',
   }
 
   return () => (
-    <div class="absolute full bg-inverse-alpha z-2" onClick={() => props.close()}>
+    <div class="absolute full bg-inverse-alpha z-2" style={{ position: 'fixed' }} onClick={() => props.close()}>
       <div class="popup fixed shadow full bg-bg" onClick={e => e.stopPropagation()}>
         <div class="popup-header px-l pt-l">
           <h2>{props.title}</h2>

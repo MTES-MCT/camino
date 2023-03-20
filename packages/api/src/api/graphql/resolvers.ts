@@ -1,7 +1,7 @@
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLUpload } from 'graphql-upload'
 
-import { titre, titres, titreCreer, titreSupprimer, titreModifier } from './resolvers/titres.js'
+import { titre, titres, titreCreer } from './resolvers/titres.js'
 
 import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer } from './resolvers/titres-etapes.js'
 
@@ -62,7 +62,6 @@ import { statistiquesGlobales } from './resolvers/statistiques.js'
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
 import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from './resolvers/points.js'
 import { journaux } from './resolvers/journaux.js'
-import { utilisateurTitreAbonner } from './resolvers/utilisateurs-titres.js'
 
 export default {
   //  types
@@ -124,8 +123,6 @@ export default {
 
   // mutations
   titreCreer,
-  titreModifier,
-  titreSupprimer,
   demarcheCreer,
   demarcheModifier,
   demarcheSupprimer,
@@ -139,7 +136,6 @@ export default {
   activiteModifier,
   activiteSupprimer,
   activiteDeposer,
-  utilisateurTitreAbonner,
   newsletterInscrire,
   entrepriseCreer,
   entrepriseModifier,
