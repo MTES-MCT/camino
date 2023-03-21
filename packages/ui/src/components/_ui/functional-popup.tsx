@@ -1,9 +1,10 @@
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 
 interface Props {
+  iid?: string
   title: string
   content: () => JSX.Element
   close: () => void
@@ -14,31 +15,13 @@ interface Props {
   }
 }
 
-export const FunctionalPopup = caminoDefineComponent<Props>(['title', 'content', 'close', 'validate'], (props: Props) => {
+export const FunctionalPopup = caminoDefineComponent<Props>(['iid', 'title', 'content', 'close', 'validate'], (props: Props) => {
   const canValidate = computed<boolean>(() => {
     return props.validate.can ?? true
   })
+
+  const id = props.iid ?? 'monId'
   const text = props.validate.text ?? 'Enregistrer'
-  const validateButton = ref<HTMLButtonElement | null>(null)
-
-  const keyup = (e: KeyboardEvent) => {
-    if ((e.which || e.keyCode) === 27) {
-      props.close()
-    } else if ((e.which || e.keyCode) === 13) {
-      if (canValidate.value) {
-        validateButton.value?.focus()
-      }
-    }
-  }
-
-  onMounted(() => {
-    validateButton.value?.focus()
-    document.addEventListener('keyup', keyup)
-  })
-
-  onUnmounted(() => {
-    document.removeEventListener('keyup', keyup)
-  })
 
   const validateProcess = ref<AsyncData<null>>({
     status: 'LOADED',
@@ -68,40 +51,55 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['title', 'content',
   }
 
   return () => (
-    <div class="absolute full bg-inverse-alpha" style={{ position: 'fixed', 'z-index': 600 }} onClick={() => props.close()}>
-      <div class="popup fixed shadow full bg-bg" onClick={e => e.stopPropagation()}>
-        <div class="popup-header px-l pt-l">
-          <h2>{props.title}</h2>
-        </div>
-        <div class="popup-content px-l pt">{props.content()}</div>
-        <div class="popup-footer px-l pt pb-l">
-          <div class="tablet-blobs">
-            <div class="tablet-blob-1-3 mb tablet-mb-0">
-              <button class="btn-border rnd-xs p-s full-x" onClick={() => props.close()}>
-                Annuler
-              </button>
-            </div>
-            <div class="tablet-blob-2-3">
-              <LoadingElement
-                data={validateProcess.value}
-                renderItem={() => (
-                  <button
-                    ref={validateButton}
-                    disabled={!canValidate.value}
-                    class={`${!canValidate.value ? 'disabled' : ''} btn btn-primary`}
-                    onClick={e => {
-                      e.stopPropagation()
-                      return validate()
-                    }}
-                  >
-                    {text}
+    <div class="dsfr">
+      <dialog id={id} class="fr-modal fr-modal--opened" open="true" role="dialog" aria-labelledby={`${id}-title`}>
+        <div class="fr-container fr-container--fluid fr-container-md">
+          <div class="fr-grid-row fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+              <div class="fr-modal__body">
+                <div class="fr-modal__header">
+                  <button class="fr-btn--close fr-btn" aria-controls={id} title="Fermer" onClick={() => props.close()}>
+                    Fermer
                   </button>
-                )}
-              />
+                </div>
+                <div class="fr-modal__content">
+                  <h1 id={`${id}-title`} class="fr-modal__title">
+                    <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
+                    {props.title}
+                  </h1>
+                  {props.content()}
+                </div>
+                <div class="fr-modal__footer">
+                  <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                    <li>
+                      <LoadingElement
+                        data={validateProcess.value}
+                        renderItem={() => (
+                          <button
+                            class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
+                            disabled={!canValidate.value}
+                            onClick={e => {
+                              e.stopPropagation()
+                              return validate()
+                            }}
+                          >
+                            {text}
+                          </button>
+                        )}
+                      />
+                    </li>
+                    <li>
+                      <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
+                        Annuler
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </dialog>
     </div>
   )
 })

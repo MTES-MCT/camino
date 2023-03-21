@@ -13,6 +13,7 @@ const close = action('close')
 
 export const Main: StoryFn = () => (
   <FunctionalPopup
+    id="mainId"
     close={close}
     title="Titre de la popup"
     validate={{
