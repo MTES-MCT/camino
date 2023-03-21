@@ -4,7 +4,7 @@ import { CaminoDate } from './date.js'
 export const eidValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof eidValidator>
 
-export type EntrepriseEtablissement = { dateDebut: CaminoDate; dateFin: CaminoDate; nom: string }
+export type EntrepriseEtablissement = { id: string; dateDebut: CaminoDate; dateFin: CaminoDate; nom: string }
 export interface Entreprise {
   id: EntrepriseId
   nom: string
