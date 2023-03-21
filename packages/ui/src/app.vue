@@ -2,9 +2,6 @@
   <div class="page relative">
     <MapPattern />
     <IconSprite />
-    <Transition name="slide" mode="out-in">
-      <component :is="menu.component" v-if="menu.component" />
-    </Transition>
 
     <Header :user="user" :currentMenuSection="currentMenuSection" :trackEvent="trackEvent" />
 
@@ -22,7 +19,7 @@
     </div>
 
     <Transition name="fade">
-      <div v-if="!!popup.component" class="absolute full bg-inverse-alpha z-2" />
+      <div v-if="!!popup.component" class="absolute full bg-inverse-alpha" style="z-index: 600" />
     </Transition>
 
     <Transition name="slide-top">
@@ -79,8 +76,6 @@ const error = computed(() => store.state.error)
 const messages = computed(() => store.state.messages)
 
 const popup = computed(() => store.state.popup)
-
-const menu = computed(() => store.state.menu)
 
 const loading = computed(() => store.state.loading.length > 0)
 

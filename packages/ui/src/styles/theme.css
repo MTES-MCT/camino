@@ -89,14 +89,14 @@ html {
   overflow: auto;
   display: flex;
   flex-direction: column;
-  z-index: 2;
+  z-index: 600;
 }
 
 .popup-header {
   flex: 0 0 auto;
   border-bottom: var(--unit-xxs) solid var(--color-alt);
   margin-bottom: calc(-1 * var(--unit-xxs));
-  z-index: 1;
+  z-index: 600;
 }
 
 .popup-content {

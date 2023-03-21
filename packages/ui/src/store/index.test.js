@@ -70,7 +70,6 @@ describe("état général de l'application", () => {
       messages: [],
       popup: { component: null, props: null, messages: [], loading: false },
       error: null,
-      menu: { component: null },
       loading: [],
       loaded: false,
       fileLoading: {
@@ -184,31 +183,6 @@ describe("état général de l'application", () => {
     await store.dispatch('errorRemove')
 
     expect(state.error).toEqual(null)
-  })
-
-  test('ferme le menu', async () => {
-    store.state.menu.component = { name: 'menu' }
-    const component = { name: 'menu' }
-
-    await store.dispatch('menuToggle', component)
-
-    expect(state.menu.component).toBeNull()
-  })
-
-  test('ferme le menu et en ouvre un autre', async () => {
-    store.state.menu.component = { name: 'bonjour' }
-    const component = { name: 'hello' }
-
-    await store.dispatch('menuToggle', component)
-
-    expect(state.menu.component).toMatchObject({ _value: component })
-  })
-
-  test('ouvre un nouveau menu', async () => {
-    const component = { name: 'hello' }
-    await store.dispatch('menuToggle', component)
-
-    expect(state.menu.component).toMatchObject({ _value: component })
   })
 
   test("recharge la page si l'id du titre n'a pas changé", async () => {

@@ -346,9 +346,6 @@ router.beforeEach(async (to, from, next) => {
   if (!store.getters['user/isLoaded']) {
     await store.dispatch('user/identify')
   }
-  if (store.state.menu.component) {
-    store.commit('menuClose')
-  }
 
   next()
 })

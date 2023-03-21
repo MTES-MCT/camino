@@ -1,4 +1,3 @@
-import { apiClient } from '@/api/api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { canDeleteTitre } from 'camino-common/src/permissions/titres'
 import { User } from 'camino-common/src/roles'
@@ -104,52 +103,54 @@ export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient'
   const editPopup = ref<boolean>(false)
 
   return () => (
-    <div class="sticky-header width-full">
-      <div class="container">
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-2">
-            <h1 class="mt-m mb-m">{props.titre.nom}</h1>
-          </div>
-          <div class="tablet-blob-1-2 flex">
-            <div class="flex-right flex my-s">
-              {props.user ? (
-                <button
-                  class={`btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px ${props.titre.abonnement ? 'btn-secondary' : 'btn-primary'}`}
-                  onClick={() => props.apiClient.titreUtilisateurAbonne(props.titre.id, !props.titre.abonnement)}
-                >
-                  <span class="mt-xs">{props.titre.abonnement ? 'Se désabonner du titre' : 'S’abonner au titre'}</span>
-                </button>
-              ) : null}
+    <>
+      <div class="sticky-header width-full">
+        <div class="container">
+          <div class="tablet-blobs">
+            <div class="tablet-blob-1-2">
+              <h1 class="mt-m mb-m">{props.titre.nom}</h1>
+            </div>
+            <div class="tablet-blob-1-2 flex">
+              <div class="flex-right flex my-s">
+                {props.user ? (
+                  <button
+                    class={`btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px ${props.titre.abonnement ? 'btn-secondary' : 'btn-primary'}`}
+                    onClick={() => props.apiClient.titreUtilisateurAbonne(props.titre.id, !props.titre.abonnement)}
+                  >
+                    <span class="mt-xs">{props.titre.abonnement ? 'Se désabonner du titre' : 'S’abonner au titre'}</span>
+                  </button>
+                ) : null}
 
-              <button class={`btn-border small px-m py-s lh-2 ${suppression.value || props.titre.modification ? 'mr-px' : 'rnd-r-xs'} ${!props.user ? 'rnd-l-xs' : null}`} onClick={props.emailSend}>
-                <span class="mt-xs nowrap">Signaler une erreur…</span>
-              </button>
-              {props.titre.modification ? (
-                <button
-                  class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`}
-                  onClick={() => {
-                    editPopup.value = true
-                  }}
-                >
-                  <Icon size="M" name="pencil" />
+                <button class={`btn-border small px-m py-s lh-2 ${suppression.value || props.titre.modification ? 'mr-px' : 'rnd-r-xs'} ${!props.user ? 'rnd-l-xs' : null}`} onClick={props.emailSend}>
+                  <span class="mt-xs nowrap">Signaler une erreur…</span>
                 </button>
-              ) : null}
+                {props.titre.modification ? (
+                  <button
+                    class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`}
+                    onClick={() => {
+                      editPopup.value = true
+                    }}
+                  >
+                    <Icon size="M" name="pencil" />
+                  </button>
+                ) : null}
 
-              {suppression.value ? (
-                <button
-                  class="btn rnd-r-xs py-s px-m"
-                  onClick={() => {
-                    removePopup.value = true
-                  }}
-                >
-                  <Icon size="M" name="delete" />
-                </button>
-              ) : null}
+                {suppression.value ? (
+                  <button
+                    class="btn rnd-r-xs py-s px-m"
+                    onClick={() => {
+                      removePopup.value = true
+                    }}
+                  >
+                    <Icon size="M" name="delete" />
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="line width-full" />
+          <div class="line width-full" />
+        </div>
       </div>
       {removePopup.value ? (
         <RemovePopup
@@ -172,6 +173,6 @@ export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient'
           }}
         />
       ) : null}
-    </div>
+    </>
   )
 })
