@@ -110,17 +110,6 @@ const actions = {
     }, 4500)
   },
 
-  menuToggle({ state, commit }, component) {
-    if (state.menu.component && state.menu.component.name === component.name) {
-      commit('menuClose')
-    } else if (state.menu.component) {
-      commit('menuClose')
-      commit('menuOpen', component)
-    } else {
-      commit('menuOpen', component)
-    }
-  },
-
   async reload({ dispatch, rootState }, { name, id }) {
     if (!id) {
       router.push({ name })
@@ -203,14 +192,6 @@ const mutations = {
 
   errorUpdate(state, error) {
     state.error = error
-  },
-
-  menuOpen(state, component) {
-    state.menu.component = shallowRef(component)
-  },
-
-  menuClose(state) {
-    state.menu.component = null
   },
 
   popupLoad(state) {

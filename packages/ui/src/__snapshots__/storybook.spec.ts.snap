@@ -7465,7 +7465,7 @@ exports[`Storybook Tests > 'Components/Statistiques/MinerauxMetau…' > 'WithErr
 `;
 
 exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Create' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Ajout d'une démarche </h2>
@@ -7507,7 +7507,7 @@ exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Create' 1`] =
 `;
 
 exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Edit' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Modification de la démarche </h2>
@@ -7549,7 +7549,7 @@ exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Edit' 1`] = `
 `;
 
 exports[`Storybook Tests > 'Components/Titre/DemarcheRemovePopup' > 'Main' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Suppression de la démarche</h2>
@@ -7574,7 +7574,7 @@ exports[`Storybook Tests > 'Components/Titre/DemarcheRemovePopup' > 'Main' 1`] =
 `;
 
 exports[`Storybook Tests > 'Components/Titre/EditPopup' > 'DefaultNoReference' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Modification du titre</h2>
@@ -7613,7 +7613,7 @@ exports[`Storybook Tests > 'Components/Titre/EditPopup' > 'DefaultNoReference' 1
 `;
 
 exports[`Storybook Tests > 'Components/Titre/EditPopup' > 'OneReference' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Modification du titre</h2>
@@ -7683,8 +7683,6 @@ exports[`Storybook Tests > 'Components/Titre/Header' > 'AbonneAuTitre' 1`] = `
     </div>
     <div class=\\"line width-full\\"></div>
   </div>
-  <!---->
-  <!---->
 </div>"
 `;
 
@@ -7705,8 +7703,6 @@ exports[`Storybook Tests > 'Components/Titre/Header' > 'CanDeleteTitre' 1`] = `
     </div>
     <div class=\\"line width-full\\"></div>
   </div>
-  <!---->
-  <!---->
 </div>"
 `;
 
@@ -7727,8 +7723,6 @@ exports[`Storybook Tests > 'Components/Titre/Header' > 'CanEditTitre' 1`] = `
     </div>
     <div class=\\"line width-full\\"></div>
   </div>
-  <!---->
-  <!---->
 </div>"
 `;
 
@@ -7748,8 +7742,6 @@ exports[`Storybook Tests > 'Components/Titre/Header' > 'Default' 1`] = `
     </div>
     <div class=\\"line width-full\\"></div>
   </div>
-  <!---->
-  <!---->
 </div>"
 `;
 
@@ -7909,7 +7901,7 @@ exports[`Storybook Tests > 'Components/Titre/Infos' > 'Empty' 1`] = `
 `;
 
 exports[`Storybook Tests > 'Components/Titre/RemovePopup' > 'Default' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Suppression du titre</h2>
@@ -8373,7 +8365,7 @@ exports[`Storybook Tests > 'Components/UI/InputDate' > 'WithDateAlreadySet' 1`] 
 `;
 
 exports[`Storybook Tests > 'Components/UI/Popup' > 'Main' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Titre de la popup</h2>
@@ -8399,7 +8391,7 @@ exports[`Storybook Tests > 'Components/UI/Popup' > 'Main' 1`] = `
 `;
 
 exports[`Storybook Tests > 'Components/UI/Popup' > 'NotValid' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Titre de la popup</h2>
@@ -9792,7 +9784,7 @@ exports[`Storybook Tests > 'Components/Utilisateur/QGISToken' > 'Default' 1`] = 
 `;
 
 exports[`Storybook Tests > 'Components/Utilisateur/RemovePopup' > 'Default' 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+"<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Suppression du compte utilisateur</h2>
