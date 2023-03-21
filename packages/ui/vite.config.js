@@ -1,3 +1,4 @@
+const { nodeResolve } = require('@rollup/plugin-node-resolve')
 const dotenv = require('dotenv')
 const path = require('path')
 const { defineConfig } = require('vite')
@@ -8,30 +9,28 @@ const { visualizer } = require('rollup-plugin-visualizer')
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
-const commitHash = process.env.GIT_SHA
-  ? process.env.GIT_SHA
-  : require('child_process').execSync('git rev-parse --short HEAD').toString()
+const commitHash = process.env.GIT_SHA ? process.env.GIT_SHA : require('child_process').execSync('git rev-parse --short HEAD').toString()
 
 module.exports = defineConfig({
   plugins: [vue(), vueJsx(), visualizer()],
   root: 'src',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   test: {
     setupFiles: ['./__mocks__/setupVitest.js'],
     transformMode: {
-      web: [/\.[jt]sx$/]
-    }
+      web: [/\.[jt]sx$/],
+    },
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118
   define: {
     applicationVersion: JSON.stringify(commitHash),
     // mode dev
-    'process.env': {}
+    'process.env': {},
   },
   build: {
     outDir: '../dist',
@@ -39,10 +38,14 @@ module.exports = defineConfig({
     rollupOptions: {
       plugins: [
         inject({
-          process: 'process'
-        })
-      ]
-    }
+          process: 'process',
+        }),
+        // encore un problème avec jsondiffpatch https://github.com/vitejs/vite/issues/7385#issuecomment-1286606298
+        nodeResolve({
+          // browser: true
+        }),
+      ],
+    },
   },
   server: {
     port: 3000,
@@ -50,11 +53,11 @@ module.exports = defineConfig({
       '/apiUrl': {
         target: process.env.API_URL,
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/apiUrl/, '')
+        rewrite: path => path.replace(/^\/apiUrl/, ''),
       },
       '/televersement': {
         target: process.env.API_URL,
-        changeOrigin: true
+        changeOrigin: true,
       },
       '/stream/version': {
         target: process.env.API_URL,
@@ -67,8 +70,8 @@ module.exports = defineConfig({
               proxyRes.destroy()
             }
           })
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
