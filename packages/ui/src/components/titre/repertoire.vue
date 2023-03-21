@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import Entreprise from '../titre/entreprise.vue'
-import Administration from '../titre/administration.vue'
+import { Administration } from '../titre/administration'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { isAssociee } from 'camino-common/src/static/administrationsTitresTypes'
 import { useStore } from 'vuex'

@@ -7464,6 +7464,114 @@ exports[`Storybook Tests > 'Components/Statistiques/MinerauxMetau…' > 'WithErr
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/Titre/Administration' > 'Default' 1`] = `
+"<div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\"><button class=\\"rnd-s accordion-header flex btn-alt py-s px-s\\">
+    <div><span>Mission régionale autorité environnementale de Guyane</span></div>
+    <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+        <use href=\\"#icon-chevron-bas\\"></use>
+      </svg></div>
+  </button>
+  <!--v-if-->
+  <div class=\\"overflow-hidden\\">
+    <transition-stub name=\\"slide\\" appear=\\"false\\" persisted=\\"true\\" css=\\"true\\">
+      <div style=\\"display: none;\\">
+        <div class=\\"px-m pt-m\\">
+          <!---->
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Adresse</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p>Route du Vieux-Port
+                97300 Cayenne<span><br>Adresse postale
+Route du Vieux-Port
+CS 76003
+97306 Cayenne</span><br>97300Cayenne</p>
+            </div>
+          </div>
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Téléphone</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p class=\\"word-break\\">+594 (0)5 94 39 80 00</p>
+            </div>
+          </div>
+          <!---->
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Site</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p class=\\"word-break\\"><a href=\\"http://www.mrae.developpement-durable.gouv.fr/guyane-r27.html\\" class=\\"btn small bold py-xs px-s rnd\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">http://www.mrae.developpement-durable.gouv.fr/guyane-r27.html</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition-stub>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Titre/Administration' > 'WithServiceAndEmail' 1`] = `
+"<div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\"><button class=\\"rnd-s accordion-header flex btn-alt py-s px-s\\">
+    <div><span>Ministère de l'Economie, des Finances et de la Relance &amp; Ministère de la Transition écologique</span></div>
+    <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+        <use href=\\"#icon-chevron-bas\\"></use>
+      </svg></div>
+  </button>
+  <!--v-if-->
+  <div class=\\"overflow-hidden\\">
+    <transition-stub name=\\"slide\\" appear=\\"false\\" persisted=\\"true\\" css=\\"true\\">
+      <div style=\\"display: none;\\">
+        <div class=\\"px-m pt-m\\">
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Service</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p>Bureau de la politique des ressources minérales non énergétiques - Direction générale de l'aménagement, du logement et de la nature (DGALN)</p>
+            </div>
+          </div>
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Adresse</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p>Tour Séquoia<span><br>1 place Carpeaux</span><br>92055Paris-La-Défense</p>
+            </div>
+          </div>
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Téléphone</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p class=\\"word-break\\">+33 (0)1 40 81 21 22</p>
+            </div>
+          </div>
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Email</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p class=\\"word-break\\"><a href=\\"mailto:earm2.deb.dgaln@developpement-durable.gouv.fr\\" class=\\"btn small bold py-xs px-s rnd\\">earm2.deb.dgaln@developpement-durable.gouv.fr</a></p>
+            </div>
+          </div>
+          <div class=\\"large-blobs\\">
+            <div class=\\"large-blob-1-6\\">
+              <h5>Site</h5>
+            </div>
+            <div class=\\"large-blob-5-6\\">
+              <p class=\\"word-break\\"><a href=\\"http://www.mineralinfo.fr\\" class=\\"btn small bold py-xs px-s rnd\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">http://www.mineralinfo.fr</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition-stub>
+  </div>
+</div>"
+`;
+
 exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Create' 1`] = `
 "<div class=\\"absolute full bg-inverse-alpha\\" style=\\"position: fixed; z-index: 600;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
