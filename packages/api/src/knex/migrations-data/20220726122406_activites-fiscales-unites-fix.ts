@@ -1,7 +1,6 @@
-import { UniteId } from 'camino-common/src/static/unites.js'
+import { UniteId, Unites } from 'camino-common/src/static/unites.js'
 import { Knex } from 'knex'
-const { SUBSTANCES_FISCALES_IDS, SubstancesFiscale } = require('camino-common/src/static/substancesFiscales')
-const { Unites } = require('camino-common/src/static/unites')
+import { SUBSTANCES_FISCALES_IDS, SubstancesFiscale, isSubstanceFiscale } from 'camino-common/src/static/substancesFiscales.js'
 export const up = async (knex: Knex) => {
   const activites: {
     id: string
@@ -27,12 +26,12 @@ export const up = async (knex: Knex) => {
 
     if (sectionSubstancesFiscales) {
       for (const element of sectionSubstancesFiscales.elements) {
-        if (substancesNeedFix.includes(element.id)) {
+        if (substancesNeedFix.includes(element.id) && isSubstanceFiscale(element.id)) {
           const sf = SubstancesFiscale[element.id]
           element.uniteId = sf.uniteId
 
           const unite = Unites[element.uniteId]
-          element.referenceUniteRatio = unite.referenceUniteRatio
+          element.referenceUniteRatio = unite.referenceUniteRatio ?? 1
           element.description = `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`
           updated = true
         }

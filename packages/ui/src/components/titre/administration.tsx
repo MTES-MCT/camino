@@ -6,22 +6,10 @@ import Accordion from '../_ui/accordion.vue'
 
 interface Props {
   administrationId: AdministrationId
-  eventTrack: () => void
+  onEventTrack: (event: { categorie: string; action: string }) => void
 }
 
-export const Administration = caminoDefineComponent<Omit<Props, 'eventTrack'>>(['administrationId'], (props, context) => {
-  const route = useRoute()
-  const eventTrack = () => {
-    context.emit('titre-event-track', {
-      categorie: 'titre-sections',
-      action: 'titre-administration_consulter',
-      nom: route.params.id,
-    })
-  }
-  return () => <PureAdministration administrationId={props.administrationId} eventTrack={eventTrack} />
-})
-export const PureAdministration = caminoDefineComponent<Props>(['administrationId', 'eventTrack'], (props, context) => {
-  const route = useRoute()
+export const Administration = caminoDefineComponent<Props>(['administrationId', 'onEventTrack'], props => {
   const opened = ref(false)
   const administration = Administrations[props.administrationId]
   const close = () => {
@@ -31,7 +19,10 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
   const toggle = () => {
     opened.value = !opened.value
     if (opened.value) {
-      props.eventTrack()
+      props.onEventTrack({
+        categorie: 'titre-sections',
+        action: 'titre-administration_consulter',
+      })
     }
   }
 

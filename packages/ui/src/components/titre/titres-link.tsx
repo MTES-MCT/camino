@@ -49,7 +49,6 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
       if (titreIds.length) {
         const selectedTitreList = data.value.value.filter(({ id }) => titreIds.includes(id))
         if (selectedTitreList) {
-          console.log('ici on fait des trucs')
           selectedTitres.value.push(...selectedTitreList)
         }
       }

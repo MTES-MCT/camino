@@ -32,7 +32,7 @@
 
     <div class="line width-full mb-xl" />
 
-    <TitreRepertoire :titreTypeId="titre.typeId" :titulaires="titre.titulaires" :amodiataires="titre.amodiataires" :administrations="titre.administrations" @titre-event-track="eventTrack" />
+    <Repertoire :user="user" :titreTypeId="titre.typeId" :titulaires="titre.titulaires" :amodiataires="titre.amodiataires" :administrations="titre.administrations" :eventTrack="eventTrack" />
 
     <div v-if="tabs.length > 1">
       <div class="flex">
@@ -64,7 +64,7 @@ import ActivitesPills from './_common/pills.vue'
 import { Header as TitreHeader } from './titre/header'
 import { Infos as TitreInfos } from './titre/infos'
 import { Territoires as TitreTerritoires } from './titre/territoires'
-import TitreRepertoire from './titre/repertoire.vue'
+import { Repertoire } from './titre/repertoire'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'
 import Journaux from './journaux/journaux.vue'
@@ -77,7 +77,7 @@ export default {
     TitreHeader,
     TitreInfos,
     TitreTerritoires,
-    TitreRepertoire,
+    Repertoire,
     TitreDemarches,
     TitreActivitesList,
     Perimetre,
@@ -180,6 +180,10 @@ export default {
     },
 
     eventTrack(event) {
+      if (!event.nom) {
+        event.nom = this.titre.id
+      }
+
       if (this.$matomo) {
         this.$matomo.trackEvent(event.categorie, event.action, event.nom)
       }
