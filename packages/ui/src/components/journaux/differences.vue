@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { formatters } from 'jsondiffpatch'
-import 'jsondiffpatch/dist/formatters-styles/html.css'
+import { formatters } from 'jsondiffpatch-rc'
+import 'jsondiffpatch-rc/dist/formatters-styles/html.css'
 
 export default defineComponent({
   props: {

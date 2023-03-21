@@ -179,7 +179,7 @@ matrices:
 	npm run matrices -w packages/api
 
 graphql/check:
-	npm i --global --force @graphql-inspector/ci @graphql-inspector/validate-command @graphql-inspector/graphql-loader @graphql-inspector/code-loader graphql
+	npm i --global --force @graphql-inspector/ci@3.4.0 @graphql-inspector/validate-command@3.4.0 @graphql-inspector/graphql-loader@3.4.0 @graphql-inspector/code-loader@3.4.0 graphql
 	graphql-inspector validate --noStrictFragments packages/ui/src/api packages/api/src/api/graphql/schemas/index.graphql
 	for f in packages/api/tests/queries/*.graphql; do \
 		graphql-inspector validate --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql; \
