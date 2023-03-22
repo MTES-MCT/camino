@@ -7,7 +7,7 @@ import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { CaminoDate, isBefore } from 'camino-common/src/date'
+import { CaminoDate, isBefore } from 'camino-common/src/date.js'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 
 /**

@@ -1,19 +1,19 @@
 /* eslint-disable camelcase */
-import '../../init'
+import '../../init.js'
 import { writeFileSync } from 'fs'
 
-import { knex } from '../../knex'
-import { TitrePhasesTest } from '../../business/rules/titre-phases-find.test'
-import { CaminoDate, getCurrent } from 'camino-common/src/date'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DemarcheId, ITitrePhase } from '../../types'
-import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-demarche-date-fin-duree-find'
-import { newDemarcheId } from '../../database/models/_format/id-create'
+import { knex } from '../../knex.js'
+import { TitrePhasesTest } from '../../business/rules/titre-phases-find.test.js'
+import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheId, ITitrePhase } from '../../types.js'
+import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-demarche-date-fin-duree-find.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
 
 const writePhasesForTest = async () => {
   const demarches: {
