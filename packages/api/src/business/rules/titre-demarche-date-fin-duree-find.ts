@@ -4,7 +4,7 @@ import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
-import { dateAddMonths, monthsBetween, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, dateAddMonths, monthsBetween, toCaminoDate } from 'camino-common/src/date.js'
 
 // entrée
 // - les démarches d'un titre
@@ -12,9 +12,9 @@ import { dateAddMonths, monthsBetween, toCaminoDate } from 'camino-common/src/da
 // sortie
 // - la date de fin de la démarche
 // - la durée cumulée depuis la date de fin précédemment enregistré dans la bdd
-const titreDemarcheDateFinAndDureeFind = (titreDemarches: TitreDemarchePhaseFind[], ordre: number) =>
+const titreDemarcheDateFinAndDureeFind = (titreDemarches: TitreDemarchePhaseFind[], ordre: number): { duree: number; dateFin: CaminoDate | null | undefined } =>
   titreDemarches.reduce(
-    ({ duree, dateFin }: { duree: number; dateFin: string | null | undefined }, titreDemarche) => {
+    ({ duree, dateFin }: { duree: number; dateFin: CaminoDate | null | undefined }, titreDemarche) => {
       if (!titreDemarche.etapes) return { duree, dateFin }
 
       // si
@@ -82,15 +82,7 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: TitreEtapePhaseFind[]) =>
   return titreEtapeDexFirst ? titreEtapeDexFirst.date : null
 }
 
-export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId'
-  | 'ordre'
-  | 'typeId'
-  | 'dateFin'
-  | 'duree'
-  | 'dateDebut'
-  | 'date'
-  | 'statutId'
-> & { points?: unknown[] }
+export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId'> & { points?: unknown[] | null }
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id'> & { etapes?: TitreEtapePhaseFind[] }
 
 // trouve la date de fin et la durée d'une démarche d'octroi

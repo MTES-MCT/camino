@@ -5,7 +5,6 @@ import { titrePhasesFind } from '../rules/titre-phases-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { getCurrent } from 'camino-common/src/date'
 
 // retourne une phase parmi les titrePhases en fonction de son id
 const titrePhaseEqualFind = (titreDemarcheId: string, titrePhases: ITitrePhase[]) => titrePhases.find(tp => tp.titreDemarcheId === titreDemarcheId)

@@ -12,10 +12,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheId, ITitrePhase } from '../../types'
-import {
-  TitreDemarchePhaseFind,
-  TitreEtapePhaseFind
-} from '../../business/rules/titre-demarche-date-fin-duree-find'
+import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-demarche-date-fin-duree-find'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 
 const writePhasesForTest = async () => {
@@ -65,7 +62,7 @@ const writePhasesForTest = async () => {
       acc[row.titre_id] = {
         titreTypeId: row.titre_type_id,
         demarches: [],
-        phases: []
+        phases: [],
       }
     }
 
@@ -82,7 +79,7 @@ const writePhasesForTest = async () => {
         dateDebut: etapeDb.date_debut,
         date: etapeDb.date,
         statutId: etapeDb.statut_id,
-        points: etapeDb.count > 0 ? [1, 2] : []
+        points: etapeDb.count > 0 ? [1, 2] : [],
       }))
 
     acc[row.titre_id].demarches.push({
@@ -90,7 +87,7 @@ const writePhasesForTest = async () => {
       ordre: row.ordre,
       typeId: row.demarche_type_id,
       id: fakeDemarcheId,
-      etapes
+      etapes,
     })
     if (row.phase_statut_id && row.date_debut && row.date_fin) {
       acc[row.titre_id].phases.push({
@@ -98,7 +95,7 @@ const writePhasesForTest = async () => {
         ordre: row.ordre,
         phaseStatutId: row.phase_statut_id,
         dateDebut: row.date_debut,
-        dateFin: row.date_fin
+        dateFin: row.date_fin,
       })
     }
 
@@ -110,22 +107,19 @@ const writePhasesForTest = async () => {
 
     return [
       titre.titreTypeId,
-      titre.demarches.sort((a, b) => a.ordre - b.ordre),
+      titre.demarches.sort((a, b) => (a.ordre ?? Infinity) - (b.ordre ?? Infinity)),
       titre.phases
         .sort((a, b) => a.ordre - b.ordre)
         .map(phase => {
-          delete phase.ordre
+          const { ordre: _, ...phaseWithoutOrdre } = phase
 
-          return phase
+          return phaseWithoutOrdre
         }),
-      getCurrent()
+      getCurrent(),
     ]
   })
 
-  writeFileSync(
-    `src/business/rules/titre-phases-find.cas.json`,
-    JSON.stringify(result)
-  )
+  writeFileSync(`src/business/rules/titre-phases-find.cas.json`, JSON.stringify(result))
 }
 
 writePhasesForTest()

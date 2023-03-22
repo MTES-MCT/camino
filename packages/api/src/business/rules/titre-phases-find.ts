@@ -7,7 +7,8 @@ import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, isBefore } from 'camino-common/src/date'
+import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -33,15 +34,15 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
   const titreDemarchesFiltered = titreDemarches.filter(titreDemarche => titreDemarchePhaseCheck(titreDemarche.typeId, titreDemarche.statutId!, titreTypeId, titreDemarche.etapes))
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
-  const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length && titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes)
+  const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
   return titreDemarchesFiltered.reduce((titrePhases: ITitrePhase[], titreDemarche, index) => {
-    let dateFin = titrePhaseDateFinFind(titreDemarchesFiltered, titreDemarche) as string
+    let dateFin = titrePhaseDateFinFind(titreDemarchesFiltered, titreDemarche)
 
     // si le titre contient une démarche d'annulation valide
     // et la date de fin de la phase est postérieure à la date d'annulation
     // alors la date de fin de la phase est la date d'annulation
-    if (titreDemarcheAnnulationDate && titreDemarcheAnnulationDate < dateFin) {
+    if ((titreDemarcheAnnulationDate && dateFin && isBefore(titreDemarcheAnnulationDate, dateFin)) || (titreDemarcheAnnulationDate && !dateFin)) {
       dateFin = titreDemarcheAnnulationDate
     }
 
@@ -55,7 +56,12 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
     // le statut est valide
     // sinon,
     // - le statut est échu
-    const phaseStatutId = dateFin < aujourdhui ? 'ech' : 'val'
+    let phaseStatutId: PhaseStatutId = 'val'
+    if (!dateFin) {
+      phaseStatutId = 'val'
+    } else {
+      phaseStatutId = isBefore(dateFin, aujourdhui) ? 'ech' : 'val'
+    }
 
     // TODO:
     // est ce qu'on doit vérifier si une date de début
@@ -72,7 +78,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
   }, [])
 }
 
-const titrePhaseDateDebutFind = (titreDemarche: TitreDemarchePhaseFind, titrePhases: ITitrePhase[], index: number, titreTypeId: TitreTypeId) => {
+const titrePhaseDateDebutFind = (titreDemarche: TitreDemarchePhaseFind, titrePhases: ITitrePhase[], index: number, titreTypeId: TitreTypeId): CaminoDate => {
   // si
   // - la démarche est un octroi
   if (isDemarcheTypeOctroi(titreDemarche.typeId)) {
@@ -90,7 +96,11 @@ const titrePhaseDateDebutFind = (titreDemarche: TitreDemarchePhaseFind, titrePha
 
   // si il y a une phase précédente
   if (phasePrevious) {
+    if (!phasePrevious.dateFin) {
+      throw new Error(`une phase précédente sans date de fin n'est pas possible ${titreDemarche.id}`)
+    }
     // la date de début est égale à la date de fin de l'étape précédente
+
     return phasePrevious.dateFin
   }
 

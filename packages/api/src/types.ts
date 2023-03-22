@@ -585,7 +585,7 @@ interface ITitrePhase {
   titreDemarcheId: DemarcheId
   phaseStatutId: PhaseStatutId
   dateDebut: CaminoDate
-  dateFin: CaminoDate
+  dateFin: CaminoDate | null | undefined
 }
 
 interface ITitrePoint {

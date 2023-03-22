@@ -16,6 +16,7 @@ import {
   checkValideAnnee,
   getMois,
   getDay,
+  isBefore,
 } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
@@ -149,4 +150,11 @@ test.each([
 test('setDayInMonth', () => {
   expect(setDayInMonth(toCaminoDate('2022-01-01'), 3)).toBe(toCaminoDate('2022-01-03'))
   expect(setDayInMonth(toCaminoDate('2022-01-31'), 3)).toBe(toCaminoDate('2022-01-03'))
+})
+
+test('isBefore', () => {
+  expect(isBefore(toCaminoDate('2022-01-01'), toCaminoDate('2022-01-03'))).toBe(true)
+  expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-03'))).toBe(false)
+  expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-31'))).toBe(false)
+  expect(isBefore(toCaminoDate('2022-01-31'), toCaminoDate('2022-01-01'))).toBe(false)
 })

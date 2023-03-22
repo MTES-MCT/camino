@@ -19,12 +19,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find'
 import titresProd from './titre-phases-find.cas.json'
 
-export type TitrePhasesTest = [
-  TitreTypeId,
-  TitreDemarchePhaseFind[],
-  ITitrePhase[],
-  CaminoDate
-]
+export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[], ITitrePhase[], CaminoDate]
 
 describe("phases d'une démarche", () => {
   const aujourdhui = toCaminoDate('2020-12-01')
@@ -391,7 +386,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: toCaminoDate('1968-01-24')
+            date: toCaminoDate('1968-01-24'),
           },
           {
             id: 'demarcheId1etapeId1',
@@ -399,9 +394,9 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: toCaminoDate('1968-01-13')
-          }
-        ]
+            date: toCaminoDate('1968-01-13'),
+          },
+        ],
       },
       {
         id: newDemarcheId('demarcheId2'),
@@ -417,7 +412,7 @@ describe("phases d'une démarche", () => {
             statutId: 'acc',
             ordre: 2,
             date: toCaminoDate('1981-09-13'),
-            dateFin: toCaminoDate('2031-09-13')
+            dateFin: toCaminoDate('2031-09-13'),
           },
           {
             id: 'demarcheId2EtapeId1',
@@ -425,10 +420,10 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: toCaminoDate('1981-09-09')
-          }
-        ]
-      }
+            date: toCaminoDate('1981-09-09'),
+          },
+        ],
+      },
     ]
     const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
@@ -439,14 +434,14 @@ describe("phases d'une démarche", () => {
         dateDebut: '1968-01-24',
         dateFin: '1981-09-13',
         phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1')
+        titreDemarcheId: newDemarcheId('demarcheId1'),
       },
       {
         dateDebut: '1981-09-13',
         dateFin: '2031-09-13',
         phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('demarcheId2')
-      }
+        titreDemarcheId: newDemarcheId('demarcheId2'),
+      },
     ])
   })
 
@@ -466,7 +461,7 @@ describe("phases d'une démarche", () => {
             statutId: 'acc',
             ordre: 2,
             date: toCaminoDate('2017-11-11'),
-            duree: 60
+            duree: 60,
           },
           {
             id: 'demarcheId1etapeId1',
@@ -474,9 +469,9 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: toCaminoDate('2017-11-06')
-          }
-        ]
+            date: toCaminoDate('2017-11-06'),
+          },
+        ],
       },
       {
         id: newDemarcheId('demarcheId2'),
@@ -492,10 +487,10 @@ describe("phases d'une démarche", () => {
             statutId: 'fai',
             ordre: 2,
             date: toCaminoDate('2022-07-08'),
-            duree: 60
-          }
-        ]
-      }
+            duree: 60,
+          },
+        ],
+      },
     ]
     const aujourdhui = toCaminoDate('2022-11-29')
     const titreTypeId = 'prw'
@@ -506,22 +501,20 @@ describe("phases d'une démarche", () => {
         dateDebut: '2017-11-11',
         dateFin: '2022-11-11',
         phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1')
+        titreDemarcheId: newDemarcheId('demarcheId1'),
       },
       {
         dateDebut: '2022-11-11',
         dateFin: null,
         phaseStatutId: 'mod',
-        titreDemarcheId: newDemarcheId('demarcheId2')
-      }
+        titreDemarcheId: newDemarcheId('demarcheId2'),
+      },
     ])
   })
-  test.each<TitrePhasesTest>(titresProd)(
-    'cas réel N°$id',
-    (titreTypeId, demarches, phases, date) => {
-      expect(titrePhasesFind(demarches, date, titreTypeId)).toStrictEqual(
-        phases
-      )
-    }
-  )
+  test('cas réels', () => {
+    const phasesReels = titresProd as TitrePhasesTest[]
+    phasesReels.forEach(([titreTypeId, demarches, phases, date], index) => {
+      expect(titrePhasesFind(demarches, date, titreTypeId), `test N*${index}`).toStrictEqual(phases)
+    })
+  })
 })

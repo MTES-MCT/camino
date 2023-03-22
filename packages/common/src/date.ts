@@ -9,6 +9,10 @@ export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
   return datesDiffInDays(new Date(a), new Date(b))
 }
 
+export const isBefore = (a: CaminoDate, b: CaminoDate): boolean => {
+  return a < b
+}
+
 export type CaminoDate = string & { __camino: 'Date' }
 export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 

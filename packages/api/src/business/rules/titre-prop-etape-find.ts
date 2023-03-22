@@ -109,7 +109,7 @@ const demarcheEligibleCheck = (titreDemarcheStatutId: DemarcheStatutId, titreDem
  * @returns id d'une etape
  */
 
-const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
+export const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
   const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
@@ -135,7 +135,7 @@ const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche
  * @returns une étape ou null
  */
 
-const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
+export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
   const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
@@ -151,5 +151,3 @@ const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreD
 
   return titreEtape
 }
-
-export { titrePropTitreEtapeFind, titreContenuTitreEtapeFind }

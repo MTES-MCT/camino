@@ -4,8 +4,9 @@ import { titreActivitesBuild } from './titre-activites-build.js'
 
 import { titreActivitesGra, titreActivitesGrp, activiteTypeGra, activiteTypeGrp, titreDemarches } from './__mocks__/titre-activites-build-titres.js'
 import { describe, expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 describe("construction des activités d'un titre", () => {
-  const aujourdhui = '2021-01-01'
+  const aujourdhui = toCaminoDate('2021-01-01')
 
   test("ne crée pas d'activité pour un titre qui n'a pas de phase de démarches", () => {
     const titreActivites1 = titreActivitesBuild(activiteTypeGrp, [2020], aujourdhui, 'titre-id', 'pxm', undefined)

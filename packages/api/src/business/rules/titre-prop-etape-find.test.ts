@@ -117,8 +117,8 @@ describe("id de l'étape qui a un contenu", () => {
           titreId: 'titre-id',
           typeId: 'pro',
           phase: {
-            dateDebut: '2020-01-01',
-            dateFin: '2020-01-02',
+            dateDebut: toCaminoDate('2020-01-01'),
+            dateFin: toCaminoDate('2020-01-02'),
             phaseStatutId: 'val',
             titreDemarcheId: newDemarcheId('demarche-id'),
           },
@@ -133,7 +133,7 @@ describe("id de l'étape qui a un contenu", () => {
             },
           ],
         },
-      ] as ITitreDemarche[],
+      ],
       'mod'
     )
 
