@@ -75,12 +75,12 @@ describe("phases d'une démarche", () => {
     expect(titrePhasesFind(titreDemarchesOctProlongation, aujourdhui, 'cxh')).toEqual([
       {
         dateDebut: '2200-01-01',
-        dateFin: '2500-01-01',
+        dateFin: '2300-01-02',
         phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
       {
-        dateDebut: '2500-01-01',
+        dateDebut: '2300-01-02',
         dateFin: '3000-01-01',
         phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
@@ -506,7 +506,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2022-11-11',
         dateFin: null,
-        phaseStatutId: 'mod',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('demarcheId2'),
       },
     ])
@@ -518,4 +518,31 @@ describe("phases d'une démarche", () => {
       expect(titrePhasesFind(demarches, date, titreTypeId), `test N*${index}`).toStrictEqual(phases)
     })
   })
+
+  // test('cas réels2', () => {
+  //   const phasesReels = titresProd as TitrePhasesTest[]
+
+  //   phasesReels.forEach(([titreTypeId, demarches, phases, date], index) => {
+
+  //     if (phases.length) {
+
+  //       const firstPhase = phases[0]
+  //       const demarche = demarches.find(({id}) => id === firstPhase.titreDemarcheId)!
+
+  //       expect(isDemarcheTypeOctroi(demarche.typeId)).toBe(true)
+  //     }
+
+  //     // if (phases.length && index !== 3325) {
+
+  //     //   const totalJours = daysBetween(phases[0].dateDebut, phases[phases.length -1].dateFin!)
+
+  //     //   let total2 = 0
+  //     //   phases.forEach((p, i) => {
+  //     //     total2 += daysBetween(p.dateDebut, p.dateFin!)
+  //     //   })
+
+  //     //   expect(totalJours, `plop ${index} ${demarches[0].id}`).toStrictEqual(total2)
+  //     // }
+  //   })
+  // })
 })

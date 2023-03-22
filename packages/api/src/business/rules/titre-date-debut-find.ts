@@ -1,6 +1,6 @@
 import { ITitreDemarche } from '../../types.js'
 
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre, titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
@@ -36,7 +36,7 @@ const titreDemarcheDateDebutFind = (titreDemarche: ITitreDemarche, titreTypeId: 
 
 export const titreDateDebutFind = (titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // la première démarche d'octroi dont le statut est acceptée ou terminée
-  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches) as ITitreDemarche[]
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches) as ITitreDemarche[]
   const titreDemarche = titreDemarchesSorted.find(titreDemarche => ['acc', 'ter'].includes(titreDemarche.statutId!) && isDemarcheTypeOctroi(titreDemarche.typeId))
 
   if (!titreDemarche) return null

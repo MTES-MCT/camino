@@ -9,7 +9,7 @@ import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresS
 import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types.js'
 
 import { propValueFind } from '../utils/prop-value-find.js'
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 
 const etapeAmodiataireFind = (titreEtape: ITitreEtape, titreDemarches: ITitreDemarche[]) => {
@@ -110,7 +110,7 @@ const demarcheEligibleCheck = (titreDemarcheStatutId: DemarcheStatutId, titreDem
  */
 
 export const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
-  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
     // si une étape a déjà été trouvée
@@ -136,7 +136,7 @@ export const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreD
  */
 
 export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
-  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
     // si une étape a déjà été trouvée

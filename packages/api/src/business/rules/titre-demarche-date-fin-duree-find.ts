@@ -135,6 +135,32 @@ const titreDemarcheOctroiDateFinAndDureeFind = (dureeAcc: number, titreEtapes: T
 
 // entrées:
 // - les étapes d'une démarche
+// retourne
+// - dateFin: la date de fin de la démarche si définie, sinon null
+// - duree
+export const newTitreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
+  // la dernière étape
+  // - dont le type est décision express (dex)
+  //   ou decision de publication au JORF (dpu)
+  //   ou publication au recueil des actes administratifs de la préfecture (rpu)
+  // - qui possède une date de fin ou durée
+  const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
+  const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(typeId) && (dateFin || duree))
+
+  if (!titreEtapeHasDateFinOrDuree) {
+    return { dateFin: null, duree: 0 }
+  }
+
+  const { dateFin, duree } = titreEtapeHasDateFinOrDuree
+
+  return {
+    duree: duree ?? 0,
+    dateFin,
+  }
+}
+
+// entrées:
+// - les étapes d'une démarche
 // - la durée cumulée
 // retourne
 // - dateFin: la date de fin de la démarche si définie, sinon null

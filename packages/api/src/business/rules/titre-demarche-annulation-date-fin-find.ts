@@ -30,5 +30,5 @@ export const titreDemarcheAnnulationDateFinFind = (titreEtapes: TitreEtapePhaseF
   const etapeAnnulation = titreEtapesSortAscByOrdre(titreEtapes).find(etapeAnnulationValideCheck)
 
   // la date de fin est la date de l'étape
-  return etapeAnnulation?.date ? etapeAnnulation.date : null
+  return etapeAnnulation?.date ?? null
 }

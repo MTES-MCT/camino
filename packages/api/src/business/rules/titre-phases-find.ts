@@ -1,14 +1,17 @@
 import { ITitrePhase } from '../../types.js'
 
-import titreDemarcheDateFinAndDureeFind, { TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find.js'
+import titreDemarcheDateFinAndDureeFind, { newTitreDemarcheNormaleDateFinAndDureeFind, TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find.js'
 import { titreDemarchePhaseCheck } from './titre-demarche-phase-check.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
-import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { CaminoDate, isBefore } from 'camino-common/src/date.js'
+import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date.js'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -23,16 +26,11 @@ const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =
     titreDemarche => ['acc', 'ter'].includes(titreDemarche.statutId!) && (titreDemarche.typeId === 'ret' || (titreDemarche.typeId === 'ren' && !titreDemarche.etapes!.find(te => te.points?.length)))
   )
 
-/**
- * Retourne les phases d'un titre
- * @param titreDemarches - démarches d'un titre
- * @param aujourdhui - date du jour
- * @param titreTypeId - id du type de titre
- */
-export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
+export const titrePhasesFindOld = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
   // filtre les démarches qui donnent lieu à des phases
   const titreDemarchesFiltered = titreDemarches.filter(titreDemarche => titreDemarchePhaseCheck(titreDemarche.typeId, titreDemarche.statutId!, titreTypeId, titreDemarche.etapes))
 
+  // FIXME ça devrait nous exploser dessus, car on ne l’a pas fait pour le moment
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
   const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
@@ -78,6 +76,153 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
   }, [])
 }
 
+const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId): CaminoDate | null => {
+  let dateDebut = null
+  if (!demarche.etapes?.length) {
+    return null
+  }
+
+  // on trie les étapes de façon ascendante pour le cas où
+  // il existe une étape de publication et une étape rectificative,
+  // on prend alors en compte l'originale
+  const etapePublicationFirst = titreEtapesSortAscByOrdre(demarche.etapes).find(etape => titreEtapePublicationCheck(etape.typeId, titreTypeId))
+  if (etapePublicationFirst && [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT].includes(etapePublicationFirst.statutId)) {
+    // retourne l’étape de publication la plus récente avec une date de début spécifiée
+    const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(demarche.etapes).find(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && titreEtape.dateDebut)
+
+    if (etapePublicationHasDateDebut?.dateDebut) {
+      dateDebut = etapePublicationHasDateDebut.dateDebut
+    } else {
+      // retourne la première étape de publication de la démarche
+      const titreEtapePublicationFirst = titreEtapesSortAscByOrdre(demarche.etapes).find(te => titreEtapePublicationCheck(te.typeId, titreTypeId))
+
+      if (!titreEtapePublicationFirst) {
+        return null
+      }
+      // sinon la date de début est égale à la date de la première étape de publication
+      dateDebut = titreEtapePublicationFirst.date
+    }
+  }
+
+  return dateDebut
+}
+/**
+ * Retourne les phases d'un titre
+ * @param titreDemarches - démarches d'un titre
+ * @param aujourdhui - date du jour
+ * @param titreTypeId - id du type de titre
+ */
+export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
+  // On parcourt les démarches dans l’ordre chronologique
+  const sortedDemarches = titreDemarcheSortAsc(titreDemarches)
+
+  const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
+  const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
+
+  const filteredDemarches = sortedDemarches.filter(demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree)))
+
+  const phases = filteredDemarches.reduce<Omit<ITitrePhase, 'phaseStatutId'>[]>((acc, demarche) => {
+    if (!demarche.etapes?.length) {
+      return acc
+    }
+    const isFirstPhase = acc.length === 0
+    let dateDebut: CaminoDate | null | undefined = findDateDebut(demarche, titreTypeId)
+
+    if (isFirstPhase) {
+      if (!isDemarcheTypeOctroi(demarche.typeId)) {
+        return acc
+      }
+
+      if (dateDebut) {
+        const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
+        if (dateFin) {
+          acc.push({
+            dateDebut,
+            dateFin,
+            titreDemarcheId: demarche.id,
+          })
+        } else if (duree) {
+          acc.push({
+            dateDebut,
+            dateFin: dateAddMonths(dateDebut, duree),
+            titreDemarcheId: demarche.id,
+          })
+        } else {
+          // si il n'y a pas de durée,
+          // la date de fin par défaut est fixée au 31 décembre 2018,
+          // selon l'article L144-4 du code minier :
+          // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
+          acc.push({
+            dateDebut,
+            dateFin: toCaminoDate('2018-12-31'),
+            titreDemarcheId: demarche.id,
+          })
+        }
+      }
+
+      return acc
+    } else {
+      if (!dateDebut) {
+        dateDebut = acc[acc.length - 1].dateFin
+      } else {
+        acc[acc.length - 1].dateFin = dateDebut
+      }
+      if (!dateDebut) {
+        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.id}`)
+      }
+      const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
+      if (dateFin) {
+        acc.push({
+          dateDebut,
+          dateFin,
+          titreDemarcheId: demarche.id,
+        })
+      } else if (duree) {
+        acc.push({
+          dateDebut,
+          dateFin: dateAddMonths(dateDebut, duree),
+          titreDemarcheId: demarche.id,
+        })
+      } else {
+        // TODO 2023-03-22 : Questions posées au métier sur ces démarches
+        if (['8H4rwTWHi1LFJV67Yywi3U51'].includes(demarche.id)) {
+          return acc
+        }
+        // c'est quoi un cas en survie provisoire
+        if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose].includes(demarche.statutId)) {
+          acc.push({
+            dateDebut,
+            dateFin: null,
+            titreDemarcheId: demarche.id,
+          })
+        }
+      }
+    }
+
+    return acc
+  }, [])
+
+  return phases.map<ITitrePhase>(p => {
+    // si
+    // - la date du jour est plus récente que la date de fin
+    // le statut est valide
+    // sinon,
+    // - le statut est échu
+    let phaseStatutId: PhaseStatutId = 'val'
+    if (!p.dateFin) {
+      phaseStatutId = 'val'
+    } else {
+      phaseStatutId = isBefore(p.dateFin, aujourdhui) ? 'ech' : 'val'
+    }
+
+    if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
+      p.dateFin = titreDemarcheAnnulationDate
+    }
+
+    return { ...p, phaseStatutId }
+  })
+}
+
 const titrePhaseDateDebutFind = (titreDemarche: TitreDemarchePhaseFind, titrePhases: ITitrePhase[], index: number, titreTypeId: TitreTypeId): CaminoDate => {
   // si
   // - la démarche est un octroi
@@ -113,8 +258,6 @@ const titrePhaseDateDebutFind = (titreDemarche: TitreDemarchePhaseFind, titrePha
 
 // trouve la date de fin d'une phase
 // in:
-// - titreDemarches: toutes les démarches du titre,
-//   utile pour trouver la date de fin en cas d'annulation
 // - titreDemarchesFiltered: uniquement les démarches
 //   d'un titre qui donnent lieu à des phases
 // - titreDemarche: la démarche dont on cherche la date de fin

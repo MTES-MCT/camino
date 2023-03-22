@@ -1,7 +1,6 @@
 import {
   anneePrecedente,
   anneeSuivante,
-  datesDiffInDays,
   daysBetween,
   getAnnee,
   isAnnee,
@@ -19,14 +18,6 @@ import {
   isBefore,
 } from './date.js'
 import { test, expect } from 'vitest'
-test.each([
-  ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],
-  ['2021-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 1],
-  ['2021-06-02T13:35:11.366Z', '2021-06-02T13:40:11.366Z', 0],
-  ['2021-06-02T13:35:11.366Z', '2021-06-03T11:30:11.366Z', 0],
-])('calcul le nombre de jours entre 2 dates', (date1, date2, days) => {
-  expect(datesDiffInDays(new Date(date1), new Date(date2))).toBe(days)
-})
 
 test('toCaminoDate', () => {
   expect(() => toCaminoDate('123123')).toThrowError()
@@ -85,6 +76,10 @@ test('daysBetween', () => {
   expect(daysBetween(toCaminoDate('2020-01-02'), toCaminoDate('2021-01-02'))).toBe(366)
   expect(daysBetween(toCaminoDate('2021-01-02'), toCaminoDate('2022-01-02'))).toBe(365)
   expect(daysBetween(toCaminoDate('2021-01-02'), toCaminoDate('2021-01-01'))).toBe(-1)
+
+  expect(daysBetween(toCaminoDate('2012-09-14'), toCaminoDate('2013-05-13'))).toBe(241)
+  expect(daysBetween(toCaminoDate('2012-09-14'), toCaminoDate('2013-01-14'))).toBe(122)
+  expect(daysBetween(toCaminoDate('2013-01-14'), toCaminoDate('2013-05-13'))).toBe(119)
 })
 test('anneeSuivante', () => {
   expect(anneeSuivante(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2023'))

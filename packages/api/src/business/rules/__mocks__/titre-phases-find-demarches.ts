@@ -127,7 +127,7 @@ export const titreDemarchesOctProlongation: TitreDemarchePhaseFind[] = [
         typeId: 'dpu',
         statutId: 'acc',
         ordre: 2,
-        date: toCaminoDate('2019-01-02'),
+        date: toCaminoDate('2300-01-02'),
         dateFin: toCaminoDate('3000-01-01'),
       },
       {
@@ -135,7 +135,7 @@ export const titreDemarchesOctProlongation: TitreDemarchePhaseFind[] = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: toCaminoDate('2019-01-02'),
+        date: toCaminoDate('2300-01-02'),
         dateFin: toCaminoDate('3000-01-01'),
       },
     ],

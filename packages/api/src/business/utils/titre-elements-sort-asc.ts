@@ -1,9 +1,10 @@
 // classe les démarches selon la date de leur première étape
 // puis par ordre si les dates sont identiques
-import { ITitreDemarche } from '../../types.js'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
 
-const titreDemarcheSortAsc = (titreElements: ITitreDemarche[]) =>
+export const titreDemarcheSortAsc = <T extends Pick<ITitreDemarche, 'typeId' | 'ordre'> & { etapes?: Pick<ITitreEtape, 'ordre' | 'date'>[] }>(titreElements: T[]): T[] =>
   titreElements.slice().sort((a, b) => {
     const aHasEtapes = a.etapes && a.etapes.length
     const bHasEtapes = b.etapes && b.etapes.length
@@ -13,7 +14,10 @@ const titreDemarcheSortAsc = (titreElements: ITitreDemarche[]) =>
     if (aHasEtapes && !bHasEtapes) return -1
 
     if (!aHasEtapes && !bHasEtapes) {
-      return ((a.type && a.type.ordre) || Infinity) - ((b.type && b.type.ordre) || Infinity)
+      const aType = DemarchesTypes[a.typeId]
+      const bType = DemarchesTypes[b.typeId]
+
+      return aType.ordre - bType.ordre
     }
 
     const dateA = titreEtapesSortAscByOrdre(a.etapes!)[0].date
@@ -22,5 +26,3 @@ const titreDemarcheSortAsc = (titreElements: ITitreDemarche[]) =>
     // TODO: supprimer les ! sur ordre
     return dateA < dateB ? -1 : dateA > dateB ? 1 : a.ordre! - b.ordre!
   })
-
-export default titreDemarcheSortAsc
