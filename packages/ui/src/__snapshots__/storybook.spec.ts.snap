@@ -10561,6 +10561,12 @@ exports[`Storybook Tests > 'Components/common/Downloads' > 'Default' 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/common/Nom' > 'AlreadyUppercase' 1`] = `"<p class=\\"h6 bold mb-0\\">Nom minuscule</p>"`;
+
+exports[`Storybook Tests > 'Components/common/Nom' > 'Default' 1`] = `"<p class=\\"h6 bold mb-0\\">Indéfini</p>"`;
+
+exports[`Storybook Tests > 'Components/common/Nom' > 'Lowercase' 1`] = `"<p class=\\"h6 bold mb-0\\">Nom minuscule</p>"`;
+
 exports[`Storybook Tests > 'Components/common/OldSectionElement' > 'AucunFichier' 1`] = `
 "<div class=\\"tablet-blobs\\">
   <div class=\\"tablet-blob-1-4\\">

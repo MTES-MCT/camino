@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import Nom from '../_common/nom.vue'
+import { Nom } from '../_common/nom'
 import { Statut } from '../_common/statut'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
 import List from '../_ui/list.vue'
