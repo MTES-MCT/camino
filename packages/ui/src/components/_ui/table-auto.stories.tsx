@@ -1,9 +1,9 @@
 import { Column, TableAuto } from './table-auto'
 import { Meta, Story } from '@storybook/vue3'
 import { markRaw } from 'vue'
-import TitreNom from '../_common/titre-nom.vue'
+import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
-import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
+import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { TableRow } from './table'
 
@@ -66,8 +66,8 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
       },
       type: {
         component: markRaw(TitreTypeTypeNom),
-        props: { nom: 'Autorisation de recherches' },
-        value: 'Autorisation de recherches',
+        props: { titreTypeId: 'arm' },
+        value: 'arm',
       },
       statut: {
         component: markRaw(Statut),
