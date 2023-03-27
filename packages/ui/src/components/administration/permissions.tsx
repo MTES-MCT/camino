@@ -28,6 +28,7 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
 
   onMounted(async () => {
     try {
+      // TODO 2023-03-27 utiliser le common
       administrationMetas.value = {
         status: 'LOADED',
         value: await props.apiClient.administrationMetas(props.administrationId),

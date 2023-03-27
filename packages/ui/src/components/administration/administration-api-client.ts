@@ -69,7 +69,7 @@ export const administrationApiClient: AdministrationApiClient = {
     `)({ id: administrationId }),
 
   administrationUtilisateurs: async (administrationId: AdministrationId) => {
-    const { utilisateurs } = await apiGraphQLFetch(gql`
+    const result = await apiGraphQLFetch(gql`
       query AdministrationUtilisateurs($id: ID!) {
         administration(id: $id) {
           utilisateurs {
@@ -88,7 +88,7 @@ export const administrationApiClient: AdministrationApiClient = {
     `)({
       id: administrationId,
     })
-    return utilisateurs
+    return result ? result.utilisateurs : []
   },
   administrationActiviteTypeEmailUpdate: async (
     activiteTypeEmail: ActiviteTypeEmail & {
