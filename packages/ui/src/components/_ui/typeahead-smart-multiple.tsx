@@ -1,6 +1,7 @@
 import { onMounted, ref, watch, Ref } from 'vue'
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { levenshtein } from 'camino-common/src/strings'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export type Element<T extends string> = { id: T; nom: string }
@@ -84,8 +85,23 @@ const GenericTypeAheadSmartMultiple = <ID extends string>() =>
         // TODO 2022-04-08: ceci est pour le composant parent, pour la traduction notamment (sinon, pour un titreId par exemple, le label est son ID au lieu du nom du titre).
         // C'est étrange, il va falloir corriger tout ça un jour
         props.filter.elements = [...Object.values(allKnownItems.value)]
+      } else if (!value.length) {
+        items.value = props.filter.elements
       } else {
-        items.value = props.filter.elements.filter(item => item.nom.toLowerCase().includes(value.toLowerCase()) || selectedItems.value.some(({ id }) => id === item.id))
+        items.value = props.filter.elements
+          .filter(item => item.nom.toLowerCase().includes(value.toLowerCase()) || selectedItems.value.some(({ id }) => id === item.id))
+          .sort((a, b) => {
+            let aLabel = a.nom
+            if (!a.nom.toLowerCase().includes(value.toLowerCase())) {
+              aLabel = a.id
+            }
+            let bLabel = b.nom
+            if (!b.nom.toLowerCase().includes(value.toLowerCase())) {
+              bLabel = b.id
+            }
+
+            return levenshtein(aLabel.toLowerCase(), value.toLowerCase()) - levenshtein(bLabel.toLowerCase(), value.toLowerCase())
+          })
       }
     }
 
