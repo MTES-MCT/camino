@@ -83,7 +83,7 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: TitreEtapePhaseFind[]) =>
 }
 
 export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId'> & { points?: unknown[] | null }
-export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id'> & { etapes?: TitreEtapePhaseFind[] }
+export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId'> & { etapes?: TitreEtapePhaseFind[] }
 
 // trouve la date de fin et la durée d'une démarche d'octroi
 const titreDemarcheOctroiDateFinAndDureeFind = (dureeAcc: number, titreEtapes: TitreEtapePhaseFind[]) => {

@@ -12,7 +12,7 @@ import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-
+const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
  * trouve une démarche acceptée ou terminée qui est
  * - un retrait
@@ -76,7 +76,7 @@ export const titrePhasesFindOld = (titreDemarches: TitreDemarchePhaseFind[], auj
   }, [])
 }
 
-const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId): CaminoDate | null => {
+const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId, isEtapeDateEnough: boolean): CaminoDate | null => {
   let dateDebut = null
   if (!demarche.etapes?.length) {
     return null
@@ -99,8 +99,10 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
       if (!titreEtapePublicationFirst) {
         return null
       }
-      // sinon la date de début est égale à la date de la première étape de publication
-      dateDebut = titreEtapePublicationFirst.date
+      if (isEtapeDateEnough) {
+        // sinon la date de début est égale à la date de la première étape de publication
+        dateDebut = titreEtapePublicationFirst.date
+      }
     }
   }
 
@@ -126,7 +128,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
       return acc
     }
     const isFirstPhase = acc.length === 0
-    let dateDebut: CaminoDate | null | undefined = findDateDebut(demarche, titreTypeId)
+    let dateDebut: CaminoDate | null | undefined = findDateDebut(demarche, titreTypeId, isFirstPhase || acc[acc.length - 1].dateFin === null)
 
     if (isFirstPhase) {
       if (!isDemarcheTypeOctroi(demarche.typeId)) {
@@ -154,7 +156,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
           // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
           acc.push({
             dateDebut,
-            dateFin: toCaminoDate('2018-12-31'),
+            dateFin: null,
             titreDemarcheId: demarche.id,
           })
         }
@@ -168,7 +170,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
         acc[acc.length - 1].dateFin = dateDebut
       }
       if (!dateDebut) {
-        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.id}`)
+        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.titreId}`)
       }
       const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
       if (dateFin) {
@@ -202,7 +204,17 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
     return acc
   }, [])
 
-  return phases.map<ITitrePhase>(p => {
+  return phases.map<ITitrePhase>((p, index) => {
+    if (p.dateFin === null && index === 0) {
+      // si il n'y a pas de durée,
+      // la date de fin par défaut est fixée au 31 décembre 2018,
+      // selon l'article L144-4 du code minier :
+      // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
+      p.dateFin = DATE_PAR_DEFAUT_TITRE_INFINI
+    }
+    if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
+      p.dateFin = titreDemarcheAnnulationDate
+    }
     // si
     // - la date du jour est plus récente que la date de fin
     // le statut est valide
@@ -213,10 +225,6 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
       phaseStatutId = 'val'
     } else {
       phaseStatutId = isBefore(p.dateFin, aujourdhui) ? 'ech' : 'val'
-    }
-
-    if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
-      p.dateFin = titreDemarcheAnnulationDate
     }
 
     return { ...p, phaseStatutId }

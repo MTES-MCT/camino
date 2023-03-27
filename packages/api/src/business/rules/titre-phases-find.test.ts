@@ -75,12 +75,12 @@ describe("phases d'une démarche", () => {
     expect(titrePhasesFind(titreDemarchesOctProlongation, aujourdhui, 'cxh')).toEqual([
       {
         dateDebut: '2200-01-01',
-        dateFin: '2300-01-02',
+        dateFin: '2500-01-01',
         phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
       {
-        dateDebut: '2300-01-02',
+        dateDebut: '2500-01-01',
         dateFin: '3000-01-01',
         phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
@@ -106,6 +106,348 @@ describe("phases d'une démarche", () => {
         dateFin: '2020-01-02',
         phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+      },
+    ])
+  })
+
+  test.only('cas sans date de fin et avec plein de css', () => {
+    const titreId = 'titreId'
+    const demarcheId1 = newDemarcheId('demarcheId1')
+    const demarcheId2 = newDemarcheId('demarcheId2')
+    const demarcheId3 = newDemarcheId('demarcheId3')
+    const demarcheId4 = newDemarcheId('demarcheId4')
+    const demarcheId5 = newDemarcheId('demarcheId5')
+    const demarcheId6 = newDemarcheId('demarcheId6')
+    const demarcheId7 = newDemarcheId('demarcheId7')
+    const demarcheId8 = newDemarcheId('demarcheId8')
+    const demarcheId9 = newDemarcheId('demarcheId9')
+    const demarcheId10 = newDemarcheId('demarcheId10')
+    const demarcheId11 = newDemarcheId('demarcheId11')
+    const demarches: ITitreDemarche[] = [
+      {
+        titreId,
+        id: demarcheId1,
+        ordre: 11,
+        typeId: 'mut',
+        statutId: 'cls',
+        phase: null,
+        etapes: [
+          {
+            titreDemarcheId: demarcheId1,
+            id: 'bAJOz7SkIQUd0p5tbeYe65c8',
+            ordre: 2,
+            date: toCaminoDate('2016-12-28'),
+            typeId: 'mdp',
+            statutId: 'fai',
+          },
+          {
+            titreDemarcheId: demarcheId1,
+
+            id: 'N19wuF9GOR3JDObopOysjmmZ',
+            ordre: 3,
+            date: toCaminoDate('2017-04-07'),
+            typeId: 'css',
+            statutId: 'fai',
+          },
+          {
+            titreDemarcheId: demarcheId1,
+            id: 's7OPm0JfMGd3ozHCTqPJiV6p',
+            ordre: 1,
+            date: toCaminoDate('2016-12-28'),
+            duree: 1920,
+            surface: 5.51,
+            typeId: 'mfr',
+            statutId: 'fai',
+          },
+        ],
+      },
+      {
+        id: demarcheId2,
+        titreId,
+        ordre: 10,
+        typeId: 'pro',
+        statutId: 'cls',
+        etapes: [
+          {
+            titreDemarcheId: demarcheId2,
+            id: '80FAfJsE18RNEeNCecqXNvDK',
+            ordre: 1,
+            date: toCaminoDate('2016-12-28'),
+            duree: 1920,
+            surface: 5.51,
+            typeId: 'mfr',
+            statutId: 'fai',
+          },
+          {
+            titreDemarcheId: demarcheId2,
+            id: 'dDGkGPzkC9Jol5RKn9fYsWdz',
+            ordre: 2,
+            date: toCaminoDate('2016-12-28'),
+            typeId: 'mdp',
+            statutId: 'fai',
+          },
+          {
+            titreDemarcheId: demarcheId2,
+            id: 'OfR06NfOvY36WnNDrrM5RukR',
+            ordre: 3,
+            date: toCaminoDate('2017-04-07'),
+            typeId: 'css',
+            statutId: 'fai',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId3,
+        ordre: 9,
+        typeId: 'dam',
+        statutId: 'ins',
+        phase: null,
+        etapes: [
+          {
+            id: '93tqyOrYrHA2uGKxemd1kdqY',
+            titreDemarcheId: demarcheId3,
+            ordre: 3,
+            date: toCaminoDate('2014-12-23'),
+            typeId: 'wpp',
+            statutId: 'fai',
+          },
+          {
+            id: 'aDG8rxlONOi4Fgt7TsJ95UNr',
+            titreDemarcheId: demarcheId3,
+
+            ordre: 1,
+            date: toCaminoDate('2013-08-01'),
+            typeId: 'wfd',
+            statutId: 'fai',
+          },
+          {
+            id: 'OvHwWwDwKOUbJb6GWaA3UPCo',
+            titreDemarcheId: demarcheId3,
+
+            ordre: 2,
+            date: toCaminoDate('2014-08-25'),
+            typeId: 'wre',
+            statutId: 'fav',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId4,
+        ordre: 8,
+        typeId: 'mut',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: '7tgscsFImQq6MS4EPc2trBtn',
+            titreDemarcheId: demarcheId4,
+            ordre: 1,
+            date: toCaminoDate('2002-12-24'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            titreDemarcheId: demarcheId4,
+            id: 'vIdHWOJWuzWNoqjfbj6cKSnq',
+            ordre: 2,
+            date: toCaminoDate('2003-01-08'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId5,
+        ordre: 7,
+        typeId: 'mut',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: '0sYAar16yTmRD3yTGeZ6DYx8',
+            titreDemarcheId: demarcheId5,
+            ordre: 1,
+            date: toCaminoDate('2000-09-26'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            id: 'lkZgiFXEcAnUZYWrM1faAOID',
+            titreDemarcheId: demarcheId5,
+            ordre: 2,
+            date: toCaminoDate('2000-10-06'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId6,
+        ordre: 6,
+        typeId: 'mut',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: 'id',
+            titreDemarcheId: demarcheId6,
+            ordre: 1,
+            date: toCaminoDate('1975-11-24'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            id: 'ObPfVRJW7Ph9774dpZFwyD5b',
+            titreDemarcheId: demarcheId6,
+            ordre: 2,
+            date: toCaminoDate('1975-11-27'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId7,
+        ordre: 5,
+        typeId: 'mut',
+
+        statutId: 'acc',
+        etapes: [
+          {
+            id: 'BNZD1Vw8mSmjAXdPbSvt4OZ3',
+            titreDemarcheId: demarcheId7,
+            ordre: 1,
+            date: toCaminoDate('1970-11-16'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            id: 'vicqAbgX5O4KnUkZ8u75s49n',
+            titreDemarcheId: demarcheId7,
+            ordre: 2,
+            date: toCaminoDate('1970-11-19'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId8,
+        ordre: 4,
+        typeId: 'mut',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: 'bNZRuyDtmIFzoG9vZBXDHufS',
+            titreDemarcheId: demarcheId8,
+            ordre: 2,
+            date: toCaminoDate('1949-08-31'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+          {
+            id: 'c5jGB0GNLxst5Lsr31hQfIue',
+            titreDemarcheId: demarcheId8,
+            ordre: 1,
+            date: toCaminoDate('1949-08-23'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId9,
+        ordre: 3,
+        typeId: 'exp',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: '0wPBYbyJYX8I6KVf3Zudcab6',
+            titreDemarcheId: demarcheId9,
+            ordre: 1,
+            date: toCaminoDate('1889-02-27'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            id: '2fADRG4Q60FHkVLTWYE2YBx8',
+            titreDemarcheId: demarcheId9,
+            ordre: 2,
+            date: toCaminoDate('1889-02-27'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId10,
+        ordre: 2,
+        typeId: 'exp',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: 'AFQBjL1kNnEF5BCa0khmZTsX',
+            titreDemarcheId: demarcheId10,
+            ordre: 2,
+            date: toCaminoDate('1879-11-14'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+          {
+            id: 'qjOsKtFzOedVJxAwxER6F2CA',
+            titreDemarcheId: demarcheId10,
+            ordre: 1,
+            date: toCaminoDate('1879-07-26'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheId11,
+        ordre: 1,
+        typeId: 'oct',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: '0ISZxJOGL7gcuD6T871h7G5u',
+            titreDemarcheId: demarcheId11,
+            ordre: 1,
+            date: toCaminoDate('1858-03-24'),
+            typeId: 'dex',
+            statutId: 'acc',
+          },
+          {
+            id: 'dYY5ieiq9ZLYLEgIBYHT9QYL',
+            titreDemarcheId: demarcheId11,
+            ordre: 2,
+            date: toCaminoDate('1858-03-24'),
+            typeId: 'dpu',
+            statutId: 'acc',
+          },
+        ],
+      },
+    ]
+
+    const tested = titrePhasesFind(demarches, aujourdhui, 'cxm')
+    expect(tested).toStrictEqual([
+      {
+        dateDebut: '1970-09-17',
+        dateFin: '1994-10-18',
+        phaseStatutId: 'ech',
+        titreDemarcheId: newDemarcheId('demarcheId1'),
+      },
+      {
+        dateDebut: '1994-10-18',
+        dateFin: '2022-05-09',
+        phaseStatutId: 'val',
+        titreDemarcheId: newDemarcheId('demarcheId2'),
       },
     ])
   })

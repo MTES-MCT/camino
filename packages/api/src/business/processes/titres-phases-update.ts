@@ -103,7 +103,7 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     if (titrePhasesToUpdate.length) {
       await titrePhasesUpsert(titrePhasesToUpdate)
 
-      console.info('titre / démarche / phases (mise à jour) ->', JSON.stringify(titrePhasesToUpdate))
+      console.info(`titre (https://camino.beta.gouv.fr/titres/${titre.slug}) / démarche / phases (mise à jour) ->`, JSON.stringify(titrePhasesToUpdate))
 
       titresPhasesIdsUpdated.push(...titrePhasesToUpdate.map(p => p.titreDemarcheId))
     }
@@ -113,7 +113,7 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     if (titrePhasesToDeleteIds.length) {
       await titrePhasesDelete(titrePhasesToDeleteIds)
 
-      console.info('titre / démarche / phases (suppression) ->', titrePhasesToDeleteIds.join(', '))
+      console.info(`titre (https://camino.beta.gouv.fr/titres/${titre.slug}) / démarche / phases (suppression) ->`, titrePhasesToDeleteIds.join(', '))
 
       titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
     }
