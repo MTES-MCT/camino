@@ -1590,11 +1590,7 @@ exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'Icone' 1`] = 
   </svg></div>"
 `;
 
-exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'NoIcone' 1`] = `
-"<div>
-  <!---->
-</div>"
-`;
+exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'NoIcone' 1`] = `""`;
 
 exports[`Storybook Tests > 'Components/Common/Domaine' > 'AllDomaines' 1`] = `
 "<div style=\\"height: 100%; width: 100%; background: white;\\">
