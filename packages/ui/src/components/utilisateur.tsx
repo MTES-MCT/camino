@@ -1,5 +1,5 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
-import Accordion from './_ui/accordion.vue'
+import { Card } from './_ui/card'
 import { User } from 'camino-common/src/roles'
 import { Icon } from './_ui/icon'
 import { QGisToken } from './utilisateur/qgis-token'
@@ -182,110 +182,108 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
         </h1>
       </div>
 
-      <Accordion class="mb" slotSub={true} slotButtons={true}>
-        {{
-          title: () => <span> Profil </span>,
-          buttons: () => (
-            <LoadingElement
-              data={utilisateur.value}
-              renderItem={item => (
-                <>
-                  {isMe.value ? (
-                    <button class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate}>
-                      <Icon size="M" name="key" />
-                    </button>
-                  ) : null}
-                  {canDeleteUtilisateur(props.user, item.id) ? (
-                    <button
-                      id="cmn-utilisateur-button-popup-supprimer"
-                      class="btn-alt py-s px-m"
-                      title="supprimer le compte utilisateur"
-                      onClick={() => {
-                        removePopup.value = true
-                      }}
-                    >
-                      <Icon size="M" name="delete" />
-                    </button>
-                  ) : null}
-                </>
-              )}
-            />
-          ),
-
-          sub: () => (
-            <div class="px-m pt-m">
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Prénom</h5>
-                </div>
-                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.prenom || '–'}</p>} />
+      <Card
+        class="mb"
+        title={() => <span> Profil </span>}
+        buttons={() => (
+          <LoadingElement
+            data={utilisateur.value}
+            renderItem={item => (
+              <>
+                {isMe.value ? (
+                  <button class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate}>
+                    <Icon size="M" name="key" />
+                  </button>
+                ) : null}
+                {canDeleteUtilisateur(props.user, item.id) ? (
+                  <button
+                    id="cmn-utilisateur-button-popup-supprimer"
+                    class="btn-alt py-s px-m"
+                    title="supprimer le compte utilisateur"
+                    onClick={() => {
+                      removePopup.value = true
+                    }}
+                  >
+                    <Icon size="M" name="delete" />
+                  </button>
+                ) : null}
+              </>
+            )}
+          />
+        )}
+        content={() => (
+          <div class="px-m pt-m">
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Prénom</h5>
               </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Nom</h5>
-                </div>
-                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.nom || '–'}</p>} />
-              </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Email</h5>
-                </div>
-                <div>
-                  <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.email || '–'}</p>} />
-                </div>
-              </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Téléphone fixe</h5>
-                </div>
-                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneFixe || '–'}</p>} />
-              </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Téléphone mobile</h5>
-                </div>
-                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneMobile || '–'}</p>} />
-              </div>
-              <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} />
-
-              {isMe.value ? (
-                <>
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4">
-                      <h5>Newsletter</h5>
-                    </div>
-                    <LoadingElement
-                      data={subscription.value}
-                      renderItem={item => (
-                        <input
-                          onInput={e => {
-                            if (isEventWithTarget(e)) {
-                              updateSubscription(props.utilisateurId, e.target.checked)
-                            }
-                          }}
-                          type="checkbox"
-                          checked={!!item}
-                        />
-                      )}
-                    />
-                  </div>
-                  <div class="tablet-blobs pb-m">
-                    <div class="tablet-blob-1-4">
-                      <h5>Jeton QGIS</h5>
-                    </div>
-
-                    <QGisToken apiClient={props.apiClient} />
-                  </div>
-                </>
-              ) : null}
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.prenom || '–'}</p>} />
             </div>
-          ),
-        }}
-      </Accordion>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Nom</h5>
+              </div>
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.nom || '–'}</p>} />
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Email</h5>
+              </div>
+              <div>
+                <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.email || '–'}</p>} />
+              </div>
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Téléphone fixe</h5>
+              </div>
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneFixe || '–'}</p>} />
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Téléphone mobile</h5>
+              </div>
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneMobile || '–'}</p>} />
+            </div>
+            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} />
+
+            {isMe.value ? (
+              <>
+                <div class="tablet-blobs">
+                  <div class="tablet-blob-1-4">
+                    <h5>Newsletter</h5>
+                  </div>
+                  <LoadingElement
+                    data={subscription.value}
+                    renderItem={item => (
+                      <input
+                        onInput={e => {
+                          if (isEventWithTarget(e)) {
+                            updateSubscription(props.utilisateurId, e.target.checked)
+                          }
+                        }}
+                        type="checkbox"
+                        checked={!!item}
+                      />
+                    )}
+                  />
+                </div>
+                <div class="tablet-blobs pb-m">
+                  <div class="tablet-blob-1-4">
+                    <h5>Jeton QGIS</h5>
+                  </div>
+
+                  <QGisToken apiClient={props.apiClient} />
+                </div>
+              </>
+            ) : null}
+          </div>
+        )}
+      />
       {removePopup.value && utilisateur.value.status === 'LOADED' ? (
         <RemovePopup
           close={() => (removePopup.value = !removePopup.value)}

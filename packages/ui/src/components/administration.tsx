@@ -3,7 +3,7 @@ import { apiClient, ApiClient, Utilisateur } from '@/api/api-client'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
-import Accordion from './_ui/accordion.vue'
+import { Card } from './_ui/card'
 import { TableAuto } from './_ui/table-auto'
 import { LoadingElement } from './_ui/functional-loader'
 import { Permissions } from './administration/permissions'
@@ -99,132 +99,131 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
     <div>
       <h5>Administration</h5>
       <h1>{administration.value.abreviation}</h1>
-      <Accordion class="mb-xxl" slotSub={true} slotButtons={true}>
-        {{
-          title: () => <span class="cap-first">{administration.value.nom}</span>,
-          sub: () => (
-            <div class="px-m pt-m border-b-s">
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Type</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p class="word-break">{type.value.nom}</p>
-                </div>
+      <Card
+        class="mb-xxl"
+        title={() => <span class="cap-first">{administration.value.nom}</span>}
+        content={() => (
+          <div class="px-m pt-m border-b-s">
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Type</h5>
               </div>
-
-              {administration.value.service ? (
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-4">
-                    <h5>Service</h5>
-                  </div>
-                  <div class="tablet-blob-3-4">
-                    <p class="word-break">{administration.value.service}</p>
-                  </div>
-                </div>
-              ) : null}
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Adresse</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p>
-                    {administration.value.adresse1}
-                    {administration.value.adresse2 ? (
-                      <span>
-                        <br />
-                        {administration.value.adresse2}
-                      </span>
-                    ) : null}
-                    <br />
-                    {administration.value.codePostal}
-                    {administration.value.commune}
-                  </p>
-                </div>
+              <div class="tablet-blob-3-4">
+                <p class="word-break">{type.value.nom}</p>
               </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Téléphone</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p class="word-break">
-                    <span>{administration.value.telephone ?? '–'}</span>
-                  </p>
-                </div>
-              </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Email</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p class="word-break">
-                    {administration.value.email ? (
-                      <a href={`mailto:${administration.value.email}`} class="btn small bold py-xs px-s rnd">
-                        {administration.value.email}
-                      </a>
-                    ) : (
-                      <span>–</span>
-                    )}
-                  </p>
-                </div>
-              </div>
-
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-4">
-                  <h5>Site</h5>
-                </div>
-                <div class="tablet-blob-3-4">
-                  <p class="word-break">
-                    {administration.value.url ? (
-                      <a href={administration.value.url} class="btn small bold py-xs px-s rnd">
-                        {administration.value.url}
-                      </a>
-                    ) : (
-                      <span>–</span>
-                    )}
-                  </p>
-                </div>
-              </div>
-
-              {departement.value ? (
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-4">
-                    <h5>Département</h5>
-                  </div>
-                  <div class="tablet-blob-3-4">
-                    <p>{departement.value?.nom}</p>
-                  </div>
-                </div>
-              ) : null}
-
-              {region.value ? (
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-4">
-                    <h5>Région</h5>
-                  </div>
-                  <div class="tablet-blob-3-4">
-                    <p>{region.value?.nom}</p>
-                  </div>
-                </div>
-              ) : null}
-
-              {isSuper(props.user) && (region.value || departement) ? (
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-4" />
-                  <div class="tablet-blob-3-4">
-                    <p class="h6 mb">
-                      Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.
-                    </p>
-                  </div>
-                </div>
-              ) : null}
             </div>
-          ),
-        }}
-      </Accordion>
+
+            {administration.value.service ? (
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-4">
+                  <h5>Service</h5>
+                </div>
+                <div class="tablet-blob-3-4">
+                  <p class="word-break">{administration.value.service}</p>
+                </div>
+              </div>
+            ) : null}
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Adresse</h5>
+              </div>
+              <div class="tablet-blob-3-4">
+                <p>
+                  {administration.value.adresse1}
+                  {administration.value.adresse2 ? (
+                    <span>
+                      <br />
+                      {administration.value.adresse2}
+                    </span>
+                  ) : null}
+                  <br />
+                  {administration.value.codePostal}
+                  {administration.value.commune}
+                </p>
+              </div>
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Téléphone</h5>
+              </div>
+              <div class="tablet-blob-3-4">
+                <p class="word-break">
+                  <span>{administration.value.telephone ?? '–'}</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Email</h5>
+              </div>
+              <div class="tablet-blob-3-4">
+                <p class="word-break">
+                  {administration.value.email ? (
+                    <a href={`mailto:${administration.value.email}`} class="btn small bold py-xs px-s rnd">
+                      {administration.value.email}
+                    </a>
+                  ) : (
+                    <span>–</span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <div class="tablet-blobs">
+              <div class="tablet-blob-1-4">
+                <h5>Site</h5>
+              </div>
+              <div class="tablet-blob-3-4">
+                <p class="word-break">
+                  {administration.value.url ? (
+                    <a href={administration.value.url} class="btn small bold py-xs px-s rnd">
+                      {administration.value.url}
+                    </a>
+                  ) : (
+                    <span>–</span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            {departement.value ? (
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-4">
+                  <h5>Département</h5>
+                </div>
+                <div class="tablet-blob-3-4">
+                  <p>{departement.value?.nom}</p>
+                </div>
+              </div>
+            ) : null}
+
+            {region.value ? (
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-4">
+                  <h5>Région</h5>
+                </div>
+                <div class="tablet-blob-3-4">
+                  <p>{region.value?.nom}</p>
+                </div>
+              </div>
+            ) : null}
+
+            {isSuper(props.user) && (region.value || departement) ? (
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-4" />
+                <div class="tablet-blob-3-4">
+                  <p class="h6 mb">
+                    Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )}
+      />
 
       <LoadingElement
         data={utilisateurs.value}

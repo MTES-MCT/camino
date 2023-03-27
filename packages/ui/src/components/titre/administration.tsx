@@ -1,7 +1,6 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import Accordion from '../_ui/accordion.vue'
 
 interface Props {
