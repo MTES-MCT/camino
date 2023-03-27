@@ -200,6 +200,27 @@ exports[`Storybook Tests > 'Components/Activite/Preview' > 'Supprimable' 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'Both' 1`] = `"<div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">12</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span></div>"`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'Default' 1`] = `
+"<div class=\\"mb--s\\">
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'WithActivitesAbsentes' 1`] = `
+"<div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">2</div></span>
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'WithActivitesEnConstruction' 1`] = `
+"<div class=\\"mb--s\\">
+  <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span>
+</div>"
+`;
+
 exports[`Storybook Tests > 'Components/Administration' > 'Default' 1`] = `
 "<div>
   <h5>Administration</h5>
@@ -2589,8 +2610,8 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2610,7 +2631,7 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2703,8 +2724,8 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'OkWithoutBlockedTitre
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2724,7 +2745,7 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'OkWithoutBlockedTitre
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2881,7 +2902,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'Ok' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -3025,7 +3046,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithMultipleEn
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -3302,8 +3323,8 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutFiscali
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4122,8 +4143,8 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4165,8 +4186,8 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4210,8 +4231,8 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4299,8 +4320,8 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
