@@ -30,7 +30,7 @@ const filtres = [
     id: 'substancesIds',
     type: 'autocomplete',
     value: [],
-    elements: SubstancesLegales,
+    elements: SubstancesLegales.sort((a, b) => a.nom.localeCompare(b.nom)),
     name: 'Substances',
   },
   {
@@ -52,21 +52,21 @@ const filtres = [
     name: 'Départements',
     type: 'autocomplete',
     value: [],
-    elements: departements.map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
+    elements: departements.sort((a, b) => a.id - b.id).map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
   },
   {
     id: 'regions',
     name: 'Régions',
     type: 'autocomplete',
     value: [],
-    elements: regions,
+    elements: regions.sort((a, b) => a.nom.localeCompare(b.nom)),
   },
   {
     id: 'facadesMaritimes',
     name: 'Façades Maritimes',
     type: 'autocomplete',
     value: [],
-    elements: FACADES.map(facade => ({ id: facade, nom: facade })),
+    elements: FACADES.sort((a, b) => a.localeCompare(b)).map(facade => ({ id: facade, nom: facade })),
   },
   {
     id: 'domainesIds',
