@@ -1,9 +1,9 @@
 import { TablePagination } from './table-pagination'
 import { Meta, Story } from '@storybook/vue3'
 import { markRaw } from 'vue'
-import TitreNom from '../_common/titre-nom.vue'
+import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
-import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
+import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { Column, TableRow } from './table'
 import { action } from '@storybook/addon-actions'
@@ -67,8 +67,8 @@ const rows: TableRow[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(row => {
       },
       type: {
         component: markRaw(TitreTypeTypeNom),
-        props: { nom: 'Autorisation de recherches' },
-        value: 'Autorisation de recherches',
+        props: { titreTypeId: 'arm' },
+        value: 'arm',
       },
       statut: {
         component: markRaw(Statut),

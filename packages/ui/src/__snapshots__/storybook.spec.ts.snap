@@ -200,6 +200,27 @@ exports[`Storybook Tests > 'Components/Activite/Preview' > 'Supprimable' 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'Both' 1`] = `"<div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">12</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span></div>"`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'Default' 1`] = `
+"<div class=\\"mb--s\\">
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'WithActivitesAbsentes' 1`] = `
+"<div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">2</div></span>
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Activites/Pills' > 'WithActivitesEnConstruction' 1`] = `
+"<div class=\\"mb--s\\">
+  <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span>
+</div>"
+`;
+
 exports[`Storybook Tests > 'Components/Administration' > 'Default' 1`] = `
 "<div>
   <h5>Administration</h5>
@@ -1563,6 +1584,14 @@ exports[`Storybook Tests > 'Components/Administrations' > 'Default' 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'Icone' 1`] = `
+"<div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+    <use href=\\"#icon-globe\\"></use>
+  </svg></div>"
+`;
+
+exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'NoIcone' 1`] = `""`;
+
 exports[`Storybook Tests > 'Components/Common/Domaine' > 'AllDomaines' 1`] = `
 "<div style=\\"height: 100%; width: 100%; background: white;\\">
   <table>
@@ -2532,7 +2561,7 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
               </button></div>
           </div><a to=\\"{name:titre,params:{id:second-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Permis exclusif de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
@@ -2583,14 +2612,14 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
               </button></div>
           </div><a to=\\"{name:titre,params:{id:first-id-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Permis exclusif de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2604,13 +2633,13 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
             <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
           </a><a to=\\"{name:titre,params:{id:third-id-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Permis exclusif de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2624,7 +2653,7 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'Ok' 1`] = `
             <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
           </a><a to=\\"{name:titre,params:{id:fourth-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
@@ -2697,14 +2726,14 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'OkWithoutBlockedTitre
               </button></div>
           </div><a to=\\"{name:titre,params:{id:first-id-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Permis exclusif de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2718,13 +2747,13 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'OkWithoutBlockedTitre
             <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
           </a><a to=\\"{name:titre,params:{id:third-id-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Permis exclusif de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2738,7 +2767,7 @@ exports[`Storybook Tests > 'Components/Dashboard/DREAL' > 'OkWithoutBlockedTitre
             <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
           </a><a to=\\"{name:titre,params:{id:fourth-slug}}\\" class=\\"tr tr-link text-decoration-none\\" type=\\"primary\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
             </div>
@@ -2875,13 +2904,13 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'Ok' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -2890,7 +2919,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'Ok' 1`] = `
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -2918,7 +2947,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'Ok' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Concession</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
@@ -3019,13 +3048,13 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithMultipleEn
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
+                <!----><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -3034,7 +3063,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithMultipleEn
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -3062,7 +3091,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithMultipleEn
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Concession</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
@@ -3160,7 +3189,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutActivit
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
             </div>
@@ -3170,7 +3199,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutActivit
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -3198,7 +3227,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutActivit
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Concession</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
@@ -3296,14 +3325,14 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutFiscali
             <div class=\\"td \\">
               <div class=\\"bg-domaine-w inline-block small bold color-bg pill py-xs px-s mono\\">W</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de prospections préalables</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de prospections préalables</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -3312,7 +3341,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutFiscali
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -4116,14 +4145,14 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4159,14 +4188,14 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4204,14 +4233,14 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -4293,14 +4322,14 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
             <div class=\\"td \\">
               <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
             </div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
             <div class=\\"td nowrap min-width-5\\">
               <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
             </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if-->
-                <!--v-if-->
+                <!---->
+                <!---->
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -9178,7 +9207,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
           </div>
@@ -9188,7 +9217,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
           </div>
@@ -9198,7 +9227,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
           </div>
@@ -9208,7 +9237,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
           </div>
@@ -9218,7 +9247,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 4</div>
           </div>
@@ -9228,7 +9257,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 5</div>
           </div>
@@ -9238,7 +9267,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 6</div>
           </div>
@@ -9248,7 +9277,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 7</div>
           </div>
@@ -9258,7 +9287,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 8</div>
           </div>
@@ -9268,7 +9297,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 9</div>
           </div>
@@ -9278,7 +9307,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 10</div>
           </div>
@@ -9288,7 +9317,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'PaginationSimple' 1`] = `
           <div class=\\"td \\">
             <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
           </div>
-          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
           <div class=\\"td nowrap min-width-5\\">
             <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 11</div>
           </div>
@@ -9366,7 +9395,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'Simple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
         </div>
@@ -9376,7 +9405,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'Simple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
         </div>
@@ -9386,7 +9415,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'Simple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
         </div>
@@ -9396,7 +9425,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'Simple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
         </div>
@@ -9432,7 +9461,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSimple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
         </div>
@@ -9442,7 +9471,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSimple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
         </div>
@@ -9452,7 +9481,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSimple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
         </div>
@@ -9462,7 +9491,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSimple' 1`] = `
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
         </div>
@@ -9498,7 +9527,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSortedByStatusAsc' 
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
         </div>
@@ -9508,7 +9537,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSortedByStatusAsc' 
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
         </div>
@@ -9518,7 +9547,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSortedByStatusAsc' 
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
         </div>
@@ -9528,7 +9557,7 @@ exports[`Storybook Tests > 'Components/UI/Table' > 'TableAutoSortedByStatusAsc' 
         <div class=\\"td \\">
           <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
         </div>
-        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\">
           <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
         </div>
@@ -11050,6 +11079,10 @@ exports[`Storybook Tests > 'Components/common/Statut' > 'Default' 1`] = `"<div c
 
 exports[`Storybook Tests > 'Components/common/Statut' > 'WithColor' 1`] = `"<div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Mon statut</div>"`;
 
+exports[`Storybook Tests > 'Components/common/TitreNom' > 'Default' 1`] = `"<span class=\\"bold\\">Nom du titre</span>"`;
+
+exports[`Storybook Tests > 'Components/common/TitreNom' > 'Empty' 1`] = `"<span class=\\"bold\\"></span>"`;
+
 exports[`Storybook Tests > 'Components/common/TitreTypeSelect' > 'Default' 1`] = `
 "<div>
   <div class=\\"tablet-blobs\\">
@@ -11095,6 +11128,8 @@ exports[`Storybook Tests > 'Components/common/TitreTypeSelect' > 'Entreprise' 1`
   <hr>
 </div>"
 `;
+
+exports[`Storybook Tests > 'Components/common/TitreTypeTypeNom' > 'Default' 1`] = `"<span class=\\"small bold\\">Autorisation de prospections préalables</span>"`;
 
 exports[`Storybook Tests > 'Pages/NewsletterForm' > 'Abonné' 1`] = `
 "<div class=\\"dsfr\\">

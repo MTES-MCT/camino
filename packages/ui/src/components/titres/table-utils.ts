@@ -2,13 +2,12 @@ import { markRaw } from 'vue'
 import { TagList } from '../_ui/tag-list'
 import List from '../_ui/list.vue'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
-import TitreNom from '../_common/titre-nom.vue'
-import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
-import CoordonneesIcone from '../_common/coordonnees-icone.vue'
-import ActivitesPills from '../_common/pills.vue'
+import { TitreNom } from '../_common/titre-nom'
+import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
+import { CoordonneesIcone } from '../_common/coordonnees-icone'
+import { ActivitesPills } from '../activites/activites-pills'
 import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Departement, DepartementId, Departements } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
@@ -16,7 +15,7 @@ import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/su
 import { sortedTitresStatuts, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreReference } from 'camino-common/src/titres-references'
-import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getDepartementsBySecteurs, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { Column } from '../_ui/table-auto'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
@@ -194,11 +193,10 @@ export const domaineCell = (titre: { domaineId: DomaineId }) => ({
 })
 
 export const typeCell = (typeId: TitreTypeId) => {
-  const titreTypeType = TitresTypesTypes[getTitreTypeType(typeId)]
   return {
     component: markRaw(TitreTypeTypeNom),
-    props: { nom: titreTypeType.nom },
-    value: titreTypeType.nom,
+    props: { titreTypeId: typeId },
+    value: typeId,
   }
 }
 export const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }) => ({
