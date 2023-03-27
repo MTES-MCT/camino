@@ -1584,6 +1584,18 @@ exports[`Storybook Tests > 'Components/Administrations' > 'Default' 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'Icone' 1`] = `
+"<div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+    <use href=\\"#icon-globe\\"></use>
+  </svg></div>"
+`;
+
+exports[`Storybook Tests > 'Components/Common/CoordonneesIcone' > 'NoIcone' 1`] = `
+"<div>
+  <!---->
+</div>"
+`;
+
 exports[`Storybook Tests > 'Components/Common/Domaine' > 'AllDomaines' 1`] = `
 "<div style=\\"height: 100%; width: 100%; background: white;\\">
   <table>
@@ -2911,7 +2923,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'Ok' 1`] = `
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -3055,7 +3067,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithMultipleEn
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -3191,7 +3203,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutActivit
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -3333,7 +3345,7 @@ exports[`Storybook Tests > 'Components/Dashboard/Entreprise' > 'OkWithoutFiscali
               </ul>
             </div>
             <div class=\\"td \\">
-              <!--v-if-->
+              <!---->
             </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
