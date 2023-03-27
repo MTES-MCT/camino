@@ -259,7 +259,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                           {contourPoints.map((point, pointIndex) => (
                             <div key={pointIndex + 1} class="geo-point">
                               <div class="flex full-x">
-                                <h4 class="mt-s">{point.lot ? 'Lot de points' : `Point ${point.nom}`}</h4>
+                                <h4 class="mt-s">{point.lot ? 'Lot de points' : `Point ${point.nom ?? ''}`}</h4>
                                 <div class="flex-right">
                                   {!(props.etape.groupes.length === groupeIndex + 1 && groupeContours.length === contourIndex + 1 && contourPoints.length === pointIndex + 1) ? (
                                     <button class="btn-border py-s px-m rnd-l-xs" onClick={() => pointMoveDown(groupeIndex, contourIndex, pointIndex)}>

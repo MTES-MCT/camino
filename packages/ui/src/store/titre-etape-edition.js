@@ -227,9 +227,9 @@ const actions = {
       state.element.geoSystemeIds = geoSystemeIds
       state.element.geoSystemeOpposableId = geoSystemeOpposableId
       // pour modifier la surface, on doit désactiver l’héritage
-      etape.heritageProps.surface.actif = false
-      etape.surface = surface
-      commit('set', etape)
+      state.element.heritageProps.surface.actif = false
+      state.element.surface = surface
+      commit('set', state.element)
 
       commit('metasSet', {
         sdomZonesDocumentTypeIds: documentTypeIds,
