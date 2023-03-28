@@ -1,11 +1,8 @@
-import { FondamentalesEdit } from './fondamentales-edit'
+import { FondamentalesEdit, Props } from './fondamentales-edit'
 import { Meta, Story } from '@storybook/vue3'
 import { EtapeFondamentale } from 'camino-common/src/etape'
-import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
-import { User } from 'camino-common/src/roles'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
@@ -14,14 +11,6 @@ const meta: Meta = {
   argTypes: {},
 }
 export default meta
-
-type Props = {
-  etape: EtapeFondamentale
-  demarcheTypeId: DemarcheTypeId
-  titreTypeId: TitreTypeId
-  user: User
-  entreprises: Entreprise[]
-}
 
 const etape: EtapeFondamentale = {
   id: 'id',

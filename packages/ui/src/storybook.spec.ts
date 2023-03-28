@@ -20,6 +20,13 @@ vi.mock('vue-router', () => ({
 
 vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
+const compose = (entry: StoryFile) => {
+  try {
+    return composeStories(entry)
+  } catch (e) {
+    throw new Error(`Un fichier est probablement mal formaté ${JSON.stringify(entry)}, ${e}`)
+  }
+}
 describe('Storybook Tests', async () => {
   const modules = await Promise.all(Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?')).map(fn => fn()))
   describe.each(
@@ -28,7 +35,7 @@ describe('Storybook Tests', async () => {
     })
   )('$name', ({ name, module }) => {
     test.skipIf(name?.includes('NoStoryshots')).each(
-      Object.entries<ContextedStory<unknown>>(composeStories(module))
+      Object.entries<ContextedStory<unknown>>(compose(module))
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async ({ story }) => {

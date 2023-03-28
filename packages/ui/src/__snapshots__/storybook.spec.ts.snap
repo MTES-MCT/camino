@@ -4684,14 +4684,14 @@ exports[`Storybook Tests > 'Components/Etape/AutoCompleteEntrepri…' > 'WithEnt
 "<div>
   <div>
     <div class=\\"flex mb-s flex-center\\">
-      <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom10</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+      <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom10</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-minus\\"></use>
         </svg></button>
     </div>
   </div>
   <div>
     <div class=\\"flex mb-s flex-center\\">
-      <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom2</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+      <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom2</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-minus\\"></use>
         </svg></button>
     </div>
@@ -4701,6 +4701,197 @@ exports[`Storybook Tests > 'Components/Etape/AutoCompleteEntrepri…' > 'WithEnt
       <!----><input id=\\"autocomplete_entreprise\\" type=\\"text\\" name=\\"autocomplete_entreprise\\" class=\\"_typeahead-input_8eddf1 fr-input\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
     </div>
     <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Etape/Fondamentales' > 'FullCertain' 1`] = `
+"<div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Durée
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p><span><span>5 ans</span>
+        <!---->
+        <!----></span>
+      </p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date de début
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>03-01-2022</p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date d'échéance
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>04-01-2022</p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Titulaire
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-prefix mb\\">
+        <li>titulaire<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\"> Opérateur </span></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Amodiataire
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-prefix\\">
+        <li>amodiataire</li>
+      </ul>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Substances
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-inline\\">
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
+      </ul>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Etape/Fondamentales' > 'FullIncertain' 1`] = `
+"<div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Durée<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p><span><span>5 ans</span>
+        <!---->
+        <!----></span>
+      </p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date de début<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>03-01-2022</p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date d'échéance<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>04-01-2022</p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Titulaire<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-prefix mb\\">
+        <li>titulaire<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\"> Opérateur </span></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Amodiataire<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-prefix\\">
+        <li>amodiataire</li>
+      </ul>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Substances<span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-inline\\">
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
+      </ul>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > 'Components/Etape/Fondamentales' > 'Partiel' 1`] = `
+"<div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Durée
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p><span><span>5 ans</span>
+        <!---->
+        <!----></span>
+      </p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date de début
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>03-01-2022</p>
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Date d'échéance
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p>04-01-2022</p>
+    </div>
+  </div>
+  <!---->
+  <!---->
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Substances
+        <!---->
+      </h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <ul class=\\"list-inline\\">
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+        <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
+      </ul>
+    </div>
   </div>
 </div>"
 `;
@@ -4716,7 +4907,7 @@ exports[`Storybook Tests > 'Components/Etape/FondamentalesEdit' > 'ArmDemandeONF
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
-          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-minus\\"></use>
             </svg></button>
         </div>
@@ -4847,7 +5038,7 @@ exports[`Storybook Tests > 'Components/Etape/FondamentalesEdit' > 'ArmJorfONF' 1
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
-          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-minus\\"></use>
             </svg></button>
         </div>
@@ -4908,7 +5099,7 @@ exports[`Storybook Tests > 'Components/Etape/FondamentalesEdit' > 'AxmDemandeONF
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
-          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-minus\\"></use>
             </svg></button>
         </div>
@@ -5030,7 +5221,7 @@ exports[`Storybook Tests > 'Components/Etape/FondamentalesEdit' > 'PrmDemandeONF
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
-          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-minus\\"></use>
             </svg></button>
         </div>
@@ -5094,7 +5285,7 @@ exports[`Storybook Tests > 'Components/Etape/FondamentalesEdit' > 'PrmDeplacemen
     <div>
       <div>
         <div class=\\"flex mb-s flex-center\\">
-          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\"> Opérateur </label><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <div class=\\"h4\\" style=\\"flex: 0 1 15em;\\">optionNom1</div><label style=\\"flex-basis: auto; user-select: none;\\"><input type=\\"checkbox\\" class=\\"mr-xs\\">Opérateur</label><button class=\\"btn py-s px-m rnd-xs\\" style=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-minus\\"></use>
             </svg></button>
         </div>
@@ -5225,6 +5416,24 @@ exports[`Storybook Tests > 'Components/Etape/FormSaveBtn' > 'SansMessage' 1`] = 
     <div class=\\"tablet-blob-1-3\\"><button class=\\"btn btn-primary\\">Enregistrer et déposer</button></div>
   </div>
 </div>"
+`;
+
+exports[`Storybook Tests > 'Components/Etape/PropDuree' > 'Empty' 1`] = `"<span><!----><!----><!----></span>"`;
+
+exports[`Storybook Tests > 'Components/Etape/PropDuree' > 'Full' 1`] = `"<span><span>2 ans</span><span> et </span><span>6 mois</span></span>"`;
+
+exports[`Storybook Tests > 'Components/Etape/PropDuree' > 'Mois' 1`] = `"<span><!----><!----><span>1 mois</span></span>"`;
+
+exports[`Storybook Tests > 'Components/Etape/PropDuree' > 'OneYear' 1`] = `
+"<span><span>1 an</span>
+<!---->
+<!----></span>"
+`;
+
+exports[`Storybook Tests > 'Components/Etape/PropDuree' > 'TwoYears' 1`] = `
+"<span><span>2 ans</span>
+<!---->
+<!----></span>"
 `;
 
 exports[`Storybook Tests > 'Components/Etape/SubstancesEdit' > 'AvecHeritage' 1`] = `
