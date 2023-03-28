@@ -86,8 +86,10 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
   // Permet d'activer le menu déroulant sur annuaire
   onMounted(() => {
     setTimeout(() => {
-      if (dsfr) {
+      try {
         dsfr.start()
+      } catch (e) {
+        console.error('impossible de lancer le js du dsfr')
       }
     }, 1000)
   })

@@ -12,7 +12,7 @@ import { ActivitesTypesEmails } from './administration/activites-types-emails'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ADMINISTRATION_TYPES, Administrations, AdministrationId, Administration as Adm, AdministrationType, isAdministrationId } from 'camino-common/src/static/administrations'
 import { isSuper, User } from 'camino-common/src/roles'
-import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
+import { canReadActivitesTypesEmails, canReadAdministrations } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { computed, defineComponent, onMounted, ref } from 'vue'
@@ -82,16 +82,18 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
   }
   onMounted(async () => {
     await loadActivitesTypesEmails()
-    try {
-      utilisateurs.value = {
-        status: 'LOADED',
-        value: await props.apiClient.administrationUtilisateurs(props.administrationId),
-      }
-    } catch (e: any) {
-      console.error('error', e)
-      utilisateurs.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
+    if (canReadAdministrations(props.user)) {
+      try {
+        utilisateurs.value = {
+          status: 'LOADED',
+          value: await props.apiClient.administrationUtilisateurs(props.administrationId),
+        }
+      } catch (e: any) {
+        console.error('error', e)
+        utilisateurs.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
       }
     }
   })
@@ -225,17 +227,19 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
         )}
       />
 
-      <LoadingElement
-        data={utilisateurs.value}
-        renderItem={item => (
-          <div class="mb-xxl">
-            <div class="line-neutral width-full mb-xxl" />
-            <h2>Utilisateurs</h2>
-            <div class="line width-full" />
-            <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} />
-          </div>
-        )}
-      />
+      {canReadAdministrations(props.user) ? (
+        <LoadingElement
+          data={utilisateurs.value}
+          renderItem={item => (
+            <div class="mb-xxl">
+              <div class="line-neutral width-full mb-xxl" />
+              <h2>Utilisateurs</h2>
+              <div class="line width-full" />
+              <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} />
+            </div>
+          )}
+        />
+      ) : null}
 
       {canReadActivitesTypesEmails(props.user, props.administrationId) ? (
         <LoadingElement
@@ -270,12 +274,14 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
           )}
         />
       ) : null}
-      <div class="mb-xxl">
-        <div class="line-neutral width-full mb-xxl" />
-        <h2>Permissions</h2>
+      {canReadAdministrations(props.user) ? (
+        <div class="mb-xxl">
+          <div class="line-neutral width-full mb-xxl" />
+          <h2>Permissions</h2>
 
-        <Permissions administrationId={props.administrationId} apiClient={props.apiClient} />
-      </div>
+          <Permissions administrationId={props.administrationId} apiClient={props.apiClient} />
+        </div>
+      ) : null}
     </div>
   )
 })
