@@ -9,42 +9,18 @@ fi
 
 # sauvegarde la base de donnees
 rm -rf /srv/backups/camino.sql
-
 docker exec camino_api_db pg_dump --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino > /srv/backups/camino.sql
 
-chown git:users /srv/backups/camino.sql
-
 # sauvegarde les fichiers
-rm -rf /srv/backups/files/*
-
-docker cp camino_api_app:/packages/api/files/. /srv/backups/files/
-
-chown git:users -R /srv/backups/files
+rsync --delete -r /srv/www/camino/files/  /srv/backups/files
+chown git:users -R /srv/backups/
 
 
-# cree un fichier d'archive
-# cree une archive a partir du dossier `files` et du fichier `camino.sql`
+export RESTIC_REPOSITORY=s3:https://b3.din.developpement-durable.gouv.fr/Camino
+export RESTIC_PASSWORD={{ restic_password }}
+# Environnement B3 (Identifiant)
+export AWS_ACCESS_KEY_ID={{ restic_s3_client_id }}
+export AWS_SECRET_ACCESS_KEY={{ restic_s3_client_secret }}
 
-FILE_SUFFIX=camino.tar.gz
-FILE_PATH=/srv/backups/`date +%Y%m%d"_"%H%M%S`-$FILE_SUFFIX
 
-FTP_URL="ftp://{{ ftp_user }}:{{ ftp_password }}@{{ ftp_host }}/"
-
-echo $FILE_PATH
-cd /srv/backups
-tar -zcvf $FILE_PATH files/* camino.sql
-cd -
-
-chown git:users /srv/backups/*.tar.gz
-# Upload le fichier vers le ftp
-curl -aT $FILE_PATH $FTP_URL
-# Renome le fichier et écrase l’ancien backup
-mv $FILE_PATH /srv/backups/$FILE_SUFFIX
-# Vérifie qu’on a seulement les 20 derniers backups sur le ftp
-if [ $(curl -l $FTP_URL | grep $FILE_SUFFIX | wc -l) -gt 15 ]
-then
-	# Supprime le backup le plus ancien
-	fileToDelete=$(curl -l $FTP_URL | grep $FILE_SUFFIX | head -n 1)
-	curl $FTP_URL -Q "DELE $fileToDelete"
-fi
-
+restic backup /srv/backups/
