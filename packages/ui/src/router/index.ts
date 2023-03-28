@@ -60,7 +60,10 @@ const StatistiquesMinerauxMetauxMetropole = async () => {
   return MinerauxMetauxMetropole
 }
 const Journaux = () => import('../components/journaux.vue')
-const About = () => import('../components/content/about.vue')
+const About = async () => {
+  const { About } = await import('../components/content/about')
+  return About
+}
 
 declare module 'vue-router' {
   interface RouteMeta {
