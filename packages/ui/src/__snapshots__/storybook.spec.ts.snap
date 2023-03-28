@@ -226,64 +226,60 @@ exports[`Storybook Tests > 'Components/Administration' > 'Default' 1`] = `
   <h5>Administration</h5>
   <h1>BRGM</h1>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb-xxl\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
-      <div class=\\"py-s px-m\\"><span class=\\"cap-first\\">Bureau de recherches géologiques et minières</span></div>
-      <div class=\\"overflow-hidden flex flex-end flex-right\\">
-        <div class=\\"py-s\\"></div>
-      </div>
-    </div>
-    <div class=\\"px-m pt-m border-b-s\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Type</h5>
+    <div class=\\"py-s px-m border-b-s\\"><span class=\\"cap-first\\">Bureau de recherches géologiques et minières</span></div>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m border-b-s\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Type</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\">Opérateur</p>
+          </div>
         </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\">Opérateur</p>
+        <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Adresse</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>3 avenue Claude-Guillemin<span><br>BP 36009</span><br>45060Orléans</p>
+          </div>
         </div>
-      </div>
-      <!---->
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Adresse</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><span>02 38 64 34 34</span></p>
+          </div>
         </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>3 avenue Claude-Guillemin<span><br>BP 36009</span><br>45060Orléans</p>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><span>–</span></p>
+          </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Site</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><a href=\\"https://www.brgm.fr/\\" class=\\"btn small bold py-xs px-s rnd\\">https://www.brgm.fr/</a></p>
+          </div>
         </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><span>02 38 64 34 34</span></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><span>–</span></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Site</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><a href=\\"https://www.brgm.fr/\\" class=\\"btn small bold py-xs px-s rnd\\">https://www.brgm.fr/</a></p>
-        </div>
-      </div>
-      <!---->
-      <!---->
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\"></div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"h6 mb\\">Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.</p>
+        <!---->
+        <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\"></div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"h6 mb\\">Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.</p>
+          </div>
         </div>
       </div>
     </div>
-    <!--v-if-->
   </div>
   <div class=\\"\\" style=\\"\\">
     <div class=\\"mb-xxl\\">
@@ -3880,7 +3876,7 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
   <h5>Entreprise</h5>
   <h1>An Entreprise</h1>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb-xxl\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span class=\\"cap-first\\"> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\"> <button class=\\"flex small btn py-s px-m mr-px\\">
           <!--v-if--><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file-add\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"flex-right\\">
@@ -3889,128 +3885,129 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
         </button><button class=\\"btn py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-pencil\\"></use>
           </svg></button>
-        <div class=\\"py-s\\"></div>
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m border-b-s\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Siren</h5>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m border-b-s\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Siren</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>SIREN</p>
+          </div>
         </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>SIREN</p>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Forme juridique</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>SAS, société par actions simplifiée</p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Établissements</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <ul class=\\"list-sans\\">
+              <li>
+                <h6 class=\\"inline-block\\">16-09-2013</h6>: Nouvel établissement
+              </li>
+              <li>
+                <h6 class=\\"inline-block\\">01-02-2013</h6>: Ancien établissement
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Adresse</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>21 par ici<br>38240CETTE COMUNE</p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><span>telephone</span></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><a href=\\"mailto:email\\" class=\\"btn small bold py-xs px-s rnd\\">email</a></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Site</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><a href=\\"url\\" class=\\"btn small bold py-xs px-s rnd\\">url</a></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Archivée</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>Non</p>
+          </div>
         </div>
       </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Forme juridique</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>SAS, société par actions simplifiée</p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Établissements</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <ul class=\\"list-sans\\">
-            <li>
-              <h6 class=\\"inline-block\\">16-09-2013</h6>: Nouvel établissement
-            </li>
-            <li>
-              <h6 class=\\"inline-block\\">01-02-2013</h6>: Ancien établissement
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Adresse</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>21 par ici<br>38240CETTE COMUNE</p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><span>telephone</span></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><a href=\\"mailto:email\\" class=\\"btn small bold py-xs px-s rnd\\">email</a></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Site</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><a href=\\"url\\" class=\\"btn small bold py-xs px-s rnd\\">url</a></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Archivée</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>Non</p>
+      <div>
+        <h4 class=\\"px-m pt mb-0\\">Documents</h4>
+        <div class=\\"overflow-scroll-x px-m\\">
+          <table>
+            <tr>
+              <th>Nom</th>
+              <th>Date</th>
+              <th class=\\"full-x-\\">Description</th>
+              <th></th>
+            </tr>
+            <tr class=\\"h6\\">
+              <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Kbis</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
+                <!--v-if-->
+              </td>
+              <td class=\\"nowrap pt-m\\">26-08-2019</td>
+              <td class=\\"pt-m\\">Kbis</td>
+              <td class=\\"flex text-right\\"><button class=\\"btn rnd-l-xs py-s px-m my--xs mr-px\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-pencil\\"></use>
+                  </svg></button><button class=\\"btn py-s px-m my--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-delete\\"></use>
+                  </svg></button><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-download\\"></use>
+                  </svg></a>
+                <!--v-if-->
+                <!--v-if-->
+              </td>
+            </tr>
+            <tr class=\\"h6\\">
+              <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Identification de matériel</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
+                <!--v-if-->
+              </td>
+              <td class=\\"nowrap pt-m\\">26-08-2019</td>
+              <td class=\\"pt-m\\">Identification pelle mécanique</td>
+              <td class=\\"flex text-right\\">
+                <!--v-if-->
+                <!--v-if--><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument2\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-download\\"></use>
+                  </svg></a>
+                <!--v-if-->
+                <!--v-if-->
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
-    <div>
-      <h4 class=\\"px-m pt mb-0\\">Documents</h4>
-      <div class=\\"overflow-scroll-x px-m\\">
-        <table>
-          <tr>
-            <th>Nom</th>
-            <th>Date</th>
-            <th class=\\"full-x-\\">Description</th>
-            <th></th>
-          </tr>
-          <tr class=\\"h6\\">
-            <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Kbis</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
-              <!--v-if-->
-            </td>
-            <td class=\\"nowrap pt-m\\">26-08-2019</td>
-            <td class=\\"pt-m\\">Kbis</td>
-            <td class=\\"flex text-right\\"><button class=\\"btn rnd-l-xs py-s px-m my--xs mr-px\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                  <use href=\\"#icon-pencil\\"></use>
-                </svg></button><button class=\\"btn py-s px-m my--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                  <use href=\\"#icon-delete\\"></use>
-                </svg></button><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                  <use href=\\"#icon-download\\"></use>
-                </svg></a>
-              <!--v-if-->
-              <!--v-if-->
-            </td>
-          </tr>
-          <tr class=\\"h6\\">
-            <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Identification de matériel</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
-              <!--v-if-->
-            </td>
-            <td class=\\"nowrap pt-m\\">26-08-2019</td>
-            <td class=\\"pt-m\\">Identification pelle mécanique</td>
-            <td class=\\"flex text-right\\">
-              <!--v-if-->
-              <!--v-if--><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument2\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                  <use href=\\"#icon-download\\"></use>
-                </svg></a>
-              <!--v-if-->
-              <!--v-if-->
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <!--v-if-->
   </div>
   <div class=\\"mb-xxl\\">
     <div class=\\"line-neutral width-full mb-xxl\\"></div>
@@ -4375,80 +4372,82 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'NonConnecte' 1`] = `
   <h5>Entreprise</h5>
   <h1>nom entreprise</h1>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb-xxl\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span class=\\"cap-first\\"> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
-        <div class=\\"py-s\\"></div>
+        <!---->
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m border-b-s\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Siren</h5>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m border-b-s\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Siren</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>siren</p>
+          </div>
         </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>siren</p>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Forme juridique</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>forme</p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Établissement</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <ul class=\\"list-sans\\"></ul>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Adresse</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>adresse<br>code postalcommune</p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><span>telephone</span></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><a href=\\"mailto:email@entreprise.fr\\" class=\\"btn small bold py-xs px-s rnd\\">email@entreprise.fr</a></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Site</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"word-break\\"><a href=\\"http://urlentreprise\\" class=\\"btn small bold py-xs px-s rnd\\">http://urlentreprise</a></p>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Archivée</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p>Non</p>
+          </div>
         </div>
       </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Forme juridique</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>forme</p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Établissement</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <ul class=\\"list-sans\\"></ul>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Adresse</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>adresse<br>code postalcommune</p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><span>telephone</span></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><a href=\\"mailto:email@entreprise.fr\\" class=\\"btn small bold py-xs px-s rnd\\">email@entreprise.fr</a></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Site</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p class=\\"word-break\\"><a href=\\"http://urlentreprise\\" class=\\"btn small bold py-xs px-s rnd\\">http://urlentreprise</a></p>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Archivée</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <p>Non</p>
-        </div>
-      </div>
+      <!---->
     </div>
-    <!---->
-    <!--v-if-->
   </div>
   <!---->
   <!---->
@@ -9966,7 +9965,7 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'AnotherUser' 1`] = `
     </h1>
   </div>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"\\" style=\\"\\">
@@ -9976,81 +9975,82 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'AnotherUser' 1`] = `
           <!---->
           <!---->
         </div>
-        <div class=\\"py-s\\"></div>
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Prénom</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>prenom</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Nom</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>nom</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Prénom</h5>
+          </div>
           <div class=\\"\\" style=\\"\\">
-            <p>email@gmail.com</p>
+            <p>prenom</p>
             <!---->
             <!---->
           </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone fixe</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>–</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone mobile</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>–</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
-          <h5>Rôles</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
-            <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-pencil\\"></use>
-              </svg></button>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Nom</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>nom</p>
             <!---->
             <!---->
           </div>
         </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div>
+            <div class=\\"\\" style=\\"\\">
+              <p>email@gmail.com</p>
+              <!---->
+              <!---->
+            </div>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>–</p>
+            <!---->
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>–</p>
+            <!---->
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+            <h5>Rôles</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-pencil\\"></use>
+                </svg></button>
+              <!---->
+              <!---->
+            </div>
+          </div>
+        </div>
+        <!---->
+        <!---->
+        <!---->
       </div>
-      <!---->
-      <!---->
-      <!---->
     </div>
-    <!--v-if-->
   </div>
   <!---->
 </div>"
@@ -10069,7 +10069,7 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'Loading' 1`] = `
     </h1>
   </div>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
@@ -10077,99 +10077,100 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'Loading' 1`] = `
           <!---->
           <div class=\\"_spinner_3306d0\\"></div>
         </div>
-        <div class=\\"py-s\\"></div>
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Prénom</h5>
-        </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Nom</h5>
-        </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Prénom</h5>
+          </div>
           <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <!---->
             <div class=\\"_spinner_3306d0\\"></div>
           </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone fixe</h5>
-        </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone mobile</h5>
-        </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
-          <h5>Rôles</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Nom</h5>
+          </div>
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <!---->
             <div class=\\"_spinner_3306d0\\"></div>
           </div>
         </div>
-      </div>
-      <!---->
-      <!---->
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Newsletter</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div>
+            <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+              <!---->
+              <!---->
+              <div class=\\"_spinner_3306d0\\"></div>
+            </div>
+          </div>
         </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
+          </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs pb-m\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Jeton QGIS</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
+          </div>
         </div>
-        <div class=\\"\\" style=\\"\\">
-          <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
-          <!---->
-          <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+            <h5>Rôles</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+              <!---->
+              <!---->
+              <div class=\\"_spinner_3306d0\\"></div>
+            </div>
+          </div>
         </div>
-        <transition-group-stub name=\\"slide-bottom\\" tag=\\"ul\\" appear=\\"false\\" persisted=\\"false\\" css=\\"true\\" class=\\"list-sans mb-0\\"></transition-group-stub>
+        <!---->
+        <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Newsletter</h5>
+          </div>
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs pb-m\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Jeton QGIS</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
+            <!---->
+            <!---->
+          </div>
+          <transition-group-stub name=\\"slide-bottom\\" tag=\\"ul\\" appear=\\"false\\" persisted=\\"false\\" css=\\"true\\" class=\\"list-sans mb-0\\"></transition-group-stub>
+        </div>
       </div>
     </div>
-    <!--v-if-->
   </div>
   <!---->
 </div>"
@@ -10187,7 +10188,7 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'MySelf' 1`] = `
     </h1>
   </div>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"\\" style=\\"\\"><button class=\\"btn-alt py-s px-m\\" title=\\"changer de mot de passe\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"key\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
@@ -10198,99 +10199,100 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'MySelf' 1`] = `
           <!---->
           <!---->
         </div>
-        <div class=\\"py-s\\"></div>
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Prénom</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>prenom</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Nom</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>nom</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Prénom</h5>
+          </div>
           <div class=\\"\\" style=\\"\\">
-            <p>email@gmail.com</p>
+            <p>prenom</p>
             <!---->
             <!---->
           </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone fixe</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>–</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone mobile</h5>
-        </div>
-        <div class=\\"\\" style=\\"\\">
-          <p>–</p>
-          <!---->
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
-          <h5>Rôles</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
-            <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div>
-            <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Nom</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>nom</p>
             <!---->
             <!---->
           </div>
         </div>
-      </div>
-      <!---->
-      <!---->
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Newsletter</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div>
+            <div class=\\"\\" style=\\"\\">
+              <p>email@gmail.com</p>
+              <!---->
+              <!---->
+            </div>
+          </div>
         </div>
-        <div class=\\"\\" style=\\"\\"><input type=\\"checkbox\\">
-          <!---->
-          <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>–</p>
+            <!---->
+            <!---->
+          </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs pb-m\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Jeton QGIS</h5>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <p>–</p>
+            <!---->
+            <!---->
+          </div>
         </div>
-        <div class=\\"\\" style=\\"\\">
-          <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
-          <!---->
-          <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+            <h5>Rôles</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div>
+              <!---->
+              <!---->
+              <!---->
+            </div>
+          </div>
         </div>
-        <transition-group-stub name=\\"slide-bottom\\" tag=\\"ul\\" appear=\\"false\\" persisted=\\"false\\" css=\\"true\\" class=\\"list-sans mb-0\\"></transition-group-stub>
+        <!---->
+        <!---->
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Newsletter</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\"><input type=\\"checkbox\\">
+            <!---->
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs pb-m\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Jeton QGIS</h5>
+          </div>
+          <div class=\\"\\" style=\\"\\">
+            <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
+            <!---->
+            <!---->
+          </div>
+          <transition-group-stub name=\\"slide-bottom\\" tag=\\"ul\\" appear=\\"false\\" persisted=\\"false\\" css=\\"true\\" class=\\"list-sans mb-0\\"></transition-group-stub>
+        </div>
       </div>
     </div>
-    <!--v-if-->
   </div>
   <!---->
 </div>"
@@ -10315,7 +10317,7 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'error' 1`] = `
     </h1>
   </div>
   <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
-    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+    <div class=\\"accordion-header flex  border-b-s\\">
       <div class=\\"py-s px-m\\"><span> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
@@ -10329,47 +10331,15 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'error' 1`] = `
           </div>
           <!---->
         </div>
-        <div class=\\"py-s\\"></div>
+        <div class=\\"py-s\\" style=\\"\\"></div>
       </div>
     </div>
-    <div class=\\"px-m pt-m\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Prénom</h5>
-        </div>
-        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <div>
-            <div class=\\"_tooltip_4f6ea8\\">
-              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-error-warning\\"></use>
-              </svg>
-            </div>
+    <div class=\\"border-b-s\\">
+      <div class=\\"px-m pt-m\\">
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Prénom</h5>
           </div>
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Nom</h5>
-        </div>
-        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <div>
-            <div class=\\"_tooltip_4f6ea8\\">
-              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-error-warning\\"></use>
-              </svg>
-            </div>
-          </div>
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Email</h5>
-        </div>
-        <div>
           <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
@@ -10382,45 +10352,11 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'error' 1`] = `
             <!---->
           </div>
         </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone fixe</h5>
-        </div>
-        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <div>
-            <div class=\\"_tooltip_4f6ea8\\">
-              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-error-warning\\"></use>
-              </svg>
-            </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Nom</h5>
           </div>
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Téléphone mobile</h5>
-        </div>
-        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <div>
-            <div class=\\"_tooltip_4f6ea8\\">
-              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-error-warning\\"></use>
-              </svg>
-            </div>
-          </div>
-          <!---->
-        </div>
-      </div>
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
-          <h5>Rôles</h5>
-        </div>
-        <div class=\\"tablet-blob-3-4\\">
-          <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -10432,12 +10368,79 @@ exports[`Storybook Tests > 'Components/Utilisateur' > 'error' 1`] = `
             <!---->
           </div>
         </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Email</h5>
+          </div>
+          <div>
+            <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+              <!---->
+              <div>
+                <div class=\\"_tooltip_4f6ea8\\">
+                  <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-error-warning\\"></use>
+                  </svg>
+                </div>
+              </div>
+              <!---->
+            </div>
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
+                <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-error-warning\\"></use>
+                </svg>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
+                <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-error-warning\\"></use>
+                </svg>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+            <h5>Rôles</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+              <!---->
+              <div>
+                <div class=\\"_tooltip_4f6ea8\\">
+                  <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                    <use href=\\"#icon-error-warning\\"></use>
+                  </svg>
+                </div>
+              </div>
+              <!---->
+            </div>
+          </div>
+        </div>
+        <!---->
+        <!---->
+        <!---->
       </div>
-      <!---->
-      <!---->
-      <!---->
     </div>
-    <!--v-if-->
   </div>
   <!---->
 </div>"
