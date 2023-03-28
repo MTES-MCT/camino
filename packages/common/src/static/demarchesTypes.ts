@@ -1,4 +1,5 @@
 import { Definition } from '../definition.js'
+import { DemarchesStatutsIds, DemarcheStatutId } from './demarchesStatuts.js'
 
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
@@ -310,6 +311,11 @@ export const demarchesTypesWithPhasesAndWithoutDateFin: DemarcheTypeId[] = [
   DEMARCHES_TYPES_IDS.Prolongation2,
   DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
 ]
+
+export const isDemarcheStatusWithPhase = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean => {
+  return ![DemarchesStatutsIds.Desiste, DemarchesStatutsIds.Rejete, DemarchesStatutsIds.ClasseSansSuite].includes(demarcheStatutId)
+}
+
 export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean => {
   if (isDemarcheTypeOctroi(demarcheTypeId)) {
     return true

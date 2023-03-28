@@ -5,7 +5,7 @@ import { titreDemarchePhaseCheck } from './titre-demarche-phase-check.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
-import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
+import { isDemarcheStatusWithPhase, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date.js'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
@@ -121,7 +121,9 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
   const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
-  const filteredDemarches = sortedDemarches.filter(demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree)))
+  const filteredDemarches = sortedDemarches.filter(
+    demarche => demarche.etapes?.length && isDemarcheStatusWithPhase(demarche.statutId) && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
+  )
 
   const phases = filteredDemarches.reduce<Omit<ITitrePhase, 'phaseStatutId'>[]>((acc, demarche) => {
     if (!demarche.etapes?.length) {
@@ -170,7 +172,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
         acc[acc.length - 1].dateFin = dateDebut
       }
       if (!dateDebut) {
-        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.titreId}`)
+        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.titreId} -- ${demarche.id}`)
       }
       const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
       if (dateFin) {

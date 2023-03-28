@@ -27,14 +27,14 @@ export const daily = async () => {
     console.info('- - -')
     console.info('mise à jour quotidienne')
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(userSuper)
-    const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
-    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
-    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
-    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
-    const titresStatutIdUpdated = await titresStatutIdsUpdate()
-    const titresPublicUpdated = await titresPublicUpdate()
+    // const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(userSuper)
+    // const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
+    // const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
+    // const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
+    // const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
+    // const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
+    // const titresStatutIdUpdated = await titresStatutIdsUpdate()
+    // const titresPublicUpdated = await titresPublicUpdate()
     const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate()
     const titresDatesUpdated = await titresDatesUpdate()
     const pointsReferencesCreated = await titresPointsReferencesCreate()
@@ -50,14 +50,14 @@ export const daily = async () => {
     const titresUpdatedIndex = await titresSlugsUpdate()
 
     logsUpdate({
-      titresEtapesOrdreUpdated,
-      titresEtapesHeritagePropsUpdated,
-      titresEtapesHeritageContenuUpdated,
-      titresDemarchesStatutUpdated,
-      titresDemarchesPublicUpdated,
-      titresDemarchesOrdreUpdated,
-      titresStatutIdUpdated,
-      titresPublicUpdated,
+      // titresEtapesOrdreUpdated,
+      // titresEtapesHeritagePropsUpdated,
+      // titresEtapesHeritageContenuUpdated,
+      // titresDemarchesStatutUpdated,
+      // titresDemarchesPublicUpdated,
+      // titresDemarchesOrdreUpdated,
+      // titresStatutIdUpdated,
+      // titresPublicUpdated,
       titresPhasesUpdated,
       titresPhasesDeleted,
       titresDatesUpdated,
