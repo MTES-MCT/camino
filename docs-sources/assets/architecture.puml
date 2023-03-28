@@ -3,6 +3,7 @@
 
 !include <office/Databases/database>
 !include <office/Servers/application_server>
+!include <office/Servers/reverse_proxy>
 !include <office/Concepts/application_web>
 !include <office/Devices/device_laptop>
 !include <office/Servers/3rd_party_mail_server>
@@ -11,41 +12,38 @@ OFF_DEVICE_LAPTOP(Utilisateurs, Utilisateurs)
 
 
 package Gouvernement {
-  together {
-    OFF_APPLICATION_SERVER(Sentry, Sentry)
-    OFF_APPLICATION_SERVER(Matomo, Matomo)
-  }
+  OFF_APPLICATION_SERVER(Sentry, Sentry)
+  OFF_APPLICATION_SERVER(Matomo, Matomo)  
   OFF_APPLICATION_SERVER(Cerbere, Cerbere)
   OFF_APPLICATION_SERVER(Insee, Insee)
   OFF_APPLICATION_SERVER(Administrations, Administrations)
-
-  Matomo -[hidden]->Cerbere
-  Cerbere -[hidden]>Insee
-  Insee -[hidden]d->Administrations
 }
 
 package Camino {
-  OFF_APPLICATION_WEB(UI, Interface)
-  OFF_APPLICATION_SERVER(API,Serveur)
+  OFF_APPLICATION_WEB(UI, UI)
+  OFF_APPLICATION_SERVER(API,API)
+  OFF_APPLICATION_SERVER(USERS,Keycloak)
+  OFF_REVERSE_PROXY(PROXY, Oauth2Proxy)
   OFF_DATABASE(Postgres,Postgres/PostGIS)
-  OFF_APPLICATION_SERVER(CRON,Cron)
 
-  UI <--> API
-  API --> Postgres
-  CRON --> Postgres
-  Postgres -[hidden]d-> CRON
+  UI <-l-> PROXY
+  PROXY <--> API
+  PROXY <--> USERS
+  Postgres <-- USERS
+  Postgres <-- API
+  API <-> USERS
 }
 package Externes {
   OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
 }
+
 Utilisateurs --> UI
-API -> Cerbere
-API -> Insee
-API -> Matomo: statistiques
-UI -> Sentry: erreurs
-CRON -> Administrations
-CRON -> Insee
-API -r-> Sentry: erreurs
-API -> Mailjet: envoie mail
-Matomo <- UI: statistiques
+API --> Cerbere
+API --> Insee
+API --> Matomo: statistiques
+API --> Administrations: cron
+UI --> Sentry: erreurs
+API --> Sentry: erreurs
+API --> Mailjet: envoie mail
+Matomo <-- UI: statistiques
 @enduml

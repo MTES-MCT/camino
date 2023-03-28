@@ -454,14 +454,11 @@ entity "**utilisateurs**" {
   + ""id"": //character varying(255) [PK]//
   --
   ""email"": //character varying(255) //
-  ""mot_de_passe"": //character varying(255) //
   ""nom"": //character varying(255) //
   ""prenom"": //character varying(255) //
   ""telephone_fixe"": //character varying(255) //
   ""telephone_mobile"": //character varying(255) //
-  ""refresh_token"": //character varying(255) //
   *""role"": //character varying(255) //
-  ""preferences"": //json //
   *""date_creation"": //character varying(255) //
   ""administration_id"": //character varying(255) [FK]//
   ""qgis_token"": //character varying(255) //
