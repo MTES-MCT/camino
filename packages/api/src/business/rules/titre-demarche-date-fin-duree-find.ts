@@ -5,6 +5,7 @@ import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate, dateAddMonths, monthsBetween, toCaminoDate } from 'camino-common/src/date.js'
+import { EtapesTypes, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 // entrée
 // - les démarches d'un titre
@@ -148,6 +149,13 @@ export const newTitreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEta
   const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(typeId) && (dateFin || duree))
 
   if (!titreEtapeHasDateFinOrDuree) {
+
+    const etapeClassementSansSuite = titreEtapesSorted.find(({typeId}) => typeId === ETAPES_TYPES.classementSansSuite)
+
+    if( etapeClassementSansSuite) {
+      return {dateFin: etapeClassementSansSuite.date, duree: 0}
+    }
+
     return { dateFin: null, duree: 0 }
   }
 

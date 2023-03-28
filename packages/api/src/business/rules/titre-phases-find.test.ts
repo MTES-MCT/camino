@@ -132,9 +132,9 @@ describe("phases d'une démarche", () => {
         statutId: 'cls',
         phase: null,
         etapes: [
+          { titreDemarcheId: demarcheId1, id: '3', ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
           { titreDemarcheId: demarcheId1, id: '1', ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
           { titreDemarcheId: demarcheId1, id: '2', ordre: 3, date: toCaminoDate('2017-04-07'), typeId: 'css', statutId: 'fai' },
-          { titreDemarcheId: demarcheId1, id: '3', ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
         ],
       },
       {
@@ -262,6 +262,75 @@ describe("phases d'une démarche", () => {
         titreDemarcheId: newDemarcheId('demarcheId11'),
       },
     ])
+  })
+
+  test('cas de survie provisoire avec la prolongation en classement sans suite après la fin de l’octroi', () => {
+    const titreId = 'titreId'
+    const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
+    const demarcheIdProlongation = newDemarcheId('demarcheIdProlongation')
+    const demarches: ITitreDemarche[] = [
+      {
+        titreId,
+        id: demarcheIdProlongation,
+        ordre: 11,
+        typeId: 'pro',
+        statutId: 'cls',
+        etapes: [
+          { titreDemarcheId: demarcheIdProlongation, id: '2', ordre: 3, date: toCaminoDate('2011-04-07'), typeId: 'css', statutId: 'fai' },
+          { titreDemarcheId: demarcheIdProlongation, id: '1', ordre: 2, date: toCaminoDate('2008-12-28'), typeId: 'mdp', statutId: 'fai' },
+          { titreDemarcheId: demarcheIdProlongation, id: '3', ordre: 1, date: toCaminoDate('2008-12-28'), duree: 60, typeId: 'mfr', statutId: 'fai' },
+        ],
+      },
+      {
+        titreId,
+        id: demarcheIdOctroi,
+        ordre: 1,
+        typeId: 'oct',
+        statutId: 'acc',
+        etapes: [
+          { id: '24', titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
+          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'acc' },
+        ],
+      },
+    ]
+
+    const tested = titrePhasesFind(demarches, toCaminoDate('2050-01-01'), 'cxm')
+    expect(tested).toStrictEqual([
+      {
+        dateDebut: '2000-03-24',
+        dateFin: '2010-03-24',
+        phaseStatutId: 'ech',
+        titreDemarcheId: demarcheIdOctroi,
+      },{
+        dateDebut: '2010-03-24',
+        dateFin: '2011-04-07',
+        phaseStatutId: 'ech',
+        titreDemarcheId: demarcheIdProlongation,
+      },
+    ])
+  })
+
+
+
+  test('un octroi rejeté ne génère pas de phase', () => {
+    const titreId = 'titreId'
+    const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
+    const demarches: ITitreDemarche[] = [
+      {
+        titreId,
+        id: demarcheIdOctroi,
+        ordre: 1,
+        typeId: 'oct',
+        statutId: 'acc',
+        etapes: [
+          { id: '24', titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
+          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'acc' },
+        ],
+      },
+    ]
+
+    const tested = titrePhasesFind(demarches, toCaminoDate('2050-01-01'), 'cxm')
+    expect(tested).toStrictEqual([])
   })
 
   test("modification d'une mutation suite à renonciation totale en décision implicite", () => {

@@ -5,7 +5,7 @@ import { titreDemarchePhaseCheck } from './titre-demarche-phase-check.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
-import { isDemarcheStatusWithPhase, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
+import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date.js'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
@@ -108,6 +108,8 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
 
   return dateDebut
 }
+
+type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & {dateDeFinParDefaut?: true}
 /**
  * Retourne les phases d'un titre
  * @param titreDemarches - démarches d'un titre
@@ -122,15 +124,15 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
   const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
   const filteredDemarches = sortedDemarches.filter(
-    demarche => demarche.etapes?.length && isDemarcheStatusWithPhase(demarche.statutId) && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
+    demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
   )
 
-  const phases = filteredDemarches.reduce<Omit<ITitrePhase, 'phaseStatutId'>[]>((acc, demarche) => {
+  const phases = filteredDemarches.reduce<IntermediateTitrePhase[]>((acc, demarche) => {
     if (!demarche.etapes?.length) {
       return acc
     }
     const isFirstPhase = acc.length === 0
-    let dateDebut: CaminoDate | null | undefined = findDateDebut(demarche, titreTypeId, isFirstPhase || acc[acc.length - 1].dateFin === null)
+    let dateDebut: CaminoDate | null | undefined = findDateDebut(demarche, titreTypeId, isFirstPhase || (acc[acc.length - 1].dateDeFinParDefaut ?? false))
 
     if (isFirstPhase) {
       if (!isDemarcheTypeOctroi(demarche.typeId)) {
@@ -158,7 +160,8 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
           // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
           acc.push({
             dateDebut,
-            dateFin: null,
+            dateFin: DATE_PAR_DEFAUT_TITRE_INFINI,
+            dateDeFinParDefaut: true,
             titreDemarcheId: demarche.id,
           })
         }
@@ -175,6 +178,8 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
         throw new Error(`une phase précédente sans date de fin est impossible ${demarche.titreId} -- ${demarche.id}`)
       }
       const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
+
+      if( !dateFin || dateFin > dateDebut ) {
       if (dateFin) {
         acc.push({
           dateDebut,
@@ -200,20 +205,15 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
             titreDemarcheId: demarche.id,
           })
         }
+        }
       }
     }
 
     return acc
   }, [])
 
-  return phases.map<ITitrePhase>((p, index) => {
-    if (p.dateFin === null && index === 0) {
-      // si il n'y a pas de durée,
-      // la date de fin par défaut est fixée au 31 décembre 2018,
-      // selon l'article L144-4 du code minier :
-      // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
-      p.dateFin = DATE_PAR_DEFAUT_TITRE_INFINI
-    }
+  return phases.map<ITitrePhase>(p => {
+    delete p.dateDeFinParDefaut
     if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
       p.dateFin = titreDemarcheAnnulationDate
     }
