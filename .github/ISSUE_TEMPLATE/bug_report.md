@@ -13,7 +13,7 @@ Une description claire et précise du problème.
 
 **Comment reproduire le bug**
 
-Ètapes pour arriver au problème:
+Étapes pour arriver au problème:
 1. [ ] Aller sur '...'
 2. [ ] Cliquer sur '....'
 3. [ ] Naviguer vers '....'
