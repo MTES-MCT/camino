@@ -68,7 +68,7 @@ export const App = defineComponent({
 
         <Transition name="fade">{popup.value.component ? <div class="absolute full bg-inverse-alpha" style="z-index: 600" /> : null}</Transition>
 
-        <Transition name="slide-top">{popup.value.component ? popup.value.component(popup.value.props) : null}</Transition>
+        <Transition name="slide-top">{popup.value.component ? <popup.value.component {...popup.value.props} /> : null}</Transition>
 
         <Transition name="fade">
           {loading.value || fileLoading.value.total ? (
