@@ -4,8 +4,8 @@ import { Tag } from '../_ui/tag'
 import { InputDate } from '../_ui/input-date'
 import InputNumber from '../_ui/input-number.vue'
 import { HeritageEdit } from './heritage-edit'
-import PropDuree from './prop-duree.vue'
-import AutocompleteEntreprise from './autocomplete-entreprise.vue'
+import { PropDuree } from './prop-duree'
+import { AutocompleteEntreprise } from './autocomplete-entreprise'
 import { CaminoDate } from 'camino-common/src/date'
 
 import { etablissementNameFind } from '@/utils/entreprise'
@@ -21,7 +21,7 @@ import { watch, computed, ref } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
 
-interface Props {
+export interface Props {
   etape: EtapeFondamentale
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
@@ -252,7 +252,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                   selectedEntities={props.etape.titulaires}
                   nonSelectableEntities={entreprisesDisabled.value}
                   placeholder="Sélectionner un titulaire"
-                  onOnEntreprisesUpdate={titulairesUpdate}
+                  onEntreprisesUpdate={titulairesUpdate}
                 />
                 <div class="h6 mt-s">
                   {titulairesLength.value ? (
@@ -296,7 +296,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                   selectedEntities={props.etape.amodiataires}
                   nonSelectableEntities={entreprisesDisabled.value}
                   placeholder="Sélectionner un amodiataire"
-                  onOnEntreprisesUpdate={amodiatairesUpdate}
+                  onEntreprisesUpdate={amodiatairesUpdate}
                 />
                 <div class="h6 mt-s">
                   {amodiatairesLength.value ? (

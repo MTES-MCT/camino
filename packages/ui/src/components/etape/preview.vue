@@ -102,7 +102,7 @@
 <script>
 import { dateFormat, cap } from '@/utils'
 import Perimetre from './perimetre.vue'
-import Fondamentales from './fondamentales.vue'
+import { Fondamentales } from './fondamentales'
 import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
 import Accordion from '../_ui/accordion.vue'

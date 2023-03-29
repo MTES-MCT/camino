@@ -7,7 +7,7 @@
 
     <main class="main">
       <div class="container">
-        <Error v-if="error" :couleur="error.type" :message="error.value" />
+        <CaminoError v-if="error" :couleur="error.type" :message="error.value" />
         <RouterView v-else-if="loaded" />
       </div>
     </main>
@@ -57,7 +57,7 @@ import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 import { IconSprite } from './components/_ui/iconSprite'
 
-import { Error } from './components/error'
+import { CaminoError } from './components/error'
 import { computed, inject } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
