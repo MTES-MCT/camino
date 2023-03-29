@@ -308,7 +308,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
     if (!titreEtapeOld.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || !titreEtapeOld.demarche.titre.administrationsLocales || !titreEtapeOld.demarche.titre.titreStatutId) {
+    if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || titreEtapeOld.demarche.titre.administrationsLocales === undefined || !titreEtapeOld.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -318,7 +318,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
         titreEtapeOld.typeId,
         titreEtapeOld.statutId,
         titreEtapeOld.titulaires,
-        titreEtapeOld.demarche.titre.administrationsLocales,
+        titreEtapeOld.demarche.titre.administrationsLocales ?? [],
         titreEtapeOld.demarche.typeId,
         {
           typeId: titreEtapeOld.demarche.titre.typeId,
@@ -602,7 +602,7 @@ const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: G
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (!titreEtape.demarche || !titreEtape.demarche.titre || !titreEtape.demarche.titre.administrationsLocales || !titreEtape.demarche.titre.titreStatutId) {
+    if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -612,7 +612,7 @@ const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: G
         titreEtape.typeId,
         titreEtape.statutId,
         titreEtape.titulaires,
-        titreEtape.demarche.titre.administrationsLocales,
+        titreEtape.demarche.titre.administrationsLocales ?? [],
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
