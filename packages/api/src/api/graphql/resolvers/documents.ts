@@ -69,7 +69,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (!titreEtape.demarche || !titreEtape.demarche.titre || !titreEtape.demarche.titre.administrationsLocales || !titreEtape.demarche.titre.titreStatutId) {
+    if (!titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -79,7 +79,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
         titreEtape.typeId,
         titreEtape.statutId,
         titreEtape.titulaires,
-        titreEtape.demarche.titre.administrationsLocales,
+        titreEtape.demarche.titre.administrationsLocales ?? [],
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
