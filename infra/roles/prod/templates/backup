@@ -1,6 +1,8 @@
 #!/bin/bash
 set eufo -pipefail
 
+source /srv/scripts/restic_data
+
 if [ "$(id -u)" != "{{git_user_uid}}" ]; then
    echo "This script must be run as git" 1>&2
    exit 1
@@ -14,13 +16,5 @@ docker exec camino_api_db pg_dump --clean --if-exists --format=c --no-owner --no
 # sauvegarde les fichiers
 rsync --delete -r /srv/www/camino/files/  /srv/backups/files
 chown git:users -R /srv/backups/
-
-
-export RESTIC_REPOSITORY=s3:https://b3.din.developpement-durable.gouv.fr/Camino
-export RESTIC_PASSWORD={{ restic_password }}
-# Environnement B3 (Identifiant)
-export AWS_ACCESS_KEY_ID={{ restic_s3_client_id }}
-export AWS_SECRET_ACCESS_KEY={{ restic_s3_client_secret }}
-
 
 restic backup /srv/backups/

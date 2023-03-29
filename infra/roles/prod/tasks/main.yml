@@ -1,4 +1,13 @@
 ---
+- name: Ajoute les variables d'environnement
+  ansible.builtin.template:
+    src: restic_data
+    dest: /srv/scripts/
+    mode: u=rwx,g=rx,o=r
+    owner: git
+    group: users
+    backup: yes
+  become: True
 - name: Ajoute le script de backup
   ansible.builtin.template:
     src: backup

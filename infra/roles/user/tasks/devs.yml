@@ -24,3 +24,8 @@
     state: present
     key: "{{ camino_dev.ssh }}"
   become: True
+- name: "{{ camino_dev.nom }}: source restic creds"
+  ansible.builtin.lineinfile:
+    path: "/home/{{ camino_dev.nom }}/.bashrc"
+    line: source /srv/scripts/restic_data
+  when: env == 'prod'
