@@ -312,7 +312,7 @@ describe("phases d'une démarche", () => {
     ])
   })
 
-  test.only('un octroi rejeté ne génère pas de phase', () => {
+  test('un octroi rejeté ne génère pas de phase', () => {
     const titreId = 'titreId'
     const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
     const demarches: ITitreDemarche[] = [
@@ -790,6 +790,55 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2017-11-11',
         dateFin: '2022-11-11',
+        phaseStatutId: 'ech',
+        titreDemarcheId: newDemarcheId('demarcheId1'),
+      },
+    ])
+  })
+
+  test(`une démarche avec deux dpu (une acceptée, puis une de rejet) génère une phase qui se termine au rejet`, () => {
+    const demarches: ITitreDemarche[] = [
+      {
+        id: newDemarcheId('demarcheId1'),
+        titreId: 'titreId',
+        typeId: 'oct',
+        statutId: 'acc',
+        ordre: 1,
+        etapes: [
+          {
+            id: 'demarcheId1etapeId3',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dpu',
+            statutId: 'rej',
+            ordre: 3,
+            date: toCaminoDate('2018-11-11'),
+          },
+          {
+            id: 'demarcheId1etapeId2',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dpu',
+            statutId: 'acc',
+            ordre: 2,
+            date: toCaminoDate('2017-11-11'),
+            duree: 60,
+          },
+          {
+            id: 'demarcheId1etapeId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dex',
+            statutId: 'acc',
+            ordre: 1,
+            date: toCaminoDate('2017-11-06'),
+          },
+        ],
+      },
+    ]
+
+    const tested = titrePhasesFind(demarches, aujourdhui, 'prw')
+    expect(tested).toStrictEqual([
+      {
+        dateDebut: '2017-11-11',
+        dateFin: '2018-11-11',
         phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('demarcheId1'),
       },
