@@ -1,40 +1,40 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="936px" preserveAspectRatio="none" style="width:558px;height:936px;background:#FFFFFF;" version="1.1" viewBox="0 0 558 936" width="558px" zoomAndPan="magnify"><defs/><g><!--MD5=[a251cab66b6246413bbd31d8282522ce]
-cluster Gouvernement--><g id="cluster_Gouvernement"><path d="M8.5,369 L127.5,369 A3.75,3.75 0 0 1 130,371.5 L137,391.2969 L218.5,391.2969 A2.5,2.5 0 0 1 221,393.7969 L221,926.5 A2.5,2.5 0 0 1 218.5,929 L8.5,929 A2.5,2.5 0 0 1 6,926.5 L6,371.5 A2.5,2.5 0 0 1 8.5,369 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="6" x2="137" y1="391.2969" y2="391.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="118" x="10" y="383.9951">Gouvernement</text></g><!--MD5=[319459dd39e1a3d7faf276cf500fb86c]
-cluster Camino--><g id="cluster_Camino"><path d="M231.5,112 L290.5,112 A3.75,3.75 0 0 1 293,114.5 L300,134.2969 L388.5,134.2969 A2.5,2.5 0 0 1 391,136.7969 L391,926.5 A2.5,2.5 0 0 1 388.5,929 L231.5,929 A2.5,2.5 0 0 1 229,926.5 L229,114.5 A2.5,2.5 0 0 1 231.5,112 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="229" x2="300" y1="134.2969" y2="134.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="58" x="233" y="126.9951">Camino</text></g><!--MD5=[a0b8db3a31e1ae33e91c4ae6290abb22]
-cluster Externes--><g id="cluster_Externes"><path d="M467.5,377 L538.5,377 A3.75,3.75 0 0 1 541,379.5 L548,399.2969 L548.5,399.2969 A2.5,2.5 0 0 1 551,401.7969 L551,512.5 A2.5,2.5 0 0 1 548.5,515 L467.5,515 A2.5,2.5 0 0 1 465,512.5 L465,379.5 A2.5,2.5 0 0 1 467.5,377 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="465" x2="548" y1="399.2969" y2="399.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="70" x="469" y="391.9951">Externes</text></g><!--MD5=[54a0bd70917f4235b84b8ddb209c8dda]
-entity Cerbere--><g id="elem_Cerbere"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="80" x="25" y="630"/><image height="48" width="40" x="35" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="640"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="39" y="700.9951">Cerbere</text></g><!--MD5=[6df8c37eff84032735dfece3f0b5166f]
-entity Insee--><g id="elem_Insee"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="62" x="140" y="630"/><image height="48" width="40" x="150" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="640"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38" x="154" y="700.9951">Insee</text></g><!--MD5=[26a0c43ac3f82932659208e3c4ccf5b1]
-entity Administrations--><g id="elem_Administrations"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="130" x="83" y="837"/><image height="48" width="40" x="93" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="847"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="106" x="97" y="907.9951">Administrations</text></g><!--MD5=[8c1934be4febfaef4a9f4ab6ed25d16c]
-entity Sentry--><g id="elem_Sentry"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="68" x="137" y="423"/><image height="48" width="40" x="147" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="433"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="151" y="493.9951">Sentry</text></g><!--MD5=[2cd49e4f1bbe02e16c374407e72acfe4]
-entity Matomo--><g id="elem_Matomo"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="80" x="22" y="423"/><image height="48" width="40" x="32" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="433"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="36" y="493.9951">Matomo</text></g><!--MD5=[c42ed81cef7fdd2e33758127945b9a5b]
-entity UI--><g id="elem_UI"><rect fill="#F1F1F1" height="78.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="84" x="237" y="158"/><image height="42" width="48" x="247" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAqCAIAAAB6LU8tAAACIklEQVR4Xu2X623DMAyEs6JGyAgeISN4hI7gETyCR/AI3KAHnkUwtAOlBa20gO9HIFGq+JmkHr3JH9MtGj6tDWhZlmEYSnfd7/d5ng+APkJjOgCKU1I1TRNcIBhFfa/risY4jmg/Hg+0Yak8XYDgFUxsf6nQQE5gJGVvoKb+D5BZu6lRQ2btpguopQuopQuopQuopa5A5gZecbeja68fG0K3ExBvdakrE4jtRYXbnhxonwvESHA1cOyBMIo2h8JzUdKBVhU+Gp7wy2XLM1DRVxG6fLhhml8hGYixoSfREgEKaogESBO6NkpLeY5TJhCfgkVfg6LvdLgPJYIugDA0qzgfn2ET0oB8RkKCir5ipXqhwhwLWxqQvZqLpsCiRe2BGEVv4TppQOJShrzwxDPtgYq6Y81x33GRNCArF/9Pj+kVECZzl+Fj2EgD4grEEi0pOOMWQ3Z4SA4qbjo7stEmPS3JQLYOvO4PPROPA9v2FEN7FpDvIgCj/p8a8hgsyRHyVRw+vbyuIQOyut6Awt//SKwPcTfXO9ueh6EfpTagtd6Iv5A/Z1mkqIbmwUgLZ4q70TagFHH72NJoI2aIva8h22Wchl8M+U/KBLKo8BSm5WlGNZLGUmxJl1wgqS/Aooe1vzvDLmOXbV9Akg4k9VJjFmzrhRpiqe1p5Awg0coAkC9tD8QEWdiCTgGikLJVBd8GxOOYv4c6EciL1X1Y40GdgN7XN7GO3HBTKsoaAAAAAElFTkSuQmCC" y="168"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60" x="251" y="222.9951">Interface</text></g><!--MD5=[645d8587175d8f7ad110cd370775931d]
-entity API--><g id="elem_API"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="77" x="287.5" y="423"/><image height="48" width="40" x="297.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="433"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="53" x="301.5" y="493.9951">Serveur</text></g><!--MD5=[7fbd20eab0f047d95d8cf961cd333b40]
-entity Postgres--><g id="elem_Postgres"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="145" x="237.5" y="630"/><image height="48" width="35" x="247.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAwCAIAAAAU+VQ7AAABRUlEQVR4Xu2Y0RWDIAxFu2JH6AiOwAiO4AiO4AiM4Ahu0Hd4bSBRa9ugX9wvD4ZcGuCcxttyFTc7cBoHpnmep2kahiGE0HXdI3FP8Bnjfd+P4xhjtJM1GyamRl5m/AnMohhLNGmVCRGyZD9QlsmzCXWwsW6wblRImc7QEMiUqWLR1igTfqN9XwnZrbxPkP133vZAncpDYU95FR8c64Oe90kOyZIuLEKxInNbN2EAInGscBFLAa4zBvn8MnEOok0omRNxB741U7BuOc8cUSaBSkQzyzqRQZaCSqwvDGO2TSVSHNanhIOHFf7W5KeZPDSTh2by0EwemslDM3loJg/N5EGZPvwD9aNM53VqwfQayzmtLkol3UM2AfQXNtYBll42Kcq0pP4EDZpz24yDWJPAZmjzO44gDU94f9Nhy2VzJXZN1bnO9ASmRZLIuPrlzAAAAABJRU5ErkJggg==" y="640"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121" x="251.5" y="700.9951">Postgres/PostGIS</text></g><!--MD5=[d1918f31dea6862af21d869c45218abf]
-entity CRON--><g id="elem_CRON"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="60" x="256" y="837"/><image height="48" width="40" x="266" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="847"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="270" y="907.9951">Cron</text></g><!--MD5=[581adf54b155a040bf7b536f279324e0]
-entity Mailjet--><g id="elem_Mailjet"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="67" x="474.5" y="423"/><image height="48" width="38" x="484.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAwCAIAAADy0J9/AAABd0lEQVR4Xu2Y7XGEIBCGr0VKSAmWYAmUYAmWQAmWYAl0kHfYyWZZZA84LpNJfH7cKB/7gCer+Ig/zkMXvJ8RpRvFex+l8jiO8AxWcq92fCKyEidqRJec5xlnKVXoGr1K7hhvpXMfdXqVEkspml0j28iOxLqu300FlnKtU85SL6MQsNi4VmIpDUplO9OUqoEkfKUOYpqynVtpwMoxxpUv8uuVl2TxGriVjWTxGriVBsuy8BMtD/icbiW/GwzTraQn8LZtSyeU7UaUMb0J6NI29n0fVKKnLm1jJK27v6OkEgOlxK1EL3Yox/0sq1xaTnxcVe4mSglHTLs2ioMDriLkvVZV2iilS1auAjhFfuAhykFMUzIcCkqXrpZL65gbTFMiEF1YZCX65/iXMqJsea2kEoOasqxSVJXZDqPAiEu5V05LUVXaGEqaq69/A5ijRBRMLogNV7k0mTlKXEaWQSwXfskcZReZsov/oQxTHtG9wLp1Qr44rHyFTycdJpTPebUSAAAAAElFTkSuQmCC" y="433"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="488.5" y="493.9951">Mailjet</text></g><!--MD5=[53a4e3a0b3b1434cfa6c5de089f495ac]
-entity Utilisateurs--><g id="elem_Utilisateurs"><rect fill="#F1F1F1" height="66.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100" x="229" y="7"/><image height="30" width="48" x="239" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAeCAIAAADlxgqWAAAAvklEQVR4Xu3X0Q2DIBSFYVd0BEZgBEZghI7ACIzACIzQDXoSDOrR9FpSwYf7v6moX2400en9sCbeMboTkPd+7pIxJqVEd2dQCIHPuzOYCMCgMp7jur+H2RQT7R8Gyjkr6GsKklKQlIKkFCSlICkFSSlI6jcQyjd39YvRWlvWdSvGuAXsQM45Xt6lrWkFNWgwznp6DVfndReq/0MLqEEzH6Zda7taMS0gvFZ8vHv4JVxBeOyx/RoUbl2HzW/Z8D49mh4kURvU5wAAAABJRU5ErkJggg==" y="17"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76" x="243" y="59.9951">Utilisateurs</text></g><!--MD5=[ae8f55762476804eff771228f9347183]
-link Matomo to Cerbere--><!--MD5=[1f07374256f45ba37bb50a9f0e92dc3c]
-link Cerbere to Insee--><!--MD5=[5e61de9a20d27b14bf65047e72460c94]
-link Insee to Administrations--><!--MD5=[2a606f92fdd05c1fe5dd6caf7c834332]
-link UI to API--><g id="link_UI_API"><path d="M286.776,241.3399 C295.328,290.1042 309.0134,368.1404 317.7497,417.956 " fill="none" id="UI-API" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="318.6319,422.9863,321.0171,413.4306,317.7682,418.0615,313.1374,414.8126,318.6319,422.9863" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="285.8845,236.2565,283.4996,245.8122,286.7483,241.1813,291.3793,244.4301,285.8845,236.2565" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[4695ed91f423ba1c16633039bbdaf4fd]
-link API to Postgres--><g id="link_API_Postgres"><path d="M322.7429,507.139 C320.1041,541.2778 316.3879,589.3563 313.6493,624.7874 " fill="none" id="API-to-Postgres" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="313.2526,629.92,317.9345,621.2551,313.638,624.9349,309.9583,620.6384,313.2526,629.92" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f743e3245976d9d16920a247c3ca78ec]
-link CRON to Postgres--><g id="link_CRON_Postgres"><path d="M301.9931,836.92 C308.9796,802.7972 314.6974,754.7195 316.0641,719.2739 " fill="none" id="CRON-to-Postgres" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="316.2338,714.139,311.9385,723.0019,316.0685,719.1363,319.9341,723.2663,316.2338,714.139" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a0d09ea99ee7199dcf9c6d96f0709cd4]
-link Postgres to CRON--><!--MD5=[133de154cbb1ae1d4142c9399328e425]
-link Utilisateurs to UI--><g id="link_Utilisateurs_UI"><path d="M279,73.2957 C279,96.4051 279,127.4432 279,152.6476 " fill="none" id="Utilisateurs-to-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="279,157.9325,283,148.9325,279,152.9325,275,148.9325,279,157.9325" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[59a7c2fc74aa7946f4a71cc4df2178ec]
-link API to Cerbere--><g id="link_API_Cerbere"><path d="M287.4886,495.5436 C240.0432,533.1726 159.5918,596.9789 109.5358,636.6785 " fill="none" id="API-to-Cerbere" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="105.3877,639.9684,114.9247,637.5097,109.3052,636.8614,109.9535,631.2418,105.3877,639.9684" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[be3be348efb594e7dc6aeb4925ce228d]
-link API to Insee--><g id="link_API_Insee"><path d="M294.4466,507.139 C268.5891,541.6713 232.0518,590.4663 205.439,626.0072 " fill="none" id="API-to-Insee" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="202.2442,630.2739,210.8405,625.4672,205.2411,626.2716,204.4367,620.6722,202.2442,630.2739" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[391497ebdc0f9cec0cc95c8724811338]
-link API to Matomo--><g id="link_API_Matomo"><path d="M292.3545,422.5284 C273.7323,402.5013 248.7569,380.6931 221,370 C178.6972,353.7032 158.4491,347.6643 119,370 C100.4842,380.4835 87.3269,399.6464 78.3545,418.0298 " fill="none" id="API-to-Matomo" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="76.1629,422.681,83.6178,416.2448,78.2943,418.158,76.3811,412.8346,76.1629,422.681" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="132" y="357.0669">statistiques</text></g><!--MD5=[2adc23712abfb26ece49e8e3b807ce47]
-link UI to Sentry--><g id="link_UI_Sentry"><path d="M263.1802,236.2565 C243.7119,284.5668 210.6881,366.5147 189.9032,418.0919 " fill="none" id="UI-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="187.9309,422.9863,195.0051,416.1339,189.7999,418.3487,187.585,413.1435,187.9309,422.9863" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="239" y="310.0669">erreurs</text></g><!--MD5=[08795052adbafbd514547914777e66fb]
-link CRON to Administrations--><g id="link_CRON_Administrations"><path d="M255.8672,879 C243.4304,879 230.9935,879 218.5566,879 " fill="none" id="CRON-to-Administrations" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="213.2266,879,222.2266,883,218.2266,879,222.2266,875,213.2266,879" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[fa0a36884de025b4a4408b2c57899acf]
-link CRON to Insee--><g id="link_CRON_Insee"><path d="M262.6222,836.92 C243.5874,802.6574 216.7362,754.3252 197.0215,718.8387 " fill="none" id="CRON-to-Insee" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="194.4106,714.139,195.2849,723.949,196.8389,718.5097,202.2781,720.0637,194.4106,714.139" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3c65e303467f427a981473c1f270161b]
-link API to Sentry--><g id="link_API_Sentry"><path d="M287.4278,465 C263.9039,465 233.9166,465 210.267,465 " fill="none" id="API-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="205.0154,465,214.0154,469,210.0154,465,214.0154,461,205.0154,465" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="223.25" y="458.0669">erreurs</text></g><!--MD5=[0ba011d2d4c3974e08ce490fd64f800b]
-link API to Mailjet--><g id="link_API_Mailjet"><path d="M364.5975,465 C395.3727,465 438.2775,465 469.1252,465 " fill="none" id="API-to-Mailjet" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="474.3532,465,465.3532,461,469.3532,465,465.3532,469,474.3532,465" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="73" x="383" y="458.0669">envoie mail</text></g><!--MD5=[0dfe3024d1bbb522efd1eb12cd5f29f9]
-reverse link Matomo to UI--><g id="link_Matomo_UI"><path d="M79.3746,417.9961 C94.1649,382.2061 117.9508,333.1093 149,297 C174.2481,267.6373 209.3595,241.2498 236.7288,222.9633 " fill="none" id="Matomo-backto-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="77.4371,422.734,84.5464,415.918,79.3298,418.1061,77.1417,412.8896,77.4371,422.734" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="150" y="310.0669">statistiques</text></g><!--MD5=[137e473581a58fed94c0b1a14f0f9de3]
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="627px" preserveAspectRatio="none" style="width:712px;height:627px;background:#FFFFFF;" version="1.1" viewBox="0 0 712 627" width="712px" zoomAndPan="magnify"><defs/><g><!--MD5=[a251cab66b6246413bbd31d8282522ce]
+cluster Gouvernement--><g id="cluster_Gouvernement"><path d="M112.5,501 L231.5,501 A3.75,3.75 0 0 1 234,503.5 L241,523.2969 L683.5,523.2969 A2.5,2.5 0 0 1 686,525.7969 L686,617.5 A2.5,2.5 0 0 1 683.5,620 L112.5,620 A2.5,2.5 0 0 1 110,617.5 L110,503.5 A2.5,2.5 0 0 1 112.5,501 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="110" x2="241" y1="523.2969" y2="523.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="118" x="114" y="515.9951">Gouvernement</text></g><!--MD5=[319459dd39e1a3d7faf276cf500fb86c]
+cluster Camino--><g id="cluster_Camino"><path d="M231.5,112 L290.5,112 A3.75,3.75 0 0 1 293,114.5 L300,134.2969 L638.5,134.2969 A2.5,2.5 0 0 1 641,136.7969 L641,451.5 A2.5,2.5 0 0 1 638.5,454 L231.5,454 A2.5,2.5 0 0 1 229,451.5 L229,114.5 A2.5,2.5 0 0 1 231.5,112 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="229" x2="300" y1="134.2969" y2="134.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="58" x="233" y="126.9951">Camino</text></g><!--MD5=[a0b8db3a31e1ae33e91c4ae6290abb22]
+cluster Externes--><g id="cluster_Externes"><path d="M8.5,501 L79.5,501 A3.75,3.75 0 0 1 82,503.5 L89,523.2969 L89.5,523.2969 A2.5,2.5 0 0 1 92,525.7969 L92,617.5 A2.5,2.5 0 0 1 89.5,620 L8.5,620 A2.5,2.5 0 0 1 6,617.5 L6,503.5 A2.5,2.5 0 0 1 8.5,501 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="6" x2="89" y1="523.2969" y2="523.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="70" x="10" y="515.9951">Externes</text></g><!--MD5=[8c1934be4febfaef4a9f4ab6ed25d16c]
+entity Sentry--><g id="elem_Sentry"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="68" x="495" y="528"/><image height="48" width="40" x="505" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="509" y="598.9951">Sentry</text></g><!--MD5=[2cd49e4f1bbe02e16c374407e72acfe4]
+entity Matomo--><g id="elem_Matomo"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="80" x="598" y="528"/><image height="48" width="40" x="608" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="612" y="598.9951">Matomo</text></g><!--MD5=[54a0bd70917f4235b84b8ddb209c8dda]
+entity Cerbere--><g id="elem_Cerbere"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="80" x="283" y="528"/><image height="48" width="40" x="293" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="297" y="598.9951">Cerbere</text></g><!--MD5=[6df8c37eff84032735dfece3f0b5166f]
+entity Insee--><g id="elem_Insee"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="62" x="398" y="528"/><image height="48" width="40" x="408" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38" x="412" y="598.9951">Insee</text></g><!--MD5=[26a0c43ac3f82932659208e3c4ccf5b1]
+entity Administrations--><g id="elem_Administrations"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="130" x="118" y="528"/><image height="48" width="40" x="128" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="106" x="132" y="598.9951">Administrations</text></g><!--MD5=[c42ed81cef7fdd2e33758127945b9a5b]
+entity UI--><g id="elem_UI"><rect fill="#F1F1F1" height="78.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="68" x="565" y="142"/><image height="42" width="48" x="575" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAqCAIAAAB6LU8tAAACIklEQVR4Xu2X623DMAyEs6JGyAgeISN4hI7gETyCR/AI3KAHnkUwtAOlBa20gO9HIFGq+JmkHr3JH9MtGj6tDWhZlmEYSnfd7/d5ng+APkJjOgCKU1I1TRNcIBhFfa/risY4jmg/Hg+0Yak8XYDgFUxsf6nQQE5gJGVvoKb+D5BZu6lRQ2btpguopQuopQuopQuopa5A5gZecbeja68fG0K3ExBvdakrE4jtRYXbnhxonwvESHA1cOyBMIo2h8JzUdKBVhU+Gp7wy2XLM1DRVxG6fLhhml8hGYixoSfREgEKaogESBO6NkpLeY5TJhCfgkVfg6LvdLgPJYIugDA0qzgfn2ET0oB8RkKCir5ipXqhwhwLWxqQvZqLpsCiRe2BGEVv4TppQOJShrzwxDPtgYq6Y81x33GRNCArF/9Pj+kVECZzl+Fj2EgD4grEEi0pOOMWQ3Z4SA4qbjo7stEmPS3JQLYOvO4PPROPA9v2FEN7FpDvIgCj/p8a8hgsyRHyVRw+vbyuIQOyut6Awt//SKwPcTfXO9ueh6EfpTagtd6Iv5A/Z1mkqIbmwUgLZ4q70TagFHH72NJoI2aIva8h22Wchl8M+U/KBLKo8BSm5WlGNZLGUmxJl1wgqS/Aooe1vzvDLmOXbV9Akg4k9VJjFmzrhRpiqe1p5Awg0coAkC9tD8QEWdiCTgGikLJVBd8GxOOYv4c6EciL1X1Y40GdgN7XN7GO3HBTKsoaAAAAAElFTkSuQmCC" y="152"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="13" x="579" y="206.9951">UI</text></g><!--MD5=[645d8587175d8f7ad110cd370775931d]
+entity API--><g id="elem_API"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="60" x="284" y="362"/><image height="48" width="40" x="294" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="372"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="21" x="298" y="432.9951">API</text></g><!--MD5=[f3484e3a0a105cb8e2150657ee7c4492]
+entity USERS--><g id="elem_USERS"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="85" x="379.5" y="362"/><image height="48" width="40" x="389.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAwCAIAAADsGa/MAAABEElEQVR4Xu3X2w2DMAxAUVZkBEbICB2BERghIzBCRugI2aBWQiNsmci2GlAln4+qCo0vUKmPKT9kogt3OcIppRDCrLcsy77veKbIEbZVK2jjmSJHmA5TQiNlPAySzHkLGinDhNHxa4YtZ0zYAI2U8bANGinjYRs0UsbDNmikjIdt0EgZD9ugkTJ/Et627c3BM0UUYdsP9yuKcC5/OOiqHgxRhOvfBbjV9EAX3KQYY907l1OH57AyPBwKeLKua3u8DL84sKeF6TGNXriusCAMV0BXNXq3mp5k0a54YJjV3mMPK/XCp5dRY8P0g/grjw6z7rjVLA9b0XAUyCPCQo+FYQ99D/QsYVC/283a7yd1+Fc+sOdHkoirOLMAAAAASUVORK5CYII=" y="372"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="393.5" y="432.9951">Keycloak</text></g><!--MD5=[f72319eafa1db8d458bf75abcfde9fad]
+entity PROXY--><g id="elem_PROXY"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="112" x="418" y="139"/><image height="48" width="38" x="428" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAwCAIAAADy0J9/AAABZ0lEQVR4Xu2XUZnDIAyAZxEJlYCESqgEJCChEk5CJeBg2aVkgTGapF/7cMf/mJH8pWQZe6TbedSB63kr53l2Jrz327axmgfsSrOPkFt3ZV1Az7quZeWvDKWKU0phMvSLISs1lSGEHwHg4FmnlDaGsmQoVQxlyVCq+LtKuL5smbJsD7sSfGUpKUblNE2YuCwLRuAn7121i0UJt0jMMviSQUn7Aw1GQEzlJOiU4MNOIZ9qf4hCSb4YY/3Zd2Ax9yWVklpUdbU/pXT52GCv0EEYAX3oAhczpnuhUzp2ePCeMaKaA8mgdNkKJrTSGQtpKKGEPwIdZHXlXumwPw8yNZXyAZ1+rUgVpynxaW0oYXU8QvJYtNdqcUMpweeZ18fnxuZ9e0q5ln9LOsCRk/UmpWOvt6HE7+8hmFhHGeCgFxtZEzWUktaQEPLo577UVNqoHpR8NK2IS5QdX7pI2edfKWlUminL9tiVd/IECgaAZEDgDxwAAAAASUVORK5CYII=" y="149"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88" x="432" y="209.9951">Oauth2Proxy</text></g><!--MD5=[7fbd20eab0f047d95d8cf961cd333b40]
+entity Postgres--><g id="elem_Postgres"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="145" x="237.5" y="139"/><image height="48" width="35" x="247.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAwCAIAAAAU+VQ7AAABRUlEQVR4Xu2Y0RWDIAxFu2JH6AiOwAiO4AiO4AiM4Ahu0Hd4bSBRa9ugX9wvD4ZcGuCcxttyFTc7cBoHpnmep2kahiGE0HXdI3FP8Bnjfd+P4xhjtJM1GyamRl5m/AnMohhLNGmVCRGyZD9QlsmzCXWwsW6wblRImc7QEMiUqWLR1igTfqN9XwnZrbxPkP133vZAncpDYU95FR8c64Oe90kOyZIuLEKxInNbN2EAInGscBFLAa4zBvn8MnEOok0omRNxB741U7BuOc8cUSaBSkQzyzqRQZaCSqwvDGO2TSVSHNanhIOHFf7W5KeZPDSTh2by0EwemslDM3loJg/N5EGZPvwD9aNM53VqwfQayzmtLkol3UM2AfQXNtYBll42Kcq0pP4EDZpz24yDWJPAZmjzO44gDU94f9Nhy2VzJXZN1bnO9ASmRZLIuPrlzAAAAABJRU5ErkJggg==" y="149"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121" x="251.5" y="209.9951">Postgres/PostGIS</text></g><!--MD5=[581adf54b155a040bf7b536f279324e0]
+entity Mailjet--><g id="elem_Mailjet"><rect fill="#F1F1F1" height="84.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="67" x="15.5" y="528"/><image height="48" width="38" x="25.5" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAwCAIAAADy0J9/AAABd0lEQVR4Xu2Y7XGEIBCGr0VKSAmWYAmUYAmWQAmWYAl0kHfYyWZZZA84LpNJfH7cKB/7gCer+Ig/zkMXvJ8RpRvFex+l8jiO8AxWcq92fCKyEidqRJec5xlnKVXoGr1K7hhvpXMfdXqVEkspml0j28iOxLqu300FlnKtU85SL6MQsNi4VmIpDUplO9OUqoEkfKUOYpqynVtpwMoxxpUv8uuVl2TxGriVjWTxGriVBsuy8BMtD/icbiW/GwzTraQn8LZtSyeU7UaUMb0J6NI29n0fVKKnLm1jJK27v6OkEgOlxK1EL3Yox/0sq1xaTnxcVe4mSglHTLs2ioMDriLkvVZV2iilS1auAjhFfuAhykFMUzIcCkqXrpZL65gbTFMiEF1YZCX65/iXMqJsea2kEoOasqxSVJXZDqPAiEu5V05LUVXaGEqaq69/A5ijRBRMLogNV7k0mTlKXEaWQSwXfskcZReZsov/oQxTHtG9wLp1Qr44rHyFTycdJpTPebUSAAAAAElFTkSuQmCC" y="538"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="29.5" y="598.9951">Mailjet</text></g><!--MD5=[53a4e3a0b3b1434cfa6c5de089f495ac]
+entity Utilisateurs--><g id="elem_Utilisateurs"><rect fill="#F1F1F1" height="66.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100" x="549" y="7"/><image height="30" width="48" x="559" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAeCAIAAADlxgqWAAAAvklEQVR4Xu3X0Q2DIBSFYVd0BEZgBEZghI7ACIzACIzQDXoSDOrR9FpSwYf7v6moX2400en9sCbeMboTkPd+7pIxJqVEd2dQCIHPuzOYCMCgMp7jur+H2RQT7R8Gyjkr6GsKklKQlIKkFCSlICkFSSlI6jcQyjd39YvRWlvWdSvGuAXsQM45Xt6lrWkFNWgwznp6DVfndReq/0MLqEEzH6Zda7taMS0gvFZ8vHv4JVxBeOyx/RoUbl2HzW/Z8D49mh4kURvU5wAAAABJRU5ErkJggg==" y="17"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76" x="563" y="59.9951">Utilisateurs</text></g><!--MD5=[a8ff1305042babfa097c9da825a48f0f]
+link PROXY to UI--><g id="link_PROXY_UI"><path d="M535.3021,181 C543.4572,181 551.6123,181 559.7674,181 " fill="none" id="PROXY-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="564.8451,181,555.8451,177,559.8451,181,555.8451,185,564.8451,181" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="530.1523,181,539.1523,185,535.1523,181,539.1523,177,530.1523,181" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[6e66f461ebab4de1c9bbfe32a84f39a1]
+link PROXY to API--><g id="link_PROXY_API"><path d="M440.6566,227.4723 C413.2067,265.7306 374.491,319.6907 347.1063,357.8581 " fill="none" id="PROXY-API" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="344.159,361.9659,352.6557,356.9854,347.0739,357.9034,346.1558,352.3216,344.159,361.9659" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="443.7171,223.2068,435.2204,228.1875,440.8023,227.2693,441.7204,232.8511,443.7171,223.2068" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[dfff8fe6769ef77401f21a8e924777fa]
+link PROXY to USERS--><g id="link_PROXY_USERS"><path d="M462.938,228.4389 C454.1007,266.3372 441.7789,319.179 432.9668,356.9695 " fill="none" id="PROXY-USERS" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="431.8017,361.9659,437.741,354.1094,432.9371,357.0965,429.9499,352.2927,431.8017,361.9659" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="464.1581,223.2068,458.2186,231.0631,463.0225,228.0761,466.0095,232.8801,464.1581,223.2068" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d62068a54d2374f717191a079f4d82eb]
+reverse link Postgres to USERS--><g id="link_Postgres_USERS"><path d="M333.5827,227.9548 C353.4851,267.582 381.7197,323.799 400.8887,361.9659 " fill="none" id="Postgres-backto-USERS" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="331.198,223.2068,331.6629,233.0447,333.4421,227.6749,338.8119,229.4541,331.198,223.2068" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[e6dfa59cb373c47251a9eda57cc684fa]
+reverse link Postgres to API--><g id="link_Postgres_API"><path d="M310.8509,228.4389 C311.5612,268.0387 312.5642,323.9541 313.246,361.9659 " fill="none" id="Postgres-backto-API" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="310.7571,223.2068,306.9195,232.2772,310.847,228.206,314.9182,232.1335,310.7571,223.2068" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[1aa24abfc67c64b6f56ffe6a72df4ff8]
+link API to USERS--><g id="link_API_USERS"><path d="M349.5511,404 C357.748,404 365.9449,404 374.1419,404 " fill="none" id="API-USERS" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="379.2456,404,370.2456,400,374.2456,404,370.2456,408,379.2456,404" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="344.375,404,353.375,408,349.375,404,353.375,400,344.375,404" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[133de154cbb1ae1d4142c9399328e425]
+link Utilisateurs to UI--><g id="link_Utilisateurs_UI"><path d="M599,73.0582 C599,92.0429 599,116.1304 599,136.7323 " fill="none" id="Utilisateurs-to-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="599,141.8897,603,132.8897,599,136.8897,595,132.8897,599,141.8897" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[59a7c2fc74aa7946f4a71cc4df2178ec]
+link API to Cerbere--><g id="link_API_Cerbere"><path d="M313.6771,446.1315 C313.7744,460.957 314.1227,477.7273 315,493 C315.5513,502.598 316.4192,512.844 317.3836,522.6266 " fill="none" id="API-to-Cerbere" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="317.8955,527.6941,320.9704,518.3375,317.3928,522.7194,313.0109,519.1419,317.8955,527.6941" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[be3be348efb594e7dc6aeb4925ce228d]
+link API to Insee--><g id="link_API_Insee"><path d="M325.7893,446.1914 C332.3035,462.766 341.9964,480.7231 356,493 C364.7723,500.6906 371.6173,494.0672 381,501 C389.3714,507.1855 396.8041,515.2807 403.1714,523.7413 " fill="none" id="API-to-Insee" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="406.2111,527.9172,404.1484,518.2868,403.2685,523.8748,397.6805,522.9949,406.2111,527.9172" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[391497ebdc0f9cec0cc95c8724811338]
+link API to Matomo--><g id="link_API_Matomo"><path d="M344.2364,440.865 C349.7072,445.8699 355.694,450.4842 362,454 C405.4746,478.2383 538.4589,475.1585 581,501 C590.7005,506.8926 599.506,515.0402 607.1375,523.6763 " fill="none" id="API-to-Matomo" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="610.7883,527.9473,607.981,518.507,607.5395,524.1466,601.8999,523.7051,610.7883,527.9473" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="563" y="489.0669">statistiques</text></g><!--MD5=[23fb2008424d61495d1967b3f8902500]
+link API to Administrations--><g id="link_API_Administrations"><path d="M283.946,442.0838 C264.8014,466.3433 239.8755,497.9288 219.5828,523.6432 " fill="none" id="API-to-Administrations" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="216.3673,527.7178,225.0828,523.1309,219.4648,523.7928,218.8029,518.1749,216.3673,527.7178" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="28" x="258" y="489.0669">cron</text></g><!--MD5=[2adc23712abfb26ece49e8e3b807ce47]
+link UI to Sentry--><g id="link_UI_Sentry"><path d="M589.8927,220.0801 C583.9938,246.6993 576.5835,282.8126 572,315 C560.8074,393.5986 574.0482,415.4605 557,493 C554.8213,502.9094 551.683,513.2744 548.2889,523.0719 " fill="none" id="UI-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="546.6053,527.8315,553.3777,520.6806,548.2727,523.1177,545.8356,518.0128,546.6053,527.8315" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="573" y="328.0669">erreurs</text></g><!--MD5=[3c65e303467f427a981473c1f270161b]
+link API to Sentry--><g id="link_API_Sentry"><path d="M339.1045,446.4147 C351.7622,463.8776 368.7484,482.4542 389,493 C424.2252,511.3432 443.3771,481.5439 478,501 C487.7092,506.4561 496.0973,514.6106 503.1077,523.4219 " fill="none" id="API-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="506.4383,527.7914,504.1638,518.2088,503.4073,523.8148,497.8013,523.0584,506.4383,527.7914" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="390" y="489.0669">erreurs</text></g><!--MD5=[0ba011d2d4c3974e08ce490fd64f800b]
+link API to Mailjet--><g id="link_API_Mailjet"><path d="M283.7467,412.685 C240.1965,426.263 158.836,455.7437 102,501 C93.876,507.4688 86.2931,515.4395 79.5465,523.639 " fill="none" id="API-to-Mailjet" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="76.303,527.6769,85.0577,523.1652,79.4342,523.7787,78.8206,518.1553,76.303,527.6769" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="73" x="135" y="489.0669">envoie mail</text></g><!--MD5=[0dfe3024d1bbb522efd1eb12cd5f29f9]
+reverse link Matomo to UI--><g id="link_Matomo_UI"><path d="M638.5963,522.679 C638.6729,471.3297 637.1356,387.0262 628,315 C623.9118,282.7679 615.9384,246.8113 609.3853,220.2659 " fill="none" id="Matomo-backto-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="638.5829,527.8511,642.6063,518.8615,638.5959,522.8511,634.6063,518.8407,638.5829,527.8511" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="630" y="328.0669">statistiques</text></g><!--MD5=[f5981f083318c7b18834aa55c250ae72]
 @startuml
 !include <tupadr3/common>
 
 !include <office/Databases/database>
 !include <office/Servers/application_server>
+!include <office/Servers/reverse_proxy>
 !include <office/Concepts/application_web>
 !include <office/Devices/device_laptop>
 !include <office/Servers/3rd_party_mail_server>
@@ -43,43 +43,40 @@ OFF_DEVICE_LAPTOP(Utilisateurs, Utilisateurs)
 
 
 package Gouvernement {
-  together {
-    OFF_APPLICATION_SERVER(Sentry, Sentry)
-    OFF_APPLICATION_SERVER(Matomo, Matomo)
-  }
+  OFF_APPLICATION_SERVER(Sentry, Sentry)
+  OFF_APPLICATION_SERVER(Matomo, Matomo)  
   OFF_APPLICATION_SERVER(Cerbere, Cerbere)
   OFF_APPLICATION_SERVER(Insee, Insee)
   OFF_APPLICATION_SERVER(Administrations, Administrations)
-
-  Matomo -[hidden]->Cerbere
-  Cerbere -[hidden]>Insee
-  Insee -[hidden]d->Administrations
 }
 
 package Camino {
-  OFF_APPLICATION_WEB(UI, Interface)
-  OFF_APPLICATION_SERVER(API,Serveur)
+  OFF_APPLICATION_WEB(UI, UI)
+  OFF_APPLICATION_SERVER(API,API)
+  OFF_APPLICATION_SERVER(USERS,Keycloak)
+  OFF_REVERSE_PROXY(PROXY, Oauth2Proxy)
   OFF_DATABASE(Postgres,Postgres/PostGIS)
-  OFF_APPLICATION_SERVER(CRON,Cron)
 
-  UI <- -> API
-  API - -> Postgres
-  CRON - -> Postgres
-  Postgres -[hidden]d-> CRON
+  UI <-l-> PROXY
+  PROXY <- -> API
+  PROXY <- -> USERS
+  Postgres <- - USERS
+  Postgres <- - API
+  API <-> USERS
 }
 package Externes {
   OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
 }
+
 Utilisateurs - -> UI
-API -> Cerbere
-API -> Insee
-API -> Matomo: statistiques
-UI -> Sentry: erreurs
-CRON -> Administrations
-CRON -> Insee
-API -r-> Sentry: erreurs
-API -> Mailjet: envoie mail
-Matomo <- UI: statistiques
+API - -> Cerbere
+API - -> Insee
+API - -> Matomo: statistiques
+API - -> Administrations: cron
+UI - -> Sentry: erreurs
+API - -> Sentry: erreurs
+API - -> Mailjet: envoie mail
+Matomo <- - UI: statistiques
 @enduml
 
 @startuml
@@ -187,6 +184,57 @@ sprite $application_server [40x48/16] {
 0000000000000004AAAAAAAAAAAAAAAAAAAAAA40
 0000000000000000344444444444444444444300
 0000000000000000000000000000000000000000
+}
+
+sprite $reverse_proxy [38x48/16] {
+00000000000000000000000000000000000000
+00000000000000000000000000000000000000
+0007AAAAAAAAAAAAAAAAAA8100000000000000
+007AAAAAAAAAAAAAAAAAAAAA10000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAA30000000000001AAAA30000000000000
+00AAAA52222222222223AAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAA711100000000000000
+00AAAAAAAAAAAAAAAAA7000000000000000000
+00AAAAAAAAAAAAAAAA9006AA50000000000000
+00AAAAAAAAAAAAAAA8006AA500000000000000
+00AAAAAAAAAAAAAA9005AA6000000000000000
+00AAAAAAAAAAAAA9105AA50000000000000000
+00AAAAAAAAAAAA9104AAAAAAAAAAAAAA400000
+00AAAAAAAAAAAA7007AAAAAAAAAAAAAA400000
+00AAAAAAAAAAAAA6018AA75555555555200000
+00AAAAAAAAAAAAAA5009AA1000000000000000
+00AAAAAAAAAAAAAAA5019A9100000000000000
+00AAAA9888888888881019AA10007AA4000000
+00AAAA300000000000000111000006AA400000
+00AAAA6444444444443000000000007AA30000
+00AAAAAAAAAAAAAAAA80000000000008AA2000
+00AAAAAAAAAAAAAAAA803AAAAAAAAAAAAA9200
+00AAAAAAAAAAAAAAAA803AAAAAAAAAAAAAA300
+00AAAA52222222222220022222222238AA4000
+00AAAA3000000000000000000000005AA40000
+00AAAAAAAAAAAAAAAAAAAAAA300005AA500000
+00AAAAAAAAAAAAAAAAAAAAAA30005AA5000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00AAAAAAAAAAAAAAAAAAAAAA30000000000000
+00111111111111111111111100000000000000
+00000000000000000000000000000000000000
 }
 
 sprite $application_web [48x42/16] {
@@ -323,43 +371,40 @@ rectangle "<color:black><$device_laptop></color>\r Utilisateurs" as Utilisateurs
 
 
 package Gouvernement {
-  together {
-    rectangle "<color:black><$application_server></color>\r Sentry" as Sentry <<OFF APPLICATION_SERVER>>
-    rectangle "<color:black><$application_server></color>\r Matomo" as Matomo <<OFF APPLICATION_SERVER>>
-  }
+  rectangle "<color:black><$application_server></color>\r Sentry" as Sentry <<OFF APPLICATION_SERVER>>
+  rectangle "<color:black><$application_server></color>\r Matomo" as Matomo <<OFF APPLICATION_SERVER>>  
   rectangle "<color:black><$application_server></color>\r Cerbere" as Cerbere <<OFF APPLICATION_SERVER>>
   rectangle "<color:black><$application_server></color>\r Insee" as Insee <<OFF APPLICATION_SERVER>>
   rectangle "<color:black><$application_server></color>\r Administrations" as Administrations <<OFF APPLICATION_SERVER>>
-
-  Matomo -[hidden]->Cerbere
-  Cerbere -[hidden]>Insee
-  Insee -[hidden]d->Administrations
 }
 
 package Camino {
-  rectangle "<color:black><$application_web></color>\r Interface" as UI <<OFF APPLICATION_WEB>>
-  rectangle "<color:black><$application_server></color>\r Serveur" as API <<OFF APPLICATION_SERVER>>
+  rectangle "<color:black><$application_web></color>\r UI" as UI <<OFF APPLICATION_WEB>>
+  rectangle "<color:black><$application_server></color>\r API" as API <<OFF APPLICATION_SERVER>>
+  rectangle "<color:black><$application_server></color>\r Keycloak" as USERS <<OFF APPLICATION_SERVER>>
+  rectangle "<color:black><$reverse_proxy></color>\r Oauth2Proxy" as PROXY <<OFF REVERSE_PROXY>>
   rectangle "<color:black><$database></color>\r Postgres/PostGIS" as Postgres <<OFF DATABASE>>
-  rectangle "<color:black><$application_server></color>\r Cron" as CRON <<OFF APPLICATION_SERVER>>
 
-  UI <- -> API
-  API - -> Postgres
-  CRON - -> Postgres
-  Postgres -[hidden]d-> CRON
+  UI <-l-> PROXY
+  PROXY <- -> API
+  PROXY <- -> USERS
+  Postgres <- - USERS
+  Postgres <- - API
+  API <-> USERS
 }
 package Externes {
   rectangle "<color:black><$3rd_party_mail_server></color>\r Mailjet" as Mailjet <<OFF 3RD_PARTY_MAIL_SERVER>>
 }
+
 Utilisateurs - -> UI
-API -> Cerbere
-API -> Insee
-API -> Matomo: statistiques
-UI -> Sentry: erreurs
-CRON -> Administrations
-CRON -> Insee
-API -r-> Sentry: erreurs
-API -> Mailjet: envoie mail
-Matomo <- UI: statistiques
+API - -> Cerbere
+API - -> Insee
+API - -> Matomo: statistiques
+API - -> Administrations: cron
+UI - -> Sentry: erreurs
+API - -> Sentry: erreurs
+API - -> Mailjet: envoie mail
+Matomo <- - UI: statistiques
 @enduml
 
 PlantUML version 1.2022.3(Tue Mar 29 16:10:57 UTC 2022)
