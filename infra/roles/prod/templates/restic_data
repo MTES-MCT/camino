@@ -1,0 +1,4 @@
+export RESTIC_REPOSITORY=s3:https://b3.din.developpement-durable.gouv.fr/Camino
+export RESTIC_PASSWORD={{ restic_password }}
+export AWS_ACCESS_KEY_ID={{ restic_s3_client_id }}
+export AWS_SECRET_ACCESS_KEY={{ restic_s3_client_secret }}
