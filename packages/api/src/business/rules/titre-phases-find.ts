@@ -109,7 +109,7 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
   return dateDebut
 }
 
-type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & {dateDeFinParDefaut?: true}
+type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & { dateDeFinParDefaut?: true }
 /**
  * Retourne les phases d'un titre
  * @param titreDemarches - démarches d'un titre
@@ -118,14 +118,14 @@ type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & {dateDeFinPar
  */
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
   // On parcourt les démarches dans l’ordre chronologique
-  const sortedDemarches = titreDemarcheSortAsc(titreDemarches)
+  const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
+    return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
+  })
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
   const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
-  const filteredDemarches = sortedDemarches.filter(
-    demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
-  )
+  const filteredDemarches = sortedDemarches.filter(demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree)))
 
   const phases = filteredDemarches.reduce<IntermediateTitrePhase[]>((acc, demarche) => {
     if (!demarche.etapes?.length) {
@@ -179,32 +179,32 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
       }
       const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
 
-      if( !dateFin || dateFin > dateDebut ) {
-      if (dateFin) {
-        acc.push({
-          dateDebut,
-          dateFin,
-          titreDemarcheId: demarche.id,
-        })
-      } else if (duree) {
-        acc.push({
-          dateDebut,
-          dateFin: dateAddMonths(dateDebut, duree),
-          titreDemarcheId: demarche.id,
-        })
-      } else {
-        // TODO 2023-03-22 : Questions posées au métier sur ces démarches
-        if (['8H4rwTWHi1LFJV67Yywi3U51'].includes(demarche.id)) {
-          return acc
-        }
-        // c'est quoi un cas en survie provisoire
-        if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose].includes(demarche.statutId)) {
+      if (!dateFin || dateFin > dateDebut) {
+        if (dateFin) {
           acc.push({
             dateDebut,
-            dateFin: null,
+            dateFin,
             titreDemarcheId: demarche.id,
           })
-        }
+        } else if (duree) {
+          acc.push({
+            dateDebut,
+            dateFin: dateAddMonths(dateDebut, duree),
+            titreDemarcheId: demarche.id,
+          })
+        } else {
+          // TODO 2023-03-22 : Questions posées au métier sur ces démarches
+          if (['8H4rwTWHi1LFJV67Yywi3U51'].includes(demarche.id)) {
+            return acc
+          }
+          // c'est quoi un cas en survie provisoire
+          if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose].includes(demarche.statutId)) {
+            acc.push({
+              dateDebut,
+              dateFin: null,
+              titreDemarcheId: demarche.id,
+            })
+          }
         }
       }
     }

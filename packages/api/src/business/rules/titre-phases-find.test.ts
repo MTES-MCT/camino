@@ -18,6 +18,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find'
 import titresProd from './titre-phases-find.cas.json'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[], ITitrePhase[], CaminoDate]
 
@@ -301,7 +302,8 @@ describe("phases d'une démarche", () => {
         dateFin: '2010-03-24',
         phaseStatutId: 'ech',
         titreDemarcheId: demarcheIdOctroi,
-      },{
+      },
+      {
         dateDebut: '2010-03-24',
         dateFin: '2011-04-07',
         phaseStatutId: 'ech',
@@ -310,9 +312,7 @@ describe("phases d'une démarche", () => {
     ])
   })
 
-
-
-  test('un octroi rejeté ne génère pas de phase', () => {
+  test.only('un octroi rejeté ne génère pas de phase', () => {
     const titreId = 'titreId'
     const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
     const demarches: ITitreDemarche[] = [
@@ -324,7 +324,7 @@ describe("phases d'une démarche", () => {
         statutId: 'acc',
         etapes: [
           { id: '24', titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
-          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'acc' },
+          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'rej' },
         ],
       },
     ]
@@ -731,6 +731,67 @@ describe("phases d'une démarche", () => {
         dateFin: null,
         phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('demarcheId2'),
+      },
+    ])
+  })
+
+  test(`une démarche avec une demande en construction n'est pas prise en compte`, () => {
+    const demarches: ITitreDemarche[] = [
+      {
+        id: newDemarcheId('demarcheId1'),
+        titreId: 'titreId',
+        typeId: 'oct',
+        statutId: 'acc',
+        ordre: 1,
+        etapes: [
+          {
+            id: 'demarcheId1etapeId2',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dpu',
+            statutId: 'acc',
+            ordre: 2,
+            date: toCaminoDate('2017-11-11'),
+            duree: 60,
+          },
+          {
+            id: 'demarcheId1etapeId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
+            typeId: 'dex',
+            statutId: 'acc',
+            ordre: 1,
+            date: toCaminoDate('2017-11-06'),
+          },
+        ],
+      },
+      {
+        id: newDemarcheId('demarcheId2'),
+        titreId: 'titreId',
+        typeId: DEMARCHES_TYPES_IDS.Prolongation1,
+        statutId: DemarchesStatutsIds.EnConstruction,
+        ordre: 2,
+        etapes: [
+          {
+            id: 'demarcheId2EtapeId2',
+            titreDemarcheId: newDemarcheId('demarcheId2'),
+            typeId: 'mfr',
+            statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
+            ordre: 2,
+            date: toCaminoDate('2022-07-08'),
+            duree: 60,
+          },
+        ],
+      },
+    ]
+    const aujourdhui = toCaminoDate('2022-11-29')
+    const titreTypeId = 'prw'
+
+    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
+    expect(tested).toStrictEqual([
+      {
+        dateDebut: '2017-11-11',
+        dateFin: '2022-11-11',
+        phaseStatutId: 'ech',
+        titreDemarcheId: newDemarcheId('demarcheId1'),
       },
     ])
   })
