@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/tracing'
 
 import VueMatomo from './stats'
-import App from './app.vue'
+import { App } from './app'
 
 import router from './router'
 import store from './store'
