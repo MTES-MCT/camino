@@ -38,9 +38,9 @@ const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
 const Metas = () => import('../components/metas.vue')
-const Error = async () => {
-  const { Error } = await import('../components/error')
-  return Error
+const CaminoError = async () => {
+  const { CaminoError } = await import('../components/error')
+  return CaminoError
 }
 const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
@@ -326,7 +326,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     name: 'erreur',
-    component: Error,
+    component: CaminoError,
     props: {
       couleur: 'error',
       message: 'Page introuvable',

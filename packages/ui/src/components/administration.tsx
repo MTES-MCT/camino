@@ -1,4 +1,4 @@
-import { Error } from './error'
+import { CaminoError } from './error'
 import { apiClient, ApiClient, Utilisateur } from '@/api/api-client'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -34,7 +34,11 @@ export const Administration = defineComponent(() => {
   })
   return () => (
     <>
-      {administrationId.value ? <PureAdministration administrationId={administrationId.value} user={user.value} apiClient={apiClient} /> : <Error message="Administration inconnue" couleur="error" />}
+      {administrationId.value ? (
+        <PureAdministration administrationId={administrationId.value} user={user.value} apiClient={apiClient} />
+      ) : (
+        <CaminoError message="Administration inconnue" couleur="error" />
+      )}
     </>
   )
 })

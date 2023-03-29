@@ -4,7 +4,7 @@ import { Date as DateComponent } from '../_ui/date'
 
 import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 
-import { Error } from '@/components/error'
+import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { datesDiffInDays } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
@@ -131,7 +131,7 @@ export const PureONFDashboard = caminoDefineComponent<Props>(['getOnfTitres'], p
         </div>
       ) : null}
 
-      {status.value === 'ERROR' ? <Error couleur="error" message="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
+      {status.value === 'ERROR' ? <CaminoError couleur="error" message="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
     </div>
   )
 })
