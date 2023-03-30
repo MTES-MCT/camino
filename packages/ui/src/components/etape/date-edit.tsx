@@ -6,7 +6,7 @@ import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 export type Props = {
   incertitude?: boolean
   date?: CaminoDate
-  onDateChanged: (date: CaminoDate) => void
+  onDateChanged: (date: CaminoDate | null) => void
   onIncertitudeChanged: (incertitude: boolean) => void
 }
 

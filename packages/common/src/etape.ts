@@ -31,14 +31,14 @@ type EtapeBase = {
   amodiataires: EtapeEntreprise[]
   points: any[]
   surface: number
-  dateDebut: CaminoDate
+  dateDebut: CaminoDate | null
   administrations?: AdministrationId[]
   documents?: CaminoDocument[]
   justificatifs?: unknown[]
   communes?: string[]
   geojsonPoints?: unknown[]
   geojsonMultiPolygon?: unknown[]
-} & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate })
+} & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
 export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
   incertitudes: {
