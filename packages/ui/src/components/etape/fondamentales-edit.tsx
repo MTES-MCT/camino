@@ -34,11 +34,11 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
 
   const entreprisesDisabled = computed<EntrepriseId[]>(() => [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id))
 
-  const dateDebutChanged = (date: CaminoDate) => {
+  const dateDebutChanged = (date: CaminoDate | null) => {
     props.etape.dateDebut = date
   }
 
-  const dateFinChanged = (date: CaminoDate) => {
+  const dateFinChanged = (date: CaminoDate | null) => {
     props.etape.dateFin = date
   }
 

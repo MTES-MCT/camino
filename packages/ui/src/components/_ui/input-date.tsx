@@ -3,8 +3,8 @@ import { CaminoDate, getAnnee, getDay, getMois, isCaminoDate, toCaminoDate } fro
 import { ref } from 'vue'
 
 interface Props {
-  initialValue?: CaminoDate | string
-  dateChanged: (date: CaminoDate) => void
+  initialValue?: CaminoDate | string | null
+  dateChanged: (date: CaminoDate | null) => void
 }
 
 const monthNames = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'décembre'] as const
@@ -24,7 +24,10 @@ export const InputDate = caminoDefineComponent<Props>(['initialValue', 'dateChan
 
   const changeDay = (event: Event) => {
     if (isEventWithTarget(event)) {
-      const day = event.target.valueAsNumber
+      let day = null
+      if (event.target.value) {
+        day = event.target.valueAsNumber
+      }
       dayId.value = day
       update()
     }
@@ -39,7 +42,10 @@ export const InputDate = caminoDefineComponent<Props>(['initialValue', 'dateChan
   }
   const changeYear = (event: Event) => {
     if (isEventWithTarget(event)) {
-      const year = event.target.valueAsNumber
+      let year = null
+      if (event.target.value) {
+        year = event.target.valueAsNumber
+      }
       yearId.value = year
       update()
     }
@@ -61,6 +67,8 @@ export const InputDate = caminoDefineComponent<Props>(['initialValue', 'dateChan
       if (date) {
         props.dateChanged(date)
       }
+    } else {
+      props.dateChanged(null)
     }
   }
 
