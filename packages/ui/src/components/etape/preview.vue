@@ -101,7 +101,7 @@
 
 <script>
 import { dateFormat, cap } from '@/utils'
-import Perimetre from './perimetre.vue'
+import { Perimetre } from './perimetre'
 import { Fondamentales } from './fondamentales'
 import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
