@@ -20,7 +20,7 @@ export const Warning: Story = () => (
   </div>
 )
 
-export const Error: Story = () => (
+export const Erreur: Story = () => (
   <div class="dsfr">
     <Alert type="error" title="Erreur" description={() => <span class="fr-text--bold">Description en gras</span>} />
   </div>
