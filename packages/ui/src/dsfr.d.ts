@@ -1,7 +1,7 @@
 declare global {
   export const dsfr: {
     (value: HTMLElement): {
-      modal: { conceal: () => void }
+      modal: { conceal: () => void; disclose: () => void }
       navigation: {
         members: { conceal: () => void }[]
       }

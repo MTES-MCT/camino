@@ -7,7 +7,7 @@
       >.
     </div>
 
-    <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
+    <TitreHeader :titre="titre" :titreEventTrack="eventTrack" />
 
     <TitreInfos :titre="titre" :user="user" :apiClient="apiClient()" class="mb" />
 

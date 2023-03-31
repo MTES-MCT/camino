@@ -39,6 +39,8 @@ describe('Storybook Tests', async () => {
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async ({ story }) => {
+      // @ts-ignore
+      window.dsfr = null
       const mounted = render(story(), {
         global: {
           components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots.default?.()) },

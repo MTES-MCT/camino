@@ -1,10 +1,10 @@
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { LoadingElement } from './functional-loader'
 
 interface Props {
-  iid?: string
+  id?: string
   title: string
   content: () => JSX.Element
   close: () => void
@@ -15,12 +15,12 @@ interface Props {
   }
 }
 
-export const FunctionalPopup = caminoDefineComponent<Props>(['iid', 'title', 'content', 'close', 'validate'], (props: Props) => {
+export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'content', 'close', 'validate'], (props: Props) => {
   const canValidate = computed<boolean>(() => {
     return props.validate.can ?? true
   })
 
-  const id = props.iid ?? 'monId'
+  const id = props.id ?? 'monId'
   const text = props.validate.text ?? 'Enregistrer'
 
   const validateProcess = ref<AsyncData<null>>({
@@ -50,9 +50,19 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['iid', 'title', 'co
     }
   }
 
+  nextTick(() => {
+    const dialogElement = document.getElementById(id)
+    if (dialogElement && dsfr) {
+      dsfr(dialogElement).modal.disclose()
+      dialogElement.addEventListener('dsfr.conceal', e => {
+        props.close()
+      })
+    }
+  })
+
   return () => (
     <div class="dsfr">
-      <dialog id={id} class="fr-modal fr-modal--opened" open="true" role="dialog" aria-labelledby={`${id}-title`}>
+      <dialog id={id} class="fr-modal" role="dialog" aria-labelledby={`${id}-title`}>
         <div class="fr-container fr-container--fluid fr-container-md">
           <div class="fr-grid-row fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
@@ -67,7 +77,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['iid', 'title', 'co
                     <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
                     {props.title}
                   </h1>
-                  {props.content()}
+                  <div class="fr-container">{props.content()}</div>
                 </div>
                 <div class="fr-modal__footer">
                   <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
