@@ -21,7 +21,7 @@ const titresDemarchesAdministrationsModificationQuery = (administrationId: Admin
     isLocale: true,
   })
 
-  administrationsTitresTypesTitresStatutsModify(administrationQuery, 'demarches', 'titresModification', b => {
+  administrationsTitresTypesTitresStatutsModify(administrationQuery, 'demarches', 'titresModification', administrationId, b => {
     if (['dre', 'dea'].includes(Administrations[administrationId].typeId)) {
       // Les DREALs peuvent créer des travaux
       b.orWhere(`${demarcheTypeAlias}.travaux`, true)
@@ -87,7 +87,7 @@ export const titresModificationSelectQuery = (q: QueryBuilder<Titres, Titres | T
     return administrationsTitresQuery(user.administrationId, 'titres', {
       isGestionnaire: true,
     })
-      .modify(administrationsTitresTypesTitresStatutsModify, 'titres', 'titres')
+      .modify(administrationsTitresTypesTitresStatutsModify, 'titres', 'titres', user.administrationId)
       .select(raw('true'))
   }
 

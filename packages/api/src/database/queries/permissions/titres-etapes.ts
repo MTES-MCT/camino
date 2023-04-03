@@ -14,6 +14,7 @@ import Journaux from '../../models/journaux.js'
 import { journauxQueryModify } from './journaux.js'
 import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 
+// TODO 2023-04-04 à supprimer et à mettre en JS dans le common
 const titreEtapeModificationQueryBuild = (user: User) => {
   if (isSuper(user)) {
     return raw('true')
@@ -78,7 +79,7 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
             isGestionnaire: true,
             isAssociee: true,
             isLocale: true,
-          }).modify(administrationsTitresTypesEtapesTypesModify, 'lecture', 'demarche:titre.typeId', 'titresEtapes.typeId')
+          }).modify(administrationsTitresTypesEtapesTypesModify, 'lecture', 'demarche:titre.typeId', 'titresEtapes.typeId', user.administrationId)
         )
       } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
         const entreprisesIds = user.entreprises.map(a => a.id)

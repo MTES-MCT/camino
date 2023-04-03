@@ -5,7 +5,6 @@ import { dbManager } from '../../../../tests/db-manager.js'
 import Titres from '../../models/titres.js'
 import { idGenerate } from '../../models/_format/id-create.js'
 import { titresArmEnDemandeQuery, titresConfidentielSelect, titresModificationSelectQuery, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
-import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts.js'
 import { userSuper } from '../../user-super.js'
 import { AdministrationRole } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
@@ -232,8 +231,6 @@ describe('titresQueryModify', () => {
       })
 
       const administrationId = 'ope-ptmg-973-01'
-
-      await AdministrationsTitresTypesTitresStatuts.query().delete()
 
       const q = Titres.query()
       q.select(

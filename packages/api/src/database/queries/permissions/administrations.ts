@@ -8,7 +8,9 @@ import { utilisateursQueryModify } from './utilisateurs.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { getAdministrationTitresTypesTitresStatuts } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts.js'
 
 const administrationsQueryModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
@@ -96,19 +98,19 @@ const administrationsTitresTypesTitresStatutsModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
   type: 'titres' | 'demarches' | 'etapes',
   titreAlias: string,
+  administrationId: AdministrationId,
   conditionsAdd?: (b: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>) => void
 ) => {
-  q.leftJoin('administrations__titresTypes__titresStatuts as a_tt_ts', b => {
-    b.on(knex.raw('?? = ??', ['a_tt_ts.administrationId', 'administrations.id']))
-    b.andOn(knex.raw('?? = ??', ['a_tt_ts.titreTypeId', `${titreAlias}.typeId`]))
-    b.andOn(knex.raw('?? = ??', ['a_tt_ts.titreStatutId', `${titreAlias}.titreStatutId`]))
-    b.andOn(knex.raw('?? is true', [`a_tt_ts.${type}ModificationInterdit`]))
-  })
+  const restrictions = getAdministrationTitresTypesTitresStatuts(administrationId).filter(r => r[`${type}ModificationInterdit`])
 
-  q.where(b => {
-    b.orWhereNull('a_tt_ts.administrationId')
+  q.where(p => {
+    if (restrictions.length) {
+      p.orWhereNot(b =>
+        restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', [`${titreAlias}.typeId`, r.titreTypeId])).where(knex.raw('?? = ?', [`${titreAlias}.titreStatutId`, r.titreStatutId]))))
+      )
+    }
     if (conditionsAdd) {
-      conditionsAdd(b)
+      conditionsAdd(p)
     }
   })
 }
@@ -119,14 +121,14 @@ const administrationsTitresTypesEtapesTypesModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
   type: 'lecture' | 'modification' | 'creation',
   titreTypeIdColumn: string,
-  etapeTypeIdColumn: string
+  etapeTypeIdColumn: string,
+  administrationId: AdministrationId
 ) => {
-  q.leftJoin('administrations__titresTypes__etapesTypes as a_tt_et', b => {
-    b.on(knex.raw('?? = ??', ['a_tt_et.administrationId', 'administrations.id']))
-    b.andOn(knex.raw('?? = ??', ['a_tt_et.titreTypeId', titreTypeIdColumn]))
-    b.andOn(knex.raw('?? = ??', ['a_tt_et.etapeTypeId', etapeTypeIdColumn]))
-    b.andOn(knex.raw('?? is true', [`a_tt_et.${type}Interdit`]))
-  }).whereNull('a_tt_et.administrationId')
+  const restrictions = getAdministrationTitresTypesEtapesTypes(administrationId).filter(r => r[`${type}Interdit`])
+
+  if (restrictions.length) {
+    q.whereNot(b => restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', [titreTypeIdColumn, r.titreTypeId])).where(knex.raw('?? = ?', [etapeTypeIdColumn, r.etapeTypeId])))))
+  }
 }
 
 export {

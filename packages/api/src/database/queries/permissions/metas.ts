@@ -31,8 +31,8 @@ const administrationsEtapesTypesPropsQuery = (administrationId: AdministrationId
         isGestionnaire: true,
         isLocale: true,
       })
-        .modify(administrationsTitresTypesTitresStatutsModify, 'etapes', 'titresModification')
-        .modify(administrationsTitresTypesEtapesTypesModify, type, 't_d_e.titreTypeId', 't_d_e.etapeTypeId')
+        .modify(administrationsTitresTypesTitresStatutsModify, 'etapes', 'titresModification', administrationId)
+        .modify(administrationsTitresTypesEtapesTypesModify, type, 't_d_e.titreTypeId', 't_d_e.etapeTypeId', administrationId)
     )
 
 const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>

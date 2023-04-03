@@ -23,8 +23,6 @@ type Administration {
   commune: String
   cedex: String
   utilisateurs: [Utilisateur]
-  titresTypesTitresStatuts: [TitreTypeTitreStatut]
-  titresTypesEtapesTypes: [TitreTypeEtapeType]
   activitesTypes: [ActiviteType]
   modification: Boolean
 }

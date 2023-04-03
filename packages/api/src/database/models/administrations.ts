@@ -2,8 +2,6 @@ import { Model } from 'objection'
 
 import { IAdministration } from '../../types.js'
 
-import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types.js'
-import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts.js'
 import Utilisateurs from './utilisateurs.js'
 import ActivitesTypes from './activites-types.js'
 
@@ -22,24 +20,6 @@ class Administrations extends Model {
   }
 
   static relationMappings = () => ({
-    titresTypesTitresStatuts: {
-      relation: Model.HasManyRelation,
-      modelClass: AdministrationsTitresTypesTitresStatuts,
-      join: {
-        from: 'administrations.id',
-        to: 'administrations__titresTypes__titresStatuts.administrationId',
-      },
-    },
-
-    titresTypesEtapesTypes: {
-      relation: Model.HasManyRelation,
-      modelClass: AdministrationsTitresTypesEtapesTypes,
-      join: {
-        from: 'administrations.id',
-        to: 'administrations__titresTypes__etapesTypes.administrationId',
-      },
-    },
-
     utilisateurs: {
       relation: Model.HasManyRelation,
       modelClass: Utilisateurs,

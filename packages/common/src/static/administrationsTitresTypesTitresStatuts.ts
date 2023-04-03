@@ -2,34 +2,6 @@ import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
 import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
-// TODO 2023-01-24: à supprimer le jour où on supprime la table administrations--titres-types--titres-statuts
-export const toDbATT = () => {
-  return Object.keys(AdministrationsTitresTypesTitresStatuts).flatMap(administrationId => {
-    return (
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId]).flatMap(titreTypeId =>
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId]).flatMap(titreStatutId => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const value = AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId][titreStatutId]
-
-          return {
-            administration_id: administrationId,
-            titre_type_id: titreTypeId,
-            titre_statut_id: titreStatutId,
-            titres_modification_interdit: value.titresModificationInterdit,
-            demarches_modification_interdit: value.demarchesModificationInterdit,
-            etapes_modification_interdit: value.etapesModificationInterdit,
-          }
-        })
-      )
-    )
-  })
-}
-
 export const canAdministrationModifyEtapes = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   return !restrictions(administrationId, titreTypeId, titreStatutId).etapesModificationInterdit
 }
@@ -200,4 +172,30 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
     },
   },
+}
+
+export const getAdministrationTitresTypesTitresStatuts = (
+  administrationId: AdministrationId
+): { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; titresModificationInterdit: boolean; demarchesModificationInterdit: boolean; etapesModificationInterdit: boolean }[] => {
+  // @ts-ignore
+  return AdministrationsTitresTypesTitresStatuts[administrationId]
+    ? // @ts-ignore
+      Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId]).flatMap((titreTypeId: TitreTypeId) =>
+        // @ts-ignore
+        Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId]).flatMap((titreStatutId: TitreStatutId) => {
+          // @ts-ignore
+          const value = AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId][titreStatutId]
+
+          return value
+            ? {
+                titreTypeId,
+                titreStatutId,
+                titresModificationInterdit: value.titresModificationInterdit,
+                demarchesModificationInterdit: value.demarchesModificationInterdit,
+                etapesModificationInterdit: value.etapesModificationInterdit,
+              }
+            : null
+        })
+      )
+    : []
 }
