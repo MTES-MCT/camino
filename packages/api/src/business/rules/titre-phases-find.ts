@@ -171,11 +171,12 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
     } else {
       if (!dateDebut) {
         dateDebut = acc[acc.length - 1].dateFin
+
+        if (!dateDebut) {
+          return acc
+        }
       } else {
         acc[acc.length - 1].dateFin = dateDebut
-      }
-      if (!dateDebut) {
-        throw new Error(`une phase précédente sans date de fin est impossible ${demarche.titreId} -- ${demarche.id}`)
       }
       const { duree, dateFin } = newTitreDemarcheNormaleDateFinAndDureeFind(demarche.etapes)
 
@@ -192,19 +193,12 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
             dateFin: dateAddMonths(dateDebut, duree),
             titreDemarcheId: demarche.id,
           })
-        } else {
-          // TODO 2023-03-22 : Questions posées au métier sur ces démarches
-          if (['8H4rwTWHi1LFJV67Yywi3U51'].includes(demarche.id)) {
-            return acc
-          }
-          // c'est quoi un cas en survie provisoire
-          if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose].includes(demarche.statutId)) {
-            acc.push({
-              dateDebut,
-              dateFin: null,
-              titreDemarcheId: demarche.id,
-            })
-          }
+        } else if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(demarche.statutId)) {
+          acc.push({
+            dateDebut,
+            dateFin: null,
+            titreDemarcheId: demarche.id,
+          })
         }
       }
     }

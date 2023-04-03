@@ -845,6 +845,311 @@ describe("phases d'une démarche", () => {
     ])
   })
 
+  test("2 démarches avec des phases en cours ne génère qu'une seule phase en modification en instance", () => {
+    const titreId = 'titreId'
+    const demarcheId1 = newDemarcheId('demarcheId1')
+    const demarcheId2 = newDemarcheId('demarcheId2')
+    const demarcheId3 = newDemarcheId('demarcheId3')
+    const demarcheId4 = newDemarcheId('demarcheId4')
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId,
+            statutId: 'acc',
+            ordre: 1,
+            typeId: 'oct',
+            id: demarcheId1,
+            etapes: [
+              {
+                titreDemarcheId: demarcheId1,
+                ordre: 2,
+                typeId: 'dpu',
+                duree: 36,
+                date: toCaminoDate('2010-11-05'),
+                statutId: 'acc',
+                points: [1, 2],
+              },
+              {
+                titreDemarcheId: demarcheId1,
+                ordre: 1,
+                typeId: 'dex',
+                date: toCaminoDate('2010-10-18'),
+                statutId: 'acc',
+              },
+            ],
+          },
+          {
+            titreId,
+            statutId: 'acc',
+            ordre: 2,
+            typeId: 'pr1',
+            id: demarcheId2,
+            etapes: [
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 5,
+                typeId: 'apd',
+                date: toCaminoDate('2015-05-13'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 11,
+                typeId: 'dex',
+                date: toCaminoDate('2015-12-04'),
+                statutId: 'acc',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 9,
+                typeId: 'acg',
+                date: toCaminoDate('2015-11-09'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 1,
+                typeId: 'mfr',
+                duree: 60,
+                date: toCaminoDate('2013-10-30'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 10,
+                typeId: 'acg',
+                date: toCaminoDate('2015-11-12'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 6,
+                typeId: 'app',
+                date: toCaminoDate('2015-06-04'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 7,
+                typeId: 'scg',
+                date: toCaminoDate('2015-10-08'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 12,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2018-11-05'),
+                date: toCaminoDate('2015-12-17'),
+                statutId: 'acc',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 3,
+                typeId: 'spp',
+                date: toCaminoDate('2013-11-19'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 2,
+                typeId: 'mdp',
+                date: toCaminoDate('2013-10-30'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 4,
+                typeId: 'apo',
+                date: toCaminoDate('2015-02-11'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId2,
+                ordre: 8,
+                typeId: 'rcg',
+                date: toCaminoDate('2015-10-08'),
+                statutId: 'fav',
+              },
+            ],
+          },
+          {
+            titreId,
+            statutId: 'dep',
+            ordre: 3,
+            typeId: 'vct',
+            id: demarcheId3,
+            etapes: [
+              {
+                titreDemarcheId: demarcheId3,
+                ordre: 2,
+                typeId: 'mdp',
+                date: toCaminoDate('2015-07-31'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId3,
+                ordre: 1,
+                typeId: 'mfr',
+                duree: 540,
+                date: toCaminoDate('2015-07-31'),
+                statutId: 'fai',
+              },
+            ],
+          },
+          {
+            titreId,
+            statutId: 'ins',
+            ordre: 4,
+            typeId: 'pr2',
+            id: demarcheId4,
+            etapes: [
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 1,
+                typeId: 'mfr',
+                duree: 60,
+                date: toCaminoDate('2018-06-29'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 12,
+                typeId: 'apd',
+                date: toCaminoDate('2021-07-30'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 4,
+                typeId: 'mco',
+                date: toCaminoDate('2019-06-13'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 10,
+                typeId: 'aac',
+                date: toCaminoDate('2020-02-04'),
+                statutId: 'fre',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 14,
+                typeId: 'apd',
+                date: toCaminoDate('2021-12-16'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 11,
+                typeId: 'apm',
+                date: toCaminoDate('2020-02-24'),
+                statutId: 'def',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 5,
+                typeId: 'rco',
+                duree: 60,
+                date: toCaminoDate('2019-08-30'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 9,
+                typeId: 'apl',
+                date: toCaminoDate('2020-01-31'),
+                statutId: 'def',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 2,
+                typeId: 'mdp',
+                date: toCaminoDate('2018-07-04'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 15,
+                typeId: 'ppu',
+                date: toCaminoDate('2023-01-18'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 6,
+                typeId: 'mco',
+                date: toCaminoDate('2019-11-19'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 3,
+                typeId: 'spp',
+                date: toCaminoDate('2018-07-20'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 16,
+                typeId: 'ppc',
+                date: toCaminoDate('2023-02-08'),
+                statutId: 'ter',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 8,
+                typeId: 'mcr',
+                date: toCaminoDate('2020-01-29'),
+                statutId: 'fav',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 7,
+                typeId: 'rco',
+                duree: 60,
+                date: toCaminoDate('2019-12-26'),
+                statutId: 'fai',
+              },
+              {
+                titreDemarcheId: demarcheId4,
+                ordre: 13,
+                typeId: 'apo',
+                date: toCaminoDate('2021-10-29'),
+                statutId: 'fav',
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'prm'
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "dateDebut": "2010-11-05",
+          "dateFin": "2013-11-05",
+          "phaseStatutId": "ech",
+          "titreDemarcheId": "demarcheId1",
+        },
+        {
+          "dateDebut": "2013-11-05",
+          "dateFin": "2018-11-05",
+          "phaseStatutId": "ech",
+          "titreDemarcheId": "demarcheId2",
+        },
+        {
+          "dateDebut": "2018-11-05",
+          "dateFin": null,
+          "phaseStatutId": "val",
+          "titreDemarcheId": "demarcheId3",
+        },
+      ]
+    `)
+  })
+
   test('cas réels', () => {
     const phasesReels = titresProd as TitrePhasesTest[]
     phasesReels.forEach(([titreTypeId, demarches, phases, date], index) => {
