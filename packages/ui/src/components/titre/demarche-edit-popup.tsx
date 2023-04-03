@@ -72,7 +72,7 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
     <form>
       <div class="fr-input-group">
         <label class="fr-label" for="demarcheType">
-          Type de la démarche*
+          Type de la démarche *
         </label>
         <select class="fr-select" id="demarcheType" name="demarcheType" required disabled={!!props.demarche.id} onChange={selectDemarcheTypeId}>
           {!props.demarche?.typeId ? (
