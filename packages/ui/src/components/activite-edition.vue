@@ -28,7 +28,7 @@
 
       <div class="p-s bg-info color-bg mb">
         Besoin d'aide pour remplir ce rapport ?
-        <router-link to="/contacts" target="_blank" class="p-s bg-info color-bg mb">Contactez-nous </router-link>
+        <a target="_blank" class="p-s bg-info color-bg mb" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" rel="noopener noreferrer">Contactez-nous </a>
       </div>
       <div v-if="shouldDisplayFiscaliteHelp" class="p-s bg-info color-bg mb">
         Les données déclarées sur Camino/Activités permettent de calculer une estimation de votre fiscalité minière, consultable sur
