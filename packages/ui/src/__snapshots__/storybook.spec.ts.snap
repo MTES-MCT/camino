@@ -8111,7 +8111,7 @@ exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Create' 1`] =
               <h1 id=\\"monId-title\\" class=\\"fr-modal__title\\"><span class=\\"fr-icon-arrow-right-line fr-icon--lg\\" aria-hidden=\\"true\\"></span>Ajout d'une démarche </h1>
               <div class=\\"fr-container\\">
                 <form>
-                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"demarcheType\\">Type de la démarche*</label><select class=\\"fr-select\\" id=\\"demarcheType\\" name=\\"demarcheType\\" required=\\"\\">
+                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"demarcheType\\">Type de la démarche *</label><select class=\\"fr-select\\" id=\\"demarcheType\\" name=\\"demarcheType\\" required=\\"\\">
                       <option disabled=\\"\\" hidden=\\"\\" value=\\"\\">Selectionnez une option</option>
                       <option value=\\"oct\\">octroi</option>
                       <option value=\\"ren\\">renonciation</option>
@@ -8152,7 +8152,7 @@ exports[`Storybook Tests > 'Components/Titre/DemarcheEditPopup' > 'Edit' 1`] = `
               <h1 id=\\"monId-title\\" class=\\"fr-modal__title\\"><span class=\\"fr-icon-arrow-right-line fr-icon--lg\\" aria-hidden=\\"true\\"></span>Modification de la démarche </h1>
               <div class=\\"fr-container\\">
                 <form>
-                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"demarcheType\\">Type de la démarche*</label><select class=\\"fr-select\\" id=\\"demarcheType\\" name=\\"demarcheType\\" required=\\"\\" disabled=\\"\\">
+                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"demarcheType\\">Type de la démarche *</label><select class=\\"fr-select\\" id=\\"demarcheType\\" name=\\"demarcheType\\" required=\\"\\" disabled=\\"\\">
                       <!---->
                       <option value=\\"oct\\">octroi</option>
                       <option value=\\"ren\\">renonciation</option>
@@ -8228,7 +8228,7 @@ exports[`Storybook Tests > 'Components/Titre/EditPopup' > 'DefaultNoReference' 1
               <h1 id=\\"monId-title\\" class=\\"fr-modal__title\\"><span class=\\"fr-icon-arrow-right-line fr-icon--lg\\" aria-hidden=\\"true\\"></span>Modification du titre</h1>
               <div class=\\"fr-container\\">
                 <form>
-                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"titreNom\\">Nom*</label><input class=\\"fr-input\\" name=\\"titreNom\\" id=\\"titreNom\\" type=\\"text\\"></div>
+                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"titreNom\\">Nom *</label><input class=\\"fr-input\\" name=\\"titreNom\\" id=\\"titreNom\\" type=\\"text\\" required=\\"\\"></div>
                   <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"references\\">Références</label><button class=\\"fr-btn fr-icon-add-line fr-btn--icon-right fr-btn--tertiary\\" id=\\"references\\">Ajouter une référence</button></div>
                 </form>
               </div>
@@ -8264,7 +8264,7 @@ exports[`Storybook Tests > 'Components/Titre/EditPopup' > 'OneReference' 1`] = `
               <h1 id=\\"monId-title\\" class=\\"fr-modal__title\\"><span class=\\"fr-icon-arrow-right-line fr-icon--lg\\" aria-hidden=\\"true\\"></span>Modification du titre</h1>
               <div class=\\"fr-container\\">
                 <form>
-                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"titreNom\\">Nom*</label><input class=\\"fr-input\\" name=\\"titreNom\\" id=\\"titreNom\\" type=\\"text\\"></div>
+                  <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"titreNom\\">Nom *</label><input class=\\"fr-input\\" name=\\"titreNom\\" id=\\"titreNom\\" type=\\"text\\" required=\\"\\"></div>
                   <div class=\\"fr-input-group\\"><label class=\\"fr-label\\" for=\\"references\\">Références</label>
                     <div class=\\"fr-grid-row fr-grid-row--middle fr-mb-3v\\"><select class=\\"fr-select fr-col\\">
                         <option value=\\"brg\\">BRGM</option>
@@ -9522,14 +9522,6 @@ exports[`Storybook Tests > 'Components/Titre/TitresLinkForm' > 'TitreWithTitreLi
 `;
 
 exports[`Storybook Tests > 'Components/UI/Alert' > 'Erreur' 1`] = `
-"<div class=\\"dsfr\\">
-  <div class=\\"fr-alert fr-alert--error\\">
-    <h3 class=\\"fr-alert__title\\">Erreur</h3><span class=\\"fr-text--bold\\">Description en gras</span>
-  </div>
-</div>"
-`;
-
-exports[`Storybook Tests > 'Components/UI/Alert' > 'Error' 1`] = `
 "<div class=\\"dsfr\\">
   <div class=\\"fr-alert fr-alert--error\\">
     <h3 class=\\"fr-alert__title\\">Erreur</h3><span class=\\"fr-text--bold\\">Description en gras</span>

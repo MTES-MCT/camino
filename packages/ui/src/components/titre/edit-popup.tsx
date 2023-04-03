@@ -30,7 +30,7 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
     <form>
       <div class="fr-input-group">
         <label class="fr-label" for="titreNom">
-          Nom*
+          Nom *
         </label>
         <input
           value={nom.value}
@@ -44,6 +44,7 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
           name="titreNom"
           id="titreNom"
           type="text"
+          required
         />
       </div>
       <div class="fr-input-group">
