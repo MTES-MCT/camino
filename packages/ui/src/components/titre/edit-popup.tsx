@@ -4,7 +4,6 @@ import { EditableTitre } from 'camino-common/src/titres'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { Icon } from '../_ui/icon'
 
 interface Props {
   titre: EditableTitre
@@ -28,60 +27,49 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
   }
 
   const content = () => (
-    <>
-      <div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Nom</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <input
-              value={nom.value}
-              onInput={e => {
-                if (isEventWithTarget(e)) {
-                  console.log('zizi')
-                  nom.value = e.target.value
-                }
-              }}
-              type="text"
-              placeholder="Nom"
-              class="p-s"
-            />
-          </div>
-        </div>
-        <hr />
+    <form>
+      <div class="fr-input-group">
+        <label class="fr-label" for="titreNom">
+          Nom*
+        </label>
+        <input
+          value={nom.value}
+          onInput={e => {
+            if (isEventWithTarget(e)) {
+              console.log('zizi')
+              nom.value = e.target.value
+            }
+          }}
+          class="fr-input"
+          name="titreNom"
+          id="titreNom"
+          type="text"
+        />
       </div>
-
-      <div>
-        <h3 class="mb-s">Références</h3>
-        <p class="h6 italic">Optionnel</p>
-        <hr />
+      <div class="fr-input-group">
+        <label class="fr-label" for="references">
+          Références
+        </label>
         {references.value.map((reference, index) => (
-          <div key={index} class="flex full-x mb-s">
-            <select v-model={reference.referenceTypeId} class="p-s mr-s">
+          <div key={index} class="fr-grid-row fr-grid-row--middle fr-mb-3v">
+            <select v-model={reference.referenceTypeId} class="fr-select fr-col">
               {sortedReferencesTypes.map(referenceType => (
                 <option key={referenceType.id} value={referenceType.id}>
                   {referenceType.nom}
                 </option>
               ))}
             </select>
-            <input v-model={reference.nom} type="text" class="p-s mr-s" placeholder="valeur" />
-            <div class="flex-right">
-              <button class="btn py-s px-m rnd-xs" onClick={() => referenceRemove(index)}>
-                <Icon name="minus" size="M" />
-              </button>
-            </div>
+            <input v-model={reference.nom} type="text" class="fr-input fr-col fr-ml-2v" />
+            <button class="fr-btn fr-icon-delete-line fr-btn--icon fr-btn--tertiary fr-ml-2v" type="button" onClick={() => referenceRemove(index)} />
           </div>
         ))}
-
         {references.value && !references.value.find(r => !r.referenceTypeId || !r.nom) ? (
-          <button class="btn rnd-xs py-s px-m full-x mb flex h6" onClick={referenceAdd}>
-            <span class="mt-xxs">Ajouter une référence</span>
-            <Icon name="plus" size="M" class="flex-right" />
+          <button class="fr-btn fr-icon-add-line fr-btn--icon-right fr-btn--tertiary" id="references" onClick={referenceAdd}>
+            Ajouter une référence
           </button>
         ) : null}
       </div>
-    </>
+    </form>
   )
 
   return () => (

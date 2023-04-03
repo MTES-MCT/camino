@@ -1,5 +1,5 @@
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { computed, defineComponent, inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheTypeId, isDemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTypesDemarchesTypes'
@@ -69,30 +69,31 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
   }
 
   const content = () => (
-    <div>
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>Type</h5>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <select class="p-s mr" disabled={!!props.demarche.id} onChange={selectDemarcheTypeId}>
-            {!props.demarche?.typeId ? <option>-</option> : null}
-            {types.value.map(demarcheType => (
-              <option key={demarcheType.id} value={demarcheType.id} selected={props.demarche?.typeId === demarcheType.id}>
-                {demarcheType.nom}
-              </option>
-            ))}
-          </select>
-        </div>
+    <form>
+      <div class="fr-input-group">
+        <label class="fr-label" for="demarcheType">
+          Type de la démarche*
+        </label>
+        <select class="fr-select" id="demarcheType" name="demarcheType" required disabled={!!props.demarche.id} onChange={selectDemarcheTypeId}>
+          {!props.demarche?.typeId ? (
+            <option value="" selected disabled hidden>
+              Selectionnez une option
+            </option>
+          ) : null}
+          {types.value.map(demarcheType => (
+            <option key={demarcheType.id} value={demarcheType.id} selected={props.demarche?.typeId === demarcheType.id}>
+              {demarcheType.nom}
+            </option>
+          ))}
+        </select>
       </div>
-      <div class="tablet-blobs mb-s">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>Description</h5>
-          <p class="h6 italic mb-0 flex-right mt-xs">Optionnel</p>
-        </div>
-        <input onInput={updateDescription} type="text" class="tablet-blob-2-3 p-s" value={description.value} />
+      <div class="fr-input-group">
+        <label class="fr-label" for="description">
+          Description
+        </label>
+        <input onInput={updateDescription} value={description.value} class="fr-input" name="description" id="description" type="text" />
       </div>
-    </div>
+    </form>
   )
 
   const save = async () => {

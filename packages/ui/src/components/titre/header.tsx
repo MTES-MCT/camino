@@ -21,6 +21,7 @@ interface Props {
     modification: boolean
     references: { referenceTypeId: ReferenceTypeId; nom: string }[]
   }
+  titreEventTrack: (event: { categorie: string; action: string; nom: string | string[] }) => void
 }
 
 interface PureProps extends Props {
@@ -28,7 +29,7 @@ interface PureProps extends Props {
   apiClient: Omit<TitreApiClient, 'loadTitreSections'>
   emailSend: () => void
 }
-export const Header = caminoDefineComponent<Props>(['titre'], (props, context) => {
+export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'], props => {
   const store = useStore()
   const route = useRoute()
   const router = useRouter()
@@ -37,7 +38,7 @@ export const Header = caminoDefineComponent<Props>(['titre'], (props, context) =
     return store.state.user.element
   })
   const eventTrack = (event: { categorie: string; action: string; nom: string | string[] }) => {
-    context.emit('titre-event-track', event)
+    props.titreEventTrack(event)
   }
 
   const removeTitre = async () => {
@@ -95,7 +96,7 @@ export const Header = caminoDefineComponent<Props>(['titre'], (props, context) =
   return () => <PureHeader {...props} user={user.value} apiClient={{ editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
 })
 
-export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient', 'user', 'emailSend'], props => {
+export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack'>>(['titre', 'apiClient', 'user', 'emailSend'], props => {
   const suppression = computed(() => {
     return canDeleteTitre(props.user)
   })

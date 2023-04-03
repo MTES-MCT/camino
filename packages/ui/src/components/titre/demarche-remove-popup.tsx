@@ -5,6 +5,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { useStore } from 'vuex'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheApiClient } from './demarche-api-client'
+import { Alert } from '@/components/_ui/alert'
 
 export interface Props {
   titreTypeId: TitreTypeId
@@ -41,16 +42,20 @@ export const PureDemarcheRemovePopup = (props: Omit<Props, 'titreId'>): JSX.Elem
   const titreTypeNom: string = isTitreType(props.titreTypeId) ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom : ''
 
   const content = () => (
-    <>
-      <p class="bold">
-        Souhaitez vous supprimer la démarche
-        <span> {DemarchesTypes[props.demarcheTypeId].nom}</span> du titre
-        <span> {props.titreNom} </span> (<span>{titreTypeNom}</span>) ?
-      </p>
-      <div class="bg-warning color-bg p-s mb-l">
-        <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
-      </div>
-    </>
+    <Alert
+      type="warning"
+      title="Attention : cette opération est définitive et ne peut pas être annulée."
+      description={() => (
+        <>
+          Souhaitez-vous supprimer la démarche <span class="fr-text--bold"> {DemarchesTypes[props.demarcheTypeId].nom}</span> du titre
+          <span class="fr-text--bold">
+            {' '}
+            {props.titreNom} ({titreTypeNom})
+          </span>{' '}
+          ?
+        </>
+      )}
+    />
   )
 
   const deleteDemarche = async () => {
