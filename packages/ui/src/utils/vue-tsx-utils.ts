@@ -1,4 +1,4 @@
-import { DefineComponent, defineComponent, RenderFunction, SetupContext } from 'vue'
+import { DefineComponent, defineComponent, Ref, RenderFunction, SetupContext } from 'vue'
 
 type PushFront<TailT extends any[], HeadT> = ((head: HeadT, ...tail: TailT) => void) extends (...arr: infer ArrT) => void ? ArrT : never
 
@@ -15,3 +15,16 @@ export function caminoDefineComponent<T>(props: CalculatePermutations<keyof T>, 
 }
 
 export const isEventWithTarget = (event: any): event is FocusEvent & { target: HTMLInputElement } => event.target
+
+
+export const updateFromEvent = (e: Event, myRef: Ref<string>) => {
+  if (isEventWithTarget(e)) {
+    myRef.value = e.target.value
+  }
+}
+
+export const updateFromCheckboxEvent = (e: Event, myRef: Ref<boolean>) => {
+  if (isEventWithTarget(e)) {
+    myRef.value = e.target.checked
+  }
+}

@@ -11,7 +11,7 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { beforeAll, beforeEach, afterEach, afterAll, test, expect, describe, vi } from 'vitest'
+import { beforeAll, afterEach, afterAll, test, expect, describe, vi } from 'vitest'
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -106,68 +106,6 @@ describe('entrepriseCreer', () => {
         },
       },
     })
-  })
-})
-
-describe('entrepriseModifier', () => {
-  const entrepriseModifierQuery = queryImport('entreprise-modifier')
-
-  let entrepriseId: string
-
-  beforeEach(async () => {
-    tokenInitializeMock.mockResolvedValue('token')
-    entrepriseFetchMock.mockResolvedValue([entreprise])
-    entreprisesEtablissementsFetchMock.mockResolvedValue([entrepriseAndEtablissements])
-
-    const res = await graphQLCall(queryImport('entreprise-creer'), { entreprise: { legalSiren: '729800706', paysId: 'fr' } }, { role: 'super' })
-
-    entrepriseId = res.body.data.entrepriseCreer.id
-  })
-
-  test('ne peut pas modifier une entreprise (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(
-      entrepriseModifierQuery,
-      {
-        entreprise: { id: entrepriseId, email: 'toto@gmail.com' },
-      },
-      undefined
-    )
-
-    expect(res.body.errors[0].message).toBe('droits insuffisants')
-  })
-
-  test("peut modifier une entreprise (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(entrepriseModifierQuery, { entreprise: { id: entrepriseId, email: 'toto@gmail.com' } }, { role: 'super' })
-
-    expect(res.body).toMatchObject({
-      data: {
-        entrepriseModifier: { email: 'toto@gmail.com' },
-      },
-    })
-    expect(res.body.errors).toBeUndefined()
-  })
-
-  test("ne peut pas modifier une entreprise avec un email invalide (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(entrepriseModifierQuery, { entreprise: { id: entrepriseId, email: 'totogmail.com' } }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe('adresse email invalide')
-  })
-
-  test("ne peut pas modifier une entreprise inexistante (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(entrepriseModifierQuery, { entreprise: { id: 'id-inconnu' } }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe('entreprise inconnue')
-  })
-
-  test('peut archiver une entreprise (super)', async () => {
-    const res = await graphQLCall(entrepriseModifierQuery, { entreprise: { id: entrepriseId, archive: true } }, { role: 'super' })
-
-    expect(res.body).toMatchObject({
-      data: {
-        entrepriseModifier: { archive: true },
-      },
-    })
-    expect(res.body.errors).toBeUndefined()
   })
 })
 

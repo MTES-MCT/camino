@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee } from 'camino-common/src/date'
 import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -13,8 +14,8 @@ export default meta
 
 type Item = { id: string; titre: string }
 
-const editPopupOpen = action('editPopupOpen')
-const getFiscaliteEntreprise = action('getFiscaliteEntreprise')
+const getFiscaliteEntrepriseAction = action('getFiscaliteEntreprise')
+const modifierEntrepriseAction = action('modifierEntreprise')
 
 const items: Item[] = [
   { id: 'id1', titre: 'titreItem1' },
@@ -41,18 +42,28 @@ const entreprise = {
   utilisateurs: [],
   etablissements: [],
 }
+
+export const apiClient: EntrepriseApiClient = {
+  getFiscaliteEntreprise: data => {
+    getFiscaliteEntrepriseAction(data)
+    return Promise.resolve({
+      redevanceCommunale: 0,
+      redevanceDepartementale: 0,
+    })
+  
+},
+modifierEntreprise: entreprise => {
+  modifierEntrepriseAction(entreprise)
+  return Promise.resolve()
+
+}
+}
+
 export const Loading: Story = () => (
   <PureEntreprise
     currentYear={annee}
-    editPopupOpen={editPopupOpen}
     entreprise={undefined}
-    getFiscaliteEntreprise={data => {
-      getFiscaliteEntreprise(data)
-      return Promise.resolve({
-        redevanceCommunale: 0,
-        redevanceDepartementale: 0,
-      })
-    }}
+    apiClient={apiClient}
     user={null}
   />
 )
@@ -60,26 +71,11 @@ export const Loading: Story = () => (
 export const NonConnecte: Story = () => (
   <PureEntreprise
     currentYear={annee}
-    editPopupOpen={editPopupOpen}
     entreprise={entreprise}
-    getFiscaliteEntreprise={data => {
-      getFiscaliteEntreprise(data)
-      return Promise.resolve({
-        redevanceCommunale: 0,
-        redevanceDepartementale: 0,
-      })
-    }}
+    apiClient={apiClient}
     user={null}
   />
 )
-
-const entrepriseId = newEntrepriseId('1')
-
-const entrepriseFull: Entreprise = {
-  id: entrepriseId,
-  nom: 'nom entreprise',
-  etablissements: [],
-}
 
 const completeEntreprise: EntrepriseType = {
   id: newEntrepriseId('any'),
@@ -282,10 +278,9 @@ const completeEntreprise: EntrepriseType = {
 export const Complet: Story = () => (
   <PureEntreprise
     currentYear={annee}
-    editPopupOpen={editPopupOpen}
     entreprise={completeEntreprise}
-    getFiscaliteEntreprise={data => {
-      getFiscaliteEntreprise(data)
+    apiClient={{...apiClient, getFiscaliteEntreprise: data => {
+      getFiscaliteEntrepriseAction(data)
       return Promise.resolve({
         guyane: {
           taxeAurifere: 12,
@@ -295,7 +290,7 @@ export const Complet: Story = () => (
         redevanceCommunale: 200,
         redevanceDepartementale: 78,
       })
-    }}
+    }}}
     user={{ role: 'super', ...testBlankUser }}
   />
 )

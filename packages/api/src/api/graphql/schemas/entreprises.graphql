@@ -75,11 +75,3 @@ input InputEntrepriseCreation {
   paysId: String!
   legalSiren: String!
 }
-
-input InputEntrepriseModification {
-  id: ID!
-  url: String
-  telephone: String
-  email: String
-  archive: Boolean
-}

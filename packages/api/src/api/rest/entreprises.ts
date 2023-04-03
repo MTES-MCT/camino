@@ -13,7 +13,7 @@ import {
 } from '../../tools/api-openfisca/index.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
-import { entrepriseGet } from '../../database/queries/entreprises.js'
+import { entrepriseGet, entrepriseUpsert } from '../../database/queries/entreprises.js'
 import TitresActivites from '../../database/models/titres-activites.js'
 import Titres from '../../database/models/titres.js'
 import { CustomResponse } from './express-type.js'
@@ -22,8 +22,10 @@ import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
-import { eidValidator } from 'camino-common/src/entreprise.js'
-import { User } from 'camino-common/src/roles'
+import { eidValidator, entrepriseModificationValidator } from 'camino-common/src/entreprise.js'
+import { User } from 'camino-common/src/roles.js'
+import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
+import { emailCheck } from '../../tools/email-check.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -266,6 +268,48 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
     )
 
   return redevances.fiscalite
+}
+
+
+export const modifierEntreprise = async(req: JWTRequest<User>, res: CustomResponse<void>) => {
+  const user = req.auth
+  const entreprise = entrepriseModificationValidator.safeParse(req.body)
+  if (!user) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!entreprise.success) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      if (!canEditEntreprise(user, entreprise.data.id)) {
+        res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      } else {
+        const errors = []
+  
+        if (entreprise.data.email && !emailCheck(entreprise.data.email)) {
+          errors.push('adresse email invalide')
+        }
+    
+        const entrepriseOld = await entrepriseGet(entreprise.data.id, { fields: {id: {}} }, user)
+        if (!entrepriseOld) {
+          errors.push('entreprise inconnue')
+        }
+    
+        if (errors.length) {
+          res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+        } else {
+          await entrepriseUpsert({
+            ...entrepriseOld,
+            ...entreprise.data,
+          })
+          res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        }
+    
+      }
+    } catch (e) {
+      console.error(e)
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
 }
 
 export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fiscalite>) => {
