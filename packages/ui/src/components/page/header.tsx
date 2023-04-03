@@ -25,7 +25,7 @@ const links = {
   TABLEAU_DE_BORD: { label: 'Tableau de bord', path: 'dashboard' },
 } as const satisfies Record<string, Link>
 
-const isDirectLink = (link: Link | LinkList): link is Link => Object.hasOwn(link, 'path')
+const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.hasOwnProperty.call(link, 'path')
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
 const linksByRole: Record<Role, (Link | LinkList)[]> = {
