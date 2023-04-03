@@ -234,3 +234,6 @@ export const About: FunctionalComponent = () => {
     </div>
   )
 }
+
+// Demandé par le router car utilisé dans un import asynchrone /shrug
+About.displayName = 'About'
