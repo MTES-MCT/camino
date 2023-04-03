@@ -268,10 +268,6 @@ type Mutation {
 
   administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
-  administrationTitreTypeTitreStatutModifier(administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!): Administration
-
-  administrationTitreTypeEtapeTypeModifier(administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!): Administration
-
   administrationActiviteTypeModifier(administrationActiviteType: InputAdministrationActiviteType!): Administration
 
   titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds

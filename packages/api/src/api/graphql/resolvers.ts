@@ -49,8 +49,6 @@ import { entreprise, entreprises, entrepriseCreer, entrepriseModifier, entrepris
 import {
   administration,
   administrations,
-  administrationTitreTypeTitreStatutModifier,
-  administrationTitreTypeEtapeTypeModifier,
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
@@ -140,8 +138,6 @@ export default {
   entrepriseCreer,
   entrepriseModifier,
   entreprisesTitresCreation,
-  administrationTitreTypeTitreStatutModifier,
-  administrationTitreTypeEtapeTypeModifier,
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
