@@ -171,6 +171,33 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid).toHaveLength(0)
   })
 
+  test("ajoute une étape sans statut à une démarche sans arbre d'instruction", () => {
+    const valid = titreDemarcheUpdatedEtatValidate(
+      { id: 'oct', nom: 'oct' } as IDemarcheType,
+      {
+        typeId: 'arm',
+        type: {
+          id: 'arm',
+          contenuIds: [],
+        } as unknown as ITitreType,
+        demarches: [
+          {
+            typeId: 'oct',
+            type: {
+              id: 'oct',
+              nom: 'oct',
+              etapesTypes: [{ id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }],
+            } as IDemarcheType,
+          },
+        ],
+      } as ITitre,
+      { typeId: 'mfr', date: '1030-01-01' } as ITitreEtape,
+      newDemarcheId()
+    )
+
+    expect(valid).toHaveLength(0)
+  })
+
   test("ajoute une étape à une démarche sans arbre d'instruction", () => {
     const valid = titreDemarcheUpdatedEtatValidate(
       { id: 'oct', nom: 'oct' } as IDemarcheType,

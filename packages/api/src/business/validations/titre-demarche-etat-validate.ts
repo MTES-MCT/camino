@@ -142,10 +142,11 @@ export const titreDemarcheUpdatedEtatValidate = (
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }
   } else {
-    // le type d'étape correspond à la démarche et au type de titre
-    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titreEtape.typeId, titreEtape.statutId, titreDemarche.type!.etapesTypes, titreDemarche.type!.nom)
-    titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
-
+    if (titreEtape.statutId) {
+      // le type d'étape correspond à la démarche et au type de titre
+      const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titreEtape.typeId, titreEtape.statutId, titreDemarche.type!.etapesTypes, titreDemarche.type!.nom)
+      titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
+    }
     const etapeTypeIdsValid = Object.keys(demarcheDefinition.restrictions)
 
     const etapeInconnue = titreDemarcheEtapesNew.find(etape => !etapeTypeIdsValid.includes(etape.typeId!))
