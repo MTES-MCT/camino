@@ -1,6 +1,7 @@
+import { getKeys, isNotNullNorUndefined } from '../typescript-tools.js'
 import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
-import { EtapeTypeId, ETAPES_TYPES } from './etapesTypes.js'
-import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
+import { EtapeTypeId, ETAPES_TYPES, isEtapeTypeId } from './etapesTypes.js'
+import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
 // TODO 2023-01-24: on n'a exposé uniquement creationInterdit
 const restrictions = (
@@ -897,23 +898,21 @@ const AdministrationsTitresTypesEtapesTypes: {
 export const getAdministrationTitresTypesEtapesTypes = (
   administrationId: AdministrationId
 ): { titreTypeId: TitreTypeId; etapeTypeId: EtapeTypeId; lectureInterdit: boolean; creationInterdit: boolean; modificationInterdit: boolean }[] => {
-  // @ts-ignore
-  return AdministrationsTitresTypesEtapesTypes[administrationId]
-    ? // @ts-ignore
-      Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId]).flatMap(titreTypeId =>
-        // @ts-ignore
-        Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId]).flatMap(etapeTypeId => {
-          // @ts-ignore
-          const value = AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId][etapeTypeId]
-
-          return {
-            titreTypeId,
-            etapeTypeId,
-            lectureInterdit: value.lectureInterdit,
-            creationInterdit: value.creationInterdit,
-            modificationInterdit: value.modificationInterdit,
-          }
-        })
-      )
-    : []
+  return getKeys(AdministrationsTitresTypesEtapesTypes[administrationId] ?? {}, isTitreType)
+    .flatMap(titreTypeId =>
+      getKeys(AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId] ?? {}, isEtapeTypeId).flatMap(etapeTypeId => {
+        const value = AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId]?.[etapeTypeId]
+        
+return value
+          ? {
+              titreTypeId,
+              etapeTypeId,
+              lectureInterdit: value.lectureInterdit,
+              creationInterdit: value.creationInterdit,
+              modificationInterdit: value.modificationInterdit,
+            }
+          : undefined
+      })
+    )
+    .filter(isNotNullNorUndefined)
 }

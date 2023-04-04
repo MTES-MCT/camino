@@ -1,6 +1,7 @@
+import { getKeys, isNotNullNorUndefined } from '../typescript-tools.js'
 import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
-import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
-import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
+import { isTitreStatutId, TitresStatutIds, TitreStatutId } from './titresStatuts.js'
+import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
 export const canAdministrationModifyEtapes = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   return !restrictions(administrationId, titreTypeId, titreStatutId).etapesModificationInterdit
@@ -177,25 +178,21 @@ const AdministrationsTitresTypesTitresStatuts: {
 export const getAdministrationTitresTypesTitresStatuts = (
   administrationId: AdministrationId
 ): { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; titresModificationInterdit: boolean; demarchesModificationInterdit: boolean; etapesModificationInterdit: boolean }[] => {
-  // @ts-ignore
-  return AdministrationsTitresTypesTitresStatuts[administrationId]
-    ? // @ts-ignore
-      Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId]).flatMap((titreTypeId: TitreTypeId) =>
-        // @ts-ignore
-        Object.keys(AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId]).flatMap((titreStatutId: TitreStatutId) => {
-          // @ts-ignore
-          const value = AdministrationsTitresTypesTitresStatuts[administrationId][titreTypeId][titreStatutId]
-
-          return value
-            ? {
-                titreTypeId,
-                titreStatutId,
-                titresModificationInterdit: value.titresModificationInterdit,
-                demarchesModificationInterdit: value.demarchesModificationInterdit,
-                etapesModificationInterdit: value.etapesModificationInterdit,
-              }
-            : null
-        })
-      )
-    : []
+  return getKeys(AdministrationsTitresTypesTitresStatuts[administrationId] ?? {}, isTitreType)
+    .flatMap(titreTypeId =>
+      getKeys(AdministrationsTitresTypesTitresStatuts[administrationId]?.[titreTypeId] ?? {}, isTitreStatutId).flatMap(titreStatutId => {
+        const value = AdministrationsTitresTypesTitresStatuts[administrationId]?.[titreTypeId]?.[titreStatutId]
+        
+return value
+          ? {
+              titreTypeId,
+              titreStatutId,
+              titresModificationInterdit: value.titresModificationInterdit,
+              demarchesModificationInterdit: value.demarchesModificationInterdit,
+              etapesModificationInterdit: value.etapesModificationInterdit,
+            }
+          : null
+      })
+    )
+    .filter(isNotNullNorUndefined)
 }
