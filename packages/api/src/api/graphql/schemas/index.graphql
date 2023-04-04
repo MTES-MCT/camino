@@ -261,9 +261,6 @@ type Mutation {
   "Crée une entreprise"
   entrepriseCreer(entreprise: InputEntrepriseCreation!): Entreprise
 
-  "Modifie une entreprise"
-  entrepriseModifier(entreprise: InputEntrepriseModification!): Entreprise
-
   administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
   administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration

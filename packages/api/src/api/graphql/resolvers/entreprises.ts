@@ -7,11 +7,8 @@ import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import { fieldsBuild } from './_fields-build.js'
 
 import { entrepriseFormat } from '../../_format/entreprises.js'
-import { emailCheck } from '../../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index.js'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs.js'
-import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 
 const entreprise = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -173,50 +170,4 @@ const entrepriseCreer = async ({ entreprise }: { entreprise: { legalSiren: strin
   }
 }
 
-const entrepriseModifier = async (
-  {
-    entreprise,
-  }: {
-    entreprise: {
-      id: EntrepriseId
-      url?: string
-      telephone?: string
-      email?: string
-    }
-  },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    if (!canEditEntreprise(user, entreprise.id)) throw new Error('droits insuffisants')
-
-    const errors = []
-
-    if (entreprise.email && !emailCheck(entreprise.email)) {
-      errors.push('adresse email invalide')
-    }
-
-    const fields = fieldsBuild(info)
-    const entrepriseOld = await entrepriseGet(entreprise.id, { fields }, user)
-    if (!entrepriseOld) {
-      errors.push('entreprise inconnue')
-    }
-
-    if (errors.length) {
-      throw new Error(errors.join(', '))
-    }
-
-    const entrepriseUpserted = await entrepriseUpsert({
-      ...entrepriseOld,
-      ...entreprise,
-    })
-
-    return entrepriseGet(entrepriseUpserted.id, { fields }, user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export { entreprise, entreprises, entrepriseCreer, entrepriseModifier, entreprisesTitresCreation }
+export { entreprise, entreprises, entrepriseCreer, entreprisesTitresCreation }

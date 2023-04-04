@@ -33,11 +33,11 @@ export const fetchWithJson = async <T extends CaminoRestRoute>(path: T, params: 
   throw new Error(`Une erreur s'est produite lors de la récupération des données`)
 }
 
-export const postWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, body: unknown): Promise<any> => {
+export const postWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, body: unknown, method: 'post' | 'put' = 'post'): Promise<any> => {
   const url = getUiRestRoute(path, params)
 
   const fetched = await fetch(url, {
-    method: 'post',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })

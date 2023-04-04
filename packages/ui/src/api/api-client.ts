@@ -4,6 +4,8 @@ import { User } from 'camino-common/src/roles'
 import { TitresLinkFormApiClient, titresLinkFormApiClient } from '@/components/titre/titres-link-form-api-client'
 import { TitreApiClient, titreApiClient } from '../components/titre/titre-api-client'
 import { UtilisateurApiClient, utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
+import { demarcheApiClient } from '@/components/titre/demarche-api-client'
+import { entrepriseApiClient } from '@/components/entreprise/entreprise-api-client'
 
 export type Utilisateur = {
   id: string
@@ -21,5 +23,7 @@ export const apiClient: ApiClient = {
   ...administrationApiClient,
   ...titresLinkFormApiClient,
   ...titreApiClient,
+  ...demarcheApiClient,
+  ...entrepriseApiClient,
   ...utilisateurApiClient,
 }

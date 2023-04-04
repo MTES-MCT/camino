@@ -12,7 +12,6 @@ vi.mock('../router', () => ({
 vi.mock('../api/entreprises', () => ({
   entreprise: vi.fn(),
   entrepriseCreer: vi.fn(),
-  entrepriseModifier: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -111,43 +110,6 @@ describe("état de l'entreprise sélectionnée", () => {
   test("retourne une erreur si l'API retourne une erreur lors de l'ajout d'une entreprise", async () => {
     const apiMock = api.entrepriseCreer.mockRejectedValue(new Error('erreur api'))
     await store.dispatch('entreprise/add', {
-      legalSiren: '123456789',
-      paysId: 'fr',
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entreprise: {
-        legalSiren: '123456789',
-        paysId: 'fr',
-      },
-    })
-
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
-  test('modifie une entreprise', async () => {
-    const apiMock = api.entrepriseModifier.mockResolvedValue({
-      id: 71,
-      nom: 'toto',
-    })
-
-    await store.dispatch('entreprise/update', {
-      legalSiren: '123456789',
-      paysId: 'fr',
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entreprise: {
-        legalSiren: '123456789',
-        paysId: 'fr',
-      },
-    })
-    expect(mutations.popupClose).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la modification d'une entreprise", async () => {
-    const apiMock = api.entrepriseModifier.mockRejectedValue(new Error('erreur api'))
-    await store.dispatch('entreprise/update', {
       legalSiren: '123456789',
       paysId: 'fr',
     })
