@@ -39,7 +39,6 @@ export const entrepriseCreer = apiGraphQLFetch(gql`
   ${fragmentEntreprise}
 `)
 
-
 export const entreprisesTitresCreation = apiGraphQLFetch(
   gql`
     query EntreprisesTitresCreation {

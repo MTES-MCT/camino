@@ -43,39 +43,23 @@ const entreprise = {
   etablissements: [],
 }
 
-export const apiClient: EntrepriseApiClient = {
+const apiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: data => {
     getFiscaliteEntrepriseAction(data)
     return Promise.resolve({
       redevanceCommunale: 0,
       redevanceDepartementale: 0,
     })
-  
-},
-modifierEntreprise: entreprise => {
-  modifierEntrepriseAction(entreprise)
-  return Promise.resolve()
-
-}
+  },
+  modifierEntreprise: entreprise => {
+    modifierEntrepriseAction(entreprise)
+    return Promise.resolve()
+  },
 }
 
-export const Loading: Story = () => (
-  <PureEntreprise
-    currentYear={annee}
-    entreprise={undefined}
-    apiClient={apiClient}
-    user={null}
-  />
-)
+export const Loading: Story = () => <PureEntreprise currentYear={annee} entreprise={undefined} apiClient={apiClient} user={null} />
 
-export const NonConnecte: Story = () => (
-  <PureEntreprise
-    currentYear={annee}
-    entreprise={entreprise}
-    apiClient={apiClient}
-    user={null}
-  />
-)
+export const NonConnecte: Story = () => <PureEntreprise currentYear={annee} entreprise={entreprise} apiClient={apiClient} user={null} />
 
 const completeEntreprise: EntrepriseType = {
   id: newEntrepriseId('any'),
@@ -279,18 +263,21 @@ export const Complet: Story = () => (
   <PureEntreprise
     currentYear={annee}
     entreprise={completeEntreprise}
-    apiClient={{...apiClient, getFiscaliteEntreprise: data => {
-      getFiscaliteEntrepriseAction(data)
-      return Promise.resolve({
-        guyane: {
-          taxeAurifere: 12,
-          taxeAurifereBrute: 38,
-          totalInvestissementsDeduits: 1,
-        },
-        redevanceCommunale: 200,
-        redevanceDepartementale: 78,
-      })
-    }}}
+    apiClient={{
+      ...apiClient,
+      getFiscaliteEntreprise: data => {
+        getFiscaliteEntrepriseAction(data)
+        return Promise.resolve({
+          guyane: {
+            taxeAurifere: 12,
+            taxeAurifereBrute: 38,
+            totalInvestissementsDeduits: 1,
+          },
+          redevanceCommunale: 200,
+          redevanceDepartementale: 78,
+        })
+      },
+    }}
     user={{ role: 'super', ...testBlankUser }}
   />
 )

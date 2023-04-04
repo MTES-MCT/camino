@@ -8,7 +8,8 @@ export const entrepriseModificationValidator = z.object({
   id: eidValidator,
   url: z.string().optional(),
   telephone: z.string().optional(),
-  email: z.string().optional()
+  email: z.string().optional(),
+  archive: z.boolean().optional(),
 })
 
 export type EntrepriseEtablissement = { id: string; dateDebut: CaminoDate; dateFin: CaminoDate; nom: string }

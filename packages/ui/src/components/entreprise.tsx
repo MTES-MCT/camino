@@ -13,7 +13,7 @@ import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fisc
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles'
 import { Icon } from './_ui/icon'
 import { CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
-  import { computed, onBeforeUnmount, onMounted, watch, defineComponent,ref  } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { EntrepriseId } from 'camino-common/src/entreprise'
@@ -76,30 +76,40 @@ export const Entreprise = defineComponent({
 
     const anneeCourante = getCurrentAnnee()
 
-    return () => <PureEntreprise currentYear={anneeCourante} entreprise={entreprise.value} apiClient={{...entrepriseApiClient, modifierEntreprise: async (entreprise) => {
-      try {
-        await entrepriseApiClient.modifierEntreprise(entreprise)
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `l'entreprise a été modifiée`,
-            type: 'success',
+    return () => (
+      <PureEntreprise
+        currentYear={anneeCourante}
+        entreprise={entreprise.value}
+        apiClient={{
+          ...entrepriseApiClient,
+          modifierEntreprise: async entreprise => {
+            try {
+              await entrepriseApiClient.modifierEntreprise(entreprise)
+              store.dispatch(
+                'messageAdd',
+                {
+                  value: `l'entreprise a été modifiée`,
+                  type: 'success',
+                },
+                { root: true }
+              )
+              await get()
+            } catch (e) {
+              console.error(e)
+              store.dispatch(
+                'messageAdd',
+                {
+                  value: `Erreur lors de la modification de l'entreprise`,
+                  type: 'error',
+                },
+                { root: true }
+              )
+            }
           },
-          { root: true }
-        )
-        await get()
-      } catch (e) {
-        console.error(e)
-        store.dispatch(
-          'messageAdd',
-          {
-            value: `Erreur lors de la modification de l'entreprise`,
-            type: 'error',
-          },
-          { root: true }
-        )
-      }
-    },}} user={user.value} />
+        }}
+        user={user.value}
+      />
+    )
   },
 })
 
@@ -166,7 +176,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entreprise', 'user'
                   <>
                     {' '}
                     <DocumentAddButton route={route.value} document={documentNew.value} title={nom.value} repertoire="entreprises" class="btn py-s px-m mr-px" />
-                    <button class="btn py-s px-m" onClick={() => editPopup.value = !editPopup.value}>
+                    <button class="btn py-s px-m" onClick={() => (editPopup.value = !editPopup.value)}>
                       <Icon size="M" name="pencil" />
                     </button>
                   </>
@@ -306,12 +316,16 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entreprise', 'user'
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
               <h3>Fiscalité</h3>
-              <EntrepriseFiscalite getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
-                if (props.entreprise?.id) {
-                  return await props.apiClient.getFiscaliteEntreprise(annee, props.entreprise?.id)
-                }
-                return {redevanceCommunale: 0, redevanceDepartementale: 0}
-              }} anneeCourante={annees.value[annees.value.length - 1]} annees={annees.value} />
+              <EntrepriseFiscalite
+                getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
+                  if (props.entreprise?.id) {
+                    return await props.apiClient.getFiscaliteEntreprise(annee, props.entreprise?.id)
+                  }
+                  return { redevanceCommunale: 0, redevanceDepartementale: 0 }
+                }}
+                anneeCourante={annees.value[annees.value.length - 1]}
+                annees={annees.value}
+              />
             </div>
           ) : null}
 
@@ -342,9 +356,8 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entreprise', 'user'
             </div>
           ) : null}
           {props.entreprise && editPopup.value ? (
-            <EntrepriseEditPopup  apiClient={props.apiClient} user={props.user} entreprise={props.entreprise} close={() => editPopup.value = !editPopup.value} />
+            <EntrepriseEditPopup apiClient={props.apiClient} user={props.user} entreprise={props.entreprise} close={() => (editPopup.value = !editPopup.value)} />
           ) : null}
-          
         </div>
       ) : (
         <Loader />

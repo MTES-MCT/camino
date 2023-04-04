@@ -55,7 +55,6 @@ export const restPostCall = async <Path extends CaminoRestRoute, T extends strin
   return jwtSet(req, user)
 }
 
-
 export const restPutCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
   path: Path,
   params: ParseUrlParams<Path>,

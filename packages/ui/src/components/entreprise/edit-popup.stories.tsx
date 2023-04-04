@@ -16,24 +16,19 @@ const save = action('save')
 
 const apiClient = {
   modifierEntreprise: (...params: unknown[]) => {
-  save(params)
-  return Promise.resolve()
-  }
+    save(params)
+    return Promise.resolve()
+  },
 }
 export const Ok: Story = () => (
   <EntrepriseEditPopup
     close={close}
-    user={{...testBlankUser, role: 'admin', administrationId: 'aut-97300-01'}}
-    entreprise={{id: newEntrepriseId('id') ,telephone: '0102030405'}}
+    user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }}
+    entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405' }}
     apiClient={apiClient}
   />
 )
 
 export const Super: Story = () => (
-  <EntrepriseEditPopup
-    close={close}
-    user={{...testBlankUser, role: 'super'}}
-    entreprise={{id: newEntrepriseId('id'), telephone: '0102030405'}}
-    apiClient={apiClient}
-  />
+  <EntrepriseEditPopup close={close} user={{ ...testBlankUser, role: 'super' }} entreprise={{ id: newEntrepriseId('id'), telephone: '0102030405' }} apiClient={apiClient} />
 )

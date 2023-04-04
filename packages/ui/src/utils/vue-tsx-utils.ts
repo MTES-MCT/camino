@@ -16,7 +16,6 @@ export function caminoDefineComponent<T>(props: CalculatePermutations<keyof T>, 
 
 export const isEventWithTarget = (event: any): event is FocusEvent & { target: HTMLInputElement } => event.target
 
-
 export const updateFromEvent = (e: Event, myRef: Ref<string>) => {
   if (isEventWithTarget(e)) {
     myRef.value = e.target.value
