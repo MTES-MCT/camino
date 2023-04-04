@@ -1,14 +1,10 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { IAdministrationActiviteType, IAdministrationTitreTypeEtapeType, IAdministrationTitreTypeTitreStatut, IAdministrationActiviteTypeEmail, Context } from '../../../types.js'
+import { IAdministrationActiviteType, IAdministrationActiviteTypeEmail, Context } from '../../../types.js'
 
 import {
   administrationGet,
   administrationsGet,
-  administrationTitreTypeTitreStatutUpsert,
-  administrationTitreTypeTitreStatutDelete,
-  administrationTitreTypeEtapeTypeDelete,
-  administrationTitreTypeEtapeTypeUpsert,
   administrationActiviteTypeDelete,
   administrationActiviteTypeUpsert,
   administrationActiviteTypeEmailCreate,
@@ -75,74 +71,6 @@ const administrations = async (_: unknown, { user }: Context, info: GraphQLResol
     if (!administrations.length) return []
 
     return administrations.map(administrationFormat)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const administrationTitreTypeTitreStatutModifier = async (
-  {
-    administrationTitreTypeTitreStatut,
-  }: {
-    administrationTitreTypeTitreStatut: IAdministrationTitreTypeTitreStatut
-  },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (
-      !administrationTitreTypeTitreStatut.titresModificationInterdit &&
-      !administrationTitreTypeTitreStatut.demarchesModificationInterdit &&
-      !administrationTitreTypeTitreStatut.etapesModificationInterdit
-    ) {
-      await administrationTitreTypeTitreStatutDelete(
-        administrationTitreTypeTitreStatut.administrationId,
-        administrationTitreTypeTitreStatut.titreTypeId,
-        administrationTitreTypeTitreStatut.titreStatutId
-      )
-    } else {
-      await administrationTitreTypeTitreStatutUpsert(administrationTitreTypeTitreStatut)
-    }
-
-    return await administrationGet(administrationTitreTypeTitreStatut.administrationId, { fields }, user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const administrationTitreTypeEtapeTypeModifier = async (
-  {
-    administrationTitreTypeEtapeType,
-  }: {
-    administrationTitreTypeEtapeType: IAdministrationTitreTypeEtapeType
-  },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (!administrationTitreTypeEtapeType.lectureInterdit && !administrationTitreTypeEtapeType.modificationInterdit && !administrationTitreTypeEtapeType.creationInterdit) {
-      await administrationTitreTypeEtapeTypeDelete(administrationTitreTypeEtapeType.administrationId, administrationTitreTypeEtapeType.titreTypeId, administrationTitreTypeEtapeType.etapeTypeId)
-    } else {
-      await administrationTitreTypeEtapeTypeUpsert(administrationTitreTypeEtapeType)
-    }
-
-    return await administrationGet(administrationTitreTypeEtapeType.administrationId, { fields }, user)
   } catch (e) {
     console.error(e)
 
@@ -235,12 +163,4 @@ const administrationActiviteTypeEmailSupprimer = async (
   }
 }
 
-export {
-  administration,
-  administrations,
-  administrationTitreTypeTitreStatutModifier,
-  administrationTitreTypeEtapeTypeModifier,
-  administrationActiviteTypeModifier,
-  administrationActiviteTypeEmailCreer,
-  administrationActiviteTypeEmailSupprimer,
-}
+export { administration, administrations, administrationActiviteTypeModifier, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer }

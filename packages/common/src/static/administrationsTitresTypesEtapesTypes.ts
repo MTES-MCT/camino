@@ -1,34 +1,7 @@
+import { getKeys, isNotNullNorUndefined } from '../typescript-tools.js'
 import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
-import { EtapeTypeId, ETAPES_TYPES } from './etapesTypes.js'
-import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
-
-// TODO 2023-01-24: à supprimer le jour où on supprime la table administrations--titres-types--etapes-types
-export const toDbATE = () => {
-  return Object.keys(AdministrationsTitresTypesEtapesTypes).flatMap(administrationId => {
-    return (
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId]).flatMap(titreTypeId =>
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId]).flatMap(etapeTypeId => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const value = AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId][etapeTypeId]
-
-          return {
-            administration_id: administrationId,
-            titre_type_id: titreTypeId,
-            etape_type_id: etapeTypeId,
-            lecture_interdit: value.lectureInterdit,
-            creation_interdit: value.creationInterdit,
-            modification_interdit: value.modificationInterdit,
-          }
-        })
-      )
-    )
-  })
-}
+import { EtapeTypeId, ETAPES_TYPES, isEtapeTypeId } from './etapesTypes.js'
+import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
 // TODO 2023-01-24: on n'a exposé uniquement creationInterdit
 const restrictions = (
@@ -920,4 +893,26 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
   },
+}
+
+export const getAdministrationTitresTypesEtapesTypes = (
+  administrationId: AdministrationId
+): { titreTypeId: TitreTypeId; etapeTypeId: EtapeTypeId; lectureInterdit: boolean; creationInterdit: boolean; modificationInterdit: boolean }[] => {
+  return getKeys(AdministrationsTitresTypesEtapesTypes[administrationId] ?? {}, isTitreType)
+    .flatMap(titreTypeId =>
+      getKeys(AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId] ?? {}, isEtapeTypeId).flatMap(etapeTypeId => {
+        const value = AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId]?.[etapeTypeId]
+
+        return value
+          ? {
+              titreTypeId,
+              etapeTypeId,
+              lectureInterdit: value.lectureInterdit,
+              creationInterdit: value.creationInterdit,
+              modificationInterdit: value.modificationInterdit,
+            }
+          : undefined
+      })
+    )
+    .filter(isNotNullNorUndefined)
 }

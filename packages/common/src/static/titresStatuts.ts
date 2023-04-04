@@ -66,4 +66,8 @@ export const TitresStatuts: {
   },
 }
 
+const TITRES_STATUTS_IDS = Object.values(TitresStatutIds)
+
+export const isTitreStatutId = (value: string): value is TitreStatutId => TITRES_STATUTS_IDS.includes(value)
+
 export const sortedTitresStatuts = Object.values(TitresStatuts).sort((a, b) => a.ordre - b.ordre)

@@ -49,8 +49,6 @@ import { entreprise, entreprises, entrepriseCreer, entreprisesTitresCreation } f
 import {
   administration,
   administrations,
-  administrationTitreTypeTitreStatutModifier,
-  administrationTitreTypeEtapeTypeModifier,
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
@@ -139,8 +137,6 @@ export default {
   newsletterInscrire,
   entrepriseCreer,
   entreprisesTitresCreation,
-  administrationTitreTypeTitreStatutModifier,
-  administrationTitreTypeEtapeTypeModifier,
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,

@@ -211,8 +211,6 @@ interface IAdministration {
   departementId?: DepartementId | null
   regionId?: RegionId | null
   abreviation?: string | null
-  titresTypesTitresStatuts?: IAdministrationTitreTypeTitreStatut[] | null
-  titresTypesEtapesTypes?: IAdministrationTitreTypeEtapeType[] | null
   activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
   associee?: boolean | null
@@ -365,35 +363,11 @@ interface IForet {
   nom: string
 }
 
-interface ITitreTypeEtapeType {
-  titreTypeId: string
-  titreType?: ITitreType | null
-  etapeTypeId: string
-  etapeType?: IEtapeType | null
-}
-
 interface IActiviteTypeTitreType {
   titreTypeId: string
   titreType?: ITitreType | null
   activiteTypeId: string
   activiteType?: IActiviteType | null
-}
-
-interface IAdministrationTitreTypeTitreStatut {
-  titreTypeId: TitreTypeId
-  titreType?: ITitreType | null
-  titreStatutId: TitreStatutId
-  administrationId: AdministrationId
-  titresModificationInterdit: boolean
-  demarchesModificationInterdit: boolean
-  etapesModificationInterdit: boolean
-}
-
-interface IAdministrationTitreTypeEtapeType extends ITitreTypeEtapeType {
-  administrationId: string
-  creationInterdit: boolean
-  lectureInterdit: boolean
-  modificationInterdit: boolean
 }
 
 interface IAdministrationActiviteType {
@@ -744,7 +718,6 @@ interface IUtilisateurTitre {
   utilisateur?: IUtilisateur | null
 }
 
-type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
 export type Context = { user: User }
 
 type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
@@ -797,8 +770,6 @@ export {
   IGeometry,
   IActiviteTypeTitreType,
   IEtapeTypeJustificatifType,
-  IAdministrationTitreTypeTitreStatut,
-  IAdministrationTitreTypeEtapeType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitre,
@@ -822,7 +793,6 @@ export {
   ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,
-  IUtilisateurCreation,
   IPropId,
   ITitreColonneId,
   ITitreDemarcheColonneId,
