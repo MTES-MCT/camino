@@ -182,8 +182,8 @@ export const getAdministrationTitresTypesTitresStatuts = (
     .flatMap(titreTypeId =>
       getKeys(AdministrationsTitresTypesTitresStatuts[administrationId]?.[titreTypeId] ?? {}, isTitreStatutId).flatMap(titreStatutId => {
         const value = AdministrationsTitresTypesTitresStatuts[administrationId]?.[titreTypeId]?.[titreStatutId]
-        
-return value
+
+        return value
           ? {
               titreTypeId,
               titreStatutId,
