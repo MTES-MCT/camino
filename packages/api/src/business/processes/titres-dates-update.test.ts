@@ -3,7 +3,7 @@ import { titreDateDemandeFind } from '../rules/titre-date-demande-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import Titres from '../../database/models/titres.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { vi, describe, expect, test } from 'vitest'
+import { vi, describe, expect, test, beforeEach } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),
   titresGet: vi.fn(),
@@ -17,6 +17,10 @@ const titresGetMock = vi.mocked(titresGet, true)
 const titreDateDemandeFindMock = vi.mocked(titreDateDemandeFind, true)
 
 console.info = vi.fn()
+
+beforeEach(() => {
+  vi.resetAllMocks()
+})
 
 describe("dates d'un titre", () => {
   test("met à jour les dates d'un titre", async () => {
@@ -33,8 +37,13 @@ describe("dates d'un titre", () => {
       {
         id: 'titre-type-id',
         dateFin: '2019-01-01',
-        dateDebut: null,
+        dateDebut: '2010-01-01',
         dateDemande: null,
+        demarches: [
+          {
+            phase: { dateDebut: toCaminoDate('2010-01-01'), dateFin: toCaminoDate('2019-01-01') },
+          },
+        ],
       },
     ] as Titres[])
     titreDateDemandeFindMock.mockReturnValue(null)

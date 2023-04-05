@@ -1,12 +1,14 @@
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ITitreEtape, IEtapeType, ITitreDemarche } from '../../types.js'
 import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
-  demarcheTypeId: string,
+  demarcheTypeId: DemarcheTypeId,
   demarcheTypeEtapesTypes: IEtapeType[],
   titreEtape: ITitreEtape,
   demarches: ITitreDemarche[] | null | undefined,
-  titreTypeId?: string
+  titreTypeId?: TitreTypeId
 ) => {
   // si le type de démarche est retrait de la demande ou déchéance
   // et que le type d'étape est saisine du préfet
@@ -124,7 +126,7 @@ const titreDemarchePublicLectureFind = (
   // ouverture de l’enquête publique (epu)
   // clôture de l’enquête publique (epc)
 
-  const domaineId = titreTypeId ? titreTypeId.substr(2) : null
+  const domaineId = titreTypeId ? getDomaineId(titreTypeId) : null
   if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'ppc', 'epu', 'epc'].includes(titreEtape.typeId)) {
     return true
   }
@@ -147,12 +149,12 @@ const titreDemarchePublicLectureFind = (
  */
 
 export const titreDemarchePublicFind = (
-  demarcheTypeId: string,
+  demarcheTypeId: DemarcheTypeId,
   demarcheTypeEtapesTypes: IEtapeType[],
   titreEtapes: ITitreEtape[],
   titreId: string,
   titreDemarches: ITitreDemarche[] | null | undefined,
-  titreTypeId?: string
+  titreTypeId?: TitreTypeId
 ) => {
   // calcule la visibilité publique ou non de la démarche
   // on parcourt successivement toutes les étapes
