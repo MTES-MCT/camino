@@ -7,6 +7,7 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: string) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>
+  creerEntreprise: (sirene: string) => Promise<void>
 }
 
 export const entrepriseApiClient: EntrepriseApiClient = {
@@ -18,5 +19,8 @@ export const entrepriseApiClient: EntrepriseApiClient = {
   },
   modifierEntreprise: async (entreprise): Promise<void> => {
     return postWithJson(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, entreprise, 'put')
+  },
+  creerEntreprise: async (sirene: string): Promise<void> => {
+    return postWithJson(CaminoRestRoutes.entreprise, { entrepriseId: sirene }, {})
   },
 }

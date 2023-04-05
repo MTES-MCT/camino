@@ -1,4 +1,32 @@
-<template>
+import { caminoDefineComponent, updateFromEvent } from "@/utils/vue-tsx-utils";
+import { User } from "camino-common/src/roles";
+import { ref } from "vue";
+import { FunctionalPopup } from "../_ui/functional-popup";
+import { EntrepriseApiClient } from "./entreprise-api-client";
+
+
+interface Props {
+  close: () => void
+  user: User
+  apiClient: Pick<EntrepriseApiClient, 'creerEntreprise'>
+
+}
+export const EntrepriseAddPopup = caminoDefineComponent<Props>(['close', 'user', 'apiClient'], (props) => {
+  const siren = ref('')
+  const content = () => (
+    <form>
+      <div class="fr-input-group">
+        <label class="fr-label" for="telephone">
+          Téléphone
+        </label>
+        <input onInput={e => updateFromEvent(e, siren)} value={siren.value} class="fr-input" name="telephone" id="telephone" type="text" />
+      </div>
+    </form>
+  )
+  return () => (<FunctionalPopup title="Modification d'une entreprise" content={content} close={props.close} validate={{ action: () =>  }} />)
+})
+
+{/* <template>
   <Popup :messages="messages">
     <template #header>
       <div>
@@ -115,4 +143,4 @@ export default {
     },
   },
 }
-</script>
+</script> */}
