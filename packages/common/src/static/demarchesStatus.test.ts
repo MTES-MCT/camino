@@ -15,5 +15,4 @@ test('isDemarcheStatutNonValide', () => {
   expect(isDemarcheStatutNonValide('acc')).toBe(false)
   expect(isDemarcheStatutNonValide('ins')).toBe(false)
   expect(isDemarcheStatutNonValide('cls')).toBe(true)
-
 })

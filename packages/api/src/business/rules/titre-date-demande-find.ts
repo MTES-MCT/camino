@@ -7,7 +7,7 @@ import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js
 export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
   // - première démarche d'octroi ou mutation partielle
-  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches) as ITitreDemarche[]
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches)
   const titreDemarche = titreDemarchesSorted.find(titreDemarche => isDemarcheTypeOctroi(titreDemarche.typeId))
 
   // si

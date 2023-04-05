@@ -1,5 +1,4 @@
 import { Definition } from '../definition.js'
-import { DemarchesStatutsIds, DemarcheStatutId } from './demarchesStatuts.js'
 
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
