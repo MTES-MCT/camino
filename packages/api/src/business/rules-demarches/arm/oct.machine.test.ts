@@ -45,7 +45,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
       'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DESISTER_PAR_LE_DEMANDEUR',
@@ -78,7 +78,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
       'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DEMANDER_COMPLEMENTS_DAE',
@@ -113,7 +113,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, ['ACCEPTER_COMPLETUDE', 'CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'REFUSER_COMPLETUDE', 'MODIFIER_DEMANDE'])
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, [
+      'ACCEPTER_COMPLETUDE',
+      'CLASSER_SANS_SUITE',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'REFUSER_COMPLETUDE',
+      'MODIFIER_DEMANDE',
+    ])
   })
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
@@ -141,7 +147,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, ['CLASSER_SANS_SUITE', 'DEMANDER_COMPLEMENTS_COMPLETUDE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE'])
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-04') }, [
+      'CLASSER_SANS_SUITE',
+      'DEMANDER_COMPLEMENTS_COMPLETUDE',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'MODIFIER_DEMANDE',
+    ])
   })
 
   test.each([

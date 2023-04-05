@@ -19,7 +19,7 @@ import { toMachineEtapes } from '../../business/rules-demarches/machine-common.j
 import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
@@ -292,7 +292,7 @@ export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<Common
               if (isDemarcheDefinitionMachine(dd)) {
                 try {
                   enAttenteDeDREAL = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
-                  const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche)
+                  const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
                   prochainesEtapes.push(
                     ...nextEtapes
                       .map(etape => etape.etapeTypeId)

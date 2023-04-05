@@ -103,7 +103,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (machine: CaminoM
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  const etapesPossibles = machine.possibleNextEtapes(etapesAvant).filter(et => {
+  const etapesPossibles = machine.possibleNextEtapes(etapesAvant, date).filter(et => {
     const newEtapes = [...etapesAvant]
 
     const items = { ...et, date }

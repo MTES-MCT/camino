@@ -12,7 +12,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
   test('peut créer une "mfr"', () => {
     const etapes = [{ ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') }]
     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(pxgOctMachine, ['DEPOSER_DEMANDE'])
+    expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-14') }, ['DEPOSER_DEMANDE'])
   })
 
   test('peut avoir une démarche en instruction', () => {
@@ -141,6 +141,6 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
       },
     ]
     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(pxgOctMachine, [])
+    expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-26') }, [])
   })
 })

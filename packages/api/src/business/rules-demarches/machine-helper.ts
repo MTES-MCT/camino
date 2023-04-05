@@ -2,6 +2,7 @@ import { BaseActionObject, interpret, ResolveTypegenMeta, ServiceMap, State, Sta
 import { EventObject } from 'xstate/lib/types.js'
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<
@@ -46,9 +47,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   }
 
   // visibleForTesting
-  public toPotentialCaminoXStateEvent(event: CaminoEvent['type']): CaminoEvent[] {
+  public toPotentialCaminoXStateEvent(event: CaminoEvent['type'], _date: CaminoDate): CaminoEvent[] {
     // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return [{ type: event }]
   }
@@ -203,13 +203,13 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
-  public possibleNextEtapes(etapes: readonly Etape[]): Omit<Etape, 'date'>[] {
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): Omit<Etape, 'date'>[] {
     const state = this.assertGoTo(etapes)
 
     return state.nextEvents
       .filter((event: string) => this.isEvent(event))
       .flatMap(event => {
-        const events = this.toPotentialCaminoXStateEvent(event)
+        const events = this.toPotentialCaminoXStateEvent(event, date)
 
         return events.filter(event => state.can(event)).flatMap(event => this.caminoXStateEventToEtapes(event))
       })

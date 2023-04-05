@@ -3,8 +3,9 @@ import { EventObject } from 'xstate/lib/types.js'
 import { interpret } from 'xstate'
 import { CaminoMachine } from './machine-helper.js'
 import { expect } from 'vitest'
+import { CaminoDate } from 'camino-common/src/date.js'
 interface CustomMatchers<R = unknown> {
-  canOnlyTransitionTo<T extends EventObject>(machine: CaminoMachine<any, T>, _events: EventObject['type'][]): R
+  canOnlyTransitionTo<T extends EventObject>(context: { machine: CaminoMachine<any, T>; date: CaminoDate }, _events: T['type'][]): R
 }
 
 declare global {
@@ -18,12 +19,12 @@ declare global {
   }
 }
 expect.extend({
-  canOnlyTransitionTo<T extends EventObject>(service: any, machine: CaminoMachine<any, T>, events: T['type'][]) {
+  canOnlyTransitionTo<T extends EventObject>(service: any, { machine, date }: { machine: CaminoMachine<any, T>; date: CaminoDate }, events: T['type'][]) {
     events.sort()
     const passEvents: EventObject['type'][] = service.state.nextEvents
       .filter((event: string) => machine.isEvent(event))
       .filter((event: EventObject['type']) => {
-        const events = machine.toPotentialCaminoXStateEvent(event)
+        const events = machine.toPotentialCaminoXStateEvent(event, date)
 
         return events.some(event => service.state.can(event))
       })
@@ -59,7 +60,7 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
         )}'. The event ${JSON.stringify(event)} should be one of '${service.state.nextEvents
           .filter(event => machine.isEvent(event))
           .filter((event: EventObject['type']) => {
-            const events = machine.toPotentialCaminoXStateEvent(event)
+            const events = machine.toPotentialCaminoXStateEvent(event, etapeAFaire.date)
 
             return events.some(event => service.state.can(event))
           })}'`

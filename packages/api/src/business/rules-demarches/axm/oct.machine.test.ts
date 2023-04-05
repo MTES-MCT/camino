@@ -22,7 +22,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-15') }, [
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
@@ -52,7 +52,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-15') }, [
       'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
@@ -76,7 +76,12 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2020-01-01'),
       },
     ])
-    expect(service).canOnlyTransitionTo(axmOctMachine, ['FAIRE_CLASSEMENT_SANS_SUITE', 'FAIRE_DESISTEMENT_DEMANDEUR', 'FAIRE_NOTE_INTERNE_SIGNALEE', 'MODIFIER_DEMANDE_APRES_DAE'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-14') }, [
+      'FAIRE_CLASSEMENT_SANS_SUITE',
+      'FAIRE_DESISTEMENT_DEMANDEUR',
+      'FAIRE_NOTE_INTERNE_SIGNALEE',
+      'MODIFIER_DEMANDE_APRES_DAE',
+    ])
   })
 
   test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', () => {
@@ -105,7 +110,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-06-15'),
       },
     ])
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-15') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
@@ -156,7 +161,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         date: toCaminoDate('2022-06-18'),
       },
     ])
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-06-18') }, [
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_NOTE_INTERNE_SIGNALEE',
@@ -233,7 +238,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
     ])
 
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [
       'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
       'FAIRE_CLASSEMENT_SANS_SUITE',
       'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
@@ -244,7 +249,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
 
   test('ne peut pas faire de note interne signalée avant une demande', () => {
     const service = orderAndInterpretMachine(axmOctMachine, [])
-    expect(service).canOnlyTransitionTo(axmOctMachine, [
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [
       'RENDRE_DAE_REQUISE',
       'RENDRE_DAE_EXEMPTEE',
       'FAIRE_DEMANDE',
@@ -269,7 +274,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
       { ...ETES.decisionImplicite.REJETE, date: toCaminoDate('2022-04-12') },
     ])
-    expect(service).canOnlyTransitionTo(axmOctMachine, ['FAIRE_NOTE_INTERNE_SIGNALEE', 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-12') }, ['FAIRE_NOTE_INTERNE_SIGNALEE', 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'])
   })
 
   test('peut classer sans suite après une décision du propriétaire du sol défavorable', () => {
@@ -281,7 +286,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.classementSansSuite.FAIT, date: toCaminoDate('2022-04-10') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(axmOctMachine, [])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-10') }, [])
     expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
   })
 
@@ -293,7 +298,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(axmOctMachine, ['FAIRE_CLASSEMENT_SANS_SUITE'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2020-01-01') }, ['FAIRE_CLASSEMENT_SANS_SUITE'])
     expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([ADMINISTRATION_IDS['DGTM - GUYANE']])
   })
 
@@ -383,8 +388,72 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-05-28') },
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
-    expect(service).canOnlyTransitionTo(axmOctMachine, ['FAIRE_NOTE_INTERNE_SIGNALEE'])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-08-28') }, ['FAIRE_NOTE_INTERNE_SIGNALEE'])
     expect(axmOctMachine.whoIsBlocking(etapes)).toStrictEqual([])
+  })
+
+  test('peut rendre l’avis DREAL que 30 jours après la saisine des services', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },
+      {
+        ...ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
+        date: toCaminoDate('2020-01-01'),
+      },
+      {
+        ...ETES.decisionDuProprietaireDuSol.FAVORABLE,
+        date: toCaminoDate('2020-01-01'),
+      },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-11') },
+      {
+        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
+        date: toCaminoDate('2022-04-15'),
+      },
+      {
+        ...ETES.saisineDesCollectivitesLocales.FAIT,
+        date: toCaminoDate('2022-04-16'),
+      },
+      { ...ETES.saisineDesServices.FAIT, date: toCaminoDate('2022-04-18') },
+    ]
+    const service = orderAndInterpretMachine(axmOctMachine, etapes)
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-18') }, [
+      'RENDRE_AVIS_DREAL',
+      'FAIRE_CLASSEMENT_SANS_SUITE',
+      'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
+      'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
+      'FAIRE_DESISTEMENT_DEMANDEUR',
+      'FAIRE_NOTE_INTERNE_SIGNALEE',
+      'RENDRE_AVIS_AGENCE_REGIONALE_SANTE',
+      'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE',
+      'RENDRE_AVIS_DGTMAUCL',
+      'RENDRE_AVIS_DGTM_MNBST',
+      'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET',
+      'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI',
+      'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES',
+      'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES',
+      'RENDRE_AVIS_DUN_MAIRE',
+      'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE',
+      'RENDRE_AVIS_GENDARMERIE_NATIONALE',
+      'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS',
+    ])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-05-17') }, [
+      'FAIRE_CLASSEMENT_SANS_SUITE',
+      'DEMANDER_INFORMATION_POUR_AVIS_DREAL',
+      'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL',
+      'FAIRE_DESISTEMENT_DEMANDEUR',
+      'FAIRE_NOTE_INTERNE_SIGNALEE',
+      'RENDRE_AVIS_AGENCE_REGIONALE_SANTE',
+      'RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE',
+      'RENDRE_AVIS_DGTMAUCL',
+      'RENDRE_AVIS_DGTM_MNBST',
+      'RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET',
+      'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI',
+      'RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES',
+      'RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES',
+      'RENDRE_AVIS_DUN_MAIRE',
+      'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE',
+      'RENDRE_AVIS_GENDARMERIE_NATIONALE',
+      'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS',
+    ])
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
