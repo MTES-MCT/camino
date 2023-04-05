@@ -1,0 +1,100 @@
+[
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "atf"
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "cur"
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "idm",
+    "optionnel": true
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jcf"
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jct"
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jid"
+  },
+  {
+    "titre_type_id": "arm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "kbi"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "atf",
+    "description": "Attestation sur l’honneur certifiant que le demandeur est en règle au regard de ses obligations fiscales et en matière de paiement de ses cotisations sociales (décret 2001-204, art. 7)."
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "bil",
+    "description": "Ces pièces sont demandées au titre de la justification des capacités financières du\ndemandeur (décret 2001-204, art. 7)"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "deb",
+    "description": "Ces pièces sont demandées au titre de la justification des capacités financières du\ndemandeur (décret 2001-204, art. 7)"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jac"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jct",
+    "description": "la justification du choix de la zone considérée, la situation du périmètre par rapport aux documents d’urbanisme, la situation du périmètre par rapport aux titres miniers et autorisations d’exploitation existants, les activités passées d’orpaillage et leurs conséquences sur les site."
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jid",
+    "description": "Pièces d'identification du demandeur (personne physique ou société)"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "lis",
+    "description": "Liste des travaux auxquels le demandeur a participé au cours des 3 dernières années"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "ref",
+    "description": "Références professionnelles du demandeur ou celles des cadres chargés du suivi et de la conduite des travauxCes pièces sont demandées au titre la justification des capacités techniques du demandeur (décret 2001-204, art. 6).\n\nS’il s’agit d’une personne morale, références professionnelles du ou des cadres chargés du suivi et de la conduite des travaux"
+  }
+]
