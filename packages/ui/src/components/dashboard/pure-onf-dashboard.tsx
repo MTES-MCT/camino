@@ -6,7 +6,7 @@ import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, s
 
 import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
-import { datesDiffInDays } from 'camino-common/src/date'
+import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 export interface Props {
@@ -67,7 +67,7 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
   return titres.map(titre => {
     let delai = ''
     if (titre.dateCARM !== '' && titre.dateReceptionONF !== '') {
-      delai = datesDiffInDays(new Date(titre.dateReceptionONF), new Date(titre.dateCARM)).toString(10)
+      delai = daysBetween(toCaminoDate(titre.dateReceptionONF), toCaminoDate(titre.dateCARM)).toString(10)
     }
     const columns: { [key in Columns]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),

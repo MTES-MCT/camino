@@ -9,7 +9,7 @@ import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresS
 import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types.js'
 
 import { propValueFind } from '../utils/prop-value-find.js'
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 
 const etapeAmodiataireFind = (titreEtape: ITitreEtape, titreDemarches: ITitreDemarche[]) => {
@@ -109,8 +109,8 @@ const demarcheEligibleCheck = (titreDemarcheStatutId: DemarcheStatutId, titreDem
  * @returns id d'une etape
  */
 
-const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
-  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
+export const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId): ITitreEtape | null => {
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
     // si une étape a déjà été trouvée
@@ -135,8 +135,8 @@ const titrePropTitreEtapeFind = (propId: IPropId, titreDemarches: ITitreDemarche
  * @returns une étape ou null
  */
 
-const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
-  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
+export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
+  const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
     // si une étape a déjà été trouvée
@@ -151,5 +151,3 @@ const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreD
 
   return titreEtape
 }
-
-export { titrePropTitreEtapeFind, titreContenuTitreEtapeFind }

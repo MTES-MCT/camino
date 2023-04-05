@@ -303,18 +303,19 @@ export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean =>
 
   return demarchesTypesOctroi.includes(demarcheTypeId)
 }
+
+export const demarchesTypesWithPhasesAndWithoutDateFin: DemarcheTypeId[] = [
+  DEMARCHES_TYPES_IDS.Prolongation,
+  DEMARCHES_TYPES_IDS.Prolongation1,
+  DEMARCHES_TYPES_IDS.Prolongation2,
+  DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
+]
 export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean => {
   if (isDemarcheTypeOctroi(demarcheTypeId)) {
     return true
   }
-  const demarchesTypesWithPhases: DemarcheTypeId[] = [
-    DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.Prolongation1,
-    DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
-  ]
 
-  return demarchesTypesWithPhases.includes(demarcheTypeId)
+  return demarchesTypesWithPhasesAndWithoutDateFin.includes(demarcheTypeId)
 }
 
 export const sortedDemarchesTypes = Object.values(DemarchesTypes).sort((a, b) => a.ordre - b.ordre)

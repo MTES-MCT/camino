@@ -2,10 +2,11 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreEtapePropFind } from './titre-etape-prop-find.js'
 import { vi, describe, expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 console.error = vi.fn()
 
 describe("valeur d'une propriété pour une étape", () => {
-  const date = '2020-12-01'
+  const date = toCaminoDate('2020-12-01')
 
   test('retourne null si le titre ne contient pas de démarches', () => {
     expect(titreEtapePropFind('titulaires', date, [] as unknown as ITitreDemarche[], 'pxm')).toEqual(null)

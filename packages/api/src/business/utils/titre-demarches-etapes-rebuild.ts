@@ -1,7 +1,8 @@
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
-import { titreDemarchePhaseCheck } from '../rules/titre-demarche-phase-check.js'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { titrePhasesFind } from '../rules/titre-phases-find.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 /**
  * Filtre les étapes antérieures à une date
@@ -19,8 +20,8 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEta
  * @returns démarches du titre
  */
 
-export const titreDemarchesEtapesRebuild = (date: string, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) =>
-  titreDemarches.reduce((acc: ITitreDemarche[], td) => {
+export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+  const titreDemarchesRebuilt = titreDemarches.reduce((acc: ITitreDemarche[], td) => {
     if (!td.etapes) return acc
 
     const titreEtapesFiltered = titreEtapesFilter(td.etapes!, date)
@@ -32,12 +33,19 @@ export const titreDemarchesEtapesRebuild = (date: string, titreDemarches: ITitre
 
       titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarche.etapes, titreTypeId, titreDemarche.id)
 
-      if (!titreDemarchePhaseCheck(titreDemarche.typeId, titreDemarche.statutId, titreTypeId, titreDemarche.etapes)) {
-        delete titreDemarche.phase
-      }
-
       acc.push(titreDemarche)
     }
 
     return acc
   }, [])
+
+  const phases = titrePhasesFind(titreDemarchesRebuilt, date, titreTypeId)
+
+  return titreDemarchesRebuilt.map(demarche => {
+    if (!phases.find(({ titreDemarcheId }) => titreDemarcheId === demarche.id)) {
+      delete demarche.phase
+    }
+
+    return demarche
+  })
+}

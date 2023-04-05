@@ -2,7 +2,7 @@ import slugify from '@sindresorhus/slugify'
 
 import { DemarcheId, ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
 
-import titreDemarcheSortAsc from './titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc } from './titre-elements-sort-asc.js'
 import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
 import titreDemarcheOctroiDateDebutFind from '../rules/titre-demarche-octroi-date-debut-find.js'
 import { titresGet, titreUpdate } from '../../database/queries/titres.js'

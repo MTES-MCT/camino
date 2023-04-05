@@ -103,8 +103,6 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     if (titrePhasesToUpdate.length) {
       await titrePhasesUpsert(titrePhasesToUpdate)
 
-      console.info('titre / démarche / phases (mise à jour) ->', JSON.stringify(titrePhasesToUpdate))
-
       titresPhasesIdsUpdated.push(...titrePhasesToUpdate.map(p => p.titreDemarcheId))
     }
 
@@ -113,9 +111,20 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     if (titrePhasesToDeleteIds.length) {
       await titrePhasesDelete(titrePhasesToDeleteIds)
 
-      console.info('titre / démarche / phases (suppression) ->', titrePhasesToDeleteIds.join(', '))
-
       titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
+    }
+
+    if (titrePhasesToUpdate.length || titrePhasesToDeleteIds.length) {
+      let reason = ''
+
+      if (titre.titreStatutId === 'mod') {
+        reason = 'Modification en instance'
+      } else if (titrePhasesOld[0]?.dateDebut === titrePhases[0]?.dateDebut && titrePhasesOld[titrePhasesOld.length - 1].dateFin === titrePhases[titrePhases.length - 1].dateFin) {
+        reason = 'Même période de validité'
+        // Si une ancienne phase contient 31-12-2018 et que la période de validité est la même
+      }
+
+      console.info(`${reason};https://camino.beta.gouv.fr/titres/${titre.slug}; ${JSON.stringify(titrePhasesOld)}; ${JSON.stringify(titrePhases)};`)
     }
   }
 

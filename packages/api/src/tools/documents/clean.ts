@@ -3,7 +3,7 @@ import { documentFilePathFind } from './document-path-find.js'
 import * as fs from 'fs'
 import { documentSupprimer } from '../../api/graphql/resolvers/documents.js'
 import { userSuper } from '../../database/user-super.js'
-import { datesDiffInDays } from 'camino-common/src/date.js'
+import { daysBetween, getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 
 export const documentsClean = async () => {
   console.info()
@@ -18,7 +18,7 @@ export const documentsClean = async () => {
 
     try {
       const { mtime } = fs.statSync(path)
-      if (datesDiffInDays(mtime, new Date()) >= 1) {
+      if (daysBetween(toCaminoDate(mtime), getCurrent()) >= 1) {
         await documentSupprimer({ id: document.id }, { user: userSuper })
         console.info(`document ${path} supprimé`)
       }

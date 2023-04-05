@@ -1,12 +1,16 @@
-export const datesDiffInDays = (a: Date, b: Date) => {
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate(), a.getHours(), a.getMinutes())
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate(), b.getHours(), b.getMinutes())
+const datesDiffInDays = (a: Date, b: Date) => {
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
 
   return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24))
 }
 
 export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
   return datesDiffInDays(new Date(a), new Date(b))
+}
+
+export const isBefore = (a: CaminoDate, b: CaminoDate): boolean => {
+  return a < b
 }
 
 export type CaminoDate = string & { __camino: 'Date' }

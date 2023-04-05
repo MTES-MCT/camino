@@ -12,10 +12,11 @@ import { Administrations } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
-const statistiquesGlobales = async (): Promise<Statistiques> => {
+export const statistiquesGlobales = async (): Promise<Statistiques> => {
   try {
     const titresActivites = await titresActivitesGet({}, {}, userSuper)
 
@@ -91,7 +92,7 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
  * @param annee
  */
 
-const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
+export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
   titres.reduce(
     (
       acc: {
@@ -121,9 +122,9 @@ const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
     []
   )
 
-const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
+export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
   return titres
-    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, `${annee}-01-01`, `${annee}-12-31`, titre.typeId))
+    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`), titre.typeId))
     .reduce(
       (acc: { quantite: number; surface: number }, concession) => {
         acc.quantite++
@@ -134,5 +135,3 @@ const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
       { quantite: 0, surface: 0 }
     )
 }
-
-export { statistiquesGlobales, titresSurfaceIndexBuild, concessionsValidesBuild }

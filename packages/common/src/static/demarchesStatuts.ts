@@ -105,3 +105,9 @@ export const DemarchesStatuts: {
 } as const
 
 export const sortedDemarchesStatuts = Object.values(DemarchesStatuts).sort((a, b) => a.ordre - b.ordre)
+
+export const isDemarcheStatutNonStatue = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
+  [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(demarcheStatutId)
+
+export const isDemarcheStatutNonValide = (demarcheStatutId: DemarcheStatutId | null | undefined): boolean =>
+  [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.Desiste, DemarchesStatutsIds.ClasseSansSuite].includes(demarcheStatutId)

@@ -2,7 +2,7 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titresGet } from '../../database/queries/titres.js'
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { userSuper } from '../../database/user-super.js'
 
 export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
@@ -14,7 +14,7 @@ export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
   const titresDemarchesIdsUpdated = [] as string[]
 
   for (const titre of titres) {
-    const titreDemarchesSorted: ITitreDemarche[] = titreDemarchesSortAsc(titre.demarches!)
+    const titreDemarchesSorted: ITitreDemarche[] = titreDemarcheSortAsc(titre.demarches!)
 
     for (const titreDemarche of titreDemarchesSorted) {
       const index = titreDemarchesSorted.indexOf(titreDemarche)

@@ -9,7 +9,7 @@ import { exhaustiveCheck } from '../../tools/exhaustive-type-check.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { FrequenceId, Frequences, getNumberOfMonths } from 'camino-common/src/static/frequence.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 const substancesFiscalesFind = (substances: SubstanceLegaleId[]): SubstanceFiscale[] => substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
@@ -70,7 +70,7 @@ export const titreActiviteSectionsBuild = (activiteTypeId: string, sections: ISe
     if (s.elements) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
     } else if (['gra', 'grx'].includes(activiteTypeId) && s.id === 'substancesFiscales') {
-      const substances = titreEtapePropFind('substances', date, titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
+      const substances = titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
 
       if (substances?.length) {
         const substancesFiscales = substancesFiscalesFind(substances)
@@ -134,7 +134,7 @@ const titreActiviteBuild = (
   activiteTypeSections: ISection[],
   annee: number,
   frequenceId: FrequenceId,
-  aujourdhui: string,
+  aujourdhui: CaminoDate,
   titreId: string,
   titreDemarches: ITitreDemarche[],
   titreTypeId: TitreTypeId,
@@ -182,7 +182,7 @@ const titreActiviteBuild = (
 export const titreActivitesBuild = (
   activiteType: IActiviteType,
   annees: number[],
-  aujourdhui: string,
+  aujourdhui: CaminoDate,
   titreId: string,
   titreTypeId: TitreTypeId,
   titreDemarches?: ITitreDemarche[] | null,

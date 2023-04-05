@@ -1,5 +1,4 @@
 import { restDeleteCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
-import { userAdd } from '../../knex/user-add.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
@@ -73,7 +72,7 @@ describe('utilisateurSupprimer', () => {
 
   test('peut supprimer un utilisateur (utilisateur super)', async () => {
     const id = 'user-todelete'
-    await userAdd(knex, {
+    await knex('utilisateurs').insert({
       id,
       prenom: 'userToDelete',
       nom: 'test',
