@@ -4,7 +4,8 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
 
-export const titreDemarcheSortAsc = <T extends Pick<ITitreDemarche, 'typeId' | 'ordre'> & { etapes?: Pick<ITitreEtape, 'ordre' | 'date'>[] }>(titreElements: T[]): T[] =>
+export type TitreDemarcheSortAscMinimalDemarche = Pick<ITitreDemarche, 'typeId' | 'ordre'> & { etapes?: Pick<ITitreEtape, 'ordre' | 'date'>[] }
+export const titreDemarcheSortAsc = <T extends TitreDemarcheSortAscMinimalDemarche>(titreElements: T[]): T[] =>
   titreElements.slice().sort((a, b) => {
     const aHasEtapes = a.etapes && a.etapes.length
     const bHasEtapes = b.etapes && b.etapes.length

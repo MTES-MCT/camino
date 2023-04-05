@@ -6,8 +6,9 @@ import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresS
 import { CaminoDate } from 'camino-common/src/date.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
-export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemarche[] | null | undefined): TitreStatutId => {
-  const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId].travaux) : null
+export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'phase'>
+export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
+  const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId]?.travaux) : null
 
   if (!titreDemarches || !titreDemarches.length) return TitresStatutIds.Indetermine
 
@@ -30,7 +31,6 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemar
     }
   }
 
-  // FIXME teste qu’on est valide même si dans 2 jours on est en mod https://camino.beta.gouv.fr/titres/m-ax-crique-serpent-aval-2019
   if (
     demarches
       ?.map(d => d.phase)
@@ -47,7 +47,7 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemar
   return TitresStatutIds.Echu
 }
 
-export const titreInSurvieProvisoire = (demarches: ITitreDemarche[] | null | undefined): boolean => {
+export const titreInSurvieProvisoire = (demarches: Pick<ITitreDemarche, 'phase'>[] | null | undefined): boolean => {
   return (
     demarches
       ?.map(d => d.phase)
