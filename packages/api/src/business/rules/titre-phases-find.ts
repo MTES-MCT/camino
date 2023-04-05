@@ -11,7 +11,7 @@ import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { DemarchesStatutsIds, isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
 const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -193,7 +193,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
             dateFin: dateAddMonths(dateDebut, duree),
             titreDemarcheId: demarche.id,
           })
-        } else if ([DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(demarche.statutId)) {
+        } else if (isDemarcheStatutNonStatue(demarche.statutId)) {
           acc.push({
             dateDebut,
             dateFin: null,

@@ -31,6 +31,8 @@ export const titreValideCheck = (titreDemarches: ITitreDemarche[], dateDebut: Ca
     return true
   }
 
+  //TODO 2023-04-04 après le refacto des phases, le code ci-dessous est surement supprimable 
+
   const newTitreDemarches = titreDemarchesEtapesRebuild(dateDebut, demarches, titreTypeId)
 
   // si le titre a le statut "modification en instance" au moment de dateDebut

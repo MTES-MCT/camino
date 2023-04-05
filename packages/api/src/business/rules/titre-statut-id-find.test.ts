@@ -18,7 +18,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
 describe("statut d'un titre", () => {
-  const aujourdhui = '2020-12-01'
+  const aujourdhui = toCaminoDate('2020-12-01')
 
   test("le statut d'un titre sans démarche est “ind”", () => {
     expect(titreStatutIdFind(aujourdhui, undefined)).toEqual('ind')
@@ -192,7 +192,7 @@ describe("statut d'un titre", () => {
     ).toEqual(true)
   })
 
-  test('ne prend pas en compte des demandes en construction pour calucler la survie provisoire', () => {
+  test('ne prend pas en compte des demandes en construction pour calculer la survie provisoire', () => {
     expect(
       titreInSurvieProvisoire([
         {

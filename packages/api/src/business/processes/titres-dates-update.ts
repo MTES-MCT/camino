@@ -5,6 +5,7 @@ import { titreDateDemandeFind } from '../rules/titre-date-demande-find.js'
 import { userSuper } from '../../database/user-super.js'
 import { DBTitre } from '../../database/models/titres.js'
 
+//TODO 2023-04-04 surement utilisé que par les exports, à faire à la volée et surement utiliser les phases pour trouver la date de début et la date de fin
 export const titresDatesUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('date de début, de fin et de demande initiale des titres…')

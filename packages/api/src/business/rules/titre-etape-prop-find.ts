@@ -1,3 +1,4 @@
+import { CaminoDate } from 'camino-common/src/date.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { ITitreDemarche, IPropId } from '../../types.js'
 
@@ -15,7 +16,7 @@ import { titreStatutIdFind } from './titre-statut-id-find.js'
  * @param titreTypeId - id du type du titre
  * @returns la ou les propriétés recherchées ou null
  */
-const titreEtapePropFind = (propId: IPropId, date: string, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // reconstruit les démarches et étapes antérieures à la date
   const titreDemarchesFiltered = titreDemarchesEtapesRebuild(date, titreDemarches, titreTypeId)
 
