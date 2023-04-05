@@ -6,8 +6,9 @@ import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import titresProd from './titre-phases-find.cas.json'
+
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+const titresProd = require('./titre-phases-find.cas.json')
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[], ITitrePhase[], CaminoDate]
 
