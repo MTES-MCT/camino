@@ -12,8 +12,8 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheId, ITitrePhase } from '../../types.js'
-import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-demarche-date-fin-duree-find.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { idGenerate, newDemarcheId } from '../../database/models/_format/id-create.js'
+import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-phases-find.js'
 
 const writePhasesForTest = async () => {
   const demarches: {
@@ -67,6 +67,7 @@ const writePhasesForTest = async () => {
     }
 
     const fakeDemarcheId = newDemarcheId()
+    const fakeTitreId = idGenerate()
 
     const etapes: TitreEtapePhaseFind[] = etapesDb.rows
       .filter(({ titre_demarche_id }) => titre_demarche_id === row.id)
@@ -83,13 +84,14 @@ const writePhasesForTest = async () => {
       }))
 
     acc[row.titre_id].demarches.push({
+      titreId: fakeTitreId,
       statutId: row.statut_id,
       ordre: row.ordre,
       typeId: row.demarche_type_id,
       id: fakeDemarcheId,
       etapes,
     })
-    if (row.phase_statut_id && row.date_debut && row.date_fin) {
+    if (row.phase_statut_id && row.date_debut) {
       acc[row.titre_id].phases.push({
         titreDemarcheId: fakeDemarcheId,
         ordre: row.ordre,

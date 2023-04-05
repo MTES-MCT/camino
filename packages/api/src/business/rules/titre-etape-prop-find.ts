@@ -16,7 +16,7 @@ import { titreStatutIdFind } from './titre-statut-id-find.js'
  * @param titreTypeId - id du type du titre
  * @returns la ou les propriétés recherchées ou null
  */
-const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+export const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // reconstruit les démarches et étapes antérieures à la date
   const titreDemarchesFiltered = titreDemarchesEtapesRebuild(date, titreDemarches, titreTypeId)
 
@@ -33,5 +33,3 @@ const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemarches: I
 
   return null
 }
-
-export { titreEtapePropFind }

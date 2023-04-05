@@ -1,8 +1,9 @@
 import { newDemarcheId } from '../../../database/models/_format/id-create.js'
-import { TitreDemarchePhaseFind } from '../titre-demarche-date-fin-duree-find.js'
 import { toCaminoDate } from 'camino-common/src/date'
+import { TitreDemarchePhaseFind } from '../titre-phases-find.js'
 
 export const titreDemarcheOctDpuAcc: TitreDemarchePhaseFind = {
+  titreId: 'titreid',
   id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
   typeId: 'oct',
   statutId: 'acc',
@@ -27,6 +28,7 @@ export const titreDemarcheOctDpuAcc: TitreDemarchePhaseFind = {
 }
 
 export const titreDemarcheOctDpuInexistante: TitreDemarchePhaseFind = {
+  titreId: 'titreId',
   id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
   typeId: 'oct',
   statutId: 'acc',
@@ -34,6 +36,7 @@ export const titreDemarcheOctDpuInexistante: TitreDemarchePhaseFind = {
 }
 
 export const titreAxmDemarcheOctDexAcc: TitreDemarchePhaseFind = {
+  titreId: 'titreId',
   id: newDemarcheId('h-ax-courdemanges-1988-oct01'),
   typeId: 'oct',
   statutId: 'acc',
@@ -50,6 +53,7 @@ export const titreAxmDemarcheOctDexAcc: TitreDemarchePhaseFind = {
 }
 
 export const titrePrmDemarcheOctRpuAcc: TitreDemarchePhaseFind = {
+  titreId: 'titreId',
   id: newDemarcheId('m-pr-courdemanges-1988-oct01'),
   typeId: 'oct',
   statutId: 'acc',
@@ -66,6 +70,7 @@ export const titrePrmDemarcheOctRpuAcc: TitreDemarchePhaseFind = {
 }
 
 export const titreDemarcheOctDpuDateDebut: TitreDemarchePhaseFind = {
+  titreId: 'titreId',
   id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
   typeId: 'oct',
   statutId: 'acc',
@@ -93,6 +98,7 @@ export const titreDemarcheOctDpuDateDebut: TitreDemarchePhaseFind = {
 
 export const titreDemarchesOctProlongation: TitreDemarchePhaseFind[] = [
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
     typeId: 'oct',
     statutId: 'acc',
@@ -117,6 +123,7 @@ export const titreDemarchesOctProlongation: TitreDemarchePhaseFind[] = [
     ],
   },
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-pro01'),
     typeId: 'pro',
     statutId: 'acc',
@@ -144,6 +151,7 @@ export const titreDemarchesOctProlongation: TitreDemarchePhaseFind[] = [
 
 export const titreDemarchesOctAnnulation: TitreDemarchePhaseFind[] = [
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
     typeId: 'oct',
     statutId: 'acc',
@@ -168,6 +176,7 @@ export const titreDemarchesOctAnnulation: TitreDemarchePhaseFind[] = [
     ],
   },
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
     typeId: 'ren',
     statutId: 'acc',
@@ -193,6 +202,7 @@ export const titreDemarchesOctAnnulation: TitreDemarchePhaseFind[] = [
 
 export const titreDemarchesOctAnnulationSansPoints: TitreDemarchePhaseFind[] = [
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
     typeId: 'oct',
     statutId: 'acc',
@@ -217,6 +227,7 @@ export const titreDemarchesOctAnnulationSansPoints: TitreDemarchePhaseFind[] = [
     ],
   },
   {
+    titreId: 'titreId',
     id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
     typeId: 'ren',
     statutId: 'acc',

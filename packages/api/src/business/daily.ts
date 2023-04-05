@@ -36,42 +36,42 @@ export const daily = async () => {
     const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate()
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
     const titresPublicUpdated = await titresPublicUpdate()
-    // const titresDatesUpdated = await titresDatesUpdate()
-    // const pointsReferencesCreated = await titresPointsReferencesCreate()
-    // const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
-    // const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
-    // const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate()
+    const titresDatesUpdated = await titresDatesUpdate()
+    const pointsReferencesCreated = await titresPointsReferencesCreate()
+    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
+    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
+    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate()
 
-    // const titresCoordonneesUpdated = await titresCoordonneesUpdate()
-    // const titresActivitesCreated = await titresActivitesUpdate()
-    // const titresActivitesRelanceSent = await titresActivitesRelanceSend()
-    // const titresActivitesStatutIdsUpdated = await titresActivitesStatutIdsUpdate()
-    // const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
-    // const titresUpdatedIndex = await titresSlugsUpdate()
+    const titresCoordonneesUpdated = await titresCoordonneesUpdate()
+    const titresActivitesCreated = await titresActivitesUpdate()
+    const titresActivitesRelanceSent = await titresActivitesRelanceSend()
+    const titresActivitesStatutIdsUpdated = await titresActivitesStatutIdsUpdate()
+    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
+    const titresUpdatedIndex = await titresSlugsUpdate()
 
-    // logsUpdate({
-    //   // titresEtapesOrdreUpdated,
-    //   // titresEtapesHeritagePropsUpdated,
-    //   // titresEtapesHeritageContenuUpdated,
-    //   // titresDemarchesStatutUpdated,
-    //   // titresDemarchesPublicUpdated,
-    //   // titresDemarchesOrdreUpdated,
-    //   // titresStatutIdUpdated,
-    //   // titresPublicUpdated,
-    //   titresPhasesUpdated,
-    //   titresPhasesDeleted,
-    //   titresDatesUpdated,
-    //   pointsReferencesCreated,
-    //   titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
-    //   titresPropsEtapesIdsUpdated,
-    //   titresContenusEtapesIdsUpdated,
-    //   titresCoordonneesUpdated,
-    //   titresActivitesCreated,
-    //   titresActivitesRelanceSent,
-    //   titresActivitesStatutIdsUpdated,
-    //   titresActivitesPropsUpdated,
-    //   titresUpdatedIndex,
-    // })
+    logsUpdate({
+      titresEtapesOrdreUpdated,
+      titresEtapesHeritagePropsUpdated,
+      titresEtapesHeritageContenuUpdated,
+      titresDemarchesStatutUpdated,
+      titresDemarchesPublicUpdated,
+      titresDemarchesOrdreUpdated,
+      titresStatutIdUpdated,
+      titresPublicUpdated,
+      titresPhasesUpdated,
+      titresPhasesDeleted,
+      titresDatesUpdated,
+      pointsReferencesCreated,
+      titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
+      titresPropsEtapesIdsUpdated,
+      titresContenusEtapesIdsUpdated,
+      titresCoordonneesUpdated,
+      titresActivitesCreated,
+      titresActivitesRelanceSent,
+      titresActivitesStatutIdsUpdated,
+      titresActivitesPropsUpdated,
+      titresUpdatedIndex,
+    })
   } catch (e) {
     console.info('erreur:', e)
 

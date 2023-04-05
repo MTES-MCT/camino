@@ -70,7 +70,7 @@ export const titreActiviteSectionsBuild = (activiteTypeId: string, sections: ISe
     if (s.elements) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
     } else if (['gra', 'grx'].includes(activiteTypeId) && s.id === 'substancesFiscales') {
-      const substances = titreEtapePropFind('substances', date, titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
+      const substances = titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
 
       if (substances?.length) {
         const substancesFiscales = substancesFiscalesFind(substances)

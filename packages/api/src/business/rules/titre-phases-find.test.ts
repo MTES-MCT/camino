@@ -1,5 +1,5 @@
 import { ITitreDemarche, ITitrePhase } from '../../types.js'
-import { titrePhasesFind } from './titre-phases-find.js'
+import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
 import {
   titreDemarcheOctDpuAcc,
   titreDemarcheOctDpuInexistante,
@@ -16,7 +16,6 @@ import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find'
 import titresProd from './titre-phases-find.cas.json'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
@@ -1156,31 +1155,4 @@ describe("phases d'une démarche", () => {
       expect(titrePhasesFind(demarches, date, titreTypeId), `test N*${index}`).toStrictEqual(phases)
     })
   })
-
-  // test('cas réels2', () => {
-  //   const phasesReels = titresProd as TitrePhasesTest[]
-
-  //   phasesReels.forEach(([titreTypeId, demarches, phases, date], index) => {
-
-  //     if (phases.length) {
-
-  //       const firstPhase = phases[0]
-  //       const demarche = demarches.find(({id}) => id === firstPhase.titreDemarcheId)!
-
-  //       expect(isDemarcheTypeOctroi(demarche.typeId)).toBe(true)
-  //     }
-
-  //     // if (phases.length && index !== 3325) {
-
-  //     //   const totalJours = daysBetween(phases[0].dateDebut, phases[phases.length -1].dateFin!)
-
-  //     //   let total2 = 0
-  //     //   phases.forEach((p, i) => {
-  //     //     total2 += daysBetween(p.dateDebut, p.dateFin!)
-  //     //   })
-
-  //     //   expect(totalJours, `plop ${index} ${demarches[0].id}`).toStrictEqual(total2)
-  //     // }
-  //   })
-  // })
 })
