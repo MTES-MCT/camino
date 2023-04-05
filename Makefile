@@ -99,6 +99,10 @@ build/ui:
 	npm run build -w packages/ui
 
 build/api:
+ifdef CI
+	# https://github.com/microsoft/TypeScript/issues/53087
+	NODE_OPTIONS=--max-old-space-size=4096 npm run build -w packages/api
+endif
 	npm run build -w packages/api
 
 start/api:
