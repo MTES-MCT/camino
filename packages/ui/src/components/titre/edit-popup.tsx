@@ -36,7 +36,6 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
           value={nom.value}
           onInput={e => {
             if (isEventWithTarget(e)) {
-              console.log('zizi')
               nom.value = e.target.value
             }
           }}

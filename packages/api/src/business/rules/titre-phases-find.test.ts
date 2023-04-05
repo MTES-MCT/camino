@@ -1,15 +1,5 @@
 import { ITitreDemarche, ITitrePhase } from '../../types.js'
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
-import {
-  titreDemarcheOctDpuAcc,
-  titreDemarcheOctDpuInexistante,
-  titreAxmDemarcheOctDexAcc,
-  titrePrmDemarcheOctRpuAcc,
-  titreDemarcheOctDpuDateDebut,
-  titreDemarchesOctProlongation,
-  titreDemarchesOctAnnulation,
-  titreDemarchesOctAnnulationSansPoints,
-} from './__mocks__/titre-phases-find-demarches.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
@@ -24,7 +14,38 @@ export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[], ITitrePhas
 describe("phases d'une démarche", () => {
   const aujourdhui = toCaminoDate('2020-12-01')
   test("un titre qui a une démarche d'octroi avec une dpu a une phase", () => {
-    expect(titrePhasesFind([titreDemarcheOctDpuAcc], aujourdhui, 'cxh')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreid',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            etapes: [
+              {
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2200-01-01'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+              },
+              {
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2200-01-01'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([
       {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
@@ -35,11 +56,48 @@ describe("phases d'une démarche", () => {
   })
 
   test("un titre qui a une démarche d'octroi sans dpu n'a pas de phase", () => {
-    expect(titrePhasesFind([titreDemarcheOctDpuInexistante], aujourdhui, 'cxh')).toEqual([])
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            etapes: [],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([])
   })
 
   test("un titre AXM qui a une démarche d'octroi avec une dex a une phase", () => {
-    expect(titrePhasesFind([titreAxmDemarcheOctDexAcc], aujourdhui, 'axm')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-ax-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            etapes: [
+              {
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2200-01-01'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('h-ax-courdemanges-1988-oct01'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'axm'
+      )
+    ).toEqual([
       {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
@@ -50,7 +108,30 @@ describe("phases d'une démarche", () => {
   })
 
   test("un titre PRM qui a une démarche d'octroi avec une rpu a une phase", () => {
-    expect(titrePhasesFind([titrePrmDemarcheOctRpuAcc], aujourdhui, 'prm')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('m-pr-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            etapes: [
+              {
+                typeId: 'rpu',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2200-01-01'),
+                dateFin: toCaminoDate('2200-01-02'),
+                titreDemarcheId: newDemarcheId('m-pr-courdemanges-1988-oct01'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'prm'
+      )
+    ).toEqual([
       {
         dateDebut: '2200-01-01',
         dateFin: '2200-01-02',
@@ -61,7 +142,40 @@ describe("phases d'une démarche", () => {
   })
 
   test("un titre qui a une démarche d'octroi avec une dpu dont la date de début est renseignée a une phase", () => {
-    expect(titrePhasesFind([titreDemarcheOctDpuDateDebut], aujourdhui, 'cxh')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            etapes: [
+              {
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2200-01-01'),
+                dateDebut: toCaminoDate('2200-01-02'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+              },
+              {
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2200-01-01'),
+                dateDebut: toCaminoDate('2200-01-02'),
+                duree: 2 * 12,
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([
       {
         dateDebut: '2200-01-02',
         dateFin: '2202-01-02',
@@ -72,7 +186,64 @@ describe("phases d'une démarche", () => {
   })
 
   test('un titre qui a une démarche de prolongation avec une dpu a une phase', () => {
-    expect(titrePhasesFind(titreDemarchesOctProlongation, aujourdhui, 'cxh')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            ordre: 1,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2200-01-01'),
+                dateFin: toCaminoDate('2500-01-01'),
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2200-01-01'),
+                dateFin: toCaminoDate('2500-01-01'),
+              },
+            ],
+          },
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-pro01'),
+            typeId: 'pro',
+            statutId: 'acc',
+            ordre: 2,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2300-01-02'),
+                dateFin: toCaminoDate('3000-01-01'),
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2300-01-02'),
+                dateFin: toCaminoDate('3000-01-01'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([
       {
         dateDebut: '2200-01-01',
         dateFin: '2500-01-01',
@@ -89,7 +260,62 @@ describe("phases d'une démarche", () => {
   })
 
   test("la phase d'un titre concernée par une démarche d'annulation a une date de fin qui est celle de cette démarche d'annulation", () => {
-    expect(titrePhasesFind(titreDemarchesOctAnnulation, aujourdhui, 'cxh')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            ordre: 1,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2000-01-02'),
+                duree: 20 * 12,
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2000-01-01'),
+                duree: 20 * 12,
+              },
+            ],
+          },
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+            typeId: 'ren',
+            statutId: 'acc',
+            ordre: 2,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2019-01-03'),
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2019-01-02'),
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([
       {
         dateDebut: '2000-01-02',
         dateFin: '2019-01-02',
@@ -100,7 +326,63 @@ describe("phases d'une démarche", () => {
   })
 
   test("la phase d'un titre concernée par une démarche de renonciation partielle n'est pas affectée par la renonciation", () => {
-    expect(titrePhasesFind(titreDemarchesOctAnnulationSansPoints, aujourdhui, 'cxh')).toEqual([
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'oct',
+            statutId: 'acc',
+            ordre: 1,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2000-01-02'),
+                duree: 20 * 12,
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2000-01-01'),
+                duree: 20 * 12,
+              },
+            ],
+          },
+          {
+            titreId: 'titreId',
+            id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+            typeId: 'ren',
+            statutId: 'acc',
+            ordre: 2,
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                typeId: 'dpu',
+                statutId: 'acc',
+                ordre: 2,
+                date: toCaminoDate('2019-01-03'),
+              },
+              {
+                titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: toCaminoDate('2019-01-02'),
+                points: [{ id: 'point' }],
+              },
+            ],
+          },
+        ],
+        aujourdhui,
+        'cxh'
+      )
+    ).toEqual([
       {
         dateDebut: '2000-01-02',
         dateFin: '2020-01-02',
