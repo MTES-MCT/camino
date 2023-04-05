@@ -18,7 +18,6 @@ const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
  * - ou une renonciation
  *   - et ce n'est pas une renonciation partielle
  *   (= ne contient pas d'étape avec des infos géo (points)
- * @param titreDemarches - liste d’étapes
  */
 const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =>
   titreDemarches.find(
@@ -59,14 +58,7 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
 }
 
 type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & { dateDeFinParDefaut?: true }
-/**
- * Retourne les phases d'un titre
- * @param titreDemarches - démarches d'un titre
- * @param aujourdhui - date du jour
- * @param titreTypeId - id du type de titre
- */
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
-  // On parcourt les démarches dans l’ordre chronologique
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
     return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
   })
@@ -160,11 +152,6 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
     if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
       p.dateFin = titreDemarcheAnnulationDate
     }
-    // si
-    // - la date du jour est plus récente que la date de fin
-    // le statut est valide
-    // sinon,
-    // - le statut est échu
     let phaseStatutId: PhaseStatutId = 'val'
     if (!p.dateFin) {
       phaseStatutId = 'val'
@@ -179,17 +166,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
 export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId'> & { points?: unknown[] | null }
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId'> & { etapes?: TitreEtapePhaseFind[] }
 
-// entrées:
-// - les étapes d'une démarche
-// retourne
-// - dateFin: la date de fin de la démarche si définie, sinon null
-// - duree
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
-  // la dernière étape
-  // - dont le type est décision express (dex)
-  //   ou decision de publication au JORF (dpu)
-  //   ou publication au recueil des actes administratifs de la préfecture (rpu)
-  // - qui possède une date de fin ou durée
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
   const dpuRejetee = titreEtapesSorted.find(({ typeId, statutId }) => typeId === ETAPES_TYPES.publicationDeDecisionAuJORF && statutId === ETAPES_STATUTS.REJETE)
