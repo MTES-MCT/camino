@@ -1,11 +1,10 @@
 import { ITitreDemarche } from '../../types.js'
 
 import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts.js'
-import {  isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-
 
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemarche[] | null | undefined): TitreStatutId => {
   const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId].travaux) : null
@@ -21,18 +20,23 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemar
     // si le statut de la démarche est en instruction ou déposée
     // -> le statut du titre est demande initiale
     if (isDemarcheStatutNonStatue(titreDemarches[0].statutId)) {
-      return  TitresStatutIds.DemandeInitiale
+      return TitresStatutIds.DemandeInitiale
     }
 
     // si le statut de la démarche est rejeté ou classé sans suite ou désisté
     // -> le statut du titre est demande classée
-    if ( isDemarcheStatutNonValide(titreDemarches[0].statutId)){
-      return  TitresStatutIds.DemandeClassee
+    if (isDemarcheStatutNonValide(titreDemarches[0].statutId)) {
+      return TitresStatutIds.DemandeClassee
     }
   }
 
-  //FIXME teste qu’on est valide même si dans 2 jours on est en mod https://camino.beta.gouv.fr/titres/m-ax-crique-serpent-aval-2019
-  if (demarches?.map(d => d.phase).filter(isNotNullNorUndefined).some(({dateDebut, dateFin}) => dateFin && aujourdhui >= dateDebut && aujourdhui <= dateFin)) {
+  // FIXME teste qu’on est valide même si dans 2 jours on est en mod https://camino.beta.gouv.fr/titres/m-ax-crique-serpent-aval-2019
+  if (
+    demarches
+      ?.map(d => d.phase)
+      .filter(isNotNullNorUndefined)
+      .some(({ dateDebut, dateFin }) => dateFin && aujourdhui >= dateDebut && aujourdhui <= dateFin)
+  ) {
     return TitresStatutIds.Valide
   }
 
@@ -44,5 +48,10 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: ITitreDemar
 }
 
 export const titreInSurvieProvisoire = (demarches: ITitreDemarche[] | null | undefined): boolean => {
-  return demarches?.map(d => d.phase).filter(isNotNullNorUndefined).some(({dateFin}) => !dateFin) ?? false
+  return (
+    demarches
+      ?.map(d => d.phase)
+      .filter(isNotNullNorUndefined)
+      .some(({ dateFin }) => !dateFin) ?? false
+  )
 }

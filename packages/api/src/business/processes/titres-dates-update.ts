@@ -23,13 +23,13 @@ export const titresDatesUpdate = async (titresIds?: string[]) => {
   for (const titre of titres) {
     const patch: Partial<DBTitre> = {}
     const sortedDemarches = titreDemarcheSortAsc(titre.demarches ?? [])
-    const dateDebut = sortedDemarches.find(demarche => demarche.phase)?.phase?.dateDebut
+    const dateDebut = sortedDemarches.find(demarche => demarche.phase)?.phase?.dateDebut ?? null
 
     if ((titre.dateDebut || dateDebut) && titre.dateDebut !== dateDebut) {
       patch.dateDebut = dateDebut
     }
 
-    const dateFin = sortedDemarches.reverse().find(demarche => demarche.phase)?.phase?.dateFin
+    const dateFin = sortedDemarches.reverse().find(demarche => demarche.phase)?.phase?.dateFin ?? null
 
     if ((titre.dateFin || dateFin) && titre.dateFin !== dateFin) {
       patch.dateFin = dateFin

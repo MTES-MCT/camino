@@ -4,7 +4,7 @@ import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 
-const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
+export const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
   // - première démarche d'octroi ou mutation partielle
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches) as ITitreDemarche[]
@@ -32,5 +32,3 @@ const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // retourne la date de l'étape
   return titreEtape.date
 }
-
-export { titreDateDemandeFind }
