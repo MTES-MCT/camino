@@ -157,6 +157,19 @@ export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> 
     super(axmOctMachine, trad)
   }
 
+  toPotentialCaminoXStateEvent(event: AXMOctXStateEvent['type'], date: CaminoDate): AXMOctXStateEvent[] {
+    switch (event) {
+      case 'FAIRE_SAISINE_DES_SERVICES':
+      case 'RENDRE_AVIS_DREAL':
+        return [{ type: event, date }]
+      default:
+        // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return [{ type: event }]
+    }
+  }
+
   eventFrom(etape: Etape): AXMOctXStateEvent {
     const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
 
