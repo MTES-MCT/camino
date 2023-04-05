@@ -1,4 +1,5 @@
 {
+  "exclude": ["./src/**/*.json"],
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
