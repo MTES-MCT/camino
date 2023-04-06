@@ -5,6 +5,7 @@ import { entreprisesUpsert, entreprisesGet } from '../../database/queries/entrep
 import { entreprisesEtablissementsUpsert, entreprisesEtablissementsDelete, entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements.js'
 import { apiInseeEntreprisesEtablissementsGet, apiInseeEntreprisesGet } from '../../tools/api-insee/index.js'
 import { userSuper } from '../../database/user-super.js'
+import { Siren, sirenValidator } from 'camino-common/src/entreprise.js'
 
 const entreprisesEtablissementsToUpdateBuild = (entreprisesEtablissementsOld: IEntrepriseEtablissement[], entreprisesEtablissementsNew: IEntrepriseEtablissement[]) =>
   entreprisesEtablissementsNew.reduce((acc: IEntrepriseEtablissement[], entrepriseEtablissementNew) => {
@@ -43,25 +44,23 @@ const entreprisesToUpdateBuild = (entreprisesOld: IEntreprise[], entreprisesNew:
     return acc
   }, [])
 
-const sirensFind = (entreprisesOld: IEntreprise[]) =>
+const sirensFind = (entreprisesOld: IEntreprise[]): Siren[] =>
   Object.keys(
-    entreprisesOld.reduce((acc: { [id: string]: number }, entrepriseOld) => {
-      if (!entrepriseOld.legalSiren) return acc
+    entreprisesOld.reduce<{ [id in string]?: number }>((acc, entrepriseOld) => {
+      const oldSiren = entrepriseOld.legalSiren
+      if (!oldSiren) return acc
 
-      let siren = Number(acc[entrepriseOld.legalSiren])
-      siren = isNaN(siren) ? 0 : siren
-      siren += 1
-
-      acc[entrepriseOld.legalSiren] = siren
+      const numberFound = acc[oldSiren] ?? 0
+      acc[oldSiren] = numberFound + 1
 
       // prévient s'il y a des doublons dans les sirens
-      if (acc[entrepriseOld.legalSiren] > 1) {
+      if ((acc[oldSiren] ?? 0) > 1) {
         console.info(`SIREN en doublon: ${entrepriseOld.legalSiren}`)
       }
 
       return acc
     }, {})
-  )
+  ).map(value => sirenValidator.parse(value))
 
 export const entreprisesUpdate = async (): Promise<void> => {
   console.info()
