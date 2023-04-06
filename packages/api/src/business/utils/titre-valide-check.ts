@@ -18,13 +18,13 @@ export const titreValideCheck = (titreDemarches: ITitreDemarche[], dateDebut: Ca
 
   // si le titre a une phase entre dateDebut et dateFin
   if (
-    demarches.some(({ phase }) => {
-      if (!phase) {
+    demarches.some(({ demarcheDateDebut, demarcheDateFin }) => {
+      if (!demarcheDateDebut) {
         return false
-      } else if (phase.dateFin) {
-        return dateDebut <= phase.dateFin && dateFin >= phase.dateDebut
+      } else if (demarcheDateFin) {
+        return dateDebut <= demarcheDateFin && dateFin >= demarcheDateDebut
       } else {
-        return dateFin >= phase.dateDebut
+        return dateFin >= demarcheDateDebut
       }
     })
   ) {

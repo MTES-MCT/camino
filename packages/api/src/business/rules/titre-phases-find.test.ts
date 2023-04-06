@@ -1,4 +1,4 @@
-import { ITitreDemarche, ITitrePhase } from '../../types.js'
+import { DemarcheId, ITitreDemarche } from '../../types.js'
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
@@ -10,10 +10,9 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 const titresProd = require('./titre-phases-find.cas.json')
 
-export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[], ITitrePhase[], CaminoDate]
+export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]
 
 describe("phases d'une démarche", () => {
-  const aujourdhui = toCaminoDate('2020-12-01')
   test("un titre qui a une démarche d'octroi avec une dpu a une phase", () => {
     expect(
       titrePhasesFind(
@@ -43,17 +42,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-cx-courdemanges-1988-oct01' : {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-      },
-    ])
+      }
+  })
   })
 
   test("un titre qui a une démarche d'octroi sans dpu n'a pas de phase", () => {
@@ -68,10 +64,9 @@ describe("phases d'une démarche", () => {
             etapes: [],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([])
+    ).toEqual({})
   })
 
   test("un titre AXM qui a une démarche d'octroi avec une dex a une phase", () => {
@@ -95,17 +90,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'axm'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-ax-courdemanges-1988-oct01': {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('h-ax-courdemanges-1988-oct01'),
       },
-    ])
+  })
   })
 
   test("un titre PRM qui a une démarche d'octroi avec une rpu a une phase", () => {
@@ -129,17 +121,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'prm'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'm-pr-courdemanges-1988-oct01': {
         dateDebut: '2200-01-01',
         dateFin: '2200-01-02',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('m-pr-courdemanges-1988-oct01'),
       },
-    ])
+  })
   })
 
   test("un titre qui a une démarche d'octroi avec une dpu dont la date de début est renseignée a une phase", () => {
@@ -173,17 +162,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-cx-courdemanges-1988-oct01': {
         dateDebut: '2200-01-02',
         dateFin: '2202-01-02',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
-    ])
+  })
   })
 
   test('un titre qui a une démarche de prolongation avec une dpu a une phase', () => {
@@ -241,23 +227,18 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-cx-courdemanges-1988-oct01': {
         dateDebut: '2200-01-01',
         dateFin: '2500-01-01',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
-      {
+      'h-cx-courdemanges-1988-pro01': {
         dateDebut: '2500-01-01',
         dateFin: '3000-01-01',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
       },
-    ])
+  })
   })
 
   test("la phase d'un titre concernée par une démarche d'annulation a une date de fin qui est celle de cette démarche d'annulation", () => {
@@ -313,17 +294,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-cx-courdemanges-1988-oct01': {
         dateDebut: '2000-01-02',
         dateFin: '2019-01-02',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
-    ])
+  })
   })
 
   test("la phase d'un titre concernée par une démarche de renonciation partielle n'est pas affectée par la renonciation", () => {
@@ -380,17 +358,14 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'cxh'
       )
-    ).toEqual([
-      {
+    ).toEqual({
+      'h-cx-courdemanges-1988-oct01': {
         dateDebut: '2000-01-02',
         dateFin: '2020-01-02',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       },
-    ])
+  })
   })
 
   test('cas sans date de fin et avec plein de css', () => {
@@ -413,7 +388,6 @@ describe("phases d'une démarche", () => {
         ordre: 11,
         typeId: 'mut',
         statutId: 'cls',
-        phase: null,
         etapes: [
           { titreDemarcheId: demarcheId1, id: '3', ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
           { titreDemarcheId: demarcheId1, id: '1', ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
@@ -438,7 +412,6 @@ describe("phases d'une démarche", () => {
         ordre: 9,
         typeId: 'dam',
         statutId: 'ins',
-        phase: null,
         etapes: [
           { id: '7', titreDemarcheId: demarcheId3, ordre: 3, date: toCaminoDate('2014-12-23'), typeId: 'wpp', statutId: 'fai' },
           { id: '8', titreDemarcheId: demarcheId3, ordre: 1, date: toCaminoDate('2013-08-01'), typeId: 'wfd', statutId: 'fai' },
@@ -536,15 +509,14 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, aujourdhui, 'cxm')
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, 'cxm')
+    expect(tested).toStrictEqual(
       {
-        dateDebut: '1858-03-24',
-        dateFin: '2018-12-31',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId11'),
-      },
-    ])
+        [newDemarcheId('demarcheId11')]: {
+          dateDebut: '1858-03-24',
+          dateFin: '2018-12-31',
+      } 
+    })
   })
 
   test('cas de survie provisoire avec la prolongation en classement sans suite après la fin de l’octroi', () => {
@@ -577,21 +549,18 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, toCaminoDate('2050-01-01'), 'cxm')
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, 'cxm')
+    expect(tested).toStrictEqual(
       {
-        dateDebut: '2000-03-24',
-        dateFin: '2010-03-24',
-        phaseStatutId: 'ech',
-        titreDemarcheId: demarcheIdOctroi,
-      },
-      {
-        dateDebut: '2010-03-24',
-        dateFin: '2011-04-07',
-        phaseStatutId: 'ech',
-        titreDemarcheId: demarcheIdProlongation,
-      },
-    ])
+        [demarcheIdOctroi]: {
+          dateDebut: '2000-03-24',
+          dateFin: '2010-03-24',
+      }, 
+        [demarcheIdProlongation]: {
+          dateDebut: '2010-03-24',
+          dateFin: '2011-04-07',
+      }, 
+    })
   })
 
   test('un octroi rejeté ne génère pas de phase', () => {
@@ -611,8 +580,8 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, toCaminoDate('2050-01-01'), 'cxm')
-    expect(tested).toStrictEqual([])
+    const tested = titrePhasesFind(demarches, 'cxm')
+    expect(tested).toStrictEqual({})
   })
 
   test("modification d'une mutation suite à renonciation totale en décision implicite", () => {
@@ -730,24 +699,20 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
-    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual(
       {
-        dateDebut: '1970-09-17',
-        dateFin: '1994-10-18',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-      {
-        dateDebut: '1994-10-18',
-        dateFin: '2022-05-09',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('demarcheId2'),
-      },
-    ])
+        [newDemarcheId('demarcheId1')]: {
+          dateDebut: '1970-09-17',
+          dateFin: '1994-10-18',
+      }, 
+        [newDemarcheId('demarcheId2')]: {
+          dateDebut: '1994-10-18',
+          dateFin: '2022-05-09',
+      }, 
+    })
   })
 
   test("modification d'une mutation suite à renonciation totale", () => {
@@ -855,25 +820,21 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
     //  d'un côté on a une dim, de l'autre on a une dex suivie d'une dpu
-    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual(
       {
-        dateDebut: '1970-09-17',
-        dateFin: '1994-10-18',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-      {
-        dateDebut: '1994-10-18',
-        dateFin: '2022-05-09',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('demarcheId2'),
-      },
-    ])
+        [newDemarcheId('demarcheId1')]: {
+          dateDebut: '1970-09-17',
+          dateFin: '1994-10-18',
+      }, 
+        [newDemarcheId('demarcheId2')]: {
+          dateDebut: '1994-10-18',
+          dateFin: '2022-05-09',
+      }, 
+    })
   })
 
   test('la phase d’une démarche d’octroi sans durée est affectée par une extension de périmètre postérieure', () => {
@@ -930,24 +891,20 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
-    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual(
       {
-        dateDebut: '1968-01-24',
-        dateFin: '1981-09-13',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-      {
-        dateDebut: '1981-09-13',
-        dateFin: '2031-09-13',
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('demarcheId2'),
-      },
-    ])
+        [newDemarcheId('demarcheId1')]: {
+          dateDebut: '1968-01-24',
+          dateFin: '1981-09-13',
+      }, 
+        [newDemarcheId('demarcheId2')]: {
+          dateDebut: '1981-09-13',
+          dateFin: '2031-09-13',
+      }, 
+    })
   })
 
   test('un titre en modification en instance doit avoir une nouvelle phase sans date de fin', () => {
@@ -997,24 +954,20 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = toCaminoDate('2022-11-29')
     const titreTypeId = 'prw'
 
-    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
-    expect(tested).toStrictEqual([
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual(
       {
+        [newDemarcheId('demarcheId1')]: {
         dateDebut: '2017-11-11',
         dateFin: '2022-11-11',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-      {
-        dateDebut: '2022-11-11',
-        dateFin: null,
-        phaseStatutId: 'val',
-        titreDemarcheId: newDemarcheId('demarcheId2'),
-      },
-    ])
+      }, 
+        [newDemarcheId('demarcheId2')]: {
+          dateDebut: '2022-11-11',
+          dateFin: null,
+      }, 
+    })
   })
 
   test(`une démarche avec une demande en construction n'est pas prise en compte`, () => {
@@ -1064,18 +1017,15 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = toCaminoDate('2022-11-29')
     const titreTypeId = 'prw'
 
-    const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
-    expect(tested).toStrictEqual([
-      {
+    const tested = titrePhasesFind(demarches, titreTypeId)
+    expect(tested).toStrictEqual(
+      {[newDemarcheId('demarcheId1')]: {
         dateDebut: '2017-11-11',
         dateFin: '2022-11-11',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-    ])
+      }}
+      )
   })
 
   test(`une démarche avec deux dpu (une acceptée, puis une de rejet) génère une phase qui se termine au rejet`, () => {
@@ -1116,15 +1066,11 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, aujourdhui, 'prw')
-    expect(tested).toStrictEqual([
-      {
+    const tested = titrePhasesFind(demarches, 'prw')
+    expect(tested).toStrictEqual({[newDemarcheId('demarcheId1')]: {
         dateDebut: '2017-11-11',
         dateFin: '2018-11-11',
-        phaseStatutId: 'ech',
-        titreDemarcheId: newDemarcheId('demarcheId1'),
-      },
-    ])
+      }})
   })
 
   test("2 démarches avec des phases en cours ne génère qu'une seule phase en modification en instance", () => {
@@ -1405,37 +1351,37 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        aujourdhui,
         'prm'
       )
     ).toMatchInlineSnapshot(`
-      [
-        {
+      {
+        "demarcheId1": {
           "dateDebut": "2010-11-05",
           "dateFin": "2013-11-05",
-          "phaseStatutId": "ech",
-          "titreDemarcheId": "demarcheId1",
         },
-        {
+        "demarcheId2": {
           "dateDebut": "2013-11-05",
           "dateFin": "2018-11-05",
-          "phaseStatutId": "ech",
-          "titreDemarcheId": "demarcheId2",
         },
-        {
+        "demarcheId3": {
           "dateDebut": "2018-11-05",
           "dateFin": null,
-          "phaseStatutId": "val",
-          "titreDemarcheId": "demarcheId3",
         },
-      ]
+      }
     `)
   })
 
   test('cas réels', () => {
     const phasesReels = titresProd as TitrePhasesTest[]
-    phasesReels.forEach(([titreTypeId, demarches, phases, date], index) => {
-      expect(titrePhasesFind(demarches, date, titreTypeId), `test N*${index}`).toStrictEqual(phases)
+    phasesReels.forEach(([titreTypeId, demarches], index) => {
+      const expectedResult = demarches.reduce<Record<DemarcheId, {dateDebut: CaminoDate | null | undefined, dateFin: CaminoDate | null | undefined}>>((acc, d) => {
+
+        if( d.demarcheDateDebut || d.demarcheDateFin){
+          acc[d.id] = { dateDebut: d.demarcheDateDebut, dateFin: d.demarcheDateFin } 
+        }
+        return acc
+      }, {})
+      expect(titrePhasesFind(demarches, titreTypeId), `test N*${index}`).toStrictEqual(expectedResult)
     })
   })
 })

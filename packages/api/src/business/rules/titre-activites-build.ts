@@ -190,7 +190,7 @@ export const titreActivitesBuild = (
 ) => {
   // si le titre n'a pas de phases de démarches
   // aucune activité ne peut être créées
-  if (!titreDemarches?.some(d => d.phase)) return []
+  if (!titreDemarches?.some(d => d.demarcheDateDebut)) return []
 
   const periodes = Frequences[activiteType.frequenceId].values
 

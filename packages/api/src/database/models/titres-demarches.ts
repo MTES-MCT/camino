@@ -6,7 +6,6 @@ import DemarchesTypes from './demarches-types.js'
 import TitresTypes from './titres-types.js'
 import Titres from './titres.js'
 import TitresEtapes from './titres-etapes.js'
-import TitresPhases from './titres-phases.js'
 
 export interface DBTitresDemarches extends ITitreDemarche {
   archive: boolean
@@ -29,6 +28,8 @@ class TitresDemarches extends Model {
       statutId: { type: 'string', maxLength: 3 },
       ordre: { type: 'integer' },
       description: { type: ['string', 'null'] },
+      demarcheDateDebut: { type: ['string', 'null'] },
+      demarcheDateFin: { type: ['string', 'null'] },
       archive: { type: 'boolean' },
     },
   }
@@ -73,15 +74,6 @@ class TitresDemarches extends Model {
       join: {
         from: 'titresDemarches.id',
         to: 'titresEtapes.titreDemarcheId',
-      },
-    },
-
-    phase: {
-      relation: Model.HasOneRelation,
-      modelClass: TitresPhases,
-      join: {
-        from: 'titresDemarches.id',
-        to: 'titresPhases.titreDemarcheId',
       },
     },
 

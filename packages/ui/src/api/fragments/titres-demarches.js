@@ -11,15 +11,8 @@ export const fragmentDemarches = gql`
     titre {
       ...demarchesTitre
     }
-    type {
-      ...demarcheType
-    }
+    typeId
     statutId
-    phase {
-      dateDebut
-      dateFin
-      phaseStatutId
-    }
 
     modification
     suppression

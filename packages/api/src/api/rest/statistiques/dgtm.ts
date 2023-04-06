@@ -25,20 +25,19 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
     .filter(({ gestionnaire, associee }) => gestionnaire || associee)
     .map(({ titreTypeId }) => titreTypeId)
 
-  const phaseOctrois: {
+  const demarcheOctrois: {
     id: string
-    dateDebut: CaminoDate
+    demarcheDateDebut: CaminoDate
     typeId: TitreTypeId
     sdomZoneIds: SDOMZoneId[] | null
   }[] = await knex
-    .select('titresPhases.dateDebut', 'titres.typeId', 'titres_etapes.sdom_zones as sdomZoneIds')
+    .select('titresDemarches.demarcheDateDebut', 'titres.typeId', 'titres_etapes.sdom_zones as sdomZoneIds')
     .distinct('titres.id')
-    .from('titresPhases')
-    .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
+    .from('titresDemarches')
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
     .joinRaw("left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'")
     .where('titresDemarches.typeId', 'oct')
-    .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
+    .andWhere('titresDemarches.demarcheDateDebut', '>=', `${anneeDepartStats}-01-01`)
     .andWhere(builder => {
       builder.whereRaw(`titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`)
       if (gestionnaireTitreTypeIds.length) {
@@ -46,8 +45,8 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
       }
     })
 
-  phaseOctrois?.forEach(phase => {
-    const annee = getAnnee(phase.dateDebut)
+  demarcheOctrois?.forEach(demarche => {
+    const annee = getAnnee(demarche.demarcheDateDebut)
 
     if (!result.depotEtInstructions[annee]) {
       result.depotEtInstructions[annee] = {
@@ -68,12 +67,12 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
     }
 
     result.depotEtInstructions[annee].totalTitresOctroyes++
-    if (!phase.sdomZoneIds || phase.sdomZoneIds.length === 0) {
+    if (!demarche.sdomZoneIds || demarche.sdomZoneIds.length === 0) {
       result.sdom[annee]['3'].octroye++
     } else {
-      phase.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].octroye++)
+      demarche.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].octroye++)
     }
-    if (phase.typeId === 'axm') {
+    if (demarche.typeId === 'axm') {
       result.depotEtInstructions[annee].totalAXMOctroyees++
     }
   })

@@ -3,7 +3,7 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { newDemarcheId } from '../../../database/models/_format/id-create.js'
-import { ITitreDemarche, ITitreEtape, ITitrePhase } from '../../../types.js'
+import { ITitreDemarche, ITitreEtape } from '../../../types.js'
 
 const titreDemarchesOctPointsMut = {
   statutId: TitresStatutIds.Valide,
@@ -294,8 +294,7 @@ const titreDemarchesOctAmodiatairesPassee = {
           dateFin: '2018-12-31',
           amodiataires: [{ id: 'fr-123456789' }],
         },
-      ],
-      phase: { phaseStatutId: 'val' },
+      ]
     },
   ] as ITitreDemarche[],
 }
@@ -325,7 +324,6 @@ const titreDemarchesOctAmodiatairesValide = {
       titreId: 'h-cx-courdemanges-1982',
       typeId: 'oct',
       statutId: 'acc',
-      phase: { phaseStatutId: 'val' } as ITitrePhase,
       etapes: [],
     },
   ] as ITitreDemarche[],
@@ -401,9 +399,6 @@ const titreDemarchesProPointsModPhaseEch = {
           points: [1, 2, 3],
         },
       ],
-      phase: {
-        statutId: 'ech',
-      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -441,9 +436,6 @@ const titreDemarchesProPointsModPhaseVal = {
           ordre: 1,
         },
       ] as ITitreEtape[],
-      phase: {
-        phaseStatutId: 'val',
-      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -481,9 +473,6 @@ const titreDemarchesMutPointsMod = {
           points: [1, 2, 3],
         },
       ],
-      phase: {
-        statutId: 'val',
-      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -526,12 +515,8 @@ const titreDemarchesProModPhaseEch = {
           communes: ['paris'],
           titulaires: ['titulaire2'],
           amodiataires: ['amodiataire2'],
-          administrations: ['administration2'],
         } as unknown as ITitreEtape,
       ],
-      phase: {
-        phaseStatutId: 'ech',
-      },
     },
     {
       id: newDemarcheId('h-cx-courdemanges-1981-oct01'),
@@ -552,7 +537,6 @@ const titreDemarchesProModPhaseEch = {
           communes: ['tours'],
           titulaires: ['titulaire1'],
           amodiataires: ['amodiataire1'],
-          administrations: ['administration1'],
         },
       ],
     },

@@ -12,12 +12,10 @@ export const fragmentTitreDemarche = gql`
     type {
       ...demarcheType
     }
+    typeId
     statutId
-    phase {
-      dateDebut
-      dateFin
-      phaseStatutId
-    }
+    demarcheDateDebut
+    demarcheDateFin
     etapes {
       ...titreEtape
     }

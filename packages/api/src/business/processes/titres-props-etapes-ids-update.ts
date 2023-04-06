@@ -4,6 +4,7 @@ import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find.js'
 import { objectsDiffer } from '../../tools/index.js'
 import { userSuper } from '../../database/user-super.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -14,7 +15,6 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: {
-          phase: { id: {} },
           etapes: {
             points: { id: {} },
             titulaires: { id: {} },
@@ -28,9 +28,11 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
 
   const titresPropsEtapesIdsUpdated = [] as string[]
 
+  const aujourdhui = getCurrent()
+
   for (const titre of titres) {
     const propsTitreEtapesIds = propsTitreEtapeIdKeys.reduce((propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
-      const titreEtape = titrePropTitreEtapeFind(propId, titre.demarches!, titre.titreStatutId!)
+      const titreEtape = titrePropTitreEtapeFind(aujourdhui, propId, titre.demarches!, titre.titreStatutId!)
 
       if (titreEtape) {
         propsTitreEtapesIds[propId] = titreEtape.id

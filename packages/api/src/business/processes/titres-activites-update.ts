@@ -22,7 +22,6 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
       fields: {
         demarches: {
           type: { id: {} },
-          phase: { id: {} },
           etapes: { id: {} },
         },
         communes: { id: {} },

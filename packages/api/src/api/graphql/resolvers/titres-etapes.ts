@@ -33,7 +33,7 @@ import { Feature } from 'geojson'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
@@ -221,6 +221,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, { user }: Context, 
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
+      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -387,6 +388,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
+      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -641,7 +643,8 @@ const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: G
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+    const currentDate = getCurrent()
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(currentDate, titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

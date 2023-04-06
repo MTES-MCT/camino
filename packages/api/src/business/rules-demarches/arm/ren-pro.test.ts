@@ -2,7 +2,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { demarcheEtatsValidate } from '../_utils.test.js'
 import { describe, expect, test } from 'vitest'
 describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => {
-  const renProEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2020-01-01')
+  const renProEtatsValidate = demarcheEtatsValidate('ren', 'arm', toCaminoDate('2020-01-01'))
 
   test('peut créer une étape "mdp" après une "mfr"', () => {
     expect(

@@ -1,5 +1,4 @@
 import Titres from '../../../database/models/titres.js'
-import { ITitrePhase } from '../../../types.js'
 
 const titresSansPhase = [
   {
@@ -52,12 +51,10 @@ const titresUnePhase = [
 
 const titrePhase = [
   {
-    titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
-    dateFin: '2500-01-01',
-    dateDebut: '2200-01-01',
-    phaseStatutId: 'val',
+    demarcheDateFin: '2500-01-01',
+    demarcheDateDebut: '2200-01-01',
   },
-] as ITitrePhase[]
+] 
 
 const titresUnePhaseMiseAJour = [
   {
@@ -69,12 +66,8 @@ const titresUnePhaseMiseAJour = [
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
-        phase: {
-          titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
-          dateFin: '2500-01-01',
-          dateDebut: '2300-01-01',
-          phaseStatutId: 'val',
-        },
+          demarcheDateFin: '2500-01-01',
+          demarcheDateDebut: '2300-01-01',
         etapes: [
           {
             id: 'h-cx-courdemanges-1988-oct01-dpu01',
@@ -130,12 +123,8 @@ const titresUnePhaseSansChangement = [
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
-        phase: {
-          titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
-          dateFin: '2500-01-01',
-          dateDebut: '2200-01-01',
-          phaseStatutId: 'val',
-        },
+          demarcheDateFin: '2500-01-01',
+          demarcheDateDebut: '2200-01-01',
         etapes: [
           {
             id: 'h-cx-courdemanges-1988-oct01-dpu01',

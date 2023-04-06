@@ -2,7 +2,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { demarcheEtatsValidate } from '../_utils.test.js'
 import { describe, expect, test } from 'vitest'
 describe('vérifie l’arbre d’octroi d’une PRM', () => {
-  const octEtatsValidate = demarcheEtatsValidate('oct', 'prm', '2020-01-01')
+  const octEtatsValidate = demarcheEtatsValidate('oct', 'prm', toCaminoDate('2020-01-01'))
 
   test('ne peut pas créer une "rpu" après une "dex" rejetée', () => {
     expect(

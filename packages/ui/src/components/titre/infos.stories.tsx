@@ -2,6 +2,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { Infos, Props } from './infos'
 import { Section, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Titre/Infos',
@@ -39,6 +40,7 @@ const apiClient: Props['apiClient'] = {
 
 export const Default: Story = () => (
   <Infos
+    getCurrentDay={() => toCaminoDate('2023-04-06')}
     titre={{
       id: 'fakeId',
       typeId: 'arm',
@@ -47,21 +49,15 @@ export const Default: Story = () => (
       demarches: [
         {
           id: 'oct',
-          phase: {
-            dateDebut: '2020-01-01',
-            dateFin: '2022-01-01',
-            phaseStatutId: 'ech',
-          },
-          type: { id: 'oct' },
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2022-01-01'),
+          typeId: 'oct',
         },
         {
           id: 'pro',
-          phase: {
-            dateDebut: '2022-01-01',
-            dateFin: '2025-01-01',
-            phaseStatutId: 'val',
-          },
-          type: { id: 'pro' },
+          demarcheDateDebut: toCaminoDate('2022-01-01'),
+          demarcheDateFin: toCaminoDate('2025-01-01'),
+          typeId: 'pro',
         },
       ],
       administrations: ['ope-onf-973-01'],
@@ -97,6 +93,7 @@ export const Default: Story = () => (
 
 export const Empty: Story = () => (
   <Infos
+    getCurrentDay={() => toCaminoDate('2023-04-06')}
     titre={{
       id: 'fakeId',
       typeId: 'arm',

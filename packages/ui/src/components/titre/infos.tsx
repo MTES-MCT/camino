@@ -13,7 +13,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { PhaseStatutId, phaseStatuts } from 'camino-common/src/static/phasesStatuts'
+import { getPhaseStatutId, PhaseStatutId, phaseStatuts } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -22,6 +22,7 @@ import { onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section } from 'camino-common/src/titres'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { CaminoDate } from 'camino-common/src/date'
 
 export interface Entreprise {
   id: string
@@ -30,20 +31,20 @@ export interface Entreprise {
   operateur: boolean
 }
 
+interface Demarche {
+  id: string
+  typeId: DemarcheTypeId
+  demarcheDateDebut: CaminoDate | null
+  demarcheDateFin: CaminoDate | null
+}
+
 export interface Props {
+  getCurrentDay: () => CaminoDate
   titre: {
     id: string
     typeId: TitreTypeId
     titreStatutId: TitreStatutId
-    demarches: {
-      id: string
-      type: { id: DemarcheTypeId }
-      phase: {
-        dateDebut: string
-        dateFin: string
-        phaseStatutId: PhaseStatutId
-      }
-    }[]
+    demarches: Demarche[]
     contenu: { [sectionId: string]: { [elementId: string]: unknown } }
     administrations: AdministrationId[]
     titulaires: Entreprise[]
@@ -97,8 +98,10 @@ const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiCl
   return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
 })
 
-export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
-  const phases = titre.demarches.filter(d => d.phase)
+export const Infos = ({ titre, user, apiClient, getCurrentDay }: Props): JSX.Element => {
+  const phases: (Demarche & {phaseStatutId: PhaseStatutId})[] = titre.demarches.filter(d => d.demarcheDateDebut).map(d => {
+    return {...d, phaseStatutId: getPhaseStatutId(getCurrentDay, d)}
+  })
 
   const titreStatut = TitresStatuts[titre.titreStatutId]
 
@@ -127,16 +130,16 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
                 {phases.map(demarche => (
                   <tr key={demarche.id}>
                     <td class="max-width-1">
-                      <Dot class="mt-xs" color={`bg-${phaseStatuts[demarche.phase.phaseStatutId].couleur}`} />
+                      <Dot class="mt-xs" color={`bg-${phaseStatuts[demarche.phaseStatutId].couleur}`} />
                     </td>
                     <td>
-                      <span class="cap-first bold h5 mb-0">{DemarchesTypes[demarche.type.id].nom}</span>
+                      <span class="cap-first bold h5 mb-0">{DemarchesTypes[demarche.typeId].nom}</span>
                     </td>
                     <td>
-                      <span class="h5 mb-0">{dateFormat(demarche.phase.dateDebut)}</span>
+                      <span class="h5 mb-0">{dateFormat(demarche.demarcheDateDebut)}</span>
                     </td>
                     <td>
-                      <span class="h5 mb-0">{dateFormat(demarche.phase.dateFin)}</span>
+                      <span class="h5 mb-0">{dateFormat(demarche.demarcheDateFin)}</span>
                     </td>
                   </tr>
                 ))}
@@ -166,7 +169,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
             id: titre.id,
             typeId: titre.typeId,
             administrations: titre.administrations,
-            demarches: titre.demarches.map(d => ({ typeId: d.type.id })),
+            demarches: titre.demarches.map(d => ({ typeId: d.typeId })),
           }}
           apiClient={apiClient}
         />

@@ -16,11 +16,13 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DocumentType, DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
 
 export const titreEtapeUpdationValidate = (
+  date: CaminoDate,
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
@@ -119,7 +121,7 @@ export const titreEtapeUpdationValidate = (
     return errors
   }
 
-  return titreEtapeUpdationBusinessValidate(titreEtape, titreDemarche, titre)
+  return titreEtapeUpdationBusinessValidate(date, titreEtape, titreDemarche, titre)
 }
 
 export const titreEtapeCompleteValidate = (
@@ -204,11 +206,11 @@ export const titreEtapeCompleteValidate = (
   return errors
 }
 
-const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, titre: ITitre) => {
+const titreEtapeUpdationBusinessValidate = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, titre: ITitre) => {
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
+  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(date, titreDemarche.type!, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
   if (demarcheUpdatedErrors.length) {
     errors.push(...demarcheUpdatedErrors)
   }

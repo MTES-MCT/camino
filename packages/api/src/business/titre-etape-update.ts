@@ -11,7 +11,7 @@ import { titresDemarchesOrdreUpdate } from './processes/titres-demarches-ordre-u
 import { titresEtapesAreasUpdate } from './processes/titres-etapes-areas-update.js'
 import { titresEtapesOrdreUpdate } from './processes/titres-etapes-ordre-update.js'
 import { titresStatutIdsUpdate } from './processes/titres-statut-ids-update.js'
-import { titresPhasesUpdate } from './processes/titres-phases-update.js'
+import { titresDemarchesDatesUpdate } from './processes/titres-phases-update.js'
 import { titresEtapesAdministrationsLocalesUpdate } from './processes/titres-etapes-administrations-locales-update.js'
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update.js'
 import { titresContenusEtapesIdsUpdate } from './processes/titres-contenus-etapes-ids-update.js'
@@ -53,7 +53,7 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate([titreId])
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate([titreId])
     const titresDatesUpdated = await titresDatesUpdate([titreId])
 
     // si l'étape est supprimée, pas de mise à jour
@@ -82,8 +82,7 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
       titresDemarchesOrdreUpdated,
       titresStatutIdUpdated,
       titresPublicUpdated,
-      titresPhasesUpdated,
-      titresPhasesDeleted,
+      titresDemarchesDatesUpdated,
       titresDatesUpdated,
       titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,

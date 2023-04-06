@@ -208,8 +208,8 @@ describe("publicité d'une démarche", () => {
       typeId: 'pr2',
       statutId: 'eco',
       ordre: 3,
-      phase: { dateDebut: toCaminoDate('2020-01-01'), dateFin: null, titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'), phaseStatutId: 'val' },
-
+      demarcheDateDebut: toCaminoDate('2020-01-01'),
+      demarcheDateFin: null,
       etapes: [
         {
           date: toCaminoDate('2020-06-01'),
@@ -226,7 +226,8 @@ describe("publicité d'une démarche", () => {
       typeId: 'pr1',
       statutId: 'acc',
       ordre: 2,
-      phase: { dateDebut: toCaminoDate('2020-01-01'), dateFin: toCaminoDate('2020-10-01'), titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'), phaseStatutId: 'val' },
+      demarcheDateDebut: toCaminoDate('2020-01-01'),
+      demarcheDateFin: toCaminoDate('2020-10-01'),
       etapes: [
         {
           date: toCaminoDate('2020-01-01'),
@@ -246,7 +247,8 @@ describe("publicité d'une démarche", () => {
       typeId: 'oct',
       statutId: 'acc',
       ordre: 1,
-      phase: { dateDebut: toCaminoDate('1014-04-01'), dateFin: toCaminoDate('2020-04-01'), titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'), phaseStatutId: 'val' },
+      demarcheDateDebut: toCaminoDate('1014-04-01'),
+      demarcheDateFin: toCaminoDate('2020-04-01'),
       etapes: [
         {
           id: 'm-pr-saint-pierre-2014-oct01-dex01',

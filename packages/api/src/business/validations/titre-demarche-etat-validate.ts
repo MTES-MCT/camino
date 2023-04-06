@@ -10,6 +10,7 @@ import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { contenuFormat } from '../../api/rest/titre-contenu.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 const titreDemarcheEtapesBuild = (titreEtape: ITitreEtape, suppression: boolean, titreDemarcheEtapes?: ITitreEtape[] | null) => {
   if (!titreDemarcheEtapes?.length) {
@@ -41,6 +42,7 @@ const titreDemarcheEtapesBuild = (titreEtape: ITitreEtape, suppression: boolean,
 
 // vérifie que  la démarche est valide par rapport aux définitions des types d'étape
 export const titreDemarcheEtatValidate = (
+  date: CaminoDate,
   demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
   demarcheTypeId: DemarcheTypeId,
   titreDemarche: ITitreDemarche,
@@ -62,7 +64,7 @@ export const titreDemarcheEtatValidate = (
     const etapes = titreEtapes.slice(0, i)
     demarche.etapes = etapes
 
-    const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(titre.titreStatutId!, [demarche], titre.type!.contenuIds)
+    const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(date, titre.titreStatutId!, [demarche], titre.type!.contenuIds)
 
     let contenu = null
     if (contenusTitreEtapesIds) {
@@ -82,6 +84,7 @@ export const titreDemarcheEtatValidate = (
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
+  date: CaminoDate,
   demarcheType: IDemarcheType,
   titre: ITitre,
   titreEtape: ITitreEtape,
@@ -155,7 +158,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     }
 
     // On vérifie que la nouvelle démarche respecte son arbre d’instructions
-    titreDemarchesErrors.push(...titreDemarcheEtatValidate(demarcheDefinition.restrictions, demarcheType.id, titreDemarche, titreDemarcheEtapesNew, titre))
+    titreDemarchesErrors.push(...titreDemarcheEtatValidate(date, demarcheDefinition.restrictions, demarcheType.id, titreDemarche, titreDemarcheEtapesNew, titre))
   }
 
   return titreDemarchesErrors
