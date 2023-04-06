@@ -13,7 +13,6 @@ import document from './document'
 import titres from './titres'
 import titresDemarches from './titres-demarches'
 import utilisateurs from './utilisateurs'
-import entreprise from './entreprise'
 import entreprises from './entreprises'
 import metas from './metas'
 import meta from './meta'
@@ -32,7 +31,6 @@ const modules = {
   titres,
   titresDemarches,
   utilisateurs,
-  entreprise,
   entreprises,
   meta,
   metas,

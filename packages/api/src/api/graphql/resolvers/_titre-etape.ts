@@ -190,6 +190,7 @@ export const titreEtapeSdomZonesGet = async (geoJson: Feature<any>): Promise<Geo
   }
 }
 
+// TODO 2023-05-16: move into common tde documents
 export const documentTypeIdsBySdomZonesGet = (sdomZones: SDOMZoneId[] | null | undefined, titreTypeId: string, demarcheTypeId: string, etapeTypeId: string) => {
   const documentTypeIds: DocumentTypeId[] = []
 

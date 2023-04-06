@@ -1,28 +1,12 @@
 import { Context, IEntreprise, IEntrepriseColonneId } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 
-import { entrepriseGet, entreprisesCount, entreprisesGet, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
+import { entreprisesCount, entreprisesGet, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
 import { entrepriseFormat } from '../../_format/entreprises.js'
-
-const entreprise = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    const entreprise = await entrepriseGet(id, { fields }, user)
-
-    if (!entreprise) return null
-
-    return entrepriseFormat(entreprise)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
 
 const entreprisesTitresCreation = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -130,4 +114,4 @@ const entreprises = async (
   }
 }
 
-export { entreprise, entreprises, entreprisesTitresCreation }
+export { entreprises, entreprisesTitresCreation }

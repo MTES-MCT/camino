@@ -1,6 +1,5 @@
-import { Utilisateur } from '@/api/api-client'
 import { apiGraphQLFetch } from '@/api/_client'
-import { Entreprise } from 'camino-common/src/entreprise'
+import { Entreprise, Utilisateur } from 'camino-common/src/entreprise'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 

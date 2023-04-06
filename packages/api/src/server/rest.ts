@@ -7,7 +7,7 @@ import { join } from 'path'
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre } from '../api/rest/titres.js'
-import { creerEntreprise, fiscalite, modifierEntreprise } from '../api/rest/entreprises.js'
+import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntrepriseDocuments, postEntrepriseDocument, deleteEntrepriseDocument } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
@@ -94,6 +94,10 @@ export const restWithPool = (dbPool: Pool) => {
 
   rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
   rest.put(CaminoRestRoutes.entreprise, restCatcher(modifierEntreprise))
+  rest.get(CaminoRestRoutes.entreprise, restCatcher(getEntreprise))
+  rest.get(CaminoRestRoutes.entrepriseDocuments, restCatcher(getEntrepriseDocuments(dbPool)))
+  rest.post(CaminoRestRoutes.entrepriseDocuments, restCatcher(postEntrepriseDocument(dbPool)))
+  rest.delete(CaminoRestRoutes.entrepriseDocument, restCatcher(deleteEntrepriseDocument(dbPool)))
   rest.post(CaminoRestRoutes.entreprises, restCatcher(creerEntreprise))
   rest.get('/deconnecter', restCatcher(logout))
   rest.get('/changerMotDePasse', restCatcher(resetPassword))

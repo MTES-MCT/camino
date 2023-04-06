@@ -7,13 +7,13 @@ import { AsyncData } from '@/api/client-rest'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { UtilisateurApiClient, utilisateurApiClient } from './utilisateur/utilisateur-api-client'
-import { Utilisateur as ApiUser } from '@/api/api-client'
 import { LoadingElement } from './_ui/functional-loader'
 import { RemovePopup } from './utilisateur/remove-popup'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs'
 import { caminoDefineComponent, isEventWithTarget } from '../utils/vue-tsx-utils'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
+import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
 
 export const Utilisateur = defineComponent({
   setup() {

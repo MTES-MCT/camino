@@ -2,17 +2,10 @@ import { sql } from '@pgtyped/runtime'
 import { SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales'
 import { Redefine } from '../../../pg-database.js'
 import { IGetProductionOrDbQuery } from './dgtm.queries.types.js'
-import { z } from 'zod'
-import { caminoAnneeValidator } from 'camino-common/src/date.js'
-
-export const getProductionOrValidator = z.object({
-  annee: caminoAnneeValidator,
-  count: z.coerce.number(),
-})
-export type ProductionOr = z.infer<typeof getProductionOrValidator>
+import { AnneeCountStatistique } from 'camino-common/src/statistiques.js'
 
 // On peut récupérer le nombre de producteurs d’or que à partir de l’année 2018. L’année à laquelle nous avons commencé à récolter les productions dans Camino
-export const getProductionOrDb = sql<Redefine<IGetProductionOrDbQuery, { substance: SubstanceFiscaleId }, ProductionOr>>`
+export const getProductionOrDb = sql<Redefine<IGetProductionOrDbQuery, { substance: SubstanceFiscaleId }, AnneeCountStatistique>>`
 select distinct
     ta.annee,
     count(distinct tt.entreprise_id)

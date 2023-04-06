@@ -1,9 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql'
 import { FileUpload } from 'graphql-upload'
 import { join } from 'path'
-import cryptoRandomString from 'crypto-random-string'
-
-import { Context, IDocument, ITitreEtape } from '../../../types.js'
+import { Context, IDocument } from '../../../types.js'
 
 import fileDelete from '../../../tools/file-delete.js'
 import fileStreamCreate from '../../../tools/file-stream-create.js'
@@ -19,15 +17,11 @@ import { titreActiviteGet } from '../../../database/queries/titres-activites.js'
 
 import { documentInputValidate } from '../../../business/validations/document-input-validate.js'
 import { documentUpdationValidate } from '../../../business/validations/document-updation-validate.js'
-import { entrepriseGet } from '../../../database/queries/entreprises.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
-
-const errorEtapesAssocieesUpdate = (etapesAssociees: ITitreEtape[], action: 'supprimer' | 'modifier') =>
-  `impossible de ${action} ce document lié ${etapesAssociees.length > 1 ? 'aux étapes' : 'à l’étape'} ${etapesAssociees.map(e => e.id).join(', ')}`
+import { newDocumentId } from '../../../database/models/_format/id-create.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = await documentFilePathFind(document, true)
@@ -91,11 +85,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
       throw new Error('droits insuffisants')
     }
   } else if (document.entrepriseId) {
-    const entreprise = await entrepriseGet(document.entrepriseId, { fields: {} }, user)
-
-    if (!entreprise) throw new Error("l'entreprise n'existe pas")
-
-    if (!canEditEntreprise(user, entreprise.id)) throw new Error('droits insuffisants')
+    throw new Error("impossible de gérer les justificatifs d'entreprise")
   } else if (document.titreActiviteId) {
     // si l'activité est récupérée depuis la base
     // alors on a le droit de la visualiser, donc de l'éditer
@@ -131,8 +121,7 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
       throw new Error(errors.concat(rulesErrors).join(', '))
     }
 
-    const hash = cryptoRandomString({ length: 8 })
-    document.id = `${document.date}-${document.typeId}-${hash}`
+    document.id = newDocumentId(document.date, document.typeId)
 
     // Enregistre le nouveau fichier
     // - arrivé via API (requêtes libres)
@@ -176,12 +165,8 @@ export const documentModifier = async ({ document }: { document: IDocument }, { 
 
     await documentPermissionsCheck(document, user)
 
-    if (documentOld.etapesAssociees && documentOld.etapesAssociees.length > 0) {
-      throw new Error(errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'modifier'))
-    }
-
-    const errors = await documentInputValidate(document)
-    const rulesErrors = await documentUpdationValidate(document)
+    const errors = documentInputValidate(document)
+    const rulesErrors = documentUpdationValidate(document)
 
     if (errors.length || rulesErrors.length) {
       const e = errors.concat(rulesErrors)
@@ -242,7 +227,6 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
           type: {
             activitesTypes: { id: {} },
           },
-          etapesAssociees: { id: {} },
         },
       },
       user
@@ -250,10 +234,6 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
 
     if (!documentOld) {
       throw new Error('aucun document avec cette id')
-    }
-
-    if (documentOld.etapesAssociees && documentOld.etapesAssociees.length > 0) {
-      throw new Error(errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'supprimer'))
     }
 
     if (!documentOld.suppression) {

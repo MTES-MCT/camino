@@ -1,8 +1,9 @@
 import { FunctionalComponent } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
-import { TitreEntreprise, titresColonnes, titresLignesBuild } from './table-utils'
+import { titresColonnes, titresLignesBuild } from './table-utils'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { User } from 'camino-common/src/roles'
+import { TitreEntreprise } from 'camino-common/src/entreprise'
 
 interface Props {
   titres: TitreEntreprise[]

@@ -1,6 +1,13 @@
+import { z } from 'zod'
+
 export interface DocumentType {
-  // TODO 2022-10-19 ceci devrait être du type DocumentTypeId
-  id: string
+  id: DocumentTypeId
+  nom: string
+  optionnel: boolean
+  description?: string
+}
+export interface EntrepriseDocumentType {
+  id: EntrepriseDocumentTypeId
   nom: string
   optionnel: boolean
   description?: string
@@ -11,6 +18,17 @@ interface Definition<T> {
   nom: string
   description?: string
 }
+
+export type FileUploadType = 'pdf' | 'doc' | 'docx'
+
+export const FICHIERS_TYPES = {
+  Pdf: 'pdf',
+  Doc: 'doc',
+  Docx: 'docx',
+} as const satisfies Record<string, FileUploadType>
+
+// prettier-ignore
+const IDS = ['aac','acc','acd','acg','acm','acr','adr','aep','aot','apd','apf','apm','apu','are','arm','arp','arr','atf','avc','ave','avi','bil','cam','car','cco','cdc','cnr','cnt','cod','con','cou','csp','cur','dcl','deb','dec','dei','dep','doe','dom','dos','erd','fac','fic','fip','for','idm','jac','jcf','jct','jeg','jid','jpa','kbi','lac','lce','lcg','lcm','lem','let','lis','lpf','mes','met','mot','nas','ndc','ndd','nip','nir','nis','noi','not','ocd','odr','ord','prg','pro','pub','pvr','rac','rad','rap','rce','rcr','rdr','rdt','rec','ree','ref','rfe','rgr','rie','rse','sch','sir' ] as const
 
 export const DOCUMENTS_TYPES_IDS = {
   avisDUnServiceDeLAdministrationCentrale: 'aac',
@@ -109,9 +127,29 @@ export const DOCUMENTS_TYPES_IDS = {
   rapportSocialEtEconomiqueDExploration: 'rse',
   schemaDePenetrationDuMassifForestier: 'sch',
   avisDeSituationAuRepertoireSirene: 'sir',
-} as const
+} as const satisfies Record<string, (typeof IDS)[number]>
 
-export type DocumentTypeId = (typeof DOCUMENTS_TYPES_IDS)[keyof typeof DOCUMENTS_TYPES_IDS]
+export const EntrepriseDocumentTypeIds = [
+  DOCUMENTS_TYPES_IDS.attestationFiscale,
+  DOCUMENTS_TYPES_IDS.avisDeSituationAuRepertoireSirene,
+  DOCUMENTS_TYPES_IDS.curriculumVitae,
+  DOCUMENTS_TYPES_IDS.identificationDeMateriel,
+  DOCUMENTS_TYPES_IDS.justificatifDIdentite,
+  DOCUMENTS_TYPES_IDS.justificatifDesCapacitesTechniques,
+  DOCUMENTS_TYPES_IDS.kbis,
+  DOCUMENTS_TYPES_IDS.justificatifDesCapacitesFinancieres,
+  DOCUMENTS_TYPES_IDS.listeDesTravauxAnterieurs,
+  DOCUMENTS_TYPES_IDS.justificatifDAdhesionALaCharteDesBonnesPratiques,
+  DOCUMENTS_TYPES_IDS.TroisDerniersBilansEtComptesDeResultats,
+  DOCUMENTS_TYPES_IDS.referencesProfessionnelles,
+  DOCUMENTS_TYPES_IDS.declarationsBancairesOuCautionsAppropriees,
+] as const satisfies readonly (typeof IDS)[number][]
+
+export const entrepriseDocumentTypeIdValidator = z.enum(EntrepriseDocumentTypeIds)
+export const isEntrepriseDocumentTypeId = (id: string): id is EntrepriseDocumentTypeId => entrepriseDocumentTypeIdValidator.safeParse(id).success
+export const documentTypeIdValidator = z.enum(IDS)
+export type EntrepriseDocumentTypeId = z.infer<typeof entrepriseDocumentTypeIdValidator>
+export type DocumentTypeId = z.infer<typeof documentTypeIdValidator>
 
 export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   aac: { id: 'aac', nom: "Avis d'un service de l'administration centrale" },
@@ -211,6 +249,8 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   sch: { id: 'sch', nom: 'Schéma de pénétration du massif forestier' },
   sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' },
 }
+
+export const sortedEntrepriseDocumentTypes = EntrepriseDocumentTypeIds.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 
 const documentsTypesIds = Object.values(DOCUMENTS_TYPES_IDS)
 

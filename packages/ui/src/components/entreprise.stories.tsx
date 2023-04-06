@@ -1,8 +1,8 @@
-import { EntrepriseType, PureEntreprise } from './entreprise'
+import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { toCaminoAnnee } from 'camino-common/src/date'
-import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
+import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
+import { Entreprise, EntrepriseDocument, EntrepriseType, toDocumentId, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 
@@ -17,15 +17,30 @@ type Item = { id: string; titre: string }
 const getFiscaliteEntrepriseAction = action('getFiscaliteEntreprise')
 const modifierEntrepriseAction = action('modifierEntreprise')
 const creerEntrepriseAction = action('creerEntreprise')
-
-const items: Item[] = [
-  { id: 'id1', titre: 'titreItem1' },
-  { id: 'id2', titre: 'titreItem2' },
-  { id: 'id3', titre: 'titreItem3' },
-]
+const getEntrepriseDocumentsAction = action('getEntrepriseDocuments')
+const getEntrepriseAction = action('getEntreprise')
+const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
+const deleteEntrepriseDocumentAction = action('deleteEntrepriseDocument')
 
 const annee = toCaminoAnnee('2023')
-const entreprise = {
+
+const entrepriseDocuments: EntrepriseDocument[] = [
+  {
+    id: toDocumentId(toCaminoDate('2019-08-26'), 'kbi', '12345678'),
+    type_id: 'kbi',
+    date: toCaminoDate('2019-08-26'),
+    description: 'Kbis',
+    can_delete_document: true,
+  },
+  {
+    id: toDocumentId(toCaminoDate('2019-08-26'), 'idm', '12345678'),
+    type_id: 'idm',
+    date: toCaminoDate('2019-08-26'),
+    description: 'Identification pelle mécanique',
+    can_delete_document: false,
+  },
+]
+const entreprise: EntrepriseType = {
   id: newEntrepriseId(''),
   nom: 'nom entreprise',
   telephone: 'telephone',
@@ -36,7 +51,6 @@ const entreprise = {
   codePostal: 'code postal',
   commune: 'commune',
   url: 'http://urlentreprise',
-  documents: [],
   archive: false,
   titulaireTitres: [],
   amodiataireTitres: [],
@@ -45,6 +59,19 @@ const entreprise = {
 }
 
 const apiClient: EntrepriseApiClient = {
+  getEntreprise: entrepriseId => {
+    getEntrepriseAction(entrepriseId)
+    return Promise.resolve(entreprise)
+  },
+  deleteEntrepriseDocument(entrepriseId, documentId) {
+    deleteEntrepriseDocumentAction(entrepriseId, documentId)
+    return Promise.resolve()
+  },
+  getEntrepriseDocuments: entrepriseId => {
+    getEntrepriseDocumentsAction(entrepriseId)
+
+    return Promise.resolve(entrepriseDocuments)
+  },
   getFiscaliteEntreprise: data => {
     getFiscaliteEntrepriseAction(data)
     return Promise.resolve({
@@ -60,11 +87,15 @@ const apiClient: EntrepriseApiClient = {
     creerEntrepriseAction(siren)
     return Promise.resolve()
   },
+  creerEntrepriseDocument: (entrepriseId, document) => {
+    creerEntrepriseDocumentAction(entrepriseId, document)
+    return Promise.resolve(toDocumentId(document.date, document.typeId, '12345678'))
+  },
 }
 
-export const Loading: StoryFn = () => <PureEntreprise currentYear={annee} entreprise={undefined} apiClient={apiClient} user={null} />
+export const Loading: StoryFn = () => <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={{ ...apiClient, getEntreprise: () => new Promise(() => ({})) }} user={null} />
 
-export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} entreprise={entreprise} apiClient={apiClient} user={null} />
+export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} entrepriseId={entreprise.id} apiClient={apiClient} user={null} />
 
 const completeEntreprise: EntrepriseType = {
   id: newEntrepriseId('any'),
@@ -82,16 +113,14 @@ const completeEntreprise: EntrepriseType = {
     {
       id: '',
       nom: 'Nouvel établissement',
-      dateDebut: '2013-09-16',
+      dateDebut: toCaminoDate('2013-09-16'),
       dateFin: null,
-      legalSiret: 'SIRET',
     },
     {
       id: '',
       nom: 'Ancien établissement',
-      dateDebut: '2013-02-01',
-      dateFin: '2013-09-15',
-      legalSiret: 'siret',
+      dateDebut: toCaminoDate('2013-02-01'),
+      dateFin: toCaminoDate('2013-09-15'),
     },
   ],
   utilisateurs: [
@@ -232,44 +261,18 @@ const completeEntreprise: EntrepriseType = {
       ],
     },
   ],
-  documents: [
-    {
-      id: 'idDocument',
-      type: {
-        id: 'kbi',
-        nom: 'Kbis',
-      },
-      date: '2019-08-26',
-      description: 'Kbis',
-      fichier: true,
-      fichierTypeId: 'pdf',
-      entreprisesLecture: true,
-      modification: true,
-      suppression: true,
-    },
-    {
-      id: 'idDocument2',
-      type: {
-        id: 'idm',
-        nom: 'Identification de matériel',
-      },
-      date: '2019-08-26',
-      description: 'Identification pelle mécanique',
-      fichier: true,
-      fichierTypeId: 'pdf',
-      entreprisesLecture: true,
-      modification: false,
-      suppression: false,
-    },
-  ],
 }
 
 export const Complet: StoryFn = () => (
   <PureEntreprise
     currentYear={annee}
-    entreprise={completeEntreprise}
+    entrepriseId={completeEntreprise.id}
     apiClient={{
       ...apiClient,
+      getEntreprise: entrepriseId => {
+        getEntrepriseAction(entrepriseId)
+        return Promise.resolve(completeEntreprise)
+      },
       getFiscaliteEntreprise: data => {
         getFiscaliteEntrepriseAction(data)
         return Promise.resolve({

@@ -1,16 +1,18 @@
 import Uppy from '@uppy/core'
-import Tus from '@uppy/tus'
+import Tus, { TusOptions } from '@uppy/tus'
 import { errorThrow } from './_client'
+import { Upload } from 'tus-js-client'
+import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/entreprise'
 
 const CHUNK_SIZE = 1048576 // 1 Mo
 const apiUrl = '/apiUrl'
 
-const uploadCall = async (file, progressCb) => {
+export const uploadCall = async (file: File, progressCb: (progress: number) => void): Promise<TempDocumentName> => {
   const uppy = new Uppy({
     autoProceed: true,
   })
 
-  uppy.use(Tus, {
+  uppy.use<TusOptions & { onChunkComplete: Upload['options']['onChunkComplete'] }, Tus>(Tus, {
     chunkSize: CHUNK_SIZE,
     endpoint: `${apiUrl}/televersement`,
     onShouldRetry: () => {
@@ -37,9 +39,7 @@ const uploadCall = async (file, progressCb) => {
       }
 
       const [{ uploadURL }] = successful
-      resolve(uploadURL)
+      resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
     })
   })
 }
-
-export { uploadCall }

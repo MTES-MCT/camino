@@ -1,7 +1,7 @@
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
-import { StatistiquesDGTM, TitreTypeIdDelai, titreTypeIdDelais } from 'camino-common/src/statistiques.js'
+import { anneeCountStatistiqueValidator, StatistiquesDGTM, TitreTypeIdDelai, titreTypeIdDelais } from 'camino-common/src/statistiques.js'
 import { CaminoAnnee, CaminoDate, getAnnee, daysBetween, toCaminoAnnee } from 'camino-common/src/date.js'
 import { knex } from '../../../knex.js'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
@@ -9,6 +9,8 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getProductionOrDb } from './dgtm.queries.js'
 import type { Pool } from 'pg'
+import { dbQueryAndValidate } from '../../../pg-database.js'
+import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales.js'
 
 const anneeDepartStats = 2015
 
@@ -217,11 +219,13 @@ export const getDGTMStatsInside =
       }
     })
 
-    const producteursOr = await getProductionOrDb.run(
+    const producteursOr = await dbQueryAndValidate(
+      getProductionOrDb,
       {
-        substance: 'auru',
+        substance: SUBSTANCES_FISCALES_IDS.or,
       },
-      pool
+      pool,
+      anneeCountStatistiqueValidator
     )
 
     if (producteursOr && producteursOr?.length) {

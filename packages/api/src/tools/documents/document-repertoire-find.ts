@@ -1,6 +1,6 @@
 import { IDocument, IDocumentRepertoire } from '../../types.js'
 
-export const documentRepertoireFind = (document: IDocument): IDocumentRepertoire => {
+export const documentRepertoireFind = (document: Pick<IDocument, 'titreActiviteId' | 'titreEtapeId' | 'entrepriseId'>): IDocumentRepertoire => {
   if (document.titreActiviteId) {
     return 'activites'
   }

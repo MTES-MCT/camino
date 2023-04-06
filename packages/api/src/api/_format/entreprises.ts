@@ -3,15 +3,13 @@ import { IEntreprise } from '../../types.js'
 import { titresFormat } from './titres.js'
 
 /**
- * Formate une entreprise en fonction du profil de l'utilisateur
+ * Formate une entreprise
  *
- * @param user - Utilisateur
- * @param administration - Entreprise à formater
+ * @param entreprise - entreprise
  * @returns Une entreprise formatée
  *
  */
-
-export const entrepriseFormat = (entreprise: IEntreprise) => {
+export const entrepriseFormat = <T extends Pick<IEntreprise, 'titulaireTitres' | 'amodiataireTitres'>>(entreprise: T): T => {
   entreprise.titulaireTitres = entreprise.titulaireTitres && titresFormat(entreprise.titulaireTitres)
 
   entreprise.amodiataireTitres = entreprise.amodiataireTitres && titresFormat(entreprise.amodiataireTitres)

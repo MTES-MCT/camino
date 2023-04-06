@@ -2,19 +2,6 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentEntreprises } from './fragments/entreprises'
-import { fragmentEntreprise } from './fragments/entreprise'
-
-export const entreprise = apiGraphQLFetch(
-  gql`
-    query Entreprise($id: ID!) {
-      entreprise(id: $id) {
-        ...entreprise
-      }
-    }
-
-    ${fragmentEntreprise}
-  `
-)
 
 export const entreprises = apiGraphQLFetch(gql`
   query Entreprises($intervalle: Int, $page: Int, $colonne: String, $ordre: String, $noms: String, $etapeId: ID) {

@@ -1,9 +1,7 @@
 import { PureEntrepriseDashboard, Props } from './pure-entreprise-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { TitreEntreprise } from '@/components/titres/table-utils'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
-import { User } from 'camino-common/src/roles'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { TitreEntreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {

@@ -2,7 +2,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
-import { Utilisateur } from '@/api/api-client'
+import { Utilisateur } from 'camino-common/src/entreprise'
 
 export type ActiviteTypeEmail = {
   email: string

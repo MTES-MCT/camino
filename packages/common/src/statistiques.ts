@@ -1,4 +1,5 @@
-import { CaminoAnnee } from './date.js'
+import { z } from 'zod'
+import { CaminoAnnee, caminoAnneeValidator } from './date.js'
 import { AdministrationTypeId } from './static/administrations.js'
 import { RegionId } from './static/region.js'
 import { SDOMZoneIds } from './static/sdom.js'
@@ -173,3 +174,9 @@ export interface StatistiquesGranulatsMarins {
   titresInstructionExploitation: number
   titresValCxw: number
 }
+
+export const anneeCountStatistiqueValidator = z.object({
+  annee: caminoAnneeValidator,
+  count: z.coerce.number(),
+})
+export type AnneeCountStatistique = z.infer<typeof anneeCountStatistiqueValidator>

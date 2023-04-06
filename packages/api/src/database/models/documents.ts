@@ -69,20 +69,6 @@ class Document extends Model {
         to: 'entreprises.id',
       },
     },
-
-    // justificatifs
-    etapesAssociees: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresEtapes,
-      join: {
-        from: 'documents.id',
-        through: {
-          from: 'titresEtapesJustificatifs.documentId',
-          to: 'titresEtapesJustificatifs.titreEtapeId',
-        },
-        to: 'titresEtapes.id',
-      },
-    },
   })
 
   public $formatDatabaseJson(json: Pojo): Pojo {

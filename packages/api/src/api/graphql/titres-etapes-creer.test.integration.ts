@@ -14,6 +14,7 @@ import { userSuper } from '../../database/user-super'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
+import { newDocumentId } from '../../database/models/_format/id-create.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -209,26 +210,30 @@ describe('etapeCreer', () => {
 
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
+    const idDom = newDocumentId(toCaminoDate('2020-01-01'), 'dom')
+    const idFor = newDocumentId(toCaminoDate('2020-01-01'), 'for')
+    const idJpa = newDocumentId(toCaminoDate('2020-01-01'), 'jpa')
+    const idCar = newDocumentId(toCaminoDate('2020-01-01'), 'car')
     await documentCreate({
-      id: 'dom',
+      id: idDom,
       typeId: 'dom',
       date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
-      id: 'for',
+      id: idFor,
       typeId: 'for',
       date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
-      id: 'jpa',
+      id: idJpa,
       typeId: 'jpa',
       date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
-      id: 'car',
+      id: idCar,
       typeId: 'car',
       date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr',
@@ -260,7 +265,7 @@ describe('etapeCreer', () => {
             },
           },
           substances: ['auru'],
-          documentIds: ['dom', 'for', 'jpa', 'car'],
+          documentIds: [idDom, idFor, idJpa, idCar],
           points: [
             {
               groupe: 1,

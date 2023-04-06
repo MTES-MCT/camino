@@ -17,10 +17,10 @@ import { FrequenceId } from 'camino-common/src/static/frequence.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
-import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
+import { DocumentType, DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { DocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
@@ -465,13 +465,13 @@ interface ITitreDemarche {
 }
 
 interface IDocument {
-  id: string
-  typeId: string
+  id: DocumentId
+  typeId: DocumentTypeId
   date: CaminoDate
   description?: string | null
   type?: DocumentType | null
   fichier?: boolean | null
-  fichierTypeId?: string | null
+  fichierTypeId?: FileUploadType | null
   fichierNouveau?: { file: FileUpload } | null
   nomTemporaire?: string | null
   url?: string | null
@@ -486,7 +486,6 @@ interface IDocument {
   activite?: ITitreActivite | null
   entrepriseId?: string | null
   entreprise?: IEntreprise | null
-  etapesAssociees?: ITitreEtape[] | null
   suppression?: boolean | null
 }
 interface ITitreEtape {

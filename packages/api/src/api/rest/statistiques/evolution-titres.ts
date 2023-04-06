@@ -7,9 +7,10 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toTitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
-import { EvolutionTitres } from 'camino-common/src/statistiques.js'
+import { AnneeCountStatistique, anneeCountStatistiqueValidator, EvolutionTitres } from 'camino-common/src/statistiques.js'
 import { getDepotDb, getEtapesTypesDecisionRefusDb, getOctroiDb, getSurfaceDb } from './evolution-titres.queries.js'
 import type { Pool } from 'pg'
+import { dbQueryAndValidate } from '../../../pg-database.js'
 
 export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeTypeId, departements: DepartementId[], anneeDepart = 2017): Promise<EvolutionTitres> => {
   let currentYear = new Date().getFullYear()
@@ -24,7 +25,8 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
   // conversion 1 km² = 100 ha
 
   const [depot, octroi, refus, surface] = await Promise.all([
-    getDepotDb.run(
+    dbQueryAndValidate(
+      getDepotDb,
       {
         anneeDepart,
         demarcheTypeIds: demarcheOctroiTypeIds,
@@ -32,18 +34,22 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
         etapeTypeId: ETAPES_TYPES.depotDeLaDemande,
         titreTypeId,
       },
-      pool
+      pool,
+      anneeCountStatistiqueValidator
     ),
-    getOctroiDb.run(
+    dbQueryAndValidate(
+      getOctroiDb,
       {
         anneeDepart,
         demarcheTypeIds: demarcheOctroiTypeIds,
         departements,
         titreTypeId,
       },
-      pool
+      pool,
+      anneeCountStatistiqueValidator
     ),
-    getEtapesTypesDecisionRefusDb.run(
+    dbQueryAndValidate(
+      getEtapesTypesDecisionRefusDb,
       {
         anneeDepart,
         demarcheTypeIds: demarcheOctroiTypeIds,
@@ -55,9 +61,10 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
         etapeTypeClassementSansSuite: ETAPES_TYPES.classementSansSuite,
         titreTypeId,
       },
-      pool
+      pool,
+      anneeCountStatistiqueValidator
     ),
-    getSurfaceDb.run({ anneeDepart, demarcheTypeIds: demarcheOctroiTypeIds, departements, titreTypeId }, pool),
+    dbQueryAndValidate(getSurfaceDb, { anneeDepart, demarcheTypeIds: demarcheOctroiTypeIds, departements, titreTypeId }, pool, anneeCountStatistiqueValidator),
   ])
 
   return {
@@ -68,9 +75,9 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
   }
 }
 
-const toRecord = (values: { annee: CaminoAnnee; count: string }[]): Record<CaminoAnnee, number> => {
+const toRecord = (values: AnneeCountStatistique[]): Record<CaminoAnnee, number> => {
   return values.reduce<Record<CaminoAnnee, number>>((acc, { annee, count }) => {
-    acc[annee] = Number(count)
+    acc[annee] = count
 
     return acc
   }, {})

@@ -1,7 +1,5 @@
 import { Perimetre } from './perimetre'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
-import { toCaminoDate } from 'camino-common/src/date'
 import { MultiPolygon, Feature } from 'geojson'
 
 const meta: Meta = {

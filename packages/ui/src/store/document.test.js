@@ -97,7 +97,7 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null,
+      nomTemporaire: undefined,
     }
     const apiMock = api.documentCreer.mockResolvedValue({
       nom: 'champs',
@@ -127,7 +127,7 @@ describe('documents', () => {
       nom: 'champs',
       typeId: 1,
       fichier: true,
-      nomTemporaire: null,
+      nomTemporaire: undefined,
     }
     await store.dispatch('document/upsert', {
       document,
@@ -154,7 +154,7 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null,
+      nomTemporaire: undefined,
     }
     const apiMock = api.documentModifier.mockResolvedValue({
       id: 14,
@@ -187,7 +187,7 @@ describe('documents', () => {
       id: 14,
       typeId: 1,
       fichier: true,
-      nomTemporaire: null,
+      nomTemporaire: undefined,
     }
     await store.dispatch('document/upsert', {
       document,
@@ -205,7 +205,7 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null,
+      nomTemporaire: undefined,
     }
     const apiMock = api.documentCreer.mockResolvedValue({
       id: 14,

@@ -9,6 +9,7 @@ import { fieldsFormat } from './graph/fields-format.js'
 import Document from '../models/documents.js'
 import { documentsQueryModify } from './permissions/documents.js'
 import { User } from 'camino-common/src/roles'
+import { DocumentId } from 'camino-common/src/entreprise.js'
 
 const documentGet = async (documentId: string, { fields }: { fields?: IFields }, user: User) => {
   const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
@@ -44,7 +45,7 @@ const documentCreate = async (document: IDocument, tr?: Transaction) => Document
 
 const documentUpsert = async (document: IDocument, tr?: Transaction) => Document.query(tr).upsertGraph(document, options.documents.update).withGraphFetched(options.documents.graph).returning('*')
 
-const documentUpdate = async (id: string, props: Partial<IDocument>) =>
+const documentUpdate = async (id: DocumentId, props: Partial<IDocument>) =>
   Document.query()
     .withGraphFetched(options.documents.graph)
     .patchAndFetchById(id, { ...props, id })
