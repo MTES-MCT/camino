@@ -6,7 +6,7 @@ import { join } from 'path'
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner } from '../api/rest/titres.js'
-import { fiscalite, modifierEntreprise } from '../api/rest/entreprises.js'
+import { creerEntreprise, fiscalite, modifierEntreprise } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
@@ -141,8 +141,8 @@ rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
 rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
 rest.put(CaminoRestRoutes.entreprise, restCatcher(modifierEntreprise))
-
-rest.get('/entreprises', restDownload(entreprises))
+rest.post(CaminoRestRoutes.entreprises, restCatcher(creerEntreprise))
+rest.get(CaminoRestRoutes.entreprises, restDownload(entreprises))
 rest.get('/fichiers/:documentId', restDownload(fichier))
 rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
 rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))

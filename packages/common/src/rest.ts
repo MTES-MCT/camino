@@ -19,6 +19,7 @@ export const CaminoRestRoutes = {
   titresLiaisons: '/titres/:id/titreLiaisons',
   statistiquesDGTM: '/statistiques/dgtm',
   fiscaliteEntreprise: '/entreprises/:entrepriseId/fiscalite/:annee',
+  entreprises: '/entreprises',
   entreprise: '/entreprises/:entrepriseId',
   generateQgisToken: '/utilisateur/generateQgisToken',
 } as const

@@ -2,31 +2,11 @@ import { entreprisesUpdate } from './entreprises-update.js'
 import { entreprisesGet } from '../../database/queries/entreprises.js'
 import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements.js'
 import { apiInseeEntreprisesGet, apiInseeEntreprisesEtablissementsGet } from '../../tools/api-insee/index.js'
-
-import {
-  dbEntreprisesCreees,
-  dbEntreprisesEtablissementsCreees,
-  apiEntreprisesCreees,
-  dbEntreprisesModifiees,
-  dbEntreprisesEtablissementsModifies,
-  apiEntreprisesModifiees,
-  dbEntreprisesSupprimeees,
-  dbEntreprisesEtablissementsSupprimeees,
-  apiEntreprisesSupprimeees,
-  dbEntreprisesExistantes,
-  dbEntreprisesEtablissementsExistants,
-  apiEntreprisesExistantes,
-  dbEntreprisesInexistantes,
-  dbEntreprisesEtablissementsInexistants,
-  apiEntreprisesInexistantes,
-  apiEntreprisesEtablissmentsInexistantes,
-  apiEntreprisesEtablissementsExistantes,
-  apiEntreprisesEtablissementsCreees,
-  apiEntreprisesEtablissementsModifiees,
-  apiEntreprisesEtablissementsSupprimeees,
-} from './__mocks__/entreprises-update.js'
 import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 import { vi, beforeEach, describe, expect, test } from 'vitest'
+import { newEntrepriseId } from 'camino-common/src/entreprise.js'
+import Entreprises from '../../database/models/entreprises.js'
+import EntreprisesEtablissements from '../../database/models/entreprises-etablissements.js'
 
 const entreprisesUpdated: IEntreprise[] = []
 // 'vi.mock()` est hoisté avant l'import, le court-circuitant
@@ -79,10 +59,17 @@ describe('entreprises', () => {
     entreprisesUpdated.splice(0, entreprisesUpdated.length)
   })
   test("crée les entreprises si elles n'existent pas", async () => {
-    entreprisesGetMock.mockResolvedValue(dbEntreprisesCreees)
-    entreprisesEtablissementsGetMock.mockResolvedValue(dbEntreprisesEtablissementsCreees)
-    apiInseeEntreprisesGetMock.mockResolvedValue(apiEntreprisesCreees)
-    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue(apiEntreprisesEtablissementsCreees)
+    entreprisesGetMock.mockResolvedValue([
+      { id: 'pipo', legalSiren: undefined, nom: 'pipo' },
+      { id: 'toto', legalSiren: '123456789', nom: 'toto' },
+      { id: 'nunu', legalSiren: '123456789', nom: 'nunu' },
+    ] as Entreprises[])
+    entreprisesEtablissementsGetMock.mockResolvedValue([])
+    apiInseeEntreprisesGetMock.mockResolvedValue([{ id: 'papa', legalSiren: '123456789' }] as Entreprises[])
+    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue([
+      { id: 'pipo', nom: 'pipo' },
+      { id: 'toto', nom: 'toto' },
+    ] as EntreprisesEtablissements[])
 
     await entreprisesUpdate()
 
@@ -91,28 +78,34 @@ describe('entreprises', () => {
       { id: 'toto', nom: 'toto' },
     ])
     expect(etablissementsDeleted.length).toEqual(0)
-    expect(entreprisesUpdated).toEqual([{ id: 'papa', legalSiren: 'toto' }])
+    expect(entreprisesUpdated).toEqual([{ id: 'papa', legalSiren: '123456789' }])
   })
 
   test('met à jour les entreprises qui ont été modifiées', async () => {
-    entreprisesGetMock.mockResolvedValue(dbEntreprisesModifiees)
-    entreprisesEtablissementsGetMock.mockResolvedValue(dbEntreprisesEtablissementsModifies)
-    apiInseeEntreprisesGetMock.mockResolvedValue(apiEntreprisesModifiees)
-    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue(apiEntreprisesEtablissementsModifiees)
+    entreprisesGetMock.mockResolvedValue([{ id: 'toto', legalSiren: '987654321', nom: 'toto' }] as Entreprises[])
+    entreprisesEtablissementsGetMock.mockResolvedValue([{ id: 'toto', nom: 'toto' }] as EntreprisesEtablissements[])
+    apiInseeEntreprisesGetMock.mockResolvedValue([{ id: 'toto', legalSiren: '123456789' }] as Entreprises[])
+    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue([{ id: 'toto', nom: 'tutu' }] as EntreprisesEtablissements[])
 
     await entreprisesUpdate()
 
     expect(etablissementsUpdated).toEqual([{ id: 'toto', nom: 'tutu' }])
     expect(etablissementsDeleted.length).toEqual(0)
-    expect(entreprisesUpdated).toEqual([{ id: 'toto', legalSiren: 'papa' }])
+    expect(entreprisesUpdated).toEqual([{ id: 'toto', legalSiren: '123456789' }])
     expect(console.info).toHaveBeenCalled()
   })
 
   test('supprime les entreprises qui ont été supprimés', async () => {
-    entreprisesGetMock.mockResolvedValue(dbEntreprisesSupprimeees)
-    entreprisesEtablissementsGetMock.mockResolvedValue(dbEntreprisesEtablissementsSupprimeees)
-    apiInseeEntreprisesGetMock.mockResolvedValue(apiEntreprisesSupprimeees)
-    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue(apiEntreprisesEtablissementsSupprimeees)
+    entreprisesGetMock.mockResolvedValue([{ id: 'papa', legalSiren: '987654321', nom: 'toto' }] as Entreprises[])
+    entreprisesEtablissementsGetMock.mockResolvedValue([
+      {
+        id: 'papa',
+        dateDebut: '2000-01-01',
+        entrepriseId: 'toto',
+      },
+    ] as EntreprisesEtablissements[])
+    apiInseeEntreprisesGetMock.mockResolvedValue([])
+    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue([])
 
     await entreprisesUpdate()
 
@@ -123,10 +116,22 @@ describe('entreprises', () => {
   })
 
   test('ne crée pas les entreprises qui existent déjà', async () => {
-    entreprisesGetMock.mockResolvedValue(dbEntreprisesExistantes)
-    entreprisesEtablissementsGetMock.mockResolvedValue(dbEntreprisesEtablissementsExistants)
-    apiInseeEntreprisesGetMock.mockResolvedValue(apiEntreprisesExistantes)
-    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue(apiEntreprisesEtablissementsExistantes)
+    entreprisesGetMock.mockResolvedValue([{ id: newEntrepriseId('toto'), legalSiren: '123456789', nom: 'toto' }] as Entreprises[])
+    entreprisesEtablissementsGetMock.mockResolvedValue([
+      {
+        id: 'toto',
+        dateDebut: '2000-01-01',
+        entrepriseId: 'toto',
+      },
+    ] as EntreprisesEtablissements[])
+    apiInseeEntreprisesGetMock.mockResolvedValue([{ id: 'toto', legalSiren: '123456789', nom: 'toto' }] as Entreprises[])
+    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue([
+      {
+        id: 'toto',
+        dateDebut: '2000-01-01',
+        entrepriseId: 'toto',
+      },
+    ] as EntreprisesEtablissements[])
 
     await entreprisesUpdate()
 
@@ -136,10 +141,10 @@ describe('entreprises', () => {
   })
 
   test("ne modifie pas d'entreprises si elles n'existent pas", async () => {
-    entreprisesGetMock.mockResolvedValue(dbEntreprisesInexistantes)
-    entreprisesEtablissementsGetMock.mockResolvedValue(dbEntreprisesEtablissementsInexistants)
-    apiInseeEntreprisesGetMock.mockResolvedValue(apiEntreprisesInexistantes)
-    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue(apiEntreprisesEtablissmentsInexistantes)
+    entreprisesGetMock.mockResolvedValue([])
+    entreprisesEtablissementsGetMock.mockResolvedValue([])
+    apiInseeEntreprisesGetMock.mockResolvedValue([])
+    apiInseeEntreprisesEtablissementsGetMock.mockResolvedValue([])
 
     await entreprisesUpdate()
 

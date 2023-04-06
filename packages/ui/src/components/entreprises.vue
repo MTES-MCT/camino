@@ -5,6 +5,7 @@
         <span class="mt-xxs">Ajouter une entreprise</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
+      <EntrepriseAddPopup v-if="popupVisible" :close="close" :user="user" :apiClient="customApiClient()" />
     </template>
 
     <template v-if="entreprises.length" #downloads>
@@ -16,23 +17,24 @@
 <script>
 import Liste from './_common/liste.vue'
 import { Downloads } from './_common/downloads'
-import EntrepriseAddPopup from './entreprise/add-popup.vue'
+import { EntrepriseAddPopup } from './entreprise/add-popup'
 
 import filtres from './entreprises/filtres'
 import { entreprisesColonnes, entreprisesLignesBuild } from './entreprises/table'
 import { Icon } from './_ui/icon'
+import { entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 
 export default {
   name: 'Entreprises',
 
-  components: { Icon, Liste, Downloads },
+  components: { Icon, Liste, Downloads, EntrepriseAddPopup },
 
   data() {
     return {
       filtres,
       colonnes: entreprisesColonnes,
-      visible: false,
+      popupVisible: false,
     }
   },
 
@@ -92,7 +94,23 @@ export default {
     },
 
     addPopupOpen() {
-      this.$store.commit('popupOpen', { component: EntrepriseAddPopup })
+      this.popupVisible = true
+    },
+    close() {
+      this.popupVisible = !this.popupVisible
+    },
+    customApiClient() {
+      return {
+        creerEntreprise: async siren => {
+          try {
+            await entrepriseApiClient.creerEntreprise(siren)
+            this.$store.dispatch('messageAdd', { value: `l'entreprise a été créée`, type: 'success' }, { root: true })
+            this.$router.push({ name: 'entreprise', params: { id: `fr-${siren}` } })
+          } catch (e) {
+            this.$store.dispatch('messageAdd', { value: `erreur lors de la création de l'entreprise`, type: 'error' }, { root: true })
+          }
+        },
+      }
     },
   },
 }

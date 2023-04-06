@@ -70,8 +70,3 @@ input InputEtablissements {
   dateDebut: String
   dateFin: String
 }
-
-input InputEntrepriseCreation {
-  paysId: String!
-  legalSiren: String!
-}

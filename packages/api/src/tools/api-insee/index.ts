@@ -1,10 +1,11 @@
 import { entrepriseEtablissementsFormat, entrepriseFormat } from './format.js'
 import { entreprisesFetch, entreprisesEtablissementsFetch } from './fetch.js'
 import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
+import { Siren } from 'camino-common/src/entreprise.js'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements
-export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: string[]) => {
+export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: Siren[]) => {
   if (!sirenIds.length) return []
 
   const entreprises = await entreprisesEtablissementsFetch(sirenIds)
@@ -22,7 +23,7 @@ export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: string[]) =
 
 // cherche les adresses des entreprises
 // retourne des objets du modèle Entreprise
-export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
+export const apiInseeEntreprisesGet = async (sirenIds: Siren[]) => {
   const entreprises = await entreprisesFetch(sirenIds)
 
   if (!entreprises || !Array.isArray(entreprises)) {
@@ -38,7 +39,7 @@ export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
   }, [])
 }
 
-export const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: string) => {
+export const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: Siren) => {
   const entreprises = await apiInseeEntreprisesGet([sirenId])
   if (!entreprises) {
     throw new Error('API Insee: erreur')

@@ -1,14 +1,12 @@
 import { Context, IEntreprise, IEntrepriseColonneId } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 
-import { entrepriseGet, entreprisesCount, entreprisesGet, entrepriseUpsert, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
+import { entrepriseGet, entreprisesCount, entreprisesGet, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
 import { entrepriseFormat } from '../../_format/entreprises.js'
-import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index.js'
-import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs.js'
 
 const entreprise = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -132,42 +130,4 @@ const entreprises = async (
   }
 }
 
-const entrepriseCreer = async ({ entreprise }: { entreprise: { legalSiren: string; paysId: string } }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!canCreateEntreprise(user)) throw new Error('droits insuffisants')
-
-    const errors = []
-
-    if (entreprise.paysId !== 'fr') {
-      errors.push('impossible de créer une entreprise étrangère')
-    }
-
-    const fields = fieldsBuild(info)
-
-    const entrepriseOld = await entrepriseGet(`${entreprise.paysId}-${entreprise.legalSiren}`, { fields }, user)
-
-    if (entrepriseOld) {
-      errors.push(`l'entreprise ${entrepriseOld.nom} existe déjà dans Camino`)
-    }
-
-    if (errors.length) {
-      throw new Error(errors.join(', '))
-    }
-
-    const entrepriseInsee = await apiInseeEntrepriseAndEtablissementsGet(entreprise.legalSiren!)
-
-    if (!entrepriseInsee) {
-      throw new Error('numéro de siren non reconnu dans la base Insee')
-    }
-
-    const entrepriseNew = await entrepriseUpsert(entrepriseInsee)
-
-    return entrepriseNew
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export { entreprise, entreprises, entrepriseCreer, entreprisesTitresCreation }
+export { entreprise, entreprises, entreprisesTitresCreation }

@@ -1,4 +1,4 @@
-import { entreprise, entrepriseCreer } from '../api/entreprises'
+import { entreprise } from '../api/entreprises'
 
 import router from '../router'
 
@@ -25,24 +25,6 @@ const actions = {
       dispatch('apiError', e, { root: true })
     } finally {
       commit('loadingRemove', 'entrepriseGet', { root: true })
-    }
-  },
-
-  async add({ commit, dispatch }, entreprise) {
-    commit('popupMessagesRemove', null, { root: true })
-    commit('popupLoad', null, { root: true })
-    commit('loadingAdd', 'entrepriseAdd', { root: true })
-    try {
-      const data = await entrepriseCreer({ entreprise })
-
-      commit('popupClose', null, { root: true })
-
-      router.push({ name: 'entreprise', params: { id: data.id } })
-      dispatch('messageAdd', { value: `l'entreprise a été créée`, type: 'success' }, { root: true })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'entrepriseAdd', { root: true })
     }
   },
 }

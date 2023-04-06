@@ -6,6 +6,7 @@ import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiS
 
 import errorLog from '../error-log.js'
 import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date.js'
+import { Siren } from 'camino-common/src/entreprise.js'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20
@@ -140,7 +141,7 @@ const typeMultiFetch = async (type: 'siren' | 'siret', field: 'etablissements' |
   }
 }
 
-const batchesBuild = (ids: string[]) => {
+const batchesBuild = (ids: Siren[]) => {
   if (ids.length <= MAX_RESULTS) return [ids]
 
   const count = Math.ceil(ids.length / MAX_RESULTS)
@@ -148,10 +149,10 @@ const batchesBuild = (ids: string[]) => {
   return [...new Array(count)].map((e, i) => ids.slice(i * MAX_RESULTS, (i + 1) * MAX_RESULTS))
 }
 
-export const entreprisesEtablissementsFetch = async (ids: string[]) => {
+export const entreprisesEtablissementsFetch = async (ids: Siren[]) => {
   const batches = batchesBuild(ids)
 
-  const queryFormat = (idsBatch: string[]) => idsBatch.map(batch => `siren:${batch}`).join(' OR ')
+  const queryFormat = (idsBatch: Siren[]) => idsBatch.map(batch => `siren:${batch}`).join(' OR ')
 
   const results = []
   for (const batch of batches) {
@@ -164,10 +165,10 @@ export const entreprisesEtablissementsFetch = async (ids: string[]) => {
   return results
 }
 
-export const entreprisesFetch = async (ids: string[]) => {
+export const entreprisesFetch = async (ids: Siren[]) => {
   const batches = batchesBuild(ids)
 
-  const queryFormat = (idsBatch: string[]) => {
+  const queryFormat = (idsBatch: Siren[]) => {
     const ids = idsBatch.map(batch => `siren:${batch}`).join(' OR ')
 
     return `(${ids}) AND etablissementSiege:true`

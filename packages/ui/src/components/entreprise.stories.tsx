@@ -16,6 +16,7 @@ type Item = { id: string; titre: string }
 
 const getFiscaliteEntrepriseAction = action('getFiscaliteEntreprise')
 const modifierEntrepriseAction = action('modifierEntreprise')
+const creerEntrepriseAction = action('creerEntreprise')
 
 const items: Item[] = [
   { id: 'id1', titre: 'titreItem1' },
@@ -53,6 +54,10 @@ const apiClient: EntrepriseApiClient = {
   },
   modifierEntreprise: entreprise => {
     modifierEntrepriseAction(entreprise)
+    return Promise.resolve()
+  },
+  creerEntreprise: siren => {
+    creerEntrepriseAction(siren)
     return Promise.resolve()
   },
 }
