@@ -4,6 +4,12 @@ import { CaminoDate } from './date.js'
 export const eidValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof eidValidator>
 
+export const sirenValidator = z
+  .string()
+  .regex(/^[0-9]{9}$/)
+  .brand('Siren')
+export type Siren = z.infer<typeof sirenValidator>
+
 export const entrepriseModificationValidator = z.object({
   id: eidValidator,
   url: z.string().optional(),

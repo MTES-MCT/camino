@@ -22,10 +22,11 @@ import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
-import { eidValidator, entrepriseModificationValidator } from 'camino-common/src/entreprise.js'
+import { eidValidator, entrepriseModificationValidator, sirenValidator } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
-import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
+import { canCreateEntreprise, canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 import { emailCheck } from '../../tools/email-check.js'
+import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -311,6 +312,42 @@ export const modifierEntreprise = async (req: JWTRequest<User>, res: CustomRespo
     } catch (e) {
       console.error(e)
       res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
+export const creerEntreprise = async (req: JWTRequest<User>, res: CustomResponse<void>) => {
+  const user = req.auth
+  const siren = sirenValidator.safeParse(req.body.siren)
+  if (!user) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!siren.success) {
+    console.warn(`siren '${req.body.siren}' invalide`)
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    if (!canCreateEntreprise(user)) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      try {
+        const entrepriseOld = await entrepriseGet(`fr-${siren.data}`, { fields: { id: {} } }, user)
+
+        if (entrepriseOld) {
+          console.warn(`l'entreprise ${entrepriseOld.nom} existe déjà dans Camino`)
+          res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+        } else {
+          const entrepriseInsee = await apiInseeEntrepriseAndEtablissementsGet(siren.data)
+
+          if (!entrepriseInsee) {
+            res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+          } else {
+            await entrepriseUpsert(entrepriseInsee)
+            res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+          }
+        }
+      } catch (e) {
+        console.error(e)
+        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      }
     }
   }
 }

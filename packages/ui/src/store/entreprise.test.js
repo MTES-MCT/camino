@@ -11,7 +11,6 @@ vi.mock('../router', () => ({
 
 vi.mock('../api/entreprises', () => ({
   entreprise: vi.fn(),
-  entrepriseCreer: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -85,42 +84,5 @@ describe("état de l'entreprise sélectionnée", () => {
     store.commit('entreprise/reset')
 
     expect(store.state.entreprise.element).toBeNull()
-  })
-
-  test('ajoute une entreprise', async () => {
-    const apiMock = api.entrepriseCreer.mockResolvedValue({
-      id: 71,
-      nom: 'toto',
-    })
-
-    await store.dispatch('entreprise/add', {
-      legalSiren: '123456789',
-      paysId: 'fr',
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entreprise: {
-        legalSiren: '123456789',
-        paysId: 'fr',
-      },
-    })
-    expect(mutations.popupClose).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de l'ajout d'une entreprise", async () => {
-    const apiMock = api.entrepriseCreer.mockRejectedValue(new Error('erreur api'))
-    await store.dispatch('entreprise/add', {
-      legalSiren: '123456789',
-      paysId: 'fr',
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entreprise: {
-        legalSiren: '123456789',
-        paysId: 'fr',
-      },
-    })
-
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
   })
 })

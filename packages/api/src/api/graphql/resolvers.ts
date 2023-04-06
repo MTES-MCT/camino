@@ -45,7 +45,7 @@ import {
 
 import { substances } from './resolvers/substances.js'
 
-import { entreprise, entreprises, entrepriseCreer, entreprisesTitresCreation } from './resolvers/entreprises.js'
+import { entreprise, entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
 import {
   administration,
   administrations,
@@ -135,7 +135,6 @@ export default {
   activiteSupprimer,
   activiteDeposer,
   newsletterInscrire,
-  entrepriseCreer,
   entreprisesTitresCreation,
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,

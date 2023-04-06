@@ -29,16 +29,6 @@ export const entreprises = apiGraphQLFetch(gql`
   ${fragmentEntreprises}
 `)
 
-export const entrepriseCreer = apiGraphQLFetch(gql`
-  mutation EntrepriseCreer($entreprise: InputEntrepriseCreation!) {
-    entrepriseCreer(entreprise: $entreprise) {
-      ...entreprise
-    }
-  }
-
-  ${fragmentEntreprise}
-`)
-
 export const entreprisesTitresCreation = apiGraphQLFetch(
   gql`
     query EntreprisesTitresCreation {

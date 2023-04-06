@@ -1,8 +1,6 @@
 import { ITitreEtapeJustificatif } from '../../types.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
-import { entreprisesEtablissementsFetch, entreprisesFetch, tokenInitialize } from '../../tools/api-insee/fetch.js'
-import { entreprise, entrepriseAndEtablissements } from '../../../tests/__mocks__/fetch-insee-api.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { documentCreate } from '../../database/queries/documents.js'
@@ -15,16 +13,6 @@ import { beforeAll, afterEach, afterAll, test, expect, describe, vi } from 'vite
 console.info = vi.fn()
 console.error = vi.fn()
 
-vi.mock('../../tools/api-insee/fetch', () => ({
-  __esModule: true,
-  tokenInitialize: vi.fn(),
-  entreprisesFetch: vi.fn(),
-  entreprisesEtablissementsFetch: vi.fn(),
-}))
-
-const tokenInitializeMock = vi.mocked(tokenInitialize, true)
-const entrepriseFetchMock = vi.mocked(entreprisesFetch, true)
-const entreprisesEtablissementsFetchMock = vi.mocked(entreprisesEtablissementsFetch, true)
 beforeAll(async () => {
   await dbManager.populateDb()
 })
@@ -35,78 +23,6 @@ afterEach(async () => {
 
 afterAll(async () => {
   await dbManager.closeKnex()
-})
-
-describe('entrepriseCreer', () => {
-  const entrepriseCreerQuery = queryImport('entreprise-creer')
-
-  test('ne peut pas créer une entreprise (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(
-      entrepriseCreerQuery,
-      {
-        entreprise: { legalSiren: 'test', paysId: 'fr' },
-      },
-      undefined
-    )
-
-    expect(res.body.errors[0].message).toBe('droits insuffisants')
-  })
-
-  test("peut créer une entreprise (un utilisateur 'super')", async () => {
-    tokenInitializeMock.mockResolvedValue('token')
-    entrepriseFetchMock.mockResolvedValue([entreprise])
-    entreprisesEtablissementsFetchMock.mockResolvedValue([entrepriseAndEtablissements])
-
-    const res = await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: '729800706', paysId: 'fr' } }, { role: 'super' })
-
-    expect(res.body).toMatchObject({
-      data: {
-        entrepriseCreer: {
-          legalSiren: '729800706',
-        },
-      },
-    })
-    expect(res.body.errors).toBeUndefined()
-  })
-
-  test("ne peut pas créer une entreprise déjà existante (un utilisateur 'super')", async () => {
-    await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: '729800706', paysId: 'fr' } }, { role: 'super' })
-
-    const res = await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: '729800706', paysId: 'fr' } }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe("l'entreprise PLACOPLATRE existe déjà dans Camino")
-  })
-
-  test("ne peut pas créer une entreprise avec un siren invalide (un utilisateur 'super')", async () => {
-    tokenInitializeMock.mockResolvedValue('token')
-    entrepriseFetchMock.mockResolvedValue([])
-
-    const res = await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: 'invalid', paysId: 'fr' } }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe('numéro de siren non reconnu dans la base Insee')
-  })
-
-  test("ne peut pas créer une entreprise étrangère (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: '729800706', paysId: 'en' } }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe('impossible de créer une entreprise étrangère')
-  })
-
-  test('n’est pas archivée à la création par défaut (utilisateur super)', async () => {
-    tokenInitializeMock.mockResolvedValue('token')
-    entrepriseFetchMock.mockResolvedValue([entreprise])
-    entreprisesEtablissementsFetchMock.mockResolvedValue([entrepriseAndEtablissements])
-
-    const res = await graphQLCall(entrepriseCreerQuery, { entreprise: { legalSiren: '729800706', paysId: 'fr' } }, { role: 'super' })
-
-    expect(res.body).toMatchObject({
-      data: {
-        entrepriseCreer: {
-          archive: false,
-        },
-      },
-    })
-  })
 })
 
 describe('entreprise', () => {

@@ -258,9 +258,6 @@ type Mutation {
   "Supprime une activité"
   activiteSupprimer(id: ID!): Activite
 
-  "Crée une entreprise"
-  entrepriseCreer(entreprise: InputEntrepriseCreation!): Entreprise
-
   administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
   administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
