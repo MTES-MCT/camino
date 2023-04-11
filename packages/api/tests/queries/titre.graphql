@@ -63,10 +63,7 @@ fragment activite on Activite {
 fragment demarche on Demarche {
   id
   ordre
-  type {
-    id
-    nom
-  }
+  typeId
   statutId
   demarcheDateDebut
   demarcheDateFin

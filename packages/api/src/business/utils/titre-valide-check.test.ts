@@ -3,13 +3,12 @@ import { titreValideCheck } from './titre-valide-check.js'
 import { describe, test, expect } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-
-
-const titreDemarches:  Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
+const titreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
   { typeId: 'oct' },
   {
     demarcheDateDebut: toCaminoDate('2014-11-02'),
-    demarcheDateFin: toCaminoDate( '2019-11-02'), typeId: 'oct'
+    demarcheDateFin: toCaminoDate('2019-11-02'),
+    typeId: 'oct',
   },
 ]
 
@@ -39,23 +38,22 @@ describe("vérifie la validité d'un titre pendant une période en fonction des 
   })
 
   test('retourne vrai si le titre est en modification en instance au moment de la date de début', () => {
-    const newTitreDemarches:  Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
+    const newTitreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
       { typeId: 'oct' },
       {
-        demarcheDateDebut: toCaminoDate('2014-11-02'), 
-        typeId: 'oct'
+        demarcheDateDebut: toCaminoDate('2014-11-02'),
+        typeId: 'oct',
       },
     ]
     expect(titreValideCheck(newTitreDemarches, toCaminoDate('2020-01-01'), toCaminoDate('2020-12-31'))).toEqual(true)
   })
 
   test("retourne faux si le titre n'est pas en modification en instance au moment de la date de début", () => {
-
-    const newTitreDemarches:  Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
+    const newTitreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[] = [
       {
-        demarcheDateDebut: toCaminoDate('2014-11-02'), 
-        demarcheDateFin: toCaminoDate('2019-11-02'), 
-        typeId: 'oct'
+        demarcheDateDebut: toCaminoDate('2014-11-02'),
+        demarcheDateFin: toCaminoDate('2019-11-02'),
+        typeId: 'oct',
       },
     ]
     expect(titreValideCheck(newTitreDemarches, toCaminoDate('2020-01-01'), toCaminoDate('2020-12-31'))).toEqual(false)

@@ -100,7 +100,13 @@ const titreDemarcheContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId
 // - ou le titre a le statut modification en instance
 //   - et la démarche est une prolongation ou une demande de titre
 //   - et la démarche n'a aucune phase valide
-const demarcheEligibleCheck = (date: CaminoDate, titreDemarcheStatutId: DemarcheStatutId, titreDemarcheTypeId: DemarcheTypeId, titreStatutId: TitreStatutId, titreDemarches: { demarcheDateDebut?: CaminoDate | null; demarcheDateFin?: CaminoDate | null }[]) =>
+const demarcheEligibleCheck = (
+  date: CaminoDate,
+  titreDemarcheStatutId: DemarcheStatutId,
+  titreDemarcheTypeId: DemarcheTypeId,
+  titreStatutId: TitreStatutId,
+  titreDemarches: { demarcheDateDebut?: CaminoDate | null; demarcheDateFin?: CaminoDate | null }[]
+) =>
   [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(titreDemarcheStatutId) ||
   isDemarcheTypeOctroi(titreDemarcheTypeId) ||
   (titreStatutId === TitresStatutIds.ModificationEnInstance &&
@@ -117,7 +123,12 @@ const demarcheEligibleCheck = (date: CaminoDate, titreDemarcheStatutId: Demarche
  * @returns id d'une etape
  */
 
-export const titrePropTitreEtapeFind = (date: CaminoDate, propId: IPropId, titreDemarches: Pick<ITitreDemarche, 'ordre' | 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'etapes' | 'id'>[], titreStatutId: TitreStatutId): ITitreEtape | null => {
+export const titrePropTitreEtapeFind = (
+  date: CaminoDate,
+  propId: IPropId,
+  titreDemarches: Pick<ITitreDemarche, 'ordre' | 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'etapes' | 'id'>[],
+  titreStatutId: TitreStatutId
+): ITitreEtape | null => {
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche) => {

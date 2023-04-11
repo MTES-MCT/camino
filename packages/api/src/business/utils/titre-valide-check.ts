@@ -29,6 +29,5 @@ export const titreValideCheck = (titreDemarches: Pick<ITitreDemarche, 'typeId' |
     return true
   }
 
-
   return false
 }
