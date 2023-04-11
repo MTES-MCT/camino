@@ -44,7 +44,7 @@ describe("construction des activités d'un titre", () => {
     const titreActivitesB = titreActivitesBuild(activiteTypeGrp, [2018], aujourdhui, 'titre-id', 'pxm', [
       {
         id: 'demarche-id',
-        demarcheDateDebut: '2018-01-01', 
+        demarcheDateDebut: '2018-01-01',
         demarcheDateFin: '2018-12-31',
         type: {},
       } as ITitreDemarche,

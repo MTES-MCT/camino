@@ -88,7 +88,7 @@ export const logsUpdate = ({
   if (titresDemarchesDatesUpdated?.length) {
     console.info(`mise à jour: ${titresDemarchesDatesUpdated.length} titre(s) (phases mises à jour)`)
   }
-  
+
   if (titresDatesUpdated?.length) {
     console.info(`mise à jour: ${titresDatesUpdated.length} titre(s) (propriétés-dates)`)
   }

@@ -6,7 +6,6 @@ import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-
 import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date.js'
-import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
@@ -57,8 +56,8 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
   return dateDebut
 }
 
-type Phase = { dateDebut: CaminoDate, dateFin: CaminoDate | null}
-type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId, dateDeFinParDefaut?: true }
+type Phase = { dateDebut: CaminoDate; dateFin: CaminoDate | null }
+type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId; dateDeFinParDefaut?: true }
 export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreTypeId: TitreTypeId): Record<DemarcheId, Phase> => {
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
     return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
@@ -154,7 +153,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
       p.dateFin = titreDemarcheAnnulationDate
     }
 
-    acc[p.demarcheId] = {dateDebut: p.dateDebut, dateFin: p.dateFin}
+    acc[p.demarcheId] = { dateDebut: p.dateDebut, dateFin: p.dateFin }
 
     return acc
   }, {})

@@ -95,10 +95,7 @@ const writePhasesForTest = async () => {
   const result: TitrePhasesTest[] = Object.keys(titres).map(titreId => {
     const titre = titres[titreId]
 
-    return [
-      titre.titreTypeId,
-      titre.demarches.sort((a, b) => (a.ordre ?? Infinity) - (b.ordre ?? Infinity)),
-    ]
+    return [titre.titreTypeId, titre.demarches.sort((a, b) => (a.ordre ?? Infinity) - (b.ordre ?? Infinity))]
   })
 
   writeFileSync(`src/business/rules/titre-phases-find.cas.json`, JSON.stringify(result))

@@ -3,7 +3,6 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
-const titreDemarcheId = newDemarcheId('unused')
 describe("statut d'un titre", () => {
   const aujourdhui = toCaminoDate('2020-12-01')
 
@@ -64,8 +63,8 @@ describe("statut d'un titre", () => {
   test("le statut d'un titre avec une démarche en instruction est “mod”", () => {
     expect(
       titreStatutIdFind(aujourdhui, [
-        { typeId: 'mut', statutId: 'ins',         demarcheDateDebut: toCaminoDate('1014-04-01'),        demarcheDateFin: null },
-        { typeId: 'oct', statutId: 'acc',         demarcheDateDebut: toCaminoDate('1014-04-01'),        demarcheDateFin: toCaminoDate('2014-04-01')         },
+        { typeId: 'mut', statutId: 'ins', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: null },
+        { typeId: 'oct', statutId: 'acc', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2014-04-01') },
       ])
     ).toEqual('mod')
   })
@@ -100,12 +99,14 @@ describe("statut d'un titre", () => {
       {
         typeId: 'pr1',
         statutId: 'acc',
-        demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2020-10-01'),
+        demarcheDateDebut: toCaminoDate('2020-01-01'),
+        demarcheDateFin: toCaminoDate('2020-10-01'),
       },
       {
         typeId: 'oct',
         statutId: 'acc',
-        demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2020-04-01'),
+        demarcheDateDebut: toCaminoDate('1014-04-01'),
+        demarcheDateFin: toCaminoDate('2020-04-01'),
       },
     ]
     expect(titreStatutIdFind(aujourdhui, demarches)).toEqual('mod')
@@ -115,9 +116,9 @@ describe("statut d'un titre", () => {
   test('un titre est en modification en instance si une prolongation est créée après une prolongation qui est toujours valide', () => {
     expect(
       titreInSurvieProvisoire([
-        {demarcheDateDebut: toCaminoDate('2020-06-01'), demarcheDateFin: null  },
-        {demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2020-10-01')  },
-        {demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2020-04-01')  },
+        { demarcheDateDebut: toCaminoDate('2020-06-01'), demarcheDateFin: null },
+        { demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2020-10-01') },
+        { demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2020-04-01') },
       ])
     ).toEqual(true)
   })

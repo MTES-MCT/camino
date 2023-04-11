@@ -210,8 +210,8 @@ const titreDemarches = [
     statutId: 'acc',
     typeId: 'oct',
     type: { id: 'oct' },
-    demarcheDateDebut: '2018-01-01', 
-    demarcheDateFin: '2018-12-31' ,
+    demarcheDateDebut: '2018-01-01',
+    demarcheDateFin: '2018-12-31',
     etapes: [
       {
         id: 'etape-id',

@@ -21,16 +21,17 @@ export const phaseStatuts: { [key in PhaseStatutId]: Definition<key> } = {
 
 export const phasesStatuts = Object.values(phaseStatuts)
 
-export const isDemarchePhaseValide = (date: CaminoDate, demarche?: {demarcheDateDebut?:CaminoDate | null, demarcheDateFin?: CaminoDate | null} | null): boolean => getPhaseStatutId(date, demarche) === PHASES_STATUTS_IDS.Valide
+export const isDemarchePhaseValide = (date: CaminoDate, demarche?: { demarcheDateDebut?: CaminoDate | null; demarcheDateFin?: CaminoDate | null } | null): boolean =>
+  getPhaseStatutId(date, demarche) === PHASES_STATUTS_IDS.Valide
 
-export const getPhaseStatutId = (date: CaminoDate, demarche?: {demarcheDateDebut?:CaminoDate | null, demarcheDateFin?: CaminoDate | null} | null): PhaseStatutId | null => {
-  if(!demarche?.demarcheDateDebut){
+export const getPhaseStatutId = (date: CaminoDate, demarche?: { demarcheDateDebut?: CaminoDate | null; demarcheDateFin?: CaminoDate | null } | null): PhaseStatutId | null => {
+  if (!demarche?.demarcheDateDebut) {
     return null
   }
 
-  if( demarche.demarcheDateFin && date > demarche.demarcheDateFin ){
+  if (demarche.demarcheDateFin && date > demarche.demarcheDateFin) {
     return PHASES_STATUTS_IDS.Echu
-  }else{
+  } else {
     return PHASES_STATUTS_IDS.Valide
   }
 }

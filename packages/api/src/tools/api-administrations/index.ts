@@ -27,7 +27,7 @@ interface IOrganisme {
   }[]
 }
 
-const organismeFetch = async (departementId: string, nom: string) => {
+const organismeFetch = async (departementId: string, nom: 'paris_ppp' | 'prefecture') => {
   if (!API_ADMINISTRATION_URL) {
     throw new Error("impossible de se connecter à l'API administration car la variable d'environnement est absente")
   }
@@ -54,7 +54,7 @@ const organismeFetch = async (departementId: string, nom: string) => {
   return result
 }
 
-const organismeDepartementCall = async (departementId: string, nom: string) => {
+const organismeDepartementCall = async (departementId: string, nom: 'paris_ppp' | 'prefecture') => {
   try {
     return await organismeFetch(departementId, nom)
   } catch (err: any) {
@@ -110,13 +110,13 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
   return organisme
 }
 
-const organismeDepartementGet = async (departementId: DepartementId, nom: string) => {
+const organismeDepartementGet = async (departementId: DepartementId, nom: 'paris_ppp' | 'prefecture') => {
   const organisme = await organismeDepartementCall(departementId, nom)
 
   return organisme ? organismeFormat(organisme, departementId) : null
 }
 
-export const organismesDepartementsGet = async (departementsIdsNoms: { departementId: DepartementId; nom: string }[]): Promise<Administration[]> => {
+export const organismesDepartementsGet = async (departementsIdsNoms: { departementId: DepartementId; nom: 'paris_ppp' | 'prefecture' }[]): Promise<Administration[]> => {
   const organismesDepartements = []
   for (const { departementId, nom } of departementsIdsNoms) {
     organismesDepartements.push(await organismeDepartementGet(departementId, nom))

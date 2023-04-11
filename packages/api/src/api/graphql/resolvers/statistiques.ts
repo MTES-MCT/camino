@@ -12,7 +12,7 @@ import { Administrations } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import { getAnnee, toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
+import { getAnnee, toCaminoDate } from 'camino-common/src/date.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -124,7 +124,7 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
 
 export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
   return titres
-    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`), titre.typeId))
+    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`)))
     .reduce(
       (acc: { quantite: number; surface: number }, concession) => {
         acc.quantite++

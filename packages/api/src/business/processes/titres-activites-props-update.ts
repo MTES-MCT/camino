@@ -30,7 +30,7 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     return titre.activites.reduce((acc, titreActivite) => {
       const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId), 1))
 
-      const titreIsValide = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date, titre.typeId, true)
+      const titreIsValide = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date)
 
       if (titreIsValide && titreActivite.suppression) {
         titreActivite.suppression = null

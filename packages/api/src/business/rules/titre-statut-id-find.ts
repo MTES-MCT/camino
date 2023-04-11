@@ -30,9 +30,7 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
     }
   }
 
-  if (
-    demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin)
-  ) {
+  if (demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin)) {
     return TitresStatutIds.Valide
   }
 
@@ -44,7 +42,5 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
 }
 
 export const titreInSurvieProvisoire = (demarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin'>[] | null | undefined): boolean => {
-  return (
-    demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && !demarcheDateFin) ?? false
-  )
+  return demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && !demarcheDateFin) ?? false
 }

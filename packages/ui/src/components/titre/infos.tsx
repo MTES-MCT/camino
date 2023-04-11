@@ -99,9 +99,11 @@ const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiCl
 })
 
 export const Infos = ({ titre, user, apiClient, getCurrentDay }: Props): JSX.Element => {
-  const phases: (Demarche & {phaseStatutId: PhaseStatutId})[] = titre.demarches.filter(d => d.demarcheDateDebut).map(d => {
-    return {...d, phaseStatutId: getPhaseStatutId(getCurrentDay, d)}
-  })
+  const phases: (Demarche & { phaseStatutId: PhaseStatutId })[] = titre.demarches
+    .filter(d => d.demarcheDateDebut)
+    .map(d => {
+      return { ...d, phaseStatutId: getPhaseStatutId(getCurrentDay, d) }
+    })
 
   const titreStatut = TitresStatuts[titre.titreStatutId]
 

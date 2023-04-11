@@ -29,8 +29,7 @@ type Demarche {
   """
   slug: String
 
-  "Type de la démarche composé de trois lettres"
-  type: DemarcheType!
+  typeId: String
 
   "Ordre chronologique de la démarche"
   ordre: Int!

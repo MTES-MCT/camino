@@ -2,7 +2,6 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { ITitreDemarche } from '../../types.js'
 
 import { titreValideCheck } from './titre-valide-check.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * Vérifie si une activité doit exister
@@ -12,10 +11,9 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
  * @param annee - année
  * @param months - nombre de mois dans la période (ex: 3 pour un trimestre)
  * @param titreDemarches - démarches du titre
- * @param titreTypeId - id du type de titre
  */
 
-export const titreActiviteValideCheck = (date: CaminoDate, aujourdhui: CaminoDate, periodeId: number, annee: number, months: number, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
+export const titreActiviteValideCheck = (date: CaminoDate, aujourdhui: CaminoDate, periodeId: number, annee: number, months: number, titreDemarches: ITitreDemarche[]) => {
   // si la date de fin de l'activité n'est pas passée
   // on ne crée pas l'activité
   if (date > aujourdhui) return false
@@ -25,5 +23,5 @@ export const titreActiviteValideCheck = (date: CaminoDate, aujourdhui: CaminoDat
 
   // le titre n'est pas valide pour cette période
   // on ne crée pas l'activité
-  return titreValideCheck(titreDemarches, dateDebut, date, titreTypeId, true)
+  return titreValideCheck(titreDemarches, dateDebut, date)
 }
