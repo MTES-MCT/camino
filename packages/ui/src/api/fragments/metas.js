@@ -35,23 +35,6 @@ const fragmentTitreType = gql`
   ${fragmentTitreTypeType}
 `
 
-const fragmentDemarcheType = gql`
-  fragment demarcheType on DemarcheType {
-    id
-    nom
-    description
-    ordre
-    duree
-    points
-    substances
-    titulaires
-    exception
-    renouvelable
-    titreTypeId
-    travaux
-  }
-`
-
 const fragmentDocumentType = gql`
   fragment documentType on DocumentType {
     id
@@ -132,7 +115,6 @@ export {
   fragmentTitreTypeType,
   fragmentTitreStatut,
   fragmentEtapeType,
-  fragmentDemarcheType,
   fragmentTitreType,
   fragmentDocumentType,
   fragmentTitreTypeDemarcheTypeEtapeType,

@@ -3,6 +3,7 @@ import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
+import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 
 type ITitreDemarchePatch = {
   publicLecture: boolean
@@ -19,7 +20,6 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: {
-          type: { etapesTypes: { id: {} } },
           etapes: { id: {} },
         },
       },
@@ -36,7 +36,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
     for (const titreDemarche of titre.demarches!) {
       const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 
-      const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes!.filter(et => et.titreTypeId === titre.typeId)
+      const demarcheTypeEtapesTypes = getEtapesTDE(titre.typeId, titreDemarche.typeId)
 
       const { publicLecture, entreprisesLecture } = titreDemarchePublicFind(titreDemarche.typeId, demarcheTypeEtapesTypes, titreDemarcheEtapes, titre.id, titre.demarches, titre.typeId)
 
@@ -53,7 +53,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
       if (Object.keys(patch).length) {
         await titreDemarcheUpdate(titreDemarche.id, patch)
 
-        console.info('titre / démarche : publique (mise à jour) ->', `${titreDemarche.id}: ${JSON.stringify(patch)}`)
+        console.info('titre / démarche : publique (mise à jour) ->', `${titre.id}: ${JSON.stringify(patch)}`)
 
         titresDemarchesUpdated.push(titreDemarche.id)
       }

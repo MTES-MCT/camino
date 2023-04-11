@@ -2,6 +2,7 @@ import { titre, titreCreer } from '../api/titres'
 
 import router from '../router'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 const state = {
   element: null,
@@ -45,11 +46,11 @@ const getters = {
   },
 
   demarches(state) {
-    return state.element?.demarches?.filter(d => !d.type.travaux) || []
+    return state.element?.demarches?.filter(d => !DemarchesTypes[d.typeId].travaux) || []
   },
 
   travaux(state) {
-    return state.element?.demarches?.filter(d => d.type.travaux) || []
+    return state.element?.demarches?.filter(d => DemarchesTypes[d.typeId].travaux) || []
   },
 }
 

@@ -40,7 +40,7 @@ const apiClient: Props['apiClient'] = {
 
 export const Default: Story = () => (
   <Infos
-    getCurrentDay={() => toCaminoDate('2023-04-06')}
+    currentDay={toCaminoDate('2023-04-06')}
     titre={{
       id: 'fakeId',
       typeId: 'arm',
@@ -93,7 +93,7 @@ export const Default: Story = () => (
 
 export const Empty: Story = () => (
   <Infos
-    getCurrentDay={() => toCaminoDate('2023-04-06')}
+    currentDay={toCaminoDate('2023-04-06')}
     titre={{
       id: 'fakeId',
       typeId: 'arm',

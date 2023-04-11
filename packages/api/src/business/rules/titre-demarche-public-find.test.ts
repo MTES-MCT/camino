@@ -76,7 +76,7 @@ describe("publicité d'une démarche", () => {
   })
 
   test("une démarche pouvant faire l'objet d'une mise en concurrence dont l'étape la plus récente est recevabilité n'est pas publique", () => {
-    expect(titreDemarchePublicFind('oct', [{ id: 'anf', nom: 'anf', ordre: 1 }], etapesBuild([{ typeId: 'mcr' }]), 'titreId', [])).toMatchObject({ publicLecture: false })
+    expect(titreDemarchePublicFind('oct', ['anf'], etapesBuild([{ typeId: 'mcr' }]), 'titreId', [])).toMatchObject({ publicLecture: false })
   })
 
   test("une démarche dont l'étape la plus récente est mise en concurrence au JORF est publique", () => {

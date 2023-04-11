@@ -146,7 +146,7 @@ describe('état du titre sélectionné', () => {
 
   test('la tab des travaux est visible si il existe au moins un travaux', () => {
     store.state.titre.element = {
-      demarches: [{ type: { travaux: true } }],
+      demarches: [{ typeId: 'aom' }],
     }
     expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }, { id: 'travaux' }])
   })

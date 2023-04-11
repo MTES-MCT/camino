@@ -22,7 +22,8 @@ import { onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section } from 'camino-common/src/titres'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, getCurrent } from 'camino-common/src/date'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Entreprise {
   id: string
@@ -39,7 +40,7 @@ interface Demarche {
 }
 
 export interface Props {
-  getCurrentDay: () => CaminoDate
+  currentDay?: CaminoDate
   titre: {
     id: string
     typeId: TitreTypeId
@@ -98,12 +99,16 @@ const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiCl
   return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
 })
 
-export const Infos = ({ titre, user, apiClient, getCurrentDay }: Props): JSX.Element => {
+export const Infos = ({ titre, user, apiClient, currentDay }: Props): JSX.Element => {
   const phases: (Demarche & { phaseStatutId: PhaseStatutId })[] = titre.demarches
-    .filter(d => d.demarcheDateDebut)
     .map(d => {
-      return { ...d, phaseStatutId: getPhaseStatutId(getCurrentDay, d) }
+      const status = getPhaseStatutId(currentDay ?? getCurrent(), d)
+      if (status) {
+        return { ...d, phaseStatutId: status }
+      }
+      return null
     })
+    .filter(isNotNullNorUndefined)
 
   const titreStatut = TitresStatuts[titre.titreStatutId]
 

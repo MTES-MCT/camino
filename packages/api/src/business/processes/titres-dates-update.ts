@@ -29,7 +29,7 @@ export const titresDatesUpdate = async (titresIds?: string[]) => {
       patch.dateDebut = dateDebut
     }
 
-    const dateFin = sortedDemarches.reverse().find(demarche => demarche.demarcheDateFin)?.demarcheDateFin ?? null
+    const dateFin = sortedDemarches.reverse().find(demarche => demarche.demarcheDateDebut)?.demarcheDateFin ?? null
 
     if ((titre.dateFin || dateFin) && titre.dateFin !== dateFin) {
       patch.dateFin = dateFin

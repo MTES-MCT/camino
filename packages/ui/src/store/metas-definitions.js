@@ -1,5 +1,4 @@
 import {
-  demarchesTypes,
   etapesTypes,
   documentsTypes,
   titresTypes,
@@ -18,6 +17,7 @@ import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -82,7 +82,7 @@ const metasIndex = {
     ids: ['titreTypeId', 'titreStatutId'],
   },
   'demarches-types': {
-    get: demarchesTypes,
+    get: () => sortedDemarchesTypes,
     labelGet,
     nom: 'Types des démarches',
     colonnes: [

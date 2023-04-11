@@ -13138,7 +13138,7 @@ exports[`Storybook Tests > 'Components/Titre/Infos' > 'Default' 1`] = `
             <th>Fin</th>
           </tr>
           <tr>
-            <td class=\\"max-width-1\\"><span class=\\"bg-success pill dot mr-xs mt-xs\\"></span></td>
+            <td class=\\"max-width-1\\"><span class=\\"bg-neutral pill dot mr-xs mt-xs\\"></span></td>
             <td><span class=\\"cap-first bold h5 mb-0\\">octroi</span></td>
             <td><span class=\\"h5 mb-0\\">01-01-2020</span></td>
             <td><span class=\\"h5 mb-0\\">01-01-2022</span></td>
