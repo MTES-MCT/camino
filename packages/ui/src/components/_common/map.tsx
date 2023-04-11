@@ -1,24 +1,31 @@
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, Ref } from 'vue'
 import { CaminoMap } from '../_map/index'
 
 import { leafletMarkerBuild, leafletGeojsonBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { Icon } from '@/components/_ui/icon'
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { GeoJsonObject } from 'geojson'
-import { LatLngTuple, Marker } from 'leaflet'
+import { LatLngTuple, LayerGroup, layerGroup, Marker } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { titresGeoPolygon } from '@/api/titres'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
+import { useRouter } from 'vue-router'
 
 export interface Props {
   geojson: GeoJsonObject
   points?: { nom: string; coordonnees: { x: number; y: number } }[]
   titreTypeId: TitreTypeId
   isMain?: boolean
+  titreId?: string
 }
 
-export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain'], props => {
+export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId'], props => {
   const map = ref<typeof CaminoMap | null>(null)
   const markersVisible = ref<boolean>(true)
   const patternVisible = ref<boolean>(true)
+
+  const router = useRouter()
 
   const isMain = computed(() => props.isMain ?? false)
 
@@ -87,9 +94,39 @@ export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     centrer()
   })
 
+  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: number[] }) => {
+    const res: { elements: TitreWithPoint[] } = await titresGeoPolygon({
+      statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
+      perimetre: data.bbox,
+    })
+    titresValidesGeojson.value.splice(0)
+    titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
+  }
+
+  const titresValidesGeojson = ref<TitreWithPoint[]>([])
+  const titresValidesLayer = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
+  const additionalOverlayLayers = computed<Record<string, LayerGroup>>(() => {
+    titresValidesLayer.value.clearLayers()
+
+    const { geojsons, markers } = layersBuild(titresValidesGeojson.value, router)
+    Object.values(geojsons).forEach(g => titresValidesLayer.value.addLayer(g))
+    markers.forEach(q => q.marker.addTo(titresValidesLayer.value))
+
+    return {
+      'Titres valides': titresValidesLayer.value,
+    }
+  })
+
   return () => (
     <div class="bg-alt">
-      <CaminoMap ref={map} geojsonLayers={geojsonLayers.value} markerLayers={markerLayers.value} class="map map-detail mb-s" />
+      <CaminoMap
+        ref={map}
+        mapUpdate={mapUpdate}
+        geojsonLayers={geojsonLayers.value}
+        markerLayers={markerLayers.value}
+        additionalOverlayLayers={additionalOverlayLayers.value}
+        class="map map-detail mb-s"
+      />
       <div class={`${isMain.value ? 'container' : ''}`}>
         <div class="tablet-blobs">
           <div class={`${!isMain.value ? 'px-s' : ''} tablet-blob-1-2`}>
