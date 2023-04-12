@@ -13,7 +13,14 @@ import { titreValideCheck } from './titre-valide-check.js'
  * @param titreDemarches - démarches du titre
  */
 
-export const titreActiviteValideCheck = (date: CaminoDate, aujourdhui: CaminoDate, periodeId: number, annee: number, months: number, titreDemarches: ITitreDemarche[]) => {
+export const titreActiviteValideCheck = (
+  date: CaminoDate,
+  aujourdhui: CaminoDate,
+  periodeId: number,
+  annee: number,
+  months: number,
+  titreDemarches: Pick<ITitreDemarche, 'typeId' | 'demarcheDateDebut' | 'demarcheDateFin'>[]
+) => {
   // si la date de fin de l'activité n'est pas passée
   // on ne crée pas l'activité
   if (date > aujourdhui) return false
