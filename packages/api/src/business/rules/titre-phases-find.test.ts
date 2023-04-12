@@ -1367,6 +1367,196 @@ describe("phases d'une démarche", () => {
     `)
   })
 
+  test('un titre qui a une décision implicite rejetée sur une prolongation a une phase', () => {
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'nJ10z3Z74xi9OTh4oG6YXQBo',
+            statutId: 'acc',
+            ordre: 1,
+            typeId: 'oct',
+            id: newDemarcheId('demarcheIdOctroi'),
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 2,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2014-11-11'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2009-11-11'),
+                statutId: 'acc',
+                points: [1, 2],
+              },
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 1,
+                typeId: 'dex',
+                dateFin: toCaminoDate('2014-11-11'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2009-10-28'),
+                statutId: 'acc',
+                points: [],
+              },
+            ],
+          },
+          {
+            titreId: 'EW9cDeM6PfXS4TPznkjsNZVO',
+            statutId: 'rej',
+            ordre: 2,
+            typeId: 'pr1',
+            id: newDemarcheId('demarcheIdPr1'),
+            etapes: [
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 3, typeId: 'spp', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2014-10-10'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 1, typeId: 'mfr', dateFin: null, duree: 60, dateDebut: null, date: toCaminoDate('2014-09-18'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 4, typeId: 'dim', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2016-03-24'), statutId: 'rej', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 2, typeId: 'mdp', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2014-09-24'), statutId: 'fai', points: [] },
+            ],
+          },
+        ],
+        'pxm'
+      )
+    ).toEqual({
+      demarcheIdOctroi: {
+        dateDebut: '2009-11-11',
+        dateFin: '2014-11-11',
+      },
+      demarcheIdPr1: {
+        dateDebut: '2014-11-11',
+        dateFin: '2016-03-24',
+      },
+    })
+  })
+
+  test('un titre qui a un désistement sur une prolongation a une phase', () => {
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'o3RzmZvqZcKMNmaE3nwXdvkE',
+            statutId: 'acc',
+            ordre: 1,
+            typeId: 'oct',
+            id: newDemarcheId('demarcheIdOctroi'),
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 2,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2009-11-17'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2004-11-17'),
+                statutId: 'acc',
+                points: [1, 2],
+              },
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 1,
+                typeId: 'dex',
+                dateFin: toCaminoDate('2009-11-17'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2004-11-08'),
+                statutId: 'acc',
+                points: [],
+              },
+            ],
+          },
+          {
+            titreId: 'Mef8FKNlX0WtohaO9wGOMQZs',
+            statutId: 'des',
+            ordre: 2,
+            typeId: 'pr1',
+            id: newDemarcheId('demarcheIdPr1'),
+            etapes: [
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 1, typeId: 'mfr', dateFin: null, duree: 24, dateDebut: null, date: toCaminoDate('2009-08-14'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 6, typeId: 'app', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2011-12-05'), statutId: 'fav', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 3, typeId: 'spp', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2009-11-27'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 2, typeId: 'mdp', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2009-08-17'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 7, typeId: 'des', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2012-08-24'), statutId: 'fai', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 5, typeId: 'apo', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2011-10-06'), statutId: 'fav', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 4, typeId: 'apd', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2011-06-30'), statutId: 'fav', points: [] },
+            ],
+          },
+        ],
+        'pxm'
+      )
+    ).toEqual({
+      demarcheIdOctroi: {
+        dateDebut: toCaminoDate('2004-11-17'),
+        dateFin: toCaminoDate('2009-11-17'),
+      },
+      demarcheIdPr1: {
+        dateDebut: toCaminoDate('2009-11-17'),
+        dateFin: toCaminoDate('2012-08-24'),
+      },
+    })
+  })
+
+  test('un titre qui a une décision de l’administration rejetée sur une prolongation a une phase', () => {
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: 'nJ10z3Z74xi9OTh4oG6YXQBo',
+            statutId: 'acc',
+            ordre: 1,
+            typeId: 'oct',
+            id: newDemarcheId('demarcheIdOctroi'),
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 2,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2014-11-11'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2009-11-11'),
+                statutId: 'acc',
+                points: [1, 2],
+              },
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 1,
+                typeId: 'dex',
+                dateFin: toCaminoDate('2014-11-11'),
+                duree: 60,
+                dateDebut: null,
+                date: toCaminoDate('2009-10-28'),
+                statutId: 'acc',
+                points: [],
+              },
+            ],
+          },
+          {
+            titreId: 'EW9cDeM6PfXS4TPznkjsNZVO',
+            statutId: 'rej',
+            ordre: 2,
+            typeId: 'pr1',
+            id: newDemarcheId('demarcheIdPr1'),
+            etapes: [
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 4, typeId: 'dex', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2016-03-24'), statutId: 'rej', points: [] },
+              { titreDemarcheId: newDemarcheId('demarcheIdPr1'), ordre: 2, typeId: 'mdp', dateFin: null, duree: null, dateDebut: null, date: toCaminoDate('2014-09-24'), statutId: 'fai', points: [] },
+            ],
+          },
+        ],
+        'pxm'
+      )
+    ).toEqual({
+      demarcheIdOctroi: {
+        dateDebut: '2009-11-11',
+        dateFin: '2014-11-11',
+      },
+      demarcheIdPr1: {
+        dateDebut: '2014-11-11',
+        dateFin: '2016-03-24',
+      },
+    })
+  })
+
   test('cas réels', () => {
     const phasesReels = titresProd as TitrePhasesTest[]
     phasesReels.forEach(([titreTypeId, demarches], index) => {

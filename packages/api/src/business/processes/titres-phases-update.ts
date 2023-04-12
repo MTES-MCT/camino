@@ -35,7 +35,7 @@ export const titresDemarchesDatesUpdate = async (titresIds?: string[]) => {
 
       if (newDateDebut !== oldDateDebut || newDateFin !== oldDateFin) {
         demarchePhaseUpdated.push(demarche.id)
-        await knex.raw(`update titres_demarches where id = '${demarche.id}' set demarche_date_debut = '${newDateDebut}' and demarche_date_fin = '${newDateFin}'`)
+        await knex.raw(`update titres_demarches set demarche_date_debut = '${newDateDebut}', demarche_date_fin = '${newDateFin}' where id = '${demarche.id}'`)
         console.info(`maj des dates de la demarche ${demarche.slug} titreId: ${demarche.titreId} dateDebut: ${oldDateDebut} => ${newDateDebut}, dateFin: ${oldDateFin} => ${newDateFin}`)
       }
     }

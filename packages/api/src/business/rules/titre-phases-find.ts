@@ -165,11 +165,20 @@ export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' |
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
-  const dpuRejetee = titreEtapesSorted.find(({ typeId, statutId }) => typeId === ETAPES_TYPES.publicationDeDecisionAuJORF && statutId === ETAPES_STATUTS.REJETE)
+  const decisionRejetee = titreEtapesSorted.find(
+    ({ typeId, statutId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId) && statutId === ETAPES_STATUTS.REJETE
+  )
 
-  if (dpuRejetee) {
-    return { dateFin: dpuRejetee.date, duree: 0 }
+  if (decisionRejetee) {
+    return { dateFin: decisionRejetee.date, duree: 0 }
   }
+
+  const desistementDemandeur = titreEtapesSorted.find(({ typeId }) => ETAPES_TYPES.desistementDuDemandeur === typeId)
+
+  if (desistementDemandeur) {
+    return { dateFin: desistementDemandeur.date, duree: 0 }
+  }
+
   const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(typeId) && (dateFin || duree))
 
   if (!titreEtapeHasDateFinOrDuree) {

@@ -7,6 +7,7 @@ import { userSuper } from '../../database/user-super.js'
 import { getMonth } from 'camino-common/src/static/frequence.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
+// TODO 2023-04-12 à supprimer et à calculer lors de l’appel à l’API par un super
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('propriétés des activités de titres…')
@@ -30,15 +31,15 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     return titre.activites.reduce((acc, titreActivite) => {
       const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId), 1))
 
-      const titreIsValide = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date)
+      const isActiviteInPhase = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date)
 
-      if (titreIsValide && titreActivite.suppression) {
+      if (isActiviteInPhase && titreActivite.suppression) {
         titreActivite.suppression = null
 
         acc.push(titreActivite)
       }
 
-      if (!titreIsValide && !titreActivite.suppression) {
+      if (!isActiviteInPhase && !titreActivite.suppression) {
         titreActivite.suppression = true
 
         acc.push(titreActivite)
