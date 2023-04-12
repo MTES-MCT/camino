@@ -9,3 +9,4 @@ sources
 CHANGELOG.md
 oct.cas.json
 titre-phases-find.cas.json
+**/*.queries.types.ts
