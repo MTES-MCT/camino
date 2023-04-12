@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import '../init.js'
 import { knex } from '../knex.js'
 import fetch from 'node-fetch'
