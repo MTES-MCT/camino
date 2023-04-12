@@ -17,6 +17,7 @@
     "db:recreate": "dropdb --host=localhost --username=postgres camino && createdb --host=localhost --username=postgres camino",
     "db:migrate": "node --loader ts-node/esm/transpile-only ./src/knex/migrate.ts",
     "db:add-migration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' knex migrate:make",
+    "db:watch": "pgtyped -w -c config.json",
     "dev": "node --watch --loader ts-node/esm/transpile-only --inspect ./src/index.ts",
     "daily-debug": "node  --inspect-brk=3000 --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
     "dev:backups-archive": "tar -zcvf backups/`date +%Y%m%d_%H%M%S`-camino.tar.gz backups/files/* backups/camino.sql",
@@ -38,7 +39,6 @@
   "dependencies": {
     "@graphql-tools/graphql-file-loader": "^7.5.16",
     "@graphql-tools/load": "^7.8.13",
-    "@pgtyped/runtime": "^2.1.0",
     "@sentry/node": "^7.43.0",
     "@sentry/types": "^7.43.0",
     "@sindresorhus/slugify": "^1.1.2",
@@ -101,6 +101,7 @@
   },
   "devDependencies": {
     "@pgtyped/cli": "^2.1.0",
+    "@pgtyped/runtime": "^2.1.0",
     "@types/carbone": "^3.2.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/stream-json": "^1.7.3",
