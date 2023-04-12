@@ -2,12 +2,13 @@ import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { StatistiquesDGTM, TitreTypeIdDelai, titreTypeIdDelais } from 'camino-common/src/statistiques.js'
-import { CaminoAnnee, CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date.js'
+import { CaminoAnnee, CaminoDate, getAnnee, daysBetween, toCaminoAnnee } from 'camino-common/src/date.js'
 import { knex } from '../../../knex.js'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { getProductionOr } from './dgtm.queries.js'
+import { pool } from '../../../pg-database.js'
 
 const anneeDepartStats = 2015
 
@@ -215,18 +216,18 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
     }
   })
 
-  // On peut récupérer le nombre de producteurs d’or que à partir de l’année 2018. L’année à laquelle nous avons commencé à récolter les productions dans Camino
-  const producteursOr: { rows: { annee: CaminoAnnee; count: string }[] } = await knex.raw(`select distinct ta.annee, count ( distinct tt.entreprise_id)
-  from titres_activites ta
-      left join titres t on ta.titre_id = t.id
-      left join titres_titulaires tt  on tt.titre_etape_id = t.props_titre_etapes_ids->>'titulaires'
-  where ta.type_id in ('gra', 'grx') and (ta.contenu -> 'substancesFiscales' -> '${SUBSTANCES_FISCALES_IDS.or}')::int > 0
-  and ta.annee > 2017
-  group by ta.annee;`)
+  const producteursOr = await getProductionOr.run(
+    {
+      substance: 'auru',
+    },
+    pool
+  )
 
-  if (producteursOr && producteursOr.rows?.length) {
-    result.producteursOr = producteursOr.rows.reduce<Record<CaminoAnnee, number>>((acc, r) => {
-      acc[r.annee] = parseInt(r.count, 10)
+  if (producteursOr && producteursOr?.length) {
+    result.producteursOr = producteursOr.reduce<Record<CaminoAnnee, number>>((acc, r) => {
+      if (r.annee && r.count) {
+        acc[toCaminoAnnee(r.annee)] = parseInt(r.count, 10)
+      }
 
       return acc
     }, {})

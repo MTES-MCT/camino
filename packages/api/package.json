@@ -17,6 +17,7 @@
     "db:recreate": "dropdb --host=localhost --username=postgres camino && createdb --host=localhost --username=postgres camino",
     "db:migrate": "node --loader ts-node/esm/transpile-only ./src/knex/migrate.ts",
     "db:add-migration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' knex migrate:make",
+    "db:watch": "npx --package=@pgtyped/cli pgtyped -w -c config.json",
     "dev": "node --watch --loader ts-node/esm/transpile-only --inspect ./src/index.ts",
     "daily-debug": "node  --inspect-brk=3000 --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
     "dev:backups-archive": "tar -zcvf backups/`date +%Y%m%d_%H%M%S`-camino.tar.gz backups/files/* backups/camino.sql",
@@ -99,6 +100,7 @@
     "xstate": "^4.37.0"
   },
   "devDependencies": {
+    "@pgtyped/runtime": "^2.1.0",
     "@types/carbone": "^3.2.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/stream-json": "^1.7.3",
@@ -113,6 +115,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-sql": "^2.3.2",
     "eslint-plugin-tsdoc": "^0.2.1",
     "pg-escape": "^0.2.0",
     "prettier-eslint": "^15.0.1",
@@ -139,9 +142,24 @@
       "node": true
     },
     "plugins": [
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "sql"
     ],
     "rules": {
+      "sql/format": [
+        2,
+        {
+          "ignoreExpressions": false,
+          "ignoreInline": true,
+          "ignoreTagless": true
+        }
+      ],
+      "sql/no-unsafe-query": [
+        2,
+        {
+          "allowLiteral": false
+        }
+      ],
       "newline-before-return": 1,
       "no-use-before-define": 0,
       "no-redeclare": 0,

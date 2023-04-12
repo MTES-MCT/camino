@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes, geojsonIntersectsSecteursMaritime, geojsonIntersectsForets, geojsonIntersectsSDOM } from '../../tools/geojson.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import TitresCommunes from '../../database/models/titres-communes.js'

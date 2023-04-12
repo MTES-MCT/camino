@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
 import Titres from '../../database/models/titres.js'

@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 

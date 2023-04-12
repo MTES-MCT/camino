@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import { DemarcheId, IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'

@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import { join } from 'path'
 
 import { idGenerate } from '../src/database/models/_format/id-create.js'
