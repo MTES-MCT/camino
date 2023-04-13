@@ -14,6 +14,8 @@ docs/generate-schema:
 
 daily:
 	npm run daily -w packages/api
+daily/debug:
+	npm run daily-debug -w packages/api
 
 monthly:
 	npm run monthly -w packages/api
