@@ -98,8 +98,55 @@ jobs:
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             flags: api-integration, api
+  check-queries:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgis/postgis:15-3.3
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: camino
+            PGUSER: postgres
+            PGPASSWORD: password
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '19.1'
+            cache: 'npm'
+        - name: Npm install
+          run: make install
+
+        - name: Migrate database and check queries
+          run: | 
+            make db/migrate
+            make db/check-queries
+            if [ ! -z  "$(git status --porcelain)" ]; then 
+            echo "Lancer 'make db/check-queries' sur sa machine et commiter les changements"
+            echo "BEGIN Git diff"
+            git diff
+            echo "END Git diff"
+            exit 1; 
+            fi
+          env:
+            PGHOST: localhost
+            PGPORT: 5432
+            PGUSER: postgres
+            PGPASSWORD: password  
+            PGDATABASE: camino   
   build:
-    needs: [unit-test, integration-test, lint, type]
+    needs: [unit-test, integration-test, lint, type, check-queries]
     runs-on: ubuntu-latest
 
     steps:

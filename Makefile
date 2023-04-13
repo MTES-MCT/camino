@@ -21,6 +21,15 @@ monthly:
 	npm run monthly -w packages/api
 
 
+db/migrate:
+	npm run db:migrate -w packages/api
+
+db/check-queries:
+ifndef CI
+	npm run db:watch -w packages/api
+else
+	npm run db:check -w packages/api
+endif 
 
 test: test/ui test/api test/common
 test/api: test/api-unit test/api-integration
@@ -81,16 +90,18 @@ lint: lint/ui lint/api lint/common
 
 install:
 ifdef CI
-	npm pkg delete scripts
-endif
+	HUSKY=0 npm ci --ignore-scripts
+else
 	npm ci
+endif
 
 
 install/prod:
 ifdef CI
-	npm pkg delete scripts
-endif
+	HUSKY=0 npm ci --omit=dev --ignore-scripts
+else
 	npm ci --omit=dev
+endif
 
 
 build: build/common build/api build/ui

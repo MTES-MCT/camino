@@ -1,0 +1,18 @@
+{
+  "transforms": [
+    {
+      "mode": "ts",
+      "include": "**/*.queries.ts",
+      "emitTemplate": "{{dir}}/{{name}}.types.ts"
+    }
+  ],
+  "srcDir": "./src/",
+  "failOnError": true,
+  "camelCaseColumnNames": false,
+  "db": {
+    "host": "localhost",
+    "user": "postgres",
+    "dbName": "camino",
+    "password": "password"
+  }
+}
