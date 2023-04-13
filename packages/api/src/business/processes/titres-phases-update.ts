@@ -1,7 +1,8 @@
 import { titrePhasesFind } from '../rules/titre-phases-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
-import { knex } from '../../knex.js'
+import { pool } from '../../pg-database.js'
+import { updateDatesDemarche } from './titres-phases-update.queries.js'
 
 export const titresDemarchesDatesUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -35,7 +36,14 @@ export const titresDemarchesDatesUpdate = async (titresIds?: string[]) => {
 
       if (newDateDebut !== oldDateDebut || newDateFin !== oldDateFin) {
         demarchePhaseUpdated.push(demarche.id)
-        await knex.raw(`update titres_demarches set demarche_date_debut = '${newDateDebut}', demarche_date_fin = '${newDateFin}' where id = '${demarche.id}'`)
+        await updateDatesDemarche.run(
+          {
+            newDateDebut,
+            newDateFin,
+            demarcheId: demarche.id,
+          },
+          pool
+        )
         console.info(`maj des dates de la demarche ${demarche.slug} titreId: ${demarche.titreId} dateDebut: ${oldDateDebut} => ${newDateDebut}, dateFin: ${oldDateFin} => ${newDateFin}`)
       }
     }
