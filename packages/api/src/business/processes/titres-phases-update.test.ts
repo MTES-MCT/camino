@@ -4,15 +4,22 @@ import { vi, afterEach, describe, expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitre } from '../../types.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { updateDatesDemarche } from './titres-phases-update.queries.js'
+import { pool } from '../../pg-database.js'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
 }))
-vi.mock('../../knex', () => ({
-  knex: { raw: vi.fn() },
+vi.mock('../../pg-database', () => ({
+  pool: { query: vi.fn() },
+}))
+vi.mock('./titres-phases-update.queries', () => ({
+  updateDatesDemarche: { run: vi.fn() },
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
+const poolMock = vi.mocked(pool, true)
+const updateDatesDemarcheMock = vi.mocked(updateDatesDemarche.run, true)
 
 console.info = vi.fn()
 
@@ -61,6 +68,7 @@ describe("phases d'un titre", () => {
 
     const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
 
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, poolMock)
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
 
@@ -105,7 +113,7 @@ describe("phases d'un titre", () => {
       } satisfies ITitre,
     ])
     const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
-
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, poolMock)
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
 
@@ -131,6 +139,8 @@ describe("phases d'un titre", () => {
       } satisfies ITitre,
     ])
     const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
+
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: null, newDateFin: null }, poolMock)
 
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
@@ -177,6 +187,7 @@ describe("phases d'un titre", () => {
     ])
     const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
 
+    expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
   })
 
@@ -200,7 +211,7 @@ describe("phases d'un titre", () => {
       } satisfies ITitre,
     ])
     const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
-
+    expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
   })
 })

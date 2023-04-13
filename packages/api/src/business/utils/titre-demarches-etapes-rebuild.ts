@@ -42,12 +42,13 @@ export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: IT
   const phases = titrePhasesFind(titreDemarchesRebuilt, titreTypeId)
 
   return titreDemarchesRebuilt.map(demarche => {
-    if (!phases[demarche.id]) {
+    const phase = phases[demarche.id]
+    if (!phase) {
       delete demarche.demarcheDateDebut
       delete demarche.demarcheDateFin
     } else {
-      demarche.demarcheDateDebut = phases[demarche.id].dateDebut
-      demarche.demarcheDateFin = phases[demarche.id].dateFin
+      demarche.demarcheDateDebut = phase.dateDebut
+      demarche.demarcheDateFin = phase.dateFin
     }
 
     return demarche
