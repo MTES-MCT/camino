@@ -252,6 +252,8 @@ CREATE TABLE public.titres_demarches (
     entreprises_lecture boolean DEFAULT false,
     ordre integer DEFAULT 0,
     slug character varying(255),
+    demarche_date_debut character varying(10),
+    demarche_date_fin character varying(10),
     description character varying(255),
     archive boolean DEFAULT false NOT NULL
 );
@@ -296,13 +298,6 @@ CREATE TABLE public.titres_forets (
     foret_id character varying(8) NOT NULL
 );
 ALTER TABLE public.titres_forets OWNER TO postgres;
-CREATE TABLE public.titres_phases (
-    titre_demarche_id character varying(128) NOT NULL,
-    phase_statut_id character varying(3) NOT NULL,
-    date_debut character varying(10),
-    date_fin character varying(10)
-);
-ALTER TABLE public.titres_phases OWNER TO postgres;
 CREATE TABLE public.titres_points (
     id character varying(255) NOT NULL,
     titre_etape_id character varying(128) NOT NULL,
@@ -450,8 +445,6 @@ ALTER TABLE ONLY public.titres_etapes
     ADD CONSTRAINT titres_etapes_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.titres_forets
     ADD CONSTRAINT titres_forets_pkey PRIMARY KEY (titre_etape_id, foret_id);
-ALTER TABLE ONLY public.titres_phases
-    ADD CONSTRAINT titres_phases_pkey PRIMARY KEY (titre_demarche_id);
 ALTER TABLE ONLY public.titres
     ADD CONSTRAINT titres_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.titres_points
@@ -630,8 +623,6 @@ ALTER TABLE ONLY public.titres_forets
     ADD CONSTRAINT titresforets_foretid_foreign FOREIGN KEY (foret_id) REFERENCES public.forets(id);
 ALTER TABLE ONLY public.titres_forets
     ADD CONSTRAINT titresforets_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.titres_phases
-    ADD CONSTRAINT titresphases_titredemarcheid_foreign FOREIGN KEY (titre_demarche_id) REFERENCES public.titres_demarches(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.titres_points
     ADD CONSTRAINT titrespoints_titreetapeid_foreign FOREIGN KEY (titre_etape_id) REFERENCES public.titres_etapes(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.titres_points_references
