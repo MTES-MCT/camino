@@ -5,7 +5,6 @@ export interface IGetProductionOrParams {
   substance?: string | null | void;
 }
 
-
 /** 'GetProductionOr' return type */
 export interface IGetProductionOrResult {
   annee: number;
@@ -17,3 +16,4 @@ export interface IGetProductionOrQuery {
   params: IGetProductionOrParams;
   result: IGetProductionOrResult;
 }
+
