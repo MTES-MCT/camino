@@ -1,14 +1,11 @@
-packages/ui/dist/**
-packages/ui/tests/unit/coverage/**
-packages/ui/src/styles/icons/icons.css
-packages/ui/src/styles/system/forms.css
-packages/ui/src/styles/settings.css
 packages/api/api-cache
 packages/api/backups
 packages/api/coverage
 packages/api/dist
 packages/api/docs
 packages/api/files
+packages/api/node_modules
 packages/api/sources
 packages/api/CHANGELOG.md
 packages/api/**/*.json
+packages/api/**/*.queries.types.ts
