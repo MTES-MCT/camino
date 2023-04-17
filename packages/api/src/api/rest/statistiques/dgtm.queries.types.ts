@@ -7,7 +7,7 @@ export interface IGetProductionOrParams {
 
 /** 'GetProductionOr' return type */
 export interface IGetProductionOrResult {
-  annee: number | null
+  annee: number
   count: string | null
 }
 
