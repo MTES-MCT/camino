@@ -6,3 +6,4 @@
 /files
 /node_modules
 /sources
+**/*.queries.types.ts
