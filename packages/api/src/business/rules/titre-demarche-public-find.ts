@@ -1,14 +1,18 @@
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { ITitreEtape, ITitreDemarche } from '../../types.js'
+import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
+import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
   demarcheTypeEtapesTypes: readonly EtapeTypeId[],
   titreEtape: ITitreEtape,
-  demarches: ITitreDemarche[] | null | undefined,
+  demarche: Pick<ITitreDemarche, 'demarcheDateFin' | 'demarcheDateDebut'>,
   titreTypeId?: TitreTypeId
 ) => {
   // si le type de démarche est retrait de la demande ou déchéance
@@ -133,7 +137,7 @@ const titreDemarchePublicLectureFind = (
   }
 
   // Pour les PRM d’un titre en survie provisoire, les demandes de prolongations sont public
-  if (titreTypeId === 'prm' && titreEtape.typeId === 'mdp' && ['pr1', 'pr2'].includes(demarcheTypeId) && titreInSurvieProvisoire(demarches)) {
+  if (titreTypeId === 'prm' && titreEtape.typeId === 'mdp' && ['pr1', 'pr2'].includes(demarcheTypeId) && titreInSurvieProvisoire([demarche])) {
     return true
   }
 
@@ -149,27 +153,36 @@ const titreDemarchePublicLectureFind = (
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarchePublicFind = (
-  demarcheTypeId: DemarcheTypeId,
-  demarcheTypeEtapesTypes: readonly EtapeTypeId[],
-  titreEtapes: ITitreEtape[],
-  titreId: string,
-  titreDemarches: ITitreDemarche[] | null | undefined,
-  titreTypeId?: TitreTypeId
-) => {
+export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin' | 'id' | 'typeId' | 'etapes'>, titreTypeId: TitreTypeId) => {
+  const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
+
   // calcule la visibilité publique ou non de la démarche
   // on parcourt successivement toutes les étapes
   // pour calculer la visibilité de la démarche
   // en fonction de l'historique
-  const publicLecture =
-    titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z'
-      ? false
-      : titreEtapes.reduce((publicLecture, titreEtape) => titreDemarchePublicLectureFind(publicLecture, demarcheTypeId, demarcheTypeEtapesTypes, titreEtape, titreDemarches, titreTypeId), false)
+  let publicLecture = false
+  if (titreDemarche.titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z') {
+    publicLecture = false
+  } else {
+    // si il existe un arbre d’instructions pour cette démarche,
+    // on laisse l’arbre traiter l’unicité des étapes
+    const demarcheDefinition = demarcheDefinitionFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
+
+    if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).publique
+    } else {
+      const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)
+      publicLecture = titreDemarcheEtapes.reduce(
+        (publicLecture, titreEtape) => titreDemarchePublicLectureFind(publicLecture, titreDemarche.typeId, demarcheTypeEtapesTypes, titreEtape, titreDemarche, titreTypeId),
+        false
+      )
+    }
+  }
 
   // les entreprises titulaires ou amodiataires peuvent voir la démarche
   // si la démarche est visible au public
   // ou si la démarche contient une demande ou une décision de l'administration unilatérale
-  const entreprisesLecture = publicLecture || titreEtapes.some(te => ['mfr', 'dex', 'dux'].includes(te.typeId))
+  const entreprisesLecture = publicLecture || titreDemarcheEtapes.some(te => ['mfr', 'dex', 'dux'].includes(te.typeId))
 
   return { publicLecture, entreprisesLecture }
 }

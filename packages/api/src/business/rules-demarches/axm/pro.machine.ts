@@ -16,15 +16,9 @@ type RendreAvisDreal = {
   type: 'RENDRE_AVIS_DREAL'
 }
 
-export type AXMOctXStateEvent =
+export type AXMProXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
-  | { type: 'RENDRE_DAE_EXEMPTEE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE' }
-  | { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE' }
-  | { type: 'RENDRE_DAE_REQUISE' }
-  | { type: 'MODIFIER_DEMANDE_APRES_DAE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
@@ -59,8 +53,6 @@ export type AXMOctXStateEvent =
   | { type: 'RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS' }
   | { type: 'RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE' }
   | { type: 'RENDRE_AVIS_GENDARMERIE_NATIONALE' }
-  | { type: 'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL' }
-  | { type: 'FAIRE_NOTE_INTERNE_SIGNALEE' }
   | { type: 'DEMANDER_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RECEVOIR_INFORMATION_POUR_AVIS_DREAL' }
   | { type: 'RENDRE_DECISION_IMPLICITE_REJET' }
@@ -68,27 +60,11 @@ export type AXMOctXStateEvent =
   | { type: 'FAIRE_DESISTEMENT_DEMANDEUR' }
   | { type: 'FAIRE_CLASSEMENT_SANS_SUITE' }
 
-type Event = AXMOctXStateEvent['type']
+type Event = AXMProXStateEvent['type']
 
 const trad: { [key in Event]: DBEtat } = {
   FAIRE_DEMANDE: ETES.demande,
   DEPOSER_DEMANDE: ETES.depotDeLaDemande,
-  RENDRE_DAE_EXEMPTEE: {
-    EXEMPTE: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE: {
-    FAVORABLE: ETES.decisionDuProprietaireDuSol.FAVORABLE,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE: {
-    FAVORABLE_AVEC_RESERVE: ETES.decisionDuProprietaireDuSol.FAVORABLE_AVEC_RESERVE,
-  },
-  RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE: {
-    DEFAVORABLE: ETES.decisionDuProprietaireDuSol.DEFAVORABLE,
-  },
-  RENDRE_DAE_REQUISE: {
-    REQUIS: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
-  },
-  MODIFIER_DEMANDE_APRES_DAE: ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
   DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: ETES.demandeDeComplements_RecevabiliteDeLaDemande_,
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
@@ -136,8 +112,6 @@ const trad: { [key in Event]: DBEtat } = {
   RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: ETES.avisDeLOfficeNationalDesForets,
   RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: ETES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_,
   RENDRE_AVIS_GENDARMERIE_NATIONALE: ETES.avisDeLaGendarmerieNationale,
-  FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL: ETES.confirmationDeLaccordDuProprietaireDuSol,
-  FAIRE_NOTE_INTERNE_SIGNALEE: ETES.noteInterneSignalee,
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_,
   RECEVOIR_INFORMATION_POUR_AVIS_DREAL: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_,
   RENDRE_DECISION_IMPLICITE_REJET: { REJETE: ETES.decisionImplicite.REJETE },
@@ -149,13 +123,15 @@ const trad: { [key in Event]: DBEtat } = {
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
 export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
-// basé sur https://cacoo.com/diagrams/iUPEVBYNBjsiirfE/249D0
-export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> {
+// basé sur TODO 2023-04-17 mettre le lien vers le bon cacoo
+// TODO 2023-04-17 mettre à jour le cacoo quand on a de nouveau accès avec :
+// - modification de la demande comme pour l'octroi d'AXM
+export class AxmProMachine extends CaminoMachine<AxmProContext, AXMProXStateEvent> {
   constructor() {
-    super(axmOctMachine, trad)
+    super(axmProMachine, trad)
   }
 
-  toPotentialCaminoXStateEvent(event: AXMOctXStateEvent['type'], date: CaminoDate): AXMOctXStateEvent[] {
+  toPotentialCaminoXStateEvent(event: AXMProXStateEvent['type'], date: CaminoDate): AXMProXStateEvent[] {
     switch (event) {
       case 'FAIRE_SAISINE_DES_SERVICES':
       case 'RENDRE_AVIS_DREAL':
@@ -168,7 +144,7 @@ export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> 
     }
   }
 
-  eventFrom(etape: Etape): AXMOctXStateEvent {
+  eventFrom(etape: Etape): AXMProXStateEvent {
     const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
 
     const entry = entries.find(([_key, dbEtat]) => {
@@ -194,106 +170,39 @@ export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> 
 }
 
 type SaisineDesServices = { faite: false } | { faite: true; date: CaminoDate }
-interface AxmContext extends CaminoCommonContext {
-  demandeFaite: boolean
-  daeRequiseOuDemandeDeposee: boolean
-  decisionDuProprietaireDuSolFavorableSansReserve: boolean
+interface AxmProContext extends CaminoCommonContext {
   saisineDesCollectivitesLocalesFaite: boolean
   saisineDesServices: SaisineDesServices
 }
 
-const peutRendreAvisDREAL = (context: AxmContext, event: RendreAvisDreal): boolean => {
+const peutRendreAvisDREAL = (context: AxmProContext, event: RendreAvisDreal): boolean => {
   return context.saisineDesServices.faite && daysBetween(dateAddMonths(context.saisineDesServices.date, 1), event.date) >= 0
 }
 
-const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
+const axmProMachine = createMachine<AxmProContext, AXMProXStateEvent>({
   predictableActionArguments: true,
-  id: 'AXMOct',
-  initial: 'demandeAFaireEtDecisionsARendre',
+  id: 'AXMPro',
+  initial: 'demandeAFaire',
   context: {
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
-    demandeFaite: false,
-    decisionDuProprietaireDuSolFavorableSansReserve: false,
     saisineDesCollectivitesLocalesFaite: false,
     saisineDesServices: { faite: false },
-    daeRequiseOuDemandeDeposee: false,
     visibilite: 'confidentielle',
   },
   on: {
-    FAIRE_NOTE_INTERNE_SIGNALEE: {
-      actions: assign<AxmContext, { type: 'FAIRE_NOTE_INTERNE_SIGNALEE' }>({}),
-      cond: context => context.demandeFaite,
-    },
     FAIRE_DESISTEMENT_DEMANDEUR: {
-      cond: context => context.demandeFaite && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: 'desistementDuDemandeurRendu',
     },
     FAIRE_CLASSEMENT_SANS_SUITE: {
-      cond: context => context.daeRequiseOuDemandeDeposee && [DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: 'classementSansSuiteRendu',
     },
   },
   states: {
-    demandeAFaireEtDecisionsARendre: {
-      type: 'parallel',
-      states: {
-        demandeMachine: {
-          initial: 'demandeAFaire',
-          states: {
-            demandeAFaire: {
-              on: {
-                FAIRE_DEMANDE: 'demandeFaite',
-              },
-            },
-            demandeFaite: {
-              type: 'final',
-              entry: assign<AxmContext>({ demandeFaite: true }),
-            },
-          },
-        },
-        decisionAutoriteEnvironnementaleMachine: {
-          initial: 'decisionARendre',
-          states: {
-            decisionARendre: {
-              on: {
-                RENDRE_DAE_REQUISE: {
-                  target: 'demandeAModifier',
-                  actions: assign<AxmContext, { type: 'RENDRE_DAE_REQUISE' }>({
-                    daeRequiseOuDemandeDeposee: true,
-                  }),
-                },
-                RENDRE_DAE_EXEMPTEE: 'demandeExemptee',
-              },
-            },
-            demandeAModifier: {
-              on: { MODIFIER_DEMANDE_APRES_DAE: 'demandeModifiee' },
-            },
-            demandeExemptee: { type: 'final' },
-            demandeModifiee: { type: 'final' },
-          },
-        },
-        decisionDuProprietaireDuSolMachine: {
-          initial: 'decisionARendre',
-          states: {
-            decisionARendre: {
-              on: {
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE: {
-                  target: 'decisionRendue',
-                  actions: assign<AxmContext, { type: 'RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE' }>({
-                    decisionDuProprietaireDuSolFavorableSansReserve: true,
-                  }),
-                },
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE: 'decisionRendue',
-                RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE: '#classementSansSuiteAFaire',
-              },
-            },
-            decisionRendue: { type: 'final' },
-          },
-        },
-      },
-
-      onDone: {
-        target: 'depotDeLaDemandeAFaire',
+    demandeAFaire: {
+      on: {
+        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire',
       },
     },
     depotDeLaDemandeAFaire: {
@@ -301,9 +210,8 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
       on: {
         DEPOSER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
-          actions: assign<AxmContext, { type: 'DEPOSER_DEMANDE' }>({
+          actions: assign<AxmProContext, { type: 'DEPOSER_DEMANDE' }>({
             demarcheStatut: DemarchesStatutsIds.Depose,
-            daeRequiseOuDemandeDeposee: true,
           }),
         },
       },
@@ -314,7 +222,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
         DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFairePuisRendreAvisDREAL',
-          actions: assign<AxmContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign<AxmProContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -322,7 +230,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
         FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
         RENDRE_DECISION_IMPLICITE_REJET: {
           target: 'decisionAnnulationParJugeAdministratifAFaire',
-          actions: assign<AxmContext, { type: 'RENDRE_DECISION_IMPLICITE_REJET' }>({
+          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_IMPLICITE_REJET' }>({
             demarcheStatut: DemarchesStatutsIds.Rejete,
             visibilite: 'publique',
           }),
@@ -334,7 +242,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFairePuisRendreAvisDREAL',
-          actions: assign<AxmContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign<AxmProContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -356,7 +264,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
             rendreAvisDrealPasEncorePossible: {
               always: {
                 target: 'rendreAvisDrealAFaire',
-                cond: (context: AxmContext) => context.saisineDesServices.faite && context.saisineDesCollectivitesLocalesFaite && context.decisionDuProprietaireDuSolFavorableSansReserve,
+                cond: (context: AxmProContext) => context.saisineDesServices.faite && context.saisineDesCollectivitesLocalesFaite,
               },
             },
             rendreAvisDrealAFaire: {
@@ -393,7 +301,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
                 FAIRE_SAISINE_COLLECTIVITES_LOCALES: {
                   target: 'avisDunMaireARendre',
                   cond: context => !context.saisineDesCollectivitesLocalesFaite,
-                  actions: assign<AxmContext, { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }>({
+                  actions: assign<AxmProContext, { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }>({
                     saisineDesCollectivitesLocalesFaite: true,
                   }),
                 },
@@ -413,7 +321,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
                 FAIRE_SAISINE_DES_SERVICES: {
                   target: 'avisDesServicesARendre',
                   cond: context => !context.saisineDesServices.faite,
-                  actions: assign<AxmContext, FaireSaisineDesServices>({
+                  actions: assign<AxmProContext, FaireSaisineDesServices>({
                     saisineDesServices: (context, event) => {
                       return {
                         faite: true,
@@ -428,22 +336,6 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
               type: 'parallel',
 
               states: {
-                confirmationAccordProprietaireDuSolMachine: {
-                  initial: 'confirmationAccordProprietaireDuSolAFaire',
-                  states: {
-                    confirmationAccordProprietaireDuSolAFaire: {
-                      on: {
-                        FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL: 'confirmationAccordProprietaireDuSolFait',
-                      },
-                    },
-                    confirmationAccordProprietaireDuSolFait: {
-                      type: 'final',
-                      entry: assign<AxmContext>({
-                        decisionDuProprietaireDuSolFavorableSansReserve: true,
-                      }),
-                    },
-                  },
-                },
                 avisDgtmMNBSTMachine: {
                   initial: 'avisDgtmMNBSTARendre',
                   states: {
@@ -605,13 +497,13 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
         FAIRE_SAISINE_AUTORITE_SIGNATAIRE: 'decisionAdministrationARendre',
         RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
           target: 'decisionAdministrationRendue',
-          actions: assign<AxmContext, { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }>({
+          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }>({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_DECISION_ADMINISTRATION_REJETE: {
           target: 'decisionAdministrationRendue',
-          actions: assign<AxmContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
+          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -621,13 +513,13 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
       on: {
         RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
           target: 'decisionAdministrationRendue',
-          actions: assign<AxmContext, { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }>({
+          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }>({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_DECISION_ADMINISTRATION_REJETE: {
           target: 'decisionAdministrationRendue',
-          actions: assign<AxmContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
+          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -735,18 +627,18 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
     decisionRetraitFaite: { type: 'final' },
     decisionAnnulationParJugeAdministratifRendu: {
       type: 'final',
-      entry: assign<AxmContext>({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+      entry: assign<AxmProContext>({ demarcheStatut: DemarchesStatutsIds.Rejete }),
     },
     desistementDuDemandeurRendu: {
       type: 'final',
-      entry: assign<AxmContext>({
+      entry: assign<AxmProContext>({
         demarcheStatut: DemarchesStatutsIds.Desiste,
         visibilite: 'publique',
       }),
     },
     classementSansSuiteRendu: {
       type: 'final',
-      entry: assign<AxmContext>({
+      entry: assign<AxmProContext>({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
         visibilite: 'publique',
       }),

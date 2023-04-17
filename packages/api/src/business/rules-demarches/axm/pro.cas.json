@@ -1,0 +1,136 @@
+[
+  {
+    "id": 0,
+    "demarcheStatutId": "des",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2019-01-26", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2019-01-26", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2021-01-31", "etapeTypeId": "des", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 1,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2011-09-25", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2011-09-25", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 2,
+    "demarcheStatutId": "ins",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2021-11-07", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2021-11-08", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2022-04-17", "etapeTypeId": "mcr", "etapeStatutId": "fav" }
+    ]
+  },
+  {
+    "id": 3,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2019-10-24", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2019-11-13", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 4,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2020-02-06", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2020-02-25", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 5,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2022-11-04", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2022-11-07", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 6,
+    "demarcheStatutId": "cls",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2012-06-27", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2012-06-27", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2014-05-20", "etapeTypeId": "css", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 7,
+    "demarcheStatutId": "cls",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2019-12-10", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2019-12-10", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2022-01-29", "etapeTypeId": "css", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 8,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2023-02-10", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2023-02-10", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 9,
+    "demarcheStatutId": "dep",
+    "demarchePublique": false,
+    "etapes": [
+      { "date": "2016-10-23", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2016-10-23", "etapeTypeId": "mdp", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 10,
+    "demarcheStatutId": "cls",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2013-11-09", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2013-11-09", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2015-08-01", "etapeTypeId": "css", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 11,
+    "demarcheStatutId": "cls",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2020-05-13", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2020-05-14", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2021-11-10", "etapeTypeId": "css", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 12,
+    "demarcheStatutId": "des",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2017-05-05", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2017-05-05", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2021-05-22", "etapeTypeId": "des", "etapeStatutId": "fai" }
+    ]
+  },
+  {
+    "id": 13,
+    "demarcheStatutId": "cls",
+    "demarchePublique": true,
+    "etapes": [
+      { "date": "2020-07-16", "etapeTypeId": "mfr", "etapeStatutId": "fai" },
+      { "date": "2020-07-16", "etapeTypeId": "mdp", "etapeStatutId": "fai" },
+      { "date": "2021-08-30", "etapeTypeId": "css", "etapeStatutId": "fai" }
+    ]
+  }
+]

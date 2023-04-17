@@ -78,12 +78,12 @@ const writeEtapesForTest = async () => {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
             etapes.splice(0, etapes.length, ...demarcheDefinition.machine.orderMachine(etapes))
             if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-              console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
+              console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
             }
           }
         } catch (e) {
           console.error('something went wrong', e)
-          console.error(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
+          console.error(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} (${demarche.id}) "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
         }
 
         const etapesAnonymes = etapes.map(etape => {

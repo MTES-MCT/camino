@@ -79,6 +79,7 @@ export const titreDemarcheSuppressionSelectQuery = (demarcheAlias: string, user:
       TitresEtapes.query()
         .alias('titresEtapesSuppression')
         .select('titresEtapesSuppression.id')
+        .where('titresEtapesSuppression.archive', false)
         .whereRaw('?? = ??', [`${demarcheAlias}.id`, 'titresEtapesSuppression.titreDemarcheId'])
         .first(),
     ])
