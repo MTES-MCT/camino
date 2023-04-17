@@ -31,6 +31,7 @@ import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etape
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 
 export const devises = async () => devisesGet()
 
@@ -168,8 +169,9 @@ const demarcheEtapesTypesGet = async ({ titreDemarcheId, titreEtapeId, date }: {
   } else {
     // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
     etapesTypes.push(
-      ...(await etapesTypesGet({ titreDemarcheId, titreEtapeId }, { fields, uniqueCheck: !demarcheDefinition }, user)).filter(etapeType =>
-        etapeTypeIsValidCheck(etapeType, date, titre, titreDemarche.type!, titreDemarche.id, titreDemarche.etapes, titreEtape)
+      ...(await etapesTypesGet({ titreDemarcheId, titreEtapeId }, { fields, uniqueCheck: !demarcheDefinition }, user)).filter(
+        etapeType =>
+          etapeTypeIsValidCheck(etapeType, date, titre, titreDemarche.type!, titreDemarche.id, titreDemarche.etapes, titreEtape) && isTDEExist(titre.typeId, titreDemarche.typeId, etapeType.id)
       )
     )
   }

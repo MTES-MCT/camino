@@ -11,7 +11,6 @@ import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTyp
 
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId } from '../entreprise.js'
-import { isTDEExist } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -85,10 +84,6 @@ export const canCreateOrEditEtape = (
   titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId },
   permission: 'creation' | 'modification'
 ): boolean => {
-  if (!isTDEExist(titre.typeId, demarcheTypeId, etapeTypeId)) {
-    return false
-  }
-
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

@@ -7,6 +7,7 @@ import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot
 import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { AxmOctMachine } from './axm/oct.machine.js'
+import { AxmProMachine } from './axm/pro.machine.js'
 import { PxgOctMachine } from './pxg/oct.machine.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
@@ -111,6 +112,42 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
       newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14'),
       // avis dgtm moins de 30 jours après la saisine des services
       newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l'),
+    ],
+  },
+  {
+    titreTypeId: 'axm',
+    demarcheTypeIds: ['pro'],
+    machine: new AxmProMachine(),
+    dateDebut: toCaminoDate('2000-01-01'),
+    demarcheIdExceptions: [
+      // décision implicite de rejet après recevabilité
+      newDemarcheId('nDtwD4ErghwdlL96y6EvpyRF'),
+      // manque la demande...
+      newDemarcheId('9GenHiIAtrCBUkUZfFP2FBj3'),
+      newDemarcheId('yR7n8yXArtiWC6D8V3ipYy9Q'),
+      // plein d'étapes à rajouter une fois la machine en place pour qu'elle soit correcte
+      newDemarcheId('FxwaBX78A5kJbdTX5ESHKmCg'),
+      newDemarcheId('LZHRQZKepqfxBGdc7S4PiZd9'),
+      newDemarcheId('XIY81Z57nhPmurZ8E5mVgpux'),
+
+      // Complète mais ne respectant pas le cacoo
+      newDemarcheId('Fq6lCWTS6h8k5dAsG6LLm3Gw'),
+      newDemarcheId('TlqKNgdYzYVrUXieMJAqWYBD'),
+      newDemarcheId('ka8jUJq3ESxAdhE6QacBlqS8'),
+      newDemarcheId('d2443R01mLB8Nv2ZAhNSZdx3'),
+      newDemarcheId('Od6oeREEAXvUyvdQWUOgKhTS'),
+      newDemarcheId('M7VhIeD27VR0kKrkPTQHyXeH'),
+      newDemarcheId('VWBvpOx3n4dN7WCQoYUEC6vM'),
+      newDemarcheId('A17SapPN5NzwSBEOeoagQcHt'),
+      newDemarcheId('tuQqpnDSYhnTGlkkxTsDUf0r'),
+      newDemarcheId('s8ONjdmsJivnfnhE4ENNVmOb'),
+      newDemarcheId('nk5alZi7lSkxGVMlmsmyaqOv'),
+      newDemarcheId('Eg3T3fvnJETbYBmd8BJYfc1h'),
+      newDemarcheId('ohHg9uU2zd9m3MvF6yJ3KxLr'),
+      newDemarcheId('zsDao5HywdHx7YRlWjEMklZJ'),
+      newDemarcheId('51G6AmHKKX5wFjbN6zJ3kufK'),
+      newDemarcheId('08eC26bUf4PCr6qj9Rl4Qa1F'),
+      newDemarcheId('OBKZ23yRO6e4VP7MyXwgCp6U'),
     ],
   },
   {
