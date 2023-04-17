@@ -142,6 +142,7 @@ const demarcheEtapesTypesGet = async ({ titreDemarcheId, titreEtapeId, date }: {
 
   if (titreEtapeId && !titreEtape) throw new Error("l'étape n'existe pas")
 
+  // TODO 2023-04-12 supprimer etapesTypes et utiliser getTDE
   const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes
   // si on modifie une étape
   // vérifie que son type est possible sur la démarche

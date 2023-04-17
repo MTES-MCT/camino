@@ -139,7 +139,6 @@ export const statistiquesGranulatsMarins = async (): Promise<StatistiquesGranula
         fields: {
           surfaceEtape: { id: {} },
           demarches: {
-            phase: { id: {} },
             etapes: { id: {} },
             type: { id: {} },
           },

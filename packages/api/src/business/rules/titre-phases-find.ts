@@ -1,4 +1,4 @@
-import { ITitreDemarche, ITitreEtape, ITitrePhase } from '../../types.js'
+import { DemarcheId, ITitreDemarche, ITitreEtape } from '../../types.js'
 
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
@@ -6,7 +6,6 @@ import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-
 import { isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, dateAddMonths, isBefore, toCaminoDate } from 'camino-common/src/date.js'
-import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
@@ -57,8 +56,9 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
   return dateDebut
 }
 
-type IntermediateTitrePhase = Omit<ITitrePhase, 'phaseStatutId'> & { dateDeFinParDefaut?: true }
-export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
+type Phase = { dateDebut: CaminoDate; dateFin: CaminoDate | null }
+type IntermediateTitrePhase = Phase & { demarcheId: DemarcheId; dateDeFinParDefaut?: true }
+export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreTypeId: TitreTypeId): { [key in DemarcheId]?: Phase } => {
   const sortedDemarches = titreDemarcheSortAsc(titreDemarches).map(demarche => {
     return { ...demarche, etapes: demarche.etapes?.filter(({ statutId }) => statutId !== ETAPES_STATUTS.EN_CONSTRUCTION) }
   })
@@ -86,13 +86,13 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
           acc.push({
             dateDebut,
             dateFin,
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         } else if (duree) {
           acc.push({
             dateDebut,
             dateFin: dateAddMonths(dateDebut, duree),
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         } else {
           // si il n'y a pas de durée,
@@ -103,7 +103,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
             dateDebut,
             dateFin: DATE_PAR_DEFAUT_TITRE_INFINI,
             dateDeFinParDefaut: true,
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         }
       }
@@ -126,19 +126,19 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
           acc.push({
             dateDebut,
             dateFin,
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         } else if (duree) {
           acc.push({
             dateDebut,
             dateFin: dateAddMonths(dateDebut, duree),
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         } else if (isDemarcheStatutNonStatue(demarche.statutId)) {
           acc.push({
             dateDebut,
             dateFin: null,
-            titreDemarcheId: demarche.id,
+            demarcheId: demarche.id,
           })
         }
       }
@@ -147,33 +147,38 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujour
     return acc
   }, [])
 
-  return phases.map<ITitrePhase>(p => {
+  return phases.reduce<Record<DemarcheId, Phase>>((acc, p) => {
     delete p.dateDeFinParDefaut
     if (titreDemarcheAnnulationDate && p.dateFin && isBefore(titreDemarcheAnnulationDate, p.dateFin) && isBefore(p.dateDebut, titreDemarcheAnnulationDate)) {
       p.dateFin = titreDemarcheAnnulationDate
     }
-    let phaseStatutId: PhaseStatutId = 'val'
-    if (!p.dateFin) {
-      phaseStatutId = 'val'
-    } else {
-      phaseStatutId = isBefore(p.dateFin, aujourdhui) ? 'ech' : 'val'
-    }
 
-    return { ...p, phaseStatutId }
-  })
+    acc[p.demarcheId] = { dateDebut: p.dateDebut, dateFin: p.dateFin }
+
+    return acc
+  }, {})
 }
 
 export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId'> & { points?: unknown[] | null }
-export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId'> & { etapes?: TitreEtapePhaseFind[] }
+export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
 
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
-  const dpuRejetee = titreEtapesSorted.find(({ typeId, statutId }) => typeId === ETAPES_TYPES.publicationDeDecisionAuJORF && statutId === ETAPES_STATUTS.REJETE)
+  const decisionRejetee = titreEtapesSorted.find(
+    ({ typeId, statutId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId) && statutId === ETAPES_STATUTS.REJETE
+  )
 
-  if (dpuRejetee) {
-    return { dateFin: dpuRejetee.date, duree: 0 }
+  if (decisionRejetee) {
+    return { dateFin: decisionRejetee.date, duree: 0 }
   }
+
+  const desistementDemandeur = titreEtapesSorted.find(({ typeId }) => ETAPES_TYPES.desistementDuDemandeur === typeId)
+
+  if (desistementDemandeur) {
+    return { dateFin: desistementDemandeur.date, duree: 0 }
+  }
+
   const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(typeId) && (dateFin || duree))
 
   if (!titreEtapeHasDateFinOrDuree) {

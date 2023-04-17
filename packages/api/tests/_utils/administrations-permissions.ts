@@ -132,7 +132,7 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
       fields: {},
     })) as IEtapeType
 
-    const demarcheType = (await DemarchesTypes.query().withGraphFetched(options.demarchesTypes.graph).findById(demarcheCreated.body.data.demarcheCreer.demarches[0].type!.id)) as IDemarcheType
+    const demarcheType = (await DemarchesTypes.query().withGraphFetched(options.demarchesTypes.graph).findById(demarcheCreated.body.data.demarcheCreer.demarches[0].typeId)) as IDemarcheType
 
     const tde = (await titreTypeDemarcheTypeEtapeTypeGet(
       {

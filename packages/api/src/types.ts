@@ -17,7 +17,6 @@ import { UniteId } from 'camino-common/src/static/unites.js'
 import { FrequenceId } from 'camino-common/src/static/frequence.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
-import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
@@ -483,7 +482,8 @@ interface ITitreDemarche {
   type?: IDemarcheType | null
   ordre?: number | null
   titreType?: ITitreType | null
-  phase?: ITitrePhase | null
+  demarcheDateDebut?: CaminoDate | null
+  demarcheDateFin?: CaminoDate | null
   parents?: ITitreDemarche[] | null
   enfants?: ITitreDemarche[] | null
   publicLecture?: boolean | null
@@ -579,13 +579,6 @@ interface ITitreIncertitudes {
   titulaires?: boolean | null
   amodiataires?: boolean | null
   administrations?: boolean | null
-}
-
-interface ITitrePhase {
-  titreDemarcheId: DemarcheId
-  phaseStatutId: PhaseStatutId
-  dateDebut: CaminoDate
-  dateFin: CaminoDate | null | undefined
 }
 
 interface ITitrePoint {
@@ -783,7 +776,6 @@ export {
   ITitreEtapeJustificatif,
   ITitreEtapeFiltre,
   ITitreIncertitudes,
-  ITitrePhase,
   ITitrePoint,
   ITitrePointReference,
   ITitreType,

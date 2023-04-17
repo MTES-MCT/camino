@@ -41,7 +41,8 @@ describe("dates d'un titre", () => {
         dateDemande: null,
         demarches: [
           {
-            phase: { dateDebut: toCaminoDate('2010-01-01'), dateFin: toCaminoDate('2019-01-01') },
+            demarcheDateDebut: toCaminoDate('2010-01-01'),
+            demarcheDateFin: toCaminoDate('2019-01-01'),
           },
         ],
       },

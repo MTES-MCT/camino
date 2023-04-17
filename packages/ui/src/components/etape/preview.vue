@@ -116,6 +116,7 @@ import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 export default {
   components: {
@@ -132,7 +133,7 @@ export default {
 
   props: {
     etape: { type: Object, required: true },
-    demarcheType: { type: Object, required: true },
+    demarcheTypeId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
     titreNom: { type: String, required: true },
     titreId: { type: String, required: true },
@@ -151,6 +152,10 @@ export default {
         section: 'etapes',
         id: this.titreId,
       }
+    },
+
+    demarcheType() {
+      return DemarchesTypes[this.demarcheTypeId]
     },
 
     documentPopupTitle() {

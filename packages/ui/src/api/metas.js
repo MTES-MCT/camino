@@ -3,7 +3,6 @@ import { apiGraphQLFetch } from './_client'
 import {
   fragmentTitreTypeType,
   fragmentTitreStatut,
-  fragmentDemarcheType,
   fragmentEtapeType,
   fragmentDocumentType,
   fragmentTitreType,
@@ -34,18 +33,6 @@ const titresStatuts = apiGraphQLFetch(
     }
 
     ${fragmentTitreStatut}
-  `
-)
-
-const demarchesTypes = apiGraphQLFetch(
-  gql`
-    query DemarchesTypes {
-      demarchesTypes {
-        ...demarcheType
-      }
-    }
-
-    ${fragmentDemarcheType}
   `
 )
 
@@ -136,7 +123,6 @@ const etapesTypesJustificatifsTypes = apiGraphQLFetch(
 export {
   titresTypesTypes,
   titresStatuts,
-  demarchesTypes,
   etapesTypes,
   documentsTypes,
   titresTypes,

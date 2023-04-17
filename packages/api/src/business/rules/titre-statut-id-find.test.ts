@@ -1,9 +1,7 @@
 import { titreInSurvieProvisoire, titreStatutIdFind, TitreStatutIdFindDemarche } from './titre-statut-id-find.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
-const titreDemarcheId = newDemarcheId('unused')
 describe("statut d'un titre", () => {
   const aujourdhui = toCaminoDate('2020-12-01')
 
@@ -21,7 +19,8 @@ describe("statut d'un titre", () => {
         {
           typeId: 'oct',
           statutId: 'acc',
-          phase: { titreDemarcheId, dateDebut: toCaminoDate('2014-04-01'), dateFin: toCaminoDate('3014-04-01'), phaseStatutId: 'val' },
+          demarcheDateDebut: toCaminoDate('2014-04-01'),
+          demarcheDateFin: toCaminoDate('3014-04-01'),
         },
       ])
     ).toEqual('val')
@@ -33,7 +32,8 @@ describe("statut d'un titre", () => {
         {
           typeId: 'oct',
           statutId: 'acc',
-          phase: { titreDemarcheId, dateDebut: toCaminoDate('1014-04-01'), dateFin: toCaminoDate('2014-04-01'), phaseStatutId: 'val' },
+          demarcheDateDebut: toCaminoDate('1014-04-01'),
+          demarcheDateFin: toCaminoDate('2014-04-01'),
         },
       ])
     ).toEqual('ech')
@@ -62,8 +62,8 @@ describe("statut d'un titre", () => {
   test("le statut d'un titre avec une démarche en instruction est “mod”", () => {
     expect(
       titreStatutIdFind(aujourdhui, [
-        { typeId: 'mut', statutId: 'ins', phase: { titreDemarcheId, dateDebut: toCaminoDate('1014-04-01'), dateFin: null, phaseStatutId: 'val' } },
-        { typeId: 'oct', statutId: 'acc', phase: { titreDemarcheId, dateDebut: toCaminoDate('1014-04-01'), dateFin: toCaminoDate('2014-04-01'), phaseStatutId: 'val' } },
+        { typeId: 'mut', statutId: 'ins', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: null },
+        { typeId: 'oct', statutId: 'acc', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2014-04-01') },
       ])
     ).toEqual('mod')
   })
@@ -74,22 +74,14 @@ describe("statut d'un titre", () => {
         {
           typeId: 'pr1',
           statutId: 'eco',
-          phase: {
-            titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
-            dateDebut: toCaminoDate('2020-01-01'),
-            dateFin: null,
-            phaseStatutId: 'val',
-          },
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: null,
         },
         {
           typeId: 'oct',
           statutId: 'acc',
-          phase: {
-            titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
-            dateDebut: toCaminoDate('1014-04-01'),
-            dateFin: toCaminoDate('2020-04-01'),
-            phaseStatutId: 'ech',
-          },
+          demarcheDateDebut: toCaminoDate('1014-04-01'),
+          demarcheDateFin: toCaminoDate('2020-04-01'),
         },
       ])
     ).toEqual('mod')
@@ -100,17 +92,20 @@ describe("statut d'un titre", () => {
       {
         typeId: 'pr2',
         statutId: 'eco',
-        phase: { titreDemarcheId: newDemarcheId('unused'), dateDebut: toCaminoDate('2020-06-01'), dateFin: null, phaseStatutId: 'val' },
+        demarcheDateDebut: toCaminoDate('2020-06-01'),
+        demarcheDateFin: null,
       },
       {
         typeId: 'pr1',
         statutId: 'acc',
-        phase: { titreDemarcheId: newDemarcheId('unused2'), dateDebut: toCaminoDate('2020-01-01'), dateFin: toCaminoDate('2020-10-01'), phaseStatutId: 'val' },
+        demarcheDateDebut: toCaminoDate('2020-01-01'),
+        demarcheDateFin: toCaminoDate('2020-10-01'),
       },
       {
         typeId: 'oct',
         statutId: 'acc',
-        phase: { titreDemarcheId: newDemarcheId('unused3'), dateDebut: toCaminoDate('1014-04-01'), dateFin: toCaminoDate('2020-04-01'), phaseStatutId: 'val' },
+        demarcheDateDebut: toCaminoDate('1014-04-01'),
+        demarcheDateFin: toCaminoDate('2020-04-01'),
       },
     ]
     expect(titreStatutIdFind(aujourdhui, demarches)).toEqual('mod')
@@ -120,9 +115,9 @@ describe("statut d'un titre", () => {
   test('un titre est en modification en instance si une prolongation est créée après une prolongation qui est toujours valide', () => {
     expect(
       titreInSurvieProvisoire([
-        { phase: { titreDemarcheId, phaseStatutId: 'val', dateDebut: toCaminoDate('2020-06-01'), dateFin: null } },
-        { phase: { titreDemarcheId, phaseStatutId: 'val', dateDebut: toCaminoDate('2020-01-01'), dateFin: toCaminoDate('2020-10-01') } },
-        { phase: { titreDemarcheId, phaseStatutId: 'val', dateDebut: toCaminoDate('1014-04-01'), dateFin: toCaminoDate('2020-04-01') } },
+        { demarcheDateDebut: toCaminoDate('2020-06-01'), demarcheDateFin: null },
+        { demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2020-10-01') },
+        { demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2020-04-01') },
       ])
     ).toEqual(true)
   })

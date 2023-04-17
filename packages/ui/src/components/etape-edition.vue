@@ -68,6 +68,7 @@ import Edit from './etape/edit.vue'
 import { getCurrent } from 'camino-common/src/date'
 import FormSaveBtn from './etape/pure-form-save-btn.vue'
 import DeposePopup from './etape/depose-popup.vue'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 export default {
   components: { Loader, Edit, InputDate, FormSaveBtn },
@@ -125,7 +126,7 @@ export default {
     },
 
     demarcheType() {
-      return this.demarche.type
+      return DemarchesTypes[this.demarche.typeId]
     },
 
     titre() {

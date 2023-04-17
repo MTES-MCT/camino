@@ -4,9 +4,8 @@ import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonVali
 import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
-export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'phase'>
+export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin'>
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
   const titreDemarches = demarches ? demarches.filter(d => !DemarchesTypes[d.typeId]?.travaux) : null
 
@@ -31,12 +30,7 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
     }
   }
 
-  if (
-    demarches
-      ?.map(d => d.phase)
-      .filter(isNotNullNorUndefined)
-      .some(({ dateDebut, dateFin }) => dateFin && aujourdhui >= dateDebut && aujourdhui <= dateFin)
-  ) {
+  if (demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin)) {
     return TitresStatutIds.Valide
   }
 
@@ -47,11 +41,6 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
   return TitresStatutIds.Echu
 }
 
-export const titreInSurvieProvisoire = (demarches: Pick<ITitreDemarche, 'phase'>[] | null | undefined): boolean => {
-  return (
-    demarches
-      ?.map(d => d.phase)
-      .filter(isNotNullNorUndefined)
-      .some(({ dateFin }) => !dateFin) ?? false
-  )
+export const titreInSurvieProvisoire = (demarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin'>[] | null | undefined): boolean => {
+  return demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && !demarcheDateFin) ?? false
 }

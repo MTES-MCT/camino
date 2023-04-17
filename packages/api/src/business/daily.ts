@@ -6,7 +6,7 @@ import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public
 import { titresDemarchesStatutIdUpdate } from './processes/titres-demarches-statut-ids-update.js'
 import { titresEtapesAdministrationsLocalesUpdate } from './processes/titres-etapes-administrations-locales-update.js'
 import { titresEtapesOrdreUpdate } from './processes/titres-etapes-ordre-update.js'
-import { titresPhasesUpdate } from './processes/titres-phases-update.js'
+import { titresDemarchesDatesUpdate } from './processes/titres-phases-update.js'
 import { titresPointsReferencesCreate } from './processes/titres-points-references-create.js'
 import { titresPublicUpdate } from './processes/titres-public-update.js'
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update.js'
@@ -31,9 +31,9 @@ export const daily = async () => {
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
-    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
-    const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate()
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate()
+    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
     const titresPublicUpdated = await titresPublicUpdate()
     const titresDatesUpdated = await titresDatesUpdate()
@@ -58,8 +58,7 @@ export const daily = async () => {
       titresDemarchesOrdreUpdated,
       titresStatutIdUpdated,
       titresPublicUpdated,
-      titresPhasesUpdated,
-      titresPhasesDeleted,
+      titresDemarchesDatesUpdated,
       titresDatesUpdated,
       pointsReferencesCreated,
       titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),

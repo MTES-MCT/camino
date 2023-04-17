@@ -1,11 +1,12 @@
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { ITitreEtape, IEtapeType, ITitreDemarche } from '../../types.js'
+import { ITitreEtape, ITitreDemarche } from '../../types.js'
 import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
-  demarcheTypeEtapesTypes: IEtapeType[],
+  demarcheTypeEtapesTypes: readonly EtapeTypeId[],
   titreEtape: ITitreEtape,
   demarches: ITitreDemarche[] | null | undefined,
   titreTypeId?: TitreTypeId
@@ -28,7 +29,7 @@ const titreDemarchePublicLectureFind = (
   // et que le type de titre n'est pas ARM
   // et que la démarche ne peut contenir de mise en concurrence au JORF ou JOUE
   // alors la démarche est publique
-  if (titreEtape.typeId === 'mcr' && (!titreTypeId || titreTypeId !== 'arm') && !demarcheTypeEtapesTypes.find(et => ['anf', 'ane'].includes(et.id))) {
+  if (titreEtape.typeId === 'mcr' && (!titreTypeId || titreTypeId !== 'arm') && !demarcheTypeEtapesTypes.find(et => ['anf', 'ane'].includes(et))) {
     return true
   }
 
@@ -150,7 +151,7 @@ const titreDemarchePublicLectureFind = (
 
 export const titreDemarchePublicFind = (
   demarcheTypeId: DemarcheTypeId,
-  demarcheTypeEtapesTypes: IEtapeType[],
+  demarcheTypeEtapesTypes: readonly EtapeTypeId[],
   titreEtapes: ITitreEtape[],
   titreId: string,
   titreDemarches: ITitreDemarche[] | null | undefined,

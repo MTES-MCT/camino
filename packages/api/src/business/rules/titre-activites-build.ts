@@ -148,7 +148,7 @@ const titreActiviteBuild = (
   // du début de la période suivante, en fonction de la fréquence
   const date = toCaminoDate(new Date(annee, periodeId * getNumberOfMonths(frequenceId), 1))
 
-  const titreActiviteIsValide = titreActiviteValideCheck(date, aujourdhui, periodeId, annee, getNumberOfMonths(frequenceId), titreDemarches, titreTypeId)
+  const titreActiviteIsValide = titreActiviteValideCheck(date, aujourdhui, periodeId, annee, getNumberOfMonths(frequenceId), titreDemarches)
 
   if (!titreActiviteIsValide) return null
 
@@ -190,7 +190,7 @@ export const titreActivitesBuild = (
 ) => {
   // si le titre n'a pas de phases de démarches
   // aucune activité ne peut être créées
-  if (!titreDemarches?.some(d => d.phase)) return []
+  if (!titreDemarches?.some(d => d.demarcheDateDebut)) return []
 
   const periodes = Frequences[activiteType.frequenceId].values
 

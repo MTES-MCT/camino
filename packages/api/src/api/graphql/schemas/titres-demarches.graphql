@@ -29,8 +29,7 @@ type Demarche {
   """
   slug: String
 
-  "Type de la démarche composé de trois lettres"
-  type: DemarcheType!
+  typeId: String
 
   "Ordre chronologique de la démarche"
   ordre: Int!
@@ -38,8 +37,8 @@ type Demarche {
   "Statut de la démarche"
   statutId: String!
 
-  "Phase, si la démarche donne lieu à une phase"
-  phase: Phase
+  demarcheDateDebut: String
+  demarcheDateFin: String
 
   titre: Titre
 
@@ -54,18 +53,6 @@ type Demarche {
 
   modification: Boolean
   suppression: Boolean
-}
-
-"Phase d'un titre minier"
-type Phase {
-  "Statut d'une phase"
-  phaseStatutId: String
-
-  "Date de début d'une phase"
-  dateDebut: String
-
-  "Date de fin d'une phase"
-  dateFin: String
 }
 
 input InputDemarcheCreation {

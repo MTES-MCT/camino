@@ -4,7 +4,7 @@
       <div class="tablet-blob-1-2">
         <div class="flex mb-s flex-center">
           <h2 class="cap-first">
-            {{ demarche.type.nom }}
+            {{ demarcheType.nom }}
           </h2>
           <h3 v-if="demarche.description" class="ml-s">({{ demarche.description }})</h3>
         </div>
@@ -45,7 +45,7 @@
       v-for="etape in etapes"
       :key="etape.id"
       :etape="etape"
-      :demarcheType="demarche.type"
+      :demarcheTypeId="demarche.typeId"
       :titreTypeId="titreTypeId"
       :titreId="titreId"
       :titreNom="titreNom"
@@ -75,7 +75,7 @@
       :titreTypeId="titreTypeId"
       :titreNom="titreNom"
       :titreId="titreId"
-      :demarcheTypeId="demarche.type.id"
+      :demarcheTypeId="demarche.typeId"
     />
 
     <div class="line width-full my-xxl" />
@@ -91,6 +91,7 @@ import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { canCreateEtapeByDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { demarcheApiClient } from './demarche-api-client'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 export default {
   components: {
@@ -121,11 +122,15 @@ export default {
     apiClient() {
       return demarcheApiClient
     },
+    demarcheType() {
+      return DemarchesTypes[this.demarche.typeId]
+    },
+
     myDemarche() {
       const demarche = {}
 
       demarche.description = this.demarche.description
-      demarche.typeId = this.demarche.type.id
+      demarche.typeId = this.demarche.typeId
       demarche.titreId = this.titreId
       demarche.id = this.demarche.id
 
@@ -149,7 +154,7 @@ export default {
     },
 
     canCreateEtape() {
-      return canCreateEtapeByDemarche(this.user, this.titreTypeId, this.demarche.type.id, this.titreAdministrations, this.titreStatutId)
+      return canCreateEtapeByDemarche(this.user, this.titreTypeId, this.demarche.typeId, this.titreAdministrations, this.titreStatutId)
     },
   },
 

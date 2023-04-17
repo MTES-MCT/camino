@@ -6,6 +6,9 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { userSuper } from '../../database/user-super.js'
 import { describe, test, expect } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
+
+const currentDate = toCaminoDate('2023-04-06')
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, boolean]>([
     [[], 'mfr', 'arm', true],
@@ -122,7 +125,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'arm',
     } as unknown as ITitre
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    let errors = titreEtapeUpdationValidate(currentDate, titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
 
@@ -131,7 +134,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(currentDate, titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
     expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
     // AXM
@@ -145,7 +148,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     } as unknown as ITitre
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(currentDate, titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
@@ -154,7 +157,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(currentDate, titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
     expect(errors).toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
   })
 })

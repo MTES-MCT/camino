@@ -12,7 +12,7 @@ import { Administrations } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { getAnnee, toCaminoDate } from 'camino-common/src/date.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -104,12 +104,12 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
     ) => {
       // titres dont le dernier octroi valide avec une phase valide débute cette année
       const titreDemarcheOctroiValide = titre.demarches?.find(
-        demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && demarche.phase && demarche.phase.dateDebut && demarche.phase.dateDebut.substr(0, 4) === annee.toString()
+        demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && demarche.demarcheDateDebut && getAnnee(demarche.demarcheDateDebut) === annee.toString()
       )
 
       if (!titreDemarcheOctroiValide) return acc
 
-      const surface = titreEtapePropFind('surface', titreDemarcheOctroiValide.phase!.dateDebut, [titreDemarcheOctroiValide], titre.typeId) as number | null
+      const surface = titreEtapePropFind('surface', titreDemarcheOctroiValide.demarcheDateDebut!, [titreDemarcheOctroiValide], titre.typeId) as number | null
 
       acc.push({
         id: titre.id,
@@ -124,7 +124,7 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
 
 export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
   return titres
-    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`), titre.typeId))
+    .filter(titre => titre.typeId === 'cxw' && titreValideCheck(titre.demarches!, toCaminoDate(`${annee}-01-01`), toCaminoDate(`${annee}-12-31`)))
     .reduce(
       (acc: { quantite: number; surface: number }, concession) => {
         acc.quantite++

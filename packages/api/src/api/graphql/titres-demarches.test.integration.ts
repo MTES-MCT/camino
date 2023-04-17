@@ -163,7 +163,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
-    expect(res.body.data.demarcheModifier.demarches[0].type.id).toBe('pro')
+    expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
   })
 
   test('ne peut pas modifier une démarche avec un titre inexistant (utilisateur super)', async () => {
@@ -185,7 +185,7 @@ describe('demarcheModifier', () => {
     )
 
     expect(res.body.errors).toBeUndefined()
-    expect(res.body.data.demarcheModifier.demarches[0].type.id).toBe('pro')
+    expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
   })
 
   test('ne peut pas modifier une démarche d’un titre ARM en DEA (utilisateur admin)', async () => {

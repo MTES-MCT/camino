@@ -48,7 +48,6 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
       fields: {
         surfaceEtape: { id: {} },
         demarches: {
-          phase: { id: {} },
           etapes: { id: {} },
           type: { id: {} },
         },

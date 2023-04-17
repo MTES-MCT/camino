@@ -12,8 +12,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: {
-          phase: { id: {} },
-          etapes: { points: { id: {} } },
+          id: {},
         },
       },
     },

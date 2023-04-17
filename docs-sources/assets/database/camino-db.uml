@@ -53,26 +53,6 @@ entity "**administrations__activites_types__emails**" {
   --
 }
 
-entity "**administrations__titres_types__etapes_types**" {
-  + ""administration_id"": //character varying(255) [PK][FK]//
-  + ""titre_type_id"": //character varying(255) [PK][FK]//
-  + ""etape_type_id"": //character varying(255) [PK][FK]//
-  --
-  ""lecture_interdit"": //boolean //
-  ""creation_interdit"": //boolean //
-  ""modification_interdit"": //boolean //
-}
-
-entity "**administrations__titres_types__titres_statuts**" {
-  + ""administration_id"": //character varying(255) [PK][FK]//
-  + ""titre_type_id"": //character varying(255) [PK][FK]//
-  + ""titre_statut_id"": //character varying(255) [PK]//
-  --
-  ""titres_modification_interdit"": //boolean //
-  ""demarches_modification_interdit"": //boolean //
-  ""etapes_modification_interdit"": //boolean //
-}
-
 entity "**caches**" {
   + ""id"": //character varying(128) [PK]//
   --
@@ -327,6 +307,8 @@ entity "**titres_demarches**" {
   ""slug"": //character varying(255) //
   ""description"": //character varying(255) //
   *""archive"": //boolean //
+  ""demarche_date_debut"": //character varying(10) //
+  ""demarche_date_fin"": //character varying(10) //
 }
 
 entity "**titres_demarches_liens**" {
@@ -371,14 +353,6 @@ entity "**titres_forets**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""foret_id"": //character varying(8) [PK][FK]//
   --
-}
-
-entity "**titres_phases**" {
-  + ""titre_demarche_id"": //character varying(128) [PK][FK]//
-  --
-  *""phase_statut_id"": //character varying(3) //
-  ""date_debut"": //character varying(10) //
-  ""date_fin"": //character varying(10) //
 }
 
 entity "**titres_points**" {
@@ -508,26 +482,6 @@ entity "**utilisateurs__titres**" {
 
 "**administrations__activites_types__emails**"   }--  "**administrations**"
 
-"**administrations__titres_types__etapes_types**"   }--  "**administrations**"
-
-"**administrations__titres_types__etapes_types**"   }--  "**administrations**"
-
-"**administrations__titres_types__etapes_types**"   }--  "**etapes_types**"
-
-"**administrations__titres_types__etapes_types**"   }--  "**etapes_types**"
-
-"**administrations__titres_types__etapes_types**"   }--  "**titres_types**"
-
-"**administrations__titres_types__etapes_types**"   }--  "**titres_types**"
-
-"**administrations__titres_types__titres_statuts**"   }--  "**administrations**"
-
-"**administrations__titres_types__titres_statuts**"   }--  "**administrations**"
-
-"**administrations__titres_types__titres_statuts**"   }--  "**titres_types**"
-
-"**administrations__titres_types__titres_statuts**"   }--  "**titres_types**"
-
 "**documents**"   }--  "**entreprises**"
 
 "**documents**"   }--  "**titres_activites**"
@@ -619,8 +573,6 @@ entity "**utilisateurs__titres**" {
 "**titres_forets**"   }--  "**titres_etapes**"
 
 "**titres_forets**"   }--  "**titres_etapes**"
-
-"**titres_phases**"  ||-||  "**titres_demarches**"
 
 "**titres_points**"   }--  "**titres_etapes**"
 

@@ -13,8 +13,9 @@ const administrationsUpdate = async () => {
   const departementsIds = Object.values(Administrations)
     .map(a => a.departementId)
     .filter((a: DepartementId | undefined): a is DepartementId => a !== undefined)
-    .map(departementId => ({
+    .map<{ departementId: DepartementId; nom: 'paris_ppp' | 'prefecture' }>(departementId => ({
       departementId,
+      // TODO 2023-04-11 pour la DGTM, https://etablissements-publics.api.gouv.fr/v3/departements/973/dreal_ut
       nom: departementId === '75' ? 'paris_ppp' : 'prefecture',
     }))
 

@@ -25,7 +25,7 @@ export const titreEtapePropFind = (propId: IPropId, date: CaminoDate, titreDemar
 
   // cherche la première occurrence de la propriété
   // dans une démarche et une étape valides
-  const titreEtape = titrePropTitreEtapeFind(propId, titreDemarchesFiltered, titreStatutId)
+  const titreEtape = titrePropTitreEtapeFind(date, propId, titreDemarchesFiltered, titreStatutId)
 
   if (titreEtape) {
     return propValueFind(titreEtape, propId)

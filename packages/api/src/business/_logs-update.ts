@@ -9,8 +9,7 @@ export const logsUpdate = ({
   titresDemarchesOrdreUpdated,
   titresStatutIdUpdated,
   titresPublicUpdated,
-  titresPhasesUpdated,
-  titresPhasesDeleted,
+  titresDemarchesDatesUpdated,
   titresDatesUpdated,
   pointsReferencesCreated,
   titresEtapesAdministrationsLocalesUpdated,
@@ -34,8 +33,7 @@ export const logsUpdate = ({
   titresDemarchesOrdreUpdated?: string[]
   titresStatutIdUpdated?: string[]
   titresPublicUpdated?: string[]
-  titresPhasesUpdated?: string[]
-  titresPhasesDeleted?: string[]
+  titresDemarchesDatesUpdated?: string[]
   titresDatesUpdated?: string[]
   pointsReferencesCreated?: string[]
   titresEtapesAdministrationsLocalesUpdated?: string[]
@@ -87,12 +85,8 @@ export const logsUpdate = ({
     console.info(`mise à jour: ${titresPublicUpdated.length} titre(s) (publicité)`)
   }
 
-  if (titresPhasesUpdated?.length) {
-    console.info(`mise à jour: ${titresPhasesUpdated.length} titre(s) (phases mises à jour)`)
-  }
-
-  if (titresPhasesDeleted?.length) {
-    console.info(`mise à jour: ${titresPhasesDeleted.length} titre(s) (phases supprimées)`)
+  if (titresDemarchesDatesUpdated?.length) {
+    console.info(`mise à jour: ${titresDemarchesDatesUpdated.length} titre(s) (phases mises à jour)`)
   }
 
   if (titresDatesUpdated?.length) {

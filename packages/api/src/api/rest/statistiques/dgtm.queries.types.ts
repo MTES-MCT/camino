@@ -2,18 +2,17 @@
 
 /** 'GetProductionOr' parameters type */
 export interface IGetProductionOrParams {
-  substance?: string | null | void;
+  substance?: string | null | void
 }
 
 /** 'GetProductionOr' return type */
 export interface IGetProductionOrResult {
-  annee: number;
-  count: string | null;
+  annee: number | null
+  count: string | null
 }
 
 /** 'GetProductionOr' query type */
 export interface IGetProductionOrQuery {
-  params: IGetProductionOrParams;
-  result: IGetProductionOrResult;
+  params: IGetProductionOrParams
+  result: IGetProductionOrResult
 }
-

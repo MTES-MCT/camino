@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { fragmentTitreEntreprises } from './entreprises'
 import { fragmentPoint } from './point'
 import { fragmentGeojsonMultiPolygon } from './geojson'
-import { fragmentDemarcheType, fragmentDocumentType } from './metas'
+import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
 import { fragmentCommune } from '@/api/fragments/commune'
@@ -232,9 +232,7 @@ const fragmentEtape = gql`
     titreDemarcheId
     demarche {
       id
-      type {
-        ...demarcheType
-      }
+      typeId
       titre {
         id
         slug
@@ -293,8 +291,6 @@ const fragmentEtape = gql`
     decisionsAnnexesSections
     decisionsAnnexesContenu
   }
-
-  ${fragmentDemarcheType}
 
   ${fragmentTitreEntreprises}
 

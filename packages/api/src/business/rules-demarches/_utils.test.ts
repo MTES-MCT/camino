@@ -9,11 +9,11 @@ import { demarcheDefinitionFind, isDemarcheDefinitionRestriction } from './defin
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { vi, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 test('teste EtatsValidate', () => {
-  const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')
+  const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', toCaminoDate('2021-01-01'))
 
   expect(octEtatsValidate).toBeTruthy()
   expect(octEtatsValidate([], {})).toHaveLength(0)
@@ -63,11 +63,11 @@ export const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
   }, [] as IEtapeType[])
 }
 
-export const demarcheEtatsValidate = (demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, date: string) => {
+export const demarcheEtatsValidate = (demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, date: CaminoDate) => {
   return (titreDemarcheEtapes: Partial<ITitreEtape>[], titre: Partial<ITitre> = {}) => {
     contenusTitreEtapesIdsFindMock.mockReturnValue({})
 
-    const demarcheDefinitions = demarcheDefinitionFind(titreTypeId, demarcheTypeId, [{ typeId: 'mfr', date: toCaminoDate(date) }], newDemarcheId())
+    const demarcheDefinitions = demarcheDefinitionFind(titreTypeId, demarcheTypeId, [{ typeId: 'mfr', date }], newDemarcheId())
     if (!isDemarcheDefinitionRestriction(demarcheDefinitions)) {
       throw new Error('cette démarche n’a pas de restrictions')
     }
@@ -84,6 +84,6 @@ export const demarcheEtatsValidate = (demarcheTypeId: DemarcheTypeId, titreTypeI
       demarches: [titreDemarche] as ITitreDemarche[],
     }
 
-    return titreDemarcheEtatValidate(demarcheDefinitionRestrictions!, demarcheTypeId, titreDemarche, titreDemarcheEtapes as ITitreEtape[], titre as ITitre)
+    return titreDemarcheEtatValidate(date, demarcheDefinitionRestrictions!, demarcheTypeId, titreDemarche, titreDemarcheEtapes as ITitreEtape[], titre as ITitre)
   }
 }

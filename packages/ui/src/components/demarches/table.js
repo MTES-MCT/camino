@@ -8,6 +8,7 @@ import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -28,6 +29,7 @@ const demarchesLignesBuild = demarches =>
     const titreStatut = TitresStatuts[demarche.titre.titreStatutId]
     const domaineId = getDomaineId(demarche.titre.typeId)
     const titreTypeType = TitresTypesTypes[getTitreTypeType(demarche.titre.typeId)]
+    const demarcheType = DemarchesTypes[demarche.typeId]
     const columns = {
       titreNom: { value: demarche.titre.nom },
       titreDomaine: {
@@ -50,8 +52,8 @@ const demarchesLignesBuild = demarches =>
       },
       type: {
         component: markRaw(Nom),
-        props: { nom: demarche.type.nom },
-        value: demarche.type.nom,
+        props: { nom: demarcheType.nom },
+        value: demarcheType.nom,
       },
       statut: {
         component: markRaw(Statut),
