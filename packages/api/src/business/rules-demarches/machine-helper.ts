@@ -153,7 +153,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     for (let i = 0; i < etapes.length; i++) {
       const etapeAFaire = etapes[i]
       const event = this.eventFrom(etapeAFaire)
-      if (!service.state.can(event)) {
+      if (!service.getSnapshot().can(event) || service.getSnapshot().done) {
         service.stop()
 
         return { valid: false, etapeIndex: i }
@@ -161,7 +161,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       service.send(event)
     }
 
-    const state = service.state
+    const state = service.getSnapshot()
     service.stop()
 
     return { valid: true, state }
@@ -212,20 +212,25 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       .flatMap(event => {
         const events = this.toPotentialCaminoXStateEvent(event, date)
 
-        return events.filter(event => state.can(event)).flatMap(event => this.caminoXStateEventToEtapes(event))
+        return events.filter(event => state.can(event) && !state.done).flatMap(event => this.caminoXStateEventToEtapes(event))
       })
       .filter(event => event !== undefined)
   }
   public getBestNextStepToReach(etapes: Etape[], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape | null {
+
+
     const result = this.getFirstInternalBestNextStepToReach([etapes], date, etapeToReach)
+    console.log('result', result)
     if (result) {
+    
       return result[etapes.length]
     }
     return null
   }
   private getFirstInternalBestNextStepToReach(allPaths: Etape[][], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape[] | null {
 
-    let paths = [...allPaths]
+    let paths: Etape[][] = allPaths.length && allPaths[0].length ? [...allPaths] : this.possibleNextEtapes([], date).map(etape=> ([{...etape, date}]))
+
     let newDate = date
     while(paths.length !== 1 || paths[0][paths[0].length - 1].etapeTypeId !== etapeToReach.etapeTypeId){
     
@@ -260,6 +265,12 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
         }
     }
    }
+
+      // mfr mdp mia ria mcr  
+      // mfr mdp mcr ssr scl
+
+      newAllPaths.forEach(p => console.log(p.map(e => `${e.etapeTypeId} / ${e.etapeStatutId}`)))
+
 
    return newAllPaths
   }

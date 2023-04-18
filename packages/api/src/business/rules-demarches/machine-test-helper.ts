@@ -26,7 +26,7 @@ expect.extend({
       .filter((event: EventObject['type']) => {
         const events = machine.toPotentialCaminoXStateEvent(event, date)
 
-        return events.some(event => service.state.can(event))
+        return events.some(event => service.state.can(event) && !service.state.done)
       })
 
     passEvents.sort()
@@ -53,7 +53,7 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
     const etapeAFaire = etapes[i]
     const event = machine.eventFrom(etapeAFaire)
 
-    if (!service.state.can(event)) {
+    if (!service.state.can(event) || service.getSnapshot().done) {
       throw new Error(
         `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
           etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
@@ -62,7 +62,7 @@ export const interpretMachine = <T extends EventObject, C extends CaminoCommonCo
           .filter((event: EventObject['type']) => {
             const events = machine.toPotentialCaminoXStateEvent(event, etapeAFaire.date)
 
-            return events.some(event => service.state.can(event))
+            return events.some(event => service.state.can(event) && !service.getSnapshot().done)
           })}'`
       )
     }
