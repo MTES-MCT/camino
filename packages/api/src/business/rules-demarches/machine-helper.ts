@@ -2,7 +2,8 @@ import { BaseActionObject, interpret, ResolveTypegenMeta, ServiceMap, State, Sta
 import { EventObject } from 'xstate/lib/types.js'
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, dateAddDays } from 'camino-common/src/date.js'
+
 
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<
@@ -214,5 +215,52 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
         return events.filter(event => state.can(event)).flatMap(event => this.caminoXStateEventToEtapes(event))
       })
       .filter(event => event !== undefined)
+  }
+  public getBestNextStepToReach(etapes: Etape[], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape | null {
+    const result = this.getFirstInternalBestNextStepToReach([etapes], date, etapeToReach)
+    if (result) {
+      return result[etapes.length]
+    }
+    return null
+  }
+  private getFirstInternalBestNextStepToReach(allPaths: Etape[][], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape[] | null {
+
+    let paths = [...allPaths]
+    let newDate = date
+    while(paths.length !== 1 || paths[0][paths[0].length - 1].etapeTypeId !== etapeToReach.etapeTypeId){
+    
+      newDate = dateAddDays(newDate, 45)
+      const result = this.getInternalBestNextStepToReach(paths, newDate, etapeToReach)
+      paths = result
+    }
+    
+    
+    if( paths ){
+      return paths[0]
+    }
+    return null
+  }
+
+  private getInternalBestNextStepToReach(allPaths: Etape[][], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape[][]  {
+
+    const newAllPaths: Etape[][] = []
+
+
+    for( const path of allPaths){
+      const possibleNextEtapes = this.possibleNextEtapes(path, date)
+
+      for (const nextEtape of possibleNextEtapes) {
+        if( !path.find(({etapeTypeId}) => etapeTypeId === nextEtape.etapeTypeId)){
+          
+
+          newAllPaths.push([...path, {...nextEtape, date}])
+        }
+        if( nextEtape.etapeTypeId === etapeToReach.etapeTypeId){
+          return [[...path, {...nextEtape, date: date}]]
+        }
+    }
+   }
+
+   return newAllPaths
   }
 }
