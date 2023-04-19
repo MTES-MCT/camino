@@ -370,122 +370,122 @@ const axmProMachine = createMachine<AxmProContext, AXMProXStateEvent>({
                     avisDgtmMNBSTRendu: { type: 'final' },
                   },
                 },
-                // avisDGTMAUCLMachine: {
-                //   initial: 'avisDGTMAUCLARendre',
-                //   states: {
-                //     avisDGTMAUCLARendre: {
-                //       on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' },
-                //     },
-                //     avisDGTMAUCLRendu: { type: 'final' },
-                //   },
-                // },
-                // avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine: {
-                //   initial: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
-                //   states: {
-                //     avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre: {
-                //       on: {
-                //         RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu',
-                //       },
-                //     },
-                //     avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu: { type: 'final' },
-                //   },
-                // },
-                // avisDirectionAlimentationAgricultureForetMachine: {
-                //   initial: 'avisDirectionAlimentationAgricultureForetARendre',
-                //   states: {
-                //     avisDirectionAlimentationAgricultureForetARendre: {
-                //       on: {
-                //         RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: 'avisDirectionAlimentationAgricultureForetRendu',
-                //       },
-                //     },
-                //     avisDirectionAlimentationAgricultureForetRendu: {
-                //       type: 'final',
-                //     },
-                //   },
-                // },
-                // avisDirectionRegionaleAffairesCulturellesMachine: {
-                //   initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
-                //   states: {
-                //     avisDirectionRegionaleAffairesCulturellesARendre: {
-                //       on: {
-                //         RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu',
-                //       },
-                //     },
-                //     avisDirectionRegionaleAffairesCulturellesRendu: {
-                //       type: 'final',
-                //     },
-                //   },
-                // },
-                // avisAgenceRegionaleSanteMachine: {
-                //   initial: 'avisAgenceRegionaleSanteARendre',
-                //   states: {
-                //     avisAgenceRegionaleSanteARendre: {
-                //       on: {
-                //         RENDRE_AVIS_AGENCE_REGIONALE_SANTE: 'avisAgenceRegionaleSanteRendu',
-                //       },
-                //     },
-                //     avisAgenceRegionaleSanteRendu: { type: 'final' },
-                //   },
-                // },
-                // avisDirectionRegionaleFinancesPubliquesMachine: {
-                //   initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
-                //   states: {
-                //     avisDirectionRegionaleFinancesPubliquesARendre: {
-                //       on: {
-                //         RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu',
-                //       },
-                //     },
-                //     avisDirectionRegionaleFinancesPubliquesRendu: {
-                //       type: 'final',
-                //     },
-                //   },
-                // },
-                // avisCaisseGeneraleDeSecuriteSocialeMachine: {
-                //   initial: 'avisCaisseGeneraleDeSecuriteSocialeARendre',
-                //   states: {
-                //     avisCaisseGeneraleDeSecuriteSocialeARendre: {
-                //       on: {
-                //         RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: 'avisCaisseGeneraleDeSecuriteSocialeRendu',
-                //       },
-                //     },
-                //     avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' },
-                //   },
-                // },
-                // avisOfficeNationalDesForetsMachine: {
-                //   initial: 'avisOfficeNationalDesForetsARendre',
-                //   states: {
-                //     avisOfficeNationalDesForetsARendre: {
-                //       on: {
-                //         RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: 'avisOfficeNationalDesForetsRendu',
-                //       },
-                //     },
-                //     avisOfficeNationalDesForetsRendu: { type: 'final' },
-                //   },
-                // },
-                // avisGendarmerieNationaleMachine: {
-                //   initial: 'avisGendarmerieNationaleARendre',
-                //   states: {
-                //     avisGendarmerieNationaleARendre: {
-                //       on: {
-                //         RENDRE_AVIS_GENDARMERIE_NATIONALE: 'avisGendarmerieNationaleRendu',
-                //       },
-                //     },
-                //     avisGendarmerieNationaleRendu: { type: 'final' },
-                //   },
-                // },
-                // avisEtatMajorOrpaillageEtPecheIlliciteMachine: {
-                //   initial: 'avisEtatMajorOrpaillageEtPecheIlliciteARendre',
-                //   states: {
-                //     avisEtatMajorOrpaillageEtPecheIlliciteARendre: {
-                //       on: {
-                //         RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: 'avisEtatMajorOrpaillageEtPecheIlliciteRendu',
-                //       },
-                //     },
-                //     avisEtatMajorOrpaillageEtPecheIlliciteRendu: {
-                //       type: 'final',
-                //     },
-                //   },
-                // },
+                avisDGTMAUCLMachine: {
+                  initial: 'avisDGTMAUCLARendre',
+                  states: {
+                    avisDGTMAUCLARendre: {
+                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' },
+                    },
+                    avisDGTMAUCLRendu: { type: 'final' },
+                  },
+                },
+                avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine: {
+                  initial: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
+                  states: {
+                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre: {
+                      on: {
+                        RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu',
+                      },
+                    },
+                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu: { type: 'final' },
+                  },
+                },
+                avisDirectionAlimentationAgricultureForetMachine: {
+                  initial: 'avisDirectionAlimentationAgricultureForetARendre',
+                  states: {
+                    avisDirectionAlimentationAgricultureForetARendre: {
+                      on: {
+                        RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: 'avisDirectionAlimentationAgricultureForetRendu',
+                      },
+                    },
+                    avisDirectionAlimentationAgricultureForetRendu: {
+                      type: 'final',
+                    },
+                  },
+                },
+                avisDirectionRegionaleAffairesCulturellesMachine: {
+                  initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
+                  states: {
+                    avisDirectionRegionaleAffairesCulturellesARendre: {
+                      on: {
+                        RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu',
+                      },
+                    },
+                    avisDirectionRegionaleAffairesCulturellesRendu: {
+                      type: 'final',
+                    },
+                  },
+                },
+                avisAgenceRegionaleSanteMachine: {
+                  initial: 'avisAgenceRegionaleSanteARendre',
+                  states: {
+                    avisAgenceRegionaleSanteARendre: {
+                      on: {
+                        RENDRE_AVIS_AGENCE_REGIONALE_SANTE: 'avisAgenceRegionaleSanteRendu',
+                      },
+                    },
+                    avisAgenceRegionaleSanteRendu: { type: 'final' },
+                  },
+                },
+                avisDirectionRegionaleFinancesPubliquesMachine: {
+                  initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
+                  states: {
+                    avisDirectionRegionaleFinancesPubliquesARendre: {
+                      on: {
+                        RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu',
+                      },
+                    },
+                    avisDirectionRegionaleFinancesPubliquesRendu: {
+                      type: 'final',
+                    },
+                  },
+                },
+                avisCaisseGeneraleDeSecuriteSocialeMachine: {
+                  initial: 'avisCaisseGeneraleDeSecuriteSocialeARendre',
+                  states: {
+                    avisCaisseGeneraleDeSecuriteSocialeARendre: {
+                      on: {
+                        RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: 'avisCaisseGeneraleDeSecuriteSocialeRendu',
+                      },
+                    },
+                    avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' },
+                  },
+                },
+                avisOfficeNationalDesForetsMachine: {
+                  initial: 'avisOfficeNationalDesForetsARendre',
+                  states: {
+                    avisOfficeNationalDesForetsARendre: {
+                      on: {
+                        RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: 'avisOfficeNationalDesForetsRendu',
+                      },
+                    },
+                    avisOfficeNationalDesForetsRendu: { type: 'final' },
+                  },
+                },
+                avisGendarmerieNationaleMachine: {
+                  initial: 'avisGendarmerieNationaleARendre',
+                  states: {
+                    avisGendarmerieNationaleARendre: {
+                      on: {
+                        RENDRE_AVIS_GENDARMERIE_NATIONALE: 'avisGendarmerieNationaleRendu',
+                      },
+                    },
+                    avisGendarmerieNationaleRendu: { type: 'final' },
+                  },
+                },
+                avisEtatMajorOrpaillageEtPecheIlliciteMachine: {
+                  initial: 'avisEtatMajorOrpaillageEtPecheIlliciteARendre',
+                  states: {
+                    avisEtatMajorOrpaillageEtPecheIlliciteARendre: {
+                      on: {
+                        RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: 'avisEtatMajorOrpaillageEtPecheIlliciteRendu',
+                      },
+                    },
+                    avisEtatMajorOrpaillageEtPecheIlliciteRendu: {
+                      type: 'final',
+                    },
+                  },
+                },
               },
               onDone: 'avisDesServicesRendus',
             },

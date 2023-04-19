@@ -245,7 +245,7 @@ describe('getNextMainSteps', () => {
       ]
     `)
   })
-  test.only("les étapes principales après une demande d'octroi d'arm", () => {
+  test('getNextMainSteps', () => {
     expect(
       armOctMachine.getNextMainSteps(
         [

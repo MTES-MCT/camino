@@ -695,9 +695,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             },
             avisONFARendre: {
               on: {
-                RENDRE_AVIS_ONF: {
-                  target: 'avisONFRendu',
-                },
+                RENDRE_AVIS_ONF: 'avisONFRendu',
               },
             },
             avisONFRendu: { type: 'final' },
