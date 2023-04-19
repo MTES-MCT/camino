@@ -122,6 +122,29 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
+  test('la demande ne peut pas être effectuée après une modification de la demande', () => {
+    const service = orderAndInterpretMachine([
+      {
+        etapeTypeId: 'mod',
+        etapeStatutId: 'fai',
+        date: toCaminoDate('2020-02-04'),
+      },
+      {
+        etapeTypeId: 'mdp',
+        etapeStatutId: 'fai',
+        date: toCaminoDate('2020-02-02'),
+      },
+      {
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
+        date: toCaminoDate('2020-01-01'),
+        contenu: { arm: { mecanise: false } },
+      },
+    ])
+
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-02-03') }, ['CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE', 'PAYER_FRAIS_DE_DOSSIER'])
+  })
+
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
     const service = orderAndInterpretMachine([
       {

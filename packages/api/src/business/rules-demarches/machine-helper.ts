@@ -2,9 +2,15 @@ import { BaseActionObject, interpret, ResolveTypegenMeta, ServiceMap, State, Sta
 import { EventObject } from 'xstate/lib/types.js'
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate, dateAddDays } from 'camino-common/src/date.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
-
+type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = State<
+  CaminoContext,
+  CaminoEvent,
+  any,
+  { value: any; context: CaminoContext },
+  ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
+>
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<
     CaminoContext,
@@ -16,7 +22,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
   >
 
-  private readonly trad: { [key in CaminoEvent['type']]: DBEtat }
+  private readonly trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
   private readonly events: Array<CaminoEvent['type']>
 
   protected constructor(
@@ -29,7 +35,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       ServiceMap,
       ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
     >,
-    trad: { [key in CaminoEvent['type']]: DBEtat }
+    trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
   ) {
     this.machine = machine
     this.trad = trad
@@ -39,9 +45,9 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   abstract eventFrom(etape: Etape): CaminoEvent
 
   protected caminoXStateEventToEtapes(event: CaminoEvent): Omit<Etape, 'date'>[] {
-    const dbEtat: DBEtat = this.trad[event.type as CaminoEvent['type']]
+    const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
-    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+    return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
       etapeTypeId,
       etapeStatutId,
     }))
@@ -115,7 +121,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
    * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
    * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
    */
-  public isEtapesOk(sortedEtapes: readonly Etape[], initialState: State<CaminoContext, CaminoEvent> | null = null): boolean {
+  public isEtapesOk(sortedEtapes: readonly Etape[], initialState: CaminoState<CaminoContext, CaminoEvent> | null = null): boolean {
     if (sortedEtapes.length) {
       for (let i = 1; i < sortedEtapes.length; i++) {
         if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
@@ -136,12 +142,12 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
 
   private goTo(
     etapes: readonly Etape[],
-    initialState: State<CaminoContext, CaminoEvent> | null = null
+    initialState: CaminoState<CaminoContext, CaminoEvent> | null = null
   ):
     | { valid: false; etapeIndex: number }
     | {
         valid: true
-        state: State<CaminoContext, CaminoEvent, any, { value: any; context: CaminoContext }, ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>>
+        state: CaminoState<CaminoContext, CaminoEvent>
       } {
     const service = interpret(this.machine)
 
@@ -187,7 +193,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  private assertGoTo(etapes: readonly Etape[], initialState: State<CaminoContext, CaminoEvent> | null = null) {
+  private assertGoTo(etapes: readonly Etape[], initialState: CaminoState<CaminoContext, CaminoEvent> | null = null): CaminoState<CaminoContext, CaminoEvent> {
     const value = this.goTo(etapes, initialState)
     if (!value.valid) {
       throw new Error(`Les étapes '${JSON.stringify(etapes)}' sont invalides à partir de l’étape ${value.etapeIndex}`)
@@ -216,62 +222,14 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       })
       .filter(event => event !== undefined)
   }
-  public getBestNextStepToReach(etapes: Etape[], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape | null {
 
+  public getNextMainSteps(etapes: Etape[], date: CaminoDate): Omit<Etape, 'date'>[] {
+    const nextSteps = this.possibleNextEtapes(etapes, date)
 
-    const result = this.getFirstInternalBestNextStepToReach([etapes], date, etapeToReach)
-    console.log('result', result)
-    if (result) {
-    
-      return result[etapes.length]
-    }
-    return null
-  }
-  private getFirstInternalBestNextStepToReach(allPaths: Etape[][], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape[] | null {
+    return nextSteps.filter(nextStep => {
+      const eventType: CaminoEvent['type'] = this.eventFrom({ ...nextStep, date }).type
 
-    let paths: Etape[][] = allPaths.length && allPaths[0].length ? [...allPaths] : this.possibleNextEtapes([], date).map(etape=> ([{...etape, date}]))
-
-    let newDate = date
-    while(paths.length !== 1 || paths[0][paths[0].length - 1].etapeTypeId !== etapeToReach.etapeTypeId){
-    
-      newDate = dateAddDays(newDate, 45)
-      const result = this.getInternalBestNextStepToReach(paths, newDate, etapeToReach)
-      paths = result
-    }
-    
-    
-    if( paths ){
-      return paths[0]
-    }
-    return null
-  }
-
-  private getInternalBestNextStepToReach(allPaths: Etape[][], date: CaminoDate, etapeToReach: Omit<Etape, 'date'>): Etape[][]  {
-
-    const newAllPaths: Etape[][] = []
-
-
-    for( const path of allPaths){
-      const possibleNextEtapes = this.possibleNextEtapes(path, date)
-
-      for (const nextEtape of possibleNextEtapes) {
-        if( !path.find(({etapeTypeId}) => etapeTypeId === nextEtape.etapeTypeId)){
-          
-
-          newAllPaths.push([...path, {...nextEtape, date}])
-        }
-        if( nextEtape.etapeTypeId === etapeToReach.etapeTypeId){
-          return [[...path, {...nextEtape, date: date}]]
-        }
-    }
-   }
-
-      // mfr mdp mia ria mcr  
-      // mfr mdp mcr ssr scl
-
-      newAllPaths.forEach(p => console.log(p.map(e => `${e.etapeTypeId} / ${e.etapeStatutId}`)))
-
-
-   return newAllPaths
+      return this.trad[eventType].mainStep
+    })
   }
 }

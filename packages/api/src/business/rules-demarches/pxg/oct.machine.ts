@@ -43,48 +43,60 @@ export type PXGOctXStateEvent =
 
 type Event = PXGOctXStateEvent['type']
 
-const trad: { [key in Event]: DBEtat } = {
-  FAIRE_DEMANDE: ETES.demande,
-  DEPOSER_DEMANDE: ETES.depotDeLaDemande,
-  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: ETES.demandeDeComplements_RecevabiliteDeLaDemande_,
+const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-    FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
+    db: {
+      FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
+    },
+    mainStep: true,
   },
   FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: {
-    DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE,
+    db: {
+      DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE,
+    },
+    mainStep: false,
   },
-  RECEVOIR_MODIFICATION_DE_LA_DEMANDE: ETES.modificationDeLaDemande,
-  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
-  FAIRE_SAISINES_DES_SERVICES: ETES.saisineDesServices,
-  RENDRE_AVIS_DGTM_MNBST: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_,
-  RENDRE_AVIS_DGTMAUCL: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_,
-  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi,
-  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet,
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: ETES.avisDeDirectionRegionaleDesAffairesCulturelles,
-  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: ETES.avisDeLagenceRegionaleDeSante,
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques,
-  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale,
-  RENDRE_AVIS_DREAL: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement,
-  FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: ETES.saisineDesCollectivitesLocales,
-  RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX: ETES.avisDunMaire,
-  FAIRE_CONSULTATION_CLE_DU_SAGE: ETES.consultationCLEDuSAGE,
-  FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: ETES.saisineDeLautoriteEnvironnementale,
-  RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE: ETES.avisDeLautoriteEnvironnementale,
-  OUVRIR_ENQUETE_PUBLIQUE: ETES.ouvertureDeLenquetePublique,
-  CLOTURER_ENQUETE_PUBLIQUE: ETES.clotureDeLenquetePublique,
-  TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR: ETES.transmissionDuProjetDePrescriptionsAuDemandeur,
-  RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES: ETES.avisDuDemandeurSurLesPrescriptionsProposees,
-  RENDRE_PASSAGE_CODERST: ETES.avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_,
   RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
-    ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
+    db: {
+      ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
+    },
+    mainStep: true,
   },
   RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
-    REJETE: ETES.decisionDeLadministration.REJETE,
+    db: {
+      REJETE: ETES.decisionDeLadministration.REJETE,
+    },
+    mainStep: false,
   },
-  NOTIFICATION_DU_DEMANDEUR: ETES.notificationAuDemandeur,
-  PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-  FAIRE_DESISTEMENT_DEMANDEUR: ETES.desistementDuDemandeur,
-  FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite,
+  FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
+  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  RECEVOIR_MODIFICATION_DE_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
+  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  FAIRE_SAISINES_DES_SERVICES: { db: ETES.saisineDesServices, mainStep: true },
+  RENDRE_AVIS_DGTM_MNBST: { db: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_, mainStep: false },
+  RENDRE_AVIS_DGTMAUCL: { db: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_, mainStep: false },
+  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: { db: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi, mainStep: false },
+  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: { db: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet, mainStep: false },
+  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: { db: ETES.avisDeDirectionRegionaleDesAffairesCulturelles, mainStep: false },
+  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: { db: ETES.avisDeLagenceRegionaleDeSante, mainStep: false },
+  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: { db: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques, mainStep: false },
+  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: { db: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale, mainStep: false },
+  RENDRE_AVIS_DREAL: { db: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
+  FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
+  RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX: { db: ETES.avisDunMaire, mainStep: false },
+  FAIRE_CONSULTATION_CLE_DU_SAGE: { db: ETES.consultationCLEDuSAGE, mainStep: false },
+  FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: { db: ETES.saisineDeLautoriteEnvironnementale, mainStep: true },
+  RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE: { db: ETES.avisDeLautoriteEnvironnementale, mainStep: true },
+  OUVRIR_ENQUETE_PUBLIQUE: { db: ETES.ouvertureDeLenquetePublique, mainStep: false },
+  CLOTURER_ENQUETE_PUBLIQUE: { db: ETES.clotureDeLenquetePublique, mainStep: false },
+  TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR: { db: ETES.transmissionDuProjetDePrescriptionsAuDemandeur, mainStep: true },
+  RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES: { db: ETES.avisDuDemandeurSurLesPrescriptionsProposees, mainStep: true },
+  RENDRE_PASSAGE_CODERST: { db: ETES.avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_, mainStep: false },
+  NOTIFICATION_DU_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
+  PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
+  FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
+  FAIRE_CLASSEMENT_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -97,9 +109,9 @@ export class PxgOctMachine extends CaminoMachine<PxgContext, PXGOctXStateEvent> 
   }
 
   eventFrom(etape: Etape): PXGOctXStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
+    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
 
-    const entry = entries.find(([_key, dbEtat]) => {
+    const entry = entries.find(([_key, { db: dbEtat }]) => {
       return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
     })
 

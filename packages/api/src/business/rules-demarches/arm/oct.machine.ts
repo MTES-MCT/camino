@@ -79,79 +79,112 @@ export type XStateEvent =
 
 export type Event = XStateEvent['type']
 
-const trad: { [key in Event]: DBEtat } = {
-  FAIRE_DEMANDE: EtapesTypesEtapesStatuts.demande,
-  DEPOSER_DEMANDE: EtapesTypesEtapesStatuts.depotDeLaDemande,
-  PAYER_FRAIS_DE_DOSSIER: EtapesTypesEtapesStatuts.paiementDesFraisDeDossier,
+const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
+  FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
+  DEPOSER_DEMANDE: { db: EtapesTypesEtapesStatuts.depotDeLaDemande, mainStep: true },
+  PAYER_FRAIS_DE_DOSSIER: { db: EtapesTypesEtapesStatuts.paiementDesFraisDeDossier, mainStep: true },
   DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-    REQUIS: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+    db: {
+      REQUIS: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+    },
+    mainStep: false,
   },
   EXEMPTER_DAE: {
-    EXEMPTE: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
+    db: {
+      EXEMPTE: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
+    },
+    mainStep: true,
   },
-  DESISTER_PAR_LE_DEMANDEUR: EtapesTypesEtapesStatuts.desistementDuDemandeur,
-  CLASSER_SANS_SUITE: EtapesTypesEtapesStatuts.classementSansSuite,
-  DEMANDER_COMPLEMENTS_DAE: EtapesTypesEtapesStatuts.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-  RECEVOIR_COMPLEMENTS_DAE: EtapesTypesEtapesStatuts.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__,
-  MODIFIER_DEMANDE_APRES_DAE: EtapesTypesEtapesStatuts.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+  DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: false },
+  CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: false },
+  DEMANDER_COMPLEMENTS_DAE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: false },
+  RECEVOIR_COMPLEMENTS_DAE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__, mainStep: false },
+  MODIFIER_DEMANDE_APRES_DAE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: true },
   REFUSER_COMPLETUDE: {
-    INCOMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.INCOMPLETE,
+    db: {
+      INCOMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.INCOMPLETE,
+    },
+    mainStep: false,
   },
-  RECEVOIR_COMPLEMENTS_COMPLETUDE: EtapesTypesEtapesStatuts.receptionDeComplements_CompletudeDeLaDemande_,
-  DEMANDER_COMPLEMENTS_COMPLETUDE: EtapesTypesEtapesStatuts.demandeDeComplements_CompletudeDeLaDemande_,
+  RECEVOIR_COMPLEMENTS_COMPLETUDE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_CompletudeDeLaDemande_, mainStep: false },
+  DEMANDER_COMPLEMENTS_COMPLETUDE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_CompletudeDeLaDemande_, mainStep: false },
   ACCEPTER_COMPLETUDE: {
-    COMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.COMPLETE,
+    db: {
+      COMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.COMPLETE,
+    },
+    mainStep: true,
   },
-  VALIDER_FRAIS_DE_DOSSIER: EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossier,
+  VALIDER_FRAIS_DE_DOSSIER: { db: EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossier, mainStep: true },
   REFUSER_RDE: {
-    DEFAVORABLE: EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.DEFAVORABLE,
+    db: {
+      DEFAVORABLE: EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.DEFAVORABLE,
+    },
+    mainStep: false,
   },
   ACCEPTER_RDE: {
-    FAVORABLE: EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.FAVORABLE,
+    db: {
+      FAVORABLE: EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.FAVORABLE,
+    },
+    mainStep: true,
   },
-  DEMANDER_COMPLEMENTS_RDE: EtapesTypesEtapesStatuts.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
-  RECEVOIR_COMPLEMENTS_RDE: EtapesTypesEtapesStatuts.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_,
-  NOTIFIER_DEMANDEUR_CSS: EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_,
+  DEMANDER_COMPLEMENTS_RDE: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_, mainStep: false },
+  RECEVOIR_COMPLEMENTS_RDE: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_, mainStep: false },
+  NOTIFIER_DEMANDEUR_CSS: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_, mainStep: true },
   DECLARER_DEMANDE_FAVORABLE: {
-    FAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.FAVORABLE,
+    db: {
+      FAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.FAVORABLE,
+    },
+    mainStep: true,
   },
   DECLARER_DEMANDE_DEFAVORABLE: {
-    DEFAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE,
+    db: {
+      DEFAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE,
+    },
+    mainStep: false,
   },
-  FAIRE_EXPERTISE_ONF: EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets,
-  RENDRE_AVIS_ONF: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets,
-  DEMANDER_INFORMATION_AVIS_ONF: EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_,
-  RECEVOIR_INFORMATION_AVIS_ONF: EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_,
-  FAIRE_SAISINE_CARM: EtapesTypesEtapesStatuts.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+  FAIRE_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets, mainStep: true },
+  RENDRE_AVIS_ONF: { db: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets, mainStep: true },
+  DEMANDER_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_, mainStep: false },
+  RECEVOIR_INFORMATION_AVIS_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_, mainStep: false },
+  FAIRE_SAISINE_CARM: { db: EtapesTypesEtapesStatuts.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, mainStep: true },
   RENDRE_AVIS_FAVORABLE_CARM: {
-    FAVORABLE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAVORABLE,
+    db: {
+      FAVORABLE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAVORABLE,
+    },
+    mainStep: true,
   },
   RENDRE_AVIS_DEFAVORABLE_CARM: {
-    DEFAVORABLE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.DEFAVORABLE,
+    db: {
+      DEFAVORABLE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.DEFAVORABLE,
+    },
+    mainStep: false,
   },
   RENDRE_AVIS_AJOURNE_CARM: {
-    AJOURNE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.AJOURNE,
+    db: {
+      AJOURNE: EtapesTypesEtapesStatuts.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.AJOURNE,
+    },
+    mainStep: false,
   },
-  NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: EtapesTypesEtapesStatuts.notificationAuDemandeur_AjournementDeLaCARM_,
-  DEMANDER_COMPLEMENT_SAISINE_CARM: EtapesTypesEtapesStatuts.demandeDeComplements_SaisineDeLaCARM_,
-  RECEVOIR_COMPLEMENT_SAISINE_CARM: EtapesTypesEtapesStatuts.receptionDeComplements_SaisineDeLaCARM_,
-  NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisFavorableDeLaCARM_,
-  NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisDefavorable_,
-  MODIFIER_DEMANDE: EtapesTypesEtapesStatuts.modificationDeLaDemande,
-  PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: EtapesTypesEtapesStatuts.paiementDesFraisDeDossierComplementaires,
-  VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossierComplementaires,
-  SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: EtapesTypesEtapesStatuts.signatureDeLautorisationDeRechercheMiniere,
-  DEMANDER_INFORMATION_MCR: EtapesTypesEtapesStatuts.demandeDinformations_RecevabiliteDeLaDemande_,
-  RECEVOIR_INFORMATION_MCR: EtapesTypesEtapesStatuts.receptionDinformation_RecevabiliteDeLaDemande_,
-  DEMANDER_COMPLEMENTS_MCR: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_,
-  RECEVOIR_COMPLEMENTS_MCR: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_,
-  DEMANDER_INFORMATION_EXPERTISE_ONF: EtapesTypesEtapesStatuts.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_,
-  RECEVOIR_INFORMATION_EXPERTISE_ONF: EtapesTypesEtapesStatuts.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_,
-  RECEVOIR_EXPERTISE_SERVICE_EAU: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau,
-  RECEVOIR_EXPERTISE_SERVICE_MINES: EtapesTypesEtapesStatuts.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_,
-  NOTIFIER_DEMANDEUR_SIGNATURE_ARM: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_,
-  FAIRE_AVENANT_ARM: EtapesTypesEtapesStatuts.avenantALautorisationDeRechercheMiniere,
-  NOTIFIER_AVENANT_ARM: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_,
+  NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_AjournementDeLaCARM_, mainStep: true },
+  DEMANDER_COMPLEMENT_SAISINE_CARM: { db: EtapesTypesEtapesStatuts.demandeDeComplements_SaisineDeLaCARM_, mainStep: false },
+  RECEVOIR_COMPLEMENT_SAISINE_CARM: { db: EtapesTypesEtapesStatuts.receptionDeComplements_SaisineDeLaCARM_, mainStep: false },
+  NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisFavorableDeLaCARM_, mainStep: true },
+  NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisDefavorable_, mainStep: true },
+  MODIFIER_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: false },
+  PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: { db: EtapesTypesEtapesStatuts.paiementDesFraisDeDossierComplementaires, mainStep: true },
+  VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: { db: EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossierComplementaires, mainStep: true },
+  SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: { db: EtapesTypesEtapesStatuts.signatureDeLautorisationDeRechercheMiniere, mainStep: true },
+  DEMANDER_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.demandeDinformations_RecevabiliteDeLaDemande_, mainStep: false },
+  RECEVOIR_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.receptionDinformation_RecevabiliteDeLaDemande_, mainStep: false },
+  DEMANDER_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  RECEVOIR_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  DEMANDER_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
+  RECEVOIR_INFORMATION_EXPERTISE_ONF: { db: EtapesTypesEtapesStatuts.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_, mainStep: false },
+  RECEVOIR_EXPERTISE_SERVICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
+  RECEVOIR_EXPERTISE_SERVICE_MINES: { db: EtapesTypesEtapesStatuts.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_, mainStep: false },
+  NOTIFIER_DEMANDEUR_SIGNATURE_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, mainStep: true },
+  FAIRE_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.avenantALautorisationDeRechercheMiniere, mainStep: false },
+  NOTIFIER_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, mainStep: false },
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -163,7 +196,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
   }
 
   caminoXStateEventToEtapes(event: XStateEvent): Omit<Etape, 'date'>[] {
-    const dbEtat = trad[event.type]
+    const dbEtat: DBEtat = trad[event.type].db
     let contenu: IContenu | undefined
     switch (event.type) {
       case 'FAIRE_DEMANDE': {
@@ -190,9 +223,9 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
   }
 
   eventFrom(etape: Etape): XStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
+    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
 
-    const entry = entries.find(([_key, dbEtat]) => {
+    const entry = entries.find(([_key, { db: dbEtat }]) => {
       return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
     })
 
@@ -662,7 +695,9 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             },
             avisONFARendre: {
               on: {
-                RENDRE_AVIS_ONF: 'avisONFRendu',
+                RENDRE_AVIS_ONF: {
+                  target: 'avisONFRendu',
+                },
               },
             },
             avisONFRendu: { type: 'final' },
