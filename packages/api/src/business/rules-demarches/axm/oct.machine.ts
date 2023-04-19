@@ -70,80 +70,114 @@ export type AXMOctXStateEvent =
 
 type Event = AXMOctXStateEvent['type']
 
-const trad: { [key in Event]: DBEtat } = {
-  FAIRE_DEMANDE: ETES.demande,
-  DEPOSER_DEMANDE: ETES.depotDeLaDemande,
+const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DAE_EXEMPTEE: {
-    EXEMPTE: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
+    db: {
+      EXEMPTE: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.EXEMPTE,
+    },
+    mainStep: true,
   },
   RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE: {
-    FAVORABLE: ETES.decisionDuProprietaireDuSol.FAVORABLE,
+    db: {
+      FAVORABLE: ETES.decisionDuProprietaireDuSol.FAVORABLE,
+    },
+    mainStep: true,
   },
   RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_FAVORABLE_AVEC_RESERVE: {
-    FAVORABLE_AVEC_RESERVE: ETES.decisionDuProprietaireDuSol.FAVORABLE_AVEC_RESERVE,
+    db: {
+      FAVORABLE_AVEC_RESERVE: ETES.decisionDuProprietaireDuSol.FAVORABLE_AVEC_RESERVE,
+    },
+    mainStep: false,
   },
   RENDRE_DECISION_DU_PROPRIETAIRE_DU_SOL_DEFAVORABLE: {
-    DEFAVORABLE: ETES.decisionDuProprietaireDuSol.DEFAVORABLE,
+    db: {
+      DEFAVORABLE: ETES.decisionDuProprietaireDuSol.DEFAVORABLE,
+    },
+    mainStep: false,
   },
   RENDRE_DAE_REQUISE: {
-    REQUIS: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+    db: {
+      REQUIS: ETES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS,
+    },
+    mainStep: false,
   },
-  MODIFIER_DEMANDE_APRES_DAE: ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: ETES.demandeDeComplements_RecevabiliteDeLaDemande_,
-  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-    FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
+    db: {
+      FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
+    },
+    mainStep: true,
   },
   FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: {
-    DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE,
-  },
-  MODIFIER_LA_DEMANDE: ETES.modificationDeLaDemande,
-  FAIRE_SAISINE_COLLECTIVITES_LOCALES: ETES.saisineDesCollectivitesLocales,
-  RENDRE_AVIS_DUN_MAIRE: ETES.avisDunMaire,
-  RENDRE_AVIS_DREAL: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement,
-  FAIRE_SAISINE_DES_SERVICES: ETES.saisineDesServices,
-  RENDRE_AVIS_DGTM_MNBST: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_,
-  FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_,
-  RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: {
-    FAVORABLE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-    FAVORABLE_AVEC_RESERVE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE_AVEC_RESERVE,
-    DEFAVORABLE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.DEFAVORABLE,
-    DEFAVORABLE_AVEC_RESERVES: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.DEFAVORABLE_AVEC_RESERVES,
+    db: {
+      DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE,
+    },
+    mainStep: false,
   },
   RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES_AJOURNE: {
-    AJOURNE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.AJOURNE,
+    db: {
+      AJOURNE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.AJOURNE,
+    },
+    mainStep: false,
   },
-  FAIRE_SAISINE_AUTORITE_SIGNATAIRE: ETES.saisineDeLautoriteSignataire,
   RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
-    ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
+    db: {
+      ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
+    },
+    mainStep: true,
   },
   RENDRE_DECISION_ADMINISTRATION_REJETE: {
-    REJETE: ETES.decisionDeLadministration.REJETE,
+    db: {
+      REJETE: ETES.decisionDeLadministration.REJETE,
+    },
+    mainStep: false,
   },
-  NOTIFIER_DEMANDEUR: ETES.notificationAuDemandeur,
-  PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-  PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: ETES.publicationDansUnJournalLocalOuNational,
-  NOTIFIER_COLLECTIVITES_LOCALES: ETES.notificationDesCollectivitesLocales,
-  RENDRE_DECISION_ABROGATION: ETES.abrogationDeLaDecision,
-  RENDRE_DECISION_RETRAIT: ETES.retraitDeLaDecision,
-  RENDRE_AVIS_DGTMAUCL: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_,
-  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi,
-  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet,
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: ETES.avisDeDirectionRegionaleDesAffairesCulturelles,
-  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: ETES.avisDeLagenceRegionaleDeSante,
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques,
-  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale,
-  RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: ETES.avisDeLOfficeNationalDesForets,
-  RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: ETES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_,
-  RENDRE_AVIS_GENDARMERIE_NATIONALE: ETES.avisDeLaGendarmerieNationale,
-  FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL: ETES.confirmationDeLaccordDuProprietaireDuSol,
-  FAIRE_NOTE_INTERNE_SIGNALEE: ETES.noteInterneSignalee,
-  DEMANDER_INFORMATION_POUR_AVIS_DREAL: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_,
-  RECEVOIR_INFORMATION_POUR_AVIS_DREAL: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_,
-  RENDRE_DECISION_IMPLICITE_REJET: { REJETE: ETES.decisionImplicite.REJETE },
-  RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: ETES.decisionDuJugeAdministratif,
-  FAIRE_DESISTEMENT_DEMANDEUR: ETES.desistementDuDemandeur,
-  FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite,
+  RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES: {
+    db: {
+      FAVORABLE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
+      FAVORABLE_AVEC_RESERVE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE_AVEC_RESERVE,
+      DEFAVORABLE: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.DEFAVORABLE,
+      DEFAVORABLE_AVEC_RESERVES: ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.DEFAVORABLE_AVEC_RESERVES,
+    },
+    mainStep: true,
+  },
+  FAIRE_DEMANDE: { db: ETES.demande, mainStep: true },
+  DEPOSER_DEMANDE: { db: ETES.depotDeLaDemande, mainStep: true },
+  MODIFIER_DEMANDE_APRES_DAE: { db: ETES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, mainStep: true },
+  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: { db: ETES.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
+  MODIFIER_LA_DEMANDE: { db: ETES.modificationDeLaDemande, mainStep: true },
+  FAIRE_SAISINE_COLLECTIVITES_LOCALES: { db: ETES.saisineDesCollectivitesLocales, mainStep: true },
+  RENDRE_AVIS_DUN_MAIRE: { db: ETES.avisDunMaire, mainStep: false },
+  RENDRE_AVIS_DREAL: { db: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement, mainStep: true },
+  FAIRE_SAISINE_DES_SERVICES: { db: ETES.saisineDesServices, mainStep: true },
+  RENDRE_AVIS_DGTM_MNBST: { db: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_, mainStep: false },
+  FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES: { db: ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_, mainStep: false },
+  FAIRE_SAISINE_AUTORITE_SIGNATAIRE: { db: ETES.saisineDeLautoriteSignataire, mainStep: false },
+  NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
+  PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { db: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
+  PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: ETES.publicationDansUnJournalLocalOuNational, mainStep: true },
+  NOTIFIER_COLLECTIVITES_LOCALES: { db: ETES.notificationDesCollectivitesLocales, mainStep: true },
+  RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
+  RENDRE_DECISION_RETRAIT: { db: ETES.retraitDeLaDecision, mainStep: false },
+  RENDRE_AVIS_DGTMAUCL: { db: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_, mainStep: false },
+  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: { db: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi, mainStep: false },
+  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: { db: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet, mainStep: false },
+  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: { db: ETES.avisDeDirectionRegionaleDesAffairesCulturelles, mainStep: false },
+  RENDRE_AVIS_AGENCE_REGIONALE_SANTE: { db: ETES.avisDeLagenceRegionaleDeSante, mainStep: false },
+  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: { db: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques, mainStep: false },
+  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: { db: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale, mainStep: false },
+  RENDRE_AVIS_OFFICE_NATIONAL_DES_FORETS: { db: ETES.avisDeLOfficeNationalDesForets, mainStep: false },
+  RENDRE_AVIS_ETAT_MAJOR_ORPAILLAGE_ET_PECHE_ILLICITE: { db: ETES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_, mainStep: false },
+  RENDRE_AVIS_GENDARMERIE_NATIONALE: { db: ETES.avisDeLaGendarmerieNationale, mainStep: false },
+  FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL: { db: ETES.confirmationDeLaccordDuProprietaireDuSol, mainStep: true },
+  FAIRE_NOTE_INTERNE_SIGNALEE: { db: ETES.noteInterneSignalee, mainStep: false },
+  DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
+  RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
+  // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la mdp et le rejet implicite
+  RENDRE_DECISION_IMPLICITE_REJET: { db: { REJETE: ETES.decisionImplicite.REJETE }, mainStep: false },
+  RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: ETES.decisionDuJugeAdministratif, mainStep: false },
+  FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
+  FAIRE_CLASSEMENT_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -169,9 +203,9 @@ export class AxmOctMachine extends CaminoMachine<AxmContext, AXMOctXStateEvent> 
   }
 
   eventFrom(etape: Etape): AXMOctXStateEvent {
-    const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
+    const entries = Object.entries(trad).filter((entry): entry is [Event, { db: DBEtat; mainStep: boolean }] => EVENTS.includes(entry[0]))
 
-    const entry = entries.find(([_key, dbEtat]) => {
+    const entry = entries.find(([_key, { db: dbEtat }]) => {
       return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
     })
 

@@ -259,6 +259,16 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
+  test('ne peut plus rien faire après un désistement', () => {
+    const service = orderAndInterpretMachine(axmOctMachine, [
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2020-02-06') },
+      { etapeTypeId: 'dae', etapeStatutId: 'req', date: toCaminoDate('2021-03-23') },
+      { etapeTypeId: 'asl', etapeStatutId: 'def', date: toCaminoDate('2021-05-07') },
+      { etapeTypeId: 'des', etapeStatutId: 'fai', date: toCaminoDate('2021-06-21') },
+    ])
+    expect(service).canOnlyTransitionTo({ machine: axmOctMachine, date: toCaminoDate('2022-04-16') }, [])
+  })
+
   test('peut faire uniquement une decision annulation par le juge administratif après une décision implicite', () => {
     const service = orderAndInterpretMachine(axmOctMachine, [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-01') },

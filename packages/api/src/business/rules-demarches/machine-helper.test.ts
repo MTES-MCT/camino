@@ -2,12 +2,12 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { describe, expect, test } from 'vitest'
-const machine = new ArmOctMachine()
+const armOctMachine = new ArmOctMachine()
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,
   test('refuse si les étapes ne sont pas temporellement dans le bon ordre', () => {
     expect(
-      machine.isEtapesOk([
+      armOctMachine.isEtapesOk([
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -26,7 +26,7 @@ describe('isEtapesOk', () => {
 describe('demarcheStatut', () => {
   test('demarche publique et acceptée', () => {
     expect(
-      machine.demarcheStatut([
+      armOctMachine.demarcheStatut([
         {
           date: toCaminoDate('2020-07-27'),
           etapeTypeId: 'mfr',
@@ -132,7 +132,7 @@ describe('demarcheStatut', () => {
 describe('whoIsBlocking', () => {
   test('on attend le PTMG pour la recevabilité d’une demande d’ARM', () => {
     expect(
-      machine.whoIsBlocking([
+      armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -154,7 +154,7 @@ describe('whoIsBlocking', () => {
 
   test("on attend l'ONF pour la validation du paiement des frais de dossier", () => {
     expect(
-      machine.whoIsBlocking([
+      armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -181,7 +181,7 @@ describe('whoIsBlocking', () => {
 
   test('on attend personne', () => {
     expect(
-      machine.whoIsBlocking([
+      armOctMachine.whoIsBlocking([
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
@@ -214,5 +214,149 @@ describe('whoIsBlocking', () => {
         },
       ])
     ).toStrictEqual([])
+  })
+})
+
+describe('getNextMainSteps', () => {
+  test("les étapes principales après une demande d'octroi d'arm", () => {
+    expect(
+      armOctMachine.getNextMainSteps(
+        [
+          {
+            etapeTypeId: 'mfr',
+            etapeStatutId: 'fai',
+            date: toCaminoDate('2021-02-01'),
+          },
+          {
+            etapeTypeId: 'mdp',
+            etapeStatutId: 'fai',
+            date: toCaminoDate('2021-02-02'),
+          },
+        ],
+        toCaminoDate('2021-02-03')
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "pfd",
+        },
+      ]
+    `)
+  })
+  test('getNextMainSteps', () => {
+    expect(
+      armOctMachine.getNextMainSteps(
+        [
+          { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
+          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: toCaminoDate('2021-02-02') },
+        ],
+        toCaminoDate('2021-02-03')
+      )
+    ).toEqual([
+      {
+        contenu: undefined,
+        etapeStatutId: 'fai',
+        etapeTypeId: 'eof',
+      },
+    ])
+    expect(
+      armOctMachine.getNextMainSteps(
+        [
+          { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
+          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'eof', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+        ],
+        toCaminoDate('2021-02-03')
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "dre",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fre",
+          "etapeTypeId": "aof",
+        },
+      ]
+    `)
+    expect(
+      armOctMachine.getNextMainSteps(
+        [
+          { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
+          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+        ],
+        toCaminoDate('2021-02-03')
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "mcr",
+        },
+      ]
+    `)
+    expect(
+      armOctMachine.getNextMainSteps(
+        [
+          { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
+          { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcp', etapeStatutId: 'com', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
+          { etapeTypeId: 'mcr', etapeStatutId: 'def', date: toCaminoDate('2021-02-02') },
+        ],
+        toCaminoDate('2021-02-03')
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "dre",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "aof",
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fre",
+          "etapeTypeId": "aof",
+        },
+      ]
+    `)
   })
 })
