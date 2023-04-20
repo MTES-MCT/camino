@@ -46,6 +46,7 @@ const titreFields = {
   demarches: {
     type: { etapesTypes: { id: {} } },
     etapes: {
+      points: { id: {} },
       type: { id: {} },
     },
   },

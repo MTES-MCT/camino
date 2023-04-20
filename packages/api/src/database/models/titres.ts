@@ -33,9 +33,6 @@ class Titres extends Model {
       nom: { type: 'string' },
       typeId: { type: 'string', maxLength: 3 },
       titreStatutId: { type: 'string', maxLength: 3 },
-      dateDebut: { type: ['string', 'null'] },
-      dateFin: { type: ['string', 'null'] },
-      dateDemande: { type: ['string', 'null'] },
       contenusTitreEtapesIds: { type: ['object', 'null'] },
       propsTitreEtapesIds: { type: 'object' },
       coordonnees: {

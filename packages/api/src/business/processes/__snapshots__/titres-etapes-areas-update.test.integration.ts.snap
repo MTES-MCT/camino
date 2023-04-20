@@ -96,9 +96,6 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     ],
     "contenusTitreEtapesIds": null,
     "coordonnees": null,
-    "dateDebut": null,
-    "dateDemande": null,
-    "dateFin": null,
     "doublonTitreId": null,
     "entreprisesLecture": false,
     "forets": [

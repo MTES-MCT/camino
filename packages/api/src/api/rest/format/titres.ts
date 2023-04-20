@@ -12,6 +12,9 @@ import { getDepartementsBySecteurs, getFacadesComputed, SecteursMaritimes } from
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { valeurFind } from 'camino-common/src/titres.js'
 import { titreSectionsGet } from '../titre-contenu.js'
+import { CaminoDate } from 'camino-common/src/date.js'
+import { titreDemarcheSortAsc } from '../../../business/utils/titre-elements-sort-asc.js'
+import { titreDateDemandeFind } from '../../../business/rules/titre-date-demande-find.js'
 
 const getFacadesMaritimeCell = (secteursMaritime: SecteursMaritimes[], separator: string): string =>
   getFacadesComputed(secteursMaritime)
@@ -49,14 +52,16 @@ export const titresTableFormat = (titres: ITitre[]) =>
 
     const separator = ';'
 
+    const { dateDebut, dateFin, dateDemande } = getTitreDates(titre)
+
     const titreNew = {
       id: titre.slug,
       nom: titre.nom,
       type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
       domaine: Domaines[getDomaineId(titre.typeId)].nom,
-      date_debut: titre.dateDebut,
-      date_fin: titre.dateFin,
-      date_demande: titre.dateDemande,
+      date_debut: dateDebut,
+      date_fin: dateFin,
+      date_demande: dateDemande,
       statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
       substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)?.join(separator),
       'surface renseignee km2': titre.surface,
@@ -91,14 +96,16 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
 
   const separator = ', '
 
+  const { dateDebut, dateFin, dateDemande } = getTitreDates(titre)
+
   return {
     id: titre.slug,
     nom: titre.nom,
     type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
     domaine: Domaines[getDomaineId(titre.typeId)].nom,
-    date_debut: titre.dateDebut,
-    date_fin: titre.dateFin,
-    date_demande: titre.dateDemande,
+    date_debut: dateDebut,
+    date_fin: dateFin,
+    date_demande: dateDemande,
     statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
     substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)?.join(separator) || null,
     'surface renseignee km2': titre.surface,
@@ -114,6 +121,16 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator) || null,
     references: titre.references && titre.references.map(reference => `${ReferencesTypes[reference.referenceTypeId].nom}: ${reference.nom}`).join(separator),
     ...titreContenuTableFormat(titre),
+  }
+}
+
+const getTitreDates = (titre: Pick<ITitre, 'demarches'>): { dateDebut: CaminoDate | null; dateFin: CaminoDate | null; dateDemande: CaminoDate | null } => {
+  const sortedDemarches = titreDemarcheSortAsc(titre.demarches ?? [])
+
+  return {
+    dateDebut: sortedDemarches.find(demarche => !!demarche.demarcheDateDebut)?.demarcheDateDebut ?? null,
+    dateFin: sortedDemarches.reverse().find(demarche => demarche.demarcheDateDebut)?.demarcheDateFin ?? null,
+    dateDemande: titreDateDemandeFind(titre.demarches!),
   }
 }
 

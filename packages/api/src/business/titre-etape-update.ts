@@ -2,7 +2,6 @@ import { DemarcheId } from '../types.js'
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
-import { titresDatesUpdate } from './processes/titres-dates-update.js'
 import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public-update.js'
 import { titresDemarchesStatutIdUpdate } from './processes/titres-demarches-statut-ids-update.js'
 import { titresEtapesHeritagePropsUpdate } from './processes/titres-etapes-heritage-props-update.js'
@@ -54,7 +53,6 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
     const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate([titreId])
-    const titresDatesUpdated = await titresDatesUpdate([titreId])
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
@@ -83,7 +81,6 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
       titresStatutIdUpdated,
       titresPublicUpdated,
       titresDemarchesDatesUpdated,
-      titresDatesUpdated,
       titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,

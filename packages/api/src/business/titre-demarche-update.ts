@@ -6,7 +6,6 @@ import { titresStatutIdsUpdate } from './processes/titres-statut-ids-update.js'
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update.js'
 import { titresContenusEtapesIdsUpdate } from './processes/titres-contenus-etapes-ids-update.js'
 import { titresDemarchesDatesUpdate } from './processes/titres-phases-update.js'
-import { titresDatesUpdate } from './processes/titres-dates-update.js'
 import { titresDemarchesOrdreUpdate } from './processes/titres-demarches-ordre-update.js'
 import { titresPublicUpdate } from './processes/titres-public-update.js'
 import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
@@ -39,7 +38,6 @@ const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: stri
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
     const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate([titreId])
-    const titresDatesUpdated = await titresDatesUpdate([titreId])
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
     const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
@@ -54,7 +52,6 @@ const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: stri
       titresStatutIdUpdated,
       titresPublicUpdated,
       titresDemarchesDatesUpdated,
-      titresDatesUpdated,
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,

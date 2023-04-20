@@ -21,8 +21,6 @@ const fragmentTitre = gql`
       nom
     }
     substances
-    dateDebut
-    dateFin
     activitesEnConstruction
     activitesAbsentes
     activitesDeposees
