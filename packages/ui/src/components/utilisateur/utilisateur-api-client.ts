@@ -1,6 +1,4 @@
 import { Utilisateur } from '@/api/api-client'
-import { fragmentEntreprises } from '@/api/fragments/entreprises'
-import { fragmentUtilisateur } from '@/api/fragments/utilisateur'
 import { apiGraphQLFetch } from '@/api/_client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
@@ -24,11 +22,23 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     const data = await apiGraphQLFetch(gql`
       query Utilisateur($id: ID!) {
         utilisateur(id: $id) {
-          ...utilisateur
+          id
+          nom
+          prenom
+          email
+          telephoneMobile
+          telephoneFixe
+          entreprises {
+            id
+            nom
+            paysId
+            legalSiren
+            legalEtranger
+          }
+          administrationId
+          role
         }
       }
-
-      ${fragmentUtilisateur}
     `)({
       id: userId,
     })
@@ -52,12 +62,14 @@ export const utilisateurApiClient: UtilisateurApiClient = {
         query UtilisateurMetas {
           entreprises {
             elements {
-              ...entreprises
+              id
+              nom
+              paysId
+              legalSiren
+              legalEtranger
             }
           }
         }
-
-        ${fragmentEntreprises}
       `
     )()
     return elements
