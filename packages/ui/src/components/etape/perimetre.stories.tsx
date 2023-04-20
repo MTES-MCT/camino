@@ -20,7 +20,6 @@ const points = [
     point: 1,
     nom: '1',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -40,7 +39,6 @@ const points = [
     point: 2,
     nom: '2',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -60,7 +58,6 @@ const points = [
     point: 3,
     nom: '3',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -80,7 +77,6 @@ const points = [
     point: 4,
     nom: '4',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [

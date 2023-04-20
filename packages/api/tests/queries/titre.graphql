@@ -154,7 +154,6 @@ fragment point on Point {
   point
   nom
   description
-  securite
   references {
     ...pointReference
   }

@@ -44,9 +44,6 @@ type Point {
   "Description du point telle que stipulée dans les documents officiels"
   description: String
 
-  "Si le point appartient à un périmètre de sécurité"
-  securite: Boolean
-
   subsidiaire: Boolean
 
   lot: Int
@@ -120,7 +117,6 @@ input InputPoint {
   point: Int!
   nom: String
   description: String
-  securite: Boolean
   subsidiaire: Boolean
   lot: Int
   references: [InputPointReference]!

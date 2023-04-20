@@ -593,7 +593,6 @@ interface ITitrePoint {
   references: ITitrePointReference[]
   coordonnees: ICoordonnees
   lot?: number | null
-  securite?: boolean | null
   subsidiaire?: boolean | null
 }
 
