@@ -1,5 +1,3 @@
-const TODAY = new Date().toISOString().slice(0, 10)
-
 const dateFormat = dateString => {
   if (typeof dateString !== 'string' || !dateString) {
     return ''
@@ -61,4 +59,4 @@ const paramsBuild = (apiParams, preferences) =>
 
 const cap = string => string[0].toUpperCase() + string.slice(1)
 
-export { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, elementsFormat, paramsBuild, cap, TODAY }
+export { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, elementsFormat, paramsBuild, cap }
