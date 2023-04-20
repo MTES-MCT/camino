@@ -1,16 +1,17 @@
 import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent } from 'leaflet'
 
 import { ref, onMounted, markRaw, watch } from 'vue'
-import { FeatureGroup, layerGroup } from 'leaflet'
+import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
   mapUpdate?: (data: { center?: number[]; zoom?: number; bbox?: number[] }) => void
+  additionalOverlayLayers?: Record<string, LayerGroup>
 }
 
-export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate'], (props, { expose }) => {
+export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
   const updateBboxOnly = ref<boolean>(false)
@@ -150,6 +151,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       'Limite de la redevance d’archéologie préventive': RedevanceArcheologiePreventive,
       Contours: geojsonLayer,
       Points: markerLayer,
+      ...props.additionalOverlayLayers,
     }
     if (map.value !== null) {
       const leafletComponentOnMounted = markRaw(

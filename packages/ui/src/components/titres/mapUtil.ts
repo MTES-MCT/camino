@@ -2,7 +2,7 @@ import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojso
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
-import { DivIconOptions, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
+import { DivIconOptions, GeoJSON, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
@@ -97,7 +97,7 @@ export type CaminoMarker = {
   domaineId?: DomaineId
 }
 export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
-  titres.reduce<{ geojsons: Record<string, any>; markers: CaminoMarker[] }>(
+  titres.reduce<{ geojsons: Record<string, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre, index) => {
       if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
 

@@ -58,7 +58,14 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class={`${isMain ? 'width-full' : ''} line-neutral`} />
 
       {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
-        <CamionCommonMap class={`${isMain ? 'width-full' : ''}`} geojson={props.geojsonMultiPolygon} points={props.points} titreTypeId={props.titreTypeId} isMain={props.isMain} />
+        <CamionCommonMap
+          class={`${isMain ? 'width-full' : ''}`}
+          geojson={props.geojsonMultiPolygon}
+          titreId={props.titreId}
+          points={props.points}
+          titreTypeId={props.titreTypeId}
+          isMain={props.isMain}
+        />
       ) : null}
 
       {props.points && tabId === 'points' ? (
