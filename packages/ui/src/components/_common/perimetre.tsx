@@ -1,14 +1,15 @@
+import { Point } from '@/utils/titre-etape-edit'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
 import { Download } from './download'
 import { CamionCommonMap, Props as CaminoCommonMapProps } from './map'
-import Points from './points.vue'
+import { Points } from './points'
 
 export type TabId = 'carte' | 'points'
 export interface Props {
-  points?: CaminoCommonMapProps['points']
+  points?: Point[]
   geojsonMultiPolygon: CaminoCommonMapProps['geojson']
   titreTypeId: TitreTypeId
   titreId?: string

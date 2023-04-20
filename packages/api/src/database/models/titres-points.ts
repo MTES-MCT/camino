@@ -27,7 +27,6 @@ class TitresPoints extends Model {
       contour: { type: 'integer' },
       point: { type: 'integer' },
       lot: { type: ['integer', 'null'] },
-      securite: { type: ['boolean', 'null'] },
       subsidiaire: { type: ['boolean', 'null'] },
     },
   }

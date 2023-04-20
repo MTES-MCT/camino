@@ -4,19 +4,21 @@ import { CaminoDocument, Etape } from 'camino-common/src/etape'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-interface Point {
+export interface Point {
   id: string
   references: PointReference[]
+  coordonnees: { x: number; y: number }
+  point: number
   contour: number
   groupe: number
   lot: number | null
   subsidiaire: boolean | null
   nom: string
-  description: string
+  description: string | null
 }
 
 interface PointReference {
-  opposable: boolean
+  opposable: boolean | null
   geoSystemeId: GeoSystemeId
   coordonnees: object
   id: string
@@ -27,8 +29,8 @@ export interface GroupeBuildPoint {
   nom?: string
   lot?: number | null
   subsidiaire?: boolean | null
-  description?: string
-  references: ({ id?: string } & object)[] | { [key in GeoSystemeId]?: { id?: string } & object }
+  description?: string | null
+  references: { id?: string; x?: string; y?: string }[] | { [key in GeoSystemeId]?: { id?: string; x?: string; y?: string } }
   // used by points-edit ?
   groupe?: number
   contour?: number
@@ -44,8 +46,8 @@ interface GroupeBuild {
   groupeIndexPrevious: number
 }
 
-const referencesBuild = (references: PointReference[]): { pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } & object } } =>
-  references.reduce<{ pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } & object } }>(
+const referencesBuild = (references: PointReference[]): { pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } } } =>
+  references.reduce<{ pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } } }>(
     ({ pointGeoSystemesIndex, pointReferences }, { geoSystemeId, coordonnees, id }) => {
       pointGeoSystemesIndex[geoSystemeId] = GeoSystemes[geoSystemeId]
 
@@ -131,7 +133,7 @@ const groupeBuild = (points: Point[], geoSystemeOpposableId: GeoSystemeId | unde
   )
 
 export const etapeGroupesBuild = (points: Point[]): { groupes: GroupeBuildPoint[][][]; geoSystemes: (GeoSysteme | undefined)[]; geoSystemeOpposableId: GeoSystemeId | undefined } => {
-  const geoSystemeOpposableId = geoSystemeOpposableIdFind(points[0].references)
+  const geoSystemeOpposableId = geoSystemeOpposableIdFind(points[0]?.references ?? [])
 
   const { groupes, geoSystemesIndex } = groupeBuild(points, geoSystemeOpposableId)
 

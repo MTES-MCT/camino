@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { MapPattern } from '../_map/pattern'
 import { Perimetre } from './perimetre'
 import { MultiPolygon, Feature } from 'geojson'
+import { Point } from '@/utils/titre-etape-edit'
 
 const meta: Meta = {
   title: 'Components/common/Perimetre',
@@ -10,7 +11,7 @@ const meta: Meta = {
 }
 export default meta
 
-const points = [
+const points: Point[] = [
   {
     id: '25DvyBbQb36lhOMLfnHNQdUS',
     coordonnees: { x: -52.5660583466962, y: 4.23944263425535 },
@@ -19,7 +20,6 @@ const points = [
     point: 1,
     nom: '1',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -39,7 +39,6 @@ const points = [
     point: 2,
     nom: '2',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -59,7 +58,6 @@ const points = [
     point: 3,
     nom: '3',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
@@ -79,7 +77,6 @@ const points = [
     point: 4,
     nom: '4',
     description: null,
-    securite: null,
     subsidiaire: null,
     lot: null,
     references: [
