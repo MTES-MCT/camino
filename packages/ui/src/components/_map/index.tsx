@@ -165,7 +165,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
           fullscreenControl: {
             pseudoFullscreen: true,
           },
-          layers: [osm, geojsonLayer, markerLayer],
+          layers: [osm, geojsonLayer, markerLayer, ...(props.additionalOverlayLayers ? Object.values(props.additionalOverlayLayers) : [])],
         })
       )
       leafletComponent.value = leafletComponentOnMounted
