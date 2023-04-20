@@ -16,8 +16,9 @@ exports[`getAssignableRoles 1`] = `
   },
   {
     "assignableRoles": [
-      "lecteur",
+      "admin",
       "editeur",
+      "lecteur",
       "entreprise",
       "bureau d’études",
       "defaut",

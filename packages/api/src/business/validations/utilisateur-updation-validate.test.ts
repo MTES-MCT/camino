@@ -109,14 +109,14 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
       { ...testBlankUser, id: 'fakeId', role: 'admin', administrationId: 'aut-97300-01' }
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
+  ).not.toThrowError()
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
       { id: 'utilisateurId', role: 'admin', administrationId: 'aut-97300-01', entreprises: [] },
       { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-97300-01' }
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
+  ).not.toThrowError()
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,

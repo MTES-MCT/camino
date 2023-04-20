@@ -22,7 +22,7 @@ test('canEditPermission', () => {
   expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'lecteur', administrationId: 'aut-97300-01' })).toEqual(true)
   expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'editeur', administrationId: 'aut-97300-01' })).toEqual(true)
   expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(true)
-  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'admin', administrationId: 'aut-97300-01' })).toEqual(false)
+  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'admin', administrationId: 'aut-97300-01' })).toEqual(true)
 
   expect(canEditPermission(users.defaut, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
   expect(canEditPermission(users.lecteur, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
