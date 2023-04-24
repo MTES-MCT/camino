@@ -72,15 +72,17 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
   })
 
   const onSearch = (searchLabel: string) => {
-    console.log('search', searchLabel)
     search.value = searchLabel.toLowerCase()
   }
 
   const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
-    const titreLinkDemarches = titre.demarches.filter(({ phase }) => phase)
-    const dateDebut = titreLinkDemarches.map(({ phase }) => phase?.dateDebut).sort()[0]
-    const dateFin = titreLinkDemarches
-      .map(({ phase }) => phase?.dateFin)
+    const dateDebut = titre.demarches
+      .filter(({ demarcheDateDebut }) => !!demarcheDateDebut)
+      .map(({ demarcheDateDebut }) => demarcheDateDebut)
+      .sort()[0]
+    const dateFin = titre.demarches
+      .filter(({ demarcheDateFin }) => !!demarcheDateFin)
+      .map(({ demarcheDateFin }) => demarcheDateFin)
       .sort()
       .reverse()[0]
 

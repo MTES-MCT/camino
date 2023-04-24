@@ -2,6 +2,7 @@ import { TitresLink } from './titres-link'
 import { Meta, Story } from '@storybook/vue3'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { action } from '@storybook/addon-actions'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
@@ -17,10 +18,8 @@ const titres: LinkableTitre[] = [
     titreStatutId: 'ech',
     demarches: [
       {
-        phase: {
-          dateDebut: '2016-10-28',
-          dateFin: '2017-03-17',
-        },
+        demarcheDateDebut: toCaminoDate('2016-10-28'),
+        demarcheDateFin: toCaminoDate('2017-03-17'),
       },
     ],
   },
@@ -30,10 +29,8 @@ const titres: LinkableTitre[] = [
     titreStatutId: 'ech',
     demarches: [
       {
-        phase: {
-          dateDebut: '2008-11-30',
-          dateFin: '2019-02-27',
-        },
+        demarcheDateDebut: toCaminoDate('2008-11-30'),
+        demarcheDateFin: toCaminoDate('2019-02-27'),
       },
     ],
   },
@@ -43,10 +40,8 @@ const titres: LinkableTitre[] = [
     titreStatutId: 'ech',
     demarches: [
       {
-        phase: {
-          dateDebut: '2008-11-30',
-          dateFin: '2019-02-27',
-        },
+        demarcheDateDebut: toCaminoDate('2008-11-30'),
+        demarcheDateFin: toCaminoDate('2019-02-27'),
       },
     ],
   },

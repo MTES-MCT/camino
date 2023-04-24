@@ -8,6 +8,7 @@ import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { fetchWithJson, postWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { CaminoDate } from 'camino-common/src/date'
 
 export type TitresLinkConfig =
   | {
@@ -19,8 +20,7 @@ export type TitresLinkConfig =
       selectedTitreIds: string[]
     }
 
-type DemarchePhase = { dateDebut: string; dateFin: string }
-type TitreLinkDemarche = { phase?: DemarchePhase }
+type TitreLinkDemarche = { demarcheDateDebut: CaminoDate | null; demarcheDateFin: CaminoDate | null }
 export type LinkableTitre = TitreLink & {
   demarches: TitreLinkDemarche[]
   titreStatutId: TitreStatutId
@@ -55,10 +55,8 @@ export const titresLinkFormApiClient: TitresLinkFormApiClient = {
                 nom
                 titreStatutId
                 demarches {
-                  phase {
-                    dateDebut
-                    dateFin
-                  }
+                  demarcheDateDebut
+                  demarcheDateFin
                 }
               }
             }
