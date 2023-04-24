@@ -34,7 +34,7 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
 
   // on interdit la suppression des documents obligatoires et imcomplets
   documents?.forEach(d => {
-    d.suppression = d.id !== typeGet(d)
+    d.suppression = d.suppression && d.id !== typeGet(d)
   })
 
   return newDocuments

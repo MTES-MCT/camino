@@ -33,10 +33,10 @@ describe('documents', () => {
   })
 
   test('supprime le document avec un type inexistant', () => {
-    expect(documentsRequiredAdd([{ typeId: 'aaa' }, { typeId: 'ddd' }], [{ optionnel: false, id: 'aaa' }], true)).toEqual([
+    expect(documentsRequiredAdd([{ typeId: 'aaa', suppression: false }, { typeId: 'ddd' }], [{ optionnel: false, id: 'aaa' }], true)).toEqual([
       {
         typeId: 'aaa',
-        suppression: true,
+        suppression: false,
       },
     ])
   })
