@@ -195,7 +195,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
     super(armOctMachine, trad)
   }
 
-  caminoXStateEventToEtapes(event: XStateEvent): Omit<Etape, 'date'>[] {
+  caminoXStateEventToEtapes(event: XStateEvent): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
     const dbEtat: DBEtat = trad[event.type].db
     let contenu: IContenu | undefined
     switch (event.type) {
@@ -219,6 +219,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
       etapeTypeId,
       etapeStatutId,
       contenu,
+      mainStep: trad[event.type].mainStep,
     }))
   }
 

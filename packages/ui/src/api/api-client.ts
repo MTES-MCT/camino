@@ -6,6 +6,7 @@ import { TitreApiClient, titreApiClient } from '../components/titre/titre-api-cl
 import { UtilisateurApiClient, utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
 import { demarcheApiClient } from '@/components/titre/demarche-api-client'
 import { entrepriseApiClient } from '@/components/entreprise/entreprise-api-client'
+import { EtapeApiClient, etapeApiClient } from '@/components/etape/etape-api-client'
 
 export type Utilisateur = {
   id: string
@@ -17,7 +18,7 @@ export type Utilisateur = {
   entreprises?: Entreprise[]
 } & User
 
-export interface ApiClient extends AdministrationApiClient, TitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient {}
+export interface ApiClient extends AdministrationApiClient, TitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient, EtapeApiClient {}
 
 export const apiClient: ApiClient = {
   ...administrationApiClient,
@@ -25,5 +26,6 @@ export const apiClient: ApiClient = {
   ...titreApiClient,
   ...demarcheApiClient,
   ...entrepriseApiClient,
+  ...etapeApiClient,
   ...utilisateurApiClient,
 }

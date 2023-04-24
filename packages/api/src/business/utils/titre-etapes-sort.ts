@@ -1,10 +1,11 @@
-import { DemarcheId, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 import { demarcheDefinitionFind, IDemarcheDefinitionRestrictions, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)

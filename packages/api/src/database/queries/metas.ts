@@ -83,6 +83,7 @@ const etapesTypesGet = async (
 
   const q = EtapesTypes.query().withGraphFetched(graph)
 
+  // FIXME à vérifier si ça sert tjrs
   if (titreDemarcheId) {
     etapesTypesQueryModify(q, user, {
       titreDemarcheId,

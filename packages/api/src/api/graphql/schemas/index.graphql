@@ -126,7 +126,7 @@ type Query {
   demarchesStatuts: [DemarcheStatut]
 
   "Types d'étapes"
-  etapesTypes(titreDemarcheId: ID, titreEtapeId: ID, date: String, travaux: Boolean): [EtapeType]
+  etapesTypes(travaux: Boolean): [EtapeType]
 
   "Status d'étapes"
   etapesStatuts: [EtapeStatut]

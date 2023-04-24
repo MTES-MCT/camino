@@ -1,4 +1,4 @@
-import { DemarcheId, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
@@ -6,6 +6,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 export const titresEtapesOrdreUpdate = async (user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()

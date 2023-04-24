@@ -15,6 +15,7 @@ import { CaminoConfig } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
+import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 const contentTypes = {
   csv: 'text/csv',
   geojson: 'application/geojson',
@@ -117,6 +118,7 @@ rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))
 rest.get('/titres_qgis', restDownload(titres))
 rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
+rest.get(CaminoRestRoutes.etapesTypesEtapesStatusWithMainStep, restCatcher(getEtapesTypesEtapesStatusWithMainStep))
 
 rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
 rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))

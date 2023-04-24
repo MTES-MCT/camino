@@ -138,12 +138,7 @@ export default {
     },
 
     loading() {
-      return (
-        this.$store.state.loading.includes('titreEtapeUpdate') ||
-        this.$store.state.loading.includes('titreEtapeMetasGet') ||
-        this.$store.state.loading.includes('titreEtapeGet') ||
-        this.$store.state.loading.includes('titreEtapeEtapesTypesGet')
-      )
+      return this.$store.state.loading.includes('titreEtapeUpdate') || this.$store.state.loading.includes('titreEtapeMetasGet') || this.$store.state.loading.includes('titreEtapeGet')
     },
 
     etapeIsDemandeEnConstruction() {

@@ -1,4 +1,5 @@
-import { DemarcheId, ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types.js'
+import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'

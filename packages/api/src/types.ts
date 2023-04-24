@@ -25,6 +25,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -467,7 +468,6 @@ interface ITitreEtapeJustificatif {
   titreEtapeId: string
 }
 
-export type DemarcheId = string & { __camino: 'demarcheId' }
 interface ITitreDemarche {
   id: DemarcheId
   description?: string

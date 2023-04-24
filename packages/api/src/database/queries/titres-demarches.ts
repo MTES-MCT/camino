@@ -1,6 +1,7 @@
 import { Transaction, QueryBuilder, RawBuilder, raw } from 'objection'
 
-import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, IFields, Index, DemarcheId } from '../../types.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, IFields, Index } from '../../types.js'
 
 import options from './_options.js'
 import { fieldsFormat } from './graph/fields-format.js'

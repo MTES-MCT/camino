@@ -1,4 +1,4 @@
-import { DemarcheId, IDemarcheType, IEtapeType, ISection, ITitre, ITitreEtape } from '../../types.js'
+import { IDemarcheType, ISection, ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
@@ -9,11 +9,12 @@ import { titreSectionsFormat } from './titres-sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
-const etapeTypeSectionsFormat = (sections: ISection[] | undefined | null, sectionsSpecifiques: ISection[] | undefined | null) => {
+export const etapeTypeSectionsFormat = (sections: ISection[] | undefined | null, sectionsSpecifiques: ISection[] | undefined | null) => {
   let result: ISection[] = []
 
   if (sectionsSpecifiques?.length) {
@@ -32,7 +33,7 @@ const etapeTypeSectionsFormat = (sections: ISection[] | undefined | null, sectio
   return titreSectionsFormat(result)
 }
 
-const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
+export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
 
   if (documentsTypes?.length) {
@@ -61,7 +62,7 @@ export interface DocumentTypeData {
   etapeTypeId: EtapeTypeId
 }
 
-const etapeTypeFormat = (
+export const etapeTypeFormat = (
   etape: ITitreEtape,
   sectionsSpecifiques: ISection[] | null | undefined,
   justificatifsTypesSpecifiques: DocumentType[] | null | undefined,
@@ -90,8 +91,9 @@ const etapeTypeFormat = (
   return etapeType
 }
 
-const etapeTypeDateFinCheck = (etapeType: IEtapeType, titreEtapes?: ITitreEtape[] | null) => {
-  if (!etapeType.dateFin || !titreEtapes) return true
+const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null) => {
+  const etapeTypeDateFin = EtapesTypes[etapeTypeId].dateFin
+  if (!etapeTypeDateFin || !titreEtapes) return true
 
   const dateDemande = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
@@ -101,11 +103,11 @@ const etapeTypeDateFinCheck = (etapeType: IEtapeType, titreEtapes?: ITitreEtape[
   // alors on ne propose pas ce type d'étape
   // Exemple: Si on a pas de date de demande, on ne peut pas proposer la « décision de l’ONF »
   // car cette étape est proposable que pour les demandes antérieures au 01/01/2020
-  return dateDemande ? dateDemande < etapeType.dateFin : false
+  return dateDemande ? dateDemande < etapeTypeDateFin : false
 }
 
-const etapeTypeIsValidCheck = (
-  etapeType: IEtapeType,
+export const etapeTypeIsValidCheck = (
+  etapeTypeId: EtapeTypeId,
   date: CaminoDate,
   titre: ITitre,
   demarcheType: IDemarcheType,
@@ -113,7 +115,7 @@ const etapeTypeIsValidCheck = (
   titreDemarcheEtapes?: ITitreEtape[] | null,
   titreEtape?: ITitreEtape
 ) => {
-  const isDateFinValid = etapeTypeDateFinCheck(etapeType, titreDemarcheEtapes)
+  const isDateFinValid = etapeTypeDateFinCheck(etapeTypeId, titreDemarcheEtapes)
 
   if (!isDateFinValid) return false
 
@@ -121,10 +123,8 @@ const etapeTypeIsValidCheck = (
     titreEtape = {} as ITitreEtape
   }
 
-  titreEtape.typeId = etapeType.id
+  titreEtape.typeId = etapeTypeId
   titreEtape.date = date
 
   return !titreDemarcheUpdatedEtatValidate(date, demarcheType, titre, titreEtape, demarcheId, titreDemarcheEtapes).length
 }
-
-export { etapeTypeIsValidCheck, etapeTypeSectionsFormat, etapeTypeFormat, documentsTypesFormat }

@@ -2,9 +2,10 @@ import { documentEtapeFormat, etapeEditFormat, etapePointsFormat } from '../util
 import { etapeSaveFormat, pointsBuild } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
-import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeEtapesTypes, titreEtapeMetas } from '../api/titres-etapes'
+import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
 import { documentsRequiredAdd } from '../utils/documents'
 import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from '../api/geojson'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const state = {
   element: null,
@@ -23,7 +24,7 @@ const state = {
 const getters = {
   etapeType(state) {
     if (state.element?.type) {
-      return state.metas.etapesTypes.find(et => et.id === state.element.type.id)
+      return EtapesTypes[state.element.type.id]
     }
     return null
   },
@@ -62,7 +63,7 @@ const actions = {
 
         titreDemarcheId = state.element.titreDemarcheId
       } else {
-        commit('set', etapeEditFormat({}))
+        commit('set', etapeEditFormat({ titreDemarcheId }))
       }
 
       await dispatch('metasGet', { titreDemarcheId, id })
@@ -107,22 +108,8 @@ const actions = {
     }
   },
 
-  async dateUpdate({ state, commit, dispatch }, { date }) {
-    try {
-      commit('loadingAdd', 'titreEtapeEtapesTypesGet', { root: true })
-      const metas = await titreEtapeEtapesTypes({
-        id: state.element?.id,
-        date,
-        titreDemarcheId: state.metas.demarche.id,
-      })
-
-      commit('metasSet', { etapesTypes: metas })
-      commit('dateSet', date)
-    } catch (e) {
-      dispatch('pageError', null, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreEtapeEtapesTypesGet', { root: true })
-    }
+  async dateUpdate({ commit }, { date }) {
+    commit('dateSet', date)
   },
 
   async heritageGet({ commit, state, dispatch }, { typeId }) {

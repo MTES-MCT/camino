@@ -1,5 +1,5 @@
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, TitreEtapeForMachine } from './metas.js'
-import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine.js'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, TitreEtapeForMachine } from './etapes.js'
+import { ArmOctMachine } from '../../business/rules-demarches/arm/oct.machine.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test, vi } from 'vitest'
 
@@ -148,13 +148,13 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-05-06'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
     expect(tested).toHaveLength(1)
     expect(tested[0]).toBe('mnv')
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(tested).toStrictEqual(['mod'])
   })
 
@@ -177,7 +177,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(tested).toStrictEqual(['rde', 'pfd', 'dae'])
   })
 
@@ -198,7 +198,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
     expect(tested).toStrictEqual(['pfd'])
   })
 
@@ -313,7 +313,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-07-01'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
     expect(tested).toStrictEqual(['rcb', 'rde', 'mcb', 'mod', 'des', 'css', 'aof', 'mia', 'ede'])
     vi.resetAllMocks()
   })
@@ -357,7 +357,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-07-01'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
     expect(tested).toStrictEqual(['mcp', 'mod', 'des', 'css', 'rde', 'mcb'])
   })
 })

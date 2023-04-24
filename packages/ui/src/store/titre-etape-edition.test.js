@@ -13,14 +13,12 @@ import {
   titreEtapeHeritageRes1,
   titreEtapeHeritageRes2,
   titreEtapeHeritage2,
-  titreEtapeEtapesTypes,
 } from './__mocks__/titre-etape'
 
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
   etapeHeritage: vi.fn(),
   titreEtapeMetas: vi.fn(),
-  titreEtapeEtapesTypes: vi.fn(),
   etapeCreer: vi.fn(),
   etapeModifier: vi.fn(),
   etapeSupprimer: vi.fn(),
@@ -79,7 +77,6 @@ describe('étapes', () => {
 
   test('récupère les métas pour éditer une étape', async () => {
     const apiMockMetas = api.titreEtapeMetas.mockResolvedValue(titreEtapeMetas)
-    const apiMockEtapesTypes = api.titreEtapeEtapesTypes.mockResolvedValue(titreEtapeEtapesTypes)
     const apiMockEtape = api.etape.mockResolvedValue({
       id: 'etape-id',
       titreDemarcheId: 'demarche-id',
@@ -93,7 +90,6 @@ describe('étapes', () => {
 
     expect(apiMockMetas).toHaveBeenCalled()
     expect(apiMockEtape).toHaveBeenCalled()
-    expect(apiMockEtapesTypes).toHaveBeenCalled()
     expect(store.state.titreEtapeEdition.metas).toEqual(titreEtapeMetasRes)
     expect(store.state.titreEtapeEdition.element).toEqual(titreEtapeEdited)
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -214,15 +210,6 @@ describe('étapes', () => {
     })
 
     expect(actions.apiError).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la récupération des etapesTypes", async () => {
-    api.titreEtapeEtapesTypes.mockRejectedValue(new Error('erreur api'))
-    await store.dispatch('titreEtapeEdition/dateUpdate', {
-      date: '2020-01-02',
-    })
-
-    expect(actions.pageError).toHaveBeenCalled()
   })
 
   test('créé une étape', async () => {

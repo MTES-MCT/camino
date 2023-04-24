@@ -2,6 +2,7 @@ import { CaminoDate } from './date.js'
 import { EntrepriseId } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId } from './static/documentsTypes.js'
+import { EtapeStatutId } from './static/etapesStatuts.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 
@@ -57,3 +58,9 @@ export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 
 
 export type Etape = EtapeWithIncertitudesAndHeritage<EtapeBase>
 export type EtapeFondamentale = EtapeWithIncertitudesAndHeritage<Omit<EtapeBase, 'points' | 'surface'>>
+
+export interface EtapeTypeEtapeStatutWithMainStep {
+  etapeTypeId: EtapeTypeId
+  etapeStatutId: EtapeStatutId
+  mainStep: boolean
+}

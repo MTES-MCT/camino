@@ -1,5 +1,5 @@
-import { DemarcheId, IContenuValeur, ITitreEtape } from '../../types.js'
-
+import { IContenuValeur, ITitreEtape } from '../../types.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 import { restrictionsArmRet } from './arm/ret.js'
 import { restrictionsArmRenPro } from './arm/ren-pro.js'
 import { etatsDefinitionPrmOct } from './prm/oct.js'
