@@ -395,9 +395,6 @@ interface ITitre {
   type?: ITitreType | null
   titreStatutId?: TitreStatutId | null
   references?: TitreReference[] | null
-  dateDebut?: string | null
-  dateFin?: string | null
-  dateDemande?: string | null
   activitesDeposees?: number | null
   activitesEnConstruction?: number | null
   activitesAbsentes?: number | null

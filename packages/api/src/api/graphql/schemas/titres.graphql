@@ -76,15 +76,6 @@ type Titre {
   "Territoires du titre dans son dernier état de validité"
   communes: [Commune]
 
-  "Date de début d'un titre"
-  dateDebut: String
-
-  "Date de fin d'un titre"
-  dateFin: String
-
-  "Date de demande initiale d'un titre"
-  dateDemande: String
-
   "Démarches effectuées sur le titre"
   demarches: [Demarche]
 
