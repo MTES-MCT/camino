@@ -120,16 +120,6 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     machine: new AxmProMachine(),
     dateDebut: toCaminoDate('2000-01-01'),
     demarcheIdExceptions: [
-      // décision implicite de rejet après recevabilité
-      newDemarcheId('nDtwD4ErghwdlL96y6EvpyRF'),
-      // manque la demande...
-      newDemarcheId('9GenHiIAtrCBUkUZfFP2FBj3'),
-      newDemarcheId('yR7n8yXArtiWC6D8V3ipYy9Q'),
-      // plein d'étapes à rajouter une fois la machine en place pour qu'elle soit correcte
-      newDemarcheId('FxwaBX78A5kJbdTX5ESHKmCg'),
-      newDemarcheId('LZHRQZKepqfxBGdc7S4PiZd9'),
-      newDemarcheId('XIY81Z57nhPmurZ8E5mVgpux'),
-
       // Complète mais ne respectant pas le cacoo
       newDemarcheId('Fq6lCWTS6h8k5dAsG6LLm3Gw'),
       newDemarcheId('TlqKNgdYzYVrUXieMJAqWYBD'),

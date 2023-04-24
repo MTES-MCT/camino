@@ -11,4 +11,4 @@ packages/api/docs
 packages/api/files
 packages/api/sources
 packages/api/CHANGELOG.md
-
+packages/api/**/*.json
