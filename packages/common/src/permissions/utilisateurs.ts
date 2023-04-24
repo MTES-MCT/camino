@@ -1,4 +1,4 @@
-import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, isAdministrationLecteur, ROLES, Role, UserNotNull } from '../roles.js'
+import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, ROLES, Role, UserNotNull } from '../roles.js'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 export const canReadUtilisateurs = (user: User) => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
@@ -16,7 +16,7 @@ export const canEditPermission = (user: User, utilisateur: UserNotNull) => {
     return false
   }
   if (getAssignableRoles(user).includes(utilisateur.role)) {
-    if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId !== utilisateur.administrationId) {
+    if (isAdministrationAdmin(user) && isAdministration(utilisateur) && user.administrationId !== utilisateur.administrationId) {
       return false
     }
 
@@ -31,7 +31,7 @@ export const getAssignableRoles = (user: User): readonly Role[] => {
     return ROLES
   }
   if (isAdministrationAdmin(user)) {
-    return ['lecteur', 'editeur', 'entreprise', 'bureau d’études', 'defaut']
+    return ['admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut']
   }
 
   return []
