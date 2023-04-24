@@ -223,6 +223,14 @@ const axmProMachine = createMachine<AxmProContext, AXMProXStateEvent>({
       cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: 'classementSansSuiteRendu',
     },
+    RENDRE_DECISION_IMPLICITE_REJET: {
+      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      target: 'decisionAnnulationParJugeAdministratifAFaire',
+      actions: assign<AxmProContext, { type: 'RENDRE_DECISION_IMPLICITE_REJET' }>({
+        demarcheStatut: DemarchesStatutsIds.Rejete,
+        visibilite: 'publique',
+      }),
+    },
   },
   states: {
     demandeAFaire: {
@@ -253,13 +261,6 @@ const axmProMachine = createMachine<AxmProContext, AXMProXStateEvent>({
           }),
         },
         FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
-        RENDRE_DECISION_IMPLICITE_REJET: {
-          target: 'decisionAnnulationParJugeAdministratifAFaire',
-          actions: assign<AxmProContext, { type: 'RENDRE_DECISION_IMPLICITE_REJET' }>({
-            demarcheStatut: DemarchesStatutsIds.Rejete,
-            visibilite: 'publique',
-          }),
-        },
       },
     },
     complementsPourRecevabiliteAFaire: {

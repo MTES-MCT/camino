@@ -22,6 +22,7 @@ describe('vérifie l’arbre de prolongation d’AXM', () => {
       'FAIRE_DESISTEMENT_DEMANDEUR',
       'FAIRE_SAISINE_COLLECTIVITES_LOCALES',
       'FAIRE_SAISINE_DES_SERVICES',
+      'RENDRE_DECISION_IMPLICITE_REJET',
     ])
   })
 

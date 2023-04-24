@@ -7,6 +7,5 @@ files
 node_modules
 sources
 CHANGELOG.md
-oct.cas.json
-titre-phases-find.cas.json
+**/*.json
 **/*.queries.types.ts
