@@ -1,4 +1,4 @@
-import { TODAY } from './index'
+import { getCurrent } from 'camino-common/src/date'
 
 const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
   const typeGet = document => (document.type ? document.type.id : document.typeId)
@@ -25,7 +25,7 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
         fichier: null,
         fichierNouveau: null,
         fichierTypeId: null,
-        date: TODAY,
+        date: getCurrent(),
         modification: true,
         suppression: false,
       })

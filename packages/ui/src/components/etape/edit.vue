@@ -63,6 +63,7 @@
         :documentPopupTitle="documentPopupTitle"
         :parentTypeId="etapeType.id"
         :documentsTypes="documentsTypes"
+        :date="etape.date"
         @complete-update="documentsCompleteUpdate"
       />
     </Accordion>

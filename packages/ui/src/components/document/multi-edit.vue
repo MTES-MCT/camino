@@ -16,7 +16,7 @@
     <DocumentAddButton
       v-if="documentsTypes?.length"
       :document="{
-        date: TODAY,
+        date,
         entreprisesLecture: !userIsAdmin,
         publicLecture: false,
         fichier: null,
@@ -38,7 +38,7 @@
 <script>
 import DocumentAddButton from './button-add.vue'
 import Documents from '../documents/list.vue'
-import { TODAY } from '@/utils'
+import { getCurrent } from 'camino-common/src/date'
 
 export default {
   components: { DocumentAddButton, Documents },
@@ -51,15 +51,10 @@ export default {
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
     repertoire: { type: String, required: true },
+    date: { type: String, default: getCurrent() },
   },
 
   emits: ['complete-update'],
-
-  data() {
-    return {
-      TODAY,
-    }
-  },
 
   computed: {
     complete() {

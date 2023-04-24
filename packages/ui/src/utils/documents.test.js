@@ -1,5 +1,5 @@
 import { documentsRequiredAdd } from './documents'
-import { TODAY } from './index'
+import { getCurrent } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 
 describe('documents', () => {
@@ -14,7 +14,7 @@ describe('documents', () => {
   `('ajoute un document obligatoire manquant', ({ userIsAdmin }) => {
     expect(documentsRequiredAdd(undefined, [{ optionnel: false, id: 'aaa' }], userIsAdmin)).toEqual([
       {
-        date: TODAY,
+        date: getCurrent(),
         entreprisesLecture: userIsAdmin,
         fichier: null,
         fichierNouveau: null,
