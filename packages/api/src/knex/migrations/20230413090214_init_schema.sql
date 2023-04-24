@@ -196,9 +196,6 @@ CREATE TABLE public.titres (
     nom character varying(255) NOT NULL,
     type_id character varying(3) NOT NULL,
     titre_statut_id character varying(3) DEFAULT 'ind'::character varying NOT NULL,
-    date_debut character varying(10),
-    date_fin character varying(10),
-    date_demande character varying(10),
     public_lecture boolean DEFAULT false,
     entreprises_lecture boolean DEFAULT false,
     doublon_titre_id character varying(128),
@@ -307,7 +304,6 @@ CREATE TABLE public.titres_points (
     point integer NOT NULL,
     nom character varying(255),
     description text,
-    securite boolean,
     subsidiaire boolean,
     lot integer,
     slug character varying(255)
