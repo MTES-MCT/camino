@@ -223,15 +223,4 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       })
       .filter(event => event !== undefined)
   }
-
-  // FIXME remove and move tests
-  public getNextMainSteps(etapes: Etape[], date: CaminoDate): Omit<Etape, 'date'>[] {
-    const nextSteps = this.possibleNextEtapes(etapes, date)
-
-    return nextSteps.filter(nextStep => {
-      const eventType: CaminoEvent['type'] = this.eventFrom({ ...nextStep, date }).type
-
-      return this.trad[eventType].mainStep
-    })
-  }
 }

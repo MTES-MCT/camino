@@ -13,8 +13,6 @@ import Domaines from '../models/domaines.js'
 import EtapesTypes from '../models/etapes-types.js'
 import TitresTypesTypes from '../models/titres-types-types.js'
 
-import { etapesTypesQueryModify } from './permissions/metas.js'
-
 import TitresTypes from '../models/titres-types.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
 import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types.js'
@@ -22,7 +20,6 @@ import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/ti
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { User } from 'camino-common/src/roles.js'
 
 const titresTypesTypesGet = async () => TitresTypesTypes.query().orderBy('ordre')
 
@@ -68,31 +65,17 @@ const demarchesStatutsGet = () => sortedDemarchesStatuts
 
 const etapesTypesGet = async (
   {
-    titreDemarcheId,
-    titreEtapeId,
     travaux,
   }: {
-    titreDemarcheId?: string
-    titreEtapeId?: string
     travaux?: boolean
   },
-  { fields, uniqueCheck = true }: { fields?: IFields; uniqueCheck?: boolean },
-  user: User
+  { fields }: { fields?: IFields }
 ) => {
   const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 
   const q = EtapesTypes.query().withGraphFetched(graph)
 
-  // FIXME à vérifier si ça sert tjrs
-  if (titreDemarcheId) {
-    etapesTypesQueryModify(q, user, {
-      titreDemarcheId,
-      titreEtapeId,
-      uniqueCheck,
-    })
-  } else {
-    q.orderBy('ordre')
-  }
+  q.orderBy('ordre')
 
   if (travaux === false || travaux === true) {
     const travauxQuery = TitresTypesDemarchesTypesEtapesTypes.query().leftJoinRelated('demarcheType').whereRaw('?? = ??', ['etapeTypeId', 'etapesTypes.id'])

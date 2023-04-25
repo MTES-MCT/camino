@@ -4,7 +4,6 @@ import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
@@ -14,7 +13,7 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>>(
+export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>>(
   titreEtapes: T[],
   demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
@@ -29,7 +28,16 @@ export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'ordre' | '
       console.error(`impossible de trouver un ordre pour la démarche '${titreEtapes[0]?.titreDemarcheId}' où ces étapes sont valides ${JSON.stringify(etapes)}`)
     }
 
-    return etapes.map(etape => titreEtapes.find(te => te.date === etape.date && te.typeId === etape.etapeTypeId && te.statutId === etape.etapeStatutId)).filter(isNotNullNorUndefined)
+    const result: T[] = []
+    for (const etape of etapes) {
+      const found = titreEtapes.find(te => !result.find(r => r.id === te.id) && te.date === etape.date && te.typeId === etape.etapeTypeId && te.statutId === etape.etapeStatutId)
+
+      if (found) {
+        result.push(found)
+      }
+    }
+
+    return result
   } else {
     demarcheDefinitionRestrictions = demarcheDefinition?.restrictions
 

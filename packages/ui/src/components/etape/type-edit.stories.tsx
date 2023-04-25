@@ -30,12 +30,11 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
 export const Simple: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     apiClient={apiClientMock}
     etape={{
-      statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
+      statutId: ETAPES_STATUTS.FAIT,
       typeId: ETAPES_TYPES.demande,
     }}
   />
@@ -44,7 +43,6 @@ export const Simple: Story = () => (
 export const DemandeAvecUnSeulStatut: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -58,7 +56,6 @@ export const DemandeAvecUnSeulStatut: Story = () => (
 export const DemandeSansStatut: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -72,7 +69,6 @@ export const DemandeSansStatut: Story = () => (
 export const DemandeEnConstruction: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={true}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -86,7 +82,6 @@ export const DemandeEnConstruction: Story = () => (
 export const NouvelleDemande: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -100,7 +95,6 @@ export const NouvelleDemande: Story = () => (
 export const Empty: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
@@ -118,7 +112,6 @@ export const Empty: Story = () => (
 export const Loading: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{ getEtapesTypesEtapesStatuts: () => new Promise(() => ({})) }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
@@ -132,7 +125,6 @@ export const Loading: Story = () => (
 export const WithError: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeIsDemandeEnConstruction={false}
     etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{ getEtapesTypesEtapesStatuts: () => Promise.reject(new Error('Cassé')) }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}

@@ -1,6 +1,5 @@
-import { EtapesStatuts, EtapeStatut, EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
-import { EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
@@ -11,6 +10,7 @@ import { EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { Alert } from '../_ui/alert'
 
 export type Props = {
   etape: {
@@ -21,8 +21,6 @@ export type Props = {
   etapeDate: CaminoDate
   demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
-  // FIXME calculer à la volée ?
-  etapeIsDemandeEnConstruction?: boolean
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
 }
 
@@ -62,7 +60,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
   )
 }
 
-export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'demarcheId', 'apiClient', 'etapeIsDemandeEnConstruction', 'onEtapeChange'], props => {
+export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'demarcheId', 'apiClient', 'onEtapeChange'], props => {
   const etapeTypeSearch = ref<string>('')
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
@@ -75,7 +73,6 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
     async newEtapeDate => {
       try {
         possibleEtapes.value = { status: 'LOADED', value: await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate) }
-        console.log(possibleEtapes.value)
         if (etapeTypeId.value) {
           possibleStatuts.value = possibleEtapes.value.value.filter(possible => possible.etapeTypeId === etapeTypeId.value).map(({ etapeStatutId }) => etapeStatutId)
         }
@@ -90,6 +87,12 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
   )
 
   const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() => (etapeTypeId.value ? [{ id: etapeTypeId.value }] : []))
+
+  const displayItemInList = (item: EtapeType, etapeTypeEtapeStatutWithMainStep: EtapeTypeEtapeStatutWithMainStep[]): JSX.Element => {
+    const isMainStep = etapeTypeEtapeStatutWithMainStep.some(({ etapeTypeId, mainStep }) => etapeTypeId === item.id && mainStep)
+
+    return isMainStep ? <strong>{item.nom}</strong> : <>{item.nom}</>
+  }
 
   return () => (
     <LoadingElement
@@ -110,6 +113,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                       type: 'single',
                       placeholder: '',
                       items: items
+                        .sort((a, b) => (a.mainStep ? -1 : 1))
                         .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
                         .filter(({ nom }) => {
                           return nom.toLowerCase().includes(etapeTypeSearch.value)
@@ -119,6 +123,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                       itemKey: 'id',
                       // FIXME itemChipLabel refresh everything on hover
                       itemChipLabel: item => item.nom,
+                      displayItemInList: item => displayItemInList(item, items),
                       onSelectItem: (type: EtapeType | undefined) => {
                         if (type) {
                           etapeTypeSearch.value = ''
@@ -140,7 +145,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
               </div>
               <hr />
 
-              {props.etapeIsDemandeEnConstruction || possibleStatuts.value.length === 0 ? null : (
+              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || possibleStatuts.value.length === 0 ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}
@@ -152,7 +157,12 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
               )}
             </>
           ) : (
-            <div>RIEN A FAIRE</div>
+            <div class="dsfr tablet-blobs">
+              <div class="tablet-blob-1-3"></div>
+              <div class="mb tablet-blob-2-3">
+                <Alert type="warning" title="Il n’y a aucune étape possible à cette date." description={() => <>Veuillez modifier la date pour pouvoir choisir une étape.</>} small={true} />
+              </div>
+            </div>
           )}
         </>
       )}

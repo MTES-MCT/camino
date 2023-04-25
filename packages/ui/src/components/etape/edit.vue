@@ -3,14 +3,7 @@
     <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
       <DateEdit v-if="userIsAdmin" :date="etape.date" :incertitude="etape.incertitudes.date" :onDateChanged="onDateChanged" :onIncertitudeChanged="onIncertitudeChanged" />
 
-      <TypeEdit
-        :etape="etape"
-        :etapeDate="etape.date"
-        :demarcheId="etape.titreDemarcheId"
-        :apiClient="etapeApiClient"
-        :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-        :onEtapeChange="onEtapeTypeChange"
-      />
+      <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="etapeApiClient" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
 
     <Accordion

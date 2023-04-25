@@ -22,6 +22,173 @@ describe('isEtapesOk', () => {
     ).toBe(false)
   })
 })
+describe('orderMachine', () => {
+  test.only("peut ordonner la machine, même si il y'a deux étapes identiques à la même date", () => {
+    expect(
+      armOctMachine.orderMachine([
+        {
+          etapeTypeId: 'mfr',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-01'),
+          contenu: { arm: { mecanise: true } },
+        },
+        {
+          etapeTypeId: 'mdp',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-02'),
+        },
+        {
+          etapeTypeId: 'dae',
+          etapeStatutId: 'exe',
+          date: toCaminoDate('2020-01-03'),
+        },
+        {
+          etapeTypeId: 'pfd',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'mcp',
+          etapeStatutId: 'com',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'mod',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'vfd',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'mcr',
+          etapeStatutId: 'fav',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'eof',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'aof',
+          etapeStatutId: 'fav',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'sca',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'aca',
+          etapeStatutId: 'ajo',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'mna',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'sca',
+          etapeStatutId: 'fai',
+          date: toCaminoDate('2020-01-11'),
+        },
+        {
+          etapeTypeId: 'aca',
+          etapeStatutId: 'fav',
+          date: toCaminoDate('2020-01-11'),
+        },
+      ])
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": {
+            "arm": {
+              "mecanise": true,
+            },
+          },
+          "date": "2020-01-01",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mfr",
+        },
+        {
+          "date": "2020-01-02",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mdp",
+        },
+        {
+          "date": "2020-01-03",
+          "etapeStatutId": "exe",
+          "etapeTypeId": "dae",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "pfd",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "com",
+          "etapeTypeId": "mcp",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "vfd",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fav",
+          "etapeTypeId": "mcr",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "eof",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fav",
+          "etapeTypeId": "aof",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "sca",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "ajo",
+          "etapeTypeId": "aca",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mna",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fai",
+          "etapeTypeId": "sca",
+        },
+        {
+          "date": "2020-01-11",
+          "etapeStatutId": "fav",
+          "etapeTypeId": "aca",
+        },
+      ]
+    `)
+  })
+})
 
 describe('demarcheStatut', () => {
   test('demarche publique et acceptée', () => {
@@ -217,10 +384,10 @@ describe('whoIsBlocking', () => {
   })
 })
 
-describe('getNextMainSteps', () => {
-  test("les étapes principales après une demande d'octroi d'arm", () => {
+describe('mainStep', () => {
+  test("les étapes après une demande d'octroi d'arm", () => {
     expect(
-      armOctMachine.getNextMainSteps(
+      armOctMachine.possibleNextEtapes(
         [
           {
             etapeTypeId: 'mfr',
@@ -240,14 +407,33 @@ describe('getNextMainSteps', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
           "etapeTypeId": "pfd",
+          "mainStep": true,
         },
       ]
     `)
   })
-  test('getNextMainSteps', () => {
+  test('possibleNextEtapes après une recevabilité favorable on doit faire une expertise de l’onf', () => {
     expect(
-      armOctMachine.getNextMainSteps(
+      armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
           { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -258,15 +444,68 @@ describe('getNextMainSteps', () => {
         ],
         toCaminoDate('2021-02-03')
       )
-    ).toEqual([
-      {
-        contenu: undefined,
-        etapeStatutId: 'fai',
-        etapeTypeId: 'eof',
-      },
-    ])
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mio",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "eof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
+      ]
+    `)
+  })
+  test('après une expertise de l’onf on doit avoir l’avis de l’onf', () => {
     expect(
-      armOctMachine.getNextMainSteps(
+      armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
           { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -282,28 +521,82 @@ describe('getNextMainSteps', () => {
       [
         {
           "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mia",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
           "etapeStatutId": "def",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "dre",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "fre",
           "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
+          "etapeTypeId": "edm",
+          "mainStep": false,
         },
       ]
     `)
+  })
+  test('après la validation de frais de paiement on doit faire une recevabilité', () => {
     expect(
-      armOctMachine.getNextMainSteps(
+      armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
           { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -317,13 +610,52 @@ describe('getNextMainSteps', () => {
       [
         {
           "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mim",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mca",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "mcr",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "mcr",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
         },
       ]
     `)
+  })
+  test('après une recevabilité défavorable on doit avoir un avis de l’onf', () => {
     expect(
-      armOctMachine.getNextMainSteps(
+      armOctMachine.possibleNextEtapes(
         [
           { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: toCaminoDate('2021-02-01') },
           { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: toCaminoDate('2021-02-02') },
@@ -340,21 +672,43 @@ describe('getNextMainSteps', () => {
           "contenu": undefined,
           "etapeStatutId": "def",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "dre",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "aof",
+          "mainStep": true,
         },
         {
           "contenu": undefined,
           "etapeStatutId": "fre",
           "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
         },
       ]
     `)

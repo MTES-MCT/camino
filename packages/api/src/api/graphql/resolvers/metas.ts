@@ -76,14 +76,15 @@ export const etapesTypes = async (
   }: {
     travaux?: boolean
   },
-  { user }: Context,
+  _context: Context,
   info: GraphQLResolveInfo
 ): Promise<IEtapeType[]> => {
   try {
     const fields = fieldsBuild(info)
     // sinon (p.e.: édition des métas ou des permissions d'administration)
     // retourne la liste des types d'étapes
-    return etapesTypesGet({ travaux }, { fields }, user)
+
+    return etapesTypesGet({ travaux }, { fields })
   } catch (e) {
     console.error(e)
 
