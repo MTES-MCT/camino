@@ -13,9 +13,18 @@ const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlPar
   return `${baseRoute}${getRestRoute(route, params)}` as UiRestRoute
 }
 
-export const fetchWithJson = async <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'get' | 'put' | 'delete' = 'get'): Promise<any> => {
+export const fetchWithJson = async <T extends CaminoRestRoute>(
+  path: T,
+  params: ParseUrlParams<T>,
+  method: 'post' | 'get' | 'put' | 'delete' = 'get',
+  searchParams: Record<string, string> = {}
+): Promise<any> => {
   const url = getUiRestRoute(path, params)
-  const fetched = await fetch(url, {
+  const urlParams = new URLSearchParams()
+  Object.keys(searchParams).forEach(key => {
+    urlParams.append(key, searchParams[key])
+  })
+  const fetched = await fetch(`${url}?${urlParams}`, {
     method,
     headers: { 'Content-Type': 'application/json' },
   })

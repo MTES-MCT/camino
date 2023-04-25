@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import type { ITitre, ITitreEtape, IDemarcheType, ITitreDemarche, DemarcheId } from '../../types.js'
+import type { ITitre, ITitreEtape, IDemarcheType, ITitreDemarche } from '../../types.js'
 
 import { demarcheDefinitionFind, IDemarcheDefinitionRestrictions, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
@@ -11,15 +11,16 @@ import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-v
 import { contenuFormat } from '../../api/rest/titre-contenu.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
-const titreDemarcheEtapesBuild = (titreEtape: ITitreEtape, suppression: boolean, titreDemarcheEtapes?: ITitreEtape[] | null) => {
+const titreDemarcheEtapesBuild = <T extends Pick<ITitreEtape, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
   if (!titreDemarcheEtapes?.length) {
     return [titreEtape]
   }
 
   // si nous n’ajoutons pas une nouvelle étape
   // on supprime l’étape en cours de modification ou de suppression
-  const titreEtapes = titreDemarcheEtapes.reduce((acc: ITitreEtape[], te) => {
+  const titreEtapes = titreDemarcheEtapes.reduce((acc: T[], te) => {
     if (te.id !== titreEtape.id) {
       acc.push(te)
     }
@@ -46,7 +47,7 @@ export const titreDemarcheEtatValidate = (
   demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
   demarcheTypeId: DemarcheTypeId,
   titreDemarche: ITitreDemarche,
-  titreEtapes: ITitreEtape[],
+  titreEtapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[],
   titre: ITitre
 ) => {
   // Si on tente d’insérer ou de modifier une étape, il faut regarder
@@ -87,11 +88,11 @@ export const titreDemarcheUpdatedEtatValidate = (
   date: CaminoDate,
   demarcheType: IDemarcheType,
   titre: ITitre,
-  titreEtape: ITitreEtape,
+  titreEtape: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: ITitreEtape[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId'>[] | null,
   suppression = false
-) => {
+): string[] => {
   let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheType.id, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []

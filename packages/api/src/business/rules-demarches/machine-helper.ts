@@ -44,12 +44,13 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
 
   abstract eventFrom(etape: Etape): CaminoEvent
 
-  protected caminoXStateEventToEtapes(event: CaminoEvent): Omit<Etape, 'date'>[] {
+  protected caminoXStateEventToEtapes(event: CaminoEvent): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
     const dbEtat: { db: DBEtat; mainStep: boolean } = this.trad[event.type as CaminoEvent['type']]
 
     return Object.values(dbEtat.db).map(({ etapeTypeId, etapeStatutId }) => ({
       etapeTypeId,
       etapeStatutId,
+      mainStep: dbEtat.mainStep,
     }))
   }
 
@@ -210,7 +211,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
 
-  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): Omit<Etape, 'date'>[] {
+  public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
     const state = this.assertGoTo(etapes)
 
     return state.nextEvents
@@ -221,15 +222,5 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
         return events.filter(event => state.can(event) && !state.done).flatMap(event => this.caminoXStateEventToEtapes(event))
       })
       .filter(event => event !== undefined)
-  }
-
-  public getNextMainSteps(etapes: Etape[], date: CaminoDate): Omit<Etape, 'date'>[] {
-    const nextSteps = this.possibleNextEtapes(etapes, date)
-
-    return nextSteps.filter(nextStep => {
-      const eventType: CaminoEvent['type'] = this.eventFrom({ ...nextStep, date }).type
-
-      return this.trad[eventType].mainStep
-    })
   }
 }

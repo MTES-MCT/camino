@@ -1,5 +1,5 @@
-import { DemarcheId } from '../types.js'
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
 import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public-update.js'

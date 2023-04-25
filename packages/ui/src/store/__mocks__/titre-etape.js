@@ -14,10 +14,6 @@ const titreEtapeMetas = {
 }
 
 const titreEtapeMetasRes = {
-  etapesTypes: [
-    { id: 'w', nom: 'granulats' },
-    { id: 'c', nom: 'carrières' },
-  ],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
@@ -41,13 +37,7 @@ const titreEtapeMetasRes2 = {
     type: { nom: 'nom de la démarche' },
     titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
-  etapesTypes: [],
 }
-
-const titreEtapeEtapesTypes = [
-  { id: 'w', nom: 'granulats' },
-  { id: 'c', nom: 'carrières' },
-]
 
 const titreEtapeEdited = {
   id: 'etape-id',
@@ -178,15 +168,4 @@ const titreEtapeHeritageRes2 = {
   contenu: {},
 }
 
-export {
-  titreEtapeMetas,
-  titreEtapeEtapesTypes,
-  titreEtapeMetasRes,
-  titreEtapeMetasRes2,
-  titreEtapeEdited,
-  titreEtapeCreation,
-  titreEtapeHeritage1,
-  titreEtapeHeritageRes1,
-  titreEtapeHeritage2,
-  titreEtapeHeritageRes2,
-}
+export { titreEtapeMetas, titreEtapeMetasRes, titreEtapeMetasRes2, titreEtapeEdited, titreEtapeCreation, titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritage2, titreEtapeHeritageRes2 }

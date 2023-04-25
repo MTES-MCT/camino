@@ -1,5 +1,5 @@
 /* eslint-disable sql/no-unsafe-query */
-import { DemarcheId, IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
+import { IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
@@ -14,6 +14,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { knex } from '../../knex.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 export const getDemarches = async (demarcheId?: DemarcheId, titreId?: string) => {
   const etapes: {

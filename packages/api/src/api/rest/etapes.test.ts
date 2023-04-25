@@ -1,7 +1,8 @@
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, TitreEtapeForMachine } from './metas.js'
-import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine.js'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, TitreEtapeForMachine } from './etapes.js'
+import { ArmOctMachine } from '../../business/rules-demarches/arm/oct.machine.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test, vi } from 'vitest'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const etapes: TitreEtapeForMachine[] = [
@@ -133,7 +134,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   test('modifie une étape existante', () => {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, 'etapeId3', toCaminoDate('2019-10-11'))
     expect(tested).toHaveLength(1)
-    expect(tested).toStrictEqual(['dae'])
+    expect(tested[0].etapeTypeId).toStrictEqual('dae')
   })
 
   test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
@@ -143,18 +144,22 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         console.error(`pas d'étapes possibles à l'étape ${JSON.stringify(etape)}. Devrait contenir AU MOINS la même étape`)
       }
       expect(etapesTypesPossibles.length).toBeGreaterThan(0)
-      expect(etapesTypesPossibles).toContain(etape.typeId)
+      expect(etapesTypesPossibles.map(({ etapeTypeId }) => etapeTypeId)).toContain(etape.typeId)
     }
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-05-06'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-05-06'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toHaveLength(1)
     expect(tested[0]).toBe('mnv')
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toStrictEqual(['mod'])
   })
 
@@ -177,7 +182,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toStrictEqual(['rde', 'pfd', 'dae'])
   })
 
@@ -198,7 +205,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2019-12-04'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toStrictEqual(['pfd'])
   })
 
@@ -313,7 +322,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-07-01'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toStrictEqual(['rcb', 'rde', 'mcb', 'mod', 'des', 'css', 'aof', 'mia', 'ede'])
     vi.resetAllMocks()
   })
@@ -357,7 +368,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
     ]
 
-    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, undefined, toCaminoDate('2022-07-01'))
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
+      .map(({ etapeTypeId }) => etapeTypeId)
+      .filter(onlyUnique)
     expect(tested).toStrictEqual(['mcp', 'mod', 'des', 'css', 'rde', 'mcb'])
   })
 })

@@ -49,8 +49,9 @@ describe('trie les étapes', () => {
   })
 
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
-    const titreEtapesMemesDatesOrdreDesc: Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const titreEtapesMemesDatesOrdreDesc: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
       {
+        id: '1',
         typeId: 'dex',
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
@@ -58,6 +59,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
       },
       {
+        id: '2',
         typeId: 'dpu',
         ordre: 1,
         date: toCaminoDate('1988-03-06'),
@@ -73,8 +75,9 @@ describe('trie les étapes', () => {
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
     const titreDemarcheId = newDemarcheId('1')
-    const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
       {
+        id: '1',
         typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
@@ -82,6 +85,7 @@ describe('trie les étapes', () => {
         statutId: 'fav',
       },
       {
+        id: '2',
         typeId: ETAPES_TYPES.classementSansSuite,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
@@ -89,6 +93,7 @@ describe('trie les étapes', () => {
         statutId: 'fav',
       },
       {
+        id: '3',
         typeId: ETAPES_TYPES.decisionAdministrative,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
@@ -122,20 +127,23 @@ describe('trie les étapes', () => {
   })
 
   test('tri selon l’arbre si les étapes ont la même date', () => {
-    const etapes: Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
       {
+        id: '1',
         typeId: 'pfd',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
       },
       {
+        id: '2',
         typeId: 'mfr',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
       },
       {
+        id: '3',
         typeId: 'mdp',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
@@ -150,8 +158,9 @@ describe('trie les étapes', () => {
   })
 
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
-    const etapes: Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
       {
+        id: '1',
         typeId: 'mcr',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
@@ -161,11 +170,13 @@ describe('trie les étapes', () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         typeId: 'bof',
+        id: '2',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
       },
       {
+        id: '3',
         typeId: 'vfd',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
@@ -176,5 +187,50 @@ describe('trie les étapes', () => {
     expect(() => titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)).toThrowErrorMatchingInlineSnapshot(
       `"l'état bof est inconnu"`
     )
+  })
+
+  test('utilise l’id pour trier des étapes totalement identiques', () => {
+    const secondMcd: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'> = {
+      id: 'mcd2',
+      typeId: 'mcd',
+      date: toCaminoDate('2020-01-01'),
+      statutId: 'fai',
+      titreDemarcheId: newDemarcheId(),
+    }
+
+    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+      {
+        id: 'mfr',
+        typeId: 'mfr',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId(),
+      },
+      {
+        id: 'mdp',
+        typeId: 'mdp',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId(),
+      },
+      {
+        id: 'mcd',
+        typeId: 'mcd',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId(),
+      },
+      {
+        id: 'rcd',
+        typeId: 'rcd',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId(),
+      },
+      secondMcd,
+    ]
+
+    const result = titreEtapesSortAscByDate(etapes, newDemarcheId(), DEMARCHES_TYPES_IDS.Octroi, TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX)
+    expect(result).toContain(secondMcd)
   })
 })

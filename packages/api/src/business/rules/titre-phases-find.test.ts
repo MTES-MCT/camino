@@ -1,4 +1,6 @@
-import { DemarcheId, ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'

@@ -13,14 +13,12 @@ import {
   titreEtapeHeritageRes1,
   titreEtapeHeritageRes2,
   titreEtapeHeritage2,
-  titreEtapeEtapesTypes,
 } from './__mocks__/titre-etape'
 
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
   etapeHeritage: vi.fn(),
   titreEtapeMetas: vi.fn(),
-  titreEtapeEtapesTypes: vi.fn(),
   etapeCreer: vi.fn(),
   etapeModifier: vi.fn(),
   etapeSupprimer: vi.fn(),
@@ -38,7 +36,6 @@ describe('étapes', () => {
       element: null,
       metas: {
         demarche: {},
-        etapesTypes: [],
         substances: [],
         entreprises: [],
       },
@@ -79,7 +76,6 @@ describe('étapes', () => {
 
   test('récupère les métas pour éditer une étape', async () => {
     const apiMockMetas = api.titreEtapeMetas.mockResolvedValue(titreEtapeMetas)
-    const apiMockEtapesTypes = api.titreEtapeEtapesTypes.mockResolvedValue(titreEtapeEtapesTypes)
     const apiMockEtape = api.etape.mockResolvedValue({
       id: 'etape-id',
       titreDemarcheId: 'demarche-id',
@@ -93,7 +89,6 @@ describe('étapes', () => {
 
     expect(apiMockMetas).toHaveBeenCalled()
     expect(apiMockEtape).toHaveBeenCalled()
-    expect(apiMockEtapesTypes).toHaveBeenCalled()
     expect(store.state.titreEtapeEdition.metas).toEqual(titreEtapeMetasRes)
     expect(store.state.titreEtapeEdition.element).toEqual(titreEtapeEdited)
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -147,7 +142,6 @@ describe('étapes', () => {
     }
 
     store.state.titreEtapeEdition.metas.demarche = { id: 'demarche-id' }
-    store.state.titreEtapeEdition.metas.etapesTypes = [{ id: 'etape-type-id', documentsTypes: [], justificatifsTypes: [] }]
 
     const apiMock1 = api.etapeHeritage.mockResolvedValue(titreEtapeHeritageRes1)
     await store.dispatch('titreEtapeEdition/heritageGet', {
@@ -216,15 +210,6 @@ describe('étapes', () => {
     expect(actions.apiError).toHaveBeenCalled()
   })
 
-  test("retourne une erreur si l'API retourne une erreur lors de la récupération des etapesTypes", async () => {
-    api.titreEtapeEtapesTypes.mockRejectedValue(new Error('erreur api'))
-    await store.dispatch('titreEtapeEdition/dateUpdate', {
-      date: '2020-01-02',
-    })
-
-    expect(actions.pageError).toHaveBeenCalled()
-  })
-
   test('créé une étape', async () => {
     store.state.titreEtapeEdition.metas.demarche = { id: 'demarche-id' }
     api.etapeCreer.mockResolvedValue({ id: 14, nom: 'champs', type: {} })
@@ -284,9 +269,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id', type },
     })
@@ -301,9 +284,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id2', type },
       idOld: 'document-id1',
@@ -323,9 +304,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentRemove', {
       id: 'document-id2',
     })

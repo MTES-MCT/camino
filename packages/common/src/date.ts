@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 const datesDiffInDays = (a: Date, b: Date) => {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
@@ -13,12 +15,13 @@ export const isBefore = (a: CaminoDate, b: CaminoDate): boolean => {
   return a < b
 }
 
-export type CaminoDate = string & { __camino: 'Date' }
-export type CaminoDateFormated = string & { __camino: 'DateFormated' }
+export const caminoDateValidator = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .brand<'Date'>()
+export type CaminoDate = z.infer<typeof caminoDateValidator>
 
-const checkValidCaminoDate = (str: string): str is CaminoDate => {
-  return str.match(/^\d{4}-\d{2}-\d{2}$/) !== null
-}
+export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 
 export const isCaminoDate = (date: string): date is CaminoDate => {
   try {
@@ -31,16 +34,18 @@ export const isCaminoDate = (date: string): date is CaminoDate => {
 }
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
-    if (checkValidCaminoDate(date) && !isNaN(new Date(date).getTime())) {
-      return date
+    const parsedDate = caminoDateValidator.safeParse(date)
+    if (parsedDate.success && !isNaN(new Date(date).getTime())) {
+      return parsedDate.data
     } else {
       throw new Error(`Invalid date string: ${date}`)
     }
   } else {
     // Use the Sweden locale because it uses the ISO format
     const dateString = date.toLocaleDateString('sv')
-    if (checkValidCaminoDate(dateString)) {
-      return dateString
+    const parsedDate = caminoDateValidator.safeParse(dateString)
+    if (parsedDate.success) {
+      return parsedDate.data
     }
   }
   throw new Error(`Shouldn't get here (invalid toDateStr provided): ${date}`)

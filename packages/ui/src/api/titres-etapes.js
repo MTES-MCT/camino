@@ -4,19 +4,6 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
 import { fragmentEtapeMetasEntreprises } from './fragments/entreprises'
 
-const titreEtapeEtapesTypes = apiGraphQLFetch(
-  gql`
-    query TitreEtapeEtapesTypes($titreDemarcheId: ID!, $date: String!, $id: ID) {
-      etapesTypes(titreDemarcheId: $titreDemarcheId, titreEtapeId: $id, date: $date) {
-        id
-        nom
-        description
-        fondamentale
-      }
-    }
-  `
-)
-
 const titreEtapeMetas = apiGraphQLFetch(
   gql`
     query TitreEtapeMetas($titreDemarcheId: ID!, $id: ID) {
@@ -95,4 +82,4 @@ const etapeDeposer = apiGraphQLFetch(gql`
   }
 `)
 
-export { etape, etapeHeritage, titreEtapeMetas, titreEtapeEtapesTypes, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer }
+export { etape, etapeHeritage, titreEtapeMetas, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer }

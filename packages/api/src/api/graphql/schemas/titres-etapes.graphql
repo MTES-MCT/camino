@@ -26,6 +26,9 @@ type Etape {
 
   demarche: Demarche
 
+  "TypeId de l'étape"
+  typeId: String
+
   "Type de l'étape"
   type: EtapeType!
 

@@ -1,6 +1,8 @@
 import slugify from '@sindresorhus/slugify'
 
-import { DemarcheId, ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
+import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
+
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titreDemarcheSortAsc } from './titre-elements-sort-asc.js'
 import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'

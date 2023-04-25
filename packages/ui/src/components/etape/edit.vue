@@ -2,7 +2,8 @@
   <div class="mb">
     <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
       <DateEdit v-if="userIsAdmin" :date="etape.date" :incertitude="etape.incertitudes.date" :onDateChanged="onDateChanged" :onIncertitudeChanged="onIncertitudeChanged" />
-      <TypeEdit :etape="etape" :etapesTypesIds="etapesTypesIds" :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction" :onEtapeChange="onEtapeTypeChange" />
+
+      <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="etapeApiClient" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
 
     <Accordion
@@ -109,6 +110,7 @@ import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import JustificatifsEdit from './justificatifs-edit.vue'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
+import { etapeApiClient } from './etape-api-client'
 
 export default {
   components: {
@@ -155,14 +157,11 @@ export default {
         decisionsAnnexes: false,
       },
       help: {},
+      etapeApiClient,
     }
   },
 
   computed: {
-    etapesTypesIds() {
-      return this.$store.state.titreEtapeEdition.metas.etapesTypes.map(t => t.id)
-    },
-
     documentsTypes() {
       return this.$store.getters['titreEtapeEdition/documentsTypes']
     },
