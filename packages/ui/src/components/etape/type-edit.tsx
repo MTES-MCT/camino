@@ -31,7 +31,6 @@ interface SelectStatutProps {
 }
 
 const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element => {
-  console.log(props)
   const etapeStatutIdSelected: EtapeStatutId | null = props.statutId
 
   return (
@@ -67,7 +66,6 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
 
   const possibleEtapes = ref<AsyncData<EtapeTypeEtapeStatutWithMainStep[]>>({ status: 'LOADING' })
   const possibleStatuts = ref<EtapeStatutId[]>([])
-  // FIXME DECIDE IF WE KEEP IT OR NOT
   watch(
     () => props.etapeDate,
     async newEtapeDate => {
@@ -121,7 +119,6 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                         .filter(onlyUnique),
                       minInputLength: 0,
                       itemKey: 'id',
-                      // FIXME itemChipLabel refresh everything on hover
                       itemChipLabel: item => item.nom,
                       displayItemInList: item => displayItemInList(item, items),
                       onSelectItem: (type: EtapeType | undefined) => {
