@@ -23,7 +23,7 @@ describe('isEtapesOk', () => {
   })
 })
 describe('orderMachine', () => {
-  test.only("peut ordonner la machine, même si il y'a deux étapes identiques à la même date", () => {
+  test("peut ordonner la machine, même si il y'a deux étapes identiques à la même date", () => {
     expect(
       armOctMachine.orderMachine([
         {
