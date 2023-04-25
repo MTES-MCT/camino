@@ -12,7 +12,6 @@ import {
   setDayInMonth,
   monthsBetween,
   dateFormat,
-  checkValideAnnee,
   getMois,
   getDay,
   isBefore,
@@ -26,10 +25,6 @@ test('toCaminoDate', () => {
 
 test('dateFormat', () => {
   expect(dateFormat(toCaminoDate('2022-12-01'))).toBe('01-12-2022')
-})
-
-test('checkValideAnnee', () => {
-  expect(() => checkValideAnnee('2022')).not.toThrowError()
 })
 
 test('getAnnee', () => {

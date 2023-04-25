@@ -7,7 +7,7 @@ import { knex } from '../../../knex.js'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { getProductionOr } from './dgtm.queries.js'
+import { getProductionOrDb } from './dgtm.queries.js'
 import { pool } from '../../../pg-database.js'
 
 const anneeDepartStats = 2015
@@ -215,7 +215,7 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
     }
   })
 
-  const producteursOr = await getProductionOr.run(
+  const producteursOr = await getProductionOrDb.run(
     {
       substance: 'auru',
     },
@@ -225,7 +225,7 @@ export const getDGTMStatsInside = async (administrationId: AdministrationId): Pr
   if (producteursOr && producteursOr?.length) {
     result.producteursOr = producteursOr.reduce<Record<CaminoAnnee, number>>((acc, r) => {
       if (r.annee && r.count) {
-        acc[toCaminoAnnee(r.annee)] = parseInt(r.count, 10)
+        acc[toCaminoAnnee(r.annee)] = r.count
       }
 
       return acc

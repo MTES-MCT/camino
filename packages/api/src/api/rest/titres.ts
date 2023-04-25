@@ -1,11 +1,11 @@
-import { titreArchive, titreGet, titresGet, titreUpsert } from '../../database/queries/titres.js'
+import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres.js'
 import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks } from 'camino-common/src/titres.js'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks, titreGetValidator, TitreGet } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -20,10 +20,12 @@ import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
-import { isAdministration, User } from 'camino-common/src/roles.js'
+import { isAdministration, isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
+import { getTitre as getTitreDb } from './titres.queries.js'
+import type { Pool } from 'pg'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -506,6 +508,37 @@ export const updateTitre = async (req: CaminoRequest, res: CustomResponse<void>)
 
           await titreUpdateTask(titreId)
           res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        }
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
+export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreGet>) => {
+  const titreId: string | undefined = req.params.titreId
+  const user = req.auth
+  // TODO  2023-04-25 Route actuellement réservée au super, car il faut réfléchir comment vérifier toutes les permissions
+  if (!isSuper(user)) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      const titres = await getTitreDb.run({ id: titreId }, pool)
+
+      if (titres.length !== 1) {
+        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+      } else {
+        const parsed = titreGetValidator.safeParse(titres[0])
+        if (parsed.success) {
+          res.json(parsed.data)
+        } else {
+          console.error(parsed.error)
+          res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         }
       }
     } catch (e) {

@@ -20,7 +20,8 @@ console.info = vi.fn()
 console.error = vi.fn()
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
-  knex = await dbManager.populateDb()
+  const { knex: knexInstance } = await dbManager.populateDb()
+  knex = knexInstance
 })
 
 afterAll(async () => {

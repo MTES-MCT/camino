@@ -1,8 +1,12 @@
 import { graphQLCall } from '../../../../tests/_utils/index.js'
 import { dbManager } from '../../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll } from 'vitest'
+import type { Pool } from 'pg'
+
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterAll(async () => {
@@ -11,6 +15,7 @@ afterAll(async () => {
 describe('substances', () => {
   test('peut voir toutes les substances', async () => {
     const res = await graphQLCall(
+      dbPool,
       `query Substances {
   substances {
    id

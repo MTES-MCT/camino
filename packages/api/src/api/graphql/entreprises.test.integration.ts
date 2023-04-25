@@ -10,11 +10,14 @@ import { userSuper } from '../../database/user-super.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { beforeAll, afterEach, afterAll, test, expect, describe, vi } from 'vitest'
+import type { Pool } from 'pg'
 console.info = vi.fn()
 console.error = vi.fn()
 
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterEach(async () => {
@@ -36,6 +39,7 @@ describe('entreprise', () => {
       {
         nom: '',
         typeId: 'arm',
+        slug: 'arm-slug',
         propsTitreEtapesIds: {},
       },
       {}
@@ -66,7 +70,7 @@ describe('entreprise', () => {
 
     await titresEtapesJustificatifsUpsert([{ documentId, titreEtapeId: titreEtape.id } as ITitreEtapeJustificatif])
 
-    const res = await graphQLCall(entrepriseQuery, { id: entrepriseId }, { role: 'super' })
+    const res = await graphQLCall(dbPool, entrepriseQuery, { id: entrepriseId }, { role: 'super' })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.entreprise.documents[0].modification).toBe(false)
@@ -85,7 +89,7 @@ describe('entreprise', () => {
       entrepriseId,
     })
 
-    const res = await graphQLCall(entrepriseQuery, { id: entrepriseId }, { role: 'super' })
+    const res = await graphQLCall(dbPool, entrepriseQuery, { id: entrepriseId }, { role: 'super' })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.entreprise.documents[0].modification).toBe(true)
@@ -106,14 +110,14 @@ describe('entreprises', () => {
       })
     }
 
-    let res = await graphQLCall(entreprisesQuery, { archive: false }, { role: 'super' })
+    let res = await graphQLCall(dbPool, entreprisesQuery, { archive: false }, { role: 'super' })
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.entreprises.elements).toHaveLength(4)
 
-    res = await graphQLCall(entreprisesQuery, { archive: true }, { role: 'super' })
+    res = await graphQLCall(dbPool, entreprisesQuery, { archive: true }, { role: 'super' })
     expect(res.body.data.entreprises.elements).toHaveLength(6)
 
-    res = await graphQLCall(entreprisesQuery, {}, { role: 'super' })
+    res = await graphQLCall(dbPool, entreprisesQuery, {}, { role: 'super' })
     expect(res.body.data.entreprises.elements).toHaveLength(10)
   })
 })

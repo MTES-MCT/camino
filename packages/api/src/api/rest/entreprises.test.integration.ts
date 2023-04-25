@@ -8,6 +8,7 @@ import { userSuper } from '../../database/user-super.js'
 import { testBlankUser } from 'camino-common/src/tests-utils.js'
 import { entreprisesEtablissementsFetch, entreprisesFetch, tokenInitialize } from '../../tools/api-insee/fetch.js'
 import { entreprise, entrepriseAndEtablissements } from '../../../tests/__mocks__/fetch-insee-api.js'
+import type { Pool } from 'pg'
 
 vi.mock('../../tools/api-insee/fetch', () => ({
   __esModule: true,
@@ -23,8 +24,10 @@ const entreprisesEtablissementsFetchMock = vi.mocked(entreprisesEtablissementsFe
 beforeEach(() => {
   vi.resetAllMocks()
 })
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterAll(async () => {
@@ -37,7 +40,7 @@ describe('fiscalite', () => {
       id: newEntrepriseId('plop'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restCall(CaminoRestRoutes.fiscaliteEntreprise, { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
+    const tested = await restCall(dbPool, CaminoRestRoutes.fiscaliteEntreprise, { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
   })
@@ -45,7 +48,7 @@ describe('fiscalite', () => {
 
 describe('entrepriseCreer', () => {
   test('ne peut pas créer une entreprise (utilisateur anonyme)', async () => {
-    const tested = await restPostCall(CaminoRestRoutes.entreprises, {}, undefined, { siren: entreprise.siren })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, undefined, { siren: entreprise.siren })
     expect(tested.statusCode).toBe(403)
   })
 
@@ -54,7 +57,7 @@ describe('entrepriseCreer', () => {
     entrepriseFetchMock.mockResolvedValue([entreprise])
     entreprisesEtablissementsFetchMock.mockResolvedValue([entrepriseAndEtablissements])
 
-    const tested = await restPostCall(CaminoRestRoutes.entreprises, {}, userSuper, { siren: entreprise.siren })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren: entreprise.siren })
     expect(tested.statusCode).toBe(204)
   })
 
@@ -63,9 +66,9 @@ describe('entrepriseCreer', () => {
     const siren = '123456789'
     entrepriseFetchMock.mockResolvedValue([{ ...entreprise, siren }])
     entreprisesEtablissementsFetchMock.mockResolvedValue([{ ...entrepriseAndEtablissements, siren }])
-    let tested = await restPostCall(CaminoRestRoutes.entreprises, {}, userSuper, { siren })
+    let tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren })
     expect(tested.statusCode).toBe(204)
-    tested = await restPostCall(CaminoRestRoutes.entreprises, {}, userSuper, { siren })
+    tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren })
     expect(tested.statusCode).toBe(400)
   })
 
@@ -73,7 +76,7 @@ describe('entrepriseCreer', () => {
     tokenInitializeMock.mockResolvedValue('token')
     entrepriseFetchMock.mockResolvedValue([])
 
-    const tested = await restPostCall(CaminoRestRoutes.entreprises, {}, userSuper, { siren: 'invalide' })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren: 'invalide' })
     expect(tested.statusCode).toBe(400)
   })
 })
@@ -84,7 +87,7 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('anonymous'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
+    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
     expect(tested.statusCode).toBe(403)
   })
 
@@ -93,7 +96,7 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
+    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
     expect(tested.statusCode).toBe(204)
   })
 
@@ -103,6 +106,7 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
     })
     const tested = await restPutCall(
+      dbPool,
       CaminoRestRoutes.entreprise,
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise.id }] },
@@ -117,6 +121,7 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
     })
     const tested = await restPutCall(
+      dbPool,
       CaminoRestRoutes.entreprise,
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'entreprise', entreprises: [] },
@@ -130,13 +135,13 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
+    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
   test("ne peut pas modifier une entreprise inexistante (un utilisateur 'super')", async () => {
     const entrepriseId = newEntrepriseId('unknown')
-    const tested = await restPutCall(CaminoRestRoutes.entreprise, { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
+    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
@@ -146,7 +151,7 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
       archive: false,
     })
-    const tested = await restPutCall(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
+    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
     expect(tested.statusCode).toBe(204)
   })
   test('ne peut pas archiver une entreprise', async () => {
@@ -156,6 +161,7 @@ describe('entrepriseModifier', () => {
       archive: false,
     })
     const tested = await restPutCall(
+      dbPool,
       CaminoRestRoutes.entreprise,
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' },

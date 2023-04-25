@@ -1,6 +1,7 @@
 import { Definition } from '../definition.js'
 import { RegionId } from './region.js'
 import { DepartementId } from './departement.js'
+import { z } from 'zod'
 
 export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 
@@ -165,11 +166,13 @@ export const ADMINISTRATION_IDS = {
   'PRÉFECTURE - MAYOTTE': 'pre-97611-01',
 } as const satisfies Record<string, (typeof IDS)[number]>
 
-export type AdministrationId = (typeof IDS)[number]
-
 export const isAdministrationId = (id: string | string[] | null | undefined): id is AdministrationId => {
   return typeof id !== 'object' && Object.values(ADMINISTRATION_IDS).includes(id)
 }
+
+export const administrationIdValidator = z.enum(IDS)
+
+export type AdministrationId = z.infer<typeof administrationIdValidator>
 
 export interface Administration<T = AdministrationId> {
   id: T

@@ -1,6 +1,7 @@
 import { PureDemarcheEditPopup, Props } from './demarche-edit-popup'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheEditPopup',
@@ -46,7 +47,7 @@ export const Edit: Story = () => (
     close={close}
     demarche={{
       titreId: 'titreId',
-      id: 'demarcheId',
+      id: demarcheIdValidator.parse('demarcheId'),
       typeId: 'amo',
       description: 'description',
     }}

@@ -13,11 +13,13 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
+
 console.info = vi.fn()
 console.error = vi.fn()
 let knex: Knex | undefined
 beforeAll(async () => {
-  knex = await dbManager.populateDb()
+  const { knex: knexInstance } = await dbManager.populateDb()
+  knex = knexInstance
 })
 
 afterAll(async () => {

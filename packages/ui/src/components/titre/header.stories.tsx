@@ -16,7 +16,7 @@ const removeTitre = action('removeTitre')
 const titreUtilisateurAbonne = action('titreUtilisateurAbonne')
 const editTitre = action('editTitre')
 
-const apiClientMock: Omit<TitreApiClient, 'loadTitreSections'> = {
+const apiClientMock: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre' | 'removeTitre'> = {
   removeTitre: async titreId => {
     removeTitre(titreId)
     return Promise.resolve()

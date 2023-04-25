@@ -20,7 +20,7 @@ async function download(props: Props) {
 
   const url = `/${props.section}?${query}`
 
-  saveAs(`/apiUrl${url}`)
+  saveAs(`/apiUrl/download${url}`)
 
   if (props.matomo) {
     props.matomo.trackLink(`${window.location.origin}${url}`, 'download')

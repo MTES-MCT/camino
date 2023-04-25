@@ -6,7 +6,6 @@ import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
 import Demarches from '../components/demarches.vue'
-import Etape from '../components/etape.vue'
 import Activite from '../components/activite.vue'
 import Activites from '../components/activites.vue'
 import TitreCreation from '../components/titre-creation.vue'
@@ -14,6 +13,12 @@ import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
 import { MenuSection } from '@/utils/matomo'
+
+const Etape = async () => {
+  const { Etape } = await import('../components/etape')
+  return Etape
+}
+
 const Utilisateur = async () => {
   const { Utilisateur } = await import('../components/utilisateur')
   return Utilisateur

@@ -18,7 +18,9 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect } from 'vitest'
 import { AdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
+import type { Pool } from 'pg'
 export const visibleCheck = async (
+  pool: Pool,
   administrationId: AdministrationId,
   visible: boolean,
   cible: 'titres' | 'demarches' | 'etapes',
@@ -45,6 +47,7 @@ export const visibleCheck = async (
   await Titres.query().insertGraph(titre, options.titres.update)
 
   const res = await graphQLCall(
+    pool,
     titreQuery,
     { id: titre.id },
     {
@@ -79,7 +82,7 @@ export const visibleCheck = async (
   }
 }
 
-export const creationCheck = async (administrationId: string, creer: boolean, cible: string, titreTypeId: TitreTypeId) => {
+export const creationCheck = async (pool: Pool, administrationId: string, creer: boolean, cible: string, titreTypeId: TitreTypeId) => {
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
   if (cible === 'titres') {
@@ -90,6 +93,7 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
 
     const titreCreerQuery = queryImport('titre-creer')
     const res = await graphQLCall(
+      pool,
       titreCreerQuery,
       {
         titre,
@@ -108,8 +112,8 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
       expect(res.body.errors[0].message).toBe('permissions insuffisantes')
     }
   } else if (cible === 'demarches') {
-    const titreCreated = await titreCreerSuper(administrationId, titreTypeId)
-    const res = await demarcheCreerProfil(titreCreated.body.data.titreCreer.id, {
+    const titreCreated = await titreCreerSuper(pool, administrationId, titreTypeId)
+    const res = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, {
       role: 'admin',
       administrationId: administration.id,
     })
@@ -121,9 +125,9 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
       expect(res.body.errors[0].message).toBe('droits insuffisants')
     }
   } else if (cible === 'etapes') {
-    const titreCreated = await titreCreerSuper(administrationId, titreTypeId)
+    const titreCreated = await titreCreerSuper(pool, administrationId, titreTypeId)
 
-    const demarcheCreated = await demarcheCreerProfil(titreCreated.body.data.titreCreer.id, { role: 'super' })
+    const demarcheCreated = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
 
     expect(demarcheCreated.body.errors).toBeUndefined()
 
@@ -197,6 +201,7 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
       })
     }
     const res = await graphQLCall(
+      pool,
       queryImport('titre-etape-creer'),
       {
         etape: {
@@ -262,6 +267,7 @@ export const creationCheck = async (administrationId: string, creer: boolean, ci
 }
 
 export const modificationCheck = async (
+  pool: Pool,
   administrationId: AdministrationId,
   modifier: boolean,
   cible: 'titres' | 'demarches',
@@ -285,6 +291,7 @@ export const modificationCheck = async (
   await Titres.query().insertGraph(titre, options.titres.update)
 
   const res = await graphQLCall(
+    pool,
     queryImport('titre'),
     { id: titre.id },
     {
@@ -328,8 +335,9 @@ export const modificationCheck = async (
   }
 }
 
-const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
+const titreCreerSuper = async (pool: Pool, administrationId: string, titreTypeId: string) =>
   graphQLCall(
+    pool,
     queryImport('titre-creer'),
     {
       titre: {
@@ -342,7 +350,7 @@ const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
     }
   )
 
-const demarcheCreerProfil = async (titreId: string, user: TestUser) => graphQLCall(queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
+const demarcheCreerProfil = async (pool: Pool, titreId: string, user: TestUser) => graphQLCall(pool, queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
 
 const titreBuild = (
   {

@@ -11,6 +11,7 @@ export const CaminoRestRoutes = {
   statistiquesGuyane: '/statistiques/guyane',
   statistiquesGranulatsMarins: '/statistiques/granulatsMarins',
   titreSections: '/titreSections/:titreId',
+  demarche: '/demarches/:demarcheId',
   titre: '/titres/:titreId',
   titreUtilisateurAbonne: '/titres/:titreId/abonne',
   titresONF: '/titresONF',

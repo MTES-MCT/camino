@@ -5,6 +5,7 @@ import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import Utilisateurs from '../../database/models/utilisateurs'
+import type { Pool } from 'pg'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn(),
@@ -24,8 +25,10 @@ console.error = vi.fn()
 beforeEach(async () => {
   await Utilisateurs.query().delete()
 })
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 
   await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
 })
@@ -39,7 +42,7 @@ describe('Visibilité des étapes', () => {
     ['ope-onf-973-01', true, 'mcr'],
     ['min-mtes-dgaln-01', true, 'mcr'],
   ])("un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre ARM : $visible", async (administrationId, visible, etapeTypeId) =>
-    visibleCheck(administrationId, visible, 'etapes', 'arm', false, etapeTypeId)
+    visibleCheck(dbPool, administrationId, visible, 'etapes', 'arm', false, etapeTypeId)
   )
 
   test.each<[AdministrationId, boolean, EtapeTypeId]>([
@@ -47,35 +50,35 @@ describe('Visibilité des étapes', () => {
     ['dea-guyane-01', true, 'mcr'],
     ['min-mtes-dgaln-01', true, 'mcr'],
   ])("un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre AXM : $visible", async (administrationId, visible, etapeTypeId) =>
-    visibleCheck(administrationId, visible, 'etapes', 'axm', false, etapeTypeId)
+    visibleCheck(dbPool, administrationId, visible, 'etapes', 'axm', false, etapeTypeId)
   )
 
   test.each<[AdministrationId, boolean, EtapeTypeId]>([['min-mtes-dgaln-01', true, 'mcr']])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre CXM : $visible",
-    async (administrationId, visible, etapeTypeId) => visibleCheck(administrationId, visible, 'etapes', 'cxm', false, etapeTypeId)
+    async (administrationId, visible, etapeTypeId) => visibleCheck(dbPool, administrationId, visible, 'etapes', 'cxm', false, etapeTypeId)
   )
 
   test.each<[AdministrationId, boolean, EtapeTypeId]>([['min-mtes-dgaln-01', true, 'mcr']])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PRM : $visible",
-    async (administrationId, visible, etapeTypeId) => visibleCheck(administrationId, visible, 'etapes', 'prm', false, etapeTypeId)
+    async (administrationId, visible, etapeTypeId) => visibleCheck(dbPool, administrationId, visible, 'etapes', 'prm', false, etapeTypeId)
   )
 
   test.each<[AdministrationId, boolean, EtapeTypeId]>([['min-mtes-dgaln-01', true, 'mcr']])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PXM : $visible",
-    async (administrationId, visible, etapeTypeId) => visibleCheck(administrationId, visible, 'etapes', 'pxm', false, etapeTypeId)
+    async (administrationId, visible, etapeTypeId) => visibleCheck(dbPool, administrationId, visible, 'etapes', 'pxm', false, etapeTypeId)
   )
 })
 
 describe('Création des étapes', () => {
   test.each<[AdministrationId]>([['min-mtes-dgaln-01']])('un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM', async administrationId =>
-    creationCheck(administrationId, true, 'etapes', 'cxm')
+    creationCheck(dbPool, administrationId, true, 'etapes', 'cxm')
   )
 
   test.each<[AdministrationId]>([['min-mtes-dgaln-01']])('un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PRM', async administrationId =>
-    creationCheck(administrationId, true, 'etapes', 'prm')
+    creationCheck(dbPool, administrationId, true, 'etapes', 'prm')
   )
 
   test.each<[AdministrationId]>([['min-mtes-dgaln-01']])('un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PXM', async administrationId =>
-    creationCheck(administrationId, true, 'etapes', 'pxm')
+    creationCheck(dbPool, administrationId, true, 'etapes', 'pxm')
   )
 })

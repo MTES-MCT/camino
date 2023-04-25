@@ -9,13 +9,15 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 import { vi, afterEach, afterAll, beforeAll, describe, test, expect } from 'vitest'
+import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
-
 afterEach(async () => {
   await dbManager.reseedDb()
 })
@@ -281,7 +283,7 @@ describe('titre', () => {
       propsTitreEtapesIds: {},
     }
     await titreCreate(titrePublicLecture, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -291,7 +293,7 @@ describe('titre', () => {
 
   test('ne peut pas voir un titre qui n\'est pas en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titrePublicLectureFalse, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({ titre: null })
@@ -299,7 +301,7 @@ describe('titre', () => {
 
   test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreDemarchesPubliques, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -314,7 +316,7 @@ describe('titre', () => {
 
   test('ne peut pas voir les activités (utilisateur anonyme)', async () => {
     await titreCreate(titreActivites, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -328,7 +330,7 @@ describe('titre', () => {
 
   test('ne peut voir que les étapes qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreEtapesPubliques, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -347,7 +349,7 @@ describe('titre', () => {
 
   test('ne peut pas voir certaines étapes (utilisateur DGTM)', async () => {
     await titreCreate(titreEtapesPubliques, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
@@ -372,6 +374,7 @@ describe('titre', () => {
   test('ne peut pas voir certaines étapes (utilisateur ONF)', async () => {
     await titreCreate(titreEtapesPubliques, {})
     const res = await graphQLCall(
+      dbPool,
       titreQuery,
       { id: 'titre-id' },
       {
@@ -403,7 +406,7 @@ describe('titre', () => {
 
   test('peut modifier les activités GRP (utilisateur DEAL Guyane)', async () => {
     await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -413,7 +416,7 @@ describe('titre', () => {
 
   test('ne peut pas voir les activités GRP (utilisateur CACEM)', async () => {
     await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM })
+    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -427,6 +430,7 @@ describe('titreCreer', () => {
 
   test('ne peut pas créer un titre (utilisateur anonyme)', async () => {
     const res = await graphQLCall(
+      dbPool,
       titreCreerQuery,
       {
         titre: { nom: 'titre', typeId: 'arm' },
@@ -438,13 +442,13 @@ describe('titreCreer', () => {
   })
 
   test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
-    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'prm' } }, { role: 'entreprise', entreprises: [] })
+    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'prm' } }, { role: 'entreprise', entreprises: [] })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("crée un titre (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
+    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body).toMatchObject({
@@ -454,6 +458,7 @@ describe('titreCreer', () => {
 
   test("ne peut pas créer un titre AXM (un utilisateur 'admin' PTMG)", async () => {
     const res = await graphQLCall(
+      dbPool,
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'axm' } },
       {
@@ -466,13 +471,14 @@ describe('titreCreer', () => {
   })
 
   test("ne peut pas créer un titre ARM (un utilisateur 'admin' Déal Guyane)", async () => {
-    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+    const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("crée un titre ARM (un utilisateur 'admin' PTMG)", async () => {
     const res = await graphQLCall(
+      dbPool,
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm' } },
       {

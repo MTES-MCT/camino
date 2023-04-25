@@ -1,5 +1,8 @@
 import { apiGraphQLFetch } from '@/api/_client'
+import { fetchWithJson } from '@/api/client-rest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheGet, DemarcheId } from 'camino-common/src/demarche'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 import gql from 'graphql-tag'
 
 export interface InputDemarcheCreation {
@@ -9,13 +12,14 @@ export interface InputDemarcheCreation {
 }
 
 export type InputDemarcheUpdation = InputDemarcheCreation & {
-  id: string
+  id: DemarcheId
 }
 
 export interface DemarcheApiClient {
   createDemarche: (demarche: InputDemarcheCreation) => Promise<void>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<void>
-  deleteDemarche: (demarcheId: string) => Promise<void>
+  deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
+  getDemarche: (demarcheId: DemarcheId) => Promise<DemarcheGet>
 }
 
 export const demarcheApiClient: DemarcheApiClient = {
@@ -51,5 +55,8 @@ export const demarcheApiClient: DemarcheApiClient = {
         }
       }
     `)({ id: demarcheId })
+  },
+  getDemarche: (demarcheId: DemarcheId): Promise<DemarcheGet> => {
+    return fetchWithJson(CaminoRestRoutes.demarche, { demarcheId })
   },
 }

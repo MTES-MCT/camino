@@ -387,7 +387,13 @@ export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fisca
       )
 
       // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
-      if (!fiscaliteVisible(user, eidValidator.parse(entrepriseId), titres)) {
+      if (
+        !fiscaliteVisible(
+          user,
+          eidValidator.parse(entrepriseId),
+          titres.map(({ typeId }) => ({ type_id: typeId }))
+        )
+      ) {
         console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`)
         res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
       } else {

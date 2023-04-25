@@ -16,7 +16,7 @@ import rateLimit from 'express-rate-limit'
 import * as Sentry from '@sentry/node'
 
 import { port, url } from './config/index.js'
-import { rest } from './server/rest.js'
+import { restWithPool } from './server/rest.js'
 import { graphql } from './server/graphql.js'
 import { authJwt } from './server/auth-jwt.js'
 import { authBasic } from './server/auth-basic.js'
@@ -71,7 +71,7 @@ filesInit().then(() => {
       res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
       res.flush()
     })
-    app.use(express.urlencoded({ extended: true }), express.json(), rest)
+    app.use(express.urlencoded({ extended: true }), express.json(), restWithPool())
 
     app.use('/televersement', uploadAllowedMiddleware, restUpload())
 

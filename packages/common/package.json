@@ -41,6 +41,7 @@
       "@typescript-eslint"
     ],
     "rules": {
+      "camelcase": 0,
       "newline-before-return": 1,
       "no-use-before-define": 0,
       "no-redeclare": 0,

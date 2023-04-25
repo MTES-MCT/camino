@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
-
+import type { Pool } from 'pg'
 import { Index, IUtilisateur } from '../../src/types.js'
 
 import { app } from '../app.js'
@@ -26,48 +26,50 @@ export const tokenCreate = (user: Partial<IUtilisateur>) => {
   throw new Error('La variable d’environnement JWT_SECRET est manquante')
 }
 
-export const graphQLCall = async (query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {
-  const req = request(app).post('/').send({ query, variables })
+export const graphQLCall = async (pool: Pool, query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {
+  const req = request(app(pool)).post('/').send({ query, variables })
 
   return jwtSet(req, user)
 }
 
-export const restUploadCall = async (user: TestUser) => {
-  const req = request(app).post('/televersement')
+export const restUploadCall = async (pool: Pool, user: TestUser) => {
+  const req = request(app(pool)).post('/televersement')
 
   return jwtSet(req, user)
 }
 
-export const restCall = async <Path extends CaminoRestRoute>(path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
-  const req = request(app).get(getRestRoute(path, params))
+export const restCall = async <Path extends CaminoRestRoute>(pool: Pool, path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app(pool)).get(getRestRoute(path, params))
 
   return jwtSet(req, user)
 }
 
 export const restPostCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
+  pool: Pool,
   path: Path,
   params: ParseUrlParams<Path>,
   user: TestUser | undefined,
   body: T
 ): Promise<request.Test> => {
-  const req = request(app).post(getRestRoute(path, params)).send(body)
+  const req = request(app(pool)).post(getRestRoute(path, params)).send(body)
 
   return jwtSet(req, user)
 }
 
 export const restPutCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
+  pool: Pool,
   path: Path,
   params: ParseUrlParams<Path>,
   user: TestUser | undefined,
   body: T
 ): Promise<request.Test> => {
-  const req = request(app).put(getRestRoute(path, params)).send(body)
+  const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
 
   return jwtSet(req, user)
 }
 
-export const restDeleteCall = async <Path extends CaminoRestRoute>(path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
-  const req = request(app).delete(getRestRoute(path, params)).send()
+export const restDeleteCall = async <Path extends CaminoRestRoute>(pool: Pool, path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app(pool)).delete(getRestRoute(path, params)).send()
 
   return jwtSet(req, user)
 }

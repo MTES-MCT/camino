@@ -1,6 +1,9 @@
-import { ReferenceTypeId } from './static/referencesTypes.js'
+import { referenceTypeIdValidator } from './static/referencesTypes.js'
+import { z } from 'zod'
 
-export interface TitreReference {
-  referenceTypeId: ReferenceTypeId
-  nom: string
-}
+export const titreReferenceValidator = z.object({
+  nom: z.string(),
+  referenceTypeId: referenceTypeIdValidator,
+})
+
+export type TitreReference = z.infer<typeof titreReferenceValidator>

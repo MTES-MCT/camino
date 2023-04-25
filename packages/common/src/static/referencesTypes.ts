@@ -1,5 +1,9 @@
+import { z } from 'zod'
 export const REFERENCES_TYPES_KEYS = ['brg', 'dea', 'deb', 'dge', 'ifr', 'irs', 'nus', 'onf', 'ptm', 'rnt'] as const
-export type ReferenceTypeId = (typeof REFERENCES_TYPES_KEYS)[number]
+
+export const referenceTypeIdValidator = z.enum(REFERENCES_TYPES_KEYS)
+
+export type ReferenceTypeId = z.infer<typeof referenceTypeIdValidator>
 
 export const REFERENCES_TYPES_IDS = {
   BRGM: 'brg',
