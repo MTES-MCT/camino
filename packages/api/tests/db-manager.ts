@@ -55,7 +55,7 @@ class DbManager {
         password: DbManager.getPgPassword(),
       },
       migrations: {
-        directory: [join(__dirname, '../src/knex/migrations-schema')],
+        directory: [join(__dirname, '../src/knex/migrations')],
         loadExtensions: ['.ts'],
         extension: 'ts',
       },

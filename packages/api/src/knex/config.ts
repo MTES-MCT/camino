@@ -16,7 +16,7 @@ export const knexConfig = {
   client: 'pg',
   connection,
   migrations: {
-    directory: [join(__dirname, './migrations-schema'), join(__dirname, './migrations-data')],
+    directory: [join(__dirname, './migrations')],
     stub: join(__dirname, './migration-stub.ts'),
     extension: 'ts',
     loadExtensions: ['.ts'],

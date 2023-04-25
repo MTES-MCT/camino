@@ -1,24 +1,24 @@
 import '../init.js'
 import { knex } from '../knex.js'
-import chalk from 'chalk'
 
 const run = async () => {
   try {
     console.info('migrate…')
+
     const [latestBatchNo, latestLog] = await knex.migrate.latest()
     if (latestLog.length === 0) {
-      console.info(chalk.cyan(`already up to date\n`))
+      console.info(`already up to date\n`)
+    } else {
+      console.info(`batch ${latestBatchNo} run: ${latestLog.length} migrations \n` + latestLog.join('\n') + '\n')
     }
-
-    console.info(chalk.green(`batch ${latestBatchNo} run: ${latestLog.length} migrations \n`) + chalk.cyan(latestLog.join('\n')) + '\n')
 
     console.info('migrations terminées')
     process.exit()
   } catch (e) {
     if (e instanceof Error) {
-      console.error(chalk.red(e.stack))
+      console.error(e.stack)
     } else {
-      console.error(chalk.red(e))
+      console.error(e)
     }
 
     process.exit(1)

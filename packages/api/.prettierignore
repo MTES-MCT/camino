@@ -8,4 +8,4 @@ node_modules
 sources
 CHANGELOG.md
 **/*.json
-**/*.queries.types.ts
+/**/*.queries.types.ts
