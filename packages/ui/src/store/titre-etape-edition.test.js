@@ -36,7 +36,6 @@ describe('étapes', () => {
       element: null,
       metas: {
         demarche: {},
-        etapesTypes: [],
         substances: [],
         entreprises: [],
       },
@@ -143,7 +142,6 @@ describe('étapes', () => {
     }
 
     store.state.titreEtapeEdition.metas.demarche = { id: 'demarche-id' }
-    store.state.titreEtapeEdition.metas.etapesTypes = [{ id: 'etape-type-id', documentsTypes: [], justificatifsTypes: [] }]
 
     const apiMock1 = api.etapeHeritage.mockResolvedValue(titreEtapeHeritageRes1)
     await store.dispatch('titreEtapeEdition/heritageGet', {
@@ -271,9 +269,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id', type },
     })
@@ -288,9 +284,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id2', type },
       idOld: 'document-id1',
@@ -310,9 +304,7 @@ describe('étapes', () => {
       type: { id: 'mfr', documentsTypes: [type] },
     }
 
-    store.state.titreEtapeEdition.metas = {
-      etapesTypes: [{ id: 'mfr' }],
-    }
+    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentRemove', {
       id: 'document-id2',
     })

@@ -11,7 +11,6 @@ const state = {
   element: null,
   metas: {
     demarche: null,
-    etapesTypes: [],
     entreprises: [],
     documentsTypes: [],
     sdomZonesDocumentTypeIds: [],
@@ -307,7 +306,6 @@ const mutations = {
     state.element = null
     state.metas = {
       demarche: null,
-      etapesTypes: [],
       entreprises: [],
       documentsTypes: [],
       sdomZonesDocumentTypeIds: [],

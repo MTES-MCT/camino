@@ -14,10 +14,6 @@ const titreEtapeMetas = {
 }
 
 const titreEtapeMetasRes = {
-  etapesTypes: [
-    { id: 'w', nom: 'granulats' },
-    { id: 'c', nom: 'carrières' },
-  ],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
@@ -41,7 +37,6 @@ const titreEtapeMetasRes2 = {
     type: { nom: 'nom de la démarche' },
     titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
-  etapesTypes: [],
 }
 
 const titreEtapeEdited = {
