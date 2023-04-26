@@ -1,0 +1,428 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`peut récupérer les statistiques des granulats marins 1`] = `
+{
+  "annees": [
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2006,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2007,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2008,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2009,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2010,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2011,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2012,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2013,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2014,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2015,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2016,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2017,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2018,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2019,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2020,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2021,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2022,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+    {
+      "activitesDeposesQuantite": 0,
+      "activitesDeposesRatio": 0,
+      "annee": 2023,
+      "concessionsValides": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "masse": 0,
+      "titresCxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPrw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "titresPxw": {
+        "quantite": 0,
+        "surface": 0,
+      },
+      "volume": 0,
+    },
+  ],
+  "surfaceExploitation": 0,
+  "surfaceExploration": 0,
+  "titresInstructionExploitation": 0,
+  "titresInstructionExploration": 0,
+  "titresValCxw": 0,
+  "titresValPrw": 0,
+}
+`;
