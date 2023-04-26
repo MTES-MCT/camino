@@ -22,31 +22,8 @@ const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof D
   auto: false,
 }
 
-export const DemarchesTypesIds = [
-  'amo',
-  'aom',
-  'ces',
-  'con',
-  'dam',
-  'dec',
-  'dep',
-  'dot',
-  'exp',
-  'exs',
-  'fus',
-  'mut',
-  'oct',
-  'pr1',
-  'pr2',
-  'pre',
-  'pro',
-  'prr',
-  'ren',
-  'res',
-  'ret',
-  'vct',
-  'vut',
-] as const
+// prettier-ignore
+export const DemarchesTypesIds = ['amo', 'aom', 'ces', 'con', 'dam', 'dec', 'dep', 'dot', 'exp', 'exs', 'fus', 'mut', 'oct', 'pr1', 'pr2', 'pre', 'pro', 'prr', 'ren', 'res', 'ret', 'vct', 'vut',] as const
 
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
