@@ -24,7 +24,9 @@ const entreprisesEtablissementsFetchMock = vi.mocked(entreprisesEtablissementsFe
 beforeEach(() => {
   vi.resetAllMocks()
 })
+
 let dbPool: Pool
+
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
   dbPool = pool

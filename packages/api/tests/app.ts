@@ -12,8 +12,8 @@ export const app = (dbPool: Pool) => {
   app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(dbPool))
 
   // TODO 2022-05-03: utiliser l'app principale (ou une partie)
-  app.use('/televersement', uploadAllowedMiddleware, restUpload())
-  app.use('/', graphql)
+  app.use('/televersement', uploadAllowedMiddleware, restUpload)
+  app.use('/', graphql(dbPool))
 
   return app
 }

@@ -12,7 +12,7 @@ import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarc
 
 import { titreGet } from '../../../database/queries/titres.js'
 
-import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
+import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
 import { canCreateTravaux, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches.js'
@@ -149,7 +149,7 @@ const demarches = async (
   }
 }
 
-const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user }: Context, info: GraphQLResolveInfo) => {
+const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     const titre = await titreGet(demarche.titreId, { fields: { pointsEtape: { id: {} } } }, user)
 
@@ -174,7 +174,7 @@ const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user 
 
     const demarcheCreated = await titreDemarcheCreate(demarche)
 
-    await titreDemarcheUpdateTask(demarcheCreated.id, demarcheCreated.titreId)
+    await titreDemarcheUpdateTask(pool, demarcheCreated.id, demarcheCreated.titreId)
 
     const fields = fieldsBuild(info)
 
@@ -188,7 +188,7 @@ const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user 
   }
 }
 
-const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user }: Context, info: GraphQLResolveInfo) => {
+const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
@@ -216,7 +216,7 @@ const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { us
 
     await titreDemarcheUpdate(demarche.id, demarche)
 
-    await titreDemarcheUpdateTask(demarche.id, demarche.titreId)
+    await titreDemarcheUpdateTask(pool, demarche.id, demarche.titreId)
 
     const fields = fieldsBuild(info)
 
@@ -230,7 +230,7 @@ const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { us
   }
 }
 
-const demarcheSupprimer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+const demarcheSupprimer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     const demarcheOld = await titreDemarcheGet(id, { fields: { etapes: { id: {} } } }, user)
 
@@ -240,7 +240,7 @@ const demarcheSupprimer = async ({ id }: { id: string }, { user }: Context, info
 
     await titreDemarcheArchive(id)
 
-    await titreDemarcheUpdateTask(null, demarcheOld.titreId)
+    await titreDemarcheUpdateTask(pool, null, demarcheOld.titreId)
 
     const fields = fieldsBuild(info)
 

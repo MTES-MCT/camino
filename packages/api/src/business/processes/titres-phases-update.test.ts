@@ -5,22 +5,25 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitre } from '../../types.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { updateDatesDemarcheDb } from './titres-phases-update.queries.js'
-import { pool } from '../../pg-database.js'
+import { Pool } from 'pg'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
 }))
-vi.mock('../../pg-database', () => ({
-  pool: { query: vi.fn() },
-}))
+vi.mock('pg', () => {
+  const Pool = vi.fn()
+  Pool.prototype.query = vi.fn()
+
+  return { Pool }
+})
 vi.mock('./titres-phases-update.queries', () => ({
   updateDatesDemarcheDb: { run: vi.fn() },
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
-const poolMock = vi.mocked(pool, true)
 const updateDatesDemarcheMock = vi.mocked(updateDatesDemarcheDb.run, true)
 
+const mockedPool = new Pool()
 console.info = vi.fn()
 
 afterEach(() => {
@@ -66,9 +69,9 @@ describe("phases d'un titre", () => {
       } satisfies ITitre,
     ])
 
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
+    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
 
-    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, poolMock)
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, mockedPool)
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
 
@@ -112,8 +115,8 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
-    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, poolMock)
+    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: toCaminoDate('2200-01-01'), newDateFin: toCaminoDate('2500-01-01') }, mockedPool)
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
 
@@ -138,9 +141,9 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
+    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
 
-    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: null, newDateFin: null }, poolMock)
+    expect(updateDatesDemarcheMock).toBeCalledWith({ demarcheId: 'h-cx-courdemanges-1988-oct01', newDateDebut: null, newDateFin: null }, mockedPool)
 
     expect(titresDemarchesDatesUpdated.length).toEqual(1)
   })
@@ -185,7 +188,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
+    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
 
     expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
@@ -210,7 +213,7 @@ describe("phases d'un titre", () => {
         ],
       } satisfies ITitre,
     ])
-    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate()
+    const [titresDemarchesDatesUpdated] = await titresDemarchesDatesUpdate(mockedPool)
     expect(updateDatesDemarcheMock).not.toBeCalled()
     expect(titresDemarchesDatesUpdated.length).toEqual(0)
   })

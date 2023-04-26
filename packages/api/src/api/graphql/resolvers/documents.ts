@@ -36,7 +36,7 @@ const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) =
   await fileStreamCreate(createReadStream(), join(process.cwd(), documentFilePath))
 }
 
-const documents = async ({ entreprisesIds }: { entreprisesIds?: string[] }, { user }: Context, info: GraphQLResolveInfo) => {
+export const documents = async ({ entreprisesIds }: { entreprisesIds?: string[] }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
     const documents = await documentsGet({ entreprisesIds }, { fields }, user)
@@ -107,7 +107,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
   }
 }
 
-const documentCreer = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
+export const documentCreer = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -163,7 +163,7 @@ const documentCreer = async ({ document }: { document: IDocument }, { user }: Co
   }
 }
 
-const documentModifier = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
+export const documentModifier = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -231,7 +231,7 @@ const documentModifier = async ({ document }: { document: IDocument }, { user }:
   }
 }
 
-const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
+export const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
@@ -282,7 +282,7 @@ const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
   }
 }
 
-const documentsLier = async ({ user }: Context, documentIds: string[], parentId: string, propParentId: 'titreActiviteId' | 'titreEtapeId', oldParent?: { documents?: IDocument[] | null }) => {
+export const documentsLier = async (context: Context, documentIds: string[], parentId: string, propParentId: 'titreActiviteId' | 'titreEtapeId', oldParent?: { documents?: IDocument[] | null }) => {
   if (oldParent?.documents?.length) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
@@ -290,7 +290,7 @@ const documentsLier = async ({ user }: Context, documentIds: string[], parentId:
       const documentId = documentIds.find(id => id === oldDocumentId)
 
       if (!documentId) {
-        await documentSupprimer({ id: oldDocumentId }, { user })
+        await documentSupprimer({ id: oldDocumentId }, context)
       }
     }
   }
@@ -313,5 +313,3 @@ const documentsLier = async ({ user }: Context, documentIds: string[], parentId:
     }
   }
 }
-
-export { documents, documentCreer, documentModifier, documentSupprimer, documentsLier }

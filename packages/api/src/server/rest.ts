@@ -1,6 +1,5 @@
 import { IFormat, Index } from '../types.js'
 import type { Pool } from 'pg'
-import { pool } from '../pg-database.js'
 
 import express from 'express'
 import { join } from 'path'
@@ -46,7 +45,7 @@ type IRestResolver = (
   user: User
 ) => Promise<IRestResolverResult | null>
 
-export const restWithPool = (dbPool: Pool = pool) => {
+export const restWithPool = (dbPool: Pool) => {
   const rest = express.Router()
   rest.get('/download/titres/:id', restDownload(titre))
   rest.get('/download/titres', restDownload(titres))
@@ -79,7 +78,7 @@ export const restWithPool = (dbPool: Pool = pool) => {
   rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
   rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
 
-  rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
+  rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats(dbPool)))
   rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
   rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
   rest.post(CaminoRestRoutes.utilisateurPermission, restCatcher(updateUtilisateurPermission))

@@ -7,7 +7,7 @@ export interface IGetProductionOrDbParams {
 
 /** 'GetProductionOrDb' return type */
 export interface IGetProductionOrDbResult {
-  annee: number | null;
+  annee: number;
   count: string | null;
 }
 

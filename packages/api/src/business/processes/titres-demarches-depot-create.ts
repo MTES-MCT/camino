@@ -10,7 +10,7 @@ import { titreUrlGet } from '../utils/urls-get.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types.js'
 import { getCurrent } from 'camino-common/src/date.js'
-
+import type { Pool } from 'pg'
 const emailConfirmationDepotSend = async (
   emails: string[],
   params: {
@@ -65,7 +65,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
   return false
 }
 
-export const titreEtapeDepotCreate = async (titreDemarche: ITitreDemarche) => {
+export const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) => {
   let titreEtapeDepot = {
     titreDemarcheId: titreDemarche.id,
     typeId: 'mdp',
@@ -74,7 +74,7 @@ export const titreEtapeDepotCreate = async (titreDemarche: ITitreDemarche) => {
   } as ITitreEtape
 
   titreEtapeDepot = await titreEtapeUpsert(titreEtapeDepot, userSuper, titreDemarche.titreId)
-  await titreEtapeUpdateTask(titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
+  await titreEtapeUpdateTask(pool, titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
   await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreEtapeDepot.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
 
   const titulaires = titreDemarche.titre?.titulaires
@@ -83,7 +83,7 @@ export const titreEtapeDepotCreate = async (titreDemarche: ITitreDemarche) => {
     await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titreEtapeDepot, titulaires)
   }
 }
-export const titresEtapesDepotCreate = async (demarcheId: string) => {
+export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string) => {
   console.info()
   console.info('dépôt d’une démarche…')
 
@@ -107,7 +107,7 @@ export const titresEtapesDepotCreate = async (demarcheId: string) => {
 
   const depotCheck = titreDemarcheDepotCheck(titreDemarche)
   if (depotCheck) {
-    await titreEtapeDepotCreate(titreDemarche)
+    await titreEtapeDepotCreate(pool, titreDemarche)
   }
 
   return depotCheck

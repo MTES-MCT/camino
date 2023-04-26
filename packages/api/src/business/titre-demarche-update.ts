@@ -13,8 +13,9 @@ import { logsUpdate } from './_logs-update.js'
 import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.js'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
+import type { Pool } from 'pg'
 
-const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: string) => {
+export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | null, titreId: string) => {
   try {
     console.info()
     console.info('- - -')
@@ -37,7 +38,7 @@ const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: stri
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate([titreId])
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
     const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
@@ -65,5 +66,3 @@ const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: stri
     throw e
   }
 }
-
-export default titreDemarcheUpdate

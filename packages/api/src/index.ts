@@ -29,11 +29,20 @@ import { geoSystemesInit } from './config/proj4.js'
 import { userLoader } from './server/user-loader.js'
 import { connectedCatcher } from './server/connected-catcher.js'
 import cookieParser from 'cookie-parser'
+import pg from 'pg'
+
+// Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
+const pool = new pg.Pool({
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+})
 
 consoleOverride()
 geoSystemesInit()
 filesInit().then(() => {
-  databaseInit().then(() => {
+  databaseInit(pool).then(() => {
     const app = express()
     app.disable('x-powered-by')
 
@@ -71,11 +80,11 @@ filesInit().then(() => {
       res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
       res.flush()
     })
-    app.use(express.urlencoded({ extended: true }), express.json(), restWithPool())
+    app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(pool))
 
     app.use('/televersement', uploadAllowedMiddleware, restUpload())
 
-    app.use('/', graphqlUpload, graphql)
+    app.use('/', graphqlUpload, graphql(pool))
 
     if (process.env.API_SENTRY_URL) {
       app.use(Sentry.Handlers.errorHandler())

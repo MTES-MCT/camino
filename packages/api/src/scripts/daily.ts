@@ -10,6 +10,7 @@ import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-chec
 import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 import { documentsClean } from '../tools/documents/clean.js'
 import * as Console from 'console'
+import pg from 'pg'
 
 const logFile = '/tmp/cron.log'
 const output = createWriteStream(logFile)
@@ -21,14 +22,22 @@ if (process.env.CAMINO_STAGE) {
   consoleOverride(false)
 }
 
+// Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
+const pool = new pg.Pool({
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+})
+
 const tasks = async () => {
   console.info('Tâches quotidiennes : démarrage')
   // Réinitialise les logs qui seront envoyés par email
   writeFileSync(logFile, '')
   try {
-    await daily()
+    await daily(pool)
     if (process.env.CAMINO_STAGE) {
-      await documentsClean()
+      await documentsClean(pool)
       await documentsCheck()
       await demarchesDefinitionsCheck()
       await titreTypeDemarcheTypeEtapeTypeCheck()
