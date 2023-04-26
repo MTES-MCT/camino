@@ -45,7 +45,6 @@ export const tables = [
     orderBy: ['titre_etape_id', 'document_id'],
   },
   { name: 'titres_forets', orderBy: ['titre_etape_id', 'foret_id'] },
-  { name: 'titres_phases', orderBy: ['titre_demarche_id', 'phase_statut_id'] },
   { name: 'titres_points', orderBy: ['id'] },
   { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },

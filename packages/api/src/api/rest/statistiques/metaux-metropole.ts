@@ -12,13 +12,14 @@ import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceD
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { evolutionTitres } from './evolution-titres.js'
+import type { Pool } from 'pg'
 
-export const getMinerauxMetauxMetropolesStatsInside = async (): Promise<StatistiquesMinerauxMetauxMetropole> => {
+export const getMinerauxMetauxMetropolesStatsInside = async (pool: Pool): Promise<StatistiquesMinerauxMetauxMetropole> => {
   const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
   const substances = await buildSubstances()
   const fiscaliteParSubstanceParAnnee = await fiscaliteDetail()
-  const prmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, departementsMetropole)
-  const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole)
+  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, departementsMetropole)
+  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole)
 
   return {
     ...result,
