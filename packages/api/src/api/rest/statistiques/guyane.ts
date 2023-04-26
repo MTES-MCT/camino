@@ -14,6 +14,7 @@ import { titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import type { Pool } from 'pg'
 
 const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: ITitreActivite[], init: { [key: string]: number }) =>
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
@@ -193,12 +194,12 @@ export const statistiquesGuyane = async () => {
   }
 }
 
-export const getGuyaneStatsInside = async (): Promise<StatistiquesGuyaneData> => {
+export const getGuyaneStatsInside = async (pool: Pool): Promise<StatistiquesGuyaneData> => {
   const guyane = [DEPARTEMENT_IDS.Guyane]
-  const armData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE, guyane)
-  const prmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, guyane)
-  const axmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, guyane)
-  const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION, guyane)
+  const armData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE, guyane)
+  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, guyane)
+  const axmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, guyane)
+  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, guyane)
 
   const fromObjection = await statistiquesGuyane()
 

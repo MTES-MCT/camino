@@ -1,7 +1,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { GranulatsMarinsActivite } from './granulats-marins-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
-import { numberFormat } from '@/utils/number-format'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { AsyncData, fetchWithJson } from '@/api/client-rest'
@@ -9,6 +8,7 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { CaminoDate, getAnnee, getCurrent, toCaminoDate } from 'camino-common/src/date'
 import type { ChartConfiguration } from 'chart.js'
+import { numberFormat } from 'camino-common/src/number'
 
 const ids = ['titresPrw', 'titresPxw', 'titresCxw', 'concessionsValides'] as const
 
@@ -95,7 +95,7 @@ const barChartConfig = (data: ChartConfiguration<'bar' | 'line'>['data'], sugges
     aspectRatio: 2,
     responsive: true,
     scales: {
-      bar: { min: 0, suggestedMax },
+      bar: { min: 0, position: 'left', suggestedMax },
       line: { min: 0, position: 'right' },
     },
     plugins: {

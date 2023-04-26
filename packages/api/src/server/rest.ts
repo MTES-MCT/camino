@@ -74,8 +74,8 @@ export const restWithPool = (dbPool: Pool) => {
   rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
   rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
   rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
-  rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats))
-  rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
+  rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats(dbPool)))
+  rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats(dbPool)))
   rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
 
   rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats(dbPool)))

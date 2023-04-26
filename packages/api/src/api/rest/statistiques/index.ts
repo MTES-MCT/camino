@@ -24,25 +24,29 @@ export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: Cust
   }
 }
 
-export const getMinerauxMetauxMetropolesStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesMinerauxMetauxMetropole>): Promise<void> => {
-  try {
-    res.json(await getMinerauxMetauxMetropolesStatsInside())
-  } catch (e) {
-    console.error(e)
+export const getMinerauxMetauxMetropolesStats =
+  (pool: Pool) =>
+  async (_req: CaminoRequest, res: CustomResponse<StatistiquesMinerauxMetauxMetropole>): Promise<void> => {
+    try {
+      res.json(await getMinerauxMetauxMetropolesStatsInside(pool))
+    } catch (e) {
+      console.error(e)
 
-    throw e
+      throw e
+    }
   }
-}
 
-export const getGuyaneStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
-  try {
-    res.json(await getGuyaneStatsInside())
-  } catch (e) {
-    console.error(e)
+export const getGuyaneStats =
+  (pool: Pool) =>
+  async (_req: CaminoRequest, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
+    try {
+      res.json(await getGuyaneStatsInside(pool))
+    } catch (e) {
+      console.error(e)
 
-    throw e
+      throw e
+    }
   }
-}
 
 export const getGranulatsMarinsStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
   try {
