@@ -4,12 +4,13 @@ import { join } from 'path'
 import { idGenerate } from '../src/database/models/_format/id-create.js'
 import { knexInstanceSet } from '../src/knex.js'
 import knex, { Knex } from 'knex'
-import { Client } from 'pg'
+import pg, { Client } from 'pg'
 import { knexSnakeCaseMappers, Model } from 'objection'
 
 class DbManager {
   private readonly dbName: string
   private knexInstance: null | Knex = null
+  private poolInstance: null | pg.Pool = null
 
   public constructor() {
     this.dbName = `a${idGenerate().toLowerCase()}`
@@ -36,12 +37,22 @@ class DbManager {
     await globalClient.end()
 
     this.knexInstance = this.getKnex()
+    this.poolInstance = this.getPool()
     if (newDatabase) {
       await this.knexInstance!.raw('CREATE EXTENSION postgis')
     }
     Model.knex(this.knexInstance!)
     knexInstanceSet(this.knexInstance!)
     await this.knexInstance!.migrate.latest()
+  }
+
+  private getPool(): pg.Pool {
+    return new pg.Pool({
+      host: 'localhost',
+      user: DbManager.getPgUser(),
+      password: DbManager.getPgPassword(),
+      database: this.dbName,
+    })
   }
 
   private getKnex(): Knex {
@@ -74,13 +85,20 @@ class DbManager {
     }
   }
 
-  public async populateDb(): Promise<Knex> {
+  private static checkPoolInstance(pool: null | pg.Pool): asserts pool is pg.Pool {
+    if (knex === null) {
+      throw new Error('populateDb should be called first')
+    }
+  }
+
+  public async populateDb(): Promise<{ knex: Knex; pool: pg.Pool }> {
     await this.init()
     await this.injectSeed()
 
     DbManager.checkKnexInstance(this.knexInstance)
+    DbManager.checkPoolInstance(this.poolInstance)
 
-    return this.knexInstance
+    return { knex: this.knexInstance, pool: this.poolInstance }
   }
 
   public async reseedDb(): Promise<void> {
@@ -91,6 +109,8 @@ class DbManager {
   public async closeKnex(): Promise<void> {
     DbManager.checkKnexInstance(this.knexInstance)
     await this.knexInstance.destroy()
+    DbManager.checkPoolInstance(this.poolInstance)
+    await this.poolInstance.end()
     await this.end()
   }
 

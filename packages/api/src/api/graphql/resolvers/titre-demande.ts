@@ -5,7 +5,7 @@ import { titreDemarcheCreate } from '../../../database/queries/titres-demarches.
 import { titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 
 import titreUpdateTask from '../../../business/titre-update.js'
-import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
+import { titreDemarcheUpdate } from '../../../business/titre-demarche-update.js'
 import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
 import { userSuper } from '../../../database/user-super.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
@@ -18,7 +18,7 @@ import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs.j
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } }, { user }: Context) => {
+export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } }, { user, pool }: Context) => {
   try {
     assertsCanCreateTitre(user, titreDemande.typeId)
 
@@ -64,7 +64,7 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
       typeId: 'oct',
     })
 
-    await titreDemarcheUpdateTask(titreDemarche.id, titreDemarche.titreId)
+    await titreDemarcheUpdate(pool, titreDemarche.id, titreDemarche.titreId)
 
     const updatedTitre = await titreGet(titreId, { fields: { demarches: { id: {} } } }, userSuper)
 
@@ -151,7 +151,7 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
       }
     }
     const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
-    await titreEtapeUpdateTask(updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
+    await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
 
     const titreEtapeId = updatedTitreEtape.id
 

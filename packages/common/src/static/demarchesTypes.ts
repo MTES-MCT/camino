@@ -1,5 +1,5 @@
 import { Definition } from '../definition.js'
-
+import { z } from 'zod'
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
   renouvelable: boolean
@@ -21,6 +21,9 @@ const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof D
   exception: false,
   auto: false,
 }
+
+// prettier-ignore
+export const DemarchesTypesIds = ['amo', 'aom', 'ces', 'con', 'dam', 'dec', 'dep', 'dot', 'exp', 'exs', 'fus', 'mut', 'oct', 'pr1', 'pr2', 'pre', 'pro', 'prr', 'ren', 'res', 'ret', 'vct', 'vut',] as const
 
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
@@ -46,11 +49,10 @@ export const DEMARCHES_TYPES_IDS = {
   Retrait: 'ret',
   DemandeDeTitreDExploitation: 'vct',
   MutationPartielle: 'vut',
-} as const
+} as const satisfies Record<string, (typeof DemarchesTypesIds)[number]>
 
-export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
-
-export type DemarcheTypeId = (typeof DEMARCHES_TYPES_IDS)[keyof typeof DEMARCHES_TYPES_IDS]
+export const demarcheTypeIdValidator = z.enum(DemarchesTypesIds)
+export type DemarcheTypeId = z.infer<typeof demarcheTypeIdValidator>
 
 export const DemarchesTypes = {
   amo: {

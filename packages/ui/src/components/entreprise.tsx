@@ -155,7 +155,9 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entreprise', 'user'
     id: props.entreprise?.id,
     name: 'entreprise',
   }))
-  const fiscaliteVisible = computed(() => fiscaliteVisibleFunc(props.user, props.entreprise?.id, [...titulaireTitres.value, ...amodiataireTitres.value]))
+  const fiscaliteVisible = computed(() =>
+    fiscaliteVisibleFunc(props.user, props.entreprise?.id, [...titulaireTitres.value.map(({ typeId }) => ({ type_id: typeId })), ...amodiataireTitres.value.map(({ typeId }) => ({ type_id: typeId }))])
+  )
 
   const canDeleteDocument = (entreprise: EntrepriseType, user: User): boolean => {
     return canEditEntreprise(user, entreprise.id) && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user))

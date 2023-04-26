@@ -19,8 +19,14 @@ export interface Props {
   displayActivites: boolean
 }
 
-const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<Entreprise, 'id' | 'nom'>[], item: TitreEntreprise[]) => {
-  return entreprises.some(({ id }) => fiscaliteVisible(user, id, item))
+const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<Entreprise, 'id' | 'nom'>[], items: TitreEntreprise[]) => {
+  return entreprises.some(({ id }) =>
+    fiscaliteVisible(
+      user,
+      id,
+      items.map(({ typeId }) => ({ type_id: typeId }))
+    )
+  )
 }
 
 export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'entreprises', 'getEntreprisesTitres', 'displayActivites'], props => {
@@ -82,7 +88,13 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                       {' '}
                       vos entreprises :
                       {props.entreprises
-                        .filter(entreprise => fiscaliteVisible(props.user, entreprise.id, item))
+                        .filter(entreprise =>
+                          fiscaliteVisible(
+                            props.user,
+                            entreprise.id,
+                            item.map(({ typeId }) => ({ type_id: typeId }))
+                          )
+                        )
                         .map(entreprise => (
                           <router-link to={entrepriseUrl(entreprise.id)} target="_blank" class="p-s color-bg mb">
                             {entreprise.nom}

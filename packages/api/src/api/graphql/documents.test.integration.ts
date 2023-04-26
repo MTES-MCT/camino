@@ -11,12 +11,15 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 
 import { afterAll, afterEach, beforeAll, describe, test, expect, vi } from 'vitest'
+import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterEach(async () => {
@@ -31,13 +34,13 @@ describe('documentSupprimer', () => {
   const documentSupprimerQuery = queryImport('documents-supprimer')
 
   test('ne peut pas supprimer un document (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(documentSupprimerQuery, { id: 'toto' }, undefined)
+    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: 'toto' }, undefined)
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
 
   test('ne peut pas supprimer un document inexistant (utilisateur super)', async () => {
-    const res = await graphQLCall(documentSupprimerQuery, { id: 'toto' }, { role: 'super' })
+    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: 'toto' }, { role: 'super' })
 
     expect(res.body.errors[0].message).toBe('aucun document avec cette id')
   })
@@ -54,7 +57,7 @@ describe('documentSupprimer', () => {
       entrepriseId,
     })
 
-    const res = await graphQLCall(documentSupprimerQuery, { id: documentId }, { role: 'super' })
+    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.documentSupprimer).toBeTruthy()
@@ -68,6 +71,7 @@ describe('documentSupprimer', () => {
     const titre = await titreCreate(
       {
         nom: '',
+        slug: 'slug-arm-1',
         typeId: 'arm',
         propsTitreEtapesIds: {},
       },
@@ -104,7 +108,7 @@ describe('documentSupprimer', () => {
       } as ITitreEtapeJustificatif,
     ])
 
-    const res = await graphQLCall(documentSupprimerQuery, { id: documentId }, { role: 'super' })
+    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
 
     expect(res.body.errors[0].message).toBe(`impossible de supprimer ce document lié à l’étape ${titreEtape.id}`)
   })
@@ -116,6 +120,7 @@ describe('documentSupprimer', () => {
     const titre = await titreCreate(
       {
         nom: '',
+        slug: 'slug-arm-2',
         typeId: 'arm',
         propsTitreEtapesIds: {},
       },
@@ -147,7 +152,7 @@ describe('documentSupprimer', () => {
       titreEtapeId: titreEtape.id,
     })
 
-    const res = await graphQLCall(documentSupprimerQuery, { id: documentId }, { role: 'super' })
+    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.documentSupprimer).toBeTruthy()

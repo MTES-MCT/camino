@@ -26,6 +26,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import type { Pool } from 'pg'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -707,7 +708,7 @@ interface IUtilisateurTitre {
   utilisateur?: IUtilisateur | null
 }
 
-export type Context = { user: User }
+export type Context = { user: User; pool: Pool }
 
 type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 

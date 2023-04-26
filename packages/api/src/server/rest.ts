@@ -1,11 +1,12 @@
 import { IFormat, Index } from '../types.js'
+import type { Pool } from 'pg'
 
 import express from 'express'
 import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner } from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre } from '../api/rest/titres.js'
 import { creerEntreprise, fiscalite, modifierEntreprise } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -16,6 +17,7 @@ import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import { getDemarche } from '../api/rest/demarches.js'
 const contentTypes = {
   csv: 'text/csv',
   geojson: 'application/geojson',
@@ -43,7 +45,66 @@ type IRestResolver = (
   user: User
 ) => Promise<IRestResolverResult | null>
 
-export const rest = express.Router()
+export const restWithPool = (dbPool: Pool) => {
+  const rest = express.Router()
+  rest.get('/download/titres/:id', restDownload(titre))
+  rest.get('/download/titres', restDownload(titres))
+  rest.get('/download/titres_qgis', restDownload(titres))
+  rest.get('/download/demarches', restDownload(demarches))
+  rest.get('/download/activites', restDownload(activites))
+  rest.get('/download/utilisateurs', restDownload(utilisateurs))
+  rest.get('/download/fichiers/:documentId', restDownload(fichier))
+  rest.get('/download/etape/zip/:etapeId', restDownload(etapeTelecharger))
+  rest.get('/download/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
+  rest.get(`/download${CaminoRestRoutes.entreprises}`, restDownload(entreprises))
+
+  rest.get('/config', restCatcher(config))
+  rest.post(CaminoRestRoutes.titresLiaisons, restCatcher(postTitreLiaisons))
+  rest.get(CaminoRestRoutes.titresLiaisons, restCatcher(getTitreLiaisons))
+  rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
+  rest.get(CaminoRestRoutes.etapesTypesEtapesStatusWithMainStep, restCatcher(getEtapesTypesEtapesStatusWithMainStep))
+
+  rest.get(CaminoRestRoutes.demarche, restCatcher(getDemarche(dbPool)))
+
+  rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
+  rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))
+  rest.get(CaminoRestRoutes.titre, restCatcher(getTitre(dbPool)))
+
+  rest.post(CaminoRestRoutes.titreUtilisateurAbonne, restCatcher(utilisateurTitreAbonner))
+  rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
+  rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
+  rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
+  rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats))
+  rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
+  rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
+
+  rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats(dbPool)))
+  rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
+  rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
+  rest.post(CaminoRestRoutes.utilisateurPermission, restCatcher(updateUtilisateurPermission))
+  rest.delete(CaminoRestRoutes.utilisateur, restCatcher(deleteUtilisateur))
+  rest.get(CaminoRestRoutes.moi, restCatcher(moi))
+  rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
+
+  rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
+  rest.put(CaminoRestRoutes.entreprise, restCatcher(modifierEntreprise))
+  rest.post(CaminoRestRoutes.entreprises, restCatcher(creerEntreprise))
+  rest.get('/deconnecter', restCatcher(logout))
+  rest.get('/changerMotDePasse', restCatcher(resetPassword))
+
+  rest.use((err: Error, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
+    if (err) {
+      res.status(500)
+      res.send({ error: err.message })
+
+      return
+    }
+
+    next()
+  })
+
+  return rest
+}
 
 type ExpressRoute = (req: CaminoRequest, res: express.Response, next: express.NextFunction) => Promise<void>
 
@@ -111,53 +172,3 @@ export const config = async (_req: CaminoRequest, res: CustomResponse<CaminoConf
 
   res.json(config)
 }
-rest.get('/config', restCatcher(config))
-rest.post(CaminoRestRoutes.titresLiaisons, restCatcher(postTitreLiaisons))
-rest.get(CaminoRestRoutes.titresLiaisons, restCatcher(getTitreLiaisons))
-rest.get('/titres/:id', restDownload(titre))
-rest.get('/titres', restDownload(titres))
-rest.get('/titres_qgis', restDownload(titres))
-rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
-rest.get(CaminoRestRoutes.etapesTypesEtapesStatusWithMainStep, restCatcher(getEtapesTypesEtapesStatusWithMainStep))
-
-rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
-rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))
-
-rest.post(CaminoRestRoutes.titreUtilisateurAbonne, restCatcher(utilisateurTitreAbonner))
-rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
-rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
-rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
-rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats))
-rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
-rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
-
-rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
-rest.get('/demarches', restDownload(demarches))
-rest.get('/activites', restDownload(activites))
-rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
-rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
-rest.post(CaminoRestRoutes.utilisateurPermission, restCatcher(updateUtilisateurPermission))
-rest.delete(CaminoRestRoutes.utilisateur, restCatcher(deleteUtilisateur))
-rest.get(CaminoRestRoutes.moi, restCatcher(moi))
-rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
-rest.get('/utilisateurs', restDownload(utilisateurs))
-rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
-rest.put(CaminoRestRoutes.entreprise, restCatcher(modifierEntreprise))
-rest.post(CaminoRestRoutes.entreprises, restCatcher(creerEntreprise))
-rest.get(CaminoRestRoutes.entreprises, restDownload(entreprises))
-rest.get('/fichiers/:documentId', restDownload(fichier))
-rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
-rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
-rest.get('/deconnecter', restCatcher(logout))
-rest.get('/changerMotDePasse', restCatcher(resetPassword))
-
-rest.use((err: Error, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
-  if (err) {
-    res.status(500)
-    res.send({ error: err.message })
-
-    return
-  }
-
-  next()
-})

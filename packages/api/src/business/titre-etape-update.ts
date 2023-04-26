@@ -22,8 +22,9 @@ import { titresActivitesPropsUpdate } from './processes/titres-activites-props-u
 import { userSuper } from '../database/user-super.js'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create.js'
 import { UserNotNull } from 'camino-common/src/roles'
+import type { Pool } from 'pg'
 
-const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
+const titreEtapeUpdate = async (pool: Pool, titreEtapeId: string | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
   try {
     console.info()
     console.info('- - -')
@@ -52,7 +53,7 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate([titreId])
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
@@ -90,7 +91,7 @@ const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: De
       titresUpdatedIndex,
     })
 
-    await titresEtapesDepotCreate(titreDemarcheId)
+    await titresEtapesDepotCreate(pool, titreDemarcheId)
   } catch (e) {
     console.error(`erreur: titreEtapeUpdate ${titreEtapeId}`)
     console.error(e)

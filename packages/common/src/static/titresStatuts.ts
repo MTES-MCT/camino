@@ -1,9 +1,11 @@
 import { Couleur } from './couleurs.js'
 import { Definition } from '../definition.js'
-
+import { z } from 'zod'
 interface TitreStatutDefinition<T> extends Definition<T> {
   couleur: Couleur
 }
+
+const TitresStatutKeys = ['dmc', 'dmi', 'ech', 'ind', 'mod', 'val'] as const
 
 export const TitresStatutIds = {
   DemandeClassee: 'dmc',
@@ -12,9 +14,10 @@ export const TitresStatutIds = {
   Indetermine: 'ind',
   ModificationEnInstance: 'mod',
   Valide: 'val',
-} as const
+} as const satisfies Record<string, (typeof TitresStatutKeys)[number]>
 
-export type TitreStatutId = (typeof TitresStatutIds)[keyof typeof TitresStatutIds]
+export const titreStatutIdValidator = z.enum(TitresStatutKeys)
+export type TitreStatutId = z.infer<typeof titreStatutIdValidator>
 
 export const TitresStatuts: {
   [key in TitreStatutId]: TitreStatutDefinition<key>

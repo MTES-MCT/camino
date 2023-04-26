@@ -1,6 +1,8 @@
 import { CaminoDate } from './date.js'
+import { DemarcheId } from './demarche.js'
 import { EntrepriseId } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
+import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { DocumentTypeId } from './static/documentsTypes.js'
 import { EtapeStatutId } from './static/etapesStatuts.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
@@ -63,4 +65,9 @@ export interface EtapeTypeEtapeStatutWithMainStep {
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId
   mainStep: boolean
+}
+
+export type CommonEtape = {
+  titreDemarcheId: DemarcheId
+  typeId: DemarcheTypeId
 }

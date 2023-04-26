@@ -1,19 +1,19 @@
 /** Types generated for queries found in "src/api/rest/statistiques/dgtm.queries.ts" */
 
-/** 'GetProductionOr' parameters type */
-export interface IGetProductionOrParams {
+/** 'GetProductionOrDb' parameters type */
+export interface IGetProductionOrDbParams {
   substance?: string | null | void;
 }
 
-/** 'GetProductionOr' return type */
-export interface IGetProductionOrResult {
+/** 'GetProductionOrDb' return type */
+export interface IGetProductionOrDbResult {
   annee: number;
   count: string | null;
 }
 
-/** 'GetProductionOr' query type */
-export interface IGetProductionOrQuery {
-  params: IGetProductionOrParams;
-  result: IGetProductionOrResult;
+/** 'GetProductionOrDb' query type */
+export interface IGetProductionOrDbQuery {
+  params: IGetProductionOrDbParams;
+  result: IGetProductionOrDbResult;
 }
 

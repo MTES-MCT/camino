@@ -8,8 +8,9 @@ import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
 import { isAdministration } from 'camino-common/src/roles.js'
 import { statistiquesGranulatsMarins } from './granulats-marins.js'
+import type { Pool } from 'pg'
 
-export const getDGTMStats = async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>) => {
+export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>) => {
   const user = req.auth
 
   const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
@@ -17,7 +18,7 @@ export const getDGTMStats = async (req: CaminoRequest, res: CustomResponse<Stati
   if (!isAdministration(user) || user?.administrationId !== administrationId) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const result = await getDGTMStatsInside(administrationId)
+    const result = await getDGTMStatsInside(pool)(administrationId)
 
     res.json(result)
   }

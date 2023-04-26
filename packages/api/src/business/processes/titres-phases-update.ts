@@ -1,10 +1,10 @@
 import { titrePhasesFind } from '../rules/titre-phases-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
-import { pool } from '../../pg-database.js'
-import { updateDatesDemarche } from './titres-phases-update.queries.js'
+import type { Pool } from 'pg'
+import { updateDatesDemarcheDb } from './titres-phases-update.queries.js'
 
-export const titresDemarchesDatesUpdate = async (titresIds?: string[]) => {
+export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[]) => {
   console.info()
   console.info('phases des titres…')
 
@@ -36,7 +36,7 @@ export const titresDemarchesDatesUpdate = async (titresIds?: string[]) => {
 
       if (newDateDebut !== oldDateDebut || newDateFin !== oldDateFin) {
         demarchePhaseUpdated.push(demarche.id)
-        await updateDatesDemarche.run(
+        await updateDatesDemarcheDb.run(
           {
             newDateDebut,
             newDateFin,

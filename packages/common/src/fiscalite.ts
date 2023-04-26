@@ -1,6 +1,6 @@
 import { isAdministration, isEntreprise, isSuper, User } from './roles.js'
 import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
-import { CommonTitre } from './titres.js'
+import { CommonRestTitre } from './titres.js'
 import { EntrepriseId } from './entreprise.js'
 import { getDomaineId } from './static/titresTypes.js'
 
@@ -25,11 +25,11 @@ export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuya
 export const fraisGestion = (fiscalite: Fiscalite): number =>
   Number.parseFloat(((fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08).toFixed(2))
 
-export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId | undefined, titres: Partial<Pick<CommonTitre, 'typeId'>>[]): boolean => {
+export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId | undefined, titres: Partial<Pick<CommonRestTitre, 'type_id'>>[]): boolean => {
   return fiscaliteVisibleByDomaines(
     user,
     entrepriseId,
-    titres.filter((titre): titre is Pick<CommonTitre, 'typeId'> => !!titre.typeId).map(({ typeId }) => getDomaineId(typeId))
+    titres.filter((titre): titre is Pick<CommonRestTitre, 'type_id'> => !!titre.type_id).map(({ type_id }) => getDomaineId(type_id))
   )
 }
 export const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId | undefined, domaineIds: DomaineId[]): boolean => {

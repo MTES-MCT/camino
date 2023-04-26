@@ -1,6 +1,7 @@
 import { PureDemarcheRemovePopup, Props } from './demarche-remove-popup'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheRemovePopup',
@@ -27,7 +28,7 @@ export const Main: Story = () => (
     displayMessage={displayMessage}
     apiClient={apiClient}
     close={close}
-    demarcheId={'demarcheId'}
+    demarcheId={demarcheIdValidator.parse('demarcheId')}
     titreTypeId={'apc'}
     titreNom="Nom du titre"
     demarcheTypeId={'oct'}

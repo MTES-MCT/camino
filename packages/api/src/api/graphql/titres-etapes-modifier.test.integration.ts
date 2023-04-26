@@ -11,6 +11,7 @@ import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
+import type { Pool } from 'pg'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -29,8 +30,10 @@ vi.mock('../../tools/file-delete', () => ({
 
 console.info = vi.fn()
 console.error = vi.fn()
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 beforeEach(async () => {
@@ -74,6 +77,7 @@ describe('etapeModifier', () => {
 
   test.each([undefined, 'editeur' as Role])('ne peut pas modifier une étape (utilisateur %s)', async (role: Role | undefined) => {
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -92,6 +96,7 @@ describe('etapeModifier', () => {
 
   test('ne peut pas modifier une étape sur une démarche inexistante (utilisateur super)', async () => {
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -111,6 +116,7 @@ describe('etapeModifier', () => {
   test('peut modifier une étape mfr avec un statut aco (utilisateur super)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -150,6 +156,7 @@ describe('etapeModifier', () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -170,6 +177,7 @@ describe('etapeModifier', () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -192,6 +200,7 @@ describe('etapeModifier', () => {
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -215,6 +224,7 @@ describe('etapeModifier', () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeModifierQuery,
       {
         etape: {
@@ -243,20 +253,20 @@ describe('etapeSupprimer', () => {
   const etapeSupprimerQuery = queryImport('titre-etape-supprimer')
 
   test.each([undefined, 'admin' as Role])('ne peut pas supprimer une étape (utilisateur %s)', async (role: Role | undefined) => {
-    const res = await graphQLCall(etapeSupprimerQuery, { id: '' }, role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined)
+    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: '' }, role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined)
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 
   test('ne peut pas supprimer une étape inexistante (utilisateur super)', async () => {
-    const res = await graphQLCall(etapeSupprimerQuery, { id: 'toto' }, userSuper)
+    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: 'toto' }, userSuper)
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 
   test('peut supprimer une étape (utilisateur super)', async () => {
     const { titreEtapeId } = await etapeCreate()
-    const res = await graphQLCall(etapeSupprimerQuery, { id: titreEtapeId }, userSuper)
+    const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: titreEtapeId }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
   })

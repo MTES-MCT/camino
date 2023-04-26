@@ -1,6 +1,6 @@
 import { fiscaliteVisible, fraisGestion } from './fiscalite.js'
 import { UserNotNull } from './roles.js'
-import { CommonTitre } from './titres.js'
+import { CommonRestTitre } from './titres.js'
 import { test, expect } from 'vitest'
 import { newEntrepriseId } from './entreprise.js'
 
@@ -23,7 +23,7 @@ test('fraisGestion', () => {
 const roleLessUser: Omit<UserNotNull, 'role'> = { id: 'id', nom: 'nom', email: 'email', prenom: 'prenom' }
 
 test('fiscaliteVisible', () => {
-  const titres: Partial<Pick<CommonTitre, 'typeId'>>[] = [{ typeId: 'arm' }, { typeId: 'prw' }]
+  const titres: Partial<Pick<CommonRestTitre, 'type_id'>>[] = [{ type_id: 'arm' }, { type_id: 'prw' }]
   expect(fiscaliteVisible(null, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible(undefined, newEntrepriseId('1234'), titres)).toBe(false)
   expect(fiscaliteVisible({ role: 'defaut', ...roleLessUser }, newEntrepriseId('1234'), titres)).toBe(false)
@@ -41,13 +41,13 @@ test('fiscaliteVisible', () => {
 })
 
 test('fiscaliteVisible avec les titres', () => {
-  expect(fiscaliteVisible({ role: 'super', ...roleLessUser }, newEntrepriseId('1234'), [{ typeId: 'arm' }, { typeId: 'prw' }])).toEqual(true)
+  expect(fiscaliteVisible({ role: 'super', ...roleLessUser }, newEntrepriseId('1234'), [{ type_id: 'arm' }, { type_id: 'prw' }])).toEqual(true)
   expect(
     fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), [
-      { typeId: 'prg' },
-      { typeId: 'prr' },
-      { typeId: 'prs' },
-      { typeId: 'prw' },
+      { type_id: 'prg' },
+      { type_id: 'prr' },
+      { type_id: 'prs' },
+      { type_id: 'prw' },
     ])
   ).toEqual(false)
   expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), [])).toEqual(false)

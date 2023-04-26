@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager.js'
-import { titreCreate } from '../../database/queries/titres.js'
+import { titreCreate, titreUpdate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
@@ -12,13 +12,17 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
+import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
+let dbPool: Pool
 beforeAll(async () => {
-  knex = await dbManager.populateDb()
+  const { knex: knexInstance, pool } = await dbManager.populateDb()
+  dbPool = pool
+  knex = knexInstance
 
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
@@ -145,6 +149,7 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
 describe('titresONF', () => {
   test("teste la récupération des données pour l'ONF", async () => {
     const tested = await restCall(
+      dbPool,
       CaminoRestRoutes.titresONF,
       {},
       {
@@ -169,6 +174,7 @@ describe('titresONF', () => {
 describe('titresPTMG', () => {
   test('teste la récupération des données pour le PTMG', async () => {
     const tested = await restCall(
+      dbPool,
       CaminoRestRoutes.titresPTMG,
       {},
       {
@@ -192,6 +198,7 @@ describe('titresPTMG', () => {
 describe('titresLiaisons', () => {
   test('peut lier deux titres', async () => {
     const getTitres = await restCall(
+      dbPool,
       CaminoRestRoutes.titresONF,
       {},
       {
@@ -212,6 +219,7 @@ describe('titresLiaisons', () => {
     )
 
     const tested = await restPostCall(
+      dbPool,
       CaminoRestRoutes.titresLiaisons,
       { id: axm.id },
       {
@@ -230,6 +238,7 @@ describe('titresLiaisons', () => {
     })
 
     const avalTested = await restCall(
+      dbPool,
       CaminoRestRoutes.titresLiaisons,
       { id: titreId },
       {
@@ -264,24 +273,25 @@ describe('titreModifier', () => {
   })
 
   test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
-    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, undefined, { id, nom: 'mon titre modifié', references: [] })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.titre, { titreId: id }, undefined, { id, nom: 'mon titre modifié', references: [] })
 
     expect(tested.statusCode).toBe(404)
   })
 
   test("ne peut pas modifier un titre (un utilisateur 'entreprise')", async () => {
-    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, { role: 'entreprise', entreprises: [] }, { id, nom: 'mon titre modifié', references: [] })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.titre, { titreId: id }, { role: 'entreprise', entreprises: [] }, { id, nom: 'mon titre modifié', references: [] })
 
     expect(tested.statusCode).toBe(404)
   })
 
   test('modifie un titre (un utilisateur userSuper)', async () => {
-    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, { role: 'super' }, { id, nom: 'mon titre modifié', references: [] })
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.titre, { titreId: id }, { role: 'super' }, { id, nom: 'mon titre modifié', references: [] })
     expect(tested.statusCode).toBe(204)
   })
 
   test("modifie un titre ARM (un utilisateur 'admin' PTMG)", async () => {
     const tested = await restPostCall(
+      dbPool,
       CaminoRestRoutes.titre,
       { titreId: id },
       {
@@ -305,6 +315,7 @@ describe('titreModifier', () => {
     )
 
     const tested = await restPostCall(
+      dbPool,
       CaminoRestRoutes.titre,
       { titreId: titre.id },
       {
@@ -318,6 +329,7 @@ describe('titreModifier', () => {
 
   test("ne peut pas modifier un titre ARM (un utilisateur 'admin' DGTM)", async () => {
     const tested = await restPostCall(
+      dbPool,
       CaminoRestRoutes.titre,
       { titreId: id },
       { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
@@ -343,19 +355,98 @@ describe('titreSupprimer', () => {
   })
 
   test('ne peut pas supprimer un titre (utilisateur anonyme)', async () => {
-    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: id }, undefined)
+    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.titre, { titreId: id }, undefined)
 
     expect(tested.statusCode).toBe(404)
   })
 
   test('peut supprimer un titre (utilisateur super)', async () => {
-    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: id }, userSuper)
+    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.titre, { titreId: id }, userSuper)
 
     expect(tested.statusCode).toBe(204)
   })
 
   test('ne peut pas supprimer un titre inexistant (utilisateur super)', async () => {
-    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: 'toto' }, userSuper)
+    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.titre, { titreId: 'toto' }, userSuper)
     expect(tested.statusCode).toBe(404)
+  })
+})
+
+describe('getTitre', () => {
+  test('ne peut pas récupérer un titre (utilisateur non super)', async () => {
+    const tested = await restCall(dbPool, CaminoRestRoutes.titre, { titreId: 'not existing' }, undefined)
+
+    expect(tested.statusCode).toBe(403)
+  })
+
+  test('ne peut pas récupérer un titre inexistant', async () => {
+    const tested = await restCall(dbPool, CaminoRestRoutes.titre, { titreId: 'not existing' }, userSuper)
+
+    expect(tested.statusCode).toBe(404)
+  })
+
+  test('peut récupérer un titre', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon nouveau titre',
+        typeId: 'arm',
+        slug: 'arm-slug',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+
+    const tested = await restCall(dbPool, CaminoRestRoutes.titre, { titreId: titre.id }, userSuper)
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toEqual({
+      id: titre.id,
+      type_id: 'arm',
+      slug: 'arm-slug',
+      nom: 'mon nouveau titre',
+      titre_statut_id: 'ind',
+      administrations_locales: [],
+    })
+  })
+  test('peut récupérer un titre avec des administrations locales', async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        slug: 'slug',
+        titreStatutId: 'val',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
+
+    const etapesCrees = await titreEtapesCreate(titreDemarche, [
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-01-01'),
+        ordre: 0,
+        administrationsLocales: ['aut-97300-01', 'aut-mrae-guyane-01'],
+      },
+    ])
+
+    await titreUpdate(titre.id, { propsTitreEtapesIds: { points: etapesCrees[0].id } })
+
+    const tested = await restCall(dbPool, CaminoRestRoutes.titre, { titreId: titre.id }, userSuper)
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toEqual({
+      id: titre.id,
+      type_id: 'arm',
+      slug: 'slug',
+      nom: 'mon titre',
+      titre_statut_id: 'val',
+      administrations_locales: ['aut-97300-01', 'aut-mrae-guyane-01'],
+    })
   })
 })

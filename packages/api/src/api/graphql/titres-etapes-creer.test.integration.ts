@@ -13,6 +13,7 @@ import { userSuper } from '../../database/user-super'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import type { Pool } from 'pg'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -28,8 +29,11 @@ vi.mock('../../tools/file-delete', () => ({
 }))
 console.info = vi.fn()
 console.error = vi.fn()
+let dbPool: Pool
+
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 
   await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
 
@@ -73,6 +77,7 @@ describe('etapeCreer', () => {
 
   test.each([undefined, 'editeur' as Role])('ne peut pas créer une étape (utilisateur %s)', async (role: Role | undefined) => {
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
       role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined
@@ -82,7 +87,7 @@ describe('etapeCreer', () => {
   })
 
   test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
-    const res = await graphQLCall(etapeCreerQuery, { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } }, { role: 'admin', administrationId: 'ope-onf-973-01' })
+    const res = await graphQLCall(dbPool, etapeCreerQuery, { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } }, { role: 'admin', administrationId: 'ope-onf-973-01' })
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
@@ -91,6 +96,7 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -112,6 +118,7 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -134,6 +141,7 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -152,6 +160,7 @@ describe('etapeCreer', () => {
   test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -174,6 +183,7 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -225,6 +235,7 @@ describe('etapeCreer', () => {
       uri: 'https://camino.beta.gouv.fr',
     })
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {
@@ -288,6 +299,7 @@ describe('etapeCreer', () => {
   test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
     const res = await graphQLCall(
+      dbPool,
       etapeCreerQuery,
       {
         etape: {

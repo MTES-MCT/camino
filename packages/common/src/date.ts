@@ -50,7 +50,12 @@ export const toCaminoDate = (date: Date | string): CaminoDate => {
   }
   throw new Error(`Shouldn't get here (invalid toDateStr provided): ${date}`)
 }
-export type CaminoAnnee = string & { __camino: 'Annee' }
+
+export const caminoAnneeValidator = z.coerce
+  .string()
+  .regex(/^\d{4}$/)
+  .brand<'Annee'>()
+export type CaminoAnnee = z.infer<typeof caminoAnneeValidator>
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return toCaminoAnnee(date.substring(0, 4))
@@ -72,7 +77,7 @@ export const getCurrent = () => toCaminoDate(new Date())
 export const getCurrentAnnee = () => getAnnee(getCurrent())
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
-  return annee.match(/^\d{4}$/) !== null
+  return caminoAnneeValidator.safeParse(annee).success
 }
 
 export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnnee(Number(annee) + 1)
@@ -80,19 +85,12 @@ export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnne
 
 export const caminoAnneeToNumber = (annee: CaminoAnnee): number => Number.parseInt(annee, 10)
 
-export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
-  if (!isAnnee(annee)) {
-    throw new Error(`l'année ${annee} n'est pas une année valide`)
-  }
-}
-
 export function toCaminoAnnee(annee: string | number): CaminoAnnee {
-  if (typeof annee === 'number') {
-    return toCaminoAnnee(annee.toString(10))
+  const parsed = caminoAnneeValidator.safeParse(annee)
+  if (parsed.success) {
+    return parsed.data
   }
-  checkValideAnnee(annee)
-
-  return annee
+  throw new Error(`l'année ${annee} n'est pas une année valide`)
 }
 
 export const dateValidate = (str: CaminoDate | string | undefined | null): { valid: true; date: CaminoDate } | { valid: false; error: 'Date manquante' | 'Date invalide' } => {

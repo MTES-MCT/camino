@@ -6,13 +6,14 @@ import { useStore } from 'vuex'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheApiClient } from './demarche-api-client'
 import { Alert } from '@/components/_ui/alert'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 export interface Props {
   titreTypeId: TitreTypeId
   titreNom: string
   titreId: string
   demarcheTypeId: DemarcheTypeId
-  demarcheId: string
+  demarcheId: DemarcheId
   close: () => void
   apiClient: Pick<DemarcheApiClient, 'deleteDemarche'>
   reload: () => void

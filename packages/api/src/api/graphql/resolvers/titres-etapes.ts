@@ -155,8 +155,9 @@ const specifiquesGet = async (titreTypeId: string, titreDemarcheTypeId: string, 
   return { sections, justificatifsTypes }
 }
 
-const etapeCreer = async ({ etape }: { etape: ITitreEtape }, { user }: Context, info: GraphQLResolveInfo) => {
+const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
   try {
+    const user = context.user
     if (!user) {
       throw new Error("la démarche n'existe pas")
     }
@@ -264,10 +265,10 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, { user }: Context, 
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
-    await documentsLier({ user }, documentIds, etapeUpdated.id, 'titreEtapeId')
+    await documentsLier(context, documentIds, etapeUpdated.id, 'titreEtapeId')
 
     try {
-      await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+      await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
     } catch (e) {
       console.error('une erreur est survenue lors des tâches annexes', e)
     }
@@ -286,8 +287,9 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, { user }: Context, 
   }
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
   try {
+    const user = context.user
     if (!user) {
       throw new Error("l'étape n'existe pas")
     }
@@ -409,7 +411,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    await documentsLier({ user }, documentIds, etape.id, 'titreEtapeId', titreEtapeOld)
+    await documentsLier(context, documentIds, etape.id, 'titreEtapeId', titreEtapeOld)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
@@ -440,7 +442,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
       )
     }
 
-    await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+    await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
     await titreEtapeAdministrationsEmailsSend(etape, etapeType, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
 
@@ -455,7 +457,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Contex
   }
 }
 
-const etapeDeposer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -566,7 +568,7 @@ const etapeDeposer = async ({ id }: { id: string }, { user }: Context, info: Gra
       }
     }
 
-    await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
+    await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
     await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreEtape.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
@@ -581,7 +583,7 @@ const etapeDeposer = async ({ id }: { id: string }, { user }: Context, info: Gra
   }
 }
 
-const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+const etapeSupprimer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -651,7 +653,7 @@ const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: G
     }
     await titreEtapeUpdate(id, { archive: true }, user, titreDemarche.titreId)
 
-    await titreEtapeUpdateTask(null, titreEtape.titreDemarcheId, user)
+    await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
 
     const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
 

@@ -4,6 +4,7 @@ import Utilisateurs from '../../database/models/utilisateurs'
 
 import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -11,8 +12,10 @@ console.error = vi.fn()
 beforeEach(async () => {
   await Utilisateurs.query().delete()
 })
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterAll(async () => {
@@ -30,7 +33,7 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])('un utilisateur admin de l’administration $administrationId peut voir un titre ARM : $visible', async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'titres', 'arm', false)
+    visibleCheck(dbPool, administrationId, visible, 'titres', 'arm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -43,7 +46,7 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])('un utilisateur admin de l’administration $administrationId peut voir un titre AXM : $visible', async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'titres', 'axm', false)
+    visibleCheck(dbPool, administrationId, visible, 'titres', 'axm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -56,7 +59,7 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])('un utilisateur admin de l’administration $administrationId peut voir un titre CXM : $visible', async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'titres', 'cxm', false)
+    visibleCheck(dbPool, administrationId, visible, 'titres', 'cxm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -69,7 +72,7 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])('un utilisateur admin de l’administration $administrationId peut voir un titre PRM : $visible', async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'titres', 'prm', false)
+    visibleCheck(dbPool, administrationId, visible, 'titres', 'prm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -81,7 +84,9 @@ describe('Visibilité des titres par les administrations gestionnaires ou associ
     ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PXM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'pxm', false))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PXM : $voir', async (administrationId, voir) =>
+    visibleCheck(dbPool, administrationId, voir, 'titres', 'pxm', false)
+  )
 })
 
 describe('Visibilité des titres par les administrations locales', () => {
@@ -91,7 +96,7 @@ describe('Visibilité des titres par les administrations locales', () => {
     ['dre-grand-est-01', true],
     ['pre-97302-01', true],
     ['aut-mrae-guyane-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre ARM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'arm', true))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre ARM : $voir', async (administrationId, voir) => visibleCheck(dbPool, administrationId, voir, 'titres', 'arm', true))
 
   test.each<[AdministrationId, boolean]>([
     ['ope-onf-973-01', true],
@@ -99,7 +104,7 @@ describe('Visibilité des titres par les administrations locales', () => {
     ['dre-grand-est-01', true],
     ['pre-97302-01', true],
     ['aut-mrae-guyane-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre AXM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'axm', true))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre AXM : $voir', async (administrationId, voir) => visibleCheck(dbPool, administrationId, voir, 'titres', 'axm', true))
 
   test.each<[AdministrationId, boolean]>([
     ['ope-onf-973-01', true],
@@ -107,7 +112,7 @@ describe('Visibilité des titres par les administrations locales', () => {
     ['dre-grand-est-01', true],
     ['pre-97302-01', true],
     ['aut-mrae-guyane-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre CXM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'cxm', true))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre CXM : $voir', async (administrationId, voir) => visibleCheck(dbPool, administrationId, voir, 'titres', 'cxm', true))
 
   test.each<[AdministrationId, boolean]>([
     ['ope-onf-973-01', true],
@@ -115,7 +120,7 @@ describe('Visibilité des titres par les administrations locales', () => {
     ['dre-grand-est-01', true],
     ['pre-97302-01', true],
     ['aut-mrae-guyane-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PRM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'prm', true))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PRM : $voir', async (administrationId, voir) => visibleCheck(dbPool, administrationId, voir, 'titres', 'prm', true))
 
   test.each<[AdministrationId, boolean]>([
     ['ope-onf-973-01', true],
@@ -123,7 +128,7 @@ describe('Visibilité des titres par les administrations locales', () => {
     ['dre-grand-est-01', true],
     ['pre-97302-01', true],
     ['aut-mrae-guyane-01', true],
-  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PXM : $voir', async (administrationId, voir) => visibleCheck(administrationId, voir, 'titres', 'pxm', true))
+  ])('un utilisateur admin de l’administration $administrationId peut voir un titre PXM : $voir', async (administrationId, voir) => visibleCheck(dbPool, administrationId, voir, 'titres', 'pxm', true))
 })
 
 describe('Création des titres', () => {
@@ -132,7 +137,7 @@ describe('Création des titres', () => {
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut créer un titre ARM : $creer', async (administrationId, creer) => creationCheck(administrationId, creer, 'titres', 'arm'))
+  ])('un utilisateur admin de l’administration $administrationId peut créer un titre ARM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'arm'))
 
   test.each<[AdministrationId, boolean]>([
     ['ope-onf-973-01', true],
@@ -140,25 +145,25 @@ describe('Création des titres', () => {
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut créer un titre AXM : $creer', async (administrationId, creer) => creationCheck(administrationId, creer, 'titres', 'axm'))
+  ])('un utilisateur admin de l’administration $administrationId peut créer un titre AXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'axm'))
 
   test.each<[AdministrationId, boolean]>([
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut créer un titre CXM : $creer', async (administrationId, creer) => creationCheck(administrationId, creer, 'titres', 'cxm'))
+  ])('un utilisateur admin de l’administration $administrationId peut créer un titre CXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'cxm'))
 
   test.each<[AdministrationId, boolean]>([
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut créer un titre PRM : $creer', async (administrationId, creer) => creationCheck(administrationId, creer, 'titres', 'prm'))
+  ])('un utilisateur admin de l’administration $administrationId peut créer un titre PRM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'prm'))
 
   test.each<[AdministrationId, boolean]>([
     ['min-mtes-dgec-01', false],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut créer un titre PXM : $creer', async (administrationId, creer) => creationCheck(administrationId, creer, 'titres', 'pxm'))
+  ])('un utilisateur admin de l’administration $administrationId peut créer un titre PXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'pxm'))
 })
 
 describe('Modification des titres', () => {
@@ -168,7 +173,7 @@ describe('Modification des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre ARM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'titres', 'arm')
+    modificationCheck(dbPool, administrationId, modifier, 'titres', 'arm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -178,7 +183,7 @@ describe('Modification des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre AXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'titres', 'axm')
+    modificationCheck(dbPool, administrationId, modifier, 'titres', 'axm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -186,7 +191,7 @@ describe('Modification des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre CXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'titres', 'cxm')
+    modificationCheck(dbPool, administrationId, modifier, 'titres', 'cxm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -194,7 +199,7 @@ describe('Modification des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre PRM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'titres', 'prm')
+    modificationCheck(dbPool, administrationId, modifier, 'titres', 'prm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -202,6 +207,6 @@ describe('Modification des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre PXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'titres', 'pxm')
+    modificationCheck(dbPool, administrationId, modifier, 'titres', 'pxm')
   )
 })

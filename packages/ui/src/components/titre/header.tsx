@@ -26,7 +26,7 @@ interface Props {
 
 interface PureProps extends Props {
   user: User
-  apiClient: Omit<TitreApiClient, 'loadTitreSections'>
+  apiClient: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre' | 'removeTitre'>
   emailSend: () => void
 }
 export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'], props => {

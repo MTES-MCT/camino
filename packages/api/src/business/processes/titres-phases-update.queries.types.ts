@@ -1,18 +1,18 @@
 /** Types generated for queries found in "src/business/processes/titres-phases-update.queries.ts" */
 
-/** 'UpdateDatesDemarche' parameters type */
-export interface IUpdateDatesDemarcheParams {
+/** 'UpdateDatesDemarcheDb' parameters type */
+export interface IUpdateDatesDemarcheDbParams {
   demarcheId?: string | null | void;
   newDateDebut?: string | null | void;
   newDateFin?: string | null | void;
 }
 
-/** 'UpdateDatesDemarche' return type */
-export type IUpdateDatesDemarcheResult = void;
+/** 'UpdateDatesDemarcheDb' return type */
+export type IUpdateDatesDemarcheDbResult = void;
 
-/** 'UpdateDatesDemarche' query type */
-export interface IUpdateDatesDemarcheQuery {
-  params: IUpdateDatesDemarcheParams;
-  result: IUpdateDatesDemarcheResult;
+/** 'UpdateDatesDemarcheDb' query type */
+export interface IUpdateDatesDemarcheDbQuery {
+  params: IUpdateDatesDemarcheDbParams;
+  result: IUpdateDatesDemarcheDbResult;
 }
 

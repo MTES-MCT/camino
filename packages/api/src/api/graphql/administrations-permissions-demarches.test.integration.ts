@@ -3,6 +3,7 @@ import { visibleCheck, creationCheck, modificationCheck } from '../../../tests/_
 import { beforeEach, beforeAll, afterAll, test, describe, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import Utilisateurs from '../../database/models/utilisateurs.js'
+import type { Pool } from 'pg'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -12,8 +13,10 @@ beforeEach(async () => {
   await Utilisateurs.query().delete()
 })
 
+let dbPool: Pool
 beforeAll(async () => {
-  await dbManager.populateDb()
+  const { pool } = await dbManager.populateDb()
+  dbPool = pool
 })
 
 afterAll(async () => {
@@ -27,7 +30,7 @@ describe('Visibilité des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])("un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre ARM : $visible", async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'demarches', 'arm', false)
+    visibleCheck(dbPool, administrationId, visible, 'demarches', 'arm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -37,7 +40,7 @@ describe('Visibilité des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])("un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre AXM : $visible", async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'demarches', 'axm', false)
+    visibleCheck(dbPool, administrationId, visible, 'demarches', 'axm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -45,7 +48,7 @@ describe('Visibilité des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])("un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre CXM : $visible", async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'demarches', 'cxm', false)
+    visibleCheck(dbPool, administrationId, visible, 'demarches', 'cxm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -53,7 +56,7 @@ describe('Visibilité des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])("un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PRM : $visible", async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'demarches', 'prm', false)
+    visibleCheck(dbPool, administrationId, visible, 'demarches', 'prm', false)
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -61,7 +64,7 @@ describe('Visibilité des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', true],
   ])("un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PXM : $visible", async (administrationId, visible) =>
-    visibleCheck(administrationId, visible, 'demarches', 'pxm', false)
+    visibleCheck(dbPool, administrationId, visible, 'demarches', 'pxm', false)
   )
 })
 
@@ -71,7 +74,7 @@ describe('Création des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre ARM : $creer", async (administrationId, creer) =>
-    creationCheck(administrationId, creer, 'demarches', 'arm')
+    creationCheck(dbPool, administrationId, creer, 'demarches', 'arm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -80,7 +83,7 @@ describe('Création des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre AXM : $creer", async (administrationId, creer) =>
-    creationCheck(administrationId, creer, 'demarches', 'axm')
+    creationCheck(dbPool, administrationId, creer, 'demarches', 'axm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -88,7 +91,7 @@ describe('Création des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre CXM : $creer", async (administrationId, creer) =>
-    creationCheck(administrationId, creer, 'demarches', 'cxm')
+    creationCheck(dbPool, administrationId, creer, 'demarches', 'cxm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -96,7 +99,7 @@ describe('Création des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PRM : $creer", async (administrationId, creer) =>
-    creationCheck(administrationId, creer, 'demarches', 'prm')
+    creationCheck(dbPool, administrationId, creer, 'demarches', 'prm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -104,7 +107,7 @@ describe('Création des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PXM : $creer", async (administrationId, creer) =>
-    creationCheck(administrationId, creer, 'demarches', 'pxm')
+    creationCheck(dbPool, administrationId, creer, 'demarches', 'pxm')
   )
 })
 
@@ -114,7 +117,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre ARM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'demarches', 'arm')
+    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'arm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -123,7 +126,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre AXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'demarches', 'axm')
+    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'axm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -131,7 +134,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre CXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'demarches', 'cxm')
+    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'cxm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -139,7 +142,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PRM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'demarches', 'prm')
+    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'prm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -147,6 +150,6 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(administrationId, modifier, 'demarches', 'pxm')
+    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'pxm')
   )
 })

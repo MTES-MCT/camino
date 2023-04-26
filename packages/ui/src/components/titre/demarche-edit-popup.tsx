@@ -6,18 +6,19 @@ import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTyp
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
 import { useStore } from 'vuex'
+import { DemarcheId } from 'camino-common/src/demarche'
 
 export interface Props {
   demarche: {
     titreId: string
-    id?: string
+    id?: DemarcheId
     typeId?: DemarcheTypeId
     description?: string
   }
   titreNom: string
   titreTypeId: TitreTypeId
   tabId: string
-  apiClient: Omit<DemarcheApiClient, 'deleteDemarche'>
+  apiClient: Pick<DemarcheApiClient, 'updateDemarche' | 'createDemarche'>
   close: () => void
   reload: () => void
   displayMessage: () => void

@@ -1,15 +1,31 @@
-import { TitreStatutId } from './static/titresStatuts.js'
-import { TitreReference } from './titres-references.js'
+import { TitreStatutId, titreStatutIdValidator } from './static/titresStatuts.js'
+import { TitreReference, titreReferenceValidator } from './titres-references.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
 import { CaminoDate, dateFormat } from './date.js'
-import { TitreTypeId } from './static/titresTypes.js'
+import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
 import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { UniteId, Unites } from './static/unites.js'
 import { DeviseId, Devises } from './static/devise.js'
 import { z } from 'zod'
-import { REFERENCES_TYPES_KEYS, ReferenceTypeId } from './static/referencesTypes.js'
+import { administrationIdValidator } from './static/administrations.js'
 
+export const commonTitreValidator = z.object({
+  id: z.string(),
+  nom: z.string(),
+  slug: z.string(),
+  type_id: titreTypeIdValidator,
+  titre_statut_id: titreStatutIdValidator,
+  administrations_locales: z.array(administrationIdValidator.brand('administrationLocale')),
+  references: z.array(titreReferenceValidator),
+  titulaires: z.array(
+    z.object({
+      nom: z.string().optional(),
+    })
+  ),
+})
+
+/** @deprecated use CommonRestTitre */
 export interface CommonTitre {
   id: string
   slug: string
@@ -19,19 +35,33 @@ export interface CommonTitre {
   references: TitreReference[]
   titulaires: { nom?: string }[]
 }
-export type EditableTitre = Pick<CommonTitre, 'id' | 'nom' | 'references'>
 
-export const editableTitreCheck = z.object({
-  id: z.string(),
-  nom: z.string(),
-  references: z.array(z.object({ nom: z.string(), referenceTypeId: z.enum<ReferenceTypeId, typeof REFERENCES_TYPES_KEYS>(REFERENCES_TYPES_KEYS) })),
+export type CommonRestTitre = z.infer<typeof commonTitreValidator>
+
+export const titreGetValidator = commonTitreValidator.pick({
+  id: true,
+  nom: true,
+  slug: true,
+  type_id: true,
+  titre_statut_id: true,
+  administrations_locales: true,
 })
 
-export interface CommonTitrePTMG extends CommonTitre {
+export type TitreGet = z.infer<typeof titreGetValidator>
+
+export type EditableTitre = Pick<CommonTitre, 'id' | 'nom' | 'references'>
+
+export const editableTitreCheck = commonTitreValidator.pick({
+  id: true,
+  nom: true,
+  references: true,
+})
+
+export interface CommonTitrePTMG extends Omit<CommonTitre, 'administrationsLocales'> {
   enAttenteDePTMG: boolean
 }
 
-export interface CommonTitreDREAL extends CommonTitre {
+export interface CommonTitreDREAL extends Omit<CommonTitre, 'administrationsLocales'> {
   activitesAbsentes: number
   activitesEnConstruction: number
   derniereEtape: { etapeTypeId: EtapeTypeId; date: CaminoDate } | null
@@ -39,14 +69,14 @@ export interface CommonTitreDREAL extends CommonTitre {
   prochainesEtapes: EtapeTypeId[]
 }
 
-export interface CommonTitreONF extends CommonTitre {
+export interface CommonTitreONF extends Omit<CommonTitre, 'administrationsLocales'> {
   dateCompletudePTMG: string
   dateReceptionONF: string
   dateCARM: string
   enAttenteDeONF: boolean
 }
 
-export type TitreLink = Pick<CommonTitre, 'id' | 'nom'>
+export type TitreLink = Pick<CommonRestTitre, 'id' | 'nom'>
 export type TitreLinks = { amont: TitreLink[]; aval: TitreLink[] }
 
 type BasicElement = {

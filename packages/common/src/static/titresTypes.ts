@@ -1,11 +1,13 @@
 import { DomaineId, isDomaineId } from './domaines.js'
 import { isTitreTypeType, TitreTypeTypeId } from './titresTypesTypes.js'
-
+import { z } from 'zod'
 interface Definition<T> {
   id: T
   domaineId: DomaineId
   typeId: TitreTypeTypeId
 }
+// prettier-ignore
+const TITRES_TYPES_KEYS = ['apc', 'aph', 'apm', 'apw', 'arc', 'arg', 'arm', 'axm', 'cxf', 'cxg', 'cxh', 'cxm', 'cxr', 'cxs', 'cxw', 'inm', 'inr', 'pcc', 'prf', 'prg', 'prh', 'prm', 'prr', 'prs', 'prw', 'pxf', 'pxg', 'pxh', 'pxm', 'pxr', 'pxw',] as const
 
 export const TITRES_TYPES_IDS = {
   AUTORISATION_DE_PROSPECTION_CARRIERES: 'apc',
@@ -44,12 +46,12 @@ export const TITRES_TYPES_IDS = {
   PERMIS_D_EXPLOITATION_METAUX: 'pxm',
   PERMIS_D_EXPLOITATION_RADIOACTIF: 'pxr',
   PERMIS_D_EXPLOITATION_GRANULATS_MARINS: 'pxw',
-} as const
+} as const satisfies Record<string, (typeof TITRES_TYPES_KEYS)[number]>
 
 export const TitresTypesIds = Object.values(TITRES_TYPES_IDS)
 
-export type TitreTypeId = (typeof TITRES_TYPES_IDS)[keyof typeof TITRES_TYPES_IDS]
-
+export const titreTypeIdValidator = z.enum(TITRES_TYPES_KEYS)
+export type TitreTypeId = z.infer<typeof titreTypeIdValidator>
 export const TitresTypes: {
   [key in TitreTypeId]: Definition<key>
 } = {

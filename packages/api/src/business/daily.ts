@@ -19,8 +19,9 @@ import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
 import { logsUpdate } from './_logs-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresActivitesRelanceSend } from './processes/titres-activites-relance-send.js'
+import type { Pool } from 'pg'
 
-export const daily = async () => {
+export const daily = async (pool: Pool) => {
   try {
     console.info()
     console.info('- - -')
@@ -31,7 +32,7 @@ export const daily = async () => {
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate()
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool)
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
     const titresPublicUpdated = await titresPublicUpdate()

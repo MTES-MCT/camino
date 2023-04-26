@@ -261,8 +261,9 @@ const activiteDeposer = async ({ id }: { id: string }, { user }: Context, info: 
   }
 }
 
-const activiteModifier = async ({ activite }: { activite: ITitreActivite & { documentIds?: string[] } }, { user }: Context, info: GraphQLResolveInfo) => {
+const activiteModifier = async ({ activite }: { activite: ITitreActivite & { documentIds?: string[] } }, context: Context, info: GraphQLResolveInfo) => {
   try {
+    const user = context.user
     if (!user) throw new Error('droits insuffisants')
 
     const oldTitreActivite = await titreActiviteGet(
@@ -297,7 +298,7 @@ const activiteModifier = async ({ activite }: { activite: ITitreActivite & { doc
     const fields = fieldsBuild(info)
 
     const documentIds = activite.documentIds || []
-    await documentsLier({ user }, documentIds, activite.id, 'titreActiviteId', oldTitreActivite)
+    await documentsLier(context, documentIds, activite.id, 'titreActiviteId', oldTitreActivite)
     delete activite.documentIds
 
     await titreActiviteUpdateQuery(activite.id, activite)
