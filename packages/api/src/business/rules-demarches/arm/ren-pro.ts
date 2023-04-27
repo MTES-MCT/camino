@@ -2,7 +2,7 @@ import { IDemarcheDefinitionRestrictions } from '../definitions.js'
 import { etatComplementsGet, etatInformationsGet } from '../etat-cycles.js'
 
 // https://cacoo.com/diagrams/nStw2pYe0PKBs1lp/B1B05
-const restrictionsArmRenPro: IDemarcheDefinitionRestrictions = {
+export const restrictionsArmRenPro: IDemarcheDefinitionRestrictions = {
   mfr: {
     justeApres: [],
   },
@@ -46,5 +46,3 @@ const restrictionsArmRenPro: IDemarcheDefinitionRestrictions = {
     avant: [[{ etapeTypeId: 'css' }], [{ etapeTypeId: 'aof' }]],
   },
 }
-
-export { restrictionsArmRenPro }

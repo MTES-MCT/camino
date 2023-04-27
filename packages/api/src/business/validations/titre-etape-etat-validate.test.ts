@@ -34,47 +34,47 @@ describe('teste etapesSuivantesEnAttenteGet', () => {
   })
 
   test('retourne la dernière étape après la fusion de 2 chemins parallèles', () => {
-    const etapes = [{ typeId: 'ide1' }, { typeId: 'ide2' }, { typeId: 'mno' }] as ITitreEtape[]
+    const etapes = [{ typeId: 'mfr' }, { typeId: 'mcp' }, { typeId: 'mno' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {
-      ide1: { justeApres: [] },
-      ide2: { justeApres: [] },
+      mfr: { justeApres: [] },
+      mcp: { justeApres: [] },
       mno: {
-        justeApres: [[{ etapeTypeId: 'ide1' }, { etapeTypeId: 'ide2' }]],
+        justeApres: [[{ etapeTypeId: 'mfr' }, { etapeTypeId: 'mcp' }]],
       },
     })
     expect(etapesEnAttente).toHaveLength(1)
     expect(etapesEnAttente[0]).toEqual({ typeId: 'mno' })
   })
   test('retourne l’étape sur le premier chemin et l’étape sur le chemin commun', () => {
-    const etapes = [{ typeId: 'ide' }, { typeId: 'mno1' }] as ITitreEtape[]
+    const etapes = [{ typeId: 'ide' }, { typeId: 'mno' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {
       ide: { separation: ['css'], justeApres: [] },
-      mno1: {
+      mno: {
         justeApres: [[{ etapeTypeId: 'ide' }]],
       },
-      mno2: {
+      mfr: {
         justeApres: [[{ etapeTypeId: 'ide' }]],
       },
       css: {
-        justeApres: [[{ etapeTypeId: 'mno1' }, { etapeTypeId: 'mno2' }]],
+        justeApres: [[{ etapeTypeId: 'mno' }, { etapeTypeId: 'mfr' }]],
       },
     })
     expect(etapesEnAttente).toHaveLength(2)
     expect(etapesEnAttente[0]).toEqual({ typeId: 'ide' })
-    expect(etapesEnAttente[1]).toEqual({ typeId: 'mno1' })
+    expect(etapesEnAttente[1]).toEqual({ typeId: 'mno' })
   })
   test('retourne l’étape sur la dernière étape sur le chemin commun', () => {
-    const etapes = [{ typeId: 'ide' }, { typeId: 'mno1' }, { typeId: 'mno2' }, { typeId: 'css' }] as ITitreEtape[]
+    const etapes = [{ typeId: 'ide' }, { typeId: 'mno' }, { typeId: 'mfr' }, { typeId: 'css' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {
       ide: { separation: ['css'], justeApres: [] },
-      mno1: {
+      mno: {
         justeApres: [[{ etapeTypeId: 'ide' }]],
       },
-      mno2: {
+      mfr: {
         justeApres: [[{ etapeTypeId: 'ide' }]],
       },
       css: {
-        justeApres: [[{ etapeTypeId: 'mno1' }, { etapeTypeId: 'mno2' }]],
+        justeApres: [[{ etapeTypeId: 'mno' }, { etapeTypeId: 'mfr' }]],
       },
     })
     expect(etapesEnAttente).toHaveLength(1)
@@ -95,16 +95,16 @@ describe('teste etapesSuivantesEnAttenteGet', () => {
   })
 
   test('retourne la dernière étape sur le chemin commun à la fin du démarche', () => {
-    const etapes = [{ typeId: 'dex' }, { typeId: 'mno1' }] as ITitreEtape[]
+    const etapes = [{ typeId: 'dex' }, { typeId: 'mno' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {
       dex: { justeApres: [], separation: [] },
-      mno1: {
+      mno: {
         justeApres: [[{ etapeTypeId: 'dex' }]],
       },
-      mno2: {
+      mfr: {
         justeApres: [[{ etapeTypeId: 'dex' }]],
       },
-      mno3: {
+      mcp: {
         justeApres: [[{ etapeTypeId: 'dex' }]],
       },
     })
@@ -115,6 +115,7 @@ describe('teste etapesSuivantesEnAttenteGet', () => {
 
 describe('teste titreEtapeTypeIdRestrictionsFind', () => {
   test('émet une erreur si l’étape est inconnue', () => {
+    // @ts-ignore
     expect(() => titreEtapeTypeIdRestrictionsFind({ dex: { justeApres: [], separation: [] } }, 'aaa')).toThrowError()
   })
 })

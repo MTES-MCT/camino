@@ -1,4 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ITitreEtape, IContenu, Index } from '../../types.js'
 
 import { ITitreCondition, IContenuElementCondition, IEtapeTypeIdCondition, IDemarcheDefinitionRestrictions, IDemarcheDefinitionRestrictionsProps } from '../rules-demarches/definitions.js'
@@ -33,7 +34,7 @@ const contenuConditionMatch = (condition: IContenuElementCondition, obj: Index<a
 const sameContenuCheck = (conditionTitre: ITitreCondition, contenu: IContenu | null) =>
   conditionTitre.contenu && Object.keys(conditionTitre.contenu).every(key => contenuConditionMatch(conditionTitre.contenu[key], contenu ? contenu[key] : null))
 
-const titreEtapeTypeIdRestrictionsFind = (demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions, etapeTypeId: string) => {
+const titreEtapeTypeIdRestrictionsFind = (demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions, etapeTypeId: EtapeTypeId) => {
   const etapeTypeIdDefinitions = demarcheDefinitionRestrictions[etapeTypeId]
 
   if (etapeTypeIdDefinitions) {
@@ -143,7 +144,7 @@ const etapesEnAttenteToString = (titreEtapesEnAttente: ITitreEtape[]) =>
     .map(t => `"${t}"`)
     .join(', ')
 
-const titreEtapeEtatValidate = (etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions, etapeTypeId: string, titreDemarcheEtapes: ITitreEtape[], contenu: IContenu | null) => {
+const titreEtapeEtatValidate = (etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions, etapeTypeId: EtapeTypeId, titreDemarcheEtapes: ITitreEtape[], contenu: IContenu | null) => {
   const errors = []
   const titreEtapesEnAttente = etapesEnAttenteGet(etapeTypeIdDefinitions, titreDemarcheEtapes)
 

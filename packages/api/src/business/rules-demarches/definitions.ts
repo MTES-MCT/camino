@@ -13,6 +13,7 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -21,9 +22,7 @@ export interface IEtapeTypeIdCondition {
   contextCheck?: (_etapes: ITitreEtape[]) => boolean
 }
 
-export interface IDemarcheDefinitionRestrictions {
-  [key: string]: IDemarcheDefinitionRestrictionsProps
-}
+export type IDemarcheDefinitionRestrictions = { [key in EtapeTypeId]?: IDemarcheDefinitionRestrictionsProps }
 
 export interface IDemarcheDefinitionRestrictionsProps {
   separation?: string[]
