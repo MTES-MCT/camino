@@ -110,7 +110,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                       id: 'select-etape-type',
                       type: 'single',
                       placeholder: '',
-                      items: items
+                      items: [...items]
                         .sort((a, b) => (a.mainStep ? -1 : 1))
                         .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
                         .filter(({ nom }) => {
