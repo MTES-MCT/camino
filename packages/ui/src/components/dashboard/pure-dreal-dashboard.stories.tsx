@@ -1,5 +1,5 @@
 import { PureDrealDashboard } from './pure-dreal-dashboard'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { statistiquesDGTMFake, titresDreal } from './testData'
 const meta: Meta = {
@@ -12,7 +12,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Ok: Story = () => (
+export const Ok: StoryFn = () => (
   <PureDrealDashboard
     getDrealTitres={() => Promise.resolve(titresDreal)}
     isDGTM={false}
@@ -28,7 +28,7 @@ export const Ok: Story = () => (
   />
 )
 
-export const OkWithoutBlockedTitres: Story = () => (
+export const OkWithoutBlockedTitres: StoryFn = () => (
   <PureDrealDashboard
     getDrealTitres={() => Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL))}
     isDGTM={false}
@@ -44,9 +44,9 @@ export const OkWithoutBlockedTitres: Story = () => (
   />
 )
 
-export const DGTMNoSnapshot: Story = () => <PureDrealDashboard getDrealTitres={() => Promise.resolve(titresDreal)} isDGTM={true} getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
+export const DGTMNoSnapshot: StoryFn = () => <PureDrealDashboard getDrealTitres={() => Promise.resolve(titresDreal)} isDGTM={true} getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <PureDrealDashboard
     getDrealTitres={() => new Promise<CommonTitreDREAL[]>(_resolve => {})}
     isDGTM={false}
@@ -61,7 +61,7 @@ export const Loading: Story = () => (
     }
   />
 )
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <PureDrealDashboard
     getDrealTitres={() => Promise.reject(new Error('because reasons'))}
     isDGTM={false}

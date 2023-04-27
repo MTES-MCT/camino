@@ -1,5 +1,5 @@
 import { PureDemarcheEditPopup, Props } from './demarche-edit-popup'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 
@@ -27,7 +27,7 @@ const apiClient: Props['apiClient'] = {
   },
 }
 
-export const Create: Story = () => (
+export const Create: StoryFn = () => (
   <PureDemarcheEditPopup
     reload={reload}
     displayMessage={displayMessage}
@@ -39,7 +39,7 @@ export const Create: Story = () => (
     tabId="demarches"
   />
 )
-export const Edit: Story = () => (
+export const Edit: StoryFn = () => (
   <PureDemarcheEditPopup
     reload={reload}
     displayMessage={displayMessage}

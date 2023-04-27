@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { RemovePopup } from './remove-popup'
 
 const meta: Meta = {
@@ -12,7 +12,7 @@ export default meta
 const deleteUser = action('deleteUser')
 const close = action('close')
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <RemovePopup
     utilisateur={{ nom: 'Nom', prenom: 'Prénom' }}
     deleteUser={() => {

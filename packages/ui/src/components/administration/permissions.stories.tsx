@@ -1,5 +1,5 @@
 import { Permissions } from './permissions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { administrationMetas } from './permissions.stub'
 
@@ -9,7 +9,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{
@@ -18,7 +18,7 @@ export const Default: Story = () => (
   />
 )
 
-export const error: Story = () => (
+export const error: StoryFn = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{
@@ -27,7 +27,7 @@ export const error: Story = () => (
   />
 )
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{

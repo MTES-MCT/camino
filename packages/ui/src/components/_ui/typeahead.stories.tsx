@@ -1,9 +1,10 @@
 import { TypeAhead } from './typeahead'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/TypeAhead',
+  // @ts-ignore il n'aime pas le côté générique du composant
   component: TypeAhead,
 }
 export default meta
@@ -20,7 +21,7 @@ const items: Item[] = [
   { id: 'id3', titre: 'titreItem3' },
 ]
 
-export const Single: Story = () => (
+export const Single: StoryFn = () => (
   <TypeAhead
     props={{
       id: 'ello',
@@ -37,7 +38,7 @@ export const Single: Story = () => (
   />
 )
 
-export const Multiple: Story = () => (
+export const Multiple: StoryFn = () => (
   <TypeAhead
     props={{
       id: 'plop',
@@ -70,7 +71,7 @@ export const Multiple: Story = () => (
   />
 )
 
-export const MultipleWithInitialItems: Story = () => (
+export const MultipleWithInitialItems: StoryFn = () => (
   <TypeAhead
     overrideItems={[{ id: 'idTitreItem1' }, { id: 'idTitreItemNotInItems' }, { id: 'idTitreItem2' }]}
     props={{

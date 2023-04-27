@@ -1,5 +1,5 @@
 import { EntrepriseAddPopup } from './add-popup'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
@@ -20,4 +20,4 @@ const apiClient = {
     return Promise.resolve()
   },
 }
-export const Super: Story = () => <EntrepriseAddPopup close={close} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} />
+export const Super: StoryFn = () => <EntrepriseAddPopup close={close} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} />

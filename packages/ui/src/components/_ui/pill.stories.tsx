@@ -1,5 +1,5 @@
 import { Pill } from './pill'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Components/Ui/Pill',
@@ -10,5 +10,5 @@ const meta: Meta = {
 }
 export default meta
 
-export const Primary: Story = () => <Pill text="Hello" />
-export const Error: Story = () => <Pill color="bg-error" text="hello" />
+export const Primary: StoryFn = () => <Pill text="Hello" />
+export const Error: StoryFn = () => <Pill color="bg-error" text="hello" />

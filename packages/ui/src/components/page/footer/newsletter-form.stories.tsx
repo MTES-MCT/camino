@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { PureNewsletterForm } from './newsletter-form'
 
 const meta: Meta = {
@@ -7,25 +7,25 @@ const meta: Meta = {
 }
 export default meta
 
-export const NonAbonné: Story = () => (
+export const NonAbonné: StoryFn = () => (
   <div class="dsfr">
     <PureNewsletterForm state={'NOT_SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
   </div>
 )
 
-export const Abonné: Story = () => (
+export const Abonné: StoryFn = () => (
   <div class="dsfr">
     <PureNewsletterForm state={'SUBSCRIBED'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
   </div>
 )
 
-export const EnCours: Story = () => (
+export const EnCours: StoryFn = () => (
   <div class="dsfr">
     <PureNewsletterForm state={'SUBSCRIBING'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
   </div>
 )
 
-export const Error: Story = () => (
+export const Error: StoryFn = () => (
   <div class="dsfr">
     <PureNewsletterForm state={'ERROR'} onEmailInput={() => ({})} onSubscribe={() => ({})} />
   </div>

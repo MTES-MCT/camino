@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { QGisToken } from './qgis-token'
 
 const meta: Meta = {
@@ -8,7 +8,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <QGisToken
     apiClient={{
       getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),

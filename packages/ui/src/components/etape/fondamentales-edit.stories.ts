@@ -1,5 +1,5 @@
 import { FondamentalesEdit, Props } from './fondamentales-edit'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { EtapeFondamentale } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -65,7 +65,7 @@ const etape: EtapeFondamentale = {
     },
   },
 }
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { FondamentalesEdit },
   setup() {
     return { args }

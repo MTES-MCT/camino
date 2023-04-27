@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Points } from './points'
 
 const meta: Meta = {
@@ -7,9 +7,9 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <Points points={[]} />
+export const Default: StoryFn = () => <Points points={[]} />
 
-export const WithPoints: Story = () => (
+export const WithPoints: StoryFn = () => (
   <Points
     points={[
       {
@@ -124,7 +124,7 @@ export const WithPoints: Story = () => (
   />
 )
 
-export const WithPointsAndMultipleReferences: Story = () => (
+export const WithPointsAndMultipleReferences: StoryFn = () => (
   <Points
     points={[
       {

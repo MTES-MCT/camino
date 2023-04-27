@@ -1,5 +1,5 @@
 import type { Icon as IconType } from './iconSpriteType'
-import { HTMLAttributes } from 'vue'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 
 export type Size = 'S' | 'M'
 export type Props = {
@@ -18,7 +18,7 @@ const heightAndWidth = (size?: Size): '16px' | '24px' => {
   return '24px'
 }
 
-export function Icon(props: Props): JSX.Element {
+export const Icon: FunctionalComponent<Props> = (props: Props): JSX.Element => {
   const size = heightAndWidth(props.size)
   return (
     <svg

@@ -1,5 +1,5 @@
 import { Statut } from './statut'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Components/common/Statut',
@@ -8,5 +8,5 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <Statut />
-export const WithColor: Story = () => <Statut nom="Mon statut" color="success" />
+export const Default: StoryFn = () => <Statut />
+export const WithColor: StoryFn = () => <Statut nom="Mon statut" color="success" />

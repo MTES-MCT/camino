@@ -1,13 +1,14 @@
 import { numberFormat } from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
 import { ElementWithValue, isFileElement, isNumberElement, valeurFind } from 'camino-common/src/titres'
+import { FunctionalComponent } from 'vue'
 
 export interface Props {
   element: ElementWithValue
   fileDownload: (file: string) => void
 }
 
-export const SectionElement = (props: Props): JSX.Element => {
+export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.Element => {
   return (
     <div class="tablet-blobs">
       {props.element.nom ? (

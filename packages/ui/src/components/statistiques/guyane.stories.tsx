@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { StatistiquesGuyane } from 'camino-common/src/statistiques.js'
 import { PureGuyane } from './guyane'
@@ -437,8 +437,8 @@ const data: Promise<StatistiquesGuyane> = Promise.resolve({
   },
 })
 
-export const DefaultNoSnapshot: Story = () => <PureGuyane getStats={() => data} />
-export const DateSetTo20220830NoSnapshot: Story = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-08-30')} />
-export const DateSetTo20220902NoSnapshot: Story = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-09-02')} />
-export const Loading: Story = () => <PureGuyane getStats={() => new Promise<any>(resolve => {})} />
-export const WithError: Story = () => <PureGuyane getStats={() => Promise.reject(new Error('because reasons'))} />
+export const DefaultNoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} />
+export const DateSetTo20220830NoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-08-30')} />
+export const DateSetTo20220902NoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-09-02')} />
+export const Loading: StoryFn = () => <PureGuyane getStats={() => new Promise<any>(resolve => {})} />
+export const WithError: StoryFn = () => <PureGuyane getStats={() => Promise.reject(new Error('because reasons'))} />

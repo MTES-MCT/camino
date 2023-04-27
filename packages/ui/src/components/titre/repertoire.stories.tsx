@@ -1,5 +1,5 @@
 import { Repertoire } from './repertoire'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
@@ -12,7 +12,7 @@ const meta: Meta = {
 }
 export default meta
 const eventTrack = action('eventTrack')
-export const Super: Story = () => (
+export const Super: StoryFn = () => (
   <Repertoire
     administrations={['aut-97300-01', 'aut-97300-01', 'dea-guyane-01']}
     amodiataires={[{ id: newEntrepriseId('id1'), etablissements: [], nom: 'Nom amodiataire' }]}
@@ -38,7 +38,7 @@ export const Super: Story = () => (
   />
 )
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Repertoire
     administrations={['aut-97300-01', 'aut-97300-01', 'dea-guyane-01']}
     amodiataires={[{ id: newEntrepriseId('id3'), etablissements: [], nom: 'Nom amodiataire', adresse: 'ici' }]}

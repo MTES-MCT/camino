@@ -1,5 +1,5 @@
 import { PureGlobales } from './globales'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Statistiques } from 'camino-common/src/statistiques'
 
 const meta: Meta = {
@@ -9,7 +9,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const DefaultNoSnapshot: Story = () => (
+export const DefaultNoSnapshot: StoryFn = () => (
   <PureGlobales
     statistiques={{
       titresActivitesBeneficesEntreprise: 678,

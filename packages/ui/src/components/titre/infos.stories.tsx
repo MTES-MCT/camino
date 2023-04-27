@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Infos, Props } from './infos'
 import { Section, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -38,7 +38,7 @@ const apiClient: Props['apiClient'] = {
     ),
 }
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Infos
     currentDay={toCaminoDate('2023-04-06')}
     titre={{
@@ -91,7 +91,7 @@ export const Default: Story = () => (
   ></Infos>
 )
 
-export const Empty: Story = () => (
+export const Empty: StoryFn = () => (
   <Infos
     currentDay={toCaminoDate('2023-04-06')}
     titre={{

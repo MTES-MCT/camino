@@ -1,5 +1,5 @@
 import { TitresTypes } from './titres-types'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 const meta: Meta = {
@@ -8,4 +8,4 @@ const meta: Meta = {
 }
 export default meta
 
-export const ONF: Story = () => <TitresTypes administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']} />
+export const ONF: StoryFn = () => <TitresTypes administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']} />

@@ -4,6 +4,7 @@ import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-co
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
+import { FunctionalComponent } from 'vue'
 import { TagList } from '../_ui/tag-list'
 
 export interface TerritoiresCommune {
@@ -146,7 +147,7 @@ function TerritoiresSansSurface(props: TerritoiresProps) {
   ) : null
 }
 
-export function Territoires(props: TerritoiresProps) {
+export const Territoires: FunctionalComponent<TerritoiresProps> = (props: TerritoiresProps) => {
   return (
     <div class="tablet-blobs mb-xl">
       <div class="tablet-blob-1-4">{Surface(props.surface)}</div>

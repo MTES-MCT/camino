@@ -1,5 +1,5 @@
 import { PureHeader } from './header'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { TitreApiClient } from './titre-api-client'
@@ -30,7 +30,7 @@ const apiClientMock: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre'
     return Promise.resolve()
   },
 }
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <PureHeader
     titre={{
       id: 'id',
@@ -46,7 +46,7 @@ export const Default: Story = () => (
   />
 )
 
-export const AbonneAuTitre: Story = () => (
+export const AbonneAuTitre: StoryFn = () => (
   <PureHeader
     titre={{
       id: 'id',
@@ -62,7 +62,7 @@ export const AbonneAuTitre: Story = () => (
   />
 )
 
-export const CanDeleteTitre: Story = () => (
+export const CanDeleteTitre: StoryFn = () => (
   <PureHeader
     titre={{
       id: 'id',
@@ -78,7 +78,7 @@ export const CanDeleteTitre: Story = () => (
   />
 )
 
-export const CanEditTitre: Story = () => (
+export const CanEditTitre: StoryFn = () => (
   <PureHeader
     titre={{
       id: 'id',

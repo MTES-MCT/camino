@@ -1,5 +1,5 @@
 import { Administration } from './administration'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -10,6 +10,6 @@ export default meta
 
 const onEventTrack = action('onEventTrack')
 
-export const Default: Story = () => <Administration administrationId="aut-mrae-guyane-01" onEventTrack={onEventTrack} />
+export const Default: StoryFn = () => <Administration administrationId="aut-mrae-guyane-01" onEventTrack={onEventTrack} />
 
-export const WithServiceAndEmail: Story = () => <Administration administrationId="min-mtes-dgaln-01" onEventTrack={onEventTrack} />
+export const WithServiceAndEmail: StoryFn = () => <Administration administrationId="min-mtes-dgaln-01" onEventTrack={onEventTrack} />

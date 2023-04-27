@@ -1,5 +1,5 @@
 import { PureONFDashboard } from './pure-onf-dashboard'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreONF } from 'camino-common/src/titres'
 
 const meta: Meta = {
@@ -94,7 +94,7 @@ const onfs: CommonTitreONF[] = [
   },
 ]
 
-export const Ok: Story = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs)} />
-export const OkSansAttenteDeONF: Story = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false })))} />
-export const Loading: Story = () => <PureONFDashboard getOnfTitres={() => new Promise<CommonTitreONF[]>(resolve => {})} />
-export const WithError: Story = () => <PureONFDashboard getOnfTitres={() => Promise.reject(new Error('because reasons'))} />
+export const Ok: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs)} />
+export const OkSansAttenteDeONF: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false })))} />
+export const Loading: StoryFn = () => <PureONFDashboard getOnfTitres={() => new Promise<CommonTitreONF[]>(resolve => {})} />
+export const WithError: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.reject(new Error('because reasons'))} />

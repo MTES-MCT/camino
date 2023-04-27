@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { ActivitesPills } from './activites-pills'
 
 const meta: Meta = {
@@ -7,7 +7,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <ActivitesPills />
-export const WithActivitesAbsentes: Story = () => <ActivitesPills activitesAbsentes={2} />
-export const WithActivitesEnConstruction: Story = () => <ActivitesPills activitesEnConstruction={2} />
-export const Both: Story = () => <ActivitesPills activitesEnConstruction={2} activitesAbsentes={12} />
+export const Default: StoryFn = () => <ActivitesPills />
+export const WithActivitesAbsentes: StoryFn = () => <ActivitesPills activitesAbsentes={2} />
+export const WithActivitesEnConstruction: StoryFn = () => <ActivitesPills activitesEnConstruction={2} />
+export const Both: StoryFn = () => <ActivitesPills activitesEnConstruction={2} activitesAbsentes={12} />

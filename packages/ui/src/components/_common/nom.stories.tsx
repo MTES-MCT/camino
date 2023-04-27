@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Nom } from './nom'
 import { MultiPolygon, Feature } from 'geojson'
 
@@ -9,6 +9,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <Nom />
-export const Lowercase: Story = () => <Nom nom="nom minuscule" />
-export const AlreadyUppercase: Story = () => <Nom nom="Nom minuscule" />
+export const Default: StoryFn = () => <Nom />
+export const Lowercase: StoryFn = () => <Nom nom="nom minuscule" />
+export const AlreadyUppercase: StoryFn = () => <Nom nom="Nom minuscule" />

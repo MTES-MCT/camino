@@ -1,5 +1,5 @@
 import PureFormSaveBtn from './pure-form-save-btn.vue'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -15,7 +15,7 @@ type Props = {
   canDepose: boolean
   showDepose: boolean
 }
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { PureFormSaveBtn },
   setup() {
     return { args }

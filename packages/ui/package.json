@@ -12,9 +12,8 @@
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.tsx,.vue src",
     "lint:check": "prettier --check src && eslint src",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "build-storybook",
-    "generate-icon-types": "ts-node --transpile-only scripts/generateIconTypes.ts",
-    "build-storybook": "storybook build"
+    "storybook:build": "storybook build",
+    "generate-icon-types": "ts-node --transpile-only scripts/generateIconTypes.ts"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",

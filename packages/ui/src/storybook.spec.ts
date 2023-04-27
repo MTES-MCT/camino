@@ -22,6 +22,7 @@ vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
 const compose = (entry: StoryFile) => {
   try {
+    // @ts-ignore waiting for https://github.com/storybookjs/testing-vue3/issues/10
     return composeStories(entry)
   } catch (e) {
     throw new Error(`Un fichier est probablement mal formaté ${JSON.stringify(entry)}, ${e}`)

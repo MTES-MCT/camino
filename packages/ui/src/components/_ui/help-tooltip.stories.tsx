@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { HelpTooltip } from './help-tooltip'
 
 const meta: Meta = {
@@ -7,5 +7,5 @@ const meta: Meta = {
 }
 export default meta
 
-export const Simple: Story = () => <HelpTooltip text="Tooltip text" />
-export const WithDifferentIcon: Story = () => <HelpTooltip icon="download" text="Tooltip text" />
+export const Simple: StoryFn = () => <HelpTooltip text="Tooltip text" />
+export const WithDifferentIcon: StoryFn = () => <HelpTooltip icon="download" text="Tooltip text" />

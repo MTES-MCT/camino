@@ -1,5 +1,5 @@
 import SectionElement from './section-element.vue'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Components/common/OldSectionElement',
@@ -18,7 +18,7 @@ type Props = {
   contenu: Record<string, any>
 }
 
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { SectionElement },
   setup() {
     return { args }

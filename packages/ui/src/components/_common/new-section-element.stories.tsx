@@ -1,5 +1,5 @@
 import { SectionElement } from './new-section-element'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
 
@@ -12,7 +12,7 @@ export default meta
 
 const fileDownload = action('fileDownload')
 
-export const Text: Story = () => (
+export const Text: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -25,7 +25,7 @@ export const Text: Story = () => (
   />
 )
 
-export const File: Story = () => (
+export const File: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -38,7 +38,7 @@ export const File: Story = () => (
   />
 )
 
-export const Date: Story = () => (
+export const Date: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -51,7 +51,7 @@ export const Date: Story = () => (
   />
 )
 
-export const Checkboxes: Story = () => (
+export const Checkboxes: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -69,7 +69,7 @@ export const Checkboxes: Story = () => (
   />
 )
 
-export const Select: Story = () => (
+export const Select: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -87,7 +87,7 @@ export const Select: Story = () => (
   />
 )
 
-export const Number: Story = () => (
+export const Number: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
     element={{
@@ -99,7 +99,7 @@ export const Number: Story = () => (
   />
 )
 
-export const Radio: Story = () => (
+export const Radio: StoryFn = () => (
   <div>
     <SectionElement
       fileDownload={fileDownload}

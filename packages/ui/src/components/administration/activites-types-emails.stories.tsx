@@ -1,5 +1,5 @@
 import { ActivitesTypesEmails } from './activites-types-emails'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { ActivitesTypesId, ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 import { Administration, Administrations, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { User } from 'camino-common/src/roles'
@@ -29,7 +29,7 @@ const activitesTypesEmails = [
   },
 ]
 
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { ActivitesTypesEmails },
   setup() {
     return { args }
@@ -38,11 +38,11 @@ const Template: Story<Props> = (args: Props) => ({
 })
 const emailUpdate = action('emailUpdate')
 const emailDelete = action('emailDelete')
-export const EmailLectureVisible: Story = () => (
+export const EmailLectureVisible: StoryFn = () => (
   <ActivitesTypesEmails administrationId="aut-97300-01" user={null} activitesTypesEmails={activitesTypesEmails} emailUpdate={emailUpdate} emailDelete={emailDelete} />
 )
 
-export const EmailLectureAndModificationVisible: Story = () => (
+export const EmailLectureAndModificationVisible: StoryFn = () => (
   <ActivitesTypesEmails
     administrationId="aut-97300-01"
     user={{
@@ -56,7 +56,7 @@ export const EmailLectureAndModificationVisible: Story = () => (
   />
 )
 
-export const EmailLectureAndModificationSurAdministrationVisible: Story = () => (
+export const EmailLectureAndModificationSurAdministrationVisible: StoryFn = () => (
   <ActivitesTypesEmails
     administrationId={ADMINISTRATION_IDS['DREAL - BRETAGNE']}
     user={{

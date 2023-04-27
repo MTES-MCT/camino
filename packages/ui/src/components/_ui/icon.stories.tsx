@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Icon } from './icon'
 import { icons } from './iconSpriteType'
 import { IconSprite } from '@/components/_ui/iconSprite'
@@ -9,7 +9,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const IconAllSize: Story = () => (
+export const IconAllSize: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
@@ -32,7 +32,7 @@ export const IconAllSize: Story = () => (
   </div>
 )
 
-export const AllIcons: Story = () => (
+export const AllIcons: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <IconSprite />
     <table>

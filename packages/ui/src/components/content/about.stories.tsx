@@ -1,5 +1,5 @@
 import { About } from './about'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Pages/APropos',
@@ -7,4 +7,4 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <About />
+export const Default: StoryFn = () => <About />

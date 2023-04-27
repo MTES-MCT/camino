@@ -16,15 +16,21 @@ function DrawComponent(component: Props['filter']['component'], element: FiltreD
   if (!component) return <span class="cap-first h6 bold">{element.nom}</span>
   switch (component) {
     case 'FiltreDomaine':
-      return FiltreDomaine({
-        element: element as FiltreDomaineProps['element'],
-      })
+      return FiltreDomaine(
+        {
+          element: element as FiltreDomaineProps['element'],
+        },
+        { attrs: {}, emit: () => {}, slots: {} }
+      )
     case 'FiltresTypes':
-      return FiltresTypes({ element: element as FiltresTypesProps['element'] })
+      return FiltresTypes({ element: element as FiltresTypesProps['element'] }, { attrs: {}, emit: () => {}, slots: {} })
     case 'FiltresStatuts':
-      return FiltresStatuts({
-        element: element as FiltresStatutsProps['element'],
-      })
+      return FiltresStatuts(
+        {
+          element: element as FiltresStatutsProps['element'],
+        },
+        { attrs: {}, emit: () => {}, slots: {} }
+      )
   }
 }
 

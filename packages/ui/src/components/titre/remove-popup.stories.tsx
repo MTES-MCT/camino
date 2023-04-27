@@ -1,5 +1,5 @@
 import { RemovePopup } from './remove-popup'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -12,7 +12,7 @@ export default meta
 const deleteTitre = action('deleteTitre')
 const close = action('close')
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <RemovePopup
     titreId="idTitre"
     close={close}

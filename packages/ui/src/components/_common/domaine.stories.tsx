@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Domaine } from './domaine'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
@@ -11,8 +11,8 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: Story = () => <Domaine />
-export const AllDomaines: Story = () => (
+export const Default: StoryFn = () => <Domaine />
+export const AllDomaines: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <table>
       <tr>

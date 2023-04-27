@@ -1,5 +1,5 @@
 import { EditPopup } from './edit-popup'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -12,7 +12,7 @@ export default meta
 const editTitre = action('editTitre')
 const close = action('close')
 
-export const DefaultNoReference: Story = () => (
+export const DefaultNoReference: StoryFn = () => (
   <EditPopup
     titre={{
       id: 'id',
@@ -27,7 +27,7 @@ export const DefaultNoReference: Story = () => (
   />
 )
 
-export const OneReference: Story = () => (
+export const OneReference: StoryFn = () => (
   <EditPopup
     titre={{
       id: 'id',

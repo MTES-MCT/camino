@@ -1,5 +1,5 @@
 import { Column, TableAuto } from './table-auto'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
@@ -84,5 +84,5 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
   }
 })
 
-export const TableAutoSimple: Story = () => <TableAuto rows={rows} columns={columns} />
-export const TableAutoSortedByStatusAsc: Story = () => <TableAuto rows={rows} columns={columns} initialSort={{ column: 'statut', order: 'desc' }} />
+export const TableAutoSimple: StoryFn = () => <TableAuto rows={rows} columns={columns} />
+export const TableAutoSortedByStatusAsc: StoryFn = () => <TableAuto rows={rows} columns={columns} initialSort={{ column: 'statut', order: 'desc' }} />

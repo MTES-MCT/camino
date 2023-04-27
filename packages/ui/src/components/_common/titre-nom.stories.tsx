@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreNom } from './titre-nom'
 
 const meta: Meta = {
@@ -8,5 +8,5 @@ const meta: Meta = {
 
 export default meta
 
-export const Default: Story = () => <TitreNom nom="Nom du titre" />
-export const Empty: Story = () => <TitreNom />
+export const Default: StoryFn = () => <TitreNom nom="Nom du titre" />
+export const Empty: StoryFn = () => <TitreNom />
