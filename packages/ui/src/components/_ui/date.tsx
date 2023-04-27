@@ -6,7 +6,7 @@ export interface Props {
   date: CaminoDate
 }
 
-export const Date: FunctionalComponent<Props> = (props: Props) => {
+export const DateComponent: FunctionalComponent<Props> = (props: Props) => {
   const dateValue = dateFormat(props.date)
   return <div style="white-space: nowrap">{dateValue}</div>
 }
