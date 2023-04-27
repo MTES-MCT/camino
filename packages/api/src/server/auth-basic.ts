@@ -42,7 +42,8 @@ export const authBasic = async (req: Request, res: express.Response, next: expre
         return
       }
 
-      const user = await userQGISCredentialsCheck(credentials.name, credentials.pass)
+      // Ceci est dû au fait que QGIS, parfois, escape le %40 au lieu de le transformer en @ correctement...
+      const user = await userQGISCredentialsCheck(credentials.name.replace('%40', '@'), credentials.pass)
 
       if (!user) {
         res.status(401)
