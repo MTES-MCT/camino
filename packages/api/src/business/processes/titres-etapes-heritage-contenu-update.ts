@@ -95,7 +95,7 @@ export const titresEtapesHeritageContenuUpdate = async (user: UserNotNull, demar
   for (const titreDemarche of Object.values(titresDemarches)) {
     if (titreDemarche.etapes?.length) {
       const etapeSectionsDictionary = titreDemarche.etapes.reduce<{
-        [etapeId: string]: DeepReadonly<Section>[]
+        [etapeId: string]: DeepReadonly<Section[]>
       }>((acc, e) => {
         acc[e.id] = getSections(titreDemarche.titreTypeId, titreDemarche.typeId, e.typeId)
 

@@ -1,17 +1,22 @@
 import { contenuNumbersCheck } from './contenu-numbers-check.js'
-import { contenuNumber, contenuNumberNeg, sections, sectionsSansElement } from '../__mocks__/contenu-numbers-check-contenus.js'
 import { describe, test, expect } from 'vitest'
 
 describe('vérifie la validité du contenu de type nombre', () => {
   test("la sections n'a pas d'éléments", () => {
-    expect(contenuNumbersCheck(sectionsSansElement, contenuNumber)).toEqual(null)
+    expect(contenuNumbersCheck([{ id: 'section-sans-elements', elements: [] }], { section: { number: 123 } })).toEqual(null)
   })
 
   test('un champ de section dont le type est un nombre et qui a une valeur positive est validée', () => {
-    expect(contenuNumbersCheck(sections, contenuNumber)).toBeNull()
+    expect(contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number' }] }], { section: { number: 123 } })).toBeNull()
   })
 
   test('un champ de section dont le type est un nombre et qui a une valeur négative retourne une erreur', () => {
-    expect(contenuNumbersCheck(sections, contenuNumberNeg)).toEqual('le champ "number" ne peut pas avoir une valeur négative')
+    expect(
+      contenuNumbersCheck([{ id: 'section', elements: [{ id: 'number', type: 'number' }] }], {
+        section: {
+          number: -1,
+        },
+      })
+    ).toEqual('le champ "number" ne peut pas avoir une valeur négative')
   })
 })

@@ -16,7 +16,7 @@ type ActiviteType {
   dateDebut: String!
   delaiMois: Int!
   frequenceId: ID!
-  sections: Json!
+  sections: Json
   documentsTypes: [DocumentType]
   lectureInterdit: Boolean
   modificationInterdit: Boolean

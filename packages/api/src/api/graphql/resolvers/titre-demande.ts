@@ -1,5 +1,4 @@
-import { ITitreDemande, ITitreEtape, ISection, ITitreEntreprise, Context, ISectionElement } from '../../../types.js'
-import { etapeTypeGet } from '../../../database/queries/metas.js'
+import { ITitreDemande, ITitreEtape, ITitreEntreprise, Context } from '../../../types.js'
 import { titreCreate, titreGet, titresGet } from '../../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../../database/queries/titres-demarches.js'
 import { titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
@@ -13,10 +12,12 @@ import { linkTitres } from '../../../database/queries/titres-titres.js'
 import { getLinkConfig, assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
 export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } }, { user, pool }: Context) => {
   try {
@@ -97,56 +98,51 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
         titreEtape.decisionsAnnexesSections = []
 
         for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
-          const etapeType = await etapeTypeGet(etapeTypeId, {
-            fields: { id: {} },
-          })
+          const etapeType = EtapesTypes[etapeTypeId]
 
           const etapesStatuts = getEtapesStatuts(etapeTypeId)
 
-          const elements: ISectionElement[] = []
-          if (etapeType?.sections?.length) {
-            etapeType.sections.forEach(section => {
+          const documentsElements: DeepReadonly<SectionsElement[]> = (getDocuments(titreDemande.typeId, titreDemarche.typeId, etapeTypeId)?.filter(dt => !dt.optionnel) ?? []).map(dt => ({
+            id: dt.id,
+            nom: dt.nom!,
+            type: 'file',
+          }))
+
+          const elements: (DeepReadonly<SectionsElement> & { sectionId: string })[] = []
+          const etapeTypeSections = [...getSections(titre.typeId, titreDemarche.typeId, etapeTypeId)]
+          if (etapeTypeSections.length) {
+            etapeTypeSections.forEach(section => {
               section.elements?.forEach(element => {
                 elements.push({ ...element, sectionId: section.id })
               })
             })
           }
 
-          const decisionAnnexeSections: ISection = {
-            id: etapeTypeId,
-            nom: etapeType!.nom,
-            elements: [
-              {
-                id: 'date',
-                nom: 'Date',
-                type: 'date',
-              },
-              {
-                id: 'statutId',
-                nom: 'Statut',
-                type: 'select',
-                valeurs: etapesStatuts.map(statut => ({
-                  id: statut.id,
-                  nom: statut.nom,
-                })),
-              },
-              ...elements,
-            ],
-          }
-
-          const documents = getDocuments(titreDemande.typeId, titreDemarche.typeId, etapeTypeId)
-
-          documents
-            ?.filter(dt => !dt.optionnel)
-            .forEach(dt => {
-              decisionAnnexeSections.elements!.push({
-                id: dt.id,
-                nom: dt.nom!,
-                type: 'file',
-              })
-            })
-
-          titreEtape.decisionsAnnexesSections.push(decisionAnnexeSections)
+          titreEtape.decisionsAnnexesSections = [
+            ...titreEtape.decisionsAnnexesSections,
+            {
+              id: etapeTypeId,
+              nom: etapeType.nom,
+              elements: [
+                {
+                  id: 'date',
+                  nom: 'Date',
+                  type: 'date',
+                },
+                {
+                  id: 'statutId',
+                  nom: 'Statut',
+                  type: 'select',
+                  options: etapesStatuts.map(statut => ({
+                    id: statut.id,
+                    nom: statut.nom,
+                  })),
+                },
+                ...elements,
+                ...documentsElements,
+              ],
+            },
+          ]
         }
       }
     }

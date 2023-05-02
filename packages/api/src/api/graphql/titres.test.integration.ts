@@ -228,7 +228,7 @@ const titreActivites: ITitre = {
               id: 'orBrut',
               nom: 'Or brut extrait (g)',
               type: 'number',
-              dateDebut: '2018-01-01',
+              dateDebut: toCaminoDate('2018-01-01'),
               description: 'Masse d’or brut',
             },
             {

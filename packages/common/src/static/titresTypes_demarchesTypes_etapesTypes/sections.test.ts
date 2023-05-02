@@ -2,7 +2,9 @@ import { getSections } from './sections.js'
 import { test, expect } from 'vitest'
 
 test('getSections erreurs', () => {
-  expect(() => getSections()).toThrowErrorMatchingInlineSnapshot('"il manque des éléments pour trouver les sections titreTypeId: \'undefined\', demarcheId: undefined, etapeTypeId: undefined"')
+  expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"il manque des éléments pour trouver les sections titreTypeId: \'undefined\', demarcheId: undefined, etapeTypeId: undefined"'
+  )
 })
 
 test('getSections pas de surcharge mais pas de sections', () => {

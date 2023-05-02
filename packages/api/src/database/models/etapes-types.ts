@@ -19,7 +19,6 @@ class EtapesTypes extends Model {
       acceptationAuto: { type: ['boolean', 'null'] },
       fondamentale: { type: ['boolean', 'null'] },
       dateFin: { type: ['string', 'null'] },
-      sections: {},
       unique: { type: ['boolean', 'null'] },
       ordre: { type: 'integer' },
       publicLecture: { type: 'boolean' },

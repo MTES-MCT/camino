@@ -1,6 +1,8 @@
-import { ISection, IHeritageContenu } from '../../../types.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { IHeritageContenu } from '../../../types.js'
 
-export const heritageContenuValidate = (sections?: ISection[] | null, heritageContenu?: IHeritageContenu | null) => {
+export const heritageContenuValidate = (sections?: DeepReadonly<Section[]> | null, heritageContenu?: IHeritageContenu | null) => {
   const errors = [] as string[]
 
   if ((!heritageContenu || !Object.keys(heritageContenu).length) && !sections?.length) {

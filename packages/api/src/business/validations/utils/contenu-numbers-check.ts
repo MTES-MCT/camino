@@ -1,6 +1,8 @@
-import { IContenu, ISection } from '../../../types.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { IContenu } from '../../../types.js'
 
-export const contenuNumbersCheck = (sections: ISection[], contenu: IContenu) => {
+export const contenuNumbersCheck = (sections: DeepReadonly<Section[]>, contenu: IContenu) => {
   const errors = sections.reduce((errors: string[], section) => {
     if (!section.elements) return errors
 

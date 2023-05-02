@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IContenu, IDecisionAnnexeContenu, IDocument, IEtapeType, ISectionElement, ITitreEtape, ITitrePoint } from '../../../types.js'
+import { Context, IContenu, IDecisionAnnexeContenu, IDocument, IEtapeType, ITitreEtape, ITitrePoint } from '../../../types.js'
 
 import { titreFormat } from '../../_format/titres.js'
 
@@ -18,7 +18,7 @@ import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { etapeTypeGet, titreTypeDemarcheTypeEtapeTypeGet } from '../../../database/queries/metas.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentsLier } from './documents.js'
-import { documentsTypesFormat, etapeTypeSectionsFormat } from '../../_format/etapes-types.js'
+import { documentsTypesFormat } from '../../_format/etapes-types.js'
 import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathGet, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
 import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
@@ -38,6 +38,9 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -118,9 +121,9 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
       fields: { justificatifsTypes: { id: {} } },
     })
 
-    const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche!.titre!.typeId, titreDemarche!.typeId, etapeType!)
+    const { justificatifsTypes } = await specifiquesGet(titreDemarche!.titre!.typeId, titreDemarche!.typeId, etapeType!)
 
-    const titreEtape = titreEtapeHeritageBuild(date, etapeType!, titreDemarche!, sections, justificatifsTypes, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
+    const titreEtape = titreEtapeHeritageBuild(date, etapeType!, titreDemarche!, justificatifsTypes, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
       throw new Error(`le type du titre de l'étape ${titreEtape.id} n'est pas chargé`)
@@ -138,7 +141,7 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
   }
 }
 
-const specifiquesGet = async (titreTypeId: string, titreDemarcheTypeId: string, etapeType: IEtapeType) => {
+const specifiquesGet = async (titreTypeId: TitreTypeId, titreDemarcheTypeId: DemarcheTypeId, etapeType: IEtapeType) => {
   const tde = await titreTypeDemarcheTypeEtapeTypeGet(
     {
       titreTypeId,
@@ -148,7 +151,7 @@ const specifiquesGet = async (titreTypeId: string, titreDemarcheTypeId: string, 
     { fields: { justificatifsTypes: { id: {} } } }
   )
 
-  const sections = etapeTypeSectionsFormat(etapeType.sections, tde?.sections)
+  const sections = getSections(titreTypeId, titreDemarcheTypeId, etapeType.id)
 
   const justificatifsTypes = documentsTypesFormat(etapeType.justificatifsTypes, tde?.justificatifsTypes)
 
@@ -527,7 +530,7 @@ const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, inf
           statutId: decisionContenu.statutId,
         }
 
-        const contenu = decisionAnnexesElements.filter((element): element is Required<ISectionElement> => element.type !== 'file' && !!element.sectionId) ?? []
+        const contenu = decisionAnnexesElements.filter((element): element is Required<SectionsElement & { sectionId: string }> => element.type !== 'file' && !!element.sectionId) ?? []
 
         if (contenu) {
           etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {

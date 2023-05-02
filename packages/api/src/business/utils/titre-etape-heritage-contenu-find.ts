@@ -47,7 +47,7 @@ export const heritageContenuFind = (sectionId: string, elementId: string, titreE
 export const titreEtapeHeritageContenuFind = (
   titreEtapes: ITitreEtape[],
   titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
-  etapeSectionsDictionary: Index<DeepReadonly<Section>[]>
+  etapeSectionsDictionary: Index<DeepReadonly<Section[]>>
 ) => {
   const sections = etapeSectionsDictionary[titreEtape.id]
 

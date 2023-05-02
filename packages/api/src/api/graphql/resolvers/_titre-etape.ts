@@ -1,10 +1,9 @@
-import { ICoordonnees, IEtapeType, IHeritageContenu, IHeritageProps, ISection, ITitreDemarche, ITitreEtape, ITitrePointReference } from '../../../types.js'
+import { ICoordonnees, IEtapeType, IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape, ITitrePointReference } from '../../../types.js'
 
 import { geoConvert } from '../../../tools/geo-convert.js'
 
 import { titreEtapeHeritagePropsFind, titreEtapePropsIds } from '../../../business/utils/titre-etape-heritage-props-find.js'
 import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
-import { etapeTypeSectionsFormat } from '../../_format/etapes-types.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
@@ -91,16 +90,17 @@ const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] 
   return newTitreEtape
 }
 
-const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, sections: ISection[], titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes?: ITitreEtape[] | null) => {
+const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes?: ITitreEtape[] | null) => {
   if (!titreEtapes) {
     titreEtapes = []
   }
+
+  const sections = getSections(titreTypeId, demarcheTypeId, etapeType.id)
   const titreEtape = {
     id: 'new-titre-etape',
     date,
     type: etapeType,
     typeId: etapeType.id,
-    sectionsSpecifiques: sections,
   } as ITitreEtape
 
   let titreEtapesFiltered = titreEtapesSortDescByOrdre(titreEtapes.filter(te => te.date < date))
@@ -108,7 +108,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, sec
   titreEtapesFiltered.splice(0, 0, titreEtape)
 
   const etapeSectionsDictionary = titreEtapesFiltered.reduce<{
-    [etapeId: string]: DeepReadonly<Section>[]
+    [etapeId: string]: DeepReadonly<Section[]>
   }>((acc, e) => {
     acc[e.id] = getSections(titreTypeId, demarcheTypeId, e.typeId)
 
@@ -154,7 +154,6 @@ export const titreEtapeHeritageBuild = (
   date: string,
   etapeType: IEtapeType,
   titreDemarche: ITitreDemarche,
-  sectionsSpecifiques: ISection[],
   justificatifsTypesSpecifiques: DocumentType[],
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId
@@ -167,9 +166,9 @@ export const titreEtapeHeritageBuild = (
 
   titreEtape.modification = true
 
-  const sections = etapeTypeSectionsFormat(etapeType.sections, sectionsSpecifiques)
+  const sections = getSections(titreTypeId, demarcheTypeId, etapeType.id)
   if (sections?.length) {
-    const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeType, sectionsSpecifiques, titreTypeId, demarcheTypeId, titreDemarche.etapes)
+    const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeType, titreTypeId, demarcheTypeId, titreDemarche.etapes)
 
     titreEtape.contenu = contenu
     titreEtape.heritageContenu = heritageContenu
@@ -177,7 +176,6 @@ export const titreEtapeHeritageBuild = (
 
   titreEtape.type = etapeType
   titreEtape.titreDemarcheId = titreDemarche.id
-  titreEtape.sectionsSpecifiques = sectionsSpecifiques
   titreEtape.justificatifsTypesSpecifiques = justificatifsTypesSpecifiques
 
   return titreEtape

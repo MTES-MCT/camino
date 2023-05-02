@@ -1,4 +1,4 @@
-import { IAdministrationActiviteTypeEmail, IContenu, IContenuValeur, ISection, ISectionElement, ITitreActivite, IUtilisateur } from '../../../types.js'
+import { IAdministrationActiviteTypeEmail, IContenu, IContenuValeur, ITitreActivite, IUtilisateur } from '../../../types.js'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
@@ -7,14 +7,16 @@ import { getPeriode } from 'camino-common/src/static/frequence.js'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { dateFormat } from 'camino-common/src/date.js'
 import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
+import { getElementValeurs, Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
-const elementHtmlBuild = (sectionId: string, element: ISectionElement, contenu: IContenu) =>
+const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionsElement>, contenu: IContenu) =>
   contenu[sectionId] && ((contenu[sectionId][element.id] as IContenuValeur) || (contenu[sectionId][element.id] as IContenuValeur) === 0 || (contenu[sectionId][element.id] as IContenuValeur) === false)
     ? `<li><strong>${element.nom ? element.nom + ' : ' : ''}</strong>${
-        element.type === 'checkboxes'
+        element.type === 'select'
           ? (contenu[sectionId][element.id] as string[])
               .reduce((valeurs: string[], id) => {
-                const valeur = element.valeurs!.find(v => v.id === id)
+                const valeur = getElementValeurs(element).find(v => v.id === id)
 
                 if (valeur?.nom) {
                   valeurs.push(valeur.nom)
@@ -24,10 +26,10 @@ const elementHtmlBuild = (sectionId: string, element: ISectionElement, contenu: 
               }, [])
               .join(', ')
           : contenu[sectionId][element.id]
-      } <br><small>${element.description}</small></li>`
+      } <br><small>${element.description ?? ''}</small></li>`
     : `<li>–</li>`
 
-const elementsHtmlBuild = (sectionId: string, elements: ISectionElement[], contenu: IContenu) =>
+const elementsHtmlBuild = (sectionId: string, elements: DeepReadonly<SectionsElement[]>, contenu: IContenu) =>
   elements
     ? elements.reduce(
         (html, element) => `
@@ -39,7 +41,7 @@ ${elementHtmlBuild(sectionId, element, contenu)}
       )
     : ''
 
-const sectionHtmlBuild = ({ id, nom, elements }: ISection, contenu: IContenu) => {
+const sectionHtmlBuild = ({ id, nom, elements }: DeepReadonly<Section>, contenu: IContenu) => {
   const sectionNomHtml = nom ? `<h2>${nom}</h2>` : ''
 
   const listHtml = elements
@@ -148,7 +150,13 @@ export const titreActiviteAdministrationsEmailsGet = (
   )
 }
 
-const titreActiviteEmailsSend = async (activite: ITitreActivite, titreNom: string, user: UserNotNull, utilisateurs: IUtilisateur[] | undefined | null, administrationIds: AdministrationId[]) => {
+export const titreActiviteEmailsSend = async (
+  activite: ITitreActivite,
+  titreNom: string,
+  user: UserNotNull,
+  utilisateurs: IUtilisateur[] | undefined | null,
+  administrationIds: AdministrationId[]
+) => {
   const emails = titreActiviteUtilisateursEmailsGet(utilisateurs)
 
   const administrationsActivitesTypesEmails = await AdministrationsActivitesTypesEmails.query().whereIn('administrationId', administrationIds)
@@ -161,5 +169,3 @@ const titreActiviteEmailsSend = async (activite: ITitreActivite, titreNom: strin
 
   await emailsSend(emails, subject, content)
 }
-
-export { titreActiviteEmailsSend }

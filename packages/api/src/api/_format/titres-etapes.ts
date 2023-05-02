@@ -15,7 +15,7 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
   }
 
   if (titreEtape.type) {
-    titreEtape.type = etapeTypeFormat(titreEtape, titreEtape.sectionsSpecifiques, titreEtape.justificatifsTypesSpecifiques, documentTypeData)
+    titreEtape.type = etapeTypeFormat(titreEtape, titreEtape.justificatifsTypesSpecifiques, documentTypeData)
   }
 
   if (!fields) return titreEtape
@@ -45,7 +45,6 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
       titreEtape,
       titreEtape.demarche!.titre!.typeId,
       titreEtape.demarche!.typeId,
-      titreEtape.type!.sections!,
       titreEtape?.type?.documentsTypes ?? [],
       titreEtape.documents,
       titreEtape.type!.justificatifsTypes!,

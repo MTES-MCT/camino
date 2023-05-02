@@ -30,16 +30,9 @@ const titreEtapeModificationQueryBuild = (user: User) => {
 }
 
 const specifiquesAdd = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>) => {
-  // sections spécifiques
-  q.leftJoin('titresTypes__demarchesTypes__etapesTypes as tde', b => {
-    b.andOn('tde.titreTypeId', 'demarche:titre.typeId')
-    b.andOn('tde.demarcheTypeId', 'demarche.typeId')
-    b.andOn('tde.etapeTypeId', 'type.id')
-  })
-  q.select(raw('tde.sections').as('sectionsSpecifiques'))
-  q.groupBy('tde.sections')
+  // TODO 2023-05-03 à supprimer mais il faut mettre tde_jystificatifs et etapes_justificatifs dans le static
 
-  // justificatifs spécifiques
+  //  justificatifs spécifiques
   q.leftJoin('titresTypes__demarchesTypes__etapesTypes__justificatifsT as tdef', b => {
     b.andOn('tdef.titreTypeId', 'demarche:titre.typeId')
     b.andOn('tdef.demarcheTypeId', 'demarche.typeId')

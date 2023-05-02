@@ -13,7 +13,6 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { Couleur } from 'camino-common/src/static/couleurs.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
-import { UniteId } from 'camino-common/src/static/unites.js'
 import { FrequenceId } from 'camino-common/src/static/frequence.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
@@ -22,11 +21,13 @@ import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
+import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -142,32 +143,6 @@ interface IHeritageContenu {
   [sectionId: string]: IHeritageProps
 }
 
-interface ISection {
-  id: string
-  nom?: string
-  elements?: ISectionElement[] | null
-}
-
-type IValeurMetasNom = 'devises' | 'unites'
-
-type ISectionElementType = 'integer' | 'number' | 'text' | 'date' | 'textarea' | 'checkbox' | 'checkboxes' | 'select' | 'radio' | 'file'
-
-interface ISectionElement {
-  id: string
-  nom: string
-  type: ISectionElementType
-  description?: string | null
-  dateDebut?: string | null
-  dateFin?: string | null
-  periodesIds?: number[] | null
-  valeurs?: { id: string; nom: string }[] | null
-  valeursMetasNom?: IValeurMetasNom
-  referenceUniteRatio?: number
-  uniteId?: UniteId
-  optionnel?: boolean
-  sectionId?: string
-}
-
 interface IActiviteTypeDocumentType {
   activiteTypeId: string
   documentTypeId: string
@@ -180,7 +155,7 @@ interface IActiviteTypePays {
 }
 
 interface IActiviteType {
-  id: string
+  id: ActivitesTypesId
   nom: string
   description?: string
   ordre: number
@@ -189,7 +164,6 @@ interface IActiviteType {
   delaiMois: number
   titresTypes: ITitreType[]
   documentsTypes: DocumentType[]
-  sections: ISection[]
   activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
@@ -325,8 +299,6 @@ interface IEtapeType {
   acceptationAuto?: boolean | null
   fondamentale?: boolean | null
   dateFin?: string | null
-  sections?: ISection[] | null
-  sectionsSpecifiques?: ISection[] | null
   titreTypeId?: string | null
   demarcheTypeId?: string | null
   unique?: boolean | null
@@ -444,7 +416,7 @@ interface ITitreActivite {
   utilisateur?: IUtilisateur | null
   dateSaisie?: CaminoDate
   contenu?: IContenu | null
-  sections: ISection[]
+  sections: DeepReadonly<Section[]>
   documents?: IDocument[] | null
   modification?: boolean | null
   suppression?: boolean | null
@@ -532,7 +504,6 @@ interface ITitreEtape {
   modification?: boolean | null
   documentIds?: string[] | null
   justificatifsTypesSpecifiques?: DocumentType[] | null
-  sectionsSpecifiques?: ISection[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: CaminoDate | null
@@ -555,7 +526,7 @@ interface ITitreEtape {
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   deposable?: boolean | null
-  decisionsAnnexesSections?: ISection[] | null
+  decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionsElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
 }
 
@@ -618,7 +589,6 @@ interface ITitreType {
   type: ITitreTypeType
   // FIXME à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
   contenuIds?: IContenuId[] | null
-  sections?: ISection[] | null
 }
 
 interface ITitreTypeType {
@@ -631,8 +601,6 @@ interface ITitreTypeDemarcheTypeEtapeType {
   titreTypeId: string
   demarcheTypeId: string
   etapeTypeId: string
-
-  sections?: ISection[] | null
   ordre: number
   etapeType?: IEtapeType
   documentsTypes?: DocumentType[] | null
@@ -736,9 +704,6 @@ export {
   IFormat,
   IActiviteType,
   IActiviteTypeDocumentType,
-  ISection,
-  ISectionElement,
-  ISectionElementType,
   IAdministration,
   ICommune,
   IArea,

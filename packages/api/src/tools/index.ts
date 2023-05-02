@@ -8,19 +8,6 @@ export const equalStringArrays = (arr1: string[], arr2: string[]): boolean =>
     return u === arr2[i]
   })
 
-export const dupRemove = (key: string, ...arrays: Index<any>[][]) =>
-  arrays.reduce(
-    (result, array) =>
-      array.reduce((res: Index<any>[], el) => {
-        if (!res.find(e => !el[key] || e[key] === el[key])) {
-          res.push(el)
-        }
-
-        return res
-      }, result),
-    []
-  )
-
 export const dupFind = (key: string, ...arrays: Index<any>[][]) =>
   arrays.reduce((result: Index<any>[], array) => result.filter(el => array.find(e => e[key] && e[key] === el[key])), arrays.pop() as Index<any>[])
 

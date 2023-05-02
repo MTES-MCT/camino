@@ -21,3 +21,7 @@ export const getEntries = <T extends string, U>(object: Record<T, U>, filter: (k
 export type DeepReadonly<T> = {
   readonly [K in keyof T]: DeepReadonly<T[K]>
 }
+
+export const exhaustiveCheck = (param: never): never => {
+  throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
+}

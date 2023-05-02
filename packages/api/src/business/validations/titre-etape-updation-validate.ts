@@ -1,4 +1,4 @@
-import { ITitreEtape, ITitreDemarche, ITitre, ISection, IDocument, IContenu, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitre, IDocument, IContenu, ITitreEntreprise } from '../../types.js'
 
 import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
@@ -17,6 +17,8 @@ import { DocumentType, DocumentsTypes } from 'camino-common/src/static/documents
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
@@ -26,7 +28,7 @@ export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
-  sections: ISection[],
+  sections: DeepReadonly<Section[]>,
   documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
@@ -114,7 +116,7 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, sections, documentsTypes, documents, justificatifsTypes, justificatifs, sdomZones))
+    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, documentsTypes, documents, justificatifsTypes, justificatifs, sdomZones))
   }
 
   if (errors.length) {
@@ -128,13 +130,13 @@ export const titreEtapeCompleteValidate = (
   titreEtape: ITitreEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  sections: ISection[],
   documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
   sdomZones: SDOMZoneId[] | null | undefined
 ) => {
+  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
   const errors = [] as string[]
   // les éléments non optionnel des sections sont renseignés
   if (sections.length) {
@@ -226,7 +228,7 @@ const titreEtapeUpdationBusinessValidate = (date: CaminoDate, titreEtape: ITitre
   return errors
 }
 
-const contenuCompleteValidate = (sections: ISection[], contenu: IContenu | null | undefined): string[] => {
+const contenuCompleteValidate = (sections: DeepReadonly<Section[]>, contenu: IContenu | null | undefined): string[] => {
   const errors: string[] = []
   sections.forEach(s =>
     s.elements?.forEach(e => {

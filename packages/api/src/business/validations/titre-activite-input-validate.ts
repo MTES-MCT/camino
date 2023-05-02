@@ -1,12 +1,14 @@
-import { ITitreActivite, ISection } from '../../types.js'
+import { ITitreActivite } from '../../types.js'
 
 import { contenuNumbersCheck } from './utils/contenu-numbers-check.js'
 import { propsDatesCheck } from './utils/props-dates-check.js'
 import { contenuDatesCheck } from './utils/contenu-dates-check.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
 const datePropsNames = ['date'] as [keyof ITitreActivite]
 
-export const titreActiviteInputValidate = (titreActivite: ITitreActivite, activiteSections: ISection[]) => {
+export const titreActiviteInputValidate = (titreActivite: ITitreActivite, activiteSections: DeepReadonly<Section[]>) => {
   const errors = []
 
   // 1. le format des dates est correct

@@ -1,6 +1,5 @@
 import { contenuFormat, titreSectionsGet } from './titre-contenu.js'
 import { describe, test, expect } from 'vitest'
-import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 describe('formatage du contenu', () => {
   test("formate le contenu d'un titre", () => {
     expect(
@@ -68,30 +67,20 @@ describe('titreSectionsGet', () => {
     expect(
       titreSectionsGet({
         contenusTitreEtapesIds: {
-          section: { prop1: 'etape-id', prop2: 'etape-id' },
+          arm: { mecanise: 'etape-id', franchissements: 'etape-id' },
         },
+        typeId: 'arm',
         demarches: [
           {
+            typeId: 'oct',
             etapes: [
               {
                 id: 'etape-id',
-                type: {
-                  ...EtapesTypes[ETAPES_TYPES.demande],
-                  ordre: 1,
-                  sections: [
-                    {
-                      id: 'section',
-                      elements: [
-                        { id: 'prop1', nom: 'Prop 1', type: 'text' },
-                        { id: 'prop2', nom: 'Prop 2', type: 'number' },
-                      ],
-                    },
-                  ],
-                },
+                typeId: 'mfr',
                 contenu: {
-                  section: {
-                    prop1: 'valeur 1',
-                    prop2: 2,
+                  arm: {
+                    mecanise: true,
+                    franchissements: 2,
                   },
                 },
               },
@@ -104,19 +93,23 @@ describe('titreSectionsGet', () => {
         {
           "elements": [
             {
-              "id": "prop1",
-              "nom": "Prop 1",
-              "type": "text",
-              "value": "valeur 1",
+              "description": "",
+              "id": "mecanise",
+              "nom": "Prospection mécanisée",
+              "type": "radio",
+              "value": true,
             },
             {
-              "id": "prop2",
-              "nom": "Prop 2",
-              "type": "number",
+              "description": "Nombre de franchissements de cours d'eau",
+              "id": "franchissements",
+              "nom": "Franchissements de cours d'eau",
+              "optionnel": true,
+              "type": "integer",
               "value": 2,
             },
           ],
-          "id": "section",
+          "id": "arm",
+          "nom": "Caractéristiques ARM",
         },
       ]
     `)

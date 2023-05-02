@@ -1,5 +1,7 @@
-import { CaminoDate, toCaminoDate } from '../date'
-import { FrequenceId } from './frequence'
+import { CaminoDate, toCaminoDate } from '../date.js'
+import { FrequenceId } from './frequence.js'
+import { Section, SectionsElement } from './titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from '../typescript-tools.js'
 
 export const ACTIVITES_TYPES_IDS = {
   "rapport d'exploitation (permis et concessions M)": 'gra',
@@ -24,25 +26,13 @@ export type ActiviteType<T = ActivitesTypesId> = {
   delaiMois: number
   ordre: number
   description?: string
-  sections: {
-    id: string
-    nom?: string
-    elements?: {
-      id: string
-      nom?: string
-      type: string
-      dateDebut?: CaminoDate
-      dateFin?: CaminoDate
-      optionnel?: boolean
-      description?: string
-      valeurs?: {
-        id: string
-        nom: string
-      }[]
-      periodesIds?: number[]
-    }[]
-  }[]
+  sections: DeepReadonly<ActiviteSection[]>
 }
+
+export const isSubstancesFiscales = (section: DeepReadonly<ActiviteSection>): section is { id: 'substancesFiscales'; nom: string } => section.id === 'substancesFiscales'
+
+export type ActiviteSection = (Omit<Section, 'elements'> & { elements: ActiviteSectionElement[] }) | { id: 'substancesFiscales'; nom: string }
+export type ActiviteSectionElement = SectionsElement & { periodeId?: 1 | 2 | 3 | 4 }
 
 export const ActivitesTypes: {
   [key in ActivitesTypesId]: ActiviteType<key>
@@ -168,7 +158,7 @@ export const ActivitesTypes: {
             id: '1',
             nom: 'Janvier',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -191,13 +181,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1],
+            periodeId: 1,
           },
           {
             id: '2',
             nom: 'Février',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -220,13 +210,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1],
+            periodeId: 1,
           },
           {
             id: '3',
             nom: 'Mars',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -249,13 +239,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1],
+            periodeId: 1,
           },
           {
             id: '4',
             nom: 'Avril',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -278,13 +268,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2],
+            periodeId: 2,
           },
           {
             id: '5',
             nom: 'Mai',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -307,13 +297,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2],
+            periodeId: 2,
           },
           {
             id: '6',
             nom: 'Juin',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -336,13 +326,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2],
+            periodeId: 2,
           },
           {
             id: '7',
             nom: 'Juillet',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -365,13 +355,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3],
+            periodeId: 3,
           },
           {
             id: '8',
             nom: 'Août',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -394,13 +384,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3],
+            periodeId: 3,
           },
           {
             id: '9',
             nom: 'Septembre',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -423,13 +413,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3],
+            periodeId: 3,
           },
           {
             id: '10',
             nom: 'Octobre',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -452,13 +442,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4],
+            periodeId: 4,
           },
           {
             id: '11',
             nom: 'Novembre',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -481,13 +471,13 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4],
+            periodeId: 4,
           },
           {
             id: '12',
             nom: 'Décembre',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'nonDebutes',
                 nom: 'non débutés',
@@ -510,7 +500,7 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4],
+            periodeId: 4,
           },
         ],
       },
@@ -673,7 +663,7 @@ export const ActivitesTypes: {
             id: 'typeLevesMagnetisme',
             nom: 'Type de levés de magnétisme',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -684,7 +674,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'surfaceLevesSpectrometrie',
@@ -706,7 +695,7 @@ export const ActivitesTypes: {
             id: 'typeLevesSpectrometrie',
             nom: 'Type de levés de spectrométrie ',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -717,7 +706,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'surfaceLevesPolarisationProvoquee',
@@ -739,7 +727,7 @@ export const ActivitesTypes: {
             id: 'typeLevesPolarisationProvoquee',
             nom: 'Type de levés de polarisation provoquée ',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -750,7 +738,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'surfaceLevesSismiques',
@@ -772,7 +759,7 @@ export const ActivitesTypes: {
             id: 'typeLevesSismiques',
             nom: 'Type de levés sismiques',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -783,7 +770,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'surfaceLevesConductivite',
@@ -805,7 +791,7 @@ export const ActivitesTypes: {
             id: 'typeLevesConductivite',
             nom: 'Type de levés de conductivité',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -816,7 +802,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'surfaceLevesAutre',
@@ -838,7 +823,7 @@ export const ActivitesTypes: {
             id: 'typeLevesAutre',
             nom: "Type de levés par d'autres méthodes",
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'auSol',
                 nom: 'au sol',
@@ -849,7 +834,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
           },
           {
             id: 'complementLevesGeochimie',
@@ -1025,7 +1009,7 @@ export const ActivitesTypes: {
             id: 'listeTraitementMineralurgiques',
             nom: 'Nature des traitements minéralurgiques',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'analyseGranulometrie',
                 nom: 'analyse granulométrique',
@@ -1059,7 +1043,6 @@ export const ActivitesTypes: {
                 nom: 'autres',
               },
             ],
-            optionnel: true,
           },
           {
             id: 'complementAnalyses',
@@ -1079,7 +1062,7 @@ export const ActivitesTypes: {
             id: 'listeEtudes',
             nom: 'Nature des études effectués',
             type: 'checkboxes',
-            valeurs: [
+            options: [
               {
                 id: 'environnementale',
                 nom: 'environnementale',
@@ -1106,7 +1089,6 @@ export const ActivitesTypes: {
               },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true,
             description: 'Nature des études effectuées',
           },
           {

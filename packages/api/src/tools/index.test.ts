@@ -1,4 +1,4 @@
-import { objectsDiffer, dupRemove, dupFind, objectClone } from './index.js'
+import { objectsDiffer, dupFind, objectClone } from './index.js'
 import { describe, expect, test } from 'vitest'
 describe('comparaison entre des objets', () => {
   test('retourne false si les objets sont identiques (dates)', () => {
@@ -39,26 +39,6 @@ describe('comparaison entre des objets', () => {
 })
 
 describe('comparaison entre des tableaux', () => {
-  test('retourne un seul tableau en combinant les éléments', () => {
-    const res = dupRemove(
-      'id',
-      [
-        { id: 1, nom: 'nom-1' },
-        { id: 2, nom: 'nom-2' },
-      ],
-      [
-        { id: 1, nom: 'nom-1-bis' },
-        { id: 3, nom: 'nom-3' },
-      ]
-    )
-
-    expect(res).toEqual([
-      { id: 1, nom: 'nom-1' },
-      { id: 2, nom: 'nom-2' },
-      { id: 3, nom: 'nom-3' },
-    ])
-  })
-
   test('retourne un seul tableau en combinant les éléments en doublon', () => {
     const res = dupFind(
       'id',

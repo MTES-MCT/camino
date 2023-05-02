@@ -42,7 +42,6 @@ beforeAll(async () => {
     .andWhere('demarcheTypeId', 'oct')
     .andWhere('etapeTypeId', 'mfr')
     .first()) as TitresTypesDemarchesTypesEtapesTypes
-  mfrTDE!.sections!.find(s => s.id === 'arm')!.elements!.find(e => e.id === 'franchissements')!.optionnel = false
   await TitresTypesDemarchesTypesEtapesTypes.query().upsertGraph(mfrTDE)
 })
 
@@ -293,7 +292,7 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors[0].message).toMatchInlineSnapshot(`"impossible d’éditer la durée, l’élément \\"Franchissements de cours d'eau\\" de la section \\"Caractéristiques ARM\\" est obligatoire"`)
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(`"impossible d’éditer la durée"`)
   })
 
   test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {

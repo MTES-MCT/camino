@@ -24,7 +24,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
 
     const errorLabel = 'au moins une substance doit être renseignée'
 
@@ -49,7 +49,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
 
     const errorLabel = 'le périmètre doit comporter au moins 4 points'
     if (error) {
@@ -69,7 +69,6 @@ describe('valide l’étape avant de l’enregistrer', () => {
       titreEtape,
       'arm',
       'oct',
-      [],
       [
         { id: 'doe', optionnel: true, nom: 'doe' },
         { id: 'dep', optionnel: true, nom: 'doe' },
@@ -100,7 +99,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
 
     const errorLabel = 'la durée doit être renseignée'
 
@@ -112,7 +111,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
   })
 
   test("une ARM ou une AXM ne peuvent pas recevoir d'amodiataires", () => {
-    const titreDemarche = {} as unknown as ITitreDemarche
+    const titreDemarche = { typeId: 'oct' } as unknown as ITitreDemarche
 
     // ARM
     let titreEtape = {
@@ -137,7 +136,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     errors = titreEtapeUpdationValidate(currentDate, titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
     expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
-    // AXM
+    // // AXM
     titreEtape = {
       typeId: 'mfr',
       amodiataires: [],
