@@ -132,7 +132,7 @@ const actions = {
         value: `fichier téléchargé : ${document.fichierNouveau.name}`,
       })
     } else {
-      await dispatch('download', `/fichiers/${document.id}`)
+      await dispatch('download', `/download/fichiers/${document.id}`)
     }
   },
 
