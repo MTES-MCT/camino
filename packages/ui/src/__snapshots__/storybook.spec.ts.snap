@@ -8504,7 +8504,7 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
                     <use href=\\"#icon-pencil\\"></use>
                   </svg></button><button class=\\"btn py-s px-m my--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                     <use href=\\"#icon-delete\\"></use>
-                  </svg></button><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  </svg></button><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/download/fichiers/idDocument\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                     <use href=\\"#icon-download\\"></use>
                   </svg></a>
                 <!--v-if-->
@@ -8519,7 +8519,7 @@ exports[`Storybook Tests > 'Components/Entreprise' > 'Complet' 1`] = `
               <td class=\\"pt-m\\">Identification pelle mécanique</td>
               <td class=\\"flex text-right\\">
                 <!--v-if-->
-                <!--v-if--><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument2\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <!--v-if--><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/download/fichiers/idDocument2\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                     <use href=\\"#icon-download\\"></use>
                   </svg></a>
                 <!--v-if-->

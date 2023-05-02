@@ -37,7 +37,7 @@
           'rnd-r-xs': !document.url && !document.uri,
           'rnd-l-xs': !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
         }"
-        :href="`/apiUrl/fichiers/${document.id}`"
+        :href="`/apiUrl/download/fichiers/${document.id}`"
         :download="document.nom"
         target="_blank"
       >

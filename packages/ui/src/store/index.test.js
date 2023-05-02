@@ -286,7 +286,7 @@ describe("état général de l'application", () => {
 
     await store.dispatch('downloadDocument', { id: 'toot' })
 
-    expect(fileSaver.saveAs).toHaveBeenCalledWith('/apiUrl/fichiers/toot')
+    expect(fileSaver.saveAs).toHaveBeenCalledWith('/apiUrl/download/fichiers/toot')
     expect(messageAddMock).toHaveBeenCalled()
     expect(state.loading).toEqual([])
   })
