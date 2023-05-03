@@ -1,4 +1,4 @@
-import { ITitre, IGeoJson, IFields } from '../../types.js'
+import { ITitre, IGeoJson, IFields, ITitreDemarche } from '../../types.js'
 
 import { geojsonFeatureMultiPolygon, geojsonFeatureCollectionPoints } from '../../tools/geojson.js'
 
@@ -19,11 +19,13 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
       titreStatutId: t.titreStatutId,
+      typeId: t.typeId,
       type: t.type,
       points: t.points,
       secteursMaritime: t.secteursMaritime,
       forets: t.forets,
       communes: t.communes,
+      demarches: [] as ITitreDemarche[],
     } as ITitre
   }
 

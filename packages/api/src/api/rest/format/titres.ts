@@ -71,14 +71,14 @@ export const titresTableFormat = (titres: ITitre[]) =>
       departements: departements.join(separator),
       regions: regions.join(separator),
       administrations_noms: titre.administrations!.map(id => Administrations[id].nom).join(separator),
-      titulaires_noms: titre.titulaires!.map(e => e.nom).join(separator),
-      titulaires_adresses: titre.titulaires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
-      titulaires_legal: titre.titulaires!.map(e => e.legalEtranger || e.legalSiren).join(separator),
-      titulaires_categorie: titre.titulaires!.map(e => e.categorie).join(separator),
-      amodiataires_noms: titre.amodiataires!.map(e => e.nom).join(separator),
-      amodiataires_adresses: titre.amodiataires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
-      amodiataires_legal: titre.amodiataires!.map(e => e.legalEtranger || e.legalSiren).join(separator),
-      amodiataires_categorie: titre.amodiataires!.map(e => e.categorie).join(separator),
+      titulaires_noms: titre.titulaires?.map(e => e.nom).join(separator),
+      titulaires_adresses: titre.titulaires?.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
+      titulaires_legal: titre.titulaires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
+      titulaires_categorie: titre.titulaires?.map(e => e.categorie).join(separator),
+      amodiataires_noms: titre.amodiataires?.map(e => e.nom).join(separator),
+      amodiataires_adresses: titre.amodiataires?.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
+      amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
+      amodiataires_categorie: titre.amodiataires?.map(e => e.categorie).join(separator),
       geojson: JSON.stringify(titre.geojsonMultiPolygon),
       ...titreReferences,
       ...titreContenuTableFormat(titre),
@@ -130,7 +130,7 @@ const getTitreDates = (titre: Pick<ITitre, 'demarches'>): { dateDebut: CaminoDat
   return {
     dateDebut: sortedDemarches.find(demarche => !!demarche.demarcheDateDebut)?.demarcheDateDebut ?? null,
     dateFin: sortedDemarches.reverse().find(demarche => demarche.demarcheDateDebut)?.demarcheDateFin ?? null,
-    dateDemande: titreDateDemandeFind(titre.demarches!),
+    dateDemande: titreDateDemandeFind(sortedDemarches),
   }
 }
 
