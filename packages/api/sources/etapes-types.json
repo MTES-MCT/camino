@@ -277,21 +277,6 @@
     "id": "dae",
     "nom": "décision de la mission autorité environnementale (examen au cas par cas du projet)",
     "ordre": 9,
-    "sections": [
-      {
-        "id": "mea",
-        "nom": "Mission autorité environnementale",
-        "elements": [
-          {
-            "id": "arrete",
-            "nom": "Arrêté préfectoral",
-            "type": "text",
-            "optionnel": true,
-            "description": "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière"
-          }
-        ]
-      }
-    ],
     "public_lecture": true,
     "entreprises_lecture": true
   },
@@ -371,56 +356,12 @@
     "id": "ede",
     "nom": "expertise DREAL ou DGTM service eau",
     "description": "Instruction de demande sur la réglementation ayant trait à l’eau par les services de la DGTM.\n",
-    "ordre": 56,
-    "sections": [
-      {
-        "id": "deal",
-        "nom": "DEAL service eau",
-        "elements": [
-          {
-            "id": "motifs",
-            "nom": "Motifs",
-            "type": "textarea",
-            "optionnel": true,
-            "description": "élément d'expertise"
-          },
-          {
-            "id": "agent",
-            "nom": "Agent",
-            "type": "text",
-            "optionnel": true,
-            "description": "Prénom et nom de l'agent chargé de l'expertise"
-          }
-        ]
-      }
-    ]
+    "ordre": 56
   },
   {
     "id": "edm",
     "nom": "expertise DGTM service prévention des risques et industries extractives (DATE)",
-    "ordre": 57,
-    "sections": [
-      {
-        "id": "deal",
-        "nom": "DEAL service mines",
-        "elements": [
-          {
-            "id": "motifs",
-            "nom": "Motifs",
-            "type": "textarea",
-            "optionnel": true,
-            "description": "élément d'expertise"
-          },
-          {
-            "id": "agent",
-            "nom": "Agent",
-            "type": "text",
-            "optionnel": true,
-            "description": "Prénom et nom de l'agent chargé de l'expertise"
-          }
-        ]
-      }
-    ]
+    "ordre": 57
   },
   {
     "id": "eof",
@@ -476,28 +417,6 @@
     "nom": "demande de compléments (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 20,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -505,28 +424,6 @@
     "nom": "demande de compléments (récépissé de déclaration loi sur l'eau)",
     "description": "après une rde",
     "ordre": 19,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -534,28 +431,6 @@
     "nom": "demande de compléments (décision de la mission autorité environnementale (examen au cas par cas du projet)",
     "description": "après une dae",
     "ordre": 18,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -563,28 +438,6 @@
     "nom": "demande de compléments (complétude de la demande)",
     "description": "après une mcp",
     "ordre": 17,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -592,28 +445,6 @@
     "nom": "demande de compléments",
     "description": "Étape à l'initiative du service instructeur qui demande des compléments au demandeur et lui fixe un délai maximum pour les transmettre. Cette étape interrompt le décompte du délai dans lequel une décision doit être prise. Cette demande doit faire l'objet d'une lettre recommandée avec demande d'accusé de réception.",
     "ordre": 16,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -636,28 +467,6 @@
     "nom": "demande de compléments (saisine de la CARM)",
     "description": "après une sca",
     "ordre": 21,
-    "sections": [
-      {
-        "id": "mcox",
-        "nom": "Gestion de la demande de compléments",
-        "elements": [
-          {
-            "id": "delaifixe",
-            "nom": "Délai fixé (jour)",
-            "type": "number",
-            "optionnel": true,
-            "description": "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
-          },
-          {
-            "id": "datear",
-            "nom": "Accusé de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -748,21 +557,6 @@
     "nom": "notification au demandeur (ajournement de la CARM)",
     "description": "après une aca ajournée",
     "ordre": 114,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception de la notification"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -770,21 +564,6 @@
     "nom": "notification au demandeur (avis favorable de la CARM)",
     "description": "après une aca favorable",
     "ordre": 115,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -792,21 +571,6 @@
     "nom": "notification au demandeur (classement sans suite)",
     "description": "après une css",
     "ordre": 116,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -814,21 +578,6 @@
     "nom": "notification au demandeur (avis défavorable)",
     "description": "après une aca défavorable",
     "ordre": 117,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -836,21 +585,6 @@
     "nom": "notification au demandeur (initiation de la démarche de retrait)",
     "description": "après une ide",
     "ordre": 120,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -858,21 +592,6 @@
     "nom": "notification au demandeur",
     "description": "Notification de la décision au demandeur.",
     "ordre": 113,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -880,21 +599,6 @@
     "nom": "notification au demandeur (signature de l’autorisation de recherche minière)",
     "description": "après une sco",
     "ordre": 118,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -902,21 +606,6 @@
     "nom": "notification au demandeur (signature de l'avenant à l’autorisation de recherche minière)",
     "description": "après une aco",
     "ordre": 119,
-    "sections": [
-      {
-        "id": "suivi",
-        "nom": "Suivi de la démarche",
-        "elements": [
-          {
-            "id": "dateReception",
-            "nom": "Date de réception",
-            "type": "date",
-            "optionnel": true,
-            "description": "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -949,43 +638,13 @@
     "id": "nis",
     "nom": "note interne signalée",
     "description": "Note confidentielle qui permet de faire connaître au sein de l'administration un certain nombre d'informations importantes. \n",
-    "ordre": 136,
-    "sections": [
-      {
-        "id": "nisi",
-        "nom": "Note interne signalée",
-        "elements": [
-          {
-            "id": "note",
-            "nom": "Notes réservées à l'administration",
-            "type": "textarea",
-            "optionnel": true,
-            "description": "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche"
-          }
-        ]
-      }
-    ]
+    "ordre": 136
   },
   {
     "id": "npp",
     "nom": "notification au préfet",
     "description": "Note au préfet demandant de notifier la décision à l’intéressé et de prendre les mesures de publicité nécessaires.",
-    "ordre": 107,
-    "sections": [
-      {
-        "id": "nppx",
-        "nom": "Note au préfet",
-        "elements": [
-          {
-            "id": "info",
-            "nom": "Informations complémentaires",
-            "type": "textarea",
-            "optionnel": true,
-            "description": "Informations complémentaires accompagnant la notification de la décision au préfet"
-          }
-        ]
-      }
-    ]
+    "ordre": 107
   },
   {
     "id": "pfc",
@@ -993,28 +652,6 @@
     "description": "Supplément de frais de dossier concernant uniquement les ARM mécanisées car elles nécessitent une expertise complémentaire (état des lieux par imagerie).\n",
     "ordre": 122,
     "unique": true,
-    "sections": [
-      {
-        "id": "paiement",
-        "nom": "Informations sur le paiement",
-        "elements": [
-          {
-            "id": "fraisComplementaires",
-            "nom": "Frais de dossier complémentaires",
-            "type": "number",
-            "optionnel": true,
-            "description": "Montant en euro des frais de dossier complémentaires payés"
-          },
-          {
-            "id": "virement",
-            "nom": "Virement banquaire ou postal",
-            "type": "text",
-            "optionnel": true,
-            "description": "Référence communiquée par le demandeur à sa banque"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -1022,28 +659,6 @@
     "nom": "paiement des frais de dossier",
     "ordre": 13,
     "unique": true,
-    "sections": [
-      {
-        "id": "paiement",
-        "nom": "Informations sur le paiement",
-        "elements": [
-          {
-            "id": "frais",
-            "nom": "Frais de dossier",
-            "type": "number",
-            "optionnel": true,
-            "description": "Montant en euro des frais de dossier payés"
-          },
-          {
-            "id": "virement",
-            "nom": "Virement banquaire ou postal",
-            "type": "text",
-            "optionnel": true,
-            "description": "Référence communiquée par le demandeur à sa banque"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -1133,41 +748,6 @@
     "nom": "récépissé de déclaration loi sur l'eau",
     "description": "Document nécessaire à l’utilisation de l’eau dans le cas d’une autorisation de recherches minières (ARM).",
     "ordre": 43,
-    "sections": [
-      {
-        "id": "arm",
-        "nom": "Caractéristiques ARM",
-        "elements": [
-          {
-            "id": "franchissements",
-            "nom": "Franchissements de cours d'eau",
-            "type": "integer",
-            "optionnel": false,
-            "description": "Nombre de franchissements de cours d'eau"
-          }
-        ]
-      },
-      {
-        "id": "deal",
-        "nom": "DEAL",
-        "elements": [
-          {
-            "id": "numero-dossier-deal-eau",
-            "nom": "Numéro de dossier",
-            "type": "text",
-            "optionnel": true,
-            "description": "Numéro de dossier DEAL Service eau"
-          },
-          {
-            "id": "numero-recepisse",
-            "nom": "Numéro de récépissé",
-            "type": "text",
-            "optionnel": true,
-            "description": "Numéro de récépissé émis par la DEAL Service eau"
-          }
-        ]
-      }
-    ],
     "public_lecture": true,
     "entreprises_lecture": true
   },
@@ -1304,21 +884,6 @@
     "description": "Validation par la direction générale des territoires et des mines (DGTM).",
     "ordre": 123,
     "unique": true,
-    "sections": [
-      {
-        "id": "paiement",
-        "nom": "Informations sur le paiement",
-        "elements": [
-          {
-            "id": "facture",
-            "nom": "Facture ONF",
-            "type": "text",
-            "optionnel": true,
-            "description": "Numéro de facture émise par l'ONF"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {
@@ -1327,21 +892,6 @@
     "description": "Acte attestant que le pétitionnaire d’une autorisation de recherches minières (ARM) a acquitté ses frais de dossier.\n",
     "ordre": 46,
     "unique": true,
-    "sections": [
-      {
-        "id": "paiement",
-        "nom": "Informations sur le paiement",
-        "elements": [
-          {
-            "id": "facture",
-            "nom": "Facture ONF",
-            "type": "text",
-            "optionnel": true,
-            "description": "Numéro de facture émise par l'ONF"
-          }
-        ]
-      }
-    ],
     "entreprises_lecture": true
   },
   {

@@ -38,7 +38,6 @@ const fragmentHeritageEtape = gql`
     type {
       id
       nom
-      sections
     }
     statutId
     titulaires {
@@ -112,7 +111,6 @@ const fragmentTitreEtape = gql`
     type {
       id
       nom
-      sections
       documentsTypes {
         ...documentType
       }
@@ -184,7 +182,6 @@ const fragmentEtapeHeritage = gql`
     type {
       id
       nom
-      sections
       documentsTypes {
         ...documentType
       }
@@ -250,7 +247,6 @@ const fragmentEtape = gql`
     type {
       id
       nom
-      sections
       documentsTypes {
         ...documentType
       }

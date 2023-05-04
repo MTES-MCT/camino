@@ -1,10 +1,7 @@
-import { IDemarcheType, ISection, ITitre, ITitreEtape } from '../../types.js'
+import { IDemarcheType, ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
-
-import { dupRemove } from '../../tools/index.js'
-import { titreSectionsFormat } from './titres-sections.js'
 
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
@@ -13,25 +10,6 @@ import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.j
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-
-export const etapeTypeSectionsFormat = (sections: ISection[] | undefined | null, sectionsSpecifiques: ISection[] | undefined | null) => {
-  let result: ISection[] = []
-
-  if (sectionsSpecifiques?.length) {
-    result.push(...sectionsSpecifiques)
-  }
-
-  // fusion des sections par défaut de l'étape type
-  // avec les sections spécifiques au type / démarche / étape
-  // si deux sections ont la même id, seule la custom est conservée
-  if (result.length && sections?.length) {
-    result = dupRemove('id', result, sections) as ISection[]
-  } else if (sections?.length) {
-    result = sections
-  }
-
-  return titreSectionsFormat(result)
-}
 
 export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
@@ -62,16 +40,9 @@ export interface DocumentTypeData {
   etapeTypeId: EtapeTypeId
 }
 
-export const etapeTypeFormat = (
-  etape: ITitreEtape,
-  sectionsSpecifiques: ISection[] | null | undefined,
-  justificatifsTypesSpecifiques: DocumentType[] | null | undefined,
-  documentTypeData: DocumentTypeData | null = null
-) => {
+export const etapeTypeFormat = (etape: ITitreEtape, justificatifsTypesSpecifiques: DocumentType[] | null | undefined, documentTypeData: DocumentTypeData | null = null) => {
   const etapeType = etape.type
   if (etapeType) {
-    etapeType.sections = etapeTypeSectionsFormat(etapeType.sections, sectionsSpecifiques)
-
     if (documentTypeData === null) {
       const typeId = etape?.demarche?.titre?.typeId
       if (!typeId) {

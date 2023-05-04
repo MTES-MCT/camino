@@ -50,7 +50,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
       ...titres.reduce((acc: ITitreActivite[], titre) => {
         if (!titreActiviteTypeCheck(activiteType, titre)) return acc
 
-        acc.push(...titreActivitesBuild(activiteType, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
+        acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 
         return acc
       }, [])

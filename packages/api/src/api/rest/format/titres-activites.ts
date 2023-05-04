@@ -1,10 +1,12 @@
-import { IContenu, IContenuValeur, Index, ISection, ITitreActivite } from '../../../types.js'
+import { IContenu, IContenuValeur, Index, ITitreActivite } from '../../../types.js'
 import { isSubstanceFiscale, SubstancesFiscale } from 'camino-common/src/static/substancesFiscales.js'
 import { UniteId, Unites } from 'camino-common/src/static/unites.js'
 import { getPeriode } from 'camino-common/src/static/frequence.js'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
-const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
+const titreActiviteContenuFormat = (contenu: IContenu, sections: DeepReadonly<Section[]>) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
     const r = section.elements!.reduce((resElements: Index<IContenuValeur>, element) => {
       let key = `${section.id}_${element.id}`

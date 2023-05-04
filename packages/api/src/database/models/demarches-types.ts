@@ -38,7 +38,6 @@ class DemarchesTypes extends Model {
           extra: {
             ordre: 'ordre',
             titreTypeId: 'titreTypeId',
-            sectionsSpecifiques: 'sections',
           },
         },
         to: 'etapesTypes.id',

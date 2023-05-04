@@ -1,13 +1,12 @@
-import { IDemarcheType, IEtapeType, ITitre, ITitreTypeDemarcheTypeEtapeType } from '../../src/types.js'
+import { IDemarcheType, IEtapeType, ITitre } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
-import { etapeTypeGet, titreTypeDemarcheTypeEtapeTypeGet } from '../../src/database/queries/metas.js'
+import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
-import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types.js'
 import { idGenerate, newDemarcheId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -19,6 +18,7 @@ import { expect } from 'vitest'
 import { AdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import type { Pool } from 'pg'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -138,16 +138,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 
     const demarcheType = (await DemarchesTypes.query().withGraphFetched(options.demarchesTypes.graph).findById(demarcheCreated.body.data.demarcheCreer.demarches[0].typeId)) as IDemarcheType
 
-    const tde = (await titreTypeDemarcheTypeEtapeTypeGet(
-      {
-        titreTypeId,
-        demarcheTypeId: demarcheType.id,
-        etapeTypeId: etapeType.id,
-      },
-      { fields: { id: {} } }
-    )) as ITitreTypeDemarcheTypeEtapeType
-
-    const sections = etapeTypeSectionsFormat(etapeType.sections, tde.sections)
+    const sections = getSections(titreTypeId, demarcheType.id, etapeType.id)
 
     const heritageContenu = sections.reduce((acc, section) => {
       if (!acc[section.id]) {

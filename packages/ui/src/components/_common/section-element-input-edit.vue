@@ -71,7 +71,7 @@ export default {
 
   computed: {
     valeurs() {
-      return this.element.valeurs
+      return this.element.options
     },
 
     masseGranulatsExtraitValeur() {

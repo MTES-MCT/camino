@@ -37,8 +37,8 @@
         <hr class="mx--" />
       </div>
 
-      <div v-if="etape.type.sections?.length">
-        <UiSection v-for="s in etape.type.sections" :key="s.id" :section="s" :contenu="etape.contenu ? etape.contenu[s.id] : {}" :date="etape.date" @file-download="fileDownload($event)" />
+      <div v-if="sections?.length">
+        <UiSection v-for="s in sections" :key="s.id" :section="s" :contenu="etape.contenu ? etape.contenu[s.id] : {}" :date="etape.date" @file-download="fileDownload($event)" />
 
         <hr class="mx--" />
       </div>
@@ -117,6 +117,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export default {
   components: {
@@ -180,7 +181,7 @@ export default {
     },
 
     hasSections() {
-      return !!this.etape.type.sections?.length
+      return !!this.sections?.length
     },
 
     hasDocuments() {
@@ -229,6 +230,14 @@ export default {
         { typeId: this.titreTypeId, titreStatutId: this.titreStatutId },
         'modification'
       )
+    },
+
+    sections() {
+      try {
+        return getSections(this.titreTypeId, this.demarcheTypeId, this.etape.type.id)
+      } catch (e) {
+        return []
+      }
     },
   },
 

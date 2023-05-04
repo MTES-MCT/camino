@@ -2,7 +2,7 @@ import { FileUpload } from 'graphql-upload'
 import { ReadStream } from 'fs'
 import { afterEach, vi, describe, test, expect } from 'vitest'
 
-import { IContenu, ISection, ITitreEtape } from '../../types.js'
+import { IContenu, ITitreEtape } from '../../types.js'
 
 import { contenuElementFilesCreate, contenuElementFilesDelete, sectionsContenuAndFilesGet } from './contenu-element-file-process.js'
 
@@ -10,6 +10,8 @@ import { objectClone } from '../../tools/index.js'
 import dirCreate from '../../tools/dir-create.js'
 import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -113,7 +115,7 @@ describe('contenuElementFileProcess', () => {
   })
 
   test('supprime les anciens fichiers sur le disque', async () => {
-    const sections: ISection[] = [
+    const sections: DeepReadonly<Section[]> = [
       {
         id: 'arm',
         elements: [

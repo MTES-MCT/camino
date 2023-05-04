@@ -12,13 +12,12 @@ class ActivitesTypes extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['id', 'nom', 'sections', 'frequenceId'],
+    required: ['id', 'nom', 'frequenceId'],
 
     properties: {
       id: { type: 'string', maxLength: 3 },
       nom: { type: 'string' },
       description: { type: ['string', 'null'] },
-      sections: {},
       frequenceId: { type: 'string', maxLength: 3 },
       dateDebut: { type: 'string' },
       delaiMois: { type: 'integer' },

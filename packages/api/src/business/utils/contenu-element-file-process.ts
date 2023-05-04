@@ -2,13 +2,15 @@ import { FileUpload } from 'graphql-upload'
 import cryptoRandomString from 'crypto-random-string'
 import { join } from 'path'
 
-import { IContenu, IContenuValeur, IDocumentRepertoire, ISection, ISectionElement, ITitreEtape } from '../../types.js'
+import { IContenu, IContenuValeur, IDocumentRepertoire, ITitreEtape } from '../../types.js'
 
 import dirCreate from '../../tools/dir-create.js'
 import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
+import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
-const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: ISectionElement) => {
+const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: DeepReadonly<SectionsElement>) => {
   const newFiles = [] as FileUpload[]
   let newValue = contenuValeur as IContenuValeur | null
 
@@ -30,7 +32,7 @@ const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, section
   return { newValue, newFiles }
 }
 
-const sectionsContenuAndFilesGet = (contenu: IContenu | undefined | null, sections: ISection[]) => {
+const sectionsContenuAndFilesGet = (contenu: IContenu | undefined | null, sections: DeepReadonly<Section[]>) => {
   const newFiles = [] as FileUpload[]
   if (contenu) {
     Object.keys(contenu)
@@ -59,7 +61,7 @@ const sectionsContenuAndFilesGet = (contenu: IContenu | undefined | null, sectio
   return { contenu, newFiles }
 }
 
-const contenuFilesGet = (contenu: IContenu | null | undefined, sections: ISection[]) => {
+const contenuFilesGet = (contenu: IContenu | null | undefined, sections: DeepReadonly<Section[]>) => {
   const files = [] as string[]
   if (contenu) {
     sections
@@ -76,7 +78,7 @@ const contenuFilesGet = (contenu: IContenu | null | undefined, sections: ISectio
   return files
 }
 
-const sectionElementFilesGet = (sectionElement: ISectionElement, contenuValeur: IContenuValeur | null) => {
+const sectionElementFilesGet = (sectionElement: DeepReadonly<SectionsElement>, contenuValeur: IContenuValeur | null) => {
   const files = [] as string[]
   if (sectionElement.type === 'file') {
     if (contenuValeur) {
@@ -107,7 +109,7 @@ const contenuElementFilesCreate = async (newFiles: FileUpload[], repertoire: IDo
 const contenuElementFilesDelete = async (
   repertoire: IDocumentRepertoire,
   parentId: string,
-  sections: ISection[],
+  sections: DeepReadonly<Section[]>,
   contenuGet: (etape: ITitreEtape) => IContenu | null | undefined,
   etapes?: ITitreEtape[] | null,
   oldContenu?: IContenu | null

@@ -1,9 +1,11 @@
 import { CaminoDate, toCaminoDate } from '../../date.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
-import { ETAPES_TYPES, EtapeTypeId } from './../etapesTypes.js'
+import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
 import { TDEType } from './index.js'
-import { DeepReadonly, isNotNullNorUndefined } from '../../typescript-tools.js'
+import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../typescript-tools.js'
+import { UniteId, UNITES } from '../unites.js'
+import { sortedDevises } from '../devise.js'
 
 const gestionDeLaDemandeDeComplements: Section[] = [
   {
@@ -861,15 +863,15 @@ const TDESections = {
 export interface Section {
   id: string
   nom?: string
-  elements: SectionsElement[]
+  elements: readonly SectionsElement[]
 }
 
 export type BasicElement = {
   id: string
   nom?: string
   description?: string
-  dateDebut?: CaminoDate
-  dateFin?: CaminoDate
+  dateDebut?: DeepReadonly<CaminoDate>
+  dateFin?: DeepReadonly<CaminoDate>
   optionnel?: boolean
 }
 
@@ -887,16 +889,26 @@ export type TextElement = {
 
 export type NumberElement = {
   type: 'number' | 'integer'
+  uniteId?: UniteId
 } & BasicElement
 
 export type RadioElement = {
   type: 'radio' | 'checkbox'
+  optionnel?: false
 } & BasicElement
 
 export type CheckboxesElement = {
   type: 'checkboxes'
   options: { id: string; nom: string }[]
+  optionnel?: false
 } & BasicElement
+
+const isSelectElementWithMetas = (
+  element: DeepReadonly<SelectElement>
+): element is BasicElement & {
+  type: 'select'
+  valeursMetasNom: 'devises' | 'unites'
+} => 'valeursMetasNom' in element
 
 export type SelectElement = {
   type: 'select'
@@ -916,7 +928,7 @@ const isEtapesTypesEtapesTypesSections = (etapeTypeId?: EtapeTypeId): etapeTypeI
   return Object.keys(EtapesTypesSections).includes(etapeTypeId)
 }
 
-export const getSections = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DeepReadonly<Section>[] => {
+export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheId: DemarcheTypeId | undefined, etapeTypeId: EtapeTypeId | undefined): DeepReadonly<Section[]> => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
     const sections: DeepReadonly<Section>[] = []
 
@@ -936,4 +948,19 @@ export const getSections = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheType
   } else {
     throw new Error(`il manque des éléments pour trouver les sections titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }
+}
+
+export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: string; nom: string }[] => {
+  if (isSelectElementWithMetas(element)) {
+    switch (element.valeursMetasNom) {
+      case 'devises':
+        return sortedDevises
+      case 'unites':
+        return UNITES
+      default:
+        exhaustiveCheck(element.valeursMetasNom)
+    }
+  }
+
+  return []
 }

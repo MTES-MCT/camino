@@ -1,11 +1,11 @@
-import { ITitreActivite, ISection, IContenu } from '../../types.js'
-
-import { titreSectionsFormat } from './titres-sections.js'
-
+import { ITitreActivite, IContenu } from '../../types.js'
 import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Unites } from 'camino-common/src/static/unites.js'
 
-export const titreActiviteContenuFormat = (sections: ISection[], contenu: IContenu, operation: 'read' | 'write') => {
+export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu, operation: 'read' | 'write') => {
   const section = sections.find(s => s.id === 'substancesFiscales')
 
   if (section?.elements?.length && contenu?.substancesFiscales) {
@@ -13,10 +13,12 @@ export const titreActiviteContenuFormat = (sections: ISection[], contenu: IConte
 
     substancesFiscalesIds.forEach(id => {
       const element = section!.elements!.find(e => e.id === id)
-      const ratio = element?.referenceUniteRatio
 
-      if (ratio) {
-        contenu!.substancesFiscales[id] = operation === 'read' ? (contenu!.substancesFiscales[id] as number) / ratio : (contenu!.substancesFiscales[id] as number) * ratio
+      if (element && (element.type === 'integer' || element.type === 'number') && element.uniteId) {
+        const ratio = Unites[element.uniteId].referenceUniteRatio
+        if (ratio) {
+          contenu!.substancesFiscales[id] = operation === 'read' ? (contenu!.substancesFiscales[id] as number) / ratio : (contenu!.substancesFiscales[id] as number) * ratio
+        }
       }
     })
   }
@@ -25,11 +27,6 @@ export const titreActiviteContenuFormat = (sections: ISection[], contenu: IConte
 }
 
 export const titreActiviteFormat = (ta: ITitreActivite) => {
-  // si les sections contiennent des élements sur cette activité
-  if (ta.sections?.length) {
-    ta.sections = titreSectionsFormat(ta.sections)
-  }
-
   if (ta.contenu) {
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
   }

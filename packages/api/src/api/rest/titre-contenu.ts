@@ -2,6 +2,9 @@ import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
 import { Section } from 'camino-common/src/titres.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
 /**
  * @deprecated utiliser titreSectionsGet
@@ -48,12 +51,15 @@ export const contenuFormat = ({
   return contenu
 }
 export const titreSectionsGet = ({
+  typeId,
   demarches,
   contenusTitreEtapesIds,
 }: {
+  typeId: TitreTypeId
   demarches?:
     | {
-        etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type' | 'sectionsSpecifiques'>[] | undefined | null
+        typeId: DemarcheTypeId
+        etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'typeId'>[] | undefined | null
       }[]
     | null
     | undefined
@@ -66,28 +72,6 @@ export const titreSectionsGet = ({
   if (!contenusTitreEtapesIds || !demarches) {
     return []
   }
-
-  demarches.forEach(demarche =>
-    demarche.etapes?.forEach(etape => {
-      if (!etape.type) {
-        throw new Error('le type d’étape doit être chargé')
-      }
-
-      if (etape.sectionsSpecifiques) {
-        const etapeTypeSections = etape.type.sections
-
-        const aggregateSections = etape.sectionsSpecifiques
-        if (etapeTypeSections?.length) {
-          etapeTypeSections.forEach(s => {
-            if (etape.sectionsSpecifiques?.every(({ id }) => id !== s.id)) {
-              aggregateSections.push(s)
-            }
-          })
-        }
-        etape.type.sections = aggregateSections
-      }
-    })
-  )
 
   const sections: Section[] = []
 
@@ -105,8 +89,9 @@ export const titreSectionsGet = ({
                 // sinon, si l'étape correspond à l'id de `contenusTitreEtapesIds`
                 // et que l'étape n'a ni contenu ni section ni l'élément qui nous intéresse
                 // on ne cherche pas plus loin
-                if (etape.contenu && etape.contenu[sectionId] && etape.contenu[sectionId][elementId] !== undefined && etape.type?.sections) {
-                  const etapeSection = etape.type.sections.find(s => s.id === sectionId)
+                const etapeSections = getSections(typeId, d.typeId, etape.typeId)
+                if (etape.contenu && etape.contenu[sectionId] && etape.contenu[sectionId][elementId] !== undefined && etapeSections?.length) {
+                  const etapeSection = etapeSections.find(s => s.id === sectionId)
 
                   if (etapeSection && etapeSection.elements) {
                     const etapeElement = etapeSection.elements.find(e => e.id === elementId)

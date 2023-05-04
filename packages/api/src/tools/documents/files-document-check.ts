@@ -4,7 +4,7 @@ import { matchFuzzy } from './_utils.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { contenuFilesGet } from '../../business/utils/contenu-element-file-process.js'
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 const etapeGet = (str: string) => str.split('-').slice(0, -1).join('-')
 
@@ -20,9 +20,12 @@ const contenuFilesCheck = async (filePath: string) => {
   if (repertoire !== 'demarches') {
     return false
   }
-  const etape = await titreEtapeGet(etapeId, { fields: { type: { id: {} } } }, userSuper)
+  const etape = await titreEtapeGet(etapeId, { fields: { demarche: { titre: { id: {} } } } }, userSuper)
   if (etape) {
-    const sections = etapeTypeSectionsFormat(etape.type!.sections, etape.sectionsSpecifiques)
+    if (!etape.demarche || !etape.demarche.titre) {
+      throw new Error('le titre et la démarche doivent être chargés')
+    }
+    const sections = getSections(etape.demarche.titre.typeId, etape.demarche.typeId, etape.typeId)
     const contenuFiles = contenuFilesGet(etape.contenu, sections)
 
     if (contenuFiles.includes(fileName)) {

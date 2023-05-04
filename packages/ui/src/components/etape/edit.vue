@@ -38,13 +38,7 @@
     </Accordion>
 
     <Accordion v-if="stepSections" id="step-sections" :step="stepSections" :opened="opened['sections']" :complete="stepSectionsComplete" :enConstruction="enConstruction" @toggle="toggle('sections')">
-      <SectionsEdit
-        :etape="etape"
-        :sections="etape.type.sections"
-        @update:etape="newValue => $emit('update:etape', newValue)"
-        @complete-update="sectionsCompleteUpdate"
-        @sections-update="sectionsUpdate"
-      />
+      <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
     </Accordion>
 
     <Accordion
@@ -111,6 +105,7 @@ import DocumentsEdit from '../document/multi-edit.vue'
 import JustificatifsEdit from './justificatifs-edit.vue'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { etapeApiClient } from './etape-api-client'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 export default {
   components: {
@@ -258,7 +253,7 @@ export default {
         })
       }
 
-      if (this.heritageLoaded && this.etape.type.sections?.length) {
+      if (this.heritageLoaded && this.sections?.length) {
         steps.push({ id: 'sections', name: 'Propriétés spécifiques' })
       }
 
@@ -317,6 +312,14 @@ export default {
 
     userIsAdmin() {
       return this.$store.getters['user/userIsAdmin']
+    },
+
+    sections() {
+      try {
+        return getSections(this.titreTypeId, this.demarcheTypeId, this.etapeType.id)
+      } catch (e) {
+        return []
+      }
     },
   },
 

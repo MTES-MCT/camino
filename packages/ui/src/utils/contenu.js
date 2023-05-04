@@ -49,7 +49,7 @@ const contenuCompleteCheck = (sections, contenu) =>
 /**
  * @deprecated voir la nouvelle méthode dans common/src/titres.ts
  */
-const valeurFind = ({ id, type, valeurs }, contenu) => {
+const valeurFind = ({ id, type, options }, contenu) => {
   if (contenu[id] === undefined || contenu[id] === '') {
     return '–'
   }
@@ -61,7 +61,7 @@ const valeurFind = ({ id, type, valeurs }, contenu) => {
   if (type === 'checkboxes') {
     return contenu[id]
       .map(id => {
-        const valeur = valeurs.find(e => e.id === id)
+        const valeur = options.find(e => e.id === id)
         return valeur ? valeur.nom : undefined
       })
       .filter(valeur => !!valeur)
@@ -69,7 +69,7 @@ const valeurFind = ({ id, type, valeurs }, contenu) => {
   }
 
   if (type === 'select') {
-    return valeurs.find(v => v.id === contenu[id])?.nom
+    return options.find(v => v.id === contenu[id])?.nom
   }
 
   if (type === 'date') {
