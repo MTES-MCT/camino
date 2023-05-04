@@ -1,15 +1,13 @@
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
-import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas.js'
 import { userSuper } from '../../database/user-super.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 
 export const etapeStatutCheck = async () => {
   console.info()
   console.info('- - -')
   console.info('vérification des statuts des étapes en bdd')
   console.info()
-
-  const tde = await titresTypesDemarchesTypesEtapesTypesGet()
 
   const etapes = await titresEtapesGet(
     {},
@@ -25,20 +23,11 @@ export const etapeStatutCheck = async () => {
   let errorsNb = 0
 
   etapes.forEach(etape => {
-    const tdeExists = !!tde.find(t => t.titreTypeId === etape.demarche!.titre!.typeId && t.demarcheTypeId === etape.demarche!.typeId && t.etapeTypeId === etape.typeId)
+    const tdeExists = isTDEExist(etape.demarche!.titre!.typeId, etape.demarche!.typeId, etape.typeId)
     const etapesStatuts = getEtapesStatuts(etape.typeId)
 
     if (tdeExists && !etapesStatuts!.map(es => es.id).includes(etape.statutId)) {
       console.info(`erreur sur le titre https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, étape « ${etape.type!.nom} » a un statut inconnu`)
-      // console.infos(
-      //   `https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, ${
-      //     etape.demarche!.type!.nom
-      //   }, ${etape.type!.nom} (${etape.typeId}),${etape.statut!.nom} (${
-      //     etape.statutId
-      //   }),${etape
-      //     .type!.etapesStatuts!.map(s => `${s.nom} (${s.id})`)
-      //     .join(' | ')}`
-      // )
       errorsNb++
     }
   })

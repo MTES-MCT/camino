@@ -20,6 +20,9 @@ import { logsUpdate } from './_logs-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresActivitesRelanceSend } from './processes/titres-activites-relance-send.js'
 import type { Pool } from 'pg'
+import { demarchesDefinitionsCheck } from '../tools/demarches/definitions-check.js'
+import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
+import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 
 export const daily = async (pool: Pool) => {
   try {
@@ -47,6 +50,10 @@ export const daily = async (pool: Pool) => {
     const titresActivitesStatutIdsUpdated = await titresActivitesStatutIdsUpdate()
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
     const titresUpdatedIndex = await titresSlugsUpdate()
+
+    await demarchesDefinitionsCheck()
+    await titreTypeDemarcheTypeEtapeTypeCheck()
+    await etapeStatutCheck()
 
     logsUpdate({
       titresEtapesOrdreUpdated,

@@ -2,12 +2,9 @@ import '../init.js'
 import { daily } from '../business/daily.js'
 import documentsCheck from '../tools/documents/check.js'
 import { matomoCacheInit } from '../tools/api-matomo/index.js'
-import demarchesDefinitionsCheck from '../tools/demarches/definitions-check.js'
 import { consoleOverride } from '../config/logger.js'
 import { mailjetSend } from '../tools/api-mailjet/emails.js'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'
-import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
-import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 import { documentsClean } from '../tools/documents/clean.js'
 import * as Console from 'console'
 import pg from 'pg'
@@ -39,9 +36,6 @@ const tasks = async () => {
     if (process.env.CAMINO_STAGE) {
       await documentsClean(pool)
       await documentsCheck()
-      await demarchesDefinitionsCheck()
-      await titreTypeDemarcheTypeEtapeTypeCheck()
-      await etapeStatutCheck()
       await matomoCacheInit()
     }
   } catch (e) {
