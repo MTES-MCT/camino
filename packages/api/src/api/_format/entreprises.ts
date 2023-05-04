@@ -11,12 +11,10 @@ import { titresFormat } from './titres.js'
  *
  */
 
-const entrepriseFormat = (entreprise: IEntreprise) => {
+export const entrepriseFormat = (entreprise: IEntreprise) => {
   entreprise.titulaireTitres = entreprise.titulaireTitres && titresFormat(entreprise.titulaireTitres)
 
   entreprise.amodiataireTitres = entreprise.amodiataireTitres && titresFormat(entreprise.amodiataireTitres)
 
   return entreprise
 }
-
-export { entrepriseFormat }
