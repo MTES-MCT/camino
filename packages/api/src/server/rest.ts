@@ -47,18 +47,22 @@ type IRestResolver = (
 
 export const restWithPool = (dbPool: Pool) => {
   const rest = express.Router()
+  // NE PAS TOUCHER A CES ROUTES, ELLES POINTENT PUBLIQUEMENT SUR DES FICHIERS
+  rest.get('/download/fichiers/:documentId', restDownload(fichier))
+  rest.get('/fichiers/:documentId', restDownload(fichier))
+  // NE PAS TOUCHER A CES ROUTES, ELLES POINTENT PUBLIQUEMENT SUR DES FICHIERS
+
   rest.get('/download/titres/:id', restDownload(titre))
   rest.get('/download/titres', restDownload(titres))
   rest.get('/download/titres_qgis', restDownload(titres))
   rest.get('/download/demarches', restDownload(demarches))
   rest.get('/download/activites', restDownload(activites))
   rest.get('/download/utilisateurs', restDownload(utilisateurs))
-  rest.get('/download/fichiers/:documentId', restDownload(fichier))
   rest.get('/download/etape/zip/:etapeId', restDownload(etapeTelecharger))
   rest.get('/download/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
   rest.get(`/download${CaminoRestRoutes.entreprises}`, restDownload(entreprises))
 
-  rest.get('/config', restCatcher(config))
+  rest.get(CaminoRestRoutes.config, restCatcher(config))
   rest.post(CaminoRestRoutes.titresLiaisons, restCatcher(postTitreLiaisons))
   rest.get(CaminoRestRoutes.titresLiaisons, restCatcher(getTitreLiaisons))
   rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
