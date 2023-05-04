@@ -7,14 +7,14 @@ export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope',
 
 export type AdministrationTypeId = (typeof ADMINISTRATION_TYPE_IDS_ARRAY)[number]
 
-export const ADMINISTRATION_TYPE_IDS: Record<string, AdministrationTypeId> = {
+export const ADMINISTRATION_TYPE_IDS = {
   AUTORITE: 'aut',
   DEAL: 'dea',
   DREAL: 'dre',
   MINISTERE: 'min',
   OPERATEUR: 'ope',
   PREFECTURE: 'pre',
-} as const
+} as const satisfies Record<string, AdministrationTypeId>
 
 export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, 'description'>
 export const ADMINISTRATION_TYPES: {

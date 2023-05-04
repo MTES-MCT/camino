@@ -1,5 +1,5 @@
 import { getKeys, PartialRecord } from '../typescript-tools.js'
-import { AdministrationId, isAdministrationId } from './administrations.js'
+import { AdministrationId, Administrations, AdministrationTypeId, ADMINISTRATION_TYPE_IDS, IDS } from './administrations.js'
 import { isTitreType, TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
 type AdministrationTitreType = PartialRecord<
@@ -9,8 +9,13 @@ type AdministrationTitreType = PartialRecord<
     associee: boolean
   }
 >
+const AdministrationsTypesTitresTypes: { [key in AdministrationTypeId]?: Readonly<AdministrationTitreType> } = {
+  [ADMINISTRATION_TYPE_IDS.DREAL]: {
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
+  },
+} as const
 
-const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTitreType } = {
+const AdministrationsTitresTypes: { [key in AdministrationId]?: Readonly<AdministrationTitreType> } = {
   'aut-97300-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },
@@ -24,7 +29,6 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   'dre-aura-01': {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: { gestionnaire: false, associee: false },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: false },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
   },
   'dre-bfc-01': {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: { gestionnaire: false, associee: false },
@@ -32,9 +36,6 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   },
   'dre-ile-de-france-01': {
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: true, associee: false },
-  },
-  'dre-nouvelle-aquitaine-01': {
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
   },
   'min-dajb-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { gestionnaire: false, associee: true },
@@ -197,16 +198,13 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   'pre-97302-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },
-}
+} as const
 
 export const getTitreTypeIdsByAdministration = (administrationId: AdministrationId): { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] => {
-  const administrationTitresTypes = AdministrationsTitresTypes[administrationId]
-
-  if (!administrationTitresTypes) {
-    return []
-  }
-
-  return getKeys(administrationTitresTypes, isTitreType).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
+  const administrationTypeTitresTypes = AdministrationsTypesTitresTypes[Administrations[administrationId].typeId]
+  const administrationTitresTypes = Object.assign({}, administrationTypeTitresTypes ?? {}, AdministrationsTitresTypes[administrationId] ?? {})
+  
+return getKeys(administrationTitresTypes, isTitreType).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
     acc.push({ titreTypeId, gestionnaire: administrationTitresTypes[titreTypeId]?.gestionnaire ?? false, associee: administrationTitresTypes[titreTypeId]?.associee ?? false })
 
     return acc
@@ -231,7 +229,7 @@ const isGestionnaireOrAssociee = (administrationId: AdministrationId, props: 'ge
 }
 
 export const getGestionnairesByTitreTypeId = (titreTypeId: TitreTypeId): { administrationId: AdministrationId; associee: boolean }[] => {
-  return getKeys(AdministrationsTitresTypes, isAdministrationId).reduce<{ administrationId: AdministrationId; associee: boolean }[]>((acc, administrationId) => {
+  return IDS.reduce<{ administrationId: AdministrationId; associee: boolean }[]>((acc, administrationId) => {
     const titreType = getTitreTypeIdsByAdministration(administrationId).find(titreType => titreType.titreTypeId === titreTypeId && titreType.gestionnaire)
     if (titreType) {
       acc.push({ associee: titreType.associee, administrationId })

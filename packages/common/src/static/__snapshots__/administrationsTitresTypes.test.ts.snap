@@ -1,5 +1,268 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
+{
+  "apc": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "aph": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "apm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "apw": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "arc": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "arg": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "arm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
+    },
+    {
+      "administrationId": "ope-onf-973-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "ope-ptmg-973-01",
+      "associee": true,
+    },
+  ],
+  "axm": [
+    {
+      "administrationId": "dea-guyane-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": true,
+    },
+    {
+      "administrationId": "ope-onf-973-01",
+      "associee": false,
+    },
+  ],
+  "cxf": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "cxg": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "cxh": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "cxm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "cxr": [
+    {
+      "administrationId": "min-mtes-dgpr-01",
+      "associee": false,
+    },
+  ],
+  "cxs": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "cxw": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "inm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "inr": [
+    {
+      "administrationId": "min-mtes-dgpr-01",
+      "associee": false,
+    },
+  ],
+  "pcc": [
+    {
+      "administrationId": "dre-ile-de-france-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "prf": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "prg": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "prh": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "prm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "prr": [
+    {
+      "administrationId": "min-mtes-dgpr-01",
+      "associee": false,
+    },
+  ],
+  "prs": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "prw": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "pxf": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "pxg": [
+    {
+      "administrationId": "dre-aura-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-bfc-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-bretagne-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-centre-val-de-loire-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-corse-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-grand-est-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-hauts-de-france-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-ile-de-france-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-normandie-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-nouvelle-aquitaine-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-occitanie-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-paca-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "dre-pays-de-la-loire-01",
+      "associee": false,
+    },
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "pxh": [
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": false,
+    },
+  ],
+  "pxm": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+  "pxr": [
+    {
+      "administrationId": "min-mtes-dgpr-01",
+      "associee": false,
+    },
+  ],
+  "pxw": [
+    {
+      "administrationId": "min-mtes-dgaln-01",
+      "associee": false,
+    },
+  ],
+}
+`;
+
 exports[`vérifie si l’administration est associée 1`] = `
 {
   "aut-97300-01": true,
@@ -4474,18 +4737,18 @@ exports[`vérifie si l’administration est gestionnaire 1`] = `
   "dea-mayotte-01": false,
   "dea-reunion-01": false,
   "dre-aura-01": true,
-  "dre-bfc-01": false,
-  "dre-bretagne-01": false,
-  "dre-centre-val-de-loire-01": false,
-  "dre-corse-01": false,
-  "dre-grand-est-01": false,
-  "dre-hauts-de-france-01": false,
+  "dre-bfc-01": true,
+  "dre-bretagne-01": true,
+  "dre-centre-val-de-loire-01": true,
+  "dre-corse-01": true,
+  "dre-grand-est-01": true,
+  "dre-hauts-de-france-01": true,
   "dre-ile-de-france-01": true,
-  "dre-normandie-01": false,
+  "dre-normandie-01": true,
   "dre-nouvelle-aquitaine-01": true,
-  "dre-occitanie-01": false,
-  "dre-paca-01": false,
-  "dre-pays-de-la-loire-01": false,
+  "dre-occitanie-01": true,
+  "dre-paca-01": true,
+  "dre-pays-de-la-loire-01": true,
   "min-dajb-01": false,
   "min-mctrct-dgcl-01": false,
   "min-mtes-dgaln-01": true,
@@ -4893,7 +5156,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -4926,7 +5189,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -4959,7 +5222,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -4992,7 +5255,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5025,7 +5288,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5058,7 +5321,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5091,7 +5354,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5124,7 +5387,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5190,7 +5453,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5223,7 +5486,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -5256,7 +5519,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prs": false,
     "prw": false,
     "pxf": false,
-    "pxg": false,
+    "pxg": true,
     "pxh": false,
     "pxm": false,
     "pxr": false,
@@ -8963,6 +9226,11 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
   "dre-aura-01": [
     {
       "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
       "gestionnaire": false,
       "titreTypeId": "cxm",
     },
@@ -8971,37 +9239,78 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "gestionnaire": false,
       "titreTypeId": "prm",
     },
+  ],
+  "dre-bfc-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+    {
+      "associee": false,
+      "gestionnaire": false,
+      "titreTypeId": "cxm",
+    },
+    {
+      "associee": false,
+      "gestionnaire": false,
+      "titreTypeId": "prm",
+    },
+  ],
+  "dre-bretagne-01": [
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pxg",
     },
   ],
-  "dre-bfc-01": [
+  "dre-centre-val-de-loire-01": [
     {
       "associee": false,
-      "gestionnaire": false,
-      "titreTypeId": "cxm",
-    },
-    {
-      "associee": false,
-      "gestionnaire": false,
-      "titreTypeId": "prm",
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
     },
   ],
-  "dre-bretagne-01": [],
-  "dre-centre-val-de-loire-01": [],
-  "dre-corse-01": [],
-  "dre-grand-est-01": [],
-  "dre-hauts-de-france-01": [],
+  "dre-corse-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
+  "dre-grand-est-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
+  "dre-hauts-de-france-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
   "dre-ile-de-france-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
     {
       "associee": false,
       "gestionnaire": true,
       "titreTypeId": "pcc",
     },
   ],
-  "dre-normandie-01": [],
+  "dre-normandie-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
   "dre-nouvelle-aquitaine-01": [
     {
       "associee": false,
@@ -9009,9 +9318,27 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
       "titreTypeId": "pxg",
     },
   ],
-  "dre-occitanie-01": [],
-  "dre-paca-01": [],
-  "dre-pays-de-la-loire-01": [],
+  "dre-occitanie-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
+  "dre-paca-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
+  "dre-pays-de-la-loire-01": [
+    {
+      "associee": false,
+      "gestionnaire": true,
+      "titreTypeId": "pxg",
+    },
+  ],
   "min-dajb-01": [
     {
       "associee": true,
