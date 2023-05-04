@@ -203,8 +203,8 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: Readonly<Adminis
 export const getTitreTypeIdsByAdministration = (administrationId: AdministrationId): { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] => {
   const administrationTypeTitresTypes = AdministrationsTypesTitresTypes[Administrations[administrationId].typeId]
   const administrationTitresTypes = Object.assign({}, administrationTypeTitresTypes ?? {}, AdministrationsTitresTypes[administrationId] ?? {})
-  
-return getKeys(administrationTitresTypes, isTitreType).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
+
+  return getKeys(administrationTitresTypes, isTitreType).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
     acc.push({ titreTypeId, gestionnaire: administrationTitresTypes[titreTypeId]?.gestionnaire ?? false, associee: administrationTitresTypes[titreTypeId]?.associee ?? false })
 
     return acc
