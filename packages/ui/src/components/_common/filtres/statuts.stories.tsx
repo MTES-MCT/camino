@@ -1,14 +1,14 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { FiltresStatuts, Props } from './statuts'
+import { FiltresStatuts } from './statuts'
 
-const meta: Meta = {
+const meta: Meta<typeof FiltresStatuts> = {
   title: 'Components/Common/Filtres/Statuts',
   component: FiltresStatuts,
 }
 export default meta
 
-export const AllStatuts: Story<Props> = () => (
+export const AllStatuts: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <table>
       <tr>

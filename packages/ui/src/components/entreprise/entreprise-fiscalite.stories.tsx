@@ -1,5 +1,5 @@
 import { EntrepriseFiscalite } from './entreprise-fiscalite'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Fiscalite } from 'camino-common/src/fiscalite'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
@@ -10,7 +10,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Ok: Story = () => (
+export const Ok: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={() =>
       Promise.resolve({
@@ -23,7 +23,7 @@ export const Ok: Story = () => (
   />
 )
 
-export const Guyane: Story = () => (
+export const Guyane: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={(annee: CaminoAnnee) =>
       Promise.resolve({
@@ -41,7 +41,7 @@ export const Guyane: Story = () => (
   />
 )
 
-export const GuyaneAnneePrecedente: Story = () => (
+export const GuyaneAnneePrecedente: StoryFn = () => (
   <EntrepriseFiscalite
     getFiscaliteEntreprise={(annee: CaminoAnnee) =>
       Promise.resolve({
@@ -59,10 +59,10 @@ export const GuyaneAnneePrecedente: Story = () => (
   />
 )
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <EntrepriseFiscalite getFiscaliteEntreprise={() => new Promise<Fiscalite>(resolve => {})} anneeCourante={toCaminoAnnee('2021')} annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]} />
 )
 
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <EntrepriseFiscalite getFiscaliteEntreprise={() => Promise.reject(new Error('because reasons'))} anneeCourante={toCaminoAnnee('2021')} annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]} />
 )

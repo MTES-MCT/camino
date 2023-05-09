@@ -1,5 +1,5 @@
 import { PureDemarcheRemovePopup, Props } from './demarche-remove-popup'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 
@@ -22,7 +22,7 @@ const apiClient: Props['apiClient'] = {
   },
 }
 
-export const Main: Story = () => (
+export const Main: StoryFn = () => (
   <PureDemarcheRemovePopup
     reload={reload}
     displayMessage={displayMessage}

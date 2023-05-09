@@ -18,7 +18,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/new-section'
-import { onMounted, ref } from 'vue'
+import { FunctionalComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section } from 'camino-common/src/titres'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
@@ -99,7 +99,7 @@ const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiCl
   return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
 })
 
-export const Infos = ({ titre, user, apiClient, currentDay }: Props): JSX.Element => {
+export const Infos: FunctionalComponent<Props> = ({ titre, user, apiClient, currentDay }: Props): JSX.Element => {
   const phases: (Demarche & { phaseStatutId: PhaseStatutId })[] = titre.demarches
     .map(d => {
       const status = getPhaseStatutId(currentDay ?? getCurrent(), d)

@@ -1,5 +1,5 @@
 import { PureMinerauxMetauxMetropole } from './mineraux-metaux-metropole'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { toCaminoAnnee } from 'camino-common/src/date'
 
@@ -10,7 +10,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const DefaultNoSnapshot: Story = () => (
+export const DefaultNoSnapshot: StoryFn = () => (
   <PureMinerauxMetauxMetropole
     getStats={() =>
       Promise.resolve({
@@ -258,5 +258,5 @@ export const DefaultNoSnapshot: Story = () => (
   />
 )
 
-export const Loading: Story = () => <PureMinerauxMetauxMetropole getStats={() => new Promise<StatistiquesMinerauxMetauxMetropole>(resolve => {})} />
-export const WithError: Story = () => <PureMinerauxMetauxMetropole getStats={() => Promise.reject(new Error('because reasons'))} />
+export const Loading: StoryFn = () => <PureMinerauxMetauxMetropole getStats={() => new Promise<StatistiquesMinerauxMetauxMetropole>(resolve => {})} />
+export const WithError: StoryFn = () => <PureMinerauxMetauxMetropole getStats={() => Promise.reject(new Error('because reasons'))} />

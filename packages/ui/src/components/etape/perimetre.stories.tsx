@@ -1,5 +1,5 @@
 import { Perimetre } from './perimetre'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { MultiPolygon, Feature } from 'geojson'
@@ -108,7 +108,7 @@ const geojsonMultiPolygon: Feature<MultiPolygon> = {
   },
 }
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Perimetre
     etape={{
       points,
@@ -130,7 +130,7 @@ export const Default: Story = () => (
   />
 )
 
-export const Incertain: Story = () => (
+export const Incertain: StoryFn = () => (
   <Perimetre
     etape={{
       points,

@@ -1,14 +1,14 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
-import { FiltreDomaine, Props } from './domaine'
+import { FiltreDomaine } from './domaine'
 
-const meta: Meta = {
+const meta: Meta<typeof FiltreDomaine> = {
   title: 'Components/Common/Filtres/Domaine',
   component: FiltreDomaine,
 }
 export default meta
 
-export const AllDomaines: Story<Props> = () => (
+export const AllDomaines: StoryFn = () => (
   <div style="height:100%;width:100%;background:white">
     <table>
       <tr>

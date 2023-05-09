@@ -1,5 +1,5 @@
 import { Territoires } from './territoires'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const meta: Meta = {
@@ -9,11 +9,11 @@ const meta: Meta = {
 }
 export default meta
 
-export const OnlySurface: Story = () => <Territoires surface={4} forets={[]} communes={[]} secteursMaritimes={[]} />
-export const OnlyForets: Story = () => <Territoires surface={0} forets={[{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]} communes={[]} secteursMaritimes={[]} />
-export const OnlySdomZones: Story = () => <Territoires surface={0} forets={[]} communes={[]} secteursMaritimes={[]} sdomZones={['1', '2']} />
-export const OnlySecteursMaritimes: Story = () => <Territoires surface={0} forets={[]} communes={[]} secteursMaritimes={['Balagne', 'Bretagne nord', 'Bretagne sud']} sdomZones={[]} />
-export const All: Story = () => (
+export const OnlySurface: StoryFn = () => <Territoires surface={4} forets={[]} communes={[]} secteursMaritimes={[]} />
+export const OnlyForets: StoryFn = () => <Territoires surface={0} forets={[{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]} communes={[]} secteursMaritimes={[]} />
+export const OnlySdomZones: StoryFn = () => <Territoires surface={0} forets={[]} communes={[]} secteursMaritimes={[]} sdomZones={['1', '2']} />
+export const OnlySecteursMaritimes: StoryFn = () => <Territoires surface={0} forets={[]} communes={[]} secteursMaritimes={['Balagne', 'Bretagne nord', 'Bretagne sud']} sdomZones={[]} />
+export const All: StoryFn = () => (
   <Territoires
     surface={4}
     forets={[{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]}
@@ -28,4 +28,4 @@ export const All: Story = () => (
   />
 )
 
-export const Empty: Story = () => <Territoires forets={[]} communes={[]} secteursMaritimes={[]} />
+export const Empty: StoryFn = () => <Territoires forets={[]} communes={[]} secteursMaritimes={[]} />

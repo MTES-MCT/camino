@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreTypeTypeNom } from './titre-type-type-nom'
 
 const meta: Meta = {
@@ -8,4 +8,4 @@ const meta: Meta = {
 
 export default meta
 
-export const Default: Story = () => <TitreTypeTypeNom titreTypeId="apc" />
+export const Default: StoryFn = () => <TitreTypeTypeNom titreTypeId="apc" />

@@ -1,6 +1,6 @@
 import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
-import { Date as DateComponent } from '../_ui/date'
+import { DateComponent } from '../_ui/date'
 
 import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 

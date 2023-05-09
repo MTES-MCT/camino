@@ -1,5 +1,5 @@
 import { PureAdministration } from './administration'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -16,7 +16,7 @@ export default meta
 const administrationActiviteTypeEmailUpdateAction = action('administrationActiviteTypeEmailUpdate')
 const administrationActiviteTypeEmailDeleteAction = action('administrationActiviteTypeEmailDelete')
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <PureAdministration
     administrationId={ADMINISTRATION_IDS.BRGM}
     user={{

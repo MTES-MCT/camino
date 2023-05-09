@@ -7,6 +7,7 @@ import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheApiClient } from './demarche-api-client'
 import { Alert } from '@/components/_ui/alert'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { FunctionalComponent } from 'vue'
 
 export interface Props {
   titreTypeId: TitreTypeId
@@ -39,7 +40,7 @@ export const DemarcheRemovePopup = caminoDefineComponent<Omit<Props, 'reload' | 
   }
 )
 
-export const PureDemarcheRemovePopup = (props: Omit<Props, 'titreId'>): JSX.Element => {
+export const PureDemarcheRemovePopup: FunctionalComponent<Omit<Props, 'titreId'>> = (props): JSX.Element => {
   const titreTypeNom: string = isTitreType(props.titreTypeId) ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom : ''
 
   const content = () => (

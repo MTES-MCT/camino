@@ -1,5 +1,6 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { Section as ISection } from 'camino-common/src/titres'
+import { FunctionalComponent } from 'vue'
 import { SectionElement } from './new-section-element'
 
 export const Sections = (props: { sections: ISection[] }): JSX.Element | null => {
@@ -18,7 +19,7 @@ interface Props {
   date?: CaminoDate
   fileDownload: (file: string) => void
 }
-export const NewSection = (props: Props): JSX.Element => {
+export const NewSection: FunctionalComponent<Props> = (props: Props): JSX.Element => {
   const entete = props.entete ?? true
 
   const elements = props.section.elements.filter(

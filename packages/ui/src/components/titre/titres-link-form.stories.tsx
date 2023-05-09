@@ -1,5 +1,5 @@
 import { TitresLinkForm, Props } from './titres-link-form'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -57,11 +57,11 @@ const apiClient: Props['apiClient'] = {
   linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: titresTo, amont: titresFrom })),
 }
 
-export const AxmWithAlreadySelectedTitre: Story = () => (
+export const AxmWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLinkForm user={{ role: 'super', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
 )
 
-export const FusionWithAlreadySelectedTitre: Story = () => (
+export const FusionWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLinkForm
     user={{ role: 'super', ...testBlankUser }}
     titre={{
@@ -74,7 +74,7 @@ export const FusionWithAlreadySelectedTitre: Story = () => (
   />
 )
 
-export const TitreWithTitreLinksLoading: Story = () => (
+export const TitreWithTitreLinksLoading: StoryFn = () => (
   <TitresLinkForm
     user={{ role: 'super', ...testBlankUser }}
     titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
@@ -85,6 +85,6 @@ export const TitreWithTitreLinksLoading: Story = () => (
   />
 )
 
-export const DefautCantUpdateLinks: Story = () => (
+export const DefautCantUpdateLinks: StoryFn = () => (
   <TitresLinkForm user={{ role: 'defaut', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
 )

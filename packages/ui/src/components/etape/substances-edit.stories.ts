@@ -1,5 +1,5 @@
 import { SubstancesEdit, Props } from './substances-edit'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { toCaminoDate } from 'camino-common/src/date'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 
@@ -10,7 +10,7 @@ const meta: Meta = {
 }
 export default meta
 
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { SubstancesEdit },
   setup() {
     return { args }

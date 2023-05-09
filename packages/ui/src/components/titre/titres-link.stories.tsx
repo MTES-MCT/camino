@@ -1,5 +1,5 @@
 import { TitresLink } from './titres-link'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -48,23 +48,23 @@ const titres: LinkableTitre[] = [
 ]
 const onSelectTitre = action('onSelectTitre')
 const onSelectTitres = action('onSelectTitres')
-export const AXM: Story = () => (
+export const AXM: StoryFn = () => (
   <TitresLink config={{ type: 'single', selectedTitreId: null }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
 )
 
-export const AXMWithAlreadySelectedTitre: Story = () => (
+export const AXMWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLink config={{ type: 'single', selectedTitreId: 'id1' }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
 )
 
-export const DemarcheFusion: Story = () => (
+export const DemarcheFusion: StoryFn = () => (
   <TitresLink config={{ type: 'multiple', selectedTitreIds: [] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
 )
 
-export const DemarcheFusionWithAlreadySelectedTitre: Story = () => (
+export const DemarcheFusionWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLink config={{ type: 'multiple', selectedTitreIds: ['id1', 'id2'] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
 )
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <TitresLink
     config={{
       type: 'multiple',
@@ -76,7 +76,7 @@ export const Loading: Story = () => (
   />
 )
 
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <TitresLink
     config={{
       type: 'multiple',

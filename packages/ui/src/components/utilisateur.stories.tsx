@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur } from './utilisateur'
@@ -44,9 +44,9 @@ const apiClientMock: UtilisateurApiClient = {
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
-export const MySelf: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+export const MySelf: StoryFn = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <PureUtilisateur
     user={{ ...testBlankUser, id: 'id', role: 'super' }}
     utilisateurId="id"
@@ -58,7 +58,7 @@ export const Loading: Story = () => (
   />
 )
 
-export const error: Story = () => (
+export const error: StoryFn = () => (
   <PureUtilisateur
     user={{ ...testBlankUser, id: 'anotherId', role: 'super' }}
     utilisateurId="id"
@@ -71,4 +71,4 @@ export const error: Story = () => (
   />
 )
 
-export const AnotherUser: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+export const AnotherUser: StoryFn = () => <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />

@@ -1,16 +1,16 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes, TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { FiltresTypes, Props } from './types'
 import { MapPattern } from '../../_map/pattern'
 
-const meta: Meta = {
+const meta: Meta<typeof FiltresTypes> = {
   title: 'Components/Common/Filtres/Types',
   component: FiltresTypes,
 }
 export default meta
 
-export const AllTypes: Story<Props> = () => (
+export const AllTypes: StoryFn<Props> = () => (
   <div style="height:100%;width:100%;background:white">
     <MapPattern />
     <table>

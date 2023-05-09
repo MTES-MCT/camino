@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { NewSection } from './new-section'
 import { toCaminoDate } from 'camino-common/src/date'
 
@@ -10,7 +10,7 @@ const meta: Meta = {
 export default meta
 
 const fileDownload = action('fileDownload')
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <NewSection
     fileDownload={fileDownload}
     entete={false}
@@ -32,7 +32,7 @@ export const Default: Story = () => (
   />
 )
 
-export const WithoutContent: Story = () => (
+export const WithoutContent: StoryFn = () => (
   <NewSection
     fileDownload={fileDownload}
     entete={false}

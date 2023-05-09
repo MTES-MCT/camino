@@ -1,5 +1,5 @@
 import { Entreprise } from './entreprise'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { toCaminoDate } from 'camino-common/src/date'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { action } from '@storybook/addon-actions'
@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta
 const onEventTrack = action('onEventTrack')
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Entreprise
     entreprise={{
       id: newEntrepriseId('id'),
@@ -32,7 +32,7 @@ export const Default: Story = () => (
   />
 )
 
-export const WithoutOptionalProps: Story = () => (
+export const WithoutOptionalProps: StoryFn = () => (
   <Entreprise
     entreprise={{
       id: newEntrepriseId('id'),

@@ -1,5 +1,5 @@
 import Preview from './preview.vue'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { Activite } from './preview.types'
 import { toCaminoDate } from 'camino-common/src/date'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
@@ -16,7 +16,7 @@ type Props = {
   initialOpened: boolean
 }
 
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { Preview },
   setup() {
     return { args }

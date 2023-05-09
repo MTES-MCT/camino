@@ -1,5 +1,5 @@
 import { EntrepriseType, PureEntreprise } from './entreprise'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee } from 'camino-common/src/date'
 import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
@@ -62,9 +62,9 @@ const apiClient: EntrepriseApiClient = {
   },
 }
 
-export const Loading: Story = () => <PureEntreprise currentYear={annee} entreprise={undefined} apiClient={apiClient} user={null} />
+export const Loading: StoryFn = () => <PureEntreprise currentYear={annee} entreprise={undefined} apiClient={apiClient} user={null} />
 
-export const NonConnecte: Story = () => <PureEntreprise currentYear={annee} entreprise={entreprise} apiClient={apiClient} user={null} />
+export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} entreprise={entreprise} apiClient={apiClient} user={null} />
 
 const completeEntreprise: EntrepriseType = {
   id: newEntrepriseId('any'),
@@ -264,7 +264,7 @@ const completeEntreprise: EntrepriseType = {
   ],
 }
 
-export const Complet: Story = () => (
+export const Complet: StoryFn = () => (
   <PureEntreprise
     currentYear={annee}
     entreprise={completeEntreprise}

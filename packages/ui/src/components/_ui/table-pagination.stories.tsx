@@ -1,5 +1,5 @@
 import { TablePagination } from './table-pagination'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
 import { Domaine } from '../_common/domaine'
@@ -86,7 +86,7 @@ const rows: TableRow[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(row => {
 })
 
 const paramsUpdate = action('paramsUpdate')
-export const PaginationSimple: Story = () => (
+export const PaginationSimple: StoryFn = () => (
   <TablePagination
     data={{
       rows,

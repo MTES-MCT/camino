@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PermissionDisplay } from './permission-edit'
@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta
 
 const update = action('update')
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' } }}
@@ -29,7 +29,7 @@ export const Default: Story = () => (
   />
 )
 
-export const Entreprise: Story = () => (
+export const Entreprise: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
@@ -46,7 +46,7 @@ export const Entreprise: Story = () => (
   />
 )
 
-export const EntrepriseLoading: Story = () => (
+export const EntrepriseLoading: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
@@ -63,7 +63,7 @@ export const EntrepriseLoading: Story = () => (
   />
 )
 
-export const UserAdminCanEditDefautIntoLecteur: Story = () => (
+export const UserAdminCanEditDefautIntoLecteur: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' } }}

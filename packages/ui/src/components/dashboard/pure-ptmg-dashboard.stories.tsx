@@ -1,5 +1,5 @@
 import { PurePTMGDashboard } from './pure-ptmg-dashboard'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 
 const meta: Meta = {
@@ -79,6 +79,6 @@ const titres: CommonTitrePTMG[] = [
   },
 ]
 
-export const Ok: Story = () => <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
-export const Loading: Story = () => <PurePTMGDashboard getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})} />
-export const WithError: Story = () => <PurePTMGDashboard getPtmgTitres={() => Promise.reject(new Error('because reasons'))} />
+export const Ok: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
+export const Loading: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})} />
+export const WithError: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.reject(new Error('because reasons'))} />

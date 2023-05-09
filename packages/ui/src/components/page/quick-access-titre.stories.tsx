@@ -1,5 +1,5 @@
 import { PureQuickAccessTitre } from './quick-access-titre'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -14,7 +14,7 @@ export default meta
 const onSelectedTitre = action('onSelectedTitre')
 const onSearch = action('onSearch')
 
-export const Simple: Story = () => (
+export const Simple: StoryFn = () => (
   <PureQuickAccessTitre
     titres={[
       {
@@ -34,4 +34,4 @@ export const Simple: Story = () => (
   />
 )
 
-export const Empty: Story = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} id={'typeahead_id'} />
+export const Empty: StoryFn = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} id={'typeahead_id'} />

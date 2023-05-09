@@ -1,5 +1,5 @@
 import { PureEntrepriseDashboard, Props } from './pure-entreprise-dashboard'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreEntreprise } from '@/components/titres/table-utils'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import { User } from 'camino-common/src/roles'
@@ -73,7 +73,7 @@ const titres: TitreEntreprise[] = [
   },
 ]
 
-const Template: Story<Props> = (args: Props) => ({
+const Template: StoryFn<Props> = (args: Props) => ({
   components: { PureEntrepriseDashboard },
   setup() {
     return { args }
@@ -81,7 +81,7 @@ const Template: Story<Props> = (args: Props) => ({
   template: '<PureEntrepriseDashboard v-bind="args" />',
 })
 
-export const Ok: Story = () => (
+export const Ok: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
@@ -90,7 +90,7 @@ export const Ok: Story = () => (
   />
 )
 
-export const OkWithMultipleEntreprises: Story = () => (
+export const OkWithMultipleEntreprises: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
@@ -102,7 +102,7 @@ export const OkWithMultipleEntreprises: Story = () => (
   />
 )
 
-export const OkWithoutFiscalite: Story = () => (
+export const OkWithoutFiscalite: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
@@ -141,7 +141,7 @@ export const OkWithoutFiscalite: Story = () => (
   />
 )
 
-export const OkWithoutActivities: Story = () => (
+export const OkWithoutActivities: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
@@ -150,7 +150,7 @@ export const OkWithoutActivities: Story = () => (
   />
 )
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
@@ -159,7 +159,7 @@ export const Loading: Story = () => (
   />
 )
 
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <PureEntrepriseDashboard
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}

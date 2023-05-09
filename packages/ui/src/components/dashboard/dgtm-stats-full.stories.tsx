@@ -1,5 +1,5 @@
 import { DGTMStatsFull } from './dgtm-stats-full'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { statistiquesDGTMFake } from './testData'
 
@@ -13,6 +13,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const OkNoSnapshot: Story = () => <DGTMStatsFull getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
-export const Loading: Story = () => <DGTMStatsFull getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})} />
-export const WithError: Story = () => <DGTMStatsFull getDgtmStats={() => Promise.reject(new Error('because reasons'))} />
+export const OkNoSnapshot: StoryFn = () => <DGTMStatsFull getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
+export const Loading: StoryFn = () => <DGTMStatsFull getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})} />
+export const WithError: StoryFn = () => <DGTMStatsFull getDgtmStats={() => Promise.reject(new Error('because reasons'))} />

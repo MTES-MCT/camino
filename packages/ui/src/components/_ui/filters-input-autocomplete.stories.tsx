@@ -1,5 +1,5 @@
 import { InputAutocomplete } from './filters-input-autocomplete'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
@@ -14,7 +14,7 @@ const meta: Meta = {
 export default meta
 
 const onSelectItems = action('onSelectItems')
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <InputAutocomplete
     filter={{
       id: 'id',

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { CoordonneesIcone } from './coordonnees-icone'
 
 const meta: Meta = {
@@ -7,5 +7,5 @@ const meta: Meta = {
 }
 export default meta
 
-export const NoIcone: Story = () => <CoordonneesIcone />
-export const Icone: Story = () => <CoordonneesIcone coordonnees={'anything'} />
+export const NoIcone: StoryFn = () => <CoordonneesIcone />
+export const Icone: StoryFn = () => <CoordonneesIcone coordonnees={'anything'} />

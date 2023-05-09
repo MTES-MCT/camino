@@ -1,5 +1,6 @@
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { FunctionalComponent } from 'vue'
 
 export type Props = {
   element: {
@@ -8,7 +9,7 @@ export type Props = {
   }
 }
 
-export function FiltresTypes(props: Props) {
+export const FiltresTypes: FunctionalComponent<Props> = (props: Props) => {
   return (
     <span>
       <svg width="24" height="24" class="mr-s mb--xs">

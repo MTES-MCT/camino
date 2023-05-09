@@ -1,5 +1,5 @@
 import { TypeEdit } from './type-edit'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPES_TYPES, etapesTypesIds } from 'camino-common/src/static/etapesTypes'
 import { action } from '@storybook/addon-actions'
@@ -27,7 +27,7 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
   },
 }
 // TODO 2023-01-09: changer la notion de etapeIsDemandeEnConstruction qui devrait être géree par le composant type-edit directement
-export const Simple: Story = () => (
+export const Simple: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -40,7 +40,7 @@ export const Simple: Story = () => (
   />
 )
 
-export const DemandeAvecUnSeulStatut: Story = () => (
+export const DemandeAvecUnSeulStatut: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -53,7 +53,7 @@ export const DemandeAvecUnSeulStatut: Story = () => (
   />
 )
 
-export const DemandeSansStatut: Story = () => (
+export const DemandeSansStatut: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -66,7 +66,7 @@ export const DemandeSansStatut: Story = () => (
   />
 )
 
-export const DemandeEnConstruction: Story = () => (
+export const DemandeEnConstruction: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -79,7 +79,7 @@ export const DemandeEnConstruction: Story = () => (
   />
 )
 
-export const NouvelleDemande: Story = () => (
+export const NouvelleDemande: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -92,7 +92,7 @@ export const NouvelleDemande: Story = () => (
   />
 )
 
-export const Empty: Story = () => (
+export const Empty: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -109,7 +109,7 @@ export const Empty: Story = () => (
   />
 )
 
-export const Loading: Story = () => (
+export const Loading: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}
@@ -122,7 +122,7 @@ export const Loading: Story = () => (
   />
 )
 
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
     etapeDate={toCaminoDate('2022-01-01')}

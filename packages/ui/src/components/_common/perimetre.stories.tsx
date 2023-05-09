@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { MapPattern } from '../_map/pattern'
 import { Perimetre } from './perimetre'
 import { MultiPolygon, Feature } from 'geojson'
@@ -109,14 +109,14 @@ const geojsonMultiPolygon: Feature<MultiPolygon> = {
 }
 
 const tabUpdate = action('tabUpdate')
-export const DefaultNoSnapshot: Story = () => (
+export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <Perimetre titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />
   </>
 )
 
-export const NoMap: Story = () => (
+export const NoMap: StoryFn = () => (
   <>
     <MapPattern />
     <Perimetre titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />

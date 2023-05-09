@@ -1,5 +1,5 @@
 import { Fondamentales } from './fondamentales'
-import { Meta, Story } from '@storybook/vue3'
+import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 
@@ -10,7 +10,7 @@ const meta: Meta = {
 }
 export default meta
 
-export const Partiel: Story = () => (
+export const Partiel: StoryFn = () => (
   <Fondamentales
     etape={{
       amodiataires: [],
@@ -33,7 +33,7 @@ export const Partiel: Story = () => (
   />
 )
 
-export const FullCertain: Story = () => (
+export const FullCertain: StoryFn = () => (
   <Fondamentales
     etape={{
       amodiataires: [{ id: newEntrepriseId('amodiataire1'), nom: 'amodiataire', operateur: true, etablissements: [] }],
@@ -55,7 +55,7 @@ export const FullCertain: Story = () => (
     }}
   />
 )
-export const FullIncertain: Story = () => (
+export const FullIncertain: StoryFn = () => (
   <Fondamentales
     etape={{
       amodiataires: [{ id: newEntrepriseId('amodiataire1'), nom: 'amodiataire', operateur: true, etablissements: [] }],
