@@ -29,16 +29,16 @@ export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | 
 
     let titresDemarchesPublicUpdated
 
+    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
+
     // si c'est une création ou modification
     // pas une suppression
     if (titreDemarcheId) {
       titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     }
-
-    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
     const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])

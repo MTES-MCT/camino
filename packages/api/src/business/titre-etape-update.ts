@@ -1,5 +1,5 @@
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import type { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
 import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public-update.js'
@@ -21,7 +21,7 @@ import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.j
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create.js'
-import { UserNotNull } from 'camino-common/src/roles'
+import type { UserNotNull } from 'camino-common/src/roles.js'
 import type { Pool } from 'pg'
 
 const titreEtapeUpdate = async (pool: Pool, titreEtapeId: string | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
@@ -49,11 +49,11 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: string | null, titreDe
 
     const titreId = titreDemarche.titreId
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(titreId)
-    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
+    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
+    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
