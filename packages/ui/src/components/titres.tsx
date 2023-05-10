@@ -9,6 +9,7 @@ import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
 import { TablePagination } from './titres/table-pagination'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -90,7 +91,9 @@ export const Titres = defineComponent({
 
         <Filtres initialized={initialized.value} />
         <div class="tablet-blobs tablet-flex-direction-reverse">
-          <div class="tablet-blob-1-3 flex mb-s">{titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} section="titres" class="flex-right full-x downloads" /> : null}</div>
+          <div class="tablet-blob-1-3 flex mb-s">
+            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute={CaminoRestRoutes.downloadTitres} params={{}} class="flex-right full-x downloads" /> : null}
+          </div>
 
           <div class="tablet-blob-2-3 flex">
             {vues.map(vue => {

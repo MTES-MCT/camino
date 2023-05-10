@@ -1,8 +1,9 @@
+import { DownloadFormat } from 'camino-common/src/rest.js'
 import xlsx from 'xlsx'
 
-import { IFormat, Index } from '../../types.js'
+import { Index } from '../../types.js'
 
-const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisateurs' | 'entreprises', elements: Index<any>[], format: IFormat) => {
+const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisateurs' | 'entreprises', elements: Index<any>[], format: DownloadFormat) => {
   let contenu = ''
 
   const sheet = xlsx.utils.json_to_sheet(elements as Index<any>[])

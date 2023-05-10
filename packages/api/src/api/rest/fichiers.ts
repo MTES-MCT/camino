@@ -1,4 +1,4 @@
-import { IContenuElement, IContenuValeur, IDocument, IDocumentRepertoire, IFormat } from '../../types.js'
+import { IContenuElement, IContenuValeur, IDocument, IDocumentRepertoire } from '../../types.js'
 
 import { documentGet } from '../../database/queries/documents.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
@@ -8,6 +8,7 @@ import { documentFilePathFind } from '../../tools/documents/document-path-find.j
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
 import { User } from 'camino-common/src/roles'
+import { DOWNLOAD_FORMATS } from 'camino-common/src/rest.js'
 
 export const etapeTelecharger = async ({ params: { etapeId } }: { params: { etapeId?: string } }, user: User) => {
   if (!etapeId) {
@@ -58,7 +59,7 @@ export const etapeTelecharger = async ({ params: { etapeId } }: { params: { etap
   try {
     return {
       nom,
-      format: 'zip' as IFormat,
+      format: DOWNLOAD_FORMATS.Zip,
       buffer: Buffer.from(base64Data, 'base64'),
     }
   } catch (e) {
@@ -94,7 +95,7 @@ export const fichier = async ({ params: { documentId } }: { params: { documentId
 
   const repertoire = documentRepertoireFind(document)
 
-  const format = 'pdf' as IFormat
+  const format = DOWNLOAD_FORMATS.PDF
 
   if (repertoire === 'demarches') {
     dossier = document.etape!.id
@@ -176,7 +177,7 @@ export const etapeFichier = async ({ params: { etapeId, fichierNom } }: { params
 
   return {
     nom: fichierNom.slice(5),
-    format: 'pdf' as IFormat,
+    format: DOWNLOAD_FORMATS.PDF,
     filePath,
   }
 }

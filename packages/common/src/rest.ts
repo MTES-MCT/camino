@@ -24,9 +24,35 @@ export const CaminoRestRoutes = {
   entreprise: '/rest/entreprises/:entrepriseId',
   generateQgisToken: '/rest/utilisateur/generateQgisToken',
   etapesTypesEtapesStatusWithMainStep: '/rest/etapesTypes/:demarcheId/:date',
+  // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
+  downloadDownloadFichier: '/download/fichiers/:documentId',
+  downloadFichier: '/fichiers/:documentId',
+  downloadTitre: '/titres/:id',
+  downloadTitres: '/titres',
+  downloadTitres_qgis: '/titres_qgis',
+  downloadDemarches: '/demarches',
+  downloadActivites: '/activites',
+  downloadUtilisateurs: '/utilisateurs',
+  downloadEtape: '/etape/zip/:etapeId',
+  downloadEtapeFichier: '/etape/:etapeId/:fichierNom',
+  downloadEntreprises: '/entreprises',
+  // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
 } as const
 
+export const DOWNLOAD_FORMATS = {
+  Excel: 'xlsx',
+  Csv: 'csv',
+  Ods: 'ods',
+  GeoJSON: 'geojson',
+  JSON: 'json',
+  PDF: 'pdf',
+  Zip: 'zip',
+} as const
+
+export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
+
 export type CaminoRestRoute = (typeof CaminoRestRoutes)[keyof typeof CaminoRestRoutes]
+
 export const ALL_CAMINO_REST_ROUTES: CaminoRestRoute[] = Object.values(CaminoRestRoutes)
 
 export type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`

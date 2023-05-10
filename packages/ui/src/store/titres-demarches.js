@@ -35,6 +35,10 @@ const state = {
       type: 'string',
       values: ['asc', 'desc'],
     },
+    {
+      id: 'travaux',
+      type: 'boolean',
+    },
   ],
   params: {
     table: {
@@ -42,6 +46,7 @@ const state = {
       intervalle: 200,
       ordre: 'asc',
       colonne: null,
+      travaux: false,
     },
     filtres: {
       typesIds: [],
@@ -78,6 +83,7 @@ const mutations = Object.assign({}, listeMutations, {
         intervalle: 200,
         ordre: 'asc',
         colonne: null,
+        travaux: false,
       },
       filtres: {
         typesIds: [],

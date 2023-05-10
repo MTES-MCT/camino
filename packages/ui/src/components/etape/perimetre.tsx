@@ -1,11 +1,11 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Perimetre as CommonPerimetre, TabId } from '../_common/perimetre'
 import { Tag } from '../_ui/tag'
-import { numberFormat } from '@/utils/number-format'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { Etape } from 'camino-common/src/etape'
 import { GeoJsonObject } from 'geojson'
 import { ref } from 'vue'
+import { numberFormat } from 'camino-common/src/number'
 
 interface Props {
   titreTypeId: TitreTypeId

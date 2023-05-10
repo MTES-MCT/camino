@@ -633,14 +633,10 @@ export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
   if (!isNotNullNorUndefined(userInBdd.nom)) {
     throw new Error('le nom est obligatoire')
   }
-
-  if (!isNotNullNorUndefined(userInBdd.prenom)) {
-    throw new Error('le prénom est obligatoire')
-  }
   const baseUser: Omit<BaseUserNotNull, 'role'> = {
     id: userInBdd.id,
     nom: userInBdd.nom,
-    prenom: userInBdd.prenom,
+    prenom: userInBdd.prenom ?? '',
     email: userInBdd.email,
   }
   if (isAdministrationRole(userInBdd.role)) {
@@ -678,8 +674,6 @@ interface IUtilisateurTitre {
 
 export type Context = { user: User; pool: Pool }
 
-type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
-
 interface ITitreDemande {
   nom: string
   typeId: TitreTypeId
@@ -701,7 +695,6 @@ export {
   TitreEtapesTravauxTypes,
   Index,
   IFields,
-  IFormat,
   IActiviteType,
   IActiviteTypeDocumentType,
   IAdministration,

@@ -9,8 +9,12 @@ type UiRestRoute = string & { __camino: 'RestRoute' }
 
 const baseRoute = '/apiUrl'
 
-const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlParams<T>): UiRestRoute => {
-  return `${baseRoute}${getRestRoute(route, params)}` as UiRestRoute
+export const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
+  const urlParams = new URLSearchParams()
+  Object.keys(searchParams).forEach(key => {
+    urlParams.append(key, searchParams[key])
+  })
+  return `${baseRoute}${getRestRoute(route, params)}?${urlParams}` as UiRestRoute
 }
 
 export const fetchWithJson = async <T extends CaminoRestRoute>(
@@ -19,12 +23,9 @@ export const fetchWithJson = async <T extends CaminoRestRoute>(
   method: 'post' | 'get' | 'put' | 'delete' = 'get',
   searchParams: Record<string, string> = {}
 ): Promise<any> => {
-  const url = getUiRestRoute(path, params)
-  const urlParams = new URLSearchParams()
-  Object.keys(searchParams).forEach(key => {
-    urlParams.append(key, searchParams[key])
-  })
-  const fetched = await fetch(`${url}?${urlParams}`, {
+  const url = getUiRestRoute(path, params, searchParams)
+
+  const fetched = await fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
   })
