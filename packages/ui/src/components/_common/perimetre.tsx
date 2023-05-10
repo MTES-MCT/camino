@@ -1,4 +1,5 @@
 import { Point } from '@/utils/titre-etape-edit'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
@@ -31,7 +32,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class="tablet-blobs tablet-flex-direction-reverse">
         <div class="tablet-blob-1-2 flex">
           {props.points?.length && titreId ? (
-            <Download section={`titres/${titreId}`} format="geojson" class="btn-border small pill pl pr-m py-s flex-right" onClicked={() => {}} query={{}}>
+            <Download downloadRoute={CaminoRestRoutes.downloadTitre} params={{ id: titreId }} format="geojson" class="btn-border small pill pl pr-m py-s flex-right" onClicked={() => {}} query={{}}>
               geojson
             </Download>
           ) : null}

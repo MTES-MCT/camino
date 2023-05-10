@@ -1,4 +1,4 @@
-import { IFormat, Index } from '../types.js'
+import { Index } from '../types.js'
 import type { Pool } from 'pg'
 
 import express from 'express'
@@ -11,24 +11,26 @@ import { creerEntreprise, fiscalite, modifierEntreprise } from '../api/rest/entr
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DownloadFormat } from 'camino-common/src/rest.js'
 import { CaminoConfig } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
-const contentTypes = {
+const contentTypes: Record<DownloadFormat, string> = {
   csv: 'text/csv',
-  geojson: 'application/geojson',
-  xlsx: 'application/xlsx',
+  geojson: 'application/geo+json',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   pdf: 'application/pdf',
   json: 'application/json',
-} as { [id in IFormat]: string }
+  ods: 'application/vnd.oasis.opendocument.spreadsheet',
+  zip: 'application/zip',
+}
 
 interface IRestResolverResult {
   nom: string
-  format: IFormat
+  format: DownloadFormat
   contenu?: string
   filePath?: string
   buffer?: Buffer
@@ -48,18 +50,18 @@ type IRestResolver = (
 export const restWithPool = (dbPool: Pool) => {
   const rest = express.Router()
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
-  rest.get('/download/fichiers/:documentId', restDownload(fichier))
-  rest.get('/fichiers/:documentId', restDownload(fichier))
+  rest.get(CaminoRestRoutes.downloadDownloadFichier, restDownload(fichier))
+  rest.get(CaminoRestRoutes.downloadFichier, restDownload(fichier))
 
-  rest.get('/titres/:id', restDownload(titre))
-  rest.get('/titres', restDownload(titres))
-  rest.get('/titres_qgis', restDownload(titres))
-  rest.get('/demarches', restDownload(demarches))
-  rest.get('/activites', restDownload(activites))
-  rest.get('/utilisateurs', restDownload(utilisateurs))
-  rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
-  rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
-  rest.get('/entreprises', restDownload(entreprises))
+  rest.get(CaminoRestRoutes.downloadTitre, restDownload(titre))
+  rest.get(CaminoRestRoutes.downloadTitres, restDownload(titres))
+  rest.get(CaminoRestRoutes.downloadTitres_qgis, restDownload(titres))
+  rest.get(CaminoRestRoutes.downloadDemarches, restDownload(demarches))
+  rest.get(CaminoRestRoutes.downloadActivites, restDownload(activites))
+  rest.get(CaminoRestRoutes.downloadUtilisateurs, restDownload(utilisateurs))
+  rest.get(CaminoRestRoutes.downloadEtape, restDownload(etapeTelecharger))
+  rest.get(CaminoRestRoutes.downloadEtapeFichier, restDownload(etapeFichier))
+  rest.get(CaminoRestRoutes.downloadEntreprises, restDownload(entreprises))
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
   rest.get(CaminoRestRoutes.moi, restCatcher(moi))

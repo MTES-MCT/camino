@@ -12,7 +12,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="demarches.length" #downloads>
-      <Downloads :formats="['csv', 'xlsx', 'ods']" section="demarches" :params="{ travaux: travaux }" class="flex-right full-x" />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" :downloadRoute="downloadDemarches" :params="downloadParams" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -24,6 +24,7 @@ import paramsEventTrack from '../../utils/matomo-tracker.js'
 
 import { demarchesColonnes, demarchesLignesBuild } from './table'
 import filtres from './filtres'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 export default {
   name: 'Demarches',
@@ -41,6 +42,8 @@ export default {
     return {
       colonnes: demarchesColonnes,
       filtres,
+      downloadDemarches: CaminoRestRoutes.downloadDemarches,
+      downloadParams: {},
     }
   },
 
@@ -107,6 +110,7 @@ export default {
     },
 
     async paramsUpdate(options) {
+      options.params.travaux = this.travaux
       await this.$store.dispatch(`titresDemarches/paramsSet`, options)
 
       if (options.section === 'filtres') {

@@ -1,4 +1,4 @@
-import { IFormat, ITitreColonneId, ITitreDemarcheColonneId, IUtilisateursColonneId, ITitreActiviteColonneId } from '../../types.js'
+import { ITitreColonneId, ITitreDemarcheColonneId, IUtilisateursColonneId, ITitreActiviteColonneId } from '../../types.js'
 
 import { titreGet, titresGet } from '../../database/queries/titres.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
@@ -26,6 +26,7 @@ import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { isDepartementId } from 'camino-common/src/static/departement.js'
 import { isRegionId } from 'camino-common/src/static/region.js'
 import { isFacade } from 'camino-common/src/static/facades.js'
+import { DownloadFormat } from 'camino-common/src/rest.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -53,7 +54,7 @@ const titreFields = {
 }
 
 interface ITitreInput {
-  query: { format?: IFormat }
+  query: { format?: DownloadFormat }
   params: { id?: string | null }
 }
 
@@ -85,7 +86,7 @@ export const titre = async ({ query: { format = 'json' }, params: { id } }: ITit
 }
 
 interface ITitresQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   ordre?: 'asc' | 'desc' | null
   colonne?: ITitreColonneId | null
   domainesIds?: string | null
@@ -202,7 +203,7 @@ export const titres = async (
 }
 
 interface ITitresDemarchesQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   ordre?: 'asc' | 'desc' | null
   colonne?: ITitreDemarcheColonneId | null
   typesIds?: string | null
@@ -261,7 +262,7 @@ export const demarches = async (
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
-      travaux: travaux ? travaux === 'true' : undefined,
+      travaux: travaux ? travaux === 'true' : false,
     },
     {
       fields: {
@@ -306,7 +307,7 @@ export const demarches = async (
 }
 
 interface ITitresActivitesQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   ordre?: 'asc' | 'desc' | null
   colonne?: ITitreActiviteColonneId | null
   typesIds?: string | null
@@ -392,7 +393,7 @@ export const activites = async (
 }
 
 interface IUtilisateursQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   colonne?: IUtilisateursColonneId | null
   ordre?: 'asc' | 'desc' | null
   entrepriseIds?: string
@@ -440,7 +441,7 @@ export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, e
 }
 
 interface IEntreprisesQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   noms?: string | null
 }
 

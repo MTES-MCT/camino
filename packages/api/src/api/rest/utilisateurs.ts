@@ -1,6 +1,6 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
+import { formatUser, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter.js'
 import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } from 'camino-common/src/roles.js'
@@ -13,6 +13,7 @@ import { idGenerate } from '../../database/models/_format/id-create.js'
 import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
+import { DownloadFormat } from 'camino-common/src/rest.js'
 
 export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
@@ -156,7 +157,7 @@ export const generateQgisToken = async (req: CaminoRequest, res: CustomResponse<
 }
 
 interface IUtilisateursQueryInput {
-  format?: IFormat
+  format?: DownloadFormat
   colonne?: IUtilisateursColonneId | null
   ordre?: 'asc' | 'desc' | null
   entrepriseIds?: string
