@@ -4,9 +4,9 @@ import { EtapeTypeId } from './static/etapesTypes.js'
 import { CaminoDate, dateFormat } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
-import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { UniteId, Unites } from './static/unites.js'
-import { DeviseId, Devises } from './static/devise.js'
+import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement, getElementValeurs } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { UniteId } from './static/unites.js'
+import { DeviseId } from './static/devise.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
 
@@ -159,10 +159,6 @@ export const isSelectElement = (element: ElementWithValue): element is SelectEle
   return element.type === 'select'
 }
 
-const isSelectOptionsElement = (element: SelectElementWithValue): element is SelectElementWithValue & { options: { id: string; nom: string }[] } => {
-  return Object.keys(element).includes('options')
-}
-
 export interface Section {
   id: string
   nom?: string
@@ -190,18 +186,7 @@ export const valeurFind = (element: ElementWithValue): string => {
   }
 
   if (isSelectElement(element)) {
-    if (isSelectOptionsElement(element)) {
-      return element.options.find(v => v.id === element.value)?.nom ?? '–'
-    } else {
-      switch (element.valeursMetasNom) {
-        case 'devises':
-          return element.value ? Devises[element.value].nom : ''
-        case 'unites':
-          return element.value ? Unites[element.value].nom : ''
-        default:
-          return ''
-      }
-    }
+    return getElementValeurs(element).find(v => v.id === element.value)?.nom ?? '-'
   }
 
   if (isDateElement(element)) {

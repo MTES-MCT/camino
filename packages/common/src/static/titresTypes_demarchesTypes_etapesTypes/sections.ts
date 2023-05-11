@@ -903,22 +903,12 @@ export type CheckboxesElement = {
   optionnel?: false
 } & BasicElement
 
-const isSelectElementWithMetas = (
-  element: DeepReadonly<SelectElement>
-): element is BasicElement & {
-  type: 'select'
-  valeursMetasNom: 'devises' | 'unites'
-} => 'valeursMetasNom' in element
+const isSelectElementWithMetas = (element: DeepReadonly<SelectElement>): element is SelectElementWithMetas => 'valeursMetasNom' in element
+const isSelectElementWithOptions = (element: DeepReadonly<SelectElement>): element is SelectElementWithOptions => 'options' in element
 
-export type SelectElement = {
-  type: 'select'
-} & (
-  | { options: { id: string; nom: string }[] }
-  | {
-      valeursMetasNom: 'devises' | 'unites'
-    }
-) &
-  BasicElement
+type SelectElementWithMetas = { type: 'select'; valeursMetasNom: 'devises' | 'unites' } & BasicElement
+type SelectElementWithOptions = { type: 'select'; options: { id: string; nom: string }[] } & BasicElement
+export type SelectElement = SelectElementWithOptions | SelectElementWithMetas
 
 export type SectionsElement = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
 
@@ -960,6 +950,8 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
       default:
         exhaustiveCheck(element.valeursMetasNom)
     }
+  } else if (isSelectElementWithOptions(element)) {
+    return element.options
   }
 
   return []
