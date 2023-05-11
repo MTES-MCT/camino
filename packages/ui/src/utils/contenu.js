@@ -1,5 +1,6 @@
-import { numberFormat } from './number-format'
 import { dateFormat } from './index'
+import { numberFormat } from 'camino-common/src/number'
+import { getElementValeurs } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 
 const contenuBuild = (sections, elementContenu) =>
   sections.reduce((contenu, section) => {
@@ -49,7 +50,8 @@ const contenuCompleteCheck = (sections, contenu) =>
 /**
  * @deprecated voir la nouvelle méthode dans common/src/titres.ts
  */
-const valeurFind = ({ id, type, options }, contenu) => {
+const valeurFind = (value, contenu) => {
+  const { id, type, options } = value
   if (contenu[id] === undefined || contenu[id] === '') {
     return '–'
   }
@@ -69,7 +71,7 @@ const valeurFind = ({ id, type, options }, contenu) => {
   }
 
   if (type === 'select') {
-    return options.find(v => v.id === contenu[id])?.nom
+    return getElementValeurs(value).find(v => v.id === contenu[id])?.nom ?? ''
   }
 
   if (type === 'date') {

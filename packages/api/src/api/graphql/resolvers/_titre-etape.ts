@@ -55,7 +55,7 @@ const uniteRatioFind = (pointReference: ITitrePointReference | 0) => {
 }
 
 const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] | null) => {
-  const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => e.type?.fondamentale && e.date < date) ?? [])
+  const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => e.type?.fondamentale && e.date <= date) ?? [])
 
   const heritageProps = titreEtapePropsIds.reduce((acc: IHeritageProps, id) => {
     acc[id] = { actif: !!titreEtapesFiltered.length }
