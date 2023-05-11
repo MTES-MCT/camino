@@ -29,9 +29,10 @@ export type ActiviteType<T = ActivitesTypesId> = {
   sections: DeepReadonly<ActiviteSection[]>
 }
 
-export const isSubstancesFiscales = (section: DeepReadonly<ActiviteSection>): section is { id: 'substancesFiscales'; nom: string } => section.id === 'substancesFiscales'
+type SubstancesFiscalesSection = { id: 'substancesFiscales'; nom: string }
+export const isSubstancesFiscales = (section: DeepReadonly<ActiviteSection>): section is DeepReadonly<SubstancesFiscalesSection> => section.id === 'substancesFiscales'
 
-export type ActiviteSection = (Omit<Section, 'elements'> & { elements: ActiviteSectionElement[] }) | { id: 'substancesFiscales'; nom: string }
+export type ActiviteSection = (Omit<Section, 'elements'> & { elements: ActiviteSectionElement[] }) | SubstancesFiscalesSection
 export type ActiviteSectionElement = SectionsElement & { periodeId?: 1 | 2 | 3 | 4 }
 
 export const ActivitesTypes: {

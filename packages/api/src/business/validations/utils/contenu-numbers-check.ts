@@ -7,8 +7,12 @@ export const contenuNumbersCheck = (sections: DeepReadonly<Section[]>, contenu: 
     if (!section.elements) return errors
 
     return section.elements.reduce((errors, element) => {
-      if (element.type === 'number' && contenu[section.id] && contenu[section.id][element.id] && contenu[section.id][element.id]! < 0) {
-        errors.push(`le champ "${element.id}" ne peut pas avoir une valeur négative`)
+      if (element.type === 'number' && contenu[section.id] && contenu[section.id][element.id]) {
+        const value = contenu[section.id][element.id]
+
+        if (typeof value === 'number' && value < 0) {
+          errors.push(`le champ "${element.id}" ne peut pas avoir une valeur négative`)
+        }
       }
 
       return errors
