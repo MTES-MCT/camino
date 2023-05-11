@@ -143,8 +143,14 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     titreTypeId: 'pxg',
     demarcheTypeIds: ['oct'],
     machine: new PxgOctMachine(),
-    // https://camino.beta.gouv.fr/titres/g-px-vallee-arena-2020
-    dateDebut: toCaminoDate('2021-01-01'),
+    // Cette date est la plus ancienne trouvée en base
+    dateDebut: toCaminoDate('1717-01-09'),
+    demarcheIdExceptions: [
+      // Ne respectent pas le cacoo
+      newDemarcheId('fqDEYKmkLijEx0b7HRmkXxUP'),
+      newDemarcheId('fML5J37ugo6iWC3ugXfQ2AIk'),
+      newDemarcheId('Umr7TPPxiuGDOzzlKfu4S8Dm'),
+    ],
   },
 ]
 
