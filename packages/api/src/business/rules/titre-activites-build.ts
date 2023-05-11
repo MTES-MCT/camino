@@ -47,7 +47,7 @@ export const titreActiviteSectionsBuild = (
 
     if (!isSubstancesFiscales(s) && s.elements) {
       elements = titreActiviteSectionElementsFormat(s.elements, periodeId, date)
-    } else if (['gra', 'grx'].includes(activiteTypeId) && s.id === 'substancesFiscales') {
+    } else if (['gra', 'grx'].includes(activiteTypeId) && isSubstancesFiscales(s)) {
       const substances = titreEtapePropFind('substances', toCaminoDate(date), titreDemarches, titreTypeId) as SubstanceLegaleId[] | null
 
       if (substances?.length) {
