@@ -108,7 +108,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.55.0",
-    "@vitest/coverage-c8": "^0.29.8",
+    "@vitest/coverage-c8": "^0.31.0",
     "carbone": "^3.5.5",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",

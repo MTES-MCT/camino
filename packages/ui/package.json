@@ -41,7 +41,7 @@
     "@uppy/tus": "^3.0.5",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
-    "@vitest/coverage-c8": "^0.29.8",
+    "@vitest/coverage-c8": "^0.31.0",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-standard": "^8.0.1",
     "babel-core": "^7.0.0-bridge.0",
