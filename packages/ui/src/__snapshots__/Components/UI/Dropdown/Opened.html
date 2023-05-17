@@ -1,0 +1,16 @@
+<div class="relative flex flex-direction-column dropdown">
+  <div class="absolute border rnd-s bg-bg full-x overflow-hidden"><button class="rnd-t-s border-b-s accordion-header flex btn-alt py-s px-s full-x">
+      <div>
+        <h6>Titre</h6>
+      </div>
+      <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="chevron-haut" role="application" fill="#666" tabindex="-1">
+          <use href="#icon-chevron-haut"></use>
+        </svg></div>
+    </button>
+    <div class="opened overflow-hidden">
+      <transition-stub name="slide" appear="false" persisted="false" css="true">
+        <h5>Contenu</h5>
+      </transition-stub>
+    </div>
+  </div>
+</div>

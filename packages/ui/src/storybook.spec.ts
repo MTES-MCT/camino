@@ -39,16 +39,16 @@ describe('Storybook Tests', async () => {
       Object.entries<ContextedStory<unknown>>(compose(module))
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
-    )('$name', async ({ story }) => {
+    )('$name', async value => {
       // @ts-ignore
       window.dsfr = null
-      const mounted = render(story(), {
+      const mounted = render(value.story(), {
         global: {
           components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots.default?.()) },
         },
       })
       await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-      expect(mounted.html()).toMatchSnapshot()
+      expect(mounted.html()).toMatchFileSnapshot(`./__snapshots__/${name}/${value.name}.html`)
     })
   })
 })

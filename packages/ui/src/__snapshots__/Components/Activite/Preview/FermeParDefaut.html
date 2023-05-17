@@ -1,0 +1,33 @@
+<div class="flex flex-direction-column rnd-s border bg-bg" sub="true">
+  <div class="accordion-header flex rnd-s">
+    <div class="py-s px-m">
+      <h5><span class="cap-first"><span>année</span> 2022</span></h5>
+      <div class="flex">
+        <h3 class="mb-s"><span class="cap-first">Gra</span></h3>
+        <!--v-if-->
+      </div>
+      <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s mb-xs">Cloturé</div>
+    </div>
+    <div class="overflow-hidden flex flex-end flex-right"><button class="btn-alt py-s px-m rnd-br-s"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="chevron-bas" role="application" fill="#666" tabindex="-1">
+          <use href="#icon-chevron-bas"></use>
+        </svg></button></div>
+  </div>
+  <!--v-if-->
+  <div class="overflow-hidden">
+    <transition-stub name="slide" appear="false" persisted="true" css="true">
+      <div style="display: none;">
+        <div>
+          <!-- eslint-disable vue/no-v-html -->
+          <div class="border-b-s px-m pt-m">
+            <div class="h6">description du type</div>
+          </div>
+          <div class="border-b-s px-m pt-m">
+            <h5> Date de modification</h5>
+            <p>01-01-2022</p>
+          </div>
+          <!--v-if-->
+        </div>
+      </div>
+    </transition-stub>
+  </div>
+</div>
