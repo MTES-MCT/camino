@@ -28,10 +28,11 @@ const links = {
 const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.hasOwnProperty.call(link, 'path')
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
+// TODO 2023-05-16 attention il faudrait vérifier si l’utilisateur peut accéder aux onglets (ex: canReadActivites)
 const linksByRole: Record<Role, (Link | LinkList)[]> = {
   super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE, links.METAS, links.JOURNAUX],
   admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE],
-  editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ANNUAIRE],
+  editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE],
   lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ANNUAIRE],
   entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.ACTIVITES, ANNUAIRE],
   'bureau d’études': [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ANNUAIRE],
