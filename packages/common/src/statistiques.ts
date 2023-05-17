@@ -3,7 +3,7 @@ import { CaminoAnnee, caminoAnneeValidator } from './date.js'
 import { AdministrationTypeId } from './static/administrations.js'
 import { RegionId } from './static/region.js'
 import { SDOMZoneIds } from './static/sdom.js'
-import { SUBSTANCES_FISCALES_IDS } from './static/substancesFiscales.js'
+import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substancesFiscales.js'
 import { TitresTypes } from './static/titresTypes.js'
 
 export interface QuantiteParMois {
@@ -45,7 +45,7 @@ export const substancesFiscalesStats = [
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
-] as const
+] as const satisfies readonly SubstanceFiscaleId[]
 
 export type SubstancesFiscalesStats = (typeof substancesFiscalesStats)[number]
 export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
