@@ -48,19 +48,18 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
             <div class="tablet-blob-1-4 tablet-pt-s pb-s">
               <h5>Rôles</h5>
             </div>
-            <div class="tablet-blob-3-4">
+            <div class="tablet-blob-3-4 tablet-pt-s pb-s">
               <LoadingElement
-                style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}
                 data={props.utilisateur}
                 renderItem={item => (
-                  <>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
                     <Pill text={item.role} />{' '}
                     {canEditPermission(props.user, item) ? (
                       <button class="btn-alt p-xs rnd-s" title="modifie les permissions" onClick={() => (mode.value = 'edit')}>
                         <Icon size="M" name="pencil" />
                       </button>
                     ) : null}{' '}
-                  </>
+                  </div>
                 )}
               />
             </div>
