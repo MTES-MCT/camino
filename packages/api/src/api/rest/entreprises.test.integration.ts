@@ -15,7 +15,7 @@ import { titreEtapeCreate, titresEtapesJustificatifsUpsert } from '../../databas
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitreEtapeJustificatif } from '../../types.js'
 import { constants } from 'http2'
-import { writeFileSync } from 'fs'
+import { mkdirSync, writeFileSync } from 'fs'
 import { idGenerate } from '../../database/models/_format/id-create'
 
 console.info = vi.fn()
@@ -30,7 +30,7 @@ vi.mock('../../tools/api-insee/fetch', () => ({
 const tokenInitializeMock = vi.mocked(tokenInitialize, true)
 const entrepriseFetchMock = vi.mocked(entreprisesFetch, true)
 const entreprisesEtablissementsFetchMock = vi.mocked(entreprisesEtablissementsFetch, true)
-
+const dir = `${process.cwd()}/files/tmp/`
 beforeEach(() => {
   vi.resetAllMocks()
 })
@@ -240,7 +240,8 @@ describe('postEntrepriseDocument', () => {
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const fileName = `existing_temp_file_${idGenerate()}`
-    writeFileSync(`${process.cwd()}/files/tmp/${fileName}`, 'Hey there!')
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'kbi',
       date: toCaminoDate('2023-05-16'),
@@ -294,7 +295,8 @@ describe('getEntrepriseDocument', () => {
     )
 
     const fileName = `existing_temp_file_${idGenerate()}`
-    writeFileSync(`${process.cwd()}/files/tmp/${fileName}`, 'Hey there!')
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'atf',
       date: toCaminoDate('2023-01-12'),
@@ -305,7 +307,8 @@ describe('getEntrepriseDocument', () => {
     const documentCall = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(documentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
-    writeFileSync(`${process.cwd()}/files/tmp/${fileName}`, 'Hey there!')
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
     const secondDocumentToInsert: EntrepriseDocumentInput = {
       typeId: 'kbi',
       date: toCaminoDate('2023-02-12'),
