@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Install
         run: make install
       - name: Build
@@ -36,6 +38,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Install
         run: make install
       - name: Lint
@@ -50,6 +54,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Install
         run: make install
       - name: Unit tests
@@ -85,6 +91,8 @@ jobs:
           with:
             node-version: '20.1'
             cache: 'npm'
+        - name: Force npm upgrade waiting for node 20.3
+          run: npm update -g npm
         - name: Npm install
           run: make install
         - name: Integration tests
@@ -125,6 +133,8 @@ jobs:
           with:
             node-version: '20.1'
             cache: 'npm'
+        - name: Force npm upgrade waiting for node 20.3
+          run: npm update -g npm
         - name: Npm install
           run: make install
 

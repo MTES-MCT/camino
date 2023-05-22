@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Install
         run:  make install
       - name: Lint
@@ -37,6 +39,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Test units
         run: |
           make install
@@ -73,6 +77,8 @@ jobs:
         with:
           node-version: '20.1'
           cache: 'npm'
+      - name: Force npm upgrade waiting for node 20.3
+        run: npm update -g npm
       - name: Generate storybook
         run: |
           make install
