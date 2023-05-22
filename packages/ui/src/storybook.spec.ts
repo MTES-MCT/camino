@@ -29,17 +29,14 @@ const compose = (entry: StoryFile) => {
   }
 }
 describe('Storybook Tests', async () => {
-  const modules = []
-  for (const [filePath, fn] of Object.entries(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?', { eager: true }))) {
-    modules.push({ filePath, module: fn })
-  }
+  const modules = Object.entries(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?', { eager: true })).map(([filePath, storyFile]) => ({ filePath, storyFile }))
   describe.each(
-    modules.map(({ filePath, module }) => {
-      return { name: module.default.title, module, filePath }
+    modules.map(({ filePath, storyFile }) => {
+      return { name: storyFile.default.title, storyFile, filePath }
     })
-  )('$name', ({ name, module, filePath }) => {
+  )('$name', ({ name, storyFile, filePath }) => {
     test.skipIf(name?.includes('NoStoryshots')).each(
-      Object.entries<ContextedStory<unknown>>(compose(module))
+      Object.entries<ContextedStory<unknown>>(compose(storyFile))
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async value => {
