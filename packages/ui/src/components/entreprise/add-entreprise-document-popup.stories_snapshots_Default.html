@@ -1,0 +1,73 @@
+<div class="dsfr">
+  <dialog id="monId" class="fr-modal" role="dialog" aria-labelledby="monId-title">
+    <div class="fr-container fr-container--fluid fr-container-md">
+      <div class="fr-grid-row fr-grid-row--center">
+        <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+          <div class="fr-modal__body">
+            <div class="fr-modal__header"><button class="fr-btn--close fr-btn" aria-controls="monId" title="Fermer">Fermer</button></div>
+            <div class="fr-modal__content">
+              <h1 id="monId-title" class="fr-modal__title"><span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>Ajout d'un document</h1>
+              <div class="fr-container">
+                <form>
+                  <fieldset class="fr-fieldset" id="text">
+                    <div class="fr-fieldset__element">
+                      <div class="fr-select-group"><label class="fr-label" for="type">Type de document</label><select class="fr-select" name="type">
+                          <option disabled="" hidden="" value="">Selectionnez un type de document</option>
+                          <option value="bil">3 derniers bilans et comptes de résultats</option>
+                          <option value="atf">Attestation fiscale</option>
+                          <option value="sir">Avis de situation au répertoire Sirene</option>
+                          <option value="cur">Curriculum vitae</option>
+                          <option value="deb">Déclarations bancaires ou cautions appropriées</option>
+                          <option value="idm">Identification de matériel</option>
+                          <option value="jac">Justificatif d’adhésion à la charte des bonnes pratiques</option>
+                          <option value="jid">Justificatif d'identité</option>
+                          <option value="jcf">Justificatif des capacités financières</option>
+                          <option value="jct">Justificatif des capacités techniques</option>
+                          <option value="kbi">Kbis</option>
+                          <option value="lis">Liste des travaux antérieurs</option>
+                          <option value="ref">Références professionnelles </option>
+                        </select></div>
+                    </div>
+                  </fieldset>
+                  <div class="dsfr">
+                    <fieldset class="fr-fieldset" id="add-entreprise-document-date-fieldset" role="group" aria-labelledby="add-entreprise-document-date-fieldset-legend add-entreprise-document-date-fieldset-messages">
+                      <legend class="fr-fieldset__legend" id="add-entreprise-document-date-fieldset-legend">Date de délivrance du document
+                        <!---->
+                      </legend>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+                        <div class="fr-input-group"><label class="fr-label" for="add-entreprise-document-date-date-jour">Jour<span class="fr-hint-text">Exemple : 14</span></label><input class="fr-input" type="number" min="1" max="31" name="day" id="add-entreprise-document-date-date-jour"></div>
+                      </div>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+                        <div class="fr-input-group"><label class="fr-label" for="add-entreprise-document-date-date-mois">Mois<span class="fr-hint-text">Exemple : 12</span></label><input class="fr-input" type="number" min="1" max="12" name="mois" id="add-entreprise-document-date-date-mois"></div>
+                      </div>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--inline-grow fr-fieldset__element--year">
+                        <div class="fr-input-group"><label class="fr-label" for="add-entreprise-document-date-date-annee">Année<span class="fr-hint-text">Exemple : 1984</span></label><input class="fr-input" type="number" min="1750" max="2099" name="annee" id="add-entreprise-document-date-date-annee"></div>
+                      </div>
+                      <div class="fr-messages-group" id="add-entreprise-document-date-fieldset-messages" aria-live="assertive"></div>
+                    </fieldset>
+                  </div>
+                  <fieldset class="fr-fieldset" id="text">
+                    <div class="fr-fieldset__element">
+                      <div class="dsfr">
+                        <div class="fr-upload-group"><label class="fr-label" for="file-upload">Ajouter un fichier<span class="fr-hint-text">Taille maximale : 30 Mo. Formats supportés : pdf.</span></label><input class="fr-upload" type="file" id="file-upload" name="file-upload" accept=".pdf"></div>
+                      </div>
+                    </div>
+                    <div class="fr-fieldset__element">
+                      <div class="fr-input-group"><label class="fr-label" for="description">Description</label><input class="fr-input" name="text" id="description" type="text"></div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+            <div class="fr-modal__footer">
+              <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                <li><button class="fr-btn fr-icon-check-line fr-btn--icon-left disabled" disabled="">Enregistrer</button></li>
+                <li><button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls="monId">Annuler</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>

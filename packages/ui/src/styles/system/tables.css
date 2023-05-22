@@ -3,7 +3,7 @@
 -------------------------------
 */
 
-table,
+table:not(.dsfr *),
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -15,7 +15,7 @@ table,
   display: table;
 }
 
-tr,
+tr:not(.dsfr *),
 .tr {
   border-bottom-color: var(--border-color);
   border-bottom-width: var(--unit-px);
@@ -26,7 +26,7 @@ tr,
   display: table-row;
 }
 
-th,
+th:not(.dsfr *),
 .th,
 .th button {
   text-align: left;
@@ -37,8 +37,8 @@ th,
   color: var(--color-neutral);
 }
 
-td,
-th,
+td:not(.dsfr *),
+th:not(.dsfr *),
 .td,
 .th {
   vertical-align: top;
@@ -52,15 +52,15 @@ th,
   display: table-cell;
 }
 
-td:not(:first-child),
-th:not(:first-child),
+td:not(:first-child):not(.dsfr *),
+th:not(:first-child):not(.dsfr *),
 .td:not(:first-child),
 .th:not(:first-child) {
   padding-left: var(--unit-s);
 }
 
-td:not(:last-child),
-th:not(:last-child),
+td:not(:last-child):not(.dsfr *),
+th:not(:last-child):not(.dsfr *),
 .td:not(:last-child),
 .th:not(:last-child) {
   padding-right: var(--unit-s);

@@ -24,7 +24,7 @@ import { documentCreate, documentsGet } from '../../../database/queries/document
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
 import { geojsonFeatureMultiPolygon } from '../../../tools/geojson.js'
-import { idGenerate } from '../../../database/models/_format/id-create.js'
+import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -41,6 +41,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -549,24 +550,26 @@ const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, inf
         for (const documentTypeId of documentTypeIds) {
           const fileName = decisionContenu[documentTypeId]
 
-          const id = idGenerate()
-          const document: IDocument = {
-            id,
-            typeId: documentTypeId,
-            date: decisionContenu.date,
-            fichier: true,
-            entreprisesLecture: true,
-            titreEtapeId: etapeDecisionAnnexe.id,
-            fichierTypeId: 'pdf',
+          if (isDocumentTypeId(documentTypeId)) {
+            const id = newDocumentId(decisionContenu.date, documentTypeId)
+            const document: IDocument = {
+              id,
+              typeId: documentTypeId,
+              date: decisionContenu.date,
+              fichier: true,
+              entreprisesLecture: true,
+              titreEtapeId: etapeDecisionAnnexe.id,
+              fichierTypeId: 'pdf',
+            }
+
+            const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
+
+            const newDocumentPath = await documentFilePathFind(document, true)
+
+            await fileRename(filePath, newDocumentPath)
+
+            await documentCreate(document)
           }
-
-          const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
-
-          const newDocumentPath = await documentFilePathFind(document, true)
-
-          await fileRename(filePath, newDocumentPath)
-
-          await documentCreate(document)
         }
       }
     }

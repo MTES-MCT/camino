@@ -10,7 +10,7 @@ import Document from '../../models/documents.js'
 import { documentCreate, documentGet } from '../documents.js'
 import { etapeTypeDocumentTypeUsedCheck } from './documents.js'
 import { Knex } from 'knex'
-import { newDemarcheId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newDocumentId } from '../../models/_format/id-create.js'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -52,7 +52,7 @@ describe('documentSupprimer', () => {
       statutId,
     })
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(toCaminoDate('2023-01-12'), 'dec')
     await documentCreate({
       id: documentId,
       typeId: 'dec',
@@ -95,7 +95,7 @@ describe('documentSupprimer', () => {
       annee: 2000,
     })
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(toCaminoDate('2023-01-12'), 'dec')
     await documentCreate({
       id: documentId,
       typeId: 'dec',
@@ -136,7 +136,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       statutId: 'aco',
     })
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(toCaminoDate('2023-01-12'), 'dec')
     await documentCreate({
       id: documentId,
       typeId: 'dec',
@@ -169,7 +169,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       statutId: 'aco',
     })
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(toCaminoDate('2023-01-12'), 'arr')
     await documentCreate({
       id: documentId,
       typeId: 'arr',

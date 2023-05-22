@@ -1,5 +1,5 @@
 import { CaminoError } from './error'
-import { apiClient, ApiClient, Utilisateur } from '@/api/api-client'
+import { apiClient, ApiClient } from '@/api/api-client'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -19,6 +19,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { ActiviteTypeEmail } from './administration/administration-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { Utilisateur } from 'camino-common/src/entreprise'
 
 export const Administration = defineComponent(() => {
   const store = useStore()

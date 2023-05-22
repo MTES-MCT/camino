@@ -14,7 +14,7 @@ const documentsRelateTrue = ['type']
 const documentsRelateFalse = [] as string[]
 
 const documents = {
-  graph: `[type, etapesAssociees]`,
+  graph: `[type]`,
   update: {
     insertMissing: true,
     relate: documentsRelateTrue,

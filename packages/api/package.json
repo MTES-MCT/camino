@@ -172,6 +172,10 @@
         {
           "message": "leftJoinRelation is deprecated. Use leftJoinRelated instead.",
           "selector": "Identifier[name='leftJoinRelation']"
+        },
+        {
+          "message": "no 'run' call from PgTyped allowed. Use dbQueryAndValidate.",
+          "selector": "CallExpression[callee.property.name='run'][arguments.length=2]"
         }
       ],
       "no-console": [

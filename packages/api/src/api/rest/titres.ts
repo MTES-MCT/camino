@@ -26,6 +26,7 @@ import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/q
 import titreUpdateTask from '../../business/titre-update.js'
 import { getTitre as getTitreDb } from './titres.queries.js'
 import type { Pool } from 'pg'
+import { dbQueryAndValidate } from '../../pg-database.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -528,18 +529,12 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const titres = await getTitreDb.run({ id: titreId }, pool)
+      const titres = await dbQueryAndValidate(getTitreDb, { id: titreId }, pool, titreGetValidator)
 
       if (titres.length !== 1) {
         res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
       } else {
-        const parsed = titreGetValidator.safeParse(titres[0])
-        if (parsed.success) {
-          res.json(parsed.data)
-        } else {
-          console.error(parsed.error)
-          res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        }
+        res.json(titres[0])
       }
     } catch (e) {
       console.error(e)

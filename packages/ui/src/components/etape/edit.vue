@@ -74,9 +74,10 @@
     >
       <JustificatifsEdit
         v-model:justificatifs="etape.justificatifs"
-        :justificatifsTypes="etape.type.justificatifsTypes"
         :entreprises="titulairesAndAmodiataires"
-        @complete-update="justificatifsCompleteUpdate"
+        :apiClient="entrepriseApiClient"
+        :tde="tde"
+        :completeUpdate="justificatifsCompleteUpdate"
       />
     </Accordion>
 
@@ -102,10 +103,11 @@ import { FondamentalesEdit } from './fondamentales-edit'
 import { PointsEdit } from './points-edit'
 import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
-import JustificatifsEdit from './justificatifs-edit.vue'
+import { JustificatifsEdit } from './justificatifs-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { etapeApiClient } from './etape-api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
   components: {
@@ -153,10 +155,18 @@ export default {
       },
       help: {},
       etapeApiClient,
+      entrepriseApiClient,
     }
   },
 
   computed: {
+    tde() {
+      return {
+        titreTypeId: this.titreTypeId,
+        demarcheTypeId: this.demarcheTypeId,
+        etapeTypeId: this.etapeType?.id,
+      }
+    },
     documentsTypes() {
       return this.$store.getters['titreEtapeEdition/documentsTypes']
     },

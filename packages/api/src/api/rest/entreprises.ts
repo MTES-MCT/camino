@@ -22,11 +22,30 @@ import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
-import { eidValidator, entrepriseModificationValidator, sirenValidator } from 'camino-common/src/entreprise.js'
+import {
+  eidValidator,
+  entrepriseModificationValidator,
+  EntrepriseType,
+  sirenValidator,
+  EntrepriseDocument,
+  entrepriseDocumentValidator,
+  DocumentId,
+  entrepriseDocumentInputValidator,
+  documentIdValidator,
+} from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
-import { canCreateEntreprise, canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
+import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { emailCheck } from '../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
+import { entrepriseFormat } from '../_format/entreprises.js'
+import { Pool } from 'pg'
+import { z } from 'zod'
+import { deleteEntrepriseDocumentQuery, getEntrepriseDocuments as getEntrepriseDocumentsQuery, insertEntrepriseDocument } from './entreprises.queries.js'
+import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
+import fileRename from '../../tools/file-rename.js'
+import { newDocumentId } from '../../database/models/_format/id-create.js'
+import { FICHIERS_TYPES } from 'camino-common/src/static/documentsTypes.js'
+import { dbQueryAndValidate } from '../../pg-database.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -348,6 +367,145 @@ export const creerEntreprise = async (req: JWTRequest<User>, res: CustomResponse
         console.error(e)
         res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       }
+    }
+  }
+}
+export const getEntreprise = async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
+  const user = req.auth
+
+  const entrepriseId = req.params.entrepriseId
+
+  if (!entrepriseId) {
+    console.warn(`l'entrepriseId est obligatoire`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    try {
+      // TODO 2023-05-15: utiliser pg-typed
+      const entreprise = await entrepriseGet(
+        entrepriseId,
+        {
+          fields: {
+            etablissements: { id: {} },
+            utilisateurs: { id: {} },
+            titulaireTitres: { id: {} },
+            amodiataireTitres: { id: {} },
+          },
+        },
+        user
+      )
+
+      if (!entreprise) {
+        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+      } else {
+        // TODO 2023-05-15: utiliser pg-typed
+        // @ts-ignore
+        res.json(entrepriseFormat(entreprise))
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
+export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocument[]>) => {
+  const user = req.auth
+
+  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  if (!entrepriseIdParsed.success) {
+    console.warn(`l'entrepriseId est obligatoire`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!canSeeEntrepriseDocuments(user, entrepriseIdParsed.data)) {
+    console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const entrepriseDocuments = await dbQueryAndValidate(getEntrepriseDocumentsQuery, { entrepriseId: entrepriseIdParsed.data }, pool, entrepriseDocumentValidator)
+    res.json(entrepriseDocuments)
+  }
+}
+
+export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<DocumentId | Error>) => {
+  const user = req.auth
+
+  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  if (!entrepriseIdParsed.success) {
+    console.warn(`l'entrepriseId est obligatoire`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
+    console.warn(`l'utilisateur ${user} n'a pas le droit de voir les documents de l'entreprise ${entrepriseIdParsed.data}`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const entrepriseDocumentInput = entrepriseDocumentInputValidator.safeParse(req.body)
+
+    if (entrepriseDocumentInput.success) {
+      const id = newDocumentId(entrepriseDocumentInput.data.date, entrepriseDocumentInput.data.typeId)
+      try {
+        const pathFrom = `/files/tmp/${entrepriseDocumentInput.data.tempDocumentName}`
+        const pathTo = await documentFilePathFind(
+          {
+            id,
+            entrepriseId: entrepriseIdParsed.data,
+            fichierTypeId: FICHIERS_TYPES.Pdf,
+          },
+          true
+        )
+
+        await fileRename(pathFrom, pathTo)
+      } catch (e: any) {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST)
+        res.json(e)
+
+        return
+      }
+
+      await dbQueryAndValidate(
+        insertEntrepriseDocument,
+        {
+          id,
+          type_id: entrepriseDocumentInput.data.typeId,
+          description: entrepriseDocumentInput.data.description,
+          date: entrepriseDocumentInput.data.date,
+          entreprise_id: entrepriseIdParsed.data,
+          fichier: true,
+          fichier_type_id: FICHIERS_TYPES.Pdf,
+          entreprises_lecture: true,
+          public_lecture: false,
+        },
+        pool,
+        z.object({ id: documentIdValidator })
+      )
+      res.json(id)
+    } else {
+      res.status(constants.HTTP_STATUS_BAD_REQUEST)
+      res.json(entrepriseDocumentInput.error)
+    }
+  }
+}
+
+export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<void | Error>) => {
+  const user = req.auth
+
+  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  const documentIdParsed = documentIdValidator.safeParse(req.params.documentId)
+  if (!entrepriseIdParsed.success) {
+    console.warn(`l'entrepriseId est obligatoire`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!documentIdParsed.success) {
+    console.warn(`le documentId est obligatoire`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!canEditEntreprise(user, entrepriseIdParsed.data)) {
+    console.warn(`l'utilisateur ${user} n'a pas le droit de supprimer les documents de l'entreprise ${entrepriseIdParsed.data}`)
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const entrepriseDocuments = await dbQueryAndValidate(getEntrepriseDocumentsQuery, { entrepriseId: entrepriseIdParsed.data }, pool, entrepriseDocumentValidator)
+    const entrepriseDocument = entrepriseDocuments.find(({ id }) => id === documentIdParsed.data)
+
+    if (!entrepriseDocument || !entrepriseDocument.can_delete_document) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      await dbQueryAndValidate(deleteEntrepriseDocumentQuery, { id: entrepriseDocument.id, entrepriseId: entrepriseIdParsed.data }, pool, z.void())
+      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
   }
 }

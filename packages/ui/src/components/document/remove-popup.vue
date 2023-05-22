@@ -13,7 +13,7 @@
 
     <p class="bold">
       Souhaitez vous supprimer le document
-      <span class="color-inverse">{{ document.type.nom }}</span> de <span class="color-inverse">{{ title }}</span> ?
+      <span class="color-inverse">{{ documentType.nom }}</span> de <span class="color-inverse">{{ title }}</span> ?
     </p>
     <div class="bg-warning color-bg p-s mb-l"><span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
 
@@ -45,6 +45,7 @@ export default {
     title: { type: String, default: '' },
     route: { type: Object, required: true },
     document: { type: Object, default: () => ({}) },
+    documentType: { type: Object, default: () => ({}) },
   },
 
   computed: {

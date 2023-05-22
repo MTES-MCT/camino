@@ -1,17 +1,17 @@
 import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
-import { ITitreEtapeJustificatif } from '../../types.js'
 import { documentCreate, documentGet } from '../../database/queries/documents.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { titreCreate } from '../../database/queries/titres.js'
-import { titreEtapeCreate, titresEtapesJustificatifsUpsert } from '../../database/queries/titres-etapes.js'
+import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 
 import { afterAll, afterEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
+import { newDocumentId } from '../../database/models/_format/id-create.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -45,11 +45,11 @@ describe('documentSupprimer', () => {
     expect(res.body.errors[0].message).toBe('aucun document avec cette id')
   })
 
-  test('peut supprimer un document d’entreprise (utilisateur super)', async () => {
+  test('ne peut pas supprimer un document d’entreprise (utilisateur super)', async () => {
     const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(getCurrent(), 'fac')
     await documentCreate({
       id: documentId,
       typeId: 'fac',
@@ -59,58 +59,7 @@ describe('documentSupprimer', () => {
 
     const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
 
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body.data.documentSupprimer).toBeTruthy()
-    expect(await documentGet(documentId, {}, userSuper)).toBeUndefined()
-  })
-
-  test('ne peut pas supprimer un document d’entreprise lié à une étape (utilisateur super)', async () => {
-    const entrepriseId = newEntrepriseId('entreprise-id')
-    await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
-
-    const titre = await titreCreate(
-      {
-        nom: '',
-        slug: 'slug-arm-1',
-        typeId: 'arm',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
-    const titreDemarche = await titreDemarcheCreate({
-      titreId: titre.id,
-      typeId: 'oct',
-    })
-
-    const titreEtape = await titreEtapeCreate(
-      {
-        typeId: 'mfr',
-        statutId: 'fai',
-        titreDemarcheId: titreDemarche.id,
-        date: toCaminoDate('2022-01-01'),
-      },
-      userSuper,
-      titre.id
-    )
-
-    const documentId = 'document-id'
-    await documentCreate({
-      id: documentId,
-      typeId: 'fac',
-      date: toCaminoDate('2023-01-12'),
-      entrepriseId,
-    })
-
-    await titresEtapesJustificatifsUpsert([
-      {
-        documentId,
-        titreEtapeId: titreEtape.id,
-      } as ITitreEtapeJustificatif,
-    ])
-
-    const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
-
-    expect(res.body.errors[0].message).toBe(`impossible de supprimer ce document lié à l’étape ${titreEtape.id}`)
+    expect(res.body.errors[0].message).toBe(`impossible de gérer les justificatifs d'entreprise`)
   })
 
   test('peut supprimer un document d’étape (utilisateur super)', async () => {
@@ -143,7 +92,7 @@ describe('documentSupprimer', () => {
       titre.id
     )
 
-    const documentId = 'document-id'
+    const documentId = newDocumentId(getCurrent(), 'fac')
     await documentCreate({
       id: documentId,
       typeId: 'fac',

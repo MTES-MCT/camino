@@ -2,9 +2,10 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { Params, TablePagination as UITablePagination } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
-import { TitreEntreprise, titresColonnes, titresLignesBuild } from './table-utils'
+import { titresColonnes, titresLignesBuild } from './table-utils'
 import { TableSortEvent } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { TitreEntreprise } from 'camino-common/src/entreprise'
 
 interface Props {
   titres: TitreEntreprise[]

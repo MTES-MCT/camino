@@ -1,9 +1,9 @@
 import List from '../_ui/list.vue'
 import { isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
-import { Utilisateur } from '@/api/api-client'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { markRaw } from 'vue'
+import { Utilisateur } from 'camino-common/src/entreprise'
 
 export const utilisateursColonnes: Column[] = [
   {

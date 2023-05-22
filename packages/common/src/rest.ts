@@ -22,6 +22,8 @@ export const CaminoRestRoutes = {
   fiscaliteEntreprise: '/rest/entreprises/:entrepriseId/fiscalite/:annee',
   entreprises: '/rest/entreprises',
   entreprise: '/rest/entreprises/:entrepriseId',
+  entrepriseDocuments: '/rest/entreprises/:entrepriseId/documents',
+  entrepriseDocument: '/rest/entreprises/:entrepriseId/documents/:documentId',
   generateQgisToken: '/rest/utilisateur/generateQgisToken',
   etapesTypesEtapesStatusWithMainStep: '/rest/etapesTypes/:demarcheId/:date',
   // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES

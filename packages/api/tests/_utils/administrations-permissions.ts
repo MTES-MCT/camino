@@ -7,7 +7,7 @@ import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
 import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
-import { idGenerate, newDemarcheId } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newDocumentId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
@@ -182,7 +182,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const documentIds = []
 
     for (const documentTypeId of documentTypesIds) {
-      const id = idGenerate()
+      const id = newDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
       documentIds.push(id)
       await documentCreate({
         id,

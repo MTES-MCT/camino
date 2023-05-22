@@ -8,38 +8,17 @@ import { CoordonneesIcone } from '../_common/coordonnees-icone'
 import { ActivitesPills } from '../activites/activites-pills'
 import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { Departement, DepartementId, Departements } from 'camino-common/src/static/departement'
+import { Departement, Departements } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
-import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { sortedTitresStatuts, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
-import { TitreReference } from 'camino-common/src/titres-references'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { getDepartementsBySecteurs, SecteursMaritimes } from 'camino-common/src/static/facades'
+import { getDepartementsBySecteurs } from 'camino-common/src/static/facades'
 import { Column } from '../_ui/table-auto'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
-
-interface Titulaire {
-  id: string
-  nom: string
-}
-export interface TitreEntreprise {
-  id: string
-  slug: string
-  nom: string
-  communes?: { departementId: DepartementId }[]
-  secteursMaritime?: [SecteursMaritimes]
-  references?: TitreReference[]
-  coordonnees?: { x: number; y: number }
-  // id devrait être une union
-  typeId: TitreTypeId
-  titreStatutId: TitreStatutId
-  substances: SubstanceLegaleId[]
-  titulaires: Titulaire[]
-  activitesAbsentes: number | null
-  activitesEnConstruction: number | null
-}
+import { TitreEntreprise } from 'camino-common/src/entreprise'
 
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,

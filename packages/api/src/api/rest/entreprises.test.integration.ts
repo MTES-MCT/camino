@@ -1,6 +1,6 @@
-import { newEntrepriseId } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentInput, newEntrepriseId, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { restCall, restPostCall, restPutCall } from '../../../tests/_utils/index.js'
+import { restCall, restDeleteCall, restPostCall, restPutCall } from '../../../tests/_utils/index.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
@@ -9,7 +9,17 @@ import { testBlankUser } from 'camino-common/src/tests-utils.js'
 import { entreprisesEtablissementsFetch, entreprisesFetch, tokenInitialize } from '../../tools/api-insee/fetch.js'
 import { entreprise, entrepriseAndEtablissements } from '../../../tests/__mocks__/fetch-insee-api.js'
 import type { Pool } from 'pg'
+import { titreCreate } from '../../database/queries/titres.js'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
+import { titreEtapeCreate, titresEtapesJustificatifsUpsert } from '../../database/queries/titres-etapes.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { ITitreEtapeJustificatif } from '../../types.js'
+import { constants } from 'http2'
+import { mkdirSync, writeFileSync } from 'fs'
+import { idGenerate } from '../../database/models/_format/id-create'
 
+console.info = vi.fn()
+console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
   __esModule: true,
   tokenInitialize: vi.fn(),
@@ -20,7 +30,7 @@ vi.mock('../../tools/api-insee/fetch', () => ({
 const tokenInitializeMock = vi.mocked(tokenInitialize, true)
 const entrepriseFetchMock = vi.mocked(entreprisesFetch, true)
 const entreprisesEtablissementsFetchMock = vi.mocked(entreprisesEtablissementsFetch, true)
-
+const dir = `${process.cwd()}/files/tmp/`
 beforeEach(() => {
   vi.resetAllMocks()
 })
@@ -170,5 +180,171 @@ describe('entrepriseModifier', () => {
       { id: entreprise.id, archive: true }
     )
     expect(tested.statusCode).toBe(400)
+  })
+})
+
+describe('getEntreprise', () => {
+  test('peut récupérer une entreprise', async () => {
+    const entrepriseId = newEntrepriseId('nouvelle-entreprise-id')
+    await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
+    const tested = await restCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "adresse": null,
+        "amodiataireTitres": [],
+        "archive": false,
+        "categorie": null,
+        "cedex": null,
+        "codePostal": null,
+        "commune": null,
+        "dateCreation": null,
+        "email": null,
+        "etablissements": [],
+        "id": "nouvelle-entreprise-id",
+        "legalEtranger": null,
+        "legalForme": null,
+        "legalSiren": null,
+        "nom": "nouvelle-entreprise-id",
+        "paysId": null,
+        "telephone": null,
+        "titulaireTitres": [],
+        "url": null,
+        "utilisateurs": [],
+      }
+    `)
+  })
+})
+
+describe('postEntrepriseDocument', () => {
+  test('ne peut pas ajouter un document inexistant sur le disque dur', async () => {
+    const entrepriseId = newEntrepriseId('entreprise-id')
+    await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
+
+    const documentToInsert: EntrepriseDocumentInput = {
+      typeId: 'kbi',
+      date: toCaminoDate('2023-05-16'),
+      description: 'desc',
+      tempDocumentName: tempDocumentNameValidator.parse('notExistingFile'),
+    }
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_BAD_REQUEST)
+
+    const entrepriseDocumentsCall = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    expect(entrepriseDocumentsCall.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(entrepriseDocumentsCall.body).toMatchInlineSnapshot('[]')
+  })
+
+  test('peut ajouter un document', async () => {
+    const entrepriseId = newEntrepriseId('entreprise-id')
+    await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
+
+    const fileName = `existing_temp_file_${idGenerate()}`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    const documentToInsert: EntrepriseDocumentInput = {
+      typeId: 'kbi',
+      date: toCaminoDate('2023-05-16'),
+      description: 'desc',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const tested = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+
+    const entrepriseDocumentsCall = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    expect(entrepriseDocumentsCall.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(entrepriseDocumentsCall.body).toHaveLength(1)
+    expect(entrepriseDocumentsCall.body[0]).toMatchObject({
+      can_delete_document: true,
+      date: '2023-05-16',
+      description: 'desc',
+      id: expect.any(String),
+      type_id: 'kbi',
+    })
+  })
+})
+describe('getEntrepriseDocument', () => {
+  test("peut récupérer les documents d'entreprise et ne peut pas supprimer les documents liés à des étapes (super)", async () => {
+    const entrepriseId = newEntrepriseId('get-entreprise-document-entreprise-id')
+    await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
+
+    const titre = await titreCreate(
+      {
+        nom: '',
+        typeId: 'arm',
+        slug: 'arm-slug',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+
+    const titreDemarche = await titreDemarcheCreate({
+      titreId: titre.id,
+      typeId: 'oct',
+    })
+    const titreEtape = await titreEtapeCreate(
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        titreDemarcheId: titreDemarche.id,
+        date: toCaminoDate('2022-01-01'),
+      },
+      userSuper,
+      titre.id
+    )
+
+    const fileName = `existing_temp_file_${idGenerate()}`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    const documentToInsert: EntrepriseDocumentInput = {
+      typeId: 'atf',
+      date: toCaminoDate('2023-01-12'),
+      description: 'desc',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const documentCall = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    expect(documentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
+
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    const secondDocumentToInsert: EntrepriseDocumentInput = {
+      typeId: 'kbi',
+      date: toCaminoDate('2023-02-12'),
+      description: 'descSecondDocument',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const secondDocumentCall = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
+    expect(secondDocumentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
+
+    await titresEtapesJustificatifsUpsert([{ documentId: documentCall.body, titreEtapeId: titreEtape.id } as ITitreEtapeJustificatif])
+
+    const tested = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(tested.body).toHaveLength(2)
+    expect(tested.body[0]).toMatchObject({
+      can_delete_document: false,
+      date: '2023-01-12',
+      description: 'desc',
+      id: documentCall.body,
+      type_id: 'atf',
+    })
+    expect(tested.body[1]).toMatchObject({
+      can_delete_document: true,
+      date: '2023-02-12',
+      description: 'descSecondDocument',
+      id: secondDocumentCall.body,
+      type_id: 'kbi',
+    })
+
+    const deletePossible = await restDeleteCall(dbPool, CaminoRestRoutes.entrepriseDocument, { entrepriseId, documentId: secondDocumentCall.body }, { ...testBlankUser, role: 'super' })
+
+    expect(deletePossible.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+
+    const deleteNotPossible = await restDeleteCall(dbPool, CaminoRestRoutes.entrepriseDocument, { entrepriseId, documentId: documentCall.body }, { ...testBlankUser, role: 'super' })
+
+    expect(deleteNotPossible.statusCode).toBe(constants.HTTP_STATUS_FORBIDDEN)
   })
 })

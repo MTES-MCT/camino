@@ -48,7 +48,7 @@ const actions = {
         })
       }
 
-      const nomTemporaire = uploadURL ? uploadURL.substring(uploadURL.lastIndexOf('/') + 1) : null
+      const nomTemporaire = uploadURL
 
       const idOld = document.id
       try {

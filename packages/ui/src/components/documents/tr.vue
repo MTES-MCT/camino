@@ -1,9 +1,9 @@
 <template>
   <tr class="h6">
     <td class="nowrap pt-m flex flex-center">
-      <span class="bold">{{ document.type.nom }}</span>
+      <span class="bold">{{ documentType.nom }}</span>
       <span>
-        <HelpTooltip v-if="helpShow && document.type.description" :text="document.type.description" class="ml-xs" />
+        <HelpTooltip v-if="helpShow && documentType.description" :text="documentType.description" class="ml-xs" />
       </span>
       <span v-if="etiquette">
         <Tag v-if="document.publicLecture" :mini="true" color="bg-info" class="ml-xs" text="Public" />
@@ -81,6 +81,7 @@ import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
+import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 
 export default {
   components: {
@@ -117,6 +118,13 @@ export default {
     manquant() {
       return !(this.document.fichier || this.document.fichierNouveau || this.document.uri || this.document.url)
     },
+    documentType() {
+      if (this.document.typeId) {
+        return DocumentsTypes[this.document.typeId]
+      } else {
+        return this.document.type
+      }
+    },
   },
 
   methods: {
@@ -132,7 +140,10 @@ export default {
         }
       }
 
-      document.typeId = document.type.id
+      // TODO 2023-04-11 make only typeId pass in documents
+      if (!document.typeId) {
+        document.typeId = document.type.id
+      }
       document.fichierNouveau = null
 
       delete document.type
@@ -162,6 +173,7 @@ export default {
             title: this.title,
             document: this.document,
             route: this.route,
+            documentType: this.documentType,
           },
         })
       }

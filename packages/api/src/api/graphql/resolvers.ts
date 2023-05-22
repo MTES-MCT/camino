@@ -45,7 +45,7 @@ import {
 
 import { substances } from './resolvers/substances.js'
 
-import { entreprise, entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
+import { entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
 import {
   administration,
   administrations,
@@ -90,7 +90,6 @@ export default {
   titre,
   titres,
   substances,
-  entreprise,
   entreprises,
   administration,
   administrations,

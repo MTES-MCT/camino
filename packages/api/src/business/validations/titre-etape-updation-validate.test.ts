@@ -72,7 +72,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [
         { id: 'doe', optionnel: true, nom: 'doe' },
         { id: 'dep', optionnel: true, nom: 'doe' },
-        { id: 'tot', optionnel: true, nom: 'tot' },
+        { id: 'aac', optionnel: true, nom: 'aac' },
       ],
       null,
       [],
@@ -81,7 +81,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     )
     expect(errors).toContain('le document "doe" est obligatoire')
     expect(errors).toContain('le document "dep" est obligatoire')
-    expect(errors).not.toContain('le document "tot" est obligatoire')
+    expect(errors).not.toContain('le document "aac" est obligatoire')
   })
 
   test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, boolean]>([

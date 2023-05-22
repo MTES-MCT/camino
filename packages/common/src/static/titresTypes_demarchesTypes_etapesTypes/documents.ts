@@ -276,9 +276,7 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
 } as const
 
-type EtapesTypesEtapesTypesDocumentsTypes = keyof typeof EtapesTypesDocumentsTypes
-
-const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is EtapesTypesEtapesTypesDocumentsTypes => {
+const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesDocumentsTypes => {
   return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)
 }
 
