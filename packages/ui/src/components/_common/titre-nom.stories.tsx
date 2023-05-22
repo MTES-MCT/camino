@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreNom } from './titre-nom'
 
 const meta: Meta = {
-  title: 'Components/common/TitreNom',
+  title: 'Components/Common/TitreNom',
   component: TitreNom,
 }
 

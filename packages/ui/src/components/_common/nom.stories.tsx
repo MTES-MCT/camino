@@ -4,7 +4,7 @@ import { Nom } from './nom'
 import { MultiPolygon, Feature } from 'geojson'
 
 const meta: Meta = {
-  title: 'Components/common/Nom',
+  title: 'Components/Common/Nom',
   component: Nom,
 }
 export default meta

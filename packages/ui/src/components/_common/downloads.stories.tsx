@@ -5,7 +5,7 @@ import { RouteLocationNormalized } from 'vue-router'
 import { PureDownloads } from './downloads'
 
 const meta: Meta = {
-  title: 'Components/common/Downloads',
+  title: 'Components/Common/Downloads',
   // @ts-ignore
   component: PureDownloads,
 }

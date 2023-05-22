@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
-  title: 'Components/common/SectionElement',
+  title: 'Components/Common/SectionElement',
   component: SectionElement,
   argTypes: {},
 }

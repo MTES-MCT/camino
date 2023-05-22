@@ -6,7 +6,7 @@ import { MultiPolygon, Feature } from 'geojson'
 import { Point } from '@/utils/titre-etape-edit'
 
 const meta: Meta = {
-  title: 'Components/common/Perimetre',
+  title: 'Components/Common/Perimetre',
   component: Perimetre,
 }
 export default meta

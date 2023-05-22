@@ -2,7 +2,7 @@ import { Statut } from './statut'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/common/Statut',
+  title: 'Components/Common/Statut',
   component: Statut,
   argTypes: {},
 }
