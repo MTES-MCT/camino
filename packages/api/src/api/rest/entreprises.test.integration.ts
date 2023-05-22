@@ -16,6 +16,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitreEtapeJustificatif } from '../../types.js'
 import { constants } from 'http2'
 import { writeFileSync } from 'fs'
+import { idGenerate } from '../../database/models/_format/id-create'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -238,7 +239,7 @@ describe('postEntrepriseDocument', () => {
     const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
-    const fileName = 'existing_temp_file'
+    const fileName = `existing_temp_file_${idGenerate()}`
     writeFileSync(`${process.cwd()}/files/tmp/${fileName}`, 'Hey there!')
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'kbi',
@@ -292,7 +293,7 @@ describe('getEntrepriseDocument', () => {
       titre.id
     )
 
-    const fileName = 'existing_temp_file'
+    const fileName = `existing_temp_file_${idGenerate()}`
     writeFileSync(`${process.cwd()}/files/tmp/${fileName}`, 'Hey there!')
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'atf',
