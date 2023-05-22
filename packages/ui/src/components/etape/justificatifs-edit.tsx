@@ -166,12 +166,6 @@ export const JustificatifsEdit = caminoDefineComponent<Props>(['completeUpdate',
     justificatifsReset()
   }
 
-  const justificatifDownload = async (entrepriseId: EntrepriseId, index: number) => {
-    const document = entreprisesJustificatifsIndex.value[entrepriseId].justificatifs[index]
-    // FIXME
-    // await this.$store.dispatch('downloadDocument', document)
-  }
-
   const justificatifsReset = () => {
     props.justificatifs.splice(0, props.justificatifs.length)
 
