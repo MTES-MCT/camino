@@ -263,7 +263,7 @@ describe('postEntrepriseDocument', () => {
   })
 })
 describe('getEntrepriseDocument', () => {
-  test.only("peut récupérer les documents d'entreprise et ne peut pas supprimer les documents liés à des étapes (super)", async () => {
+  test("peut récupérer les documents d'entreprise et ne peut pas supprimer les documents liés à des étapes (super)", async () => {
     const entrepriseId = newEntrepriseId('get-entreprise-document-entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
