@@ -30,8 +30,8 @@ const compose = (entry: StoryFile) => {
 }
 describe('Storybook Tests', async () => {
   const modules = []
-  for (const [filePath, fn] of Object.entries(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?'))) {
-    modules.push({ filePath, module: await fn() })
+  for (const [filePath, fn] of Object.entries(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?', { eager: true }))) {
+    modules.push({ filePath, module: fn })
   }
   describe.each(
     modules.map(({ filePath, module }) => {
