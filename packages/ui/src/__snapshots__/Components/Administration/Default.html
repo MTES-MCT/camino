@@ -1,0 +1,267 @@
+<div>
+  <h5>Administration</h5>
+  <h1>BRGM</h1>
+  <div class="flex flex-direction-column rnd-s border bg-bg mb-xxl">
+    <div class="py-s px-m border-b-s"><span class="cap-first">Bureau de recherches géologiques et minières</span></div>
+    <div class="border-b-s">
+      <div class="px-m pt-m border-b-s">
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4">
+            <h5>Type</h5>
+          </div>
+          <div class="tablet-blob-3-4">
+            <p class="word-break">Opérateur</p>
+          </div>
+        </div>
+        <!---->
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4">
+            <h5>Adresse</h5>
+          </div>
+          <div class="tablet-blob-3-4">
+            <p>3 avenue Claude-Guillemin<span><br>BP 36009</span><br>45060Orléans</p>
+          </div>
+        </div>
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4">
+            <h5>Téléphone</h5>
+          </div>
+          <div class="tablet-blob-3-4">
+            <p class="word-break"><span>02 38 64 34 34</span></p>
+          </div>
+        </div>
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4">
+            <h5>Email</h5>
+          </div>
+          <div class="tablet-blob-3-4">
+            <p class="word-break"><span>–</span></p>
+          </div>
+        </div>
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4">
+            <h5>Site</h5>
+          </div>
+          <div class="tablet-blob-3-4">
+            <p class="word-break"><a href="https://www.brgm.fr/" class="btn small bold py-xs px-s rnd">https://www.brgm.fr/</a></p>
+          </div>
+        </div>
+        <!---->
+        <!---->
+        <div class="tablet-blobs">
+          <div class="tablet-blob-1-4"></div>
+          <div class="tablet-blob-3-4">
+            <p class="h6 mb">Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" style="">
+    <div class="mb-xxl">
+      <div class="line-neutral width-full mb-xxl"></div>
+      <h2>Utilisateurs</h2>
+      <div class="line width-full"></div>
+      <div class="width-full-p">
+        <div class="overflow-scroll-x mb">
+          <div class="table">
+            <div class="tr">
+              <div class="th nowrap min-width-6"><button class="btn-menu full-x p-0">Nom<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="chevron-bas" role="application" fill="#666" tabindex="-1" class="right">
+                    <use href="#icon-chevron-bas"></use>
+                  </svg></button></div>
+              <div class="th nowrap min-width-6"><button class="btn-menu full-x p-0">Prénom
+                  <!---->
+                </button></div>
+              <div class="th nowrap "><button class="btn-menu full-x p-0">Email
+                  <!---->
+                </button></div>
+              <div class="th nowrap min-width-6"><button class="btn-menu full-x p-0">Rôle
+                  <!---->
+                </button></div>
+              <div class="th nowrap min-width-6"><button class="btn-menu full-x p-0 disabled">Lien
+                  <!---->
+                </button></div>
+            </div><a to="{name:utilisateur,params:{id:jeanmichel}}" class="tr tr-link text-decoration-none" type="primary">
+              <div class="td min-width-6"><span class="">Michel</span></div>
+              <div class="td min-width-6"><span class="">Jean</span></div>
+              <div class="td "><span class="h6">jean.michel@gmail.com</span></div>
+              <div class="td min-width-6"><span class="bg-neutral color-bg pill py-xs px-s small bold">super</span></div>
+              <div class="td min-width-6"><span class=""></span></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <!---->
+  </div>
+  <div class="" style="">
+    <div class="line-neutral width-full mb-xxl"></div>
+    <h2>Emails</h2>
+    <div class="mb-xxl">
+      <h3>Emails à notifier lors du dépôt d’un type d’activité</h3>
+      <div class="tablet-blob-3-4">
+        <div class="h6">
+          <p>Lors d’un dépôt d’une activité d’un type en particulier<span><strong> si la production annuelle est non nulle</strong></span>, quels sont les emails à notifier ?</p>
+        </div>
+      </div>
+      <div class="line width-full"></div>
+      <div class="width-full-p">
+        <div class="overflow-scroll-x mb">
+          <table>
+            <tr>
+              <th>Type d'activité</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <td><select class="py-xs px-s mr-s mt-xs">
+                  <option value="gra">Rapport d'exploitation (permis et concessions M) (GRA)</option>
+                  <option value="grp">Rapport trimestriel d'exploitation d'or en Guyane (GRP)</option>
+                  <option value="grx">Rapport d'exploitation (autorisations M) (GRX)</option>
+                  <option value="pma">Rapport d’intensité d’exploration (PMA)</option>
+                  <option value="pmb">Rapport financier d'exploration (PMB)</option>
+                  <option value="pmc">Rapport environnemental d'exploration (PMC)</option>
+                  <option value="pmd">Rapport social et économique d'exploration (PMD)</option>
+                  <option value="wrp">Rapport d'exploitation (permis et concessions W) (WRP)</option>
+                </select></td>
+              <td><input type="email" class="py-xs mt-xs" placeholder="Email"></td>
+              <td><button class="py-s px-m btn rnd-xs p-s" disabled=""><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="plus" role="application" fill="#666" tabindex="-1">
+                    <use href="#icon-plus"></use>
+                  </svg></button></td>
+            </tr>
+            <tr>
+              <td><span class="cap-first">Rapport d'exploitation (autorisations M) (GRX)</span></td>
+              <td>toto@toto.com</td>
+              <td><button class="btn-border py-s px-m my--xs rnd-xs flex-right"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="delete" role="application" fill="#666" tabindex="-1">
+                    <use href="#icon-delete"></use>
+                  </svg></button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <!---->
+  </div>
+  <div class="mb-xxl">
+    <div class="line-neutral width-full mb-xxl"></div>
+    <h2>Permissions</h2>
+    <div>
+      <div class="mb-xxl">
+        <h3>Administration gestionnaire ou associée</h3>
+        <div class="h6">
+          <ul class="list-prefix">
+            <li>Un utilisateur d'une <b>administration gestionnaire</b> peut créer et modifier les titres et leur contenu.</li>
+            <li>Un utilisateur d'une <b>administration associée</b> peut voir les titres non-publics. Cette administration n'apparaît pas sur les pages des titres.</li>
+          </ul>
+        </div>
+        <div class="line width-full"></div>
+        <div class="width-full-p">
+          <div class="overflow-scroll-x mb">
+            <table>
+              <tr>
+                <th>Domaine</th>
+                <th>Type de titre</th>
+                <th>Gestionnaire</th>
+                <th>Associée</th>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bg-domaine-c inline-block small bold color-bg pill py-xs px-s mono mt-s">C</div>
+                </td>
+                <td><span class="small bold cap-first mt-s">permis exclusif de carrières</span></td>
+                <td><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="checkbox-blank" role="application" fill="#666" tabindex="-1">
+                    <use href="#icon-checkbox-blank"></use>
+                  </svg></td>
+                <td><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="checkbox" role="application" fill="#666" tabindex="-1">
+                    <use href="#icon-checkbox"></use>
+                  </svg></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="mb-xxl">
+        <h3>Restrictions de l'édition des titres, démarches et étapes</h3>
+        <div class="h6">
+          <p class="mb-s">Par défaut :</p>
+          <ul class="list-prefix mb-s">
+            <li>Un utilisateur d'une administration gestionnaire peut modifier les titres, démarches et étapes.</li>
+            <li>Un utilisateur d'une administration locale peut modifier les démarches et étapes.</li>
+          </ul>
+          <p>Restreint ces droits par domaine / type de titre / statut de titre.</p>
+        </div>
+        <div class="line width-full"></div>
+        <div class="width-full-p">
+          <div class="overflow-scroll-x mb">
+            <table>
+              <tr>
+                <th>Domaine</th>
+                <th>Type de titre</th>
+                <th>Statut de titre</th>
+                <th>Titres</th>
+                <th>Démarches</th>
+                <th>Étapes</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="mb-xxl">
+        <h3>Restrictions de la visibilité, édition et création des étapes</h3>
+        <div class="h6">
+          <p class="mb-s">Par défaut, un utilisateur d'une administration gestionnaire ou locale peut voir, modifier et créer des étapes des titre.</p>
+          <p>Restreint ces droits par domaine / type de titre / type d'étape.</p>
+        </div>
+        <div class="line width-full"></div>
+        <div class="width-full-p">
+          <div class="overflow-scroll-x mb">
+            <table>
+              <tr>
+                <th>Domaine</th>
+                <th>Type de titre</th>
+                <th>Type d'étape</th>
+                <th>Visibilité</th>
+                <th>Modification</th>
+                <th>Création</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="" style="">
+        <div class="mb-xxl">
+          <h3>Restriction de la visibilité et de l'édition des activités</h3>
+          <div class="h6">
+            <p class="mb-s">Par défaut, un utilisateur d'une administration gestionnaire ou locale peut voir et modifier les activités des titres.</p>
+            <p>Restreint ces droits par type d'étape.</p>
+          </div>
+          <div class="line width-full"></div>
+          <div class="width-full-p">
+            <div class="overflow-scroll-x mb">
+              <table>
+                <tr>
+                  <th>Type d'activité</th>
+                  <th>Visibilité</th>
+                  <th>Modification</th>
+                </tr>
+                <tr>
+                  <td><span class="cap-first">rapport d'exploitation (permis et concessions M) (GRA)</span></td>
+                  <td><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="checkbox-blank" role="application" fill="#666" tabindex="-1">
+                      <use href="#icon-checkbox-blank"></use>
+                    </svg></td>
+                  <td><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="checkbox" role="application" fill="#666" tabindex="-1">
+                      <use href="#icon-checkbox"></use>
+                    </svg></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!---->
+        <!---->
+      </div>
+    </div>
+  </div>
+</div>
