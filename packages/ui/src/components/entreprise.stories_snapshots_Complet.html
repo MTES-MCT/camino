@@ -4,11 +4,7 @@
   <div class="flex flex-direction-column rnd-s border bg-bg mb-xxl">
     <div class="accordion-header flex  border-b-s">
       <div class="py-s px-m"><span class="cap-first"> Profil </span></div>
-      <div class="overflow-hidden flex flex-end flex-right"> <button class="flex small btn py-s px-m mr-px">
-          <!--v-if--><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="file-add" role="application" fill="#666" tabindex="-1" class="flex-right">
-            <use href="#icon-file-add"></use>
-          </svg>
-        </button><button class="btn py-s px-m"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="pencil" role="application" fill="#666" tabindex="-1">
+      <div class="overflow-hidden flex flex-end flex-right"><button class="btn py-s px-m"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="pencil" role="application" fill="#666" tabindex="-1">
             <use href="#icon-pencil"></use>
           </svg></button>
         <div class="py-s" style=""></div>
@@ -88,50 +84,40 @@
           </div>
         </div>
       </div>
-      <div>
-        <h4 class="px-m pt mb-0">Documents</h4>
-        <div class="overflow-scroll-x px-m">
-          <table>
-            <tr>
-              <th>Nom</th>
-              <th>Date</th>
-              <th class="full-x-">Description</th>
-              <th></th>
-            </tr>
-            <tr class="h6">
-              <td class="nowrap pt-m flex flex-center"><span class="bold">Kbis</span><span><!--v-if--></span><span><!--v-if--><span class="bold cap-first small ml-xs"><span class="bg-info py-xxs px-xs rnd-xs color-bg box">Entreprise</span></span></span>
-                <!--v-if-->
-              </td>
-              <td class="nowrap pt-m">26-08-2019</td>
-              <td class="pt-m">Kbis</td>
-              <td class="flex text-right"><button class="btn rnd-l-xs py-s px-m my--xs mr-px"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="pencil" role="application" fill="#666" tabindex="-1">
-                    <use href="#icon-pencil"></use>
-                  </svg></button><button class="btn py-s px-m my--xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="delete" role="application" fill="#666" tabindex="-1">
-                    <use href="#icon-delete"></use>
-                  </svg></button><a class="btn-border py-s px-m my--xs rnd-r-xs" href="/apiUrl/download/fichiers/idDocument" target="_blank"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="download" role="application" fill="#666" tabindex="-1">
-                    <use href="#icon-download"></use>
-                  </svg></a>
-                <!--v-if-->
-                <!--v-if-->
-              </td>
-            </tr>
-            <tr class="h6">
-              <td class="nowrap pt-m flex flex-center"><span class="bold">Identification de matériel</span><span><!--v-if--></span><span><!--v-if--><span class="bold cap-first small ml-xs"><span class="bg-info py-xxs px-xs rnd-xs color-bg box">Entreprise</span></span></span>
-                <!--v-if-->
-              </td>
-              <td class="nowrap pt-m">26-08-2019</td>
-              <td class="pt-m">Identification pelle mécanique</td>
-              <td class="flex text-right">
-                <!--v-if-->
-                <!--v-if--><a class="btn-border py-s px-m my--xs rnd-r-xs" href="/apiUrl/download/fichiers/idDocument2" target="_blank"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" aria-labelledby="download" role="application" fill="#666" tabindex="-1">
-                    <use href="#icon-download"></use>
-                  </svg></a>
-                <!--v-if-->
-                <!--v-if-->
-              </td>
-            </tr>
-          </table>
+      <div class="dsfr">
+        <div class="fr-container">
+          <div class=" fr-table">
+            <table style="display: table;">
+              <caption>Documents de l'entreprise</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Description</th>
+                  <th scope="col" style="display: flex; justify-content: end;"><button class="fr-btn fr-icon-add-line fr-btn--primary fr-mb-0" title="Ajouter un document"></button></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="/apiUrl/fichiers/2019-08-26-kbi-12345678?" title="Télécharger le document Kbis" target="_blank">Kbis</a></td>
+                  <td>26-08-2019</td>
+                  <td>Kbis</td>
+                  <td><button class="fr-btn fr-icon-delete-line fr-btn--secondary fr-mb-0" title="Supprimer le document Kbis"></button></td>
+                </tr>
+                <tr>
+                  <td><a href="/apiUrl/fichiers/2019-08-26-idm-12345678?" title="Télécharger le document Identification de matériel" target="_blank">Identification de matériel</a></td>
+                  <td>26-08-2019</td>
+                  <td>Identification pelle mécanique</td>
+                  <td>
+                    <!---->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        <!---->
+        <!---->
       </div>
     </div>
   </div>
@@ -145,32 +131,13 @@
       </div>
       <div class="line-neutral mb"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2022 <br><strong>Cotisations</strong>
       <div class="_fiscalite-table_16f3a1">
-        <div>a. Redevance communale</div>
-        <div class="_fiscalite-value_16f3a1" style="">200,00&nbsp;€
-          <!---->
-          <!---->
-        </div>
-        <div>b. Redevance départementale</div>
-        <div class="_fiscalite-value_16f3a1" style="">78,00&nbsp;€
-          <!---->
-          <!---->
-        </div>
-        <div>c. Taxe minière sur l’or de Guyane</div>
+        <div>a. Redevance communale</div>200,00&nbsp;€<div>b. Redevance départementale</div>78,00&nbsp;€<div>c. Taxe minière sur l’or de Guyane</div>
         <div class="_fiscalite-value_16f3a1">38,00&nbsp;€</div>
         <div>d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
         <div class="_fiscalite-value_16f3a1">1,00&nbsp;€</div>
         <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
         <div class="_fiscalite-value_16f3a1">12,00&nbsp;€</div>
-        <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
-        <div class="_fiscalite-value_16f3a1" style="">23,20&nbsp;€
-          <!---->
-          <!---->
-        </div>
-        <div>Somme à payer auprès du comptable (2)</div>
-        <div class="_fiscalite-value_16f3a1" style="">313,20&nbsp;€
-          <!---->
-          <!---->
-        </div>
+        <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>23,20&nbsp;€<div>Somme à payer auprès du comptable (2)</div>313,20&nbsp;€
       </div>
     </div>
   </div>
