@@ -16,7 +16,7 @@ setup(app => {
 export const decorators: Decorator[] = [
   story => ({
     components: { story, IconSprite },
-    template: '<div style="margin: 3em;"><IconSprite /><story /></div>',
+    template: '<div class="page">' + '<main class="main">' + '<div class="container"><IconSprite /><story /></div>' + '</main>' + '</div>',
   }),
 ]
 
