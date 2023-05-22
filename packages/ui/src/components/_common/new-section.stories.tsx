@@ -4,7 +4,7 @@ import { NewSection } from './new-section'
 import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
-  title: 'Components/common/Section',
+  title: 'Components/Common/Section',
   component: NewSection,
 }
 export default meta

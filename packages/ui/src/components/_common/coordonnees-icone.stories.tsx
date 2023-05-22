@@ -7,5 +7,9 @@ const meta: Meta = {
 }
 export default meta
 
-export const NoIcone: StoryFn = () => <CoordonneesIcone />
+export const NoIcone: StoryFn = () => (
+  <div>
+    <CoordonneesIcone />
+  </div>
+)
 export const Icone: StoryFn = () => <CoordonneesIcone coordonnees={'anything'} />

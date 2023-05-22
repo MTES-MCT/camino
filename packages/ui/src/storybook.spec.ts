@@ -29,12 +29,15 @@ const compose = (entry: StoryFile) => {
   }
 }
 describe('Storybook Tests', async () => {
-  const modules = await Promise.all(Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?')).map(fn => fn()))
+  const modules = []
+  for (const [filePath, fn] of Object.entries(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?'))) {
+    modules.push({ filePath, module: await fn() })
+  }
   describe.each(
-    modules.map(module => {
-      return { name: module.default.title, module }
+    modules.map(({ filePath, module }) => {
+      return { name: module.default.title, module, filePath }
     })
-  )('$name', ({ name, module }) => {
+  )('$name', ({ name, module, filePath }) => {
     test.skipIf(name?.includes('NoStoryshots')).each(
       Object.entries<ContextedStory<unknown>>(compose(module))
         .map(([name, story]) => ({ name, story }))
@@ -48,7 +51,7 @@ describe('Storybook Tests', async () => {
         },
       })
       await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-      expect(mounted.html()).toMatchFileSnapshot(`./__snapshots__/${name}/${value.name}.html`)
+      expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
     })
   })
 })

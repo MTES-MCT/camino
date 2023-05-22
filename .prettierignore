@@ -9,4 +9,4 @@ packages/api/sources
 packages/api/CHANGELOG.md
 packages/api/**/*.json
 packages/api/**/*.queries.types.ts
-packages/ui/src/__snapshots__/**/*.html
+packages/ui/src/**/*.html

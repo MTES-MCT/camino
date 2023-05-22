@@ -2,12 +2,16 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { Points } from './points'
 
 const meta: Meta = {
-  title: 'Components/common/Points',
+  title: 'Components/Common/Points',
   component: Points,
 }
 export default meta
 
-export const Default: StoryFn = () => <Points points={[]} />
+export const Default: StoryFn = () => (
+  <div>
+    <Points points={[]} />
+  </div>
+)
 
 export const WithPoints: StoryFn = () => (
   <Points

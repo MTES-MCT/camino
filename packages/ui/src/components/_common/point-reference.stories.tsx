@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { PointReference } from './point-reference'
 
 const meta: Meta = {
-  title: 'Components/common/PointReference',
+  title: 'Components/Common/PointReference',
   component: PointReference,
 }
 export default meta

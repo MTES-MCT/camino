@@ -2,7 +2,7 @@ import SectionElement from './section-element.vue'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/common/OldSectionElement',
+  title: 'Components/Common/OldSectionElement',
   component: SectionElement,
   argTypes: {},
 }

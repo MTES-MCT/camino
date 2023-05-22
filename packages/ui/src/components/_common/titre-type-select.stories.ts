@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
-  title: 'Components/common/TitreTypeSelect',
+  title: 'Components/Common/TitreTypeSelect',
   component: TitreTypeSelect,
   argTypes: {},
 }
