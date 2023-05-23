@@ -1,5 +1,10 @@
 import { PAYS_IDS } from './pays.js'
 import { RegionId, Regions } from './region.js'
+import { z } from 'zod'
+
+// prettier-ignore
+const IDS = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','21','22','23','24','25','26','27','28','29','2A','2B','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79','80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','971','972','973','974','976',
+ ] as const
 
 export const DEPARTEMENT_IDS = {
   Ain: '01',
@@ -103,23 +108,25 @@ export const DEPARTEMENT_IDS = {
   Guyane: '973',
   'La Réunion': '974',
   Mayotte: '976',
-} as const
+} as const satisfies Record<string, (typeof IDS)[number]>
 
+const departementIdValidator = z.enum(IDS)
+export type DepartementId = z.infer<typeof departementIdValidator>
 export interface Departement<T = DepartementId> {
   id: T
   nom: string
   regionId: RegionId
 }
 
-const isCodePostal = (codePostal: string): codePostal is CodePostal => codePostal.match(/^\d{5}$/) !== null
+export const codePostalValidator = z
+  .string()
+  .regex(/^\d{5}$/)
+  .brand('codePostal')
+export type CodePostal = z.infer<typeof codePostalValidator>
 
 export const checkCodePostal = (codePostal: string): CodePostal => {
-  if (isCodePostal(codePostal)) {
-    return codePostal
-  }
-  throw new Error(`la valeur '${codePostal}' n'est pas un code postal`)
+  return codePostalValidator.parse(codePostal)
 }
-export type CodePostal = string & { __camino: 'codePostal' }
 export const toDepartementId = (codePostal: CodePostal): DepartementId => {
   let departementId = codePostal.substring(0, 2)
   if (isDepartementId(departementId)) {
@@ -131,8 +138,6 @@ export const toDepartementId = (codePostal: CodePostal): DepartementId => {
   }
   throw new Error(`impossible de trouver l'id de département dans le code postal ${codePostal}`)
 }
-
-export type DepartementId = (typeof DEPARTEMENT_IDS)[keyof typeof DEPARTEMENT_IDS]
 
 export const Departements: { [key in DepartementId]: Departement<key> } = {
   '01': { id: '01', nom: 'Ain', regionId: '84' },
@@ -238,8 +243,7 @@ export const Departements: { [key in DepartementId]: Departement<key> } = {
   '976': { id: '976', nom: 'Mayotte', regionId: '06' },
 }
 
-const departementIds = Object.values(DEPARTEMENT_IDS)
-export const isDepartementId = (departementId: string | null | undefined): departementId is DepartementId => departementIds.includes(departementId)
+export const isDepartementId = (departementId: string | null | undefined): departementId is DepartementId => departementIdValidator.safeParse(departementId).success
 
 export const departements = Object.values(Departements)
 export const departementsMetropole: DepartementId[] = departements.filter(dep => Regions[dep.regionId].paysId === PAYS_IDS['République Française']).map(({ id }) => id)

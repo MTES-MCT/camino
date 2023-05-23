@@ -1,23 +1,36 @@
-import { FiscaliteParSubstanceParAnnee, StatistiquesMinerauxMetauxMetropole, StatistiquesMinerauxMetauxMetropoleSels, substancesFiscalesStats } from 'camino-common/src/statistiques.js'
+import {
+  FiscaliteParSubstanceParAnnee,
+  StatistiquesMinerauxMetauxMetropole,
+  StatistiquesMinerauxMetauxMetropoleSels,
+  anneeCountStatistiqueValidator,
+  substancesFiscalesStats,
+} from 'camino-common/src/statistiques.js'
 import { CaminoAnnee, anneeSuivante, toCaminoAnnee } from 'camino-common/src/date.js'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
-import { knex } from '../../../knex.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titresGet } from '../../../database/queries/titres.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { SubstanceFiscaleId, SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales.js'
-import { CodePostal, Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
+import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
+import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
 import { REGION_IDS } from 'camino-common/src/static/region.js'
 import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceDepartementale, substanceFiscaleToInput } from '../../../tools/api-openfisca/index.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { evolutionTitres } from './evolution-titres.js'
 import type { Pool } from 'pg'
+import { dbQueryAndValidate } from '../../../pg-database.js'
+import {
+  getSubstancesByEntrepriseCategoryByAnnee,
+  getTitreActiviteSubstanceParAnnee,
+  getsubstancesByAnneeByCommune,
+  substancesByAnneeByCommuneValidator,
+  substancesByEntrepriseCategoryByAnneeValidator,
+} from './metaux-metropole.queries.js'
 
 export const getMinerauxMetauxMetropolesStatsInside = async (pool: Pool): Promise<StatistiquesMinerauxMetauxMetropole> => {
   const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
-  const substances = await buildSubstances()
-  const fiscaliteParSubstanceParAnnee = await fiscaliteDetail()
+  const substances = await buildSubstances(pool)
+  const fiscaliteParSubstanceParAnnee = await fiscaliteDetail(pool)
   const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, departementsMetropole)
   const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole)
 
@@ -34,7 +47,7 @@ const sels = [
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
-] as const
+] as const satisfies readonly SubstanceFiscaleId[]
 type Sels = (typeof sels)[number]
 
 type StatistiquesMinerauxMetauxMetropoleInstantBuild = Pick<StatistiquesMinerauxMetauxMetropole, 'surfaceExploration' | 'surfaceExploitation' | 'titres'>
@@ -105,19 +118,17 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
 
   return statsInstant
 }
-const buildSubstances = async (): Promise<Pick<StatistiquesMinerauxMetauxMetropole, 'substances'>> => {
+
+const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMetauxMetropole, 'substances'>> => {
   const bauxite = SUBSTANCES_FISCALES_IDS.bauxite
-  const resultSubstances: { annee: CaminoAnnee; substance: number }[] = await knex
-    .select('annee', knex.raw("titres_activites.contenu->'substancesFiscales'-> ?  as substance", bauxite))
-    .from('titres_activites')
-    .whereRaw(`titres_activites.contenu -> 'substancesFiscales' \\? '${bauxite}'`)
+  const resultSubstances = await dbQueryAndValidate(getTitreActiviteSubstanceParAnnee, { substanceFiscale: bauxite }, pool, anneeCountStatistiqueValidator)
 
   const bauxiteResult = resultSubstances.reduce<Record<CaminoAnnee, number>>((acc, dateSubstance) => {
     const annee = dateSubstance.annee
     if (!acc[annee]) {
       acc[annee] = 0
     }
-    acc[annee] += fromUniteFiscaleToUnite(SubstancesFiscale[bauxite].uniteId, dateSubstance.substance)
+    acc[annee] += fromUniteFiscaleToUnite(SubstancesFiscale[bauxite].uniteId, dateSubstance.count)
 
     return acc
   }, {})
@@ -134,46 +145,20 @@ const buildSubstances = async (): Promise<Pick<StatistiquesMinerauxMetauxMetropo
   bauxiteResult[toCaminoAnnee('2018')] = 138.8
   bauxiteResult[toCaminoAnnee('2019')] = 120.76
 
-  // TODO 2022-10-03 Problème de type postgres (jsonb ou numeric trop gros?), même avec du cast, on obtient des string
-  const resultSel: {
-    annee: CaminoAnnee
-    communeId: CodePostal
-    nacc: string
-    naca: string
-    nacb: string
-  }[] = await knex
-    .select(
-      'titres_activites.annee',
-      'tc.commune_id',
-      knex.raw("titres_activites.contenu->'substancesFiscales'->'nacc' as nacc"),
-      knex.raw("titres_activites.contenu->'substancesFiscales'->'naca' as naca"),
-      knex.raw("titres_activites.contenu->'substancesFiscales'->'nacb' as nacb")
-    )
-    .distinctOn('titres.slug', 'titres_activites.annee')
-    .from('titres_activites')
-    .leftJoin('titres', 'titres.id', 'titres_activites.titre_id')
-    .joinRaw("left join titres_communes tc on tc.titre_etape_id  = titres.props_titre_etapes_ids ->> 'points'")
-    .whereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacc'")
-    .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacb'")
-    .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'naca'")
-    .orderBy('titres.slug')
-
+  const resultSel = await dbQueryAndValidate(getsubstancesByAnneeByCommune, { substancesFiscales: sels }, pool, substancesByAnneeByCommuneValidator)
   const selsStats = resultSel.reduce<{
     [key in Sels]: StatistiquesMinerauxMetauxMetropoleSels
   }>(
     (acc, stat) => {
       const annee = stat.annee
 
-      const regionId = Departements[toDepartementId(stat.communeId)].regionId
+      const regionId = Departements[toDepartementId(stat.commune_id)].regionId
 
       for (const substance of sels) {
-        if (typeof stat[substance] !== 'number') {
-          console.warn(`WTF ${typeof stat[substance]} ${stat[substance]}`)
-        }
         if (!acc[substance][annee]) {
           acc[substance][annee] = {}
         }
-        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, parseInt(stat[substance], 10))
+        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, stat.substances[substance] ?? 0)
         acc[substance][annee][regionId] = valeur + (acc[substance][annee][regionId] ?? 0)
       }
 
@@ -279,7 +264,7 @@ const buildSubstances = async (): Promise<Pick<StatistiquesMinerauxMetauxMetropo
   return { substances: { aloh: bauxiteResult, ...selsStats } }
 }
 
-const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
+const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnnee> => {
   const fakeCommune = '66666'
   const body: OpenfiscaRequest = {
     articles: {
@@ -311,25 +296,21 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
     },
   }
 
-  const sumSubstances = substancesFiscalesStats.map(substance => `sum((ta.contenu->'substancesFiscales'->'${substance}')::int) as ${substance}`).join(',')
-  const whereSubstances = substancesFiscalesStats.map(substance => `ta.contenu->'substancesFiscales' \\? '${substance}'`).join('or \n')
-  const result: {
-    rows: ({
-      categorie: 'pme' | 'autre'
-      annee: CaminoAnnee
-    } & Record<SubstanceFiscaleId, number>)[]
-  } = await knex.raw(`
-  select case when e_t.categorie = 'PME' then 'pme' else 'autre' end as categorie, ta.annee, ${sumSubstances}
-  from titres_activites ta  
-  join titres t on t.id = ta.titre_id 
-  left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
-  left join entreprises e_t on e_t.id  = tt.entreprise_id
-  where ${whereSubstances}
-  group by case when e_t.categorie = 'PME' then 'pme' else 'autre' end, ta.annee
-  `)
+  const result = await dbQueryAndValidate(
+    getSubstancesByEntrepriseCategoryByAnnee,
+    {
+      bauxite: SUBSTANCES_FISCALES_IDS.bauxite,
+      selContenu: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+      selSondage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+      selAbattage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
+    },
+    pool,
+    substancesByEntrepriseCategoryByAnneeValidator
+  )
+
   const annees: CaminoAnnee[] = []
 
-  result.rows.forEach(row => {
+  result.forEach(row => {
     const annee = row.annee
     const categorie = row.categorie
 
@@ -337,7 +318,7 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
     const anneeFiscale = anneeSuivante(annee)
     body.articles[categorie].surface_communale[annee] = 1
 
-    substancesFiscalesStats.forEach((substance: SubstanceFiscaleId) => {
+    substancesFiscalesStats.forEach(substance => {
       const substanceFiscale = SubstancesFiscale[substance]
       ;(body.articles[categorie][redevanceCommunale(substanceFiscale)] ??= {})[anneeFiscale] = null
       ;(body.articles[categorie][redevanceDepartementale(substanceFiscale)] ??= {})[anneeFiscale] = null

@@ -4,9 +4,8 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { ChartWithExport } from '../_charts/chart-with-export'
 
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { numberFormat } from '@/utils/number-format'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-import { ref, onMounted, defineComponent, FunctionalComponent } from 'vue'
+import { ref, onMounted, FunctionalComponent } from 'vue'
 import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
 import { Unites } from 'camino-common/src/static/unites'
@@ -15,6 +14,7 @@ import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
 import { CHART_COLORS, nextColor } from '../_charts/utils'
 import styles from './mineraux-metaux-metropole.module.css'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { numberFormat } from 'camino-common/src/number'
 const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => fetchWithJson(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, {})
 
 export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxMetauxMetropole getStats={getStats} />
@@ -337,7 +337,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               <div>
                 <p class="bold text-center">
                   Demande
-                  {data.value.status === 'LOADED' && data.value.value.titres.instructionExploration > 1 ? 's' : ''}
+                  {data.value.status === 'LOADED' && data.value.value.titres.instructionExploration > 1 ? 's ' : ' '}
                   en cours d'instruction (initiale et modification en instance)
                 </p>
               </div>
@@ -399,7 +399,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               <div>
                 <p class="bold text-center">
                   Demande
-                  {data.value.status === 'LOADED' && data.value.value.titres.instructionExploitation > 1 ? 's' : ''}
+                  {data.value.status === 'LOADED' && data.value.value.titres.instructionExploitation > 1 ? 's ' : ' '}
                   en cours d'instruction (initiale et modification en instance)
                 </p>
               </div>
