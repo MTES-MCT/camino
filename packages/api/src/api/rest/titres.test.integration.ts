@@ -8,11 +8,14 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { entreprisesUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import type { Pool } from 'pg'
+import { createJournalCreate } from '../../database/queries/journaux.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
+import { constants } from 'http2'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -449,4 +452,26 @@ describe('getTitre', () => {
       administrations_locales: ['aut-97300-01', 'aut-mrae-guyane-01'],
     })
   })
+})
+
+test('getTitreDate', async () => {
+  const titre = await titreCreate(
+    {
+      nom: 'mon autre titre',
+      typeId: 'arm',
+      slug: 'slug',
+      titreStatutId: 'val',
+      propsTitreEtapesIds: {},
+    },
+    {}
+  )
+
+  let tested = await restCall(dbPool, CaminoRestRoutes.titreDate, { titreId: titre.id }, userSuper)
+
+  expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+  await createJournalCreate(idGenerate(), userSuper.id, titre.id)
+
+  tested = await restCall(dbPool, CaminoRestRoutes.titreDate, { titreId: titre.id }, userSuper)
+
+  expect(tested.body).toBe(getCurrent())
 })

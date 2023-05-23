@@ -13,6 +13,7 @@ export const CaminoRestRoutes = {
   titreSections: '/rest/titreSections/:titreId',
   demarche: '/rest/demarches/:demarcheId',
   titre: '/rest/titres/:titreId',
+  titreDate: '/rest/titres/:titreId/date',
   titreUtilisateurAbonne: '/rest/titres/:titreId/abonne',
   titresONF: '/rest/titresONF',
   titresPTMG: '/rest/titresPTMG',

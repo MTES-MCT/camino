@@ -6,7 +6,7 @@ import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre } from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre, getTitreDate } from '../api/rest/titres.js'
 import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntrepriseDocuments, postEntrepriseDocument, deleteEntrepriseDocument } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -76,6 +76,7 @@ export const restWithPool = (dbPool: Pool) => {
   rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
   rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))
   rest.get(CaminoRestRoutes.titre, restCatcher(getTitre(dbPool)))
+  rest.get(CaminoRestRoutes.titreDate, restCatcher(getTitreDate(dbPool)))
 
   rest.post(CaminoRestRoutes.titreUtilisateurAbonne, restCatcher(utilisateurTitreAbonner))
   rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
