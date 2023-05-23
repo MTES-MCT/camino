@@ -1,8 +1,8 @@
 import { sql } from '@pgtyped/runtime'
 import { AnneeCountStatistique } from 'camino-common/src/statistiques.js'
 import { Redefine } from '../../../pg-database.js'
-import { IGetSelByAnneeByCommuneQuery, IGetSubstancesByEntrepriseCategoryByAnneeQuery, IGetTitreActiviteSubstanceParAnneeQuery } from './metaux-metropole.queries.types.js'
-import { SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
+import { IGetSubstancesByEntrepriseCategoryByAnneeQuery, IGetTitreActiviteSubstanceParAnneeQuery, IGetsubstancesByAnneeByCommuneQuery } from './metaux-metropole.queries.types.js'
+import { SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
 import { z } from 'zod'
 import { caminoAnneeValidator } from 'camino-common/src/date.js'
 import { codePostalValidator } from 'camino-common/src/static/departement.js'
@@ -17,30 +17,30 @@ where
     titres_activites.contenu -> 'substancesFiscales' ? $ substanceFiscale
 `
 
-export const selByAnneeByCommuneValidator = z.object({
+export const substancesByAnneeByCommuneValidator = z.object({
   annee: caminoAnneeValidator,
   commune_id: codePostalValidator,
-  nacc: z.number(),
-  naca: z.number(),
-  nacb: z.number(),
+  substances: z.record(substanceFiscaleIdValidator, z.coerce.number()),
 })
 
-type SelByAnneeByCommune = z.infer<typeof selByAnneeByCommuneValidator>
-export const getSelByAnneeByCommune = sql<Redefine<IGetSelByAnneeByCommuneQuery, void, SelByAnneeByCommune>>`
+type substancesByAnneeByCommune = z.infer<typeof substancesByAnneeByCommuneValidator>
+export const getsubstancesByAnneeByCommune = sql<Redefine<IGetsubstancesByAnneeByCommuneQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
 select distinct on ("titres"."slug", "titres_activites"."annee")
     "titres_activites"."annee",
     "tc"."commune_id",
-    titres_activites.contenu -> 'substancesFiscales' -> 'nacc' as nacc,
-    titres_activites.contenu -> 'substancesFiscales' -> 'naca' as naca,
-    titres_activites.contenu -> 'substancesFiscales' -> 'nacb' as nacb
+    titres_activites.contenu -> 'substancesFiscales' as substances
 from
     "titres_activites"
     left join "titres" on "titres"."id" = "titres_activites"."titre_id"
     left join titres_communes tc on tc.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'
 where
-    titres_activites.contenu -> 'substancesFiscales' ? 'nacc'
-    or titres_activites.contenu -> 'substancesFiscales' ? 'nacb'
-    or titres_activites.contenu -> 'substancesFiscales' ? 'naca'
+    EXISTS (
+        SELECT
+            TRUE
+        FROM
+            jsonb_object_keys(titres_activites.contenu -> 'substancesFiscales') substanceIds
+        WHERE
+            substanceIds IN $$ substancesFiscales)
 order by
     "titres"."slug" asc
 `

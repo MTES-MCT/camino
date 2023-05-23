@@ -1,5 +1,9 @@
 import { UniteId } from './unites.js'
 import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales.js'
+import { z } from 'zod'
+
+// prettier-ignore
+const IDS = ['aloh','anti','arge','arse','auru','bism','cfxa','cfxb','cfxc','coox','cuiv','etai','fera','ferb','fluo','hyda','hydb','hydc','hydd','hyde','hydf','kclx','lith','mang','moly','naca','nacb','nacc','plom','souf','uran','wolf','zinc',] as const
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -35,9 +39,10 @@ export const SUBSTANCES_FISCALES_IDS = {
   uranium: 'uran',
   'oxyde de tungstène (WO3)': 'wolf',
   zinc: 'zinc',
-} as const
+} as const satisfies Record<string, (typeof IDS)[number]>
 
-export type SubstanceFiscaleId = (typeof SUBSTANCES_FISCALES_IDS)[keyof typeof SUBSTANCES_FISCALES_IDS]
+export const substanceFiscaleIdValidator = z.enum(IDS)
+export type SubstanceFiscaleId = z.infer<typeof substanceFiscaleIdValidator>
 
 export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   id: T
@@ -52,9 +57,8 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   }
 }
 
-export const isSubstanceFiscale = (substance: string): substance is SubstanceFiscaleId => {
-  return Object.values(SUBSTANCES_FISCALES_IDS).includes(substance)
-}
+export const isSubstanceFiscale = (substance: string): substance is SubstanceFiscaleId => substanceFiscaleIdValidator.safeParse(substance).success
+
 export const SubstancesFiscale: {
   [key in SubstanceFiscaleId]: SubstanceFiscale<key>
 } = {

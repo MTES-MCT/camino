@@ -18,22 +18,22 @@ export interface IGetTitreActiviteSubstanceParAnneeQuery {
   result: IGetTitreActiviteSubstanceParAnneeResult;
 }
 
-/** 'GetSelByAnneeByCommune' parameters type */
-export type IGetSelByAnneeByCommuneParams = void;
-
-/** 'GetSelByAnneeByCommune' return type */
-export interface IGetSelByAnneeByCommuneResult {
-  annee: number;
-  commune_id: string;
-  naca: Json | null;
-  nacb: Json | null;
-  nacc: Json | null;
+/** 'GetsubstancesByAnneeByCommune' parameters type */
+export interface IGetsubstancesByAnneeByCommuneParams {
+  substancesFiscales: readonly (string | null | void)[];
 }
 
-/** 'GetSelByAnneeByCommune' query type */
-export interface IGetSelByAnneeByCommuneQuery {
-  params: IGetSelByAnneeByCommuneParams;
-  result: IGetSelByAnneeByCommuneResult;
+/** 'GetsubstancesByAnneeByCommune' return type */
+export interface IGetsubstancesByAnneeByCommuneResult {
+  annee: number;
+  commune_id: string;
+  substances: Json | null;
+}
+
+/** 'GetsubstancesByAnneeByCommune' query type */
+export interface IGetsubstancesByAnneeByCommuneQuery {
+  params: IGetsubstancesByAnneeByCommuneParams;
+  result: IGetsubstancesByAnneeByCommuneResult;
 }
 
 /** 'GetSubstancesByEntrepriseCategoryByAnnee' parameters type */

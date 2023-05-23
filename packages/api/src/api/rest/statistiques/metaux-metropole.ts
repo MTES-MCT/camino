@@ -10,7 +10,7 @@ import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titresGet } from '../../../database/queries/titres.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales.js'
+import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
 import { REGION_IDS } from 'camino-common/src/static/region.js'
 import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceDepartementale, substanceFiscaleToInput } from '../../../tools/api-openfisca/index.js'
@@ -20,10 +20,10 @@ import { evolutionTitres } from './evolution-titres.js'
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../../pg-database.js'
 import {
-  getSelByAnneeByCommune,
   getSubstancesByEntrepriseCategoryByAnnee,
   getTitreActiviteSubstanceParAnnee,
-  selByAnneeByCommuneValidator,
+  getsubstancesByAnneeByCommune,
+  substancesByAnneeByCommuneValidator,
   substancesByEntrepriseCategoryByAnneeValidator,
 } from './metaux-metropole.queries.js'
 
@@ -47,7 +47,7 @@ const sels = [
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
-] as const
+] as const satisfies readonly SubstanceFiscaleId[]
 type Sels = (typeof sels)[number]
 
 type StatistiquesMinerauxMetauxMetropoleInstantBuild = Pick<StatistiquesMinerauxMetauxMetropole, 'surfaceExploration' | 'surfaceExploitation' | 'titres'>
@@ -145,7 +145,7 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
   bauxiteResult[toCaminoAnnee('2018')] = 138.8
   bauxiteResult[toCaminoAnnee('2019')] = 120.76
 
-  const resultSel = await dbQueryAndValidate(getSelByAnneeByCommune, undefined, pool, selByAnneeByCommuneValidator)
+  const resultSel = await dbQueryAndValidate(getsubstancesByAnneeByCommune, { substancesFiscales: sels }, pool, substancesByAnneeByCommuneValidator)
   const selsStats = resultSel.reduce<{
     [key in Sels]: StatistiquesMinerauxMetauxMetropoleSels
   }>(
@@ -155,13 +155,10 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
       const regionId = Departements[toDepartementId(stat.commune_id)].regionId
 
       for (const substance of sels) {
-        if (typeof stat[substance] !== 'number') {
-          console.warn(`WTF ${typeof stat[substance]} ${stat[substance]}`)
-        }
         if (!acc[substance][annee]) {
           acc[substance][annee] = {}
         }
-        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, stat[substance])
+        const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, stat.substances[substance] ?? 0)
         acc[substance][annee][regionId] = valeur + (acc[substance][annee][regionId] ?? 0)
       }
 
