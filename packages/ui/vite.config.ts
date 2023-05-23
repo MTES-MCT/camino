@@ -30,6 +30,8 @@ export default defineConfig({
       { find: /^jsondiffpatch-rc$/, replacement: 'jsondiffpatch-rc/dist/jsondiffpatch.esm.js' },
       { find: /^storybook-vue3-router$/, replacement: 'storybook-vue3-router/dist/index.mjs' },
     ],
+    css: true,
+    testTimeout: 30000
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118
