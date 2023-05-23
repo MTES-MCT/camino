@@ -24,6 +24,8 @@ module.exports = defineConfig({
     transformMode: {
       web: [/\.[jt]sx$/],
     },
+    css: true,
+    testTimeout: 30000
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118
