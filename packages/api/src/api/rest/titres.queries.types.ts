@@ -22,3 +22,19 @@ export interface IGetTitreQuery {
   result: IGetTitreResult;
 }
 
+/** 'GetLastJournal' parameters type */
+export interface IGetLastJournalParams {
+  titreId?: string | null | void;
+}
+
+/** 'GetLastJournal' return type */
+export interface IGetLastJournalResult {
+  date: string | null;
+}
+
+/** 'GetLastJournal' query type */
+export interface IGetLastJournalQuery {
+  params: IGetLastJournalParams;
+  result: IGetLastJournalResult;
+}
+

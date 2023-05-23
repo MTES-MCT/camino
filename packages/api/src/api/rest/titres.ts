@@ -24,7 +24,7 @@ import { isAdministration, isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getTitre as getTitreDb } from './titres.queries.js'
+import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator } from './titres.queries.js'
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
 
@@ -535,6 +535,27 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
         res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
       } else {
         res.json(titres[0])
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
+export const getTitreDate = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CaminoDate | null>) => {
+  const titreId: string | undefined = req.params.titreId
+  if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      const journaux = await dbQueryAndValidate(getLastJournal, { titreId }, pool, lastJournalGetValidator)
+
+      if (journaux.length !== 1) {
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      } else {
+        res.json(journaux[0].date)
       }
     } catch (e) {
       console.error(e)

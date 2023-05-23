@@ -4,13 +4,16 @@ import { User } from 'camino-common/src/roles'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { EditableTitre } from 'camino-common/src/titres'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { Icon } from '../_ui/icon'
 import { EditPopup } from './edit-popup'
 import { RemovePopup } from './remove-popup'
 import { titreApiClient, TitreApiClient } from './titre-api-client'
+import { AsyncData } from '@/api/client-rest'
+import { CaminoDate, dateFormat } from 'camino-common/src/date'
+import { LoadingElement } from '../_ui/functional-loader'
 
 interface Props {
   titre: {
@@ -26,7 +29,7 @@ interface Props {
 
 interface PureProps extends Props {
   user: User
-  apiClient: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre' | 'removeTitre'>
+  apiClient: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre' | 'removeTitre' | 'getLastModifiedDate'>
   emailSend: () => void
 }
 export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'], props => {
@@ -93,7 +96,7 @@ export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'],
     window.location.href = `mailto:camino@beta.gouv.fr?subject=Erreur ${route.params.id}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} : `
   }
 
-  return () => <PureHeader {...props} user={user.value} apiClient={{ editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
+  return () => <PureHeader {...props} user={user.value} apiClient={{ ...titreApiClient, editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
 })
 
 export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack'>>(['titre', 'apiClient', 'user', 'emailSend'], props => {
@@ -103,13 +106,31 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
   const removePopup = ref<boolean>(false)
   const editPopup = ref<boolean>(false)
 
+  const lastModifiedDate = ref<AsyncData<CaminoDate | null>>({ status: 'LOADING' })
+
+  onMounted(async () => {
+    try {
+      lastModifiedDate.value = { status: 'LOADED', value: await props.apiClient.getLastModifiedDate(props.titre.id) }
+    } catch (e: any) {
+      console.error('error', e)
+      lastModifiedDate.value = {
+        status: 'ERROR',
+        message: e.message ?? 'something wrong happened',
+      }
+    }
+  })
   return () => (
     <>
       <div class="sticky-header width-full">
         <div class="container">
           <div class="tablet-blobs">
             <div class="tablet-blob-1-2">
-              <h1 class="mt-m mb-m">{props.titre.nom}</h1>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                <h1 class="mt-m mb-m">{props.titre.nom}</h1>
+                <div class="pl-s color-neutral">
+                  <LoadingElement data={lastModifiedDate.value} renderItem={item => (item ? <>Modifié le {dateFormat(item)}</> : null)} />
+                </div>
+              </div>
             </div>
             <div class="tablet-blob-1-2 flex">
               <div class="flex-right flex my-s">
