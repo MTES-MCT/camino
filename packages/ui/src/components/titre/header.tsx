@@ -109,7 +109,10 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
         <div class="container">
           <div class="tablet-blobs">
             <div class="tablet-blob-1-2">
-              <h1 class="mt-m mb-m">{props.titre.nom}</h1>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                <h1 class="mt-m mb-m">{props.titre.nom}</h1>
+                <div class="pl-s color-neutral">Modifié le 2023-05-23</div>
+              </div>
             </div>
             <div class="tablet-blob-1-2 flex">
               <div class="flex-right flex my-s">
