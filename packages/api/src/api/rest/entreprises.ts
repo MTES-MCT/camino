@@ -23,7 +23,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
 import {
-  eidValidator,
+  entrepriseIdValidator,
   entrepriseModificationValidator,
   EntrepriseType,
   sirenValidator,
@@ -412,7 +412,7 @@ export const getEntreprise = async (req: JWTRequest<User>, res: CustomResponse<E
 export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocument[]>) => {
   const user = req.auth
 
-  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -428,7 +428,7 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
 export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<DocumentId | Error>) => {
   const user = req.auth
 
-  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -486,7 +486,7 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
 export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<void | Error>) => {
   const user = req.auth
 
-  const entrepriseIdParsed = eidValidator.safeParse(req.params.entrepriseId)
+  const entrepriseIdParsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
   const documentIdParsed = documentIdValidator.safeParse(req.params.documentId)
   if (!entrepriseIdParsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
@@ -548,7 +548,7 @@ export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fisca
       if (
         !fiscaliteVisible(
           user,
-          eidValidator.parse(entrepriseId),
+          entrepriseIdValidator.parse(entrepriseId),
           titres.map(({ typeId }) => ({ type_id: typeId }))
         )
       ) {

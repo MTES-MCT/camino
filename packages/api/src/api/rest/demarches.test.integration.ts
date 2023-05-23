@@ -1,7 +1,6 @@
 import { restCall } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
@@ -21,13 +20,13 @@ afterAll(async () => {
 
 describe('getDemarche', () => {
   test('ne peut pas récupérer une démarche (utilisateur non super)', async () => {
-    const tested = await restCall(dbPool, CaminoRestRoutes.demarche, { demarcheId: 'not existing' }, undefined)
+    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: 'not existing' }, undefined)
 
     expect(tested.statusCode).toBe(403)
   })
 
   test('ne peut pas récupérer une démarche inexistante', async () => {
-    const tested = await restCall(dbPool, CaminoRestRoutes.demarche, { demarcheId: 'not existing' }, userSuper)
+    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: 'not existing' }, userSuper)
 
     expect(tested.statusCode).toBe(404)
   })
@@ -47,7 +46,7 @@ describe('getDemarche', () => {
       titreId: titre.id,
       typeId: 'oct',
     })
-    const tested = await restCall(dbPool, CaminoRestRoutes.demarche, { demarcheId: titreDemarche.id }, userSuper)
+    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: titreDemarche.id }, userSuper)
 
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toEqual({

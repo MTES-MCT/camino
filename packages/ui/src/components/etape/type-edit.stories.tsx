@@ -1,7 +1,7 @@
 import { TypeEdit } from './type-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import { ETAPES_TYPES, etapesTypesIds } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { toCaminoDate } from 'camino-common/src/date'

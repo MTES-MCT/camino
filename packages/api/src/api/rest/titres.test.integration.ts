@@ -153,7 +153,7 @@ describe('titresONF', () => {
   test("teste la récupération des données pour l'ONF", async () => {
     const tested = await restCall(
       dbPool,
-      CaminoRestRoutes.titresONF,
+      '/rest/titresONF',
       {},
       {
         role: 'admin',
@@ -178,7 +178,7 @@ describe('titresPTMG', () => {
   test('teste la récupération des données pour le PTMG', async () => {
     const tested = await restCall(
       dbPool,
-      CaminoRestRoutes.titresPTMG,
+      '/rest/titresPTMG',
       {},
       {
         role: 'admin',
@@ -202,7 +202,7 @@ describe('titresLiaisons', () => {
   test('peut lier deux titres', async () => {
     const getTitres = await restCall(
       dbPool,
-      CaminoRestRoutes.titresONF,
+      '/rest/titresONF',
       {},
       {
         role: 'admin',

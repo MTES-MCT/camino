@@ -1,7 +1,8 @@
+import { sirenValidator } from 'camino-common/src/entreprise.js'
 import { IApiSirenEtablissement, IApiSirenUniteLegale } from '../../src/tools/api-insee/types.js'
 
 const entreprise = {
-  siren: '729800706',
+  siren: sirenValidator.parse('729800706'),
   nic: '00586',
   siret: '72980070600586',
   statutDiffusionEtablissement: 'O',

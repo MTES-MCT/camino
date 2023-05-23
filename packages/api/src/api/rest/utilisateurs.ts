@@ -14,6 +14,7 @@ import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
+import { Pool } from 'pg'
 
 export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
@@ -101,7 +102,7 @@ export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<
   }
 }
 
-export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
+export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<User>) => {
   res.clearCookie('shouldBeConnected')
   const user = req.auth
   if (!user) {

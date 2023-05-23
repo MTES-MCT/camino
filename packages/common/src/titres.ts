@@ -1,7 +1,7 @@
 import { TitreStatutId, titreStatutIdValidator } from './static/titresStatuts.js'
 import { TitreReference, titreReferenceValidator } from './titres-references.js'
-import { EtapeTypeId } from './static/etapesTypes.js'
-import { CaminoDate, dateFormat } from './date.js'
+import { etapeTypeIdValidator } from './static/etapesTypes.js'
+import { CaminoDate, caminoDateValidator, dateFormat } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
 import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement, getElementValeurs } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
@@ -28,8 +28,8 @@ export const commonTitreValidator = z.object({
 /** @deprecated use CommonRestTitre */
 export interface CommonTitre {
   id: string
-  slug: string
   nom: string
+  slug: string
   typeId: TitreTypeId
   titreStatutId: TitreStatutId
   references: TitreReference[]
@@ -56,28 +56,37 @@ export const editableTitreCheck = commonTitreValidator.pick({
   nom: true,
   references: true,
 })
+export const titrePtmgValidator = commonTitreValidator.omit({'administrations_locales': true}).extend({
+  enAttenteDePTMG: z.boolean()}
+)
+export type CommonTitrePTMG = z.infer<typeof titrePtmgValidator>
 
-export interface CommonTitrePTMG extends Omit<CommonTitre, 'administrationsLocales'> {
-  enAttenteDePTMG: boolean
-}
+export const titreDrealValidator = commonTitreValidator.omit({'administrations_locales': true}).extend({
+  activitesAbsentes: z.number(),
+  activitesEnConstruction: z.number(),
+  derniereEtape: z.object({etapeTypeId: etapeTypeIdValidator, date: caminoDateValidator}).nullable(),
+  enAttenteDeDREAL: z.boolean(),
+  prochainesEtapes: z.array(etapeTypeIdValidator)}
+)
+export type CommonTitreDREAL = z.infer<typeof titreDrealValidator>
 
-export interface CommonTitreDREAL extends Omit<CommonTitre, 'administrationsLocales'> {
-  activitesAbsentes: number
-  activitesEnConstruction: number
-  derniereEtape: { etapeTypeId: EtapeTypeId; date: CaminoDate } | null
-  enAttenteDeDREAL: boolean
-  prochainesEtapes: EtapeTypeId[]
-}
+export const titreOnfValidator = commonTitreValidator.omit({'administrations_locales': true}).extend({
+  dateCompletudePTMG: z.string(),
+  dateReceptionONF: z.string(),
+  dateCARM: z.string(),
+  enAttenteDeONF: z.boolean()}
+)
+export type CommonTitreONF = z.infer<typeof titreOnfValidator>
 
-export interface CommonTitreONF extends Omit<CommonTitre, 'administrationsLocales'> {
-  dateCompletudePTMG: string
-  dateReceptionONF: string
-  dateCARM: string
-  enAttenteDeONF: boolean
-}
+export const titreLinkValidator = commonTitreValidator.pick({id: true, nom: true})
+export type TitreLink = z.infer<typeof titreLinkValidator>
 
-export type TitreLink = Pick<CommonRestTitre, 'id' | 'nom'>
-export type TitreLinks = { amont: TitreLink[]; aval: TitreLink[] }
+export const titreLinksValidator = z.object({
+  amont: z.array(titreLinkValidator),
+  aval: z.array(titreLinkValidator),
+
+})
+export type TitreLinks = z.infer<typeof titreLinksValidator>
 
 type BasicElement = {
   id: string

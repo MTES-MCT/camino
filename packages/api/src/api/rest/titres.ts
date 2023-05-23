@@ -5,7 +5,7 @@ import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks, titreGetValidator, TitreGet } from 'camino-common/src/titres.js'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks, titreGetValidator, TitreGet, titreOnfValidator, titrePtmgValidator, titreLinksValidator } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -56,12 +56,12 @@ export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTi
 
           const dateCARM = octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
 
-          return {
+          const value: CommonTitreONF = {
             id: titre.id,
             slug: titre.slug,
             nom: titre.nom,
-            titreStatutId: titre.titreStatutId,
-            typeId: titre.typeId,
+            titre_statut_id: titre.titreStatutId,
+            type_id: titre.typeId,
             references,
             titulaires: titre.titulaires.map(entreprise => ({
               nom: entreprise.nom ?? '',
@@ -71,6 +71,7 @@ export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTi
             dateCARM,
             enAttenteDeONF: blockedByMe,
           }
+          return titreOnfValidator.parse(value)
         })
       )
     }
@@ -173,18 +174,19 @@ export const titresPTMG = async (req: CaminoRequest, res: CustomResponse<CommonT
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
       const titresFormated: CommonTitrePTMG[] = (await titresArmAvecOctroi(user, administrationId)).map(({ titre, references, blockedByMe }) => {
-        return {
+        const value: CommonTitrePTMG = {
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          typeId: titre.typeId,
-          titreStatutId: titre.titreStatutId,
+          type_id: titre.typeId,
+          titre_statut_id: titre.titreStatutId,
           references,
           titulaires: titre.titulaires.map(entreprise => ({
             nom: entreprise.nom ?? '',
           })),
           enAttenteDePTMG: blockedByMe,
         }
+        return titrePtmgValidator.parse(value)
       })
 
       res.json(titresFormated)
@@ -402,10 +404,11 @@ export const getTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<T
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      res.json({
+      const value: TitreLinks = {
         amont: await titreLinksGet(titreId, 'titreFromId', user),
         aval: await titreLinksGet(titreId, 'titreToId', user),
-      })
+      }
+      res.json(titreLinksValidator.parse(value))
     }
   }
 }

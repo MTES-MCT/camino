@@ -1,5 +1,9 @@
+import { z } from 'zod'
 import { CaminoDate, toCaminoDate } from '../date.js'
 import { Definition } from '../definition.js'
+
+// prettier-ignore
+const IDS = ['aac','aaf','abd','abs','aca','acd','acg','acl','aco','aec','aep','afp','agn','aim','ama','ami','and','ane','anf','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','def','des','dex','dim','dpu','dup','dux','ede','edm','eof','epc','epu','esb','ide','ihi','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mfr','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','mod','mom','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rca','rcb','rcd','rcg','rcm','rco','rcs','rde','ria','rie','rif','rim','rio','rpe','rpu','rtd','sas','sca','scg','scl','sco','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp',] as const
 
 export const ETAPES_TYPES = {
   avisDeDirectionRegionaleDesAffairesCulturelles: 'aac',
@@ -168,12 +172,14 @@ export const ETAPES_TYPES = {
   saisineDeLautoriteEnvironnementale: 'wse',
   saisineDesServicesDeLEtat: 'wss',
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp',
-} as const
+} as const satisfies Record<string, EtapeTypeId>
 
-export type EtapeTypeId = (typeof ETAPES_TYPES)[keyof typeof ETAPES_TYPES]
 export type EtapeTypeKey = keyof typeof ETAPES_TYPES
 
-export const etapesTypesIds = Object.values(ETAPES_TYPES)
+export const etapeTypeIdValidator = z.enum(IDS)
+
+export type EtapeTypeId = z.infer<typeof etapeTypeIdValidator>
+
 export type EtapeType<T = EtapeTypeId> = Omit<Definition<T>, 'ordre'> & { unique: boolean; fondamentale: boolean; dateFin: CaminoDate | null }
 export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
   aac: {
@@ -859,7 +865,7 @@ export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
 }
 
 export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId => {
-  return etapesTypesIds.includes(etapeTypeId)
+  return etapeTypeIdValidator.safeParse(etapeTypeId).success
 }
 export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeKey => {
   return etapeTypeKey in ETAPES_TYPES

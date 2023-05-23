@@ -3,7 +3,6 @@ import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import type { Pool } from 'pg'
 
 console.info = vi.fn()
@@ -29,7 +28,7 @@ describe('utilisateurModifier', () => {
       entreprises: [],
       administrationId: null,
     }
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.utilisateurPermission, { id: utilisateurToEdit.id }, undefined, utilisateurToEdit)
+    const tested = await restPostCall(dbPool, '/rest/utilisateurs/:id/permission', { id: utilisateurToEdit.id }, undefined, utilisateurToEdit)
 
     expect(tested.statusCode).toBe(403)
   })
@@ -45,7 +44,7 @@ describe('utilisateurModifier', () => {
     }
     const tested = await restPostCall(
       dbPool,
-      CaminoRestRoutes.utilisateurPermission,
+      '/rest/utilisateurs/:id/permission',
       { id: userToEdit.id },
       {
         role: 'super',
@@ -59,7 +58,7 @@ describe('utilisateurModifier', () => {
 
 describe('utilisateurSupprimer', () => {
   test('ne peut pas supprimer un compte (utilisateur anonyme)', async () => {
-    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.utilisateur, { id: 'test' }, undefined)
+    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: 'test' }, undefined)
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -71,7 +70,7 @@ describe('utilisateurSupprimer', () => {
   test('peut supprimer son compte utilisateur', async () => {
     const user = await userGenerate({ role: 'defaut' })
 
-    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.utilisateur, { id: user.id }, { role: 'defaut' })
+    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: user.id }, { role: 'defaut' })
     expect(tested.statusCode).toBe(204)
   })
 
@@ -86,12 +85,12 @@ describe('utilisateurSupprimer', () => {
       dateCreation: '2022-05-12',
     })
 
-    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.utilisateur, { id }, { role: 'super' })
+    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id }, { role: 'super' })
     expect(tested.statusCode).toBe(204)
   })
 
   test('ne peut pas supprimer un utilisateur inexistant (utilisateur super)', async () => {
-    const tested = await restDeleteCall(dbPool, CaminoRestRoutes.utilisateur, { id: 'not-existing' }, { role: 'super' })
+    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: 'not-existing' }, { role: 'super' })
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
