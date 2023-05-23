@@ -296,7 +296,17 @@ const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnne
     },
   }
 
-  const result = await dbQueryAndValidate(getSubstancesByEntrepriseCategoryByAnnee, undefined, pool, substancesByEntrepriseCategoryByAnneeValidator)
+  const result = await dbQueryAndValidate(
+    getSubstancesByEntrepriseCategoryByAnnee,
+    {
+      bauxite: SUBSTANCES_FISCALES_IDS.bauxite,
+      selContenu: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+      selSondage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+      selAbattage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
+    },
+    pool,
+    substancesByEntrepriseCategoryByAnneeValidator
+  )
 
   const annees: CaminoAnnee[] = []
 

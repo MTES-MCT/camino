@@ -37,7 +37,12 @@ export interface IGetsubstancesByAnneeByCommuneQuery {
 }
 
 /** 'GetSubstancesByEntrepriseCategoryByAnnee' parameters type */
-export type IGetSubstancesByEntrepriseCategoryByAnneeParams = void;
+export interface IGetSubstancesByEntrepriseCategoryByAnneeParams {
+  bauxite?: string | null | void;
+  selAbattage?: string | null | void;
+  selContenu?: string | null | void;
+  selSondage?: string | null | void;
+}
 
 /** 'GetSubstancesByEntrepriseCategoryByAnnee' return type */
 export interface IGetSubstancesByEntrepriseCategoryByAnneeResult {

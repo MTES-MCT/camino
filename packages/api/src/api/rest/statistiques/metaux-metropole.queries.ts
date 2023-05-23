@@ -2,7 +2,7 @@ import { sql } from '@pgtyped/runtime'
 import { AnneeCountStatistique } from 'camino-common/src/statistiques.js'
 import { Redefine } from '../../../pg-database.js'
 import { IGetSubstancesByEntrepriseCategoryByAnneeQuery, IGetTitreActiviteSubstanceParAnneeQuery, IGetsubstancesByAnneeByCommuneQuery } from './metaux-metropole.queries.types.js'
-import { SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
+import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
 import { z } from 'zod'
 import { caminoAnneeValidator } from 'camino-common/src/date.js'
 import { codePostalValidator } from 'camino-common/src/static/departement.js'
@@ -53,8 +53,20 @@ export const substancesByEntrepriseCategoryByAnneeValidator = z.object({
   nacb: z.coerce.number(),
   nacc: z.coerce.number(),
 })
+
 type SubstancesByEntrepriseCategoryByAnnee = z.infer<typeof substancesByEntrepriseCategoryByAnneeValidator>
-export const getSubstancesByEntrepriseCategoryByAnnee = sql<Redefine<IGetSubstancesByEntrepriseCategoryByAnneeQuery, void, SubstancesByEntrepriseCategoryByAnnee>>`
+export const getSubstancesByEntrepriseCategoryByAnnee = sql<
+  Redefine<
+    IGetSubstancesByEntrepriseCategoryByAnneeQuery,
+    {
+      bauxite: typeof SUBSTANCES_FISCALES_IDS.bauxite
+      selContenu: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+      selSondage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage
+      selAbattage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+    },
+    SubstancesByEntrepriseCategoryByAnnee
+  >
+>`
 select
     case when e_t.categorie = 'PME' then
         'pme'
@@ -62,20 +74,20 @@ select
         'autre'
     end as categorie,
     ta.annee,
-    sum((ta.contenu -> 'substancesFiscales' -> 'aloh')::bigint) as aloh,
-    sum((ta.contenu -> 'substancesFiscales' -> 'nacc')::bigint) as nacc,
-    sum((ta.contenu -> 'substancesFiscales' -> 'nacb')::bigint) as nacb,
-    sum((ta.contenu -> 'substancesFiscales' -> 'naca')::bigint) as naca
+    sum((ta.contenu -> 'substancesFiscales' -> $ bauxite)::bigint) as aloh,
+    sum((ta.contenu -> 'substancesFiscales' -> $ selContenu)::bigint) as nacc,
+    sum((ta.contenu -> 'substancesFiscales' -> $ selSondage)::bigint) as nacb,
+    sum((ta.contenu -> 'substancesFiscales' -> $ selAbattage)::bigint) as naca
 from
     titres_activites ta
     join titres t on t.id = ta.titre_id
     left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
     left join entreprises e_t on e_t.id = tt.entreprise_id
 where
-    ta.contenu -> 'substancesFiscales' ? 'aloh'
-    or ta.contenu -> 'substancesFiscales' ? 'nacc'
-    or ta.contenu -> 'substancesFiscales' ? 'nacb'
-    or ta.contenu -> 'substancesFiscales' ? 'naca'
+    ta.contenu -> 'substancesFiscales' ? $ bauxite
+    or ta.contenu -> 'substancesFiscales' ? $ selContenu
+    or ta.contenu -> 'substancesFiscales' ? $ selSondage
+    or ta.contenu -> 'substancesFiscales' ? $ selAbattage
 group by
     case when e_t.categorie = 'PME' then
         'pme'
