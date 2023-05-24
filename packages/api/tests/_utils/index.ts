@@ -8,7 +8,7 @@ import { Index, IUtilisateur } from '../../src/types.js'
 import { app } from '../app.js'
 import { utilisateurCreate, utilisateurGet } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
-import { AdminUserNotNull, isAdministrationRole, isSuperRole } from 'camino-common/src/roles.js'
+import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
@@ -91,7 +91,7 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
   return req
 }
 
-export const userGenerate = async (user: TestUser) => {
+export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
   let id = 'super'
 
   if (!isSuperRole(user.role)) {
@@ -118,7 +118,8 @@ export const userGenerate = async (user: TestUser) => {
     )
   }
 
-  return userInDb
+  // TODO 2023-05-24: pg-typed utilisateurCreate and utilisateurGet
+  return userInDb as UserNotNull
 }
 export const userTokenGenerate = async (user: TestUser) => {
   const userInDb = await userGenerate(user)

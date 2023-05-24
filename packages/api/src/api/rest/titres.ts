@@ -5,7 +5,7 @@ import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks, titreGetValidator, TitreGet, titreOnfValidator, titrePtmgValidator, titreLinksValidator } from 'camino-common/src/titres.js'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreValidator, TitreLink, TitreLinks, titreGetValidator, TitreGet, titreOnfValidator, titrePtmgValidator, titreLinksValidator, utilisateurTitreAbonneValidator } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -36,7 +36,7 @@ const etapesAMasquer = [
   ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
 ]
 
-export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
+export const titresONF =(_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -162,7 +162,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-export const titresPTMG = async (req: CaminoRequest, res: CustomResponse<CommonTitrePTMG[]>) => {
+export const titresPTMG = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitrePTMG[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -201,7 +201,7 @@ type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
 } & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
-export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
+export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -347,7 +347,7 @@ export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<Common
 const isStringArray = (stuff: any): stuff is string[] => {
   return stuff instanceof Array && stuff.every(value => typeof value === 'string')
 }
-export const postTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const postTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id
@@ -392,7 +392,7 @@ export const postTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<
     aval: await titreLinksGet(titreId, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const getTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id
@@ -422,7 +422,7 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
   return titres.map(({ id, nom }) => ({ id, nom }))
 }
 
-export const removeTitre = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   const titreId: string | undefined = req.params.titreId
@@ -451,10 +451,9 @@ export const removeTitre = async (req: CaminoRequest, res: CustomResponse<void>)
   }
 }
 
-export const utilisateurTitreAbonner = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const utilisateurTitreAbonner = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
-  const body = z.object({ abonne: z.boolean() })
-  const parsedBody = body.safeParse(req.body)
+  const parsedBody = utilisateurTitreAbonneValidator.safeParse(req.body)
   const titreId: string | undefined = req.params.titreId
   if (!titreId) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
@@ -486,10 +485,10 @@ export const utilisateurTitreAbonner = async (req: CaminoRequest, res: CustomRes
   }
 }
 
-export const updateTitre = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const titreId: string | undefined = req.params.titreId
   const user = req.auth
-  const parsedBody = editableTitreCheck.safeParse(req.body)
+  const parsedBody = editableTitreValidator.safeParse(req.body)
   if (!titreId) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else if (!parsedBody.success) {

@@ -1,9 +1,10 @@
-import { restDeleteCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
+import { restCall, restDeleteCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import type { Pool } from 'pg'
+import { constants } from 'http2'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -18,6 +19,26 @@ beforeAll(async () => {
 afterAll(async () => {
   await dbManager.reseedDb()
   await dbManager.closeKnex()
+})
+
+describe('moi', () => {
+  test('peut demander les informations sur soi-même', async () => {
+    const user = await userGenerate({ role: 'defaut' })
+    let tested = await restCall(dbPool, '/moi', {  }, undefined)
+    
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+
+    tested = await restCall(dbPool, '/moi', {  }, user)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "email": "defaut-user@camino.local",
+        "id": "defaut-user",
+        "nom": "nom-defaut",
+        "prenom": "prenom-defaut",
+        "role": "defaut",
+      }
+    `)
+  })
 })
 
 describe('utilisateurModifier', () => {

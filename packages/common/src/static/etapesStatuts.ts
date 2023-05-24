@@ -1,5 +1,7 @@
 import { Couleur } from './couleurs.js'
+import {z} from 'zod'
 
+const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'aco', 'nul', 'pro'] as const
 export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',
   DEFAVORABLE_AVEC_RESERVES: 'dre',
@@ -19,15 +21,13 @@ export const ETAPES_STATUTS = {
   EN_CONSTRUCTION: 'aco',
   NON_APPLICABLE: 'nul',
   PROGRAMME: 'pro',
-} as const
-export type EtapeStatutId = (typeof ETAPES_STATUTS)[keyof typeof ETAPES_STATUTS]
+} as const satisfies Record<string, EtapeStatutId>
+
+export const etapeStatutIdValidator = z.enum(IDS)
+export type EtapeStatutId = z.infer<typeof etapeStatutIdValidator>
 export type EtapeStatutKey = keyof typeof ETAPES_STATUTS
 
-const etapesStatutsIds = Object.values(ETAPES_STATUTS)
-
-export const isStatut = (statut: string): statut is EtapeStatutId => {
-  return etapesStatutsIds.includes(statut)
-}
+export const isStatut = (statut: string): statut is EtapeStatutId => etapeStatutIdValidator.safeParse(statut).success
 
 export const isEtapeStatutKey = (etapeStatutKey: string): etapeStatutKey is EtapeStatutKey => {
   return etapeStatutKey in ETAPES_STATUTS

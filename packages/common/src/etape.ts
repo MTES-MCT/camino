@@ -4,9 +4,10 @@ import { EntrepriseId } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { DocumentTypeId } from './static/documentsTypes.js'
-import { EtapeStatutId } from './static/etapesStatuts.js'
-import { EtapeTypeId } from './static/etapesTypes.js'
+import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
+import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
+import { z } from 'zod'
 
 export type HeritageProp<T> =
   | {
@@ -61,11 +62,8 @@ export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 
 export type Etape = EtapeWithIncertitudesAndHeritage<EtapeBase>
 export type EtapeFondamentale = EtapeWithIncertitudesAndHeritage<Omit<EtapeBase, 'points' | 'surface'>>
 
-export interface EtapeTypeEtapeStatutWithMainStep {
-  etapeTypeId: EtapeTypeId
-  etapeStatutId: EtapeStatutId
-  mainStep: boolean
-}
+export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
+export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
 
 export type CommonEtape = {
   titreDemarcheId: DemarcheId

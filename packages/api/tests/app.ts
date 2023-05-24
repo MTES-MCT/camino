@@ -10,6 +10,9 @@ export const app = (dbPool: Pool) => {
   app.disable('x-powered-by')
   app.use(authJwt)
   app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(dbPool))
+  app.get('/calculate', (req, res) => {
+    res.json({})
+  })
 
   // TODO 2022-05-03: utiliser l'app principale (ou une partie)
   app.use('/televersement', uploadAllowedMiddleware, restUpload)

@@ -1,3 +1,6 @@
+import {z} from 'zod'
+const IDS = ['deg','gon','km3','m3a','m3x','met','mgr','mkc','mkg','mtc','mtk','mtt','txa','vmd'] as const
+
 export const UNITE_IDS = {
   degré: 'deg',
   grade: 'gon',
@@ -13,7 +16,7 @@ export const UNITE_IDS = {
   tonne: 'mtt',
   'tonnes par an': 'txa',
   '100 000 mètres cubes': 'vmd',
-} as const
+} as const satisfies Record<string, typeof IDS[number]>
 
 export interface Unite<T = UniteId> {
   id: T
@@ -26,7 +29,8 @@ export interface Unite<T = UniteId> {
 
 export type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
 
-export type UniteId = (typeof UNITE_IDS)[keyof typeof UNITE_IDS]
+export const uniteIdValidator = z.enum(IDS)
+export type UniteId = z.infer<typeof uniteIdValidator>
 
 export const Unites: { [key in UniteId]: Unite<key> } = {
   deg: { id: 'deg', nom: 'degré', symbole: 'º', referenceUniteId: null, referenceUniteRatio: null },
@@ -54,4 +58,4 @@ export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number =
   return value
 }
 
-export const UNITES = Object.values(Unites)
+export const UNITES = IDS

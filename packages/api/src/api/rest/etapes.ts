@@ -21,8 +21,9 @@ import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { Pool } from 'pg'
 
-export const getEtapesTypesEtapesStatusWithMainStep = async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep[]>): Promise<void> => {
+export const getEtapesTypesEtapesStatusWithMainStep = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep[]>): Promise<void> => {
   const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
   const dateParsed = caminoDateValidator.safeParse(req.params.date)
   const etapeIdParsed = z.optional(z.string()).safeParse(req.query.etapeId)

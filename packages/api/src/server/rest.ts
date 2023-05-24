@@ -12,7 +12,7 @@ import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageN
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
 import { CaminoRestRoute, CaminoRestRoutes, DownloadFormat, CaminoRestRouteIds, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute } from 'camino-common/src/rest.js'
-import { CaminoConfig } from 'camino-common/src/static/config.js'
+import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
@@ -70,10 +70,38 @@ type RestRouteImplementations<Route, Output = {}> = Route extends readonly [infe
   : Output
   : Output;
 
+
+export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
+  const config: CaminoConfig = {
+    sentryDsn: process.env.SENTRY_DSN,
+    caminoStage: process.env.CAMINO_STAGE,
+    environment: process.env.ENV ?? 'dev',
+    uiHost: process.env.UI_HOST,
+    matomoHost: process.env.API_MATOMO_URL,
+    matomoSiteId: process.env.API_MATOMO_ID,
+  }
+
+
+  res.json(caminoConfigValidator.parse(config))
+}
+  
 const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRouteIds>>  = {
+  '/moi': { get: moi },
+  "/config": { get: config },
+  '/rest/titres/:id/titreLiaisons': {get: getTitreLiaisons, post: postTitreLiaisons},
+  '/rest/titreSections/:titreId': {get: getTitresSections},
+  '/rest/etapesTypes/:demarcheId/:date': {get: getEtapesTypesEtapesStatusWithMainStep},
+  '/rest/demarches/:demarcheId': {get: getDemarche},
+  '/rest/titres/:titreId': {delete: removeTitre, post: updateTitre, get: getTitre},
+  '/rest/titres/:titreId/date': {get: getTitreDate},
+  '/rest/titres/:titreId/abonne': {post: utilisateurTitreAbonner},
+  '/rest/titresONF': {get: titresONF},
+  '/rest/titresPTMG': {get: titresPTMG},
+  '/rest/titresDREAL': {get: titresDREAL},
+  '/rest/statistiques/minerauxMetauxMetropole': {get: getMinerauxMetauxMetropolesStats},
+  
   '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
-  // "/config": { get: config },
 } as const
 
 export const restWithPool = (dbPool: Pool) => {
@@ -111,25 +139,6 @@ export const restWithPool = (dbPool: Pool) => {
       }
     }
   })
-  // rest.get(CaminoRestRoutes.moi, restCatcher(moi))
-  // rest.get(CaminoRestRoutes.config, restCatcher(config))
-  // rest.post(CaminoRestRoutes.titresLiaisons, restCatcher(postTitreLiaisons))
-  // rest.get(CaminoRestRoutes.titresLiaisons, restCatcher(getTitreLiaisons))
-  // rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
-  // rest.get(CaminoRestRoutes.etapesTypesEtapesStatusWithMainStep, restCatcher(getEtapesTypesEtapesStatusWithMainStep))
-
-  // rest.get(CaminoRestRoutes.demarche, restCatcher(getDemarche(dbPool)))
-
-  // rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
-  // rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))
-  // rest.get(CaminoRestRoutes.titre, restCatcher(getTitre(dbPool)))
-  // rest.get(CaminoRestRoutes.titreDate, restCatcher(getTitreDate(dbPool)))
-
-  // rest.post(CaminoRestRoutes.titreUtilisateurAbonne, restCatcher(utilisateurTitreAbonner))
-  // rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
-  // rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
-  // rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
-  // rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats(dbPool)))
   // rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats(dbPool)))
   // rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
 
@@ -218,15 +227,3 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
   }
 }
 
-export const config = async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
-  const config: CaminoConfig = {
-    sentryDsn: process.env.SENTRY_DSN,
-    caminoStage: process.env.CAMINO_STAGE,
-    environment: process.env.ENV ?? 'dev',
-    uiHost: process.env.UI_HOST,
-    matomoHost: process.env.API_MATOMO_URL,
-    matomoSiteId: process.env.API_MATOMO_ID,
-  }
-
-  res.json(config)
-}

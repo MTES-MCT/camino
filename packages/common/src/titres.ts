@@ -1,12 +1,12 @@
 import { TitreStatutId, titreStatutIdValidator } from './static/titresStatuts.js'
 import { TitreReference, titreReferenceValidator } from './titres-references.js'
 import { etapeTypeIdValidator } from './static/etapesTypes.js'
-import { CaminoDate, caminoDateValidator, dateFormat } from './date.js'
+import { caminoDateValidator, dateFormat } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
-import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement, getElementValeurs } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { UniteId } from './static/unites.js'
-import { DeviseId } from './static/devise.js'
+import { checkboxesElementValidator, dateElementValidator, fileElementValidator, getElementValeurs, numberElementValidator, radioElementValidator, selectElementValidator, textElementValidator } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { uniteIdValidator } from './static/unites.js'
+import { deviseIdValidator } from './static/devise.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
 
@@ -51,7 +51,7 @@ export type TitreGet = z.infer<typeof titreGetValidator>
 
 export type EditableTitre = Pick<CommonTitre, 'id' | 'nom' | 'references'>
 
-export const editableTitreCheck = commonTitreValidator.pick({
+export const editableTitreValidator = commonTitreValidator.pick({
   id: true,
   nom: true,
   references: true,
@@ -88,61 +88,38 @@ export const titreLinksValidator = z.object({
 })
 export type TitreLinks = z.infer<typeof titreLinksValidator>
 
-type BasicElement = {
-  id: string
-  nom?: string
-  description?: string
-  dateDebut?: CaminoDate
-  dateFin?: CaminoDate
-  optionnel?: boolean
-}
 
-type DateElementWithValue = {
-  value: CaminoDate | undefined
-} & BasicElement &
-  DateElement
+const dateElementWithValueValidator = dateElementValidator.extend({value: caminoDateValidator.optional()})
+type DateElementWithValue = z.infer<typeof dateElementWithValueValidator>
 
-type FileElementWithValue = {
-  value: string | undefined
-} & BasicElement &
-  FileElement
+const fileElementWithValueValidator = fileElementValidator.extend({value: z.string().optional()})
+type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
 
-type TextElementWithValue = {
-  value: string | undefined
-} & BasicElement &
-  TextElement
+const textElementWithValueValidator = textElementValidator.extend({value: z.string().optional()})
+type TextElementWithValue = z.infer<typeof textElementWithValueValidator>
 
-type NumberElementWithValue = {
-  value: number | undefined
-} & BasicElement &
-  NumberElement
+const numberElementWithValueValidator = numberElementValidator.extend({value: z.number().optional()})
+type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
-type RadioElementWithValue = {
-  value: boolean | undefined
-} & BasicElement &
-  RadioElement
+const radioElementWithValueValidator = radioElementValidator.extend({value: z.boolean().optional()})
+type RadioElementWithValue = z.infer<typeof radioElementWithValueValidator>
 
-type CheckboxesElementWithValue = {
-  options: { id: string; nom: string }[]
-  value: string[]
-} & BasicElement &
-  CheckboxesElement
+const checkboxesElementWithValueValidator = checkboxesElementValidator.extend({value: z.array(z.string())})
+type CheckboxesElementWithValue = z.infer<typeof checkboxesElementWithValueValidator>
 
-type SelectElementWithValue = BasicElement &
-  SelectElement &
-  (
-    | { options: { id: string; nom: string }[]; value: string | undefined }
-    | {
-        valeursMetasNom: 'unites'
-        value: UniteId | undefined
-      }
-    | {
-        valeursMetasNom: 'devises'
-        value: DeviseId | undefined
-      }
-  )
+const selectElementWithValueValidator = z.intersection(selectElementValidator, z.union([
+  z.object(
+    {options: z.array(z.object({id: z.string(), nom: z.string()})), value: z.string().optional()}
+  ),
+  z.object({valeursMetasNom: z.literal('unites'), value: uniteIdValidator.optional()}),
+  z.object({valeursMetasNom: z.literal('devises'), value: deviseIdValidator.optional()}),
+]))
 
-export type ElementWithValue = FileElementWithValue | DateElementWithValue | TextElementWithValue | NumberElementWithValue | RadioElementWithValue | CheckboxesElementWithValue | SelectElementWithValue
+type SelectElementWithValue = z.infer<typeof selectElementWithValueValidator>
+
+const elementWithValueValidator = z.union([fileElementWithValueValidator, dateElementWithValueValidator, textElementWithValueValidator, numberElementWithValueValidator, radioElementWithValueValidator, checkboxesElementWithValueValidator, selectElementWithValueValidator])
+
+export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
 export const isFileElement = (element: ElementWithValue): element is FileElementWithValue => {
   return element.type === 'file'
@@ -168,11 +145,9 @@ export const isSelectElement = (element: ElementWithValue): element is SelectEle
   return element.type === 'select'
 }
 
-export interface Section {
-  id: string
-  nom?: string
-  elements: ElementWithValue[]
-}
+export const sectionValidator = z.object({id: z.string(), nom: z.string().optional(), elements: z.array(elementWithValueValidator)})
+
+export type Section = z.infer<typeof sectionValidator>
 
 export const valeurFind = (element: ElementWithValue): string => {
   if (element.value === undefined || element.value === '') {
@@ -210,3 +185,6 @@ export const valeurFind = (element: ElementWithValue): string => {
 
   return element.value
 }
+
+
+export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })

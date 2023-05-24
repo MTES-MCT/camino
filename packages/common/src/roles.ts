@@ -1,5 +1,6 @@
-import { AdministrationId } from './static/administrations'
-import { EntrepriseId } from './entreprise'
+import {  administrationIdValidator } from './static/administrations'
+import { entrepriseIdValidator } from './entreprise'
+import { z } from 'zod'
 
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
 export type Role = (typeof ROLES)[number]
@@ -8,28 +9,35 @@ type UserBureaudEtudes = { role: 'bureau d’études' } & EntrepriseUserNotNull
 type UserAdmin = { role: 'admin' } & AdminUserNotNull
 type UserLecteur = { role: 'lecteur' } & AdminUserNotNull
 type UserEditeur = { role: 'editeur' } & AdminUserNotNull
-export type UserSuper = { role: 'super' } & BaseUserNotNull
-export type UserDefaut = { role: 'defaut' } & BaseUserNotNull
 
-export interface BaseUserNotNull {
-  id: string
-  email: string
-  role: Role
-  nom: string
-  prenom: string
-}
-type Extends<T, U extends T> = U
-export type AdministrationRole = Extends<Role, 'admin' | 'editeur' | 'lecteur'>
-export interface AdminUserNotNull extends BaseUserNotNull {
-  role: AdministrationRole
-  administrationId: AdministrationId
-}
+const baseUserNotNullValidator = z.object({id: z.string(), email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string()})
+export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
-export type EntrepriseOrBureauDetudeRole = Extends<Role, 'entreprise' | 'bureau d’études'>
-export interface EntrepriseUserNotNull extends BaseUserNotNull {
-  role: EntrepriseOrBureauDetudeRole
-  entreprises: { id: EntrepriseId }[]
-}
+const superRoleValidator = z.literal('super')
+export type SuperRole = z.infer<typeof superRoleValidator>
+const superUserNotNullValidator = baseUserNotNullValidator.extend({role: superRoleValidator})
+export type UserSuper = z.infer<typeof superUserNotNullValidator>
+
+const defautRoleValidator = z.literal('defaut')
+export type defautRole = z.infer<typeof defautRoleValidator>
+const defautUserNotNullValidator = baseUserNotNullValidator.extend({role: defautRoleValidator})
+export type UserDefaut = z.infer<typeof defautUserNotNullValidator>
+
+const ADMINISTRATION_ROLES = ['admin', 'editeur', 'lecteur'] as const satisfies readonly Role[]
+const administrationRoleValidator = z.enum(ADMINISTRATION_ROLES)
+export type AdministrationRole = z.infer<typeof administrationRoleValidator>
+
+const adminUserNotNullValidator = baseUserNotNullValidator.extend({role: administrationRoleValidator, administrationId: administrationIdValidator})
+export type AdminUserNotNull = z.infer<typeof  adminUserNotNullValidator>
+
+const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
+const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
+export type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
+const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({role: entrepriseRoleValidator, entreprises: z.array(z.object({id: entrepriseIdValidator}))})
+
+export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
+export const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
+export const userValidator = userNotNullValidator.nullable().optional()
 
 export const isSuper = (user: User): user is UserSuper => userPermissionCheck(user, 'super')
 
@@ -49,12 +57,12 @@ function userPermissionCheck(user: User, role: Role) {
   return user?.role === role
 }
 
-export type User = UserNotNull | undefined | null
-export type UserNotNull = UserSuper | UserDefaut | AdminUserNotNull | EntrepriseUserNotNull
+export type User = z.infer<typeof userValidator>
+export type UserNotNull = z.infer<typeof userNotNullValidator>
 
-export const isAdministrationRole = (role: Role): role is AdministrationRole => ['admin', 'editeur', 'lecteur'].includes(role)
+export const isAdministrationRole = (role: Role): role is AdministrationRole => administrationRoleValidator.safeParse(role).success
 export const isAdministrationAdminRole = (role: Role): role is 'admin' => role === 'admin'
 export const isSuperRole = (role: Role): role is 'super' => role === 'super'
 export const isDefautRole = (role: Role): role is 'defaut' => role === 'defaut'
 
-export const isEntrepriseOrBureauDetudeRole = (role: Role): role is EntrepriseOrBureauDetudeRole => ['entreprise', 'bureau d’études'].includes(role)
+export const isEntrepriseOrBureauDetudeRole = (role: Role): role is EntrepriseOrBureauDetudeRole => entrepriseRoleValidator.safeParse(role).success

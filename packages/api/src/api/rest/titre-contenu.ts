@@ -5,6 +5,7 @@ import { CaminoRequest, CustomResponse } from './express-type.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { Pool } from 'pg'
 
 /**
  * @deprecated utiliser titreSectionsGet
@@ -137,7 +138,7 @@ export const titreSectionsGet = ({
   return sections
 }
 
-export const getTitresSections = async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
+export const getTitresSections = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
   try {
     const titreId: string | undefined = req.params.titreId
     if (!titreId) {
