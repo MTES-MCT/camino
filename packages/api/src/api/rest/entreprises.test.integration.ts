@@ -1,10 +1,4 @@
-import {
-  EntrepriseDocumentInput,
-  newEntrepriseId,
-  Siren,
-  sirenValidator,
-  tempDocumentNameValidator
-} from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { restCall, restDeleteCall, restPostCall, restPutCall } from '../../../tests/_utils/index.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
@@ -117,9 +111,9 @@ describe('entrepriseModifier', () => {
     expect(tested.statusCode).toBe(204)
   })
 
-  test("peut modifier une entreprise (un utilisateur '/rest/entreprises/:entrepriseId')", async () => {
+  test("peut modifier une entreprise (un utilisateur 'entreprise')", async () => {
     const entreprise = await entrepriseUpsert({
-      id: newEntrepriseId('/rest/entreprises/:entrepriseId'),
+      id: newEntrepriseId('monBelEntrepriseId'),
       nom: 'Mon Entreprise',
     })
     const tested = await restPutCall(
@@ -309,7 +303,7 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const documentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' },  documentToInsert)
+    const documentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(documentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     mkdirSync(dir, { recursive: true })
@@ -321,12 +315,7 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, {
-      typeId: 'kbi',
-      date: toCaminoDate('2023-02-12'),
-      description: 'descSecondDocument',
-      tempDocumentName: tempDocumentNameValidator.parse(fileName),
-    })
+    const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
     expect(secondDocumentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     await titresEtapesJustificatifsUpsert([{ documentId: documentCall.body, titreEtapeId: titreEtape.id } as ITitreEtapeJustificatif])
@@ -349,11 +338,21 @@ describe('getEntrepriseDocument', () => {
       type_id: 'kbi',
     })
 
-    const deletePossible = await restDeleteCall(dbPool, '/rest/entreprises/:entrepriseId/documents/:documentId', { entrepriseId, documentId: secondDocumentCall.body }, { ...testBlankUser, role: 'super' })
+    const deletePossible = await restDeleteCall(
+      dbPool,
+      '/rest/entreprises/:entrepriseId/documents/:documentId',
+      { entrepriseId, documentId: secondDocumentCall.body },
+      { ...testBlankUser, role: 'super' }
+    )
 
     expect(deletePossible.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
 
-    const deleteNotPossible = await restDeleteCall(dbPool, '/rest/entreprises/:entrepriseId/documents/:documentId', { entrepriseId, documentId: documentCall.body }, { ...testBlankUser, role: 'super' })
+    const deleteNotPossible = await restDeleteCall(
+      dbPool,
+      '/rest/entreprises/:entrepriseId/documents/:documentId',
+      { entrepriseId, documentId: documentCall.body },
+      { ...testBlankUser, role: 'super' }
+    )
 
     expect(deleteNotPossible.statusCode).toBe(constants.HTTP_STATUS_FORBIDDEN)
   })

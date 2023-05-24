@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
-import { CaminoRestRoutes, getRestRoute } from './rest'
+import { getRestRoute } from './rest'
 
 test('getRestRoute', () => {
-  expect(getRestRoute(CaminoRestRoutes.newsletter, { id: 'userId' })).toBe('/rest/utilisateurs/userId/newsletter')
+  expect(getRestRoute('/rest/utilisateurs/:id/newsletter', { id: 'userId' })).toBe('/rest/utilisateurs/userId/newsletter')
 })

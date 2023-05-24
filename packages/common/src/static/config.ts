@@ -1,4 +1,4 @@
-import {z} from 'zod'
+import { z } from 'zod'
 
 export const caminoConfigValidator = z.object({
   caminoStage: z.enum(['dev', 'preprod', 'prod']).optional(),

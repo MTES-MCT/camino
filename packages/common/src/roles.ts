@@ -1,4 +1,4 @@
-import {  administrationIdValidator } from './static/administrations'
+import { administrationIdValidator } from './static/administrations'
 import { entrepriseIdValidator } from './entreprise'
 import { z } from 'zod'
 
@@ -10,30 +10,30 @@ type UserAdmin = { role: 'admin' } & AdminUserNotNull
 type UserLecteur = { role: 'lecteur' } & AdminUserNotNull
 type UserEditeur = { role: 'editeur' } & AdminUserNotNull
 
-const baseUserNotNullValidator = z.object({id: z.string(), email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string()})
+const baseUserNotNullValidator = z.object({ id: z.string(), email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string() })
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
 const superRoleValidator = z.literal('super')
 export type SuperRole = z.infer<typeof superRoleValidator>
-const superUserNotNullValidator = baseUserNotNullValidator.extend({role: superRoleValidator})
+const superUserNotNullValidator = baseUserNotNullValidator.extend({ role: superRoleValidator })
 export type UserSuper = z.infer<typeof superUserNotNullValidator>
 
 const defautRoleValidator = z.literal('defaut')
 export type defautRole = z.infer<typeof defautRoleValidator>
-const defautUserNotNullValidator = baseUserNotNullValidator.extend({role: defautRoleValidator})
+const defautUserNotNullValidator = baseUserNotNullValidator.extend({ role: defautRoleValidator })
 export type UserDefaut = z.infer<typeof defautUserNotNullValidator>
 
 const ADMINISTRATION_ROLES = ['admin', 'editeur', 'lecteur'] as const satisfies readonly Role[]
 const administrationRoleValidator = z.enum(ADMINISTRATION_ROLES)
 export type AdministrationRole = z.infer<typeof administrationRoleValidator>
 
-const adminUserNotNullValidator = baseUserNotNullValidator.extend({role: administrationRoleValidator, administrationId: administrationIdValidator})
-export type AdminUserNotNull = z.infer<typeof  adminUserNotNullValidator>
+const adminUserNotNullValidator = baseUserNotNullValidator.extend({ role: administrationRoleValidator, administrationId: administrationIdValidator })
+export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
 export type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
-const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({role: entrepriseRoleValidator, entreprises: z.array(z.object({id: entrepriseIdValidator}))})
+const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(z.object({ id: entrepriseIdValidator })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
 export const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])

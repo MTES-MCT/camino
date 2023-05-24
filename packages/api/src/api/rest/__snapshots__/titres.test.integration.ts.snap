@@ -23,7 +23,7 @@ exports[`titresDREAL > teste la récupération des données pour les DREAL 1`] =
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "mod",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "adresse": null,
@@ -45,7 +45,7 @@ exports[`titresDREAL > teste la récupération des données pour les DREAL 1`] =
       "url": null,
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;
 
@@ -72,7 +72,7 @@ exports[`titresDREAL > teste la récupération des données pour les DREAL 2`] =
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "mod",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "adresse": null,
@@ -94,7 +94,7 @@ exports[`titresDREAL > teste la récupération des données pour les DREAL 2`] =
       "url": null,
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;
 

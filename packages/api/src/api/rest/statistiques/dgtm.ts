@@ -51,7 +51,6 @@ export const getDGTMStatsInside =
 
     demarcheOctrois?.forEach(demarche => {
       const annee = getAnnee(demarche.demarcheDateDebut)
-
       if (!result.depotEtInstructions[annee]) {
         result.depotEtInstructions[annee] = {
           totalAXMDeposees: 0,
@@ -70,14 +69,18 @@ export const getDGTMStatsInside =
         }
       }
 
-      result.depotEtInstructions[annee].totalTitresOctroyes++
-      if (!demarche.sdomZoneIds || demarche.sdomZoneIds.length === 0) {
-        result.sdom[annee]['3'].octroye++
-      } else {
-        demarche.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].octroye++)
-      }
-      if (demarche.typeId === 'axm') {
-        result.depotEtInstructions[annee].totalAXMOctroyees++
+      const anneeDepot = result.depotEtInstructions[annee]
+      const anneeSdom = result.sdom[annee]
+      if (anneeDepot && anneeSdom) {
+        anneeDepot.totalTitresOctroyes++
+        if (!demarche.sdomZoneIds || demarche.sdomZoneIds.length === 0) {
+          anneeSdom['3'].octroye++
+        } else {
+          demarche.sdomZoneIds.forEach(zoneId => anneeSdom[zoneId].octroye++)
+        }
+        if (demarche.typeId === 'axm') {
+          anneeDepot.totalAXMOctroyees++
+        }
       }
     })
 
@@ -125,15 +128,19 @@ export const getDGTMStatsInside =
         }
       }
 
-      result.depotEtInstructions[annee].totalTitresDeposes++
-      if (!etape.sdomZoneIds || etape.sdomZoneIds.length === 0) {
-        result.sdom[annee][3].depose++
-      } else {
-        etape.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].depose++)
-      }
+      const anneeDepot = result.depotEtInstructions[annee]
+      const anneeSdom = result.sdom[annee]
+      if (anneeDepot && anneeSdom) {
+        anneeDepot.totalTitresDeposes++
+        if (!etape.sdomZoneIds || etape.sdomZoneIds.length === 0) {
+          anneeSdom[3].depose++
+        } else {
+          etape.sdomZoneIds.forEach(zoneId => anneeSdom[zoneId].depose++)
+        }
 
-      if (etape.typeId === 'axm') {
-        result.depotEtInstructions[annee].totalAXMDeposees++
+        if (etape.typeId === 'axm') {
+          anneeDepot.totalAXMDeposees++
+        }
       }
     })
 
@@ -199,22 +206,32 @@ export const getDGTMStatsInside =
           console.warn('cette demarche a une dex AVANT le depot', instruction.id)
           days = Math.abs(days)
         }
-        result.delais[annee][instruction.titretypeid].delaiInstructionEnJours.push(days)
+        const delaiAnnee = result.delais[annee]
+        if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+          delaiAnnee[instruction.titretypeid]?.delaiInstructionEnJours.push(days)
+        }
       }
+
       if (instruction.apo) {
         let days = daysBetween(instruction.depotdelademandedate, instruction.apo)
         if (days < 0) {
           console.warn('cette demarche a une apo AVANT le depot', instruction.id)
           days = Math.abs(days)
         }
-        result.delais[annee][instruction.titretypeid].delaiCommissionDepartementaleEnJours.push(days)
+        const delaiAnnee = result.delais[annee]
+        if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+          delaiAnnee[instruction.titretypeid]?.delaiCommissionDepartementaleEnJours.push(days)
+        }
         if (instruction.decisionadministration) {
           days = daysBetween(instruction.apo, instruction.decisionadministration)
           if (days < 0) {
             console.warn('cette demarche a une decisionadministration AVANT la commission départementale des mines', instruction.id)
             days = Math.abs(days)
           }
-          result.delais[annee][instruction.titretypeid].delaiDecisionPrefetEnJours.push(days)
+          const delaiAnnee = result.delais[annee]
+          if (delaiAnnee && delaiAnnee[instruction.titretypeid]) {
+            delaiAnnee[instruction.titretypeid]?.delaiDecisionPrefetEnJours.push(days)
+          }
         }
       }
     })

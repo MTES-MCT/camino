@@ -1,11 +1,23 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres.js'
-import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreValidator, TitreLink, TitreLinks, titreGetValidator, TitreGet, titreOnfValidator, titrePtmgValidator, titreLinksValidator, utilisateurTitreAbonneValidator } from 'camino-common/src/titres.js'
+import {
+  CommonTitreDREAL,
+  CommonTitreONF,
+  CommonTitrePTMG,
+  editableTitreValidator,
+  TitreLink,
+  TitreLinks,
+  titreGetValidator,
+  TitreGet,
+  titreOnfValidator,
+  titrePtmgValidator,
+  titreLinksValidator,
+  utilisateurTitreAbonneValidator,
+} from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -36,7 +48,7 @@ const etapesAMasquer = [
   ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
 ]
 
-export const titresONF =(_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
+export const titresONF = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -71,6 +83,7 @@ export const titresONF =(_pool: Pool) => async (req: CaminoRequest, res: CustomR
             dateCARM,
             enAttenteDeONF: blockedByMe,
           }
+
           return titreOnfValidator.parse(value)
         })
       )
@@ -186,6 +199,7 @@ export const titresPTMG = (_pool: Pool) => async (req: CaminoRequest, res: Custo
           })),
           enAttenteDePTMG: blockedByMe,
         }
+
         return titrePtmgValidator.parse(value)
       })
 
@@ -325,8 +339,8 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
             id: titre.id,
             slug: titre.slug,
             nom: titre.nom,
-            titreStatutId: titre.titreStatutId,
-            typeId: titre.typeId,
+            titre_statut_id: titre.titreStatutId,
+            type_id: titre.typeId,
             references,
             titulaires: titre.titulaires,
             // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
@@ -347,7 +361,7 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
 const isStringArray = (stuff: any): stuff is string[] => {
   return stuff instanceof Array && stuff.every(value => typeof value === 'string')
 }
-export const postTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id
@@ -392,7 +406,7 @@ export const postTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res:
     aval: await titreLinksGet(titreId, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id

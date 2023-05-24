@@ -158,8 +158,11 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
         if (!acc[substance][annee]) {
           acc[substance][annee] = {}
         }
+        const substanceData = acc[substance][annee]
         const valeur = fromUniteFiscaleToUnite(SubstancesFiscale[substance].uniteId, stat.substances[substance] ?? 0)
-        acc[substance][annee][regionId] = valeur + (acc[substance][annee][regionId] ?? 0)
+        if (substanceData) {
+          substanceData[regionId] = valeur + (substanceData[regionId] ?? 0)
+        }
       }
 
       return acc
@@ -361,7 +364,10 @@ const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnne
 
       const sum = pme + autre
       if (substance in substances) {
-        substances[substance][anneeFiscale] = Number(sum.toFixed(0))
+        const subtanceData = substances[substance]
+        if (subtanceData) {
+          subtanceData[anneeFiscale] = Number(sum.toFixed(0))
+        }
       }
     })
   })

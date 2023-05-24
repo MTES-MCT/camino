@@ -1,5 +1,5 @@
-import {z} from 'zod'
-const IDS = ['deg','gon','km3','m3a','m3x','met','mgr','mkc','mkg','mtc','mtk','mtt','txa','vmd'] as const
+import { z } from 'zod'
+const IDS = ['deg', 'gon', 'km3', 'm3a', 'm3x', 'met', 'mgr', 'mkc', 'mkg', 'mtc', 'mtk', 'mtt', 'txa', 'vmd'] as const
 
 export const UNITE_IDS = {
   degré: 'deg',
@@ -16,7 +16,7 @@ export const UNITE_IDS = {
   tonne: 'mtt',
   'tonnes par an': 'txa',
   '100 000 mètres cubes': 'vmd',
-} as const satisfies Record<string, typeof IDS[number]>
+} as const satisfies Record<string, (typeof IDS)[number]>
 
 export interface Unite<T = UniteId> {
   id: T
@@ -58,4 +58,4 @@ export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number =
   return value
 }
 
-export const UNITES = IDS
+export const UNITES = Object.values(Unites)

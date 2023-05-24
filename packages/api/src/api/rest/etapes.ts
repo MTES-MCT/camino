@@ -23,24 +23,26 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Pool } from 'pg'
 
-export const getEtapesTypesEtapesStatusWithMainStep = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep[]>): Promise<void> => {
-  const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
-  const dateParsed = caminoDateValidator.safeParse(req.params.date)
-  const etapeIdParsed = z.optional(z.string()).safeParse(req.query.etapeId)
-  const user = req.auth
+export const getEtapesTypesEtapesStatusWithMainStep =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<EtapeTypeEtapeStatutWithMainStep[]>): Promise<void> => {
+    const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
+    const dateParsed = caminoDateValidator.safeParse(req.params.date)
+    const etapeIdParsed = z.optional(z.string()).safeParse(req.query.etapeId)
+    const user = req.auth
 
-  if (!demarcheIdParsed.success || !dateParsed.success || !etapeIdParsed.success) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    try {
-      const result = await demarcheEtapesTypesGet(demarcheIdParsed.data, dateParsed.data, etapeIdParsed.data ?? null, user)
-      res.json(result)
-    } catch (e) {
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-      console.error(e)
+    if (!demarcheIdParsed.success || !dateParsed.success || !etapeIdParsed.success) {
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        const result = await demarcheEtapesTypesGet(demarcheIdParsed.data, dateParsed.data, etapeIdParsed.data ?? null, user)
+        res.json(result)
+      } catch (e) {
+        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
     }
   }
-}
 
 const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoDate, titreEtapeId: string | null, user: User) => {
   const titreDemarche = await titreDemarcheGet(

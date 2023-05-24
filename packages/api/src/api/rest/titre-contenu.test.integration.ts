@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager.js'
-import { titreCreate, titreUpdate } from '../../database/queries/titres.js'
+import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
@@ -75,50 +75,50 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   })
 
   await knex('titres')
-    .update({ contenusTitreEtapesIds: {"arm": {"mecanise": etapesCrees[0].id, "franchissements": etapesCrees[0].id}} })
+    .update({ contenusTitreEtapesIds: { arm: { mecanise: etapesCrees[0].id, franchissements: etapesCrees[0].id } } })
     .where('id', titre.id)
 
-    return titre.id
+  return titre.id
 }
 
 test('get titreSections', async () => {
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   const id = await createTitreWithEtapes(
-  'titre1',
-  [
-    {
-      typeId: 'mfr',
-      statutId: 'fai',
-      date: toCaminoDate('2022-01-01'),
-      ordre: 0,
-      contenu: {"arm": {"mecanise": true, "franchissements": 8}}
-    },
-    {
-      typeId: 'mdp',
-      statutId: 'fai',
-      date: toCaminoDate('2022-02-01'),
-      ordre: 1,
-    },
-    {
-      typeId: 'pfd',
-      statutId: 'fai',
-      date: toCaminoDate('2022-02-10'),
-      ordre: 2,
-    },
-    {
-      typeId: 'mcp',
-      statutId: 'com',
-      date: toCaminoDate('2022-03-10'),
-      ordre: 3,
-    },
-  ],
-  entreprises
-)
+    'titre1',
+    [
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-01-01'),
+        ordre: 0,
+        contenu: { arm: { mecanise: true, franchissements: 8 } },
+      },
+      {
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-01'),
+        ordre: 1,
+      },
+      {
+        typeId: 'pfd',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-10'),
+        ordre: 2,
+      },
+      {
+        typeId: 'mcp',
+        statutId: 'com',
+        date: toCaminoDate('2022-03-10'),
+        ordre: 3,
+      },
+    ],
+    entreprises
+  )
 
-    const tested = await restCall(dbPool, '/rest/titreSections/:titreId', { titreId: id }, userSuper)
+  const tested = await restCall(dbPool, '/rest/titreSections/:titreId', { titreId: id }, userSuper)
 
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
-    expect(tested.body).toMatchInlineSnapshot(`
+  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.body).toMatchInlineSnapshot(`
       [
         {
           "elements": [
@@ -143,5 +143,4 @@ test('get titreSections', async () => {
         },
       ]
     `)
-  
 })

@@ -138,39 +138,41 @@ export const titreSectionsGet = ({
   return sections
 }
 
-export const getTitresSections = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
-  try {
-    const titreId: string | undefined = req.params.titreId
-    if (!titreId) {
-      throw new Error('le paramètre titreId est obligatoire')
-    }
+export const getTitresSections =
+  (_pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
+    try {
+      const titreId: string | undefined = req.params.titreId
+      if (!titreId) {
+        throw new Error('le paramètre titreId est obligatoire')
+      }
 
-    const user = req.auth
+      const user = req.auth
 
-    let result: Section[] = []
-    const titre = await titreGet(
-      titreId,
-      {
-        fields: {
-          demarches: {
-            type: { etapesTypes: { id: {} } },
-            etapes: {
-              type: { id: {} },
+      let result: Section[] = []
+      const titre = await titreGet(
+        titreId,
+        {
+          fields: {
+            demarches: {
+              type: { etapesTypes: { id: {} } },
+              etapes: {
+                type: { id: {} },
+              },
             },
           },
         },
-      },
-      user
-    )
+        user
+      )
 
-    if (titre) {
-      result = titreSectionsGet(titre)
+      if (titre) {
+        result = titreSectionsGet(titre)
+      }
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+
+      throw e
     }
-
-    res.json(result)
-  } catch (e) {
-    console.error(e)
-
-    throw e
   }
-}

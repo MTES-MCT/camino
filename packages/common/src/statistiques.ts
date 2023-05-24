@@ -33,13 +33,6 @@ export interface Statistiques {
   utilisateurs: StatistiquesUtilisateurs
 }
 
-export interface DepotEtInstructionStat {
-  totalAXMDeposees: number
-  totalAXMOctroyees: number
-  totalTitresDeposes: number
-  totalTitresOctroyes: number
-}
-
 export const substancesFiscalesStats = [
   SUBSTANCES_FISCALES_IDS.bauxite,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
@@ -51,36 +44,47 @@ const substancesFiscalesStatsValidator = z.enum(substancesFiscalesStats)
 export type SubstancesFiscalesStats = z.infer<typeof substancesFiscalesStatsValidator>
 
 export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
-export type TitreTypeIdDelai = (typeof titreTypeIdDelais)[number]
+const titreTypeIdDelaisValidator = z.enum(titreTypeIdDelais)
+export type TitreTypeIdDelai = z.infer<typeof titreTypeIdDelaisValidator>
 
-export interface StatistiquesDGTM {
-  depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>
-  sdom: Record<
-    CaminoAnnee,
-    {
-      [SDOMZoneIds.Zone0]: { depose: number; octroye: number }
-      [SDOMZoneIds.Zone0Potentielle]: { depose: number; octroye: number }
-      [SDOMZoneIds.Zone1]: { depose: number; octroye: number }
-      [SDOMZoneIds.Zone2]: { depose: number; octroye: number }
-      3: { depose: number; octroye: number }
-    }
-  >
-  delais: Record<
-    CaminoAnnee,
-    Record<
-      TitreTypeIdDelai,
-      {
-        delaiInstructionEnJours: number[]
-        delaiCommissionDepartementaleEnJours: number[]
-        delaiDecisionPrefetEnJours: number[]
-      }
-    >
-  >
-  producteursOr: Record<CaminoAnnee, number>
-  avisAXM: {
-    [key in CaminoAnnee]?: { apd: { fav: number; def: number; dre: number; fre: number; ajo: number }; apo: { fav: number; def: number; dre: number; fre: number; ajo: number } }
-  }
-}
+export const statistiquesDGTMValidator = z.object({
+  depotEtInstructions: z.record(
+    caminoAnneeValidator,
+    z.object({
+      totalAXMDeposees: z.number(),
+      totalAXMOctroyees: z.number(),
+      totalTitresDeposes: z.number(),
+      totalTitresOctroyes: z.number(),
+    })
+  ),
+  sdom: z.record(
+    caminoAnneeValidator,
+    z.object({
+      [SDOMZoneIds.Zone0]: z.object({ depose: z.number(), octroye: z.number() }),
+      [SDOMZoneIds.Zone0Potentielle]: z.object({ depose: z.number(), octroye: z.number() }),
+      [SDOMZoneIds.Zone1]: z.object({ depose: z.number(), octroye: z.number() }),
+      [SDOMZoneIds.Zone2]: z.object({ depose: z.number(), octroye: z.number() }),
+      3: z.object({ depose: z.number(), octroye: z.number() }),
+    })
+  ),
+  delais: z.record(
+    caminoAnneeValidator,
+    z.record(
+      titreTypeIdDelaisValidator,
+      z.object({ delaiInstructionEnJours: z.array(z.number()), delaiCommissionDepartementaleEnJours: z.array(z.number()), delaiDecisionPrefetEnJours: z.array(z.number()) })
+    )
+  ),
+  producteursOr: z.record(caminoAnneeValidator, z.number()),
+  avisAXM: z.record(
+    caminoAnneeValidator,
+    z.object({
+      apd: z.object({ fav: z.number(), def: z.number(), dre: z.number(), fre: z.number(), ajo: z.number() }),
+      apo: z.object({ fav: z.number(), def: z.number(), dre: z.number(), fre: z.number(), ajo: z.number() }),
+    })
+  ),
+})
+export type StatistiquesDGTM = z.infer<typeof statistiquesDGTMValidator>
+
 const statistiquesMinerauxMetauxMetropoleSelsValidator = z.record(caminoAnneeValidator, z.record(regionIdValidator, z.number()))
 export type StatistiquesMinerauxMetauxMetropoleSels = z.infer<typeof statistiquesMinerauxMetauxMetropoleSelsValidator>
 
@@ -92,7 +96,6 @@ const evolutionTitresValidator = z.object({
   octroiEtProlongation: z.record(caminoAnneeValidator, z.number()),
   refusees: z.record(caminoAnneeValidator, z.number()),
   surface: z.record(caminoAnneeValidator, z.number()),
-
 })
 
 export type EvolutionTitres = z.infer<typeof evolutionTitresValidator>
@@ -110,14 +113,13 @@ export const statistiquesMinerauxMetauxMetropoleValidator = z.object({
     [SUBSTANCES_FISCALES_IDS.bauxite]: z.record(caminoAnneeValidator, z.number()),
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]: statistiquesMinerauxMetauxMetropoleSelsValidator,
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]: statistiquesMinerauxMetauxMetropoleSelsValidator,
-    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: statistiquesMinerauxMetauxMetropoleSelsValidator
-}),
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: statistiquesMinerauxMetauxMetropoleSelsValidator,
+  }),
   fiscaliteParSubstanceParAnnee: fiscaliteParSubstanceParAnneeValidator,
   prm: evolutionTitresValidator,
-  cxm: evolutionTitresValidator
+  cxm: evolutionTitresValidator,
 })
 export type StatistiquesMinerauxMetauxMetropole = z.infer<typeof statistiquesMinerauxMetauxMetropoleValidator>
-
 
 const statistiquesGuyaneActiviteValidator = z.object({
   annee: caminoAnneeValidator,
@@ -132,7 +134,7 @@ const statistiquesGuyaneActiviteValidator = z.object({
 })
 export type StatistiquesGuyaneActivite = z.infer<typeof statistiquesGuyaneActiviteValidator>
 
-export const statistiquesGuyaneDataValidator = z.object( {
+export const statistiquesGuyaneDataValidator = z.object({
   arm: evolutionTitresValidator,
   cxm: evolutionTitresValidator,
   prm: evolutionTitresValidator,
@@ -143,16 +145,14 @@ export const statistiquesGuyaneDataValidator = z.object( {
   surfaceExploration: z.number(),
   titresAxm: z.number(),
   titresCxm: z.number(),
-  annees: z.array(statistiquesGuyaneActiviteValidator)
+  annees: z.array(statistiquesGuyaneActiviteValidator),
 })
 export type StatistiquesGuyaneData = z.infer<typeof statistiquesGuyaneDataValidator>
-
 
 export type StatistiquesGuyane = {
   data: StatistiquesGuyaneData
   parAnnee: Record<CaminoAnnee, StatistiquesGuyaneActivite>
 }
-
 
 export const statistiqueGranulatsMarinsStatAnneeValidator = z.object({
   annee: z.number(),
@@ -175,7 +175,7 @@ export const statistiqueGranulatsMarinsStatAnneeValidator = z.object({
   concessionsValides: z.object({
     quantite: z.number(),
     surface: z.number(),
-  })
+  }),
 })
 export type StatistiqueGranulatsMarinsStatAnnee = z.infer<typeof statistiqueGranulatsMarinsStatAnneeValidator>
 

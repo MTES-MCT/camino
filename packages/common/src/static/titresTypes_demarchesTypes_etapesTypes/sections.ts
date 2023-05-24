@@ -1,10 +1,10 @@
-import { CaminoDate, caminoDateValidator, toCaminoDate } from '../../date.js'
+import { caminoDateValidator, toCaminoDate } from '../../date.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
 import { TDEType } from './index.js'
 import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../typescript-tools.js'
-import { UniteId, uniteIdValidator, UNITES } from '../unites.js'
+import { uniteIdValidator, UNITES } from '../unites.js'
 import { sortedDevises } from '../devise.js'
 import { z } from 'zod'
 
@@ -867,7 +867,6 @@ export interface Section {
   elements: readonly SectionsElement[]
 }
 
-
 const basicElementValidator = z.object({
   id: z.string(),
   nom: z.string().optional(),
@@ -879,32 +878,35 @@ const basicElementValidator = z.object({
 
 export type BasicElement = z.infer<typeof basicElementValidator>
 
-export const dateElementValidator = basicElementValidator.extend({type: z.literal('date')})
+export const dateElementValidator = basicElementValidator.extend({ type: z.literal('date') })
 export type DateElement = z.infer<typeof dateElementValidator>
 
-export const fileElementValidator = basicElementValidator.extend({type: z.literal('file')})
+export const fileElementValidator = basicElementValidator.extend({ type: z.literal('file') })
 export type FileElement = z.infer<typeof fileElementValidator>
 
-export const textElementValidator = basicElementValidator.extend({type: z.enum(['text', 'textarea'])})
+export const textElementValidator = basicElementValidator.extend({ type: z.enum(['text', 'textarea']) })
 export type TextElement = z.infer<typeof textElementValidator>
 
-export const numberElementValidator = basicElementValidator.extend({type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional()})
+export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
 export type NumberElement = z.infer<typeof numberElementValidator>
 
-export const radioElementValidator = basicElementValidator.extend({type: z.enum(['radio', 'checkbox']), optionnel: z.literal(false).optional()})
+export const radioElementValidator = basicElementValidator.extend({ type: z.enum(['radio', 'checkbox']), optionnel: z.literal(false).optional() })
 export type RadioElement = z.infer<typeof radioElementValidator>
 
-export const checkboxesElementValidator = basicElementValidator.extend({type: z.literal('checkboxes'), options: z.array(z.object({id: z.string(), nom: z.string()})), optionnel: z.literal(false).optional()})
+export const checkboxesElementValidator = basicElementValidator.extend({
+  type: z.literal('checkboxes'),
+  options: z.array(z.object({ id: z.string(), nom: z.string() })),
+  optionnel: z.literal(false).optional(),
+})
 export type CheckboxesElement = z.infer<typeof checkboxesElementValidator>
-
 
 const isSelectElementWithMetas = (element: DeepReadonly<SelectElement>): element is SelectElementWithMetas => 'valeursMetasNom' in element
 const isSelectElementWithOptions = (element: DeepReadonly<SelectElement>): element is SelectElementWithOptions => 'options' in element
 
-const selectElementWithMetasValidator = basicElementValidator.extend({type: z.literal('select'), valeursMetasNom: z.enum(['devises', 'unites'])})
+const selectElementWithMetasValidator = basicElementValidator.extend({ type: z.literal('select'), valeursMetasNom: z.enum(['devises', 'unites']) })
 type SelectElementWithMetas = z.infer<typeof selectElementWithMetasValidator>
 
-const selectElementWithOptionsValidator = basicElementValidator.extend({type: z.literal('select'), options: z.array(z.object({id: z.string(), nom: z.string()}))})
+const selectElementWithOptionsValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })) })
 type SelectElementWithOptions = z.infer<typeof selectElementWithOptionsValidator>
 
 export const selectElementValidator = z.union([selectElementWithMetasValidator, selectElementWithOptionsValidator])

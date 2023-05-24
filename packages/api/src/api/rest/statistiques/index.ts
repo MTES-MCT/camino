@@ -48,12 +48,14 @@ export const getGuyaneStats =
     }
   }
 
-export const getGranulatsMarinsStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
-  try {
-    res.json(await statistiquesGranulatsMarins())
-  } catch (e) {
-    console.error(e)
+export const getGranulatsMarinsStats =
+  (_pool: Pool) =>
+  async (_req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
+    try {
+      res.json(await statistiquesGranulatsMarins())
+    } catch (e) {
+      console.error(e)
 
-    throw e
+      throw e
+    }
   }
-}

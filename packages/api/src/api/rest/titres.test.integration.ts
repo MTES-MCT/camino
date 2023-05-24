@@ -11,7 +11,6 @@ import { Knex } from 'knex'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
@@ -27,7 +26,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
 
-  await knex('communes').insert({id: 97300, nom: 'Une ville en Guyane', departement_id: 973})
+  await knex('communes').insert({ id: 97300, nom: 'Une ville en Guyane', departement_id: 973 })
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {
@@ -47,7 +46,7 @@ beforeAll(async () => {
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
-        administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']]
+        administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
       },
       {
         typeId: 'mdp',
@@ -78,7 +77,7 @@ beforeAll(async () => {
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
-        administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']]
+        administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
       },
       {
         typeId: 'mdp',
@@ -148,9 +147,9 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   })
 
   await knex('titres')
-    .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id} })
+    .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
     .where('id', titre.id)
-  await knex('titres_communes').insert({titre_etape_id: etapesCrees[0].id, commune_id: 97300, surface: 12})
+  await knex('titres_communes').insert({ titre_etape_id: etapesCrees[0].id, commune_id: 97300, surface: 12 })
 }
 
 describe('titresONF', () => {
@@ -516,7 +515,7 @@ test('utilisateurTitreAbonner', async () => {
     {}
   )
 
-  let tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, {abonne: true})
+  const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
 })

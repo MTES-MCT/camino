@@ -3,20 +3,25 @@ import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
 import { CommonRestTitre } from './titres.js'
 import { EntrepriseId } from './entreprise.js'
 import { getDomaineId } from './static/titresTypes.js'
+import { z } from 'zod'
 
-export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
-export interface FiscaliteFrance {
-  redevanceCommunale: number
-  redevanceDepartementale: number
-}
+const fiscaliteFranceValidator = z.object({
+  redevanceCommunale: z.number(),
+  redevanceDepartementale: z.number(),
+})
+export type FiscaliteFrance = z.infer<typeof fiscaliteFranceValidator>
 
-export interface FiscaliteGuyane extends FiscaliteFrance {
-  guyane: {
-    taxeAurifereBrute: number
-    totalInvestissementsDeduits: number
-    taxeAurifere: number
-  }
-}
+const fiscaliteGuyaneValidator = fiscaliteFranceValidator.extend({
+  guyane: z.object({
+    taxeAurifereBrute: z.number(),
+    totalInvestissementsDeduits: z.number(),
+    taxeAurifere: z.number(),
+  }),
+})
+export type FiscaliteGuyane = z.infer<typeof fiscaliteGuyaneValidator>
+
+export const fiscaliteValidator = z.union([fiscaliteFranceValidator, fiscaliteGuyaneValidator])
+export type Fiscalite = z.infer<typeof fiscaliteValidator>
 
 export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteGuyane => 'guyane' in fiscalite
 

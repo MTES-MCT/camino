@@ -16,7 +16,7 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 
-export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -32,7 +32,7 @@ export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomRe
     }
   }
 }
-export const updateUtilisateurPermission = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -68,7 +68,7 @@ export const updateUtilisateurPermission = async (req: CaminoRequest, res: Custo
     }
   }
 }
-export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -121,7 +121,7 @@ export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomRespon
   }
 }
 
-export const manageNewsletterSubscription = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+export const manageNewsletterSubscription = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -144,7 +144,7 @@ export const manageNewsletterSubscription = async (req: CaminoRequest, res: Cust
   }
 }
 
-export const generateQgisToken = async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
+export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
   const user = req.auth
 
   if (!user) {

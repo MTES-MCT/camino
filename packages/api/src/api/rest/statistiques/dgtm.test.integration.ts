@@ -1,7 +1,6 @@
 import { restCall } from '../../../../tests/_utils/index.js'
 import { dbManager } from '../../../../tests/db-manager.js'
 import { expect, test, afterAll, beforeAll, vi } from 'vitest'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import type { Pool } from 'pg'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 
@@ -19,7 +18,7 @@ afterAll(async () => {
 })
 
 test('peut récupérer les statistiques de la DGTM', async () => {
-  const tested = await restCall(dbPool, CaminoRestRoutes.statistiquesDGTM, {}, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
+  const tested = await restCall(dbPool, '/rest/statistiques/dgtm', {}, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
   expect(tested.statusCode).toBe(200)
   expect(tested.body).toMatchSnapshot()

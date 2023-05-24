@@ -1,5 +1,5 @@
 import { Couleur } from './couleurs.js'
-import {z} from 'zod'
+import { z } from 'zod'
 
 const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'ter', 'aco', 'nul', 'pro'] as const
 export const ETAPES_STATUTS = {

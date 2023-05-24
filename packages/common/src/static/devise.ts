@@ -1,5 +1,5 @@
 import { Definition } from '../definition.js'
-import {z} from 'zod'
+import { z } from 'zod'
 const IDS = ['EUR', 'FRF', 'XPF'] as const
 export const DEVISES_IDS = {
   Euros: 'EUR',

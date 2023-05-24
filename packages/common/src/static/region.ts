@@ -1,5 +1,5 @@
 import { PaysId } from './pays.js'
-import {z} from 'zod'
+import { z } from 'zod'
 // prettier-ignore
 export const IDS = ['01','02','03','04','06','11','24','27','28','32','44','52','53','75','76','84','93','94',] as const
 export const REGION_IDS = {
@@ -56,4 +56,4 @@ export const Regions: { [key in RegionId]: Region<key> } = {
   '93': { id: '93', nom: "Provence-Alpes-Côte d'Azur", paysId: 'FR' },
   '94': { id: '94', nom: 'Corse', paysId: 'FR' },
 }
-export const regions = IDS
+export const regions = Object.values(Regions)

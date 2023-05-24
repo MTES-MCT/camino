@@ -7,6 +7,7 @@ import inseeTypesVoies from './definitions/voies.js'
 
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 
 interface IApiSirenNomFormat extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {}
 
@@ -82,7 +83,7 @@ export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale
 }
 
 export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, siren }: IApiSirenEtablissement) => {
-  const id = `fr-${siren}`
+  const id = entrepriseIdValidator.parse(`fr-${siren}`)
 
   const entreprise = {
     id,

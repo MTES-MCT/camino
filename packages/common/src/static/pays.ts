@@ -1,4 +1,4 @@
-import {z} from 'zod'
+import { z } from 'zod'
 // prettier-ignore
 export const IDS = ['BL','FR','GF','GP','MF','MQ','NC','PF','PM','RE','TF','WF','XX','YT',] as const
 
@@ -44,7 +44,5 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
   XX: { id: 'XX', nom: 'Clipperton (Île)' },
   YT: { id: 'YT', nom: 'Département de Mayotte' },
 }
-
-const PAYS_IDS_LIST = Object.values(PAYS_IDS)
 
 export const isPaysId = (value: string): value is PaysId => paysIdValidator.safeParse(value).success

@@ -1,4 +1,4 @@
-import { Siren } from "camino-common/src/entreprise"
+import { Siren } from 'camino-common/src/entreprise'
 
 export interface IApiSirenUniteLegalePeriode extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite {
   dateDebut: Date

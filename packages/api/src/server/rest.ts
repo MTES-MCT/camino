@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { Index } from '../types.js'
 import type { Pool } from 'pg'
 
@@ -18,7 +20,7 @@ import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
-import {z} from 'zod'
+import { z } from 'zod'
 const contentTypes: Record<DownloadFormat, string> = {
   csv: 'text/csv',
   geojson: 'application/geo+json',
@@ -48,28 +50,21 @@ type IRestResolver = (
   user: User
 ) => Promise<IRestResolverResult | null>
 
-
-type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<typeof CaminoRestRoutes[Route]['get']['output']>>) => Promise<void>
-type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<typeof CaminoRestRoutes[Route]['post']['output']>>) => Promise<void>
-type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<typeof CaminoRestRoutes[Route]['put']['output']>>) => Promise<void>
+type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['get']['output']>>) => Promise<void>
+type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['post']['output']>>) => Promise<void>
+type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
 
-type Transform<Route> = (Route extends GetRestRoutes 
-? { 'get': RestGetCall<Route> } 
-: {}) & (Route extends PostRestRoutes 
-? { 'post': RestPostCall<Route> } 
-: {}) & (Route extends PutRestRoutes 
-  ? { 'put': RestPutCall<Route> } 
-  : {}) & (Route extends DeleteRestRoutes 
-? { 'delete': RestDeleteCall } 
-: {}) 
+type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
+  (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
+  (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
+  (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {})
 
 type RestRouteImplementations<Route, Output = {}> = Route extends readonly [infer First, ...infer Rest]
-  ? First extends string 
-  ? RestRouteImplementations<Rest, {[key in First]: Transform<First>} & Output>
+  ? First extends string
+    ? RestRouteImplementations<Rest, { [key in First]: Transform<First> } & Output>
+    : Output
   : Output
-  : Output;
-
 
 export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const config: CaminoConfig = {
@@ -81,27 +76,37 @@ export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRe
     matomoSiteId: process.env.API_MATOMO_ID,
   }
 
-
   res.json(caminoConfigValidator.parse(config))
 }
-  
-const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRouteIds>>  = {
+
+const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRouteIds>> = {
   '/moi': { get: moi },
-  "/config": { get: config },
-  '/rest/titres/:id/titreLiaisons': {get: getTitreLiaisons, post: postTitreLiaisons},
-  '/rest/titreSections/:titreId': {get: getTitresSections},
-  '/rest/etapesTypes/:demarcheId/:date': {get: getEtapesTypesEtapesStatusWithMainStep},
-  '/rest/demarches/:demarcheId': {get: getDemarche},
-  '/rest/titres/:titreId': {delete: removeTitre, post: updateTitre, get: getTitre},
-  '/rest/titres/:titreId/date': {get: getTitreDate},
-  '/rest/titres/:titreId/abonne': {post: utilisateurTitreAbonner},
-  '/rest/titresONF': {get: titresONF},
-  '/rest/titresPTMG': {get: titresPTMG},
-  '/rest/titresDREAL': {get: titresDREAL},
-  '/rest/statistiques/minerauxMetauxMetropole': {get: getMinerauxMetauxMetropolesStats},
-  
-  '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: deleteEntrepriseDocument },
+  '/config': { get: config },
+  '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
+  '/rest/titreSections/:titreId': { get: getTitresSections },
+  '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
+  '/rest/demarches/:demarcheId': { get: getDemarche },
+  '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
+  '/rest/titres/:titreId/date': { get: getTitreDate },
+  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner },
+  '/rest/titresONF': { get: titresONF },
+  '/rest/titresPTMG': { get: titresPTMG },
+  '/rest/titresDREAL': { get: titresDREAL },
+  '/rest/statistiques/minerauxMetauxMetropole': { get: getMinerauxMetauxMetropolesStats }, // UNTESTED YET
+  '/rest/statistiques/guyane': { get: getGuyaneStats },
+  '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
+  '/rest/statistiques/dgtm': { get: getDGTMStats },
+  '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
+  '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },
+  '/rest/utilisateurs/:id': { delete: deleteUtilisateur },
+  '/rest/utilisateurs/:id/newsletter': { get: isSubscribedToNewsletter, post: manageNewsletterSubscription }, // UNTESTED YET
+  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { get: fiscalite }, // UNTESTED YET
+  '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
+  '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: deleteEntrepriseDocument },
+  '/rest/entreprises': { post: creerEntreprise },
+  '/deconnecter': { get: logout },
+  '/changerMotDePasse': { get: resetPassword },
 } as const
 
 export const restWithPool = (dbPool: Pool) => {
@@ -121,43 +126,26 @@ export const restWithPool = (dbPool: Pool) => {
   // rest.get(CaminoRestRoutes.downloadEntreprises, restDownload(entreprises))
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
-  Object.keys(restRouteImplementations).filter(isCaminoRestRoute).forEach(route => {
-    const maRoute = restRouteImplementations[route]
-    if (maRoute) {
-      if ('get' in maRoute) {
-        rest.get(route, restCatcher(maRoute.get(dbPool)))
-      }
-      if ('post' in maRoute) {
-        rest.post(route, restCatcher(maRoute.post(dbPool)))
-      }
-      if ('put' in maRoute) {
-        rest.put(route, restCatcher(maRoute.put(dbPool)))
-      }
+  Object.keys(restRouteImplementations)
+    .filter(isCaminoRestRoute)
+    .forEach(route => {
+      const maRoute = restRouteImplementations[route]
+      if (maRoute) {
+        if ('get' in maRoute) {
+          rest.get(route, restCatcher(maRoute.get(dbPool)))
+        }
+        if ('post' in maRoute) {
+          rest.post(route, restCatcher(maRoute.post(dbPool)))
+        }
+        if ('put' in maRoute) {
+          rest.put(route, restCatcher(maRoute.put(dbPool)))
+        }
 
-      if ('delete' in maRoute) {
-        rest.delete(route, restCatcher(maRoute.delete(dbPool)))
+        if ('delete' in maRoute) {
+          rest.delete(route, restCatcher(maRoute.delete(dbPool)))
+        }
       }
-    }
-  })
-  // rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats(dbPool)))
-  // rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
-
-  // rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats(dbPool)))
-  // rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
-  // rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
-  // rest.post(CaminoRestRoutes.utilisateurPermission, restCatcher(updateUtilisateurPermission))
-  // rest.delete(CaminoRestRoutes.utilisateur, restCatcher(deleteUtilisateur))
-  // rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
-
-  // rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
-  // rest.put(CaminoRestRoutes.entreprise, restCatcher(modifierEntreprise))
-  // rest.get(CaminoRestRoutes.entreprise, restCatcher(getEntreprise))
-  // rest.get(CaminoRestRoutes.entrepriseDocuments, restCatcher(getEntrepriseDocuments(dbPool)))
-  // rest.post(CaminoRestRoutes.entrepriseDocuments, restCatcher(postEntrepriseDocument(dbPool)))
-  // rest.delete(CaminoRestRoutes.entrepriseDocument, restCatcher(deleteEntrepriseDocument(dbPool)))
-  // rest.post(CaminoRestRoutes.entreprises, restCatcher(creerEntreprise))
-  // rest.get('/deconnecter', restCatcher(logout))
-  // rest.get('/changerMotDePasse', restCatcher(resetPassword))
+    })
 
   rest.use((err: Error, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
     if (err) {
@@ -226,4 +214,3 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
     next(e)
   }
 }
-

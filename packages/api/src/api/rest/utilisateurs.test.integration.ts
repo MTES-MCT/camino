@@ -5,6 +5,7 @@ import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import type { Pool } from 'pg'
 import { constants } from 'http2'
+import { userSuper } from '../../database/user-super.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -24,11 +25,11 @@ afterAll(async () => {
 describe('moi', () => {
   test('peut demander les informations sur soi-même', async () => {
     const user = await userGenerate({ role: 'defaut' })
-    let tested = await restCall(dbPool, '/moi', {  }, undefined)
-    
+    let tested = await restCall(dbPool, '/moi', {}, undefined)
+
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
 
-    tested = await restCall(dbPool, '/moi', {  }, user)
+    tested = await restCall(dbPool, '/moi', {}, user)
     expect(tested.body).toMatchInlineSnapshot(`
       {
         "email": "defaut-user@camino.local",
@@ -118,5 +119,12 @@ describe('utilisateurSupprimer', () => {
         "error": "aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur",
       }
     `)
+  })
+})
+
+describe('generateQgisToken', () => {
+  test.only('génère un token Qgis', async () => {
+    const tested = await restPostCall(dbPool, '/rest/utilisateur/generateQgisToken', {}, userSuper, undefined)
+    expect(tested.statusCode).toBe(200)
   })
 })

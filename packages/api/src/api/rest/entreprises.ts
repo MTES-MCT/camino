@@ -290,7 +290,7 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
   return redevances.fiscalite
 }
 
-export const modifierEntreprise = async (req: JWTRequest<User>, res: CustomResponse<void>) => {
+export const modifierEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<void>) => {
   const user = req.auth
   const entreprise = entrepriseModificationValidator.safeParse(req.body)
   if (!user) {
@@ -335,7 +335,7 @@ export const modifierEntreprise = async (req: JWTRequest<User>, res: CustomRespo
   }
 }
 
-export const creerEntreprise = async (req: JWTRequest<User>, res: CustomResponse<void>) => {
+export const creerEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<void>) => {
   const user = req.auth
   const siren = sirenValidator.safeParse(req.body.siren)
   if (!user) {
@@ -370,7 +370,7 @@ export const creerEntreprise = async (req: JWTRequest<User>, res: CustomResponse
     }
   }
 }
-export const getEntreprise = async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
+export const getEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
   const user = req.auth
 
   const entrepriseId = req.params.entrepriseId
@@ -510,7 +510,7 @@ export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<U
   }
 }
 
-export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fiscalite>) => {
+export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<Fiscalite>) => {
   const user = req.auth
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)

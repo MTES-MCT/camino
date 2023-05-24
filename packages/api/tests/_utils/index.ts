@@ -12,7 +12,7 @@ import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
-import {z} from 'zod'
+import { z } from 'zod'
 
 export const queryImport = (nom: string) =>
   fs
@@ -39,23 +39,22 @@ export const restUploadCall = async (pool: Pool, user: TestUser) => {
   return jwtSet(req, user)
 }
 
-
 export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: Route, params: ParseUrlParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
   const req = request(app(pool)).get(getRestRoute(route, params))
 
   return jwtSet(req, user)
 }
 
-
-
 export const restPostCall = async <Route extends PostRestRoutes>(
   pool: Pool,
   caminoRestRoute: Route,
   params: ParseUrlParams<Route>,
   user: TestUser | undefined,
-  body: z.infer<typeof CaminoRestRoutes[Route]['post']['input']>
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
 ): Promise<request.Test> => {
-  const req = request(app(pool)).post(getRestRoute(caminoRestRoute, params)).send(body)
+  const req = request(app(pool))
+    .post(getRestRoute(caminoRestRoute, params))
+    .send(body ?? undefined)
 
   return jwtSet(req, user)
 }
@@ -65,7 +64,7 @@ export const restPutCall = async <Route extends PutRestRoutes>(
   path: Route,
   params: ParseUrlParams<Route>,
   user: TestUser | undefined,
-  body: z.infer<typeof CaminoRestRoutes[Route]['put']['input']>
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['put']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
 
@@ -86,6 +85,7 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
 
   if (token) {
     req.set('x-forwarded-access-token', token)
+    req.set('authorization', 'falseauthorizationtoken')
   }
 
   return req
