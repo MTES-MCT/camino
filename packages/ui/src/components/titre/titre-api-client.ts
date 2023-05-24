@@ -1,6 +1,5 @@
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { EditableTitre, Section, TitreGet } from 'camino-common/src/titres'
-import { fetchWithJson, postWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 
 export interface TitreApiClient {
@@ -14,21 +13,21 @@ export interface TitreApiClient {
 
 export const titreApiClient: TitreApiClient = {
   loadTitreSections: async (titreId: string): Promise<Section[]> => {
-    return fetchWithJson(CaminoRestRoutes.titreSections, { titreId })
+    return getWithJson('/rest/titreSections/:titreId', { titreId })
   },
   removeTitre: async (titreId: string): Promise<void> => {
-    return fetchWithJson(CaminoRestRoutes.titre, { titreId }, 'delete')
+    return deleteWithJson('/rest/titres/:titreId', { titreId })
   },
   titreUtilisateurAbonne: async (titreId: string, abonne: boolean): Promise<void> => {
-    return postWithJson(CaminoRestRoutes.titreUtilisateurAbonne, { titreId }, { abonne })
+    return postWithJson('/rest/titres/:titreId/abonne', { titreId }, { abonne })
   },
   editTitre: (titre: EditableTitre): Promise<void> => {
-    return postWithJson(CaminoRestRoutes.titre, { titreId: titre.id }, titre)
+    return postWithJson('/rest/titres/:titreId', { titreId: titre.id }, titre)
   },
   getTitreById: (titreId: string): Promise<TitreGet> => {
-    return fetchWithJson(CaminoRestRoutes.titre, { titreId })
+    return getWithJson('/rest/titres/:titreId', { titreId })
   },
   getLastModifiedDate: (titreId: string): Promise<CaminoDate | null> => {
-    return fetchWithJson(CaminoRestRoutes.titreDate, { titreId })
+    return getWithJson('/rest/titres/:titreId/date', { titreId })
   },
 }

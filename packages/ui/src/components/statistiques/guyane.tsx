@@ -1,6 +1,5 @@
 import { FunctionalComponent, Ref, ref, computed, onMounted, defineComponent } from 'vue'
-import { fetchWithJson, AsyncData } from '@/api/client-rest'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { getWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesGuyane, StatistiquesGuyaneActivite, StatistiquesGuyaneData } from 'camino-common/src/statistiques'
 import { GuyaneActivite } from './guyane-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
@@ -13,7 +12,7 @@ import { anneePrecedente, anneeSuivante, CaminoAnnee, CaminoDate, getAnnee, getC
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 const getStats = async (): Promise<StatistiquesGuyane> => {
-  const data: StatistiquesGuyaneData = await fetchWithJson(CaminoRestRoutes.statistiquesGuyane, {})
+  const data: StatistiquesGuyaneData = await getWithJson('/rest/statistiques/guyane', {})
   return {
     data,
     parAnnee: data.annees.reduce((acc: Record<CaminoAnnee, StatistiquesGuyaneActivite>, statsAnnee: StatistiquesGuyaneActivite) => {
@@ -70,28 +69,28 @@ const armChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         type: 'bar',
         label: "Demandes d'octroi ARM déposées",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.arm.depot[annee]),
+        data: annees.map(annee => data.arm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: "Demandes d'ARM octroyées",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.arm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.arm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: "Demandes d'octroi d'ARM refusées",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.arm.refusees[annee]),
+        data: annees.map(annee => data.arm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: 'Surface cumulée des autorisations de recherche (ha)',
         yAxisID: 'surface',
-        data: annees.map(annee => data.arm.surface[annee]),
+        data: annees.map(annee => data.arm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],
@@ -109,28 +108,28 @@ const prmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         type: 'bar',
         label: 'Demandes de PER déposées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.depot[annee]),
+        data: annees.map(annee => data.prm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: 'Demandes de PER octroyées et prolongées',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.prm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de PER refusées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.refusees[annee]),
+        data: annees.map(annee => data.prm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: 'Surface cumulée des permis de recherche (ha) accordés',
         yAxisID: 'surface',
-        data: annees.map(annee => data.prm.surface[annee]),
+        data: annees.map(annee => data.prm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],
@@ -148,28 +147,28 @@ const axmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         type: 'bar',
         label: "Demandes d'AEX déposées (octroi et prolongation)",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.axm.depot[annee]),
+        data: annees.map(annee => data.axm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: "Demandes d'AEX octroyées et prolongées",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.axm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.axm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: "Demandes d'AEX refusées (octroi et prolongation)",
         yAxisID: 'demandes',
-        data: annees.map(annee => data.axm.refusees[annee]),
+        data: annees.map(annee => data.axm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: "Surface cumulée des autorisations d'exploitation (ha) accordés",
         yAxisID: 'surface',
-        data: annees.map(annee => data.axm.surface[annee]),
+        data: annees.map(annee => data.axm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],
@@ -186,28 +185,28 @@ const cxmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
         type: 'bar',
         label: 'Demandes de concessions déposées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.depot[annee]),
+        data: annees.map(annee => data.cxm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions octroyées et prolongées',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.cxm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions refusées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.refusees[annee]),
+        data: annees.map(annee => data.cxm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: 'Surface cumulée des concessions (ha) accordés',
         yAxisID: 'surface',
-        data: annees.map(annee => data.cxm.surface[annee]),
+        data: annees.map(annee => data.cxm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],

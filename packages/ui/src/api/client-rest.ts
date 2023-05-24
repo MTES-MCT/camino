@@ -1,4 +1,5 @@
-import { CaminoRestRoute, getRestRoute, ParseUrlParams } from 'camino-common/src/rest'
+import { CaminoRestRoute, CaminoRestRoutes,  DeleteRestRoutes,  getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest'
+import {z} from 'zod'
 
 type Loading = { status: 'LOADING' }
 type Error = { status: 'ERROR'; message: string }
@@ -17,18 +18,16 @@ export const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: Pars
   return `${baseRoute}${getRestRoute(route, params)}?${urlParams}` as UiRestRoute
 }
 
-export const fetchWithJson = async <T extends CaminoRestRoute>(
-  path: T,
-  params: ParseUrlParams<T>,
-  method: 'post' | 'get' | 'put' | 'delete' = 'get',
-  searchParams: Record<string, string> = {}
-): Promise<any> => {
+
+const callFetch =  async <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'put' | 'get' | 'delete', searchParams: Record<string, string> = {}, body?: any): Promise<any> => {
   const url = getUiRestRoute(path, params, searchParams)
 
-  const fetched = await fetch(url, {
+  const defaultOptions = {
     method,
     headers: { 'Content-Type': 'application/json' },
-  })
+  }
+
+  const fetched = await fetch(url, body ? {...defaultOptions, body: JSON.stringify(body)} : defaultOptions)
   if (fetched.ok) {
     if (fetched.status === 200) {
       const body = await fetched.json()
@@ -43,24 +42,12 @@ export const fetchWithJson = async <T extends CaminoRestRoute>(
   throw new Error(`Une erreur s'est produite lors de la récupération des données`)
 }
 
-export const postWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, body: unknown, method: 'post' | 'put' = 'post'): Promise<any> => {
-  const url = getUiRestRoute(path, params)
 
-  const fetched = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (fetched.ok) {
-    if (fetched.status === 200) {
-      const body = await fetched.json()
-      return body
-    }
-    return
-  }
-  if (fetched.status === 403) {
-    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
-  }
-  console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
-  throw new Error(`Une erreur s'est produite lors de la récupération des données`)
-}
+export const getWithJson = async <T extends GetRestRoutes>(path: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): Promise<z.infer<typeof CaminoRestRoutes[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
+
+export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): Promise<void> => await callFetch(path, params, 'delete', searchParams)
+
+export const postWithJson = async <T extends PostRestRoutes>(path: T, params: ParseUrlParams<T>, body: z.infer<typeof CaminoRestRoutes[T]['post']['input']>): Promise<z.infer<typeof CaminoRestRoutes[T]['post']['output']>> => await callFetch(path, params, 'post', {}, body)
+
+export const putWithJson = async <T extends PutRestRoutes>(path: T, params: ParseUrlParams<T>, body: z.infer<typeof CaminoRestRoutes[T]['put']['input']>): Promise<z.infer<typeof CaminoRestRoutes[T]['put']['output']>> => await callFetch(path, params, 'put', {}, body)
+

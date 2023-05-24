@@ -3,21 +3,20 @@ import { PureEntrepriseDashboard } from '@/components/dashboard/pure-entreprise-
 import { PureONFDashboard } from '@/components/dashboard/pure-onf-dashboard'
 import { PurePTMGDashboard } from '@/components/dashboard/pure-ptmg-dashboard'
 import { PureDrealDashboard } from '@/components/dashboard/pure-dreal-dashboard'
-import { fetchWithJson } from '@/api/client-rest'
+import { getWithJson } from '@/api/client-rest'
 import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG } from 'camino-common/src/titres'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 
-const getOnfTitres = async (): Promise<CommonTitreONF[]> => fetchWithJson(CaminoRestRoutes.titresONF, {})
-const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> => fetchWithJson(CaminoRestRoutes.titresPTMG, {})
-const getDrealTitres = async (): Promise<CommonTitreDREAL[]> => fetchWithJson(CaminoRestRoutes.titresDREAL, {})
-const getDgtmStats = async (): Promise<StatistiquesDGTM> => fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
+const getOnfTitres = async (): Promise<CommonTitreONF[]> => getWithJson('/rest/titresONF', {})
+const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> => getWithJson('/rest/titresPTMG', {})
+const getDrealTitres = async (): Promise<CommonTitreDREAL[]> => getWithJson('/rest/titresDREAL', {})
+const getDgtmStats = async (): Promise<StatistiquesDGTM> => getWithJson('/rest/statistiques/dgtm', {})
 
 export const Dashboard = defineComponent({
   setup() {

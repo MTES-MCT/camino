@@ -1,5 +1,5 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { fetchWithJson } from '@/api/client-rest'
+import { getWithJson } from '@/api/client-rest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheGet, DemarcheId } from 'camino-common/src/demarche'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
@@ -57,6 +57,6 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({ id: demarcheId })
   },
   getDemarche: (demarcheId: DemarcheId): Promise<DemarcheGet> => {
-    return fetchWithJson(CaminoRestRoutes.demarche, { demarcheId })
+    return getWithJson('/rest/demarches/:demarcheId', { demarcheId })
   },
 }

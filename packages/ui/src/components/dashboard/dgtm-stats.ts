@@ -78,7 +78,7 @@ export const producteursOrChartConfiguration = (data: StatistiquesDGTM): ChartCo
   const datasets = [
     {
       label: 'Producteurs',
-      data: annees.map(annee => data.producteursOr[annee]),
+      data: annees.map(annee => data.producteursOr[annee] ?? 0),
       ...datasetParams(0),
     },
   ]
@@ -117,12 +117,12 @@ export const delaiPerConcessionChartConfiguration = (data: StatistiquesDGTM): Ch
   const datasets = [
     {
       label: 'PER',
-      data: annees.map(annee => Math.round(data.delais[annee].prm.delaiInstructionEnJours.reduce((acc, current) => acc + current, 0) / data.delais[annee].prm.delaiInstructionEnJours.length / 30)),
+      data: annees.map(annee => Math.round((data.delais[annee]?.prm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.prm?.delaiInstructionEnJours?.length ?? 1) / 30)),
       ...datasetParams(0),
     },
     {
       label: 'Concession',
-      data: annees.map(annee => Math.round(data.delais[annee].cxm.delaiInstructionEnJours.reduce((acc, current) => acc + current, 0) / data.delais[annee].cxm.delaiInstructionEnJours.length / 30)),
+      data: annees.map(annee => Math.round((data.delais[annee]?.cxm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.cxm?.delaiInstructionEnJours?.length ?? 1) / 30)),
       ...datasetParams(1),
     },
   ]
@@ -208,44 +208,44 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
   const datasets = [
     {
       label: 'instruction min',
-      data: annees.map(annee => Math.round(Math.min(...item.delais[annee].axm.delaiInstructionEnJours) / 30)),
+      data: annees.map(annee => Math.round(Math.min(...(item.delais[annee]?.axm?.delaiInstructionEnJours ?? [])) / 30)),
       hidden: true,
       ...datasetParams(0),
     },
     {
       label: 'instruction',
-      data: annees.map(annee => Math.round(item.delais[annee].axm.delaiInstructionEnJours.reduce((acc, current) => acc + current, 0) / item.delais[annee].axm.delaiInstructionEnJours.length / 30)),
+      data: annees.map(annee => Math.round((item.delais[annee]?.axm?.delaiInstructionEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiInstructionEnJours?.length ?? 1) / 30)),
       ...datasetParams(1),
     },
     {
       label: 'instruction max',
-      data: annees.map(annee => Math.round(Math.max(...item.delais[annee].axm.delaiInstructionEnJours) / 30)),
+      data: annees.map(annee => Math.round(Math.max(...(item.delais[annee]?.axm?.delaiInstructionEnJours ?? [])) / 30)),
       hidden: true,
       ...datasetParams(2),
     },
     {
       label: 'CDM min',
-      data: annees.map(annee => Math.round(Math.min(...item.delais[annee].axm.delaiCommissionDepartementaleEnJours) / 30)),
+      data: annees.map(annee => Math.round(Math.min(...(item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? [])) / 30)),
       hidden: true,
       ...datasetParams(3),
     },
     {
       label: 'CDM',
       data: annees.map(annee =>
-        Math.round(item.delais[annee].axm.delaiCommissionDepartementaleEnJours.reduce((acc, current) => acc + current, 0) / item.delais[annee].axm.delaiCommissionDepartementaleEnJours.length / 30)
+        Math.round((item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours?.length ?? 1) / 30)
       ),
       ...datasetParams(4),
     },
     {
       label: 'CDM max',
-      data: annees.map(annee => Math.round(Math.max(...item.delais[annee].axm.delaiCommissionDepartementaleEnJours) / 30)),
+      data: annees.map(annee => Math.round(Math.max(...(item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? [] )) / 30)),
       hidden: true,
       ...datasetParams(5),
     },
     {
       label: 'décision du préfet',
       data: annees.map(annee =>
-        Math.round(item.delais[annee].axm.delaiDecisionPrefetEnJours.reduce((acc, current) => acc + current, 0) / item.delais[annee].axm.delaiDecisionPrefetEnJours.length / 30)
+        Math.round((item.delais[annee]?.axm?.delaiDecisionPrefetEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiDecisionPrefetEnJours?.length ?? 1) / 30)
       ),
       ...datasetParams(6),
     },
@@ -328,7 +328,7 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
   const datasets = [
     {
       label: 'Zone 0',
-      data: annees.map(annee => item.sdom[annee][SDOMZoneIds.Zone0].depose + item.sdom[annee][SDOMZoneIds.Zone0].octroye),
+      data: annees.map(annee => (item.sdom[annee]?.[SDOMZoneIds.Zone0].depose ?? 0) + (item.sdom[annee]?.[SDOMZoneIds.Zone0].octroye ?? 0)),
       fill: false,
       tension: 0.5,
       backgroundColor: '#0000ff',
@@ -336,7 +336,7 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
     },
     {
       label: 'Zone 0 potentielle',
-      data: annees.map(annee => item.sdom[annee][SDOMZoneIds.Zone0Potentielle].depose + item.sdom[annee][SDOMZoneIds.Zone0Potentielle].octroye),
+      data: annees.map(annee => (item.sdom[annee]?.[SDOMZoneIds.Zone0Potentielle].depose ?? 0) + (item.sdom[annee]?.[SDOMZoneIds.Zone0Potentielle].octroye ?? 0)),
       fill: false,
       tension: 0.5,
       backgroundColor: '#ffffff',
@@ -346,7 +346,7 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
 
     {
       label: 'Zone 1',
-      data: annees.map(annee => item.sdom[annee][SDOMZoneIds.Zone1].depose + item.sdom[annee][SDOMZoneIds.Zone1].octroye),
+      data: annees.map(annee => (item.sdom[annee]?.[SDOMZoneIds.Zone1].depose ?? 0) + (item.sdom[annee]?.[SDOMZoneIds.Zone1].octroye ?? 0)),
       fill: false,
       tension: 0.5,
       backgroundColor: '#00ff7f',
@@ -355,7 +355,7 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
 
     {
       label: 'Zone 2',
-      data: annees.map(annee => item.sdom[annee][SDOMZoneIds.Zone2].depose + item.sdom[annee][SDOMZoneIds.Zone2].octroye),
+      data: annees.map(annee => (item.sdom[annee]?.[SDOMZoneIds.Zone2].depose ?? 0) + (item.sdom[annee]?.[SDOMZoneIds.Zone2].octroye ?? 0)),
       fill: false,
       tension: 0.5,
       backgroundColor: '#ffaa00',
@@ -363,7 +363,7 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
     },
     {
       label: 'Zone 3',
-      data: annees.map(annee => item.sdom[annee][3].depose + item.sdom[annee][3].octroye),
+      data: annees.map(annee => (item.sdom[annee]?.[3].depose ?? 0) + (item.sdom[annee]?.[3].octroye ?? 0)),
       fill: false,
       tension: 0.5,
       backgroundColor: '#E0E0DD',
@@ -382,25 +382,25 @@ const graphDepoData = (item: StatistiquesDGTM): ChartData => {
   const datasets = [
     {
       label: 'AEX déposés',
-      data: annees.map(annee => item.depotEtInstructions[annee].totalAXMDeposees),
+      data: annees.map(annee => item.depotEtInstructions[annee]?.totalAXMDeposees ?? 0),
       stack: 'depot',
       ...datasetParams(0),
     },
     {
       label: 'Autres titres déposés',
-      data: annees.map(annee => item.depotEtInstructions[annee].totalTitresDeposes - item.depotEtInstructions[annee].totalAXMDeposees),
+      data: annees.map(annee => (item.depotEtInstructions[annee]?.totalTitresDeposes ?? 0) - (item.depotEtInstructions[annee]?.totalAXMDeposees ?? 0)),
       stack: 'depot',
       ...datasetParams(1),
     },
     {
       label: 'AEX octroyés',
-      data: annees.map(annee => item.depotEtInstructions[annee].totalAXMOctroyees),
+      data: annees.map(annee => item.depotEtInstructions[annee]?.totalAXMOctroyees ?? 0),
       stack: 'octroi',
       ...datasetParams(2),
     },
     {
       label: 'Autres titres octroyés',
-      data: annees.map(annee => item.depotEtInstructions[annee].totalTitresOctroyes - item.depotEtInstructions[annee].totalAXMOctroyees),
+      data: annees.map(annee => (item.depotEtInstructions[annee]?.totalTitresOctroyes ?? 0) - (item.depotEtInstructions[annee]?.totalAXMOctroyees ?? 0)),
       stack: 'octroi',
       ...datasetParams(3),
     },

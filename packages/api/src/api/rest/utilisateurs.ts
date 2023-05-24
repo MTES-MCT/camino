@@ -7,7 +7,7 @@ import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } fr
 import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
-import { QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur.js'
+import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import { knex } from '../../knex.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import bcrypt from 'bcryptjs'
@@ -132,13 +132,12 @@ export const manageNewsletterSubscription = (_pool: Pool) => async (req: CaminoR
     if (!user || !utilisateur) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const subscription = req.body
-
-      if (typeof subscription !== 'object' && !('newsletter' in subscription) && typeof subscription.newsletter !== 'boolean') {
-        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
-      } else {
-        await newsletterSubscriberUpdate(utilisateur.email, subscription.newsletter)
+      const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
+      if (subscriptionParsed.success) {
+        await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      } else {
+        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
       }
     }
   }

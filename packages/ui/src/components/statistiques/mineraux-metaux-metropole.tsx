@@ -1,4 +1,4 @@
-import { fetchWithJson, AsyncData } from '@/api/client-rest'
+import { getWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { ChartWithExport } from '../_charts/chart-with-export'
@@ -15,7 +15,7 @@ import { CHART_COLORS, nextColor } from '../_charts/utils'
 import styles from './mineraux-metaux-metropole.module.css'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { numberFormat } from 'camino-common/src/number'
-const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => fetchWithJson(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, {})
+const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => getWithJson('/rest/statistiques/minerauxMetauxMetropole', {})
 
 export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxMetauxMetropole getStats={getStats} />
 // Demandé par le router car utilisé dans un import asynchrone /shrug
@@ -116,28 +116,28 @@ const perChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Chart
         type: 'bar',
         label: 'Demandes de PER déposées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.depot[annee]),
+        data: annees.map(annee => data.prm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: 'Demandes de PER octroyées et prolongées',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.prm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de PER refusées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.prm.refusees[annee]),
+        data: annees.map(annee => data.prm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: 'Surface cumulée des permis de recherche (ha) accordés',
         yAxisID: 'surface',
-        data: annees.map(annee => data.prm.surface[annee]),
+        data: annees.map(annee => data.prm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],
@@ -185,28 +185,28 @@ const concessionChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole)
         type: 'bar',
         label: 'Demandes de concessions déposées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.depot[annee]),
+        data: annees.map(annee => data.cxm.depot[annee] ?? 0),
         backgroundColor: CHART_COLORS.green,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions octroyées et prolongées',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.octroiEtProlongation[annee]),
+        data: annees.map(annee => data.cxm.octroiEtProlongation[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
       {
         type: 'bar',
         label: 'Demandes de concessions refusées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: annees.map(annee => data.cxm.refusees[annee]),
+        data: annees.map(annee => data.cxm.refusees[annee] ?? 0),
         backgroundColor: CHART_COLORS.purple,
       },
       {
         type: 'line',
         label: 'Surface cumulée des concessions (ha) accordées',
         yAxisID: 'surface',
-        data: annees.map(annee => data.cxm.surface[annee]),
+        data: annees.map(annee => data.cxm.surface[annee] ?? 0),
         backgroundColor: CHART_COLORS.blue,
       },
     ],
@@ -279,9 +279,9 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
       selsTabId.value = annee
       if (data.value.status === 'LOADED') {
         selsFiscalite.value =
-          data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] +
-            data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] +
-            data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0
+          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? 0) +
+            (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
+            (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
       }
     }
   }
@@ -293,11 +293,11 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
         status: 'LOADED',
         value: stats,
       }
-      anneesBauxite.value = Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]).filter(isAnnee).sort()
+      anneesBauxite.value = Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite] ?? {}).filter(isAnnee).sort()
       anneesSels.value = [
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]),
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]),
-        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]),
+        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_] ?? {}),
+        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage] ?? {}),
+        ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage] ?? {}),
       ]
         .filter(isAnnee)
         .filter(onlyUnique)

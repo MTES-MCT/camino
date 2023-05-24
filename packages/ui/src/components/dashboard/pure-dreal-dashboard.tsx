@@ -72,7 +72,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['getDrealTitres'
         [key in Columns]: ComponentColumnData | TextColumnData
       } = {
         nom: nomCell(titre),
-        type: typeCell(titre.typeId),
+        type: typeCell(titre.type_id),
         statut: statutCell(titre),
         activites: activitesCell(titre),
         references: referencesCell(titre),

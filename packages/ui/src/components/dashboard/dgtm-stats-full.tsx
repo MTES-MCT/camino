@@ -1,7 +1,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { AsyncData, fetchWithJson } from '@/api/client-rest'
+import { AsyncData, getWithJson } from '@/api/client-rest'
 import { ChartWithExport } from '@/components/_charts/chart-with-export'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 
@@ -29,7 +29,7 @@ export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], prop
         const stats = await props.getDgtmStats()
         data.value = { status: 'LOADED', value: stats }
       } else {
-        const stats = await fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
+        const stats = await getWithJson('/rest/statistiques/dgtm', {})
         data.value = { status: 'LOADED', value: stats }
       }
     } catch (e: any) {

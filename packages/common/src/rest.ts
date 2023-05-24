@@ -1,7 +1,7 @@
 import { ZodType, z } from 'zod'
 import { documentIdValidator, entrepriseDocumentInputValidator, entrepriseDocumentValidator, entrepriseModificationValidator, entrepriseTypeValidator, sirenValidator } from './entreprise'
 import { demarcheGetValidator } from './demarche'
-import { qgisTokenValidator, utilisateurToEdit } from './utilisateur'
+import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
 import { editableTitreValidator, sectionValidator, titreDrealValidator, titreGetValidator, titreLinksValidator, titreOnfValidator, titrePtmgValidator, utilisateurTitreAbonneValidator } from './titres'
 import { userValidator } from './roles'
 import { caminoDateValidator } from './date'
@@ -56,7 +56,7 @@ export type CaminoRestRouteIds = typeof IDS
 export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
   '/moi': { get: { output: userValidator } },
-  '/rest/utilisateurs/:id/newsletter': { get: { output: z.boolean() }, post: { input: z.object({ newletter: z.boolean() }), output: z.boolean() } },
+  '/rest/utilisateurs/:id/newsletter': { get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
   '/rest/utilisateurs/:id': { delete: true },
   '/rest/utilisateurs/:id/permission': { post: { input: utilisateurToEdit, output: z.void() } },
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },

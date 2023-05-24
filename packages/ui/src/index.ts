@@ -9,16 +9,15 @@ import { App } from './app'
 
 import router from './router'
 import store from './store'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { CaminoConfig } from 'camino-common/src/static/config'
-import { fetchWithJson } from './api/client-rest'
+import { getWithJson } from './api/client-rest'
 let caminoApplicationVersion = localStorage.getItem('caminoApplicationVersion')
 
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
   const app = createApp(App)
   sync(store, router)
-  const configFromJson: CaminoConfig = await fetchWithJson(CaminoRestRoutes.config, {})
+  const configFromJson: CaminoConfig = await getWithJson('/config', {})
   const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {
