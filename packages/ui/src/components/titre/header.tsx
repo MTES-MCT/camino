@@ -4,7 +4,7 @@ import { User } from 'camino-common/src/roles'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { EditableTitre } from 'camino-common/src/titres'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { Icon } from '../_ui/icon'
@@ -108,17 +108,23 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
 
   const lastModifiedDate = ref<AsyncData<CaminoDate | null>>({ status: 'LOADING' })
 
-  onMounted(async () => {
-    try {
-      lastModifiedDate.value = { status: 'LOADED', value: await props.apiClient.getLastModifiedDate(props.titre.id) }
-    } catch (e: any) {
-      console.error('error', e)
-      lastModifiedDate.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
+  watch(
+    () => props.titre.id,
+    async () => {
+      lastModifiedDate.value = { status: 'LOADING' }
+      try {
+        lastModifiedDate.value = { status: 'LOADED', value: await props.apiClient.getLastModifiedDate(props.titre.id) }
+      } catch (e: any) {
+        console.error('error', e)
+        lastModifiedDate.value = {
+          status: 'ERROR',
+          message: e.message ?? 'something wrong happened',
+        }
       }
-    }
-  })
+    },
+    { immediate: true }
+  )
+
   return () => (
     <>
       <div class="sticky-header width-full">
