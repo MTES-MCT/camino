@@ -123,7 +123,7 @@ describe('utilisateurSupprimer', () => {
 })
 
 describe('generateQgisToken', () => {
-  test.only('génère un token Qgis', async () => {
+  test('génère un token Qgis', async () => {
     const tested = await restPostCall(dbPool, '/rest/utilisateur/generateQgisToken', {}, userSuper, undefined)
     expect(tested.statusCode).toBe(200)
   })
