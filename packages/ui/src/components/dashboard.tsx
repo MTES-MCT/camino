@@ -3,20 +3,11 @@ import { PureEntrepriseDashboard } from '@/components/dashboard/pure-entreprise-
 import { PureONFDashboard } from '@/components/dashboard/pure-onf-dashboard'
 import { PurePTMGDashboard } from '@/components/dashboard/pure-ptmg-dashboard'
 import { PureDrealDashboard } from '@/components/dashboard/pure-dreal-dashboard'
-import { getWithJson } from '@/api/client-rest'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG } from 'camino-common/src/titres'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { titres } from '@/api/titres'
-import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
-import { EntrepriseId } from 'camino-common/src/entreprise'
-
-const getOnfTitres = async (): Promise<CommonTitreONF[]> => getWithJson('/rest/titresONF', {})
-const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> => getWithJson('/rest/titresPTMG', {})
-const getDrealTitres = async (): Promise<CommonTitreDREAL[]> => getWithJson('/rest/titresDREAL', {})
-const getDgtmStats = async (): Promise<StatistiquesDGTM> => getWithJson('/rest/statistiques/dgtm', {})
+import { dashboardApiClient } from './dashboard/dashboard-api-client'
 
 export const Dashboard = defineComponent({
   setup() {
@@ -25,7 +16,6 @@ export const Dashboard = defineComponent({
 
     const user = store.state.user.element
 
-    const entreprisesIds: EntrepriseId[] = []
     const hasEntreprises: boolean = store.getters['user/hasEntreprises']
 
     const isONF: boolean = store.getters['user/isONF']
@@ -33,27 +23,21 @@ export const Dashboard = defineComponent({
     const isDREAL: boolean = store.getters['user/isDREAL']
     const isDGTM: boolean = store.getters['user/isDGTM']
     const entreprises = store.getters['user/user']?.entreprises ?? []
-    if (hasEntreprises) {
-      // TODO 2022-03-17: type the store
-      entreprisesIds.push(...entreprises.map((entreprise: { id: EntrepriseId }) => entreprise.id))
-    } else if (!isONF && !isPTMG && !isDREAL && !isDGTM) {
+    if (!isONF && !isPTMG && !isDREAL && !isDGTM) {
       store.commit('titres/reset')
       store.dispatch('titres/init')
       router.replace({ name: 'titres' })
     }
-    const getEntreprisesTitres = async () => {
-      return (await titres({ entreprisesIds })).elements
-    }
 
     let dashboard = <div>Loading</div>
     if (hasEntreprises) {
-      dashboard = <PureEntrepriseDashboard getEntreprisesTitres={getEntreprisesTitres} user={user} entreprises={entreprises} displayActivites={canReadActivites(user)} />
+      dashboard = <PureEntrepriseDashboard apiClient={dashboardApiClient} user={user} entreprises={entreprises} displayActivites={canReadActivites(user)} />
     } else if (isONF) {
-      dashboard = <PureONFDashboard getOnfTitres={getOnfTitres} />
+      dashboard = <PureONFDashboard apiClient={dashboardApiClient} />
     } else if (isPTMG) {
-      dashboard = <PurePTMGDashboard getPtmgTitres={getPtmgTitres} />
+      dashboard = <PurePTMGDashboard apiClient={dashboardApiClient} />
     } else if (isDREAL || isDGTM) {
-      dashboard = <PureDrealDashboard getDrealTitres={getDrealTitres} isDGTM={isDGTM} getDgtmStats={getDgtmStats} />
+      dashboard = <PureDrealDashboard apiClient={dashboardApiClient} isDGTM={isDGTM} />
     }
     return () => <dashboard />
   },

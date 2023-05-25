@@ -79,6 +79,6 @@ const titres: CommonTitrePTMG[] = [
   },
 ]
 
-export const Ok: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
-export const Loading: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})} />
-export const WithError: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.reject(new Error('because reasons'))} />
+export const Ok: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => Promise.resolve(titres) }} />
+export const Loading: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => new Promise<CommonTitrePTMG[]>(resolve => {}) }} />
+export const WithError: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => Promise.reject(new Error('because reasons')) }} />

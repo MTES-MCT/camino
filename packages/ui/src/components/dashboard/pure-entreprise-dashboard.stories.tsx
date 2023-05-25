@@ -84,7 +84,7 @@ export const Ok: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
-    getEntreprisesTitres={() => Promise.resolve(titres)}
+    apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
 
@@ -96,7 +96,7 @@ export const OkWithMultipleEntreprises: StoryFn = () => (
       { id: newEntrepriseId('id'), nom: 'entreprise1' },
       { id: newEntrepriseId('id2'), nom: 'entreprise2' },
     ]}
-    getEntreprisesTitres={() => Promise.resolve(titres)}
+    apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
 
@@ -105,37 +105,38 @@ export const OkWithoutFiscalite: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[]}
-    getEntreprisesTitres={() =>
-      Promise.resolve([
-        {
-          id: 'mlWyShEGu8v7eYmsUhfiAMbs',
-          slug: 'm-ax-amadis-5-2022',
-          nom: 'Amadis 5',
-          typeId: 'apw',
-          titreStatutId: 'val',
-          substances: ['auru'],
-          activitesEnConstruction: null,
-          activitesAbsentes: null,
-          titulaires: [
-            {
-              id: 'fr-838049344',
-              nom: "CHAMB'OR",
-            },
-          ],
-          communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
-          references: [
-            {
-              referenceTypeId: 'dea',
-              nom: '01/2022',
-            },
-            {
-              referenceTypeId: 'dea',
-              nom: 'X21-09',
-            },
-          ],
-        },
-      ])
-    }
+    apiClient={{
+      getEntreprisesTitres: () =>
+        Promise.resolve([
+          {
+            id: 'mlWyShEGu8v7eYmsUhfiAMbs',
+            slug: 'm-ax-amadis-5-2022',
+            nom: 'Amadis 5',
+            typeId: 'apw',
+            titreStatutId: 'val',
+            substances: ['auru'],
+            activitesEnConstruction: null,
+            activitesAbsentes: null,
+            titulaires: [
+              {
+                id: 'fr-838049344',
+                nom: "CHAMB'OR",
+              },
+            ],
+            communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
+            references: [
+              {
+                referenceTypeId: 'dea',
+                nom: '01/2022',
+              },
+              {
+                referenceTypeId: 'dea',
+                nom: 'X21-09',
+              },
+            ],
+          },
+        ]),
+    }}
   />
 )
 
@@ -144,7 +145,7 @@ export const OkWithoutActivities: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
-    getEntreprisesTitres={() => Promise.resolve(titres)}
+    apiClient={{ getEntreprisesTitres: () => Promise.resolve(titres) }}
   />
 )
 
@@ -153,7 +154,7 @@ export const Loading: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
-    getEntreprisesTitres={() => new Promise<TitreEntreprise[]>(resolve => {})}
+    apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(resolve => {}) }}
   />
 )
 
@@ -162,6 +163,6 @@ export const WithError: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
-    getEntreprisesTitres={() => Promise.reject(new Error('because reasons'))}
+    apiClient={{ getEntreprisesTitres: () => Promise.reject(new Error('because reasons')) }}
   />
 )

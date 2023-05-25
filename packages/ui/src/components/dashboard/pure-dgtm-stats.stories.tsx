@@ -13,6 +13,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const OkNoSnapshot: StoryFn = () => <PureDGTMStats getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
-export const Loading: StoryFn = () => <PureDGTMStats getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})} />
-export const WithError: StoryFn = () => <PureDGTMStats getDgtmStats={() => Promise.reject(new Error('because reasons'))} />
+export const OkNoSnapshot: StoryFn = () => <PureDGTMStats apiClient={{ getDgtmStats: () => Promise.resolve(statistiquesDGTMFake) }} />
+export const Loading: StoryFn = () => <PureDGTMStats apiClient={{ getDgtmStats: () => new Promise<StatistiquesDGTM>(resolve => {}) }} />
+export const WithError: StoryFn = () => <PureDGTMStats apiClient={{ getDgtmStats: () => Promise.reject(new Error('because reasons')) }} />

@@ -7,9 +7,10 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DashboardApiClient } from './dashboard-api-client'
 
 export interface Props {
-  getPtmgTitres: () => Promise<CommonTitrePTMG[]>
+  apiClient: Pick<DashboardApiClient, 'getPtmgTitres'>
 }
 const columns = [nomColumn, statutColumn, referencesColumn, titulairesColumn] as const
 type Columns = (typeof columns)[number]['id']
@@ -30,7 +31,7 @@ const titresLignesBuild = (titres: CommonTitrePTMG[]): TableRow<Columns>[] => {
   })
 }
 
-export const PurePTMGDashboard = caminoDefineComponent<Props>(['getPtmgTitres'], props => {
+export const PurePTMGDashboard = caminoDefineComponent<Props>(['apiClient'], props => {
   const data = ref<
     AsyncData<{
       ptmgTitres: TableRow[]
@@ -41,7 +42,7 @@ export const PurePTMGDashboard = caminoDefineComponent<Props>(['getPtmgTitres'],
   const initialColumnId = columns[1].id
   onMounted(async () => {
     try {
-      const titres = await props.getPtmgTitres()
+      const titres = await props.apiClient.getPtmgTitres()
       const ptmgTitres = titresLignesBuild(titres.filter(titre => !titre.enAttenteDePTMG))
 
       const ptmgTitresBloques = titresLignesBuild(titres.filter(titre => titre.enAttenteDePTMG))

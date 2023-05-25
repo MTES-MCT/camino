@@ -9,8 +9,9 @@ import { CommonTitreONF } from 'camino-common/src/titres'
 import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DashboardApiClient } from './dashboard-api-client'
 export interface Props {
-  getOnfTitres: () => Promise<CommonTitreONF[]>
+  apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
 }
 
 const columns = [
@@ -87,13 +88,13 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
   })
 }
 
-export const PureONFDashboard = caminoDefineComponent<Props>(['getOnfTitres'], props => {
+export const PureONFDashboard = caminoDefineComponent<Props>(['apiClient'], props => {
   const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
   const onfTitres = ref<TableRow[]>([])
   const onfTitresBloques = ref<TableRow[]>([])
   onMounted(async () => {
     try {
-      const titres = await props.getOnfTitres()
+      const titres = await props.apiClient.getOnfTitres()
       onfTitres.value.push(...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeONF)))
       onfTitresBloques.value.push(...titresLignesBuild(titres.filter(titre => titre.enAttenteDeONF)))
       status.value = 'LOADED'

@@ -111,7 +111,7 @@ export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomRespon
     try {
       const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
       res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
-      // FIXME use zod validator !
+      // TODO 2023-05-25 use zod validator!
       res.json(formatUser(utilisateur!))
     } catch (e) {
       console.error(e)

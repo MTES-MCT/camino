@@ -10,12 +10,13 @@ import { AsyncData } from '@/api/client-rest'
 import { TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DashboardApiClient } from './dashboard-api-client'
 
 export interface Props {
   user: User
   entreprises: Pick<Entreprise, 'id' | 'nom'>[]
   // TODO 2022-03-22: type the graphql
-  getEntreprisesTitres: () => Promise<TitreEntreprise[]>
+  apiClient: Pick<DashboardApiClient, 'getEntreprisesTitres'>
   displayActivites: boolean
 }
 
@@ -29,7 +30,7 @@ const fiscaliteVisibleForAtLeastOneEntreprise = (user: User, entreprises: Pick<E
   )
 }
 
-export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'entreprises', 'getEntreprisesTitres', 'displayActivites'], props => {
+export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'entreprises', 'apiClient', 'displayActivites'], props => {
   const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
   const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] => titresLignesBuild(entreprises, props.displayActivites)
@@ -45,7 +46,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
 
   onMounted(async () => {
     try {
-      const entreprises = await props.getEntreprisesTitres()
+      const entreprises = await props.apiClient.getEntreprisesTitres(props.entreprises.map(({ id }) => id))
       data.value = { status: 'LOADED', value: entreprises }
     } catch (e: any) {
       data.value = {
