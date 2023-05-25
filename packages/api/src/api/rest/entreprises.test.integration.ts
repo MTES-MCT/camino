@@ -248,7 +248,7 @@ describe('postEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId: 'bite' }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })

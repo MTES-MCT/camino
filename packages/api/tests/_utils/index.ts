@@ -11,7 +11,7 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams,ZodParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
 import { z } from 'zod'
 
 export const queryImport = (nom: string) =>
@@ -48,7 +48,7 @@ export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: R
 export const restPostCall = async <Route extends PostRestRoutes>(
   pool: Pool,
   caminoRestRoute: Route,
-  params: ParseUrlParams<Route>,
+  params: (typeof CaminoRestRoutes)[Route] extends { params: any } ? { [k in keyof (typeof CaminoRestRoutes)[Route]['params'] ]: z.infer<(typeof CaminoRestRoutes)[Route]['params'][k]> } : undefined,
   user: TestUser | undefined,
   body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
 ): Promise<request.Test> => {
