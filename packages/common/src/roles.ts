@@ -1,5 +1,5 @@
-import { administrationIdValidator } from './static/administrations'
-import { entrepriseIdValidator } from './entreprise'
+import { administrationIdValidator } from './static/administrations.js'
+import { entrepriseIdValidator } from './entreprise.js'
 import { z } from 'zod'
 
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const

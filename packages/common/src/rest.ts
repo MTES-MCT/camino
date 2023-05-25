@@ -1,14 +1,23 @@
 import { ZodType, z } from 'zod'
-import { documentIdValidator, entrepriseDocumentInputValidator, entrepriseDocumentValidator, entrepriseModificationValidator, entrepriseTypeValidator, sirenValidator } from './entreprise'
-import { demarcheGetValidator } from './demarche'
-import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur'
-import { editableTitreValidator, sectionValidator, titreDrealValidator, titreGetValidator, titreLinksValidator, titreOnfValidator, titrePtmgValidator, utilisateurTitreAbonneValidator } from './titres'
-import { userValidator } from './roles'
-import { caminoDateValidator } from './date'
-import { etapeTypeEtapeStatutWithMainStepValidator } from './etape'
-import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques'
-import { fiscaliteValidator } from './fiscalite'
-import { caminoConfigValidator } from './static/config'
+import { documentIdValidator, entrepriseDocumentInputValidator, entrepriseDocumentValidator, entrepriseModificationValidator, entrepriseTypeValidator, sirenValidator } from './entreprise.js'
+import { demarcheGetValidator } from './demarche.js'
+import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
+import {
+  editableTitreValidator,
+  sectionValidator,
+  titreDrealValidator,
+  titreGetValidator,
+  titreLinksValidator,
+  titreOnfValidator,
+  titrePtmgValidator,
+  utilisateurTitreAbonneValidator,
+} from './titres.js'
+import { userValidator } from './roles.js'
+import { caminoDateValidator } from './date.js'
+import { etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
+import { fiscaliteValidator } from './fiscalite.js'
+import { caminoConfigValidator } from './static/config.js'
 
 type CaminoRoute = {
   get?: { output: ZodType }
