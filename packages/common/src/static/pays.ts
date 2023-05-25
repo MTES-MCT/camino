@@ -1,3 +1,7 @@
+import { z } from 'zod'
+// prettier-ignore
+export const IDS = ['BL','FR','GF','GP','MF','MQ','NC','PF','PM','RE','TF','WF','XX','YT',] as const
+
 export const PAYS_IDS = {
   "Collectivité d'outre-mer de Saint-Barthélemy": 'BL',
   'République Française': 'FR',
@@ -20,7 +24,9 @@ export interface Pays<T = PaysId> {
   nom: string
 }
 
-export type PaysId = (typeof PAYS_IDS)[keyof typeof PAYS_IDS]
+export const paysIdValidator = z.enum(IDS)
+
+export type PaysId = z.infer<typeof paysIdValidator>
 
 export const PaysList: { [key in PaysId]: Pays<key> } = {
   BL: { id: 'BL', nom: "Collectivité d'outre-mer de Saint-Barthélemy" },
@@ -39,6 +45,4 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
   YT: { id: 'YT', nom: 'Département de Mayotte' },
 }
 
-const PAYS_IDS_LIST = Object.values(PAYS_IDS)
-
-export const isPaysId = (value: string): value is PaysId => PAYS_IDS_LIST.includes(value)
+export const isPaysId = (value: string): value is PaysId => paysIdValidator.safeParse(value).success

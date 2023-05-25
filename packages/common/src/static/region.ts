@@ -1,5 +1,7 @@
 import { PaysId } from './pays.js'
-
+import { z } from 'zod'
+// prettier-ignore
+export const IDS = ['01','02','03','04','06','11','24','27','28','32','44','52','53','75','76','84','93','94',] as const
 export const REGION_IDS = {
   Guadeloupe: '01',
   Martinique: '02',
@@ -27,13 +29,12 @@ export interface Region<T = RegionId> {
   paysId: PaysId
 }
 
-export type RegionId = (typeof REGION_IDS)[keyof typeof REGION_IDS]
+export const regionIdValidator = z.enum(IDS)
+export type RegionId = z.infer<typeof regionIdValidator>
 
 export const regionsIds = Object.values(REGION_IDS)
 
-export const isRegionId = (regionId: string): regionId is RegionId => {
-  return regionsIds.includes(regionId)
-}
+export const isRegionId = (regionId: string): regionId is RegionId => regionIdValidator.safeParse(regionId).success
 
 export const Regions: { [key in RegionId]: Region<key> } = {
   '01': { id: '01', nom: 'Guadeloupe', paysId: 'GP' },

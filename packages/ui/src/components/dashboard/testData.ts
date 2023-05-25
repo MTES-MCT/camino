@@ -8,8 +8,8 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'firstId',
     slug: 'first-id-slug',
     nom: 'first-name',
-    typeId: 'prm',
-    titreStatutId: 'dmi',
+    type_id: 'prm',
+    titre_statut_id: 'dmi',
     references: [],
     titulaires: [
       {
@@ -26,8 +26,8 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'secondId',
     slug: 'second-slug',
     nom: 'Second Nom de titre',
-    typeId: 'prm',
-    titreStatutId: 'dmi',
+    type_id: 'prm',
+    titre_statut_id: 'dmi',
     references: [
       {
         nom: '2010-001',
@@ -50,8 +50,8 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'thirdId',
     slug: 'third-id-slug',
     nom: 'third-name',
-    typeId: 'prm',
-    titreStatutId: 'dmi',
+    type_id: 'prm',
+    titre_statut_id: 'dmi',
     references: [],
     titulaires: [
       {
@@ -68,8 +68,8 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'fourthId',
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
-    typeId: 'arc',
-    titreStatutId: 'dmi',
+    type_id: 'arc',
+    titre_statut_id: 'dmi',
     references: [
       {
         nom: '2010-001',

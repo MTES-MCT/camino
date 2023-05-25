@@ -13,9 +13,9 @@ const titres: CommonTitrePTMG[] = [
     id: 'firstId',
     slug: 'first-id-slug',
     nom: 'first-name',
-    titreStatutId: 'dmi',
+    titre_statut_id: 'dmi',
     references: [],
-    typeId: 'arm',
+    type_id: 'arm',
     titulaires: [
       {
         nom: 'Titulaire1',
@@ -27,8 +27,8 @@ const titres: CommonTitrePTMG[] = [
     id: 'secondId',
     slug: 'second-slug',
     nom: 'Second Nom de titre',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [
       {
         nom: '2010-001',
@@ -47,8 +47,8 @@ const titres: CommonTitrePTMG[] = [
     id: 'thirdId',
     slug: 'third-id-slug',
     nom: 'third-name',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [],
     titulaires: [
       {
@@ -61,8 +61,8 @@ const titres: CommonTitrePTMG[] = [
     id: 'fourthId',
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [
       {
         nom: '2010-001',
@@ -79,6 +79,6 @@ const titres: CommonTitrePTMG[] = [
   },
 ]
 
-export const Ok: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
-export const Loading: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})} />
-export const WithError: StoryFn = () => <PurePTMGDashboard getPtmgTitres={() => Promise.reject(new Error('because reasons'))} />
+export const Ok: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => Promise.resolve(titres) }} />
+export const Loading: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => new Promise<CommonTitrePTMG[]>(resolve => {}) }} />
+export const WithError: StoryFn = () => <PurePTMGDashboard apiClient={{ getPtmgTitres: () => Promise.reject(new Error('because reasons')) }} />

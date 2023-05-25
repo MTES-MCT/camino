@@ -1,11 +1,23 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres.js'
-import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks, titreGetValidator, TitreGet } from 'camino-common/src/titres.js'
+import {
+  CommonTitreDREAL,
+  CommonTitreONF,
+  CommonTitrePTMG,
+  editableTitreValidator,
+  TitreLink,
+  TitreLinks,
+  titreGetValidator,
+  TitreGet,
+  titreOnfValidator,
+  titrePtmgValidator,
+  titreLinksValidator,
+  utilisateurTitreAbonneValidator,
+} from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -36,7 +48,7 @@ const etapesAMasquer = [
   ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
 ]
 
-export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
+export const titresONF = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreONF[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -56,12 +68,12 @@ export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTi
 
           const dateCARM = octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
 
-          return {
+          const value: CommonTitreONF = {
             id: titre.id,
             slug: titre.slug,
             nom: titre.nom,
-            titreStatutId: titre.titreStatutId,
-            typeId: titre.typeId,
+            titre_statut_id: titre.titreStatutId,
+            type_id: titre.typeId,
             references,
             titulaires: titre.titulaires.map(entreprise => ({
               nom: entreprise.nom ?? '',
@@ -71,6 +83,8 @@ export const titresONF = async (req: CaminoRequest, res: CustomResponse<CommonTi
             dateCARM,
             enAttenteDeONF: blockedByMe,
           }
+
+          return titreOnfValidator.parse(value)
         })
       )
     }
@@ -161,7 +175,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-export const titresPTMG = async (req: CaminoRequest, res: CustomResponse<CommonTitrePTMG[]>) => {
+export const titresPTMG = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitrePTMG[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -173,18 +187,20 @@ export const titresPTMG = async (req: CaminoRequest, res: CustomResponse<CommonT
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
       const titresFormated: CommonTitrePTMG[] = (await titresArmAvecOctroi(user, administrationId)).map(({ titre, references, blockedByMe }) => {
-        return {
+        const value: CommonTitrePTMG = {
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          typeId: titre.typeId,
-          titreStatutId: titre.titreStatutId,
+          type_id: titre.typeId,
+          titre_statut_id: titre.titreStatutId,
           references,
           titulaires: titre.titulaires.map(entreprise => ({
             nom: entreprise.nom ?? '',
           })),
           enAttenteDePTMG: blockedByMe,
         }
+
+        return titrePtmgValidator.parse(value)
       })
 
       res.json(titresFormated)
@@ -199,7 +215,7 @@ type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
 } & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
-export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
+export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
   const user = req.auth
 
   if (!user) {
@@ -323,8 +339,8 @@ export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<Common
             id: titre.id,
             slug: titre.slug,
             nom: titre.nom,
-            titreStatutId: titre.titreStatutId,
-            typeId: titre.typeId,
+            titre_statut_id: titre.titreStatutId,
+            type_id: titre.typeId,
             references,
             titulaires: titre.titulaires,
             // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
@@ -345,7 +361,7 @@ export const titresDREAL = async (req: CaminoRequest, res: CustomResponse<Common
 const isStringArray = (stuff: any): stuff is string[] => {
   return stuff instanceof Array && stuff.every(value => typeof value === 'string')
 }
-export const postTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id
@@ -390,7 +406,7 @@ export const postTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<
     aval: await titreLinksGet(titreId, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
+export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
   const titreId = req.params.id
@@ -402,10 +418,11 @@ export const getTitreLiaisons = async (req: CaminoRequest, res: CustomResponse<T
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      res.json({
+      const value: TitreLinks = {
         amont: await titreLinksGet(titreId, 'titreFromId', user),
         aval: await titreLinksGet(titreId, 'titreToId', user),
-      })
+      }
+      res.json(titreLinksValidator.parse(value))
     }
   }
 }
@@ -419,7 +436,7 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
   return titres.map(({ id, nom }) => ({ id, nom }))
 }
 
-export const removeTitre = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   const titreId: string | undefined = req.params.titreId
@@ -448,10 +465,9 @@ export const removeTitre = async (req: CaminoRequest, res: CustomResponse<void>)
   }
 }
 
-export const utilisateurTitreAbonner = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const utilisateurTitreAbonner = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
-  const body = z.object({ abonne: z.boolean() })
-  const parsedBody = body.safeParse(req.body)
+  const parsedBody = utilisateurTitreAbonneValidator.safeParse(req.body)
   const titreId: string | undefined = req.params.titreId
   if (!titreId) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
@@ -483,10 +499,10 @@ export const utilisateurTitreAbonner = async (req: CaminoRequest, res: CustomRes
   }
 }
 
-export const updateTitre = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const titreId: string | undefined = req.params.titreId
   const user = req.auth
-  const parsedBody = editableTitreCheck.safeParse(req.body)
+  const parsedBody = editableTitreValidator.safeParse(req.body)
   if (!titreId) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else if (!parsedBody.success) {

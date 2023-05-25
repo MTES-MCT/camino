@@ -1,7 +1,6 @@
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPES, Administrations } from 'camino-common/src/static/administrations'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
-import { fetchWithJson } from '@/api/client-rest'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { getWithJson } from '@/api/client-rest'
 
 const state = {
   element: null,
@@ -16,7 +15,7 @@ const actions = {
     try {
       commit('loadingAdd', 'userMoi', { root: true })
 
-      const data = await fetchWithJson(CaminoRestRoutes.moi, {})
+      const data = await getWithJson('/moi', {})
 
       commit('set', data)
     } catch (e) {

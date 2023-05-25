@@ -1,9 +1,8 @@
 import { uploadCall } from '@/api/_upload'
-import { fetchWithJson, postWithJson } from '@/api/client-rest'
+import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
-import { EntrepriseId, EntrepriseType, Siren, EntrepriseDocument, DocumentId, EntrepriseDocumentInput, entrepriseDocumentInputValidator } from 'camino-common/src/entreprise'
+import { EntrepriseId, EntrepriseType, Siren, EntrepriseDocument, DocumentId, entrepriseDocumentInputValidator, documentIdValidator } from 'camino-common/src/entreprise'
 import { Fiscalite } from 'camino-common/src/fiscalite'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { z } from 'zod'
 
 export interface EntrepriseApiClient {
@@ -23,24 +22,24 @@ type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidat
 
 export const entrepriseApiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: async (annee, entrepriseId): Promise<Fiscalite> => {
-    return fetchWithJson(CaminoRestRoutes.fiscaliteEntreprise, {
+    return getWithJson('/rest/entreprises/:entrepriseId/fiscalite/:annee', {
       annee,
       entrepriseId,
     })
   },
   modifierEntreprise: async (entreprise): Promise<void> => {
-    return postWithJson(CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, entreprise, 'put')
+    return putWithJson('/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, entreprise)
   },
   creerEntreprise: async (siren: Siren): Promise<void> => {
-    return postWithJson(CaminoRestRoutes.entreprises, {}, { siren })
+    return postWithJson('/rest/entreprises', {}, { siren })
   },
   getEntreprise: async (entrepriseId: EntrepriseId): Promise<EntrepriseType> => {
-    return fetchWithJson(CaminoRestRoutes.entreprise, {
+    return getWithJson('/rest/entreprises/:entrepriseId', {
       entrepriseId,
     })
   },
   getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
-    return fetchWithJson(CaminoRestRoutes.entrepriseDocuments, {
+    return getWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
     })
   },
@@ -49,9 +48,15 @@ export const entrepriseApiClient: EntrepriseApiClient = {
 
     const { document, ...entrepriseDocumentInput } = uiEntrepriseDocumentInput
 
-    return postWithJson(CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName } as EntrepriseDocumentInput)
+    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName })
+    const parsed = documentIdValidator.safeParse(createDocument)
+    if (parsed.success) {
+      return parsed.data
+    } else {
+      throw createDocument
+    }
   },
   deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, documentId: DocumentId): Promise<void> => {
-    return fetchWithJson(CaminoRestRoutes.entrepriseDocument, { entrepriseId, documentId }, 'delete')
+    return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:documentId', { entrepriseId, documentId })
   },
 }

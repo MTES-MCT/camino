@@ -16,8 +16,8 @@ const onfs: CommonTitreONF[] = [
     id: 'firstId',
     slug: 'first-id-slug',
     nom: 'first-name',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [],
     titulaires: [
       {
@@ -33,8 +33,8 @@ const onfs: CommonTitreONF[] = [
     id: 'secondId',
     slug: 'second-slug',
     nom: 'Second Nom de titre',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [
       {
         nom: '2010-001',
@@ -56,8 +56,8 @@ const onfs: CommonTitreONF[] = [
     id: 'thirdId',
     slug: 'third-id-slug',
     nom: 'third-name',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [],
     titulaires: [
       {
@@ -73,8 +73,8 @@ const onfs: CommonTitreONF[] = [
     id: 'fourthId',
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
-    titreStatutId: 'dmi',
-    typeId: 'arm',
+    titre_statut_id: 'dmi',
+    type_id: 'arm',
     references: [
       {
         nom: '2010-001',
@@ -94,7 +94,7 @@ const onfs: CommonTitreONF[] = [
   },
 ]
 
-export const Ok: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs)} />
-export const OkSansAttenteDeONF: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false })))} />
-export const Loading: StoryFn = () => <PureONFDashboard getOnfTitres={() => new Promise<CommonTitreONF[]>(resolve => {})} />
-export const WithError: StoryFn = () => <PureONFDashboard getOnfTitres={() => Promise.reject(new Error('because reasons'))} />
+export const Ok: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.resolve(onfs) }} />
+export const OkSansAttenteDeONF: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false }))) }} />
+export const Loading: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {}) }} />
+export const WithError: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.reject(new Error('because reasons')) }} />

@@ -14,65 +14,71 @@ export default meta
 
 export const Ok: StoryFn = () => (
   <PureDrealDashboard
-    getDrealTitres={() => Promise.resolve(titresDreal)}
     isDGTM={false}
-    getDgtmStats={() =>
-      Promise.resolve({
-        depotEtInstructions: {},
-        sdom: {},
-        delais: {},
-        avisAXM: {},
-        producteursOr: {},
-      })
-    }
+    apiClient={{
+      getDrealTitres: () => Promise.resolve(titresDreal),
+      getDgtmStats: () =>
+        Promise.resolve({
+          depotEtInstructions: {},
+          sdom: {},
+          delais: {},
+          avisAXM: {},
+          producteursOr: {},
+        }),
+    }}
   />
 )
 
 export const OkWithoutBlockedTitres: StoryFn = () => (
   <PureDrealDashboard
-    getDrealTitres={() => Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL))}
+    apiClient={{
+      getDrealTitres: () => Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL)),
+      getDgtmStats: () =>
+        Promise.resolve({
+          depotEtInstructions: {},
+          sdom: {},
+          delais: {},
+          avisAXM: {},
+          producteursOr: {},
+        }),
+    }}
     isDGTM={false}
-    getDgtmStats={() =>
-      Promise.resolve({
-        depotEtInstructions: {},
-        sdom: {},
-        delais: {},
-        avisAXM: {},
-        producteursOr: {},
-      })
-    }
   />
 )
 
-export const DGTMNoSnapshot: StoryFn = () => <PureDrealDashboard getDrealTitres={() => Promise.resolve(titresDreal)} isDGTM={true} getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
+export const DGTMNoSnapshot: StoryFn = () => (
+  <PureDrealDashboard apiClient={{ getDrealTitres: () => Promise.resolve(titresDreal), getDgtmStats: () => Promise.resolve(statistiquesDGTMFake) }} isDGTM={true} />
+)
 
 export const Loading: StoryFn = () => (
   <PureDrealDashboard
-    getDrealTitres={() => new Promise<CommonTitreDREAL[]>(_resolve => {})}
     isDGTM={false}
-    getDgtmStats={() =>
-      Promise.resolve({
-        depotEtInstructions: {},
-        sdom: {},
-        delais: {},
-        avisAXM: {},
-        producteursOr: {},
-      })
-    }
+    apiClient={{
+      getDrealTitres: () => new Promise<CommonTitreDREAL[]>(_resolve => {}),
+      getDgtmStats: () =>
+        Promise.resolve({
+          depotEtInstructions: {},
+          sdom: {},
+          delais: {},
+          avisAXM: {},
+          producteursOr: {},
+        }),
+    }}
   />
 )
 export const WithError: StoryFn = () => (
   <PureDrealDashboard
-    getDrealTitres={() => Promise.reject(new Error('because reasons'))}
+    apiClient={{
+      getDrealTitres: () => Promise.reject(new Error('because reasons')),
+      getDgtmStats: () =>
+        Promise.resolve({
+          depotEtInstructions: {},
+          sdom: {},
+          delais: {},
+          avisAXM: {},
+          producteursOr: {},
+        }),
+    }}
     isDGTM={false}
-    getDgtmStats={() =>
-      Promise.resolve({
-        depotEtInstructions: {},
-        sdom: {},
-        delais: {},
-        avisAXM: {},
-        producteursOr: {},
-      })
-    }
   />
 )

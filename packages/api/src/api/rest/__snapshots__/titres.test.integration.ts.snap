@@ -1,5 +1,103 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`titresDREAL > teste la récupération des données pour les DREAL 1`] = `
+{
+  "activitesAbsentes": 0,
+  "activitesEnConstruction": 0,
+  "derniereEtape": {
+    "date": "2022-03-10",
+    "etapeStatutId": "com",
+    "etapeTypeId": "mcp",
+  },
+  "enAttenteDeDREAL": false,
+  "id": Any<String>,
+  "nom": "titre1",
+  "prochainesEtapes": [
+    "vfd",
+    "mod",
+  ],
+  "references": [
+    {
+      "nom": "ONF",
+      "referenceTypeId": "onf",
+    },
+  ],
+  "slug": Any<String>,
+  "titre_statut_id": "mod",
+  "titulaires": [
+    {
+      "adresse": null,
+      "archive": false,
+      "categorie": null,
+      "cedex": null,
+      "codePostal": null,
+      "commune": null,
+      "dateCreation": null,
+      "email": null,
+      "id": "plop",
+      "legalEtranger": null,
+      "legalForme": null,
+      "legalSiren": null,
+      "nom": "Mon Entreprise",
+      "operateur": null,
+      "paysId": null,
+      "telephone": null,
+      "url": null,
+    },
+  ],
+  "type_id": "arm",
+}
+`;
+
+exports[`titresDREAL > teste la récupération des données pour les DREAL 2`] = `
+{
+  "activitesAbsentes": 0,
+  "activitesEnConstruction": 0,
+  "derniereEtape": {
+    "date": "2022-02-10",
+    "etapeStatutId": "fai",
+    "etapeTypeId": "pfd",
+  },
+  "enAttenteDeDREAL": false,
+  "id": Any<String>,
+  "nom": "titre2",
+  "prochainesEtapes": [
+    "mcp",
+    "mod",
+  ],
+  "references": [
+    {
+      "nom": "ONF",
+      "referenceTypeId": "onf",
+    },
+  ],
+  "slug": Any<String>,
+  "titre_statut_id": "mod",
+  "titulaires": [
+    {
+      "adresse": null,
+      "archive": false,
+      "categorie": null,
+      "cedex": null,
+      "codePostal": null,
+      "commune": null,
+      "dateCreation": null,
+      "email": null,
+      "id": "plop",
+      "legalEtranger": null,
+      "legalForme": null,
+      "legalSiren": null,
+      "nom": "Mon Entreprise",
+      "operateur": null,
+      "paysId": null,
+      "telephone": null,
+      "url": null,
+    },
+  ],
+  "type_id": "arm",
+}
+`;
+
 exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
 {
   "dateCARM": "",
@@ -15,13 +113,13 @@ exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "val",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "nom": "Mon Entreprise",
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;
 
@@ -40,13 +138,13 @@ exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "val",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "nom": "Mon Entreprise",
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;
 
@@ -62,13 +160,13 @@ exports[`titresPTMG > teste la récupération des données pour le PTMG 1`] = `
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "val",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "nom": "Mon Entreprise",
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;
 
@@ -84,12 +182,12 @@ exports[`titresPTMG > teste la récupération des données pour le PTMG 2`] = `
     },
   ],
   "slug": Any<String>,
-  "titreStatutId": "val",
+  "titre_statut_id": "mod",
   "titulaires": [
     {
       "nom": "Mon Entreprise",
     },
   ],
-  "typeId": "arm",
+  "type_id": "arm",
 }
 `;

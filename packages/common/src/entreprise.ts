@@ -9,9 +9,9 @@ import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { TitreReference } from './titres-references.js'
 
-export const eidValidator = z.string().brand<'EntrepriseId'>()
-export type EntrepriseId = z.infer<typeof eidValidator>
-export const isEntrepriseId = (eid: string): eid is EntrepriseId => eidValidator.safeParse(eid).success
+export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
+export type EntrepriseId = z.infer<typeof entrepriseIdValidator>
+export const isEntrepriseId = (eid: string): eid is EntrepriseId => entrepriseIdValidator.safeParse(eid).success
 export const documentIdValidator = z.string().brand<'DocumentId'>()
 
 export type DocumentId = z.infer<typeof documentIdValidator>
@@ -36,7 +36,7 @@ export const entrepriseDocumentInputValidator = z.object({
 export type EntrepriseDocumentInput = z.infer<typeof entrepriseDocumentInputValidator>
 
 export const entrepriseModificationValidator = z.object({
-  id: eidValidator,
+  id: entrepriseIdValidator,
   url: z.string().optional(),
   telephone: z.string().optional(),
   email: z.string().optional(),
@@ -82,23 +82,25 @@ export type Utilisateur = {
   entreprises?: Entreprise[]
 } & User
 
-export type EntrepriseType = {
-  id: EntrepriseId
-  nom: string
-  telephone: string
-  email: string
-  legalSiren: string
-  legalForme: string
-  adresse: string
-  codePostal: string
-  commune: string
-  url: string
-  archive: boolean
-  titulaireTitres: TitreEntreprise[]
-  amodiataireTitres: TitreEntreprise[]
-  utilisateurs: Utilisateur[]
-  etablissements: EntrepriseEtablissement[]
-}
+export const entrepriseTypeValidator = z.object({
+  id: entrepriseIdValidator,
+  nom: z.string(),
+  telephone: z.string(),
+  email: z.string(),
+  legalSiren: z.string(),
+  legalForme: z.string(),
+  adresse: z.string(),
+  codePostal: z.string(),
+  commune: z.string(),
+  url: z.string(),
+  archive: z.boolean(),
+  titulaireTitres: z.array(z.custom<TitreEntreprise>()),
+  amodiataireTitres: z.array(z.custom<TitreEntreprise>()),
+  utilisateurs: z.array(z.custom<Utilisateur>()),
+  etablissements: z.array(z.custom<EntrepriseEtablissement>()),
+})
+
+export type EntrepriseType = z.infer<typeof entrepriseTypeValidator>
 
 export const entrepriseDocumentValidator = z.object({
   id: documentIdValidator,
@@ -111,7 +113,7 @@ export const entrepriseDocumentValidator = z.object({
 export type EntrepriseDocument = z.infer<typeof entrepriseDocumentValidator>
 
 export const newEntrepriseId = (value: string): EntrepriseId => {
-  return eidValidator.parse(value)
+  return entrepriseIdValidator.parse(value)
 }
 
 export const toDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId, hash: string): DocumentId => {

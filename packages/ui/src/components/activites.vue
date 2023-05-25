@@ -13,7 +13,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="activites.length" #downloads>
-      <Downloads :formats="['csv', 'xlsx', 'ods']" :downloadRoute="downloadActivites" :params="downloadParams" class="flex-right full-x" />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" downloadRoute="/activites" :params="downloadParams" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -25,7 +25,6 @@ import { Downloads } from './_common/downloads'
 import filtres from './activites/filtres'
 import { activitesColonnes, activitesLignesBuild } from './activites/table'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 export default {
   name: 'Activites',
@@ -37,7 +36,6 @@ export default {
       filtres,
       colonnes: activitesColonnes,
       visible: false,
-      downloadActivites: CaminoRestRoutes.downloadActivites,
       downloadParams: {},
     }
   },

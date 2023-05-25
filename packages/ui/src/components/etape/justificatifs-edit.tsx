@@ -9,8 +9,7 @@ import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from
 import { getEntries, getKeys } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { EntrepriseApiClient } from '../entreprise/entreprise-api-client'
-import { AsyncData, getUiRestRoute } from '@/api/client-rest'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -210,7 +209,7 @@ export const JustificatifsEdit = caminoDefineComponent<Props>(['completeUpdate',
                   <div class="tablet-blobs">
                     <div class="tablet-blob-1-3 flex flex-center">
                       {j.id ? (
-                        <a class="mt-s" href={getUiRestRoute(CaminoRestRoutes.downloadFichier, { documentId: j.id })} title={`Télécharger le document ${j.entrepriseDocumentType.nom}`} target="_blank">
+                        <a class="mt-s" href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })} title={`Télécharger le document ${j.entrepriseDocumentType.nom}`} target="_blank">
                           {j.entrepriseDocumentType.nom}
                         </a>
                       ) : (

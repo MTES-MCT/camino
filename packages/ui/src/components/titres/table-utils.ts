@@ -131,8 +131,8 @@ export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
   props: { nom: titre.nom },
   value: titre.nom,
 })
-export const statutCell = (titre: { titreStatutId: TitreStatutId }): ComponentColumnData => {
-  const statut = TitresStatuts[titre.titreStatutId]
+export const statutCell = (titre: { titre_statut_id: TitreStatutId }): ComponentColumnData => {
+  const statut = TitresStatuts[titre.titre_statut_id]
   return {
     component: markRaw(Statut),
     props: {
@@ -204,7 +204,7 @@ export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boole
         value: titre.coordonnees ? '·' : '',
       },
       type: typeCell(titre.typeId),
-      statut: statutCell(titre),
+      statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {
         component: markRaw(TagList),
         props: {

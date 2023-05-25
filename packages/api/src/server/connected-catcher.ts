@@ -1,10 +1,11 @@
 import express from 'express'
 import { constants } from 'http2'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoRestRoute } from 'camino-common/src/rest.js'
 import { CaminoRequest } from '../api/rest/express-type'
 
+const excludedRoutes: CaminoRestRoute[] = ['/moi', '/config']
 export const connectedCatcher = async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
-  if (!req.url.includes(CaminoRestRoutes.moi) && !req.url.includes(CaminoRestRoutes.config)) {
+  if (excludedRoutes.every(route => !req.url.includes(route))) {
     if (req.cookies.shouldBeConnected) {
       const reqUser = req.auth
       if (!reqUser) {

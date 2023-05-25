@@ -4,17 +4,18 @@ import { AsyncData } from '@/api/client-rest'
 import { ChartWithExport } from '@/components/_charts/chart-with-export'
 import { sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration } from './dgtm-stats'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DashboardApiClient } from './dashboard-api-client'
 
 export interface Props {
-  getDgtmStats: () => Promise<StatistiquesDGTM>
+  apiClient: Pick<DashboardApiClient, 'getDgtmStats'>
 }
 
-export const PureDGTMStats = caminoDefineComponent<Props>(['getDgtmStats'], props => {
+export const PureDGTMStats = caminoDefineComponent<Props>(['apiClient'], props => {
   const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
   onMounted(async () => {
     try {
-      const stats = await props.getDgtmStats()
+      const stats = await props.apiClient.getDgtmStats()
       data.value = { status: 'LOADED', value: stats }
     } catch (e: any) {
       console.error('error', e)

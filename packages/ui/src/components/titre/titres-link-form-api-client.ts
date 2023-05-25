@@ -6,8 +6,7 @@ import gql from 'graphql-tag'
 
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { fetchWithJson, postWithJson } from '@/api/client-rest'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { getWithJson, postWithJson } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 
 export type TitresLinkConfig =
@@ -34,11 +33,11 @@ export interface TitresLinkFormApiClient {
 
 export const titresLinkFormApiClient: TitresLinkFormApiClient = {
   linkTitres: async (titreId: string, titreFromIds: string[]): Promise<TitreLinks> => {
-    return await postWithJson(CaminoRestRoutes.titresLiaisons, { id: titreId }, titreFromIds)
+    return await postWithJson('/rest/titres/:id/titreLiaisons', { id: titreId }, titreFromIds)
   },
 
   loadTitreLinks: async (titreId: string) => {
-    return await fetchWithJson(CaminoRestRoutes.titresLiaisons, { id: titreId })
+    return await getWithJson('/rest/titres/:id/titreLiaisons', { id: titreId })
   },
 
   loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => async () => {

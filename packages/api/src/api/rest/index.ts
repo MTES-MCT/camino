@@ -27,6 +27,7 @@ import { isDepartementId } from 'camino-common/src/static/departement.js'
 import { isRegionId } from 'camino-common/src/static/region.js'
 import { isFacade } from 'camino-common/src/static/facades.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
+import { Pool } from 'pg'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -58,32 +59,34 @@ interface ITitreInput {
   params: { id?: string | null }
 }
 
-export const titre = async ({ query: { format = 'json' }, params: { id } }: ITitreInput, user: User) => {
-  formatCheck(['geojson', 'json'], format)
+export const titre =
+  (_pool: Pool) =>
+  async ({ query: { format = 'json' }, params: { id } }: ITitreInput, user: User) => {
+    formatCheck(['geojson', 'json'], format)
 
-  const titre = await titreGet(id!, { fields: titreFields }, user)
+    const titre = await titreGet(id!, { fields: titreFields }, user)
 
-  if (!titre) {
-    return null
+    if (!titre) {
+      return null
+    }
+
+    const titreFormatted = titreFormat(titre)
+    let contenu
+
+    if (format === 'geojson') {
+      const titreGeojson = titreGeojsonFormat(titreFormatted)
+
+      contenu = JSON.stringify(titreGeojson, null, 2)
+    } else {
+      contenu = JSON.stringify(titreFormatted, null, 2)
+    }
+
+    return {
+      nom: fileNameCreate(titre.id, format),
+      format,
+      contenu,
+    }
   }
-
-  const titreFormatted = titreFormat(titre)
-  let contenu
-
-  if (format === 'geojson') {
-    const titreGeojson = titreGeojsonFormat(titreFormatted)
-
-    contenu = JSON.stringify(titreGeojson, null, 2)
-  } else {
-    contenu = JSON.stringify(titreFormatted, null, 2)
-  }
-
-  return {
-    nom: fileNameCreate(titre.id, format),
-    format,
-    contenu,
-  }
-}
 
 interface ITitresQueryInput {
   format?: DownloadFormat
@@ -104,103 +107,105 @@ interface ITitresQueryInput {
   perimetre?: number[] | null
 }
 
-export const titres = async (
-  {
-    query: {
-      format = 'json',
-      ordre,
-      colonne,
-      typesIds,
-      domainesIds,
-      statutsIds,
-      substancesIds,
-      titresIds,
-      entreprisesIds,
-      references,
-      territoires,
-      communes,
-      departements,
-      regions,
-      facadesMaritimes,
-      perimetre,
-    },
-  }: { query: ITitresQueryInput },
-  user: User
-) => {
-  formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
-
-  const titres = await titresGet(
+export const titres =
+  (_pool: Pool) =>
+  async (
     {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      domainesIds: domainesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      ids: titresIds ? stringSplit(titresIds) : null,
-      entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
-      substancesIds: substancesIds ? stringSplit(substancesIds) : null,
-      references,
-      territoires,
-      communes,
-      departements: departements?.split(',').filter(isDepartementId),
-      regions: regions?.split(',').filter(isRegionId),
-      facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
-      perimetre,
-      demandeEnCours: true,
-    },
-    { fields: titreFields },
-    user
-  )
+      query: {
+        format = 'json',
+        ordre,
+        colonne,
+        typesIds,
+        domainesIds,
+        statutsIds,
+        substancesIds,
+        titresIds,
+        entreprisesIds,
+        references,
+        territoires,
+        communes,
+        departements,
+        regions,
+        facadesMaritimes,
+        perimetre,
+      },
+    }: { query: ITitresQueryInput },
+    user: User
+  ) => {
+    formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
 
-  const titresFormatted = titresFormat(titres)
+    const titres = await titresGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        domainesIds: domainesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        ids: titresIds ? stringSplit(titresIds) : null,
+        entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
+        substancesIds: substancesIds ? stringSplit(substancesIds) : null,
+        references,
+        territoires,
+        communes,
+        departements: departements?.split(',').filter(isDepartementId),
+        regions: regions?.split(',').filter(isRegionId),
+        facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
+        perimetre,
+        demandeEnCours: true,
+      },
+      { fields: titreFields },
+      user
+    )
 
-  let contenu
+    const titresFormatted = titresFormat(titres)
 
-  if (format === 'geojson') {
-    const elements = titresGeojsonFormat(titresFormatted)
+    let contenu
 
-    contenu = JSON.stringify(elements, null, 2)
-  } else if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresTableFormat(titresFormatted)
+    if (format === 'geojson') {
+      const elements = titresGeojsonFormat(titresFormatted)
 
-    contenu = tableConvert('titres', elements, format)
-  } else {
-    contenu = JSON.stringify(titresFormatted, null, 2)
-  }
+      contenu = JSON.stringify(elements, null, 2)
+    } else if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresTableFormat(titresFormatted)
 
-  if (matomo) {
-    const url = Object.entries({
-      format,
-      ordre,
-      colonne,
-      typesIds,
-      domainesIds,
-      statutsIds,
-      substancesIds,
-      titresIds,
-      entreprisesIds,
-      references,
-      territoires,
-    })
-      .filter(param => param[1] !== undefined)
-      .map(param => param.join('='))
-      .join('&')
+      contenu = tableConvert('titres', elements, format)
+    } else {
+      contenu = JSON.stringify(titresFormatted, null, 2)
+    }
 
-    matomo.track({
-      url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
-      e_c: 'camino-api',
-      e_a: `titres-flux-${format}`,
-    })
-  }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`titres-${titres.length}`, format),
+    if (matomo) {
+      const url = Object.entries({
         format,
-        contenu,
-      }
-    : null
-}
+        ordre,
+        colonne,
+        typesIds,
+        domainesIds,
+        statutsIds,
+        substancesIds,
+        titresIds,
+        entreprisesIds,
+        references,
+        territoires,
+      })
+        .filter(param => param[1] !== undefined)
+        .map(param => param.join('='))
+        .join('&')
+
+      matomo.track({
+        url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
+        e_c: 'camino-api',
+        e_a: `titres-flux-${format}`,
+      })
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`titres-${titres.length}`, format),
+          format,
+          contenu,
+        }
+      : null
+  }
 
 interface ITitresDemarchesQueryInput {
   format?: DownloadFormat
@@ -221,90 +226,92 @@ interface ITitresDemarchesQueryInput {
   travaux?: string | null
 }
 
-export const demarches = async (
-  {
-    query: {
-      format = 'json',
-      ordre,
-      colonne,
-      typesIds,
-      statutsIds,
-      etapesInclues,
-      etapesExclues,
-      titresTypesIds,
-      titresDomainesIds,
-      titresStatutsIds,
-      titresIds,
-      titresEntreprisesIds,
-      titresSubstancesIds,
-      titresReferences,
-      titresTerritoires,
-      travaux,
-    },
-  }: { query: ITitresDemarchesQueryInput },
-  user: User
-) => {
-  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+export const demarches =
+  (_pool: Pool) =>
+  async (
+    {
+      query: {
+        format = 'json',
+        ordre,
+        colonne,
+        typesIds,
+        statutsIds,
+        etapesInclues,
+        etapesExclues,
+        titresTypesIds,
+        titresDomainesIds,
+        titresStatutsIds,
+        titresIds,
+        titresEntreprisesIds,
+        titresSubstancesIds,
+        titresReferences,
+        titresTerritoires,
+        travaux,
+      },
+    }: { query: ITitresDemarchesQueryInput },
+    user: User
+  ) => {
+    formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
 
-  const titresDemarches = await titresDemarchesGet(
-    {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
-      etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
-      titresTypesIds: titresTypesIds?.split(','),
-      titresDomainesIds: titresDomainesIds?.split(','),
-      titresStatutsIds: titresStatutsIds?.split(','),
-      titresIds: titresIds?.split(','),
-      titresEntreprisesIds: titresEntreprisesIds?.split(','),
-      titresSubstancesIds: titresSubstancesIds?.split(','),
-      titresReferences,
-      titresTerritoires,
-      travaux: travaux ? travaux === 'true' : false,
-    },
-    {
-      fields: {
-        type: { etapesTypes: { id: {} } },
-        titre: {
-          id: {},
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
-        },
-        etapes: {
-          forets: { id: {} },
-          communes: { id: {} },
-          points: { id: {} },
-          type: {
+    const titresDemarches = await titresDemarchesGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
+        etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
+        titresTypesIds: titresTypesIds?.split(','),
+        titresDomainesIds: titresDomainesIds?.split(','),
+        titresStatutsIds: titresStatutsIds?.split(','),
+        titresIds: titresIds?.split(','),
+        titresEntreprisesIds: titresEntreprisesIds?.split(','),
+        titresSubstancesIds: titresSubstancesIds?.split(','),
+        titresReferences,
+        titresTerritoires,
+        travaux: travaux ? travaux === 'true' : false,
+      },
+      {
+        fields: {
+          type: { etapesTypes: { id: {} } },
+          titre: {
             id: {},
+            titulaires: { id: {} },
+            amodiataires: { id: {} },
+          },
+          etapes: {
+            forets: { id: {} },
+            communes: { id: {} },
+            points: { id: {} },
+            type: {
+              id: {},
+            },
           },
         },
       },
-    },
-    user
-  )
+      user
+    )
 
-  const demarchesFormatted = titresDemarches.map(titreDemarche => titreDemarcheFormat(titreDemarche))
+    const demarchesFormatted = titresDemarches.map(titreDemarche => titreDemarcheFormat(titreDemarche))
 
-  let contenu
+    let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresDemarchesFormatTable(demarchesFormatted)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresDemarchesFormatTable(demarchesFormatted)
 
-    contenu = tableConvert('demarches', elements, format)
-  } else {
-    contenu = JSON.stringify(demarchesFormatted, null, 2)
+      contenu = tableConvert('demarches', elements, format)
+    } else {
+      contenu = JSON.stringify(demarchesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`${travaux === 'true' ? 'travaux' : 'demarches'}-${titresDemarches.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`${travaux === 'true' ? 'travaux' : 'demarches'}-${titresDemarches.length}`, format),
-        format,
-        contenu,
-      }
-    : null
-}
 
 interface ITitresActivitesQueryInput {
   format?: DownloadFormat
@@ -323,74 +330,76 @@ interface ITitresActivitesQueryInput {
   titresStatutsIds?: string | null
 }
 
-export const activites = async (
-  {
-    query: {
-      format = 'json',
-      ordre,
-      colonne,
-      typesIds,
-      statutsIds,
-      annees,
-      titresIds,
-      titresEntreprisesIds,
-      titresSubstancesIds,
-      titresReferences,
-      titresTerritoires,
-      titresTypesIds,
-      titresDomainesIds,
-      titresStatutsIds,
-    },
-  }: { query: ITitresActivitesQueryInput },
-  user: User
-) => {
-  formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
-
-  const titresActivites = await titresActivitesGet(
+export const activites =
+  (_pool: Pool) =>
+  async (
     {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      annees: annees?.split(',').map(a => Number(a)),
-      titresIds: titresIds?.split(','),
-      titresEntreprisesIds: titresEntreprisesIds?.split(','),
-      titresSubstancesIds: titresSubstancesIds?.split(','),
-      titresReferences,
-      titresTerritoires,
-      titresTypesIds: titresTypesIds?.split(','),
-      titresDomainesIds: titresDomainesIds?.split(','),
-      titresStatutsIds: titresStatutsIds?.split(','),
-    },
-    {
-      fields: {
-        type: { id: {} },
-        titre: { communes: { id: {} } },
+      query: {
+        format = 'json',
+        ordre,
+        colonne,
+        typesIds,
+        statutsIds,
+        annees,
+        titresIds,
+        titresEntreprisesIds,
+        titresSubstancesIds,
+        titresReferences,
+        titresTerritoires,
+        titresTypesIds,
+        titresDomainesIds,
+        titresStatutsIds,
       },
-    },
-    user
-  )
+    }: { query: ITitresActivitesQueryInput },
+    user: User
+  ) => {
+    formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
 
-  const titresActivitesFormatted = titresActivites.map(a => titreActiviteFormat(a))
+    const titresActivites = await titresActivitesGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        annees: annees?.split(',').map(a => Number(a)),
+        titresIds: titresIds?.split(','),
+        titresEntreprisesIds: titresEntreprisesIds?.split(','),
+        titresSubstancesIds: titresSubstancesIds?.split(','),
+        titresReferences,
+        titresTerritoires,
+        titresTypesIds: titresTypesIds?.split(','),
+        titresDomainesIds: titresDomainesIds?.split(','),
+        titresStatutsIds: titresStatutsIds?.split(','),
+      },
+      {
+        fields: {
+          type: { id: {} },
+          titre: { communes: { id: {} } },
+        },
+      },
+      user
+    )
 
-  let contenu
+    const titresActivitesFormatted = titresActivites.map(a => titreActiviteFormat(a))
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresActivitesFormatTable(titresActivitesFormatted)
+    let contenu
 
-    contenu = tableConvert('activites', elements, format)
-  } else {
-    contenu = JSON.stringify(titresActivitesFormatted, null, 2)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresActivitesFormatTable(titresActivitesFormatted)
+
+      contenu = tableConvert('activites', elements, format)
+    } else {
+      contenu = JSON.stringify(titresActivitesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`activites-${titresActivites.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`activites-${titresActivites.length}`, format),
-        format,
-        contenu,
-      }
-    : null
-}
 
 interface IUtilisateursQueryInput {
   format?: DownloadFormat
@@ -445,28 +454,30 @@ interface IEntreprisesQueryInput {
   noms?: string | null
 }
 
-export const entreprises = async ({ query: { format = 'json', noms } }: { query: IEntreprisesQueryInput }, user: User) => {
-  formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
+export const entreprises =
+  (_pool: Pool) =>
+  async ({ query: { format = 'json', noms } }: { query: IEntreprisesQueryInput }, user: User) => {
+    formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
 
-  const entreprises = await entreprisesGet({ noms }, {}, user)
+    const entreprises = await entreprisesGet({ noms }, {}, user)
 
-  const entreprisesFormatted = entreprises.map(entrepriseFormat)
+    const entreprisesFormatted = entreprises.map(entrepriseFormat)
 
-  let contenu
+    let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = entreprisesFormatTable(entreprisesFormatted)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = entreprisesFormatTable(entreprisesFormatted)
 
-    contenu = tableConvert('entreprises', elements, format)
-  } else {
-    contenu = JSON.stringify(entreprisesFormatted, null, 2)
+      contenu = tableConvert('entreprises', elements, format)
+    } else {
+      contenu = JSON.stringify(entreprisesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
-        format,
-        contenu,
-      }
-    : null
-}

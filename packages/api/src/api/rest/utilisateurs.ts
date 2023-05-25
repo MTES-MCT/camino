@@ -7,15 +7,16 @@ import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } fr
 import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
-import { QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur.js'
+import { newsletterAbonnementValidator, QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import { knex } from '../../knex.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
+import { Pool } from 'pg'
 
-export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -31,7 +32,7 @@ export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomRe
     }
   }
 }
-export const updateUtilisateurPermission = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -67,7 +68,7 @@ export const updateUtilisateurPermission = async (req: CaminoRequest, res: Custo
     }
   }
 }
-export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<void>) => {
+export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -101,7 +102,7 @@ export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<
   }
 }
 
-export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
+export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<User>) => {
   res.clearCookie('shouldBeConnected')
   const user = req.auth
   if (!user) {
@@ -110,6 +111,7 @@ export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
     try {
       const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
       res.cookie('shouldBeConnected', 'anyValueIsGood, We just check the presence of this cookie')
+      // TODO 2023-05-25 use zod validator!
       res.json(formatUser(utilisateur!))
     } catch (e) {
       console.error(e)
@@ -119,7 +121,7 @@ export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
   }
 }
 
-export const manageNewsletterSubscription = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+export const manageNewsletterSubscription = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -130,19 +132,18 @@ export const manageNewsletterSubscription = async (req: CaminoRequest, res: Cust
     if (!user || !utilisateur) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const subscription = req.body
-
-      if (typeof subscription !== 'object' && !('newsletter' in subscription) && typeof subscription.newsletter !== 'boolean') {
-        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
-      } else {
-        await newsletterSubscriberUpdate(utilisateur.email, subscription.newsletter)
+      const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
+      if (subscriptionParsed.success) {
+        await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      } else {
+        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
       }
     }
   }
 }
 
-export const generateQgisToken = async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
+export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
   const user = req.auth
 
   if (!user) {
@@ -168,36 +169,38 @@ interface IUtilisateursQueryInput {
   emails?: string | null
 }
 
-export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
-  const utilisateurs = await utilisateursGet(
-    {
-      colonne,
-      ordre,
-      entrepriseIds: entrepriseIds?.split(','),
-      administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole),
-      noms,
-      emails,
-    },
-    {},
-    user
-  )
+export const utilisateurs =
+  (_pool: Pool) =>
+  async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
+    const utilisateurs = await utilisateursGet(
+      {
+        colonne,
+        ordre,
+        entrepriseIds: entrepriseIds?.split(','),
+        administrationIds: administrationIds?.split(','),
+        roles: roles?.split(',').filter(isRole),
+        noms,
+        emails,
+      },
+      {},
+      user
+    )
 
-  let contenu
+    let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = utilisateursFormatTable(utilisateurs)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = utilisateursFormatTable(utilisateurs)
 
-    contenu = tableConvert('utilisateurs', elements, format)
-  } else {
-    contenu = JSON.stringify(utilisateurs, null, 2)
+      contenu = tableConvert('utilisateurs', elements, format)
+    } else {
+      contenu = JSON.stringify(utilisateurs, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-        format,
-        contenu,
-      }
-    : null
-}

@@ -9,7 +9,7 @@
     </template>
 
     <template v-if="entreprises.length" #downloads>
-      <Downloads :formats="['csv', 'xlsx', 'ods']" :downloadRoute="downloadEnterprises" :params="downloadParams" class="flex-right full-x" />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" downloadRoute="/entreprises" :params="downloadParams" class="flex-right full-x" />
     </template>
   </Liste>
 </template>
@@ -24,7 +24,6 @@ import { entreprisesColonnes, entreprisesLignesBuild } from './entreprises/table
 import { Icon } from './_ui/icon'
 import { entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 export default {
   name: 'Entreprises',
@@ -36,7 +35,6 @@ export default {
       filtres,
       colonnes: entreprisesColonnes,
       popupVisible: false,
-      downloadEnterprises: CaminoRestRoutes.downloadEntreprises,
       downloadParams: {},
     }
   },

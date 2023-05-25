@@ -1,10 +1,9 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { Entreprise, Utilisateur } from 'camino-common/src/entreprise'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
-import { fetchWithJson, postWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 
 export interface UtilisateurApiClient {
   getUtilisateur: (userId: string) => Promise<Utilisateur>
@@ -44,16 +43,16 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     return data
   },
   getUtilisateurNewsletter: async (userId: string) => {
-    return await fetchWithJson(CaminoRestRoutes.newsletter, { id: userId }, 'get')
+    return await getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId })
   },
   updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
-    return await postWithJson(CaminoRestRoutes.newsletter, { id: userId }, { newsletter })
+    await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
   },
   removeUtilisateur: async (userId: string) => {
-    return await fetchWithJson(CaminoRestRoutes.utilisateur, { id: userId }, 'delete')
+    return await deleteWithJson('/rest/utilisateurs/:id', { id: userId })
   },
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => {
-    return await postWithJson(CaminoRestRoutes.utilisateurPermission, { id: utilisateur.id }, utilisateur)
+    return await postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur)
   },
   getEntreprises: async () => {
     const { elements } = await apiGraphQLFetch(
@@ -73,5 +72,5 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     )()
     return elements
   },
-  getQGISToken: async () => fetchWithJson(CaminoRestRoutes.generateQgisToken, {}, 'post'),
+  getQGISToken: async () => postWithJson('/rest/utilisateur/generateQgisToken', {}, undefined),
 }

@@ -8,10 +8,11 @@ import { Index, IUtilisateur } from '../../src/types.js'
 import { app } from '../app.js'
 import { utilisateurCreate, utilisateurGet } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
-import { AdminUserNotNull, isAdministrationRole, isSuperRole } from 'camino-common/src/roles.js'
+import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { CaminoRestRoute, getRestRoute, ParseUrlParams } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
+import { z } from 'zod'
 
 export const queryImport = (nom: string) =>
   fs
@@ -38,37 +39,39 @@ export const restUploadCall = async (pool: Pool, user: TestUser) => {
   return jwtSet(req, user)
 }
 
-export const restCall = async <Path extends CaminoRestRoute>(pool: Pool, path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
-  const req = request(app(pool)).get(getRestRoute(path, params))
+export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: Route, params: ParseUrlParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app(pool)).get(getRestRoute(route, params))
 
   return jwtSet(req, user)
 }
 
-export const restPostCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
+export const restPostCall = async <Route extends PostRestRoutes>(
   pool: Pool,
-  path: Path,
-  params: ParseUrlParams<Path>,
+  caminoRestRoute: Route,
+  params: ParseUrlParams<Route>,
   user: TestUser | undefined,
-  body: T
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
 ): Promise<request.Test> => {
-  const req = request(app(pool)).post(getRestRoute(path, params)).send(body)
+  const req = request(app(pool))
+    .post(getRestRoute(caminoRestRoute, params))
+    .send(body ?? undefined)
 
   return jwtSet(req, user)
 }
 
-export const restPutCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
+export const restPutCall = async <Route extends PutRestRoutes>(
   pool: Pool,
-  path: Path,
-  params: ParseUrlParams<Path>,
+  path: Route,
+  params: ParseUrlParams<Route>,
   user: TestUser | undefined,
-  body: T
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['put']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
 
   return jwtSet(req, user)
 }
 
-export const restDeleteCall = async <Path extends CaminoRestRoute>(pool: Pool, path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
+export const restDeleteCall = async <Route extends DeleteRestRoutes>(pool: Pool, path: Route, params: ParseUrlParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
   const req = request(app(pool)).delete(getRestRoute(path, params)).send()
 
   return jwtSet(req, user)
@@ -82,12 +85,13 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
 
   if (token) {
     req.set('x-forwarded-access-token', token)
+    req.set('authorization', 'falseauthorizationtoken')
   }
 
   return req
 }
 
-export const userGenerate = async (user: TestUser) => {
+export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
   let id = 'super'
 
   if (!isSuperRole(user.role)) {
@@ -114,7 +118,8 @@ export const userGenerate = async (user: TestUser) => {
     )
   }
 
-  return userInDb
+  // TODO 2023-05-24: pg-typed utilisateurCreate and utilisateurGet
+  return userInDb as UserNotNull
 }
 export const userTokenGenerate = async (user: TestUser) => {
   const userInDb = await userGenerate(user)

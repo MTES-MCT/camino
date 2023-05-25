@@ -1,9 +1,8 @@
-import { EntrepriseDocumentInput, newEntrepriseId, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { restCall, restDeleteCall, restPostCall, restPutCall } from '../../../tests/_utils/index.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { afterAll, beforeAll, describe, test, expect, vi, beforeEach } from 'vitest'
-import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import { userSuper } from '../../database/user-super.js'
 import { testBlankUser } from 'camino-common/src/tests-utils.js'
 import { entreprisesEtablissementsFetch, entreprisesFetch, tokenInitialize } from '../../tools/api-insee/fetch.js'
@@ -52,7 +51,7 @@ describe('fiscalite', () => {
       id: newEntrepriseId('plop'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restCall(dbPool, CaminoRestRoutes.fiscaliteEntreprise, { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
+    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/fiscalite/:annee', { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
   })
@@ -60,7 +59,7 @@ describe('fiscalite', () => {
 
 describe('entrepriseCreer', () => {
   test('ne peut pas créer une entreprise (utilisateur anonyme)', async () => {
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, undefined, { siren: entreprise.siren })
+    const tested = await restPostCall(dbPool, '/rest/entreprises', {}, undefined, { siren: entreprise.siren })
     expect(tested.statusCode).toBe(403)
   })
 
@@ -69,18 +68,18 @@ describe('entrepriseCreer', () => {
     entrepriseFetchMock.mockResolvedValue([entreprise])
     entreprisesEtablissementsFetchMock.mockResolvedValue([entrepriseAndEtablissements])
 
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren: entreprise.siren })
+    const tested = await restPostCall(dbPool, '/rest/entreprises', {}, userSuper, { siren: entreprise.siren })
     expect(tested.statusCode).toBe(204)
   })
 
   test("ne peut pas créer une entreprise déjà existante (un utilisateur 'super')", async () => {
     tokenInitializeMock.mockResolvedValue('token')
-    const siren = '123456789'
+    const siren = sirenValidator.parse('123456789')
     entrepriseFetchMock.mockResolvedValue([{ ...entreprise, siren }])
     entreprisesEtablissementsFetchMock.mockResolvedValue([{ ...entrepriseAndEtablissements, siren }])
-    let tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren })
+    let tested = await restPostCall(dbPool, '/rest/entreprises', {}, userSuper, { siren })
     expect(tested.statusCode).toBe(204)
-    tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren })
+    tested = await restPostCall(dbPool, '/rest/entreprises', {}, userSuper, { siren })
     expect(tested.statusCode).toBe(400)
   })
 
@@ -88,7 +87,7 @@ describe('entrepriseCreer', () => {
     tokenInitializeMock.mockResolvedValue('token')
     entrepriseFetchMock.mockResolvedValue([])
 
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.entreprises, {}, userSuper, { siren: 'invalide' })
+    const tested = await restPostCall(dbPool, '/rest/entreprises', {}, userSuper, { siren: 'invalide' as Siren })
     expect(tested.statusCode).toBe(400)
   })
 })
@@ -99,7 +98,7 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('anonymous'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
+    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, undefined, { id: entreprise.id, email: 'toto@gmail.com' })
     expect(tested.statusCode).toBe(403)
   })
 
@@ -108,18 +107,18 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
+    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'toto@gmail.com' })
     expect(tested.statusCode).toBe(204)
   })
 
   test("peut modifier une entreprise (un utilisateur 'entreprise')", async () => {
     const entreprise = await entrepriseUpsert({
-      id: newEntrepriseId('entreprise'),
+      id: newEntrepriseId('monBelEntrepriseId'),
       nom: 'Mon Entreprise',
     })
     const tested = await restPutCall(
       dbPool,
-      CaminoRestRoutes.entreprise,
+      '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise.id }] },
       { id: entreprise.id, email: 'toto@gmail.com' }
@@ -134,7 +133,7 @@ describe('entrepriseModifier', () => {
     })
     const tested = await restPutCall(
       dbPool,
-      CaminoRestRoutes.entreprise,
+      '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'entreprise', entreprises: [] },
       { id: entreprise.id, email: 'toto@gmail.com' }
@@ -147,13 +146,13 @@ describe('entrepriseModifier', () => {
       id: newEntrepriseId('super'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
+    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
   test("ne peut pas modifier une entreprise inexistante (un utilisateur 'super')", async () => {
     const entrepriseId = newEntrepriseId('unknown')
-    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
+    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: newEntrepriseId('unknown') }, userSuper, { id: entrepriseId, email: 'totogmailcom' })
     expect(tested.statusCode).toBe(400)
   })
 
@@ -163,7 +162,7 @@ describe('entrepriseModifier', () => {
       nom: 'Mon Entreprise',
       archive: false,
     })
-    const tested = await restPutCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
+    const tested = await restPutCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId: entreprise.id }, userSuper, { id: entreprise.id, archive: true })
     expect(tested.statusCode).toBe(204)
   })
   test('ne peut pas archiver une entreprise', async () => {
@@ -174,7 +173,7 @@ describe('entrepriseModifier', () => {
     })
     const tested = await restPutCall(
       dbPool,
-      CaminoRestRoutes.entreprise,
+      '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
       { ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' },
       { id: entreprise.id, archive: true }
@@ -187,7 +186,7 @@ describe('getEntreprise', () => {
   test('peut récupérer une entreprise', async () => {
     const entrepriseId = newEntrepriseId('nouvelle-entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
-    const tested = await restCall(dbPool, CaminoRestRoutes.entreprise, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -227,10 +226,10 @@ describe('postEntrepriseDocument', () => {
       description: 'desc',
       tempDocumentName: tempDocumentNameValidator.parse('notExistingFile'),
     }
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_BAD_REQUEST)
 
-    const entrepriseDocumentsCall = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(entrepriseDocumentsCall.statusCode).toBe(constants.HTTP_STATUS_OK)
     expect(entrepriseDocumentsCall.body).toMatchInlineSnapshot('[]')
   })
@@ -249,10 +248,10 @@ describe('postEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const tested = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
 
-    const entrepriseDocumentsCall = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const entrepriseDocumentsCall = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(entrepriseDocumentsCall.statusCode).toBe(constants.HTTP_STATUS_OK)
     expect(entrepriseDocumentsCall.body).toHaveLength(1)
     expect(entrepriseDocumentsCall.body[0]).toMatchObject({
@@ -304,7 +303,7 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const documentCall = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
+    const documentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, documentToInsert)
     expect(documentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     mkdirSync(dir, { recursive: true })
@@ -316,12 +315,12 @@ describe('getEntrepriseDocument', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const secondDocumentCall = await restPostCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
+    const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
     expect(secondDocumentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     await titresEtapesJustificatifsUpsert([{ documentId: documentCall.body, titreEtapeId: titreEtape.id } as ITitreEtapeJustificatif])
 
-    const tested = await restCall(dbPool, CaminoRestRoutes.entrepriseDocuments, { entrepriseId }, { ...testBlankUser, role: 'super' })
+    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
     expect(tested.body).toHaveLength(2)
     expect(tested.body[0]).toMatchObject({
@@ -339,11 +338,21 @@ describe('getEntrepriseDocument', () => {
       type_id: 'kbi',
     })
 
-    const deletePossible = await restDeleteCall(dbPool, CaminoRestRoutes.entrepriseDocument, { entrepriseId, documentId: secondDocumentCall.body }, { ...testBlankUser, role: 'super' })
+    const deletePossible = await restDeleteCall(
+      dbPool,
+      '/rest/entreprises/:entrepriseId/documents/:documentId',
+      { entrepriseId, documentId: secondDocumentCall.body },
+      { ...testBlankUser, role: 'super' }
+    )
 
     expect(deletePossible.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
 
-    const deleteNotPossible = await restDeleteCall(dbPool, CaminoRestRoutes.entrepriseDocument, { entrepriseId, documentId: documentCall.body }, { ...testBlankUser, role: 'super' })
+    const deleteNotPossible = await restDeleteCall(
+      dbPool,
+      '/rest/entreprises/:entrepriseId/documents/:documentId',
+      { entrepriseId, documentId: documentCall.body },
+      { ...testBlankUser, role: 'super' }
+    )
 
     expect(deleteNotPossible.statusCode).toBe(constants.HTTP_STATUS_FORBIDDEN)
   })

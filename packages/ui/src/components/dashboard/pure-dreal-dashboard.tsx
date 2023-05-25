@@ -1,4 +1,4 @@
-import { defineComponent, markRaw, onMounted, ref } from 'vue'
+import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import List from '../_ui/list.vue'
 import { PureDGTMStats } from './pure-dgtm-stats'
@@ -17,17 +17,16 @@ import {
   activitesCell,
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
-import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DashboardApiClient } from './dashboard-api-client'
 
 export interface Props {
-  getDrealTitres: () => Promise<CommonTitreDREAL[]>
+  apiClient: Pick<DashboardApiClient, 'getDrealTitres' | 'getDgtmStats'>
   isDGTM: boolean
-  getDgtmStats: () => Promise<StatistiquesDGTM>
 }
 
 const derniereEtapeColumn: Column<'derniereEtape'> = {
@@ -46,7 +45,7 @@ const columns = [nomColumn, typeColumn, statutColumn, activiteColumn, references
 
 const columnsEnAttente = [nomColumn, typeColumn, statutColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
 
-export const PureDrealDashboard = caminoDefineComponent<Props>(['getDrealTitres', 'isDGTM', 'getDgtmStats'], props => {
+export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'isDGTM'], props => {
   const data = ref<
     AsyncData<{
       drealTitres: TableRow[]
@@ -72,7 +71,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['getDrealTitres'
         [key in Columns]: ComponentColumnData | TextColumnData
       } = {
         nom: nomCell(titre),
-        type: typeCell(titre.typeId),
+        type: typeCell(titre.type_id),
         statut: statutCell(titre),
         activites: activitesCell(titre),
         references: referencesCell(titre),
@@ -92,7 +91,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['getDrealTitres'
 
   onMounted(async () => {
     try {
-      const titres = await props.getDrealTitres()
+      const titres = await props.apiClient.getDrealTitres()
       data.value = {
         status: 'LOADED',
         value: {
@@ -122,7 +121,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['getDrealTitres'
             Statistiques
             <router-link to={{ name: 'Stats DGTM' }}> Voir plus </router-link>
           </h3>
-          <PureDGTMStats getDgtmStats={props.getDgtmStats} />
+          <PureDGTMStats apiClient={props.apiClient} />
         </div>
       ) : null}
       <div class="line-neutral width-full mb-l"></div>

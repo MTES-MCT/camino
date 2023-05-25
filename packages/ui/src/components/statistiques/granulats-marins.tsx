@@ -3,8 +3,7 @@ import { GranulatsMarinsActivite } from './granulats-marins-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
-import { AsyncData, fetchWithJson } from '@/api/client-rest'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { AsyncData, getWithJson } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { CaminoDate, getAnnee, getCurrent, toCaminoDate } from 'camino-common/src/date'
 import type { ChartConfiguration } from 'chart.js'
@@ -83,7 +82,7 @@ const statsBarFormat = ({
   )
 
 const getStats = async (): Promise<StatistiquesGranulatsMarins> => {
-  const data: StatistiquesGranulatsMarins = await fetchWithJson(CaminoRestRoutes.statistiquesGranulatsMarins, {})
+  const data: StatistiquesGranulatsMarins = await getWithJson('/rest/statistiques/granulatsMarins', {})
   return data
 }
 

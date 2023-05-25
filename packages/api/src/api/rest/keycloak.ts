@@ -1,9 +1,10 @@
+import { Pool } from 'pg'
 import { CaminoRequest, CustomResponse } from './express-type'
 
-export const logout = async (req: CaminoRequest, res: CustomResponse<string>) => {
+export const logout = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
-    res.status(403)
+    res.sendStatus(403)
   } else {
     const token = authorizationToken.substring(7)
     const uiUrl = process.env.OAUTH_URL ?? ''
@@ -18,10 +19,10 @@ export const logout = async (req: CaminoRequest, res: CustomResponse<string>) =>
     res.redirect(oauthLogoutUrl.href)
   }
 }
-export const resetPassword = async (req: CaminoRequest, res: CustomResponse<string>) => {
+export const resetPassword = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
-    res.status(403)
+    res.sendStatus(403)
   } else {
     const uiUrl = process.env.OAUTH_URL ?? ''
 
