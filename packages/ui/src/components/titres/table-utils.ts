@@ -204,7 +204,7 @@ export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boole
         value: titre.coordonnees ? '·' : '',
       },
       type: typeCell(titre.typeId),
-      statut: statutCell({titre_statut_id: titre.titreStatutId}),
+      statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {
         component: markRaw(TagList),
         props: {

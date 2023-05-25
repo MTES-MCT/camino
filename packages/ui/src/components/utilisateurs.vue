@@ -13,7 +13,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="utilisateurs.length" #downloads>
-      <Downloads :formats="['csv', 'xlsx', 'ods']" :downloadRoute="downloadUtilisateurs" :params="downloadParams" class="flex-right full-x" />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" downloadRoute="/utilisateurs" :params="downloadParams" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -25,7 +25,6 @@ import { Downloads } from './_common/downloads'
 import filtres from './utilisateurs/filtres'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 export default {
   name: 'Utilisateurs',
@@ -37,7 +36,6 @@ export default {
       filtres,
       colonnes: utilisateursColonnes,
       visible: false,
-      downloadUtilisateurs: CaminoRestRoutes.downloadUtilisateurs,
       downloadParams: {},
     }
   },

@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
-import { fetchWithJson } from '../api/client-rest'
+import { getWithJson } from '../api/client-rest'
 import user from './user'
 
 import { vi, describe, test, beforeEach, expect } from 'vitest'
@@ -11,7 +11,7 @@ vi.mock('../api/utilisateurs', () => ({
 }))
 
 vi.mock('../api/client-rest', () => ({
-  fetchWithJson: vi.fn(),
+  getWithJson: vi.fn(),
 }))
 
 vi.mock('../router', () => [])
@@ -73,7 +73,7 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test("identifie l'utilisateur si un token valide est présent", async () => {
-    const apiMock = fetchWithJson.mockResolvedValue(userInfo)
+    const apiMock = getWithJson.mockResolvedValue(userInfo)
 
     store = createStore({ modules: { user, map }, actions, mutations })
 

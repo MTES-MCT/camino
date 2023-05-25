@@ -15,5 +15,4 @@ export const utilisateurToEdit = z.object({
 
 export type UtilisateurToEdit = z.infer<typeof utilisateurToEdit>
 
-
 export const newsletterAbonnementValidator = z.object({ newsletter: z.boolean() })

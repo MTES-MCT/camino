@@ -3,21 +3,21 @@ import { HTMLAttributes, inject, ref } from 'vue'
 import { useRoute, RouteLocationNormalized } from 'vue-router'
 import { Dropdown } from '../_ui/dropdown'
 import { Download } from './download'
-import { CaminoRestRoute, DownloadFormat, ParseUrlParams } from 'camino-common/src/rest'
+import { DownloadRestRoutes, DownloadFormat, ParseUrlParams } from 'camino-common/src/rest'
 
-const DownloadsGeneric = <T extends CaminoRestRoute>() =>
+const DownloadsGeneric = <T extends DownloadRestRoutes>() =>
   caminoDefineComponent<Omit<Props<T>, 'route' | 'matomo'>>(['formats', 'downloadRoute', 'params'], props => {
     const route = useRoute()
     const matomo = inject('matomo', undefined)
     return () => <PureDownloads {...props} route={route} matomo={matomo} />
   })
 
-export const Downloads = <T extends CaminoRestRoute>(props: Omit<Props<T>, 'route' | 'matomo'> & { class: HTMLAttributes['class'] }): JSX.Element => {
+export const Downloads = <T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'> & { class: HTMLAttributes['class'] }): JSX.Element => {
   const HiddenDownloads = DownloadsGeneric<T>()
   // @ts-ignore
   return <HiddenDownloads {...props} />
 }
-export interface Props<T extends CaminoRestRoute> {
+export interface Props<T extends DownloadRestRoutes> {
   formats: DownloadFormat[]
   downloadRoute: T
   params: ParseUrlParams<T>
@@ -25,7 +25,7 @@ export interface Props<T extends CaminoRestRoute> {
   matomo?: { trackLink: (url: string, params: string) => void }
 }
 
-const PureDownloadsGeneric = <T extends CaminoRestRoute>() =>
+const PureDownloadsGeneric = <T extends DownloadRestRoutes>() =>
   caminoDefineComponent<Props<T>>(['formats', 'downloadRoute', 'route', 'matomo', 'params'], props => {
     const opened = ref<boolean>(false)
     const toggle = (newState: boolean) => {
@@ -61,7 +61,7 @@ const PureDownloadsGeneric = <T extends CaminoRestRoute>() =>
     )
   })
 
-export const PureDownloads = <T extends CaminoRestRoute>(props: Props<T>): JSX.Element => {
+export const PureDownloads = <T extends DownloadRestRoutes>(props: Props<T>): JSX.Element => {
   const HiddenDownloads = PureDownloadsGeneric<T>()
   // @ts-ignore
   return <HiddenDownloads {...props} />

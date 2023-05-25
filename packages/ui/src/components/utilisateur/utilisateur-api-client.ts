@@ -1,6 +1,5 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { Entreprise, Utilisateur } from 'camino-common/src/entreprise'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'

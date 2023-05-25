@@ -13,7 +13,7 @@ import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntre
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
-import { CaminoRestRoute, CaminoRestRoutes, DownloadFormat, CaminoRestRouteIds, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DownloadFormat, CaminoRestRouteIds, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute, DownloadRestRoutes } from 'camino-common/src/rest.js'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
@@ -54,11 +54,13 @@ type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequ
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
+type RestDownloadCall = (pool: Pool) => IRestResolver
 
 type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
-  (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {})
+  (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
+  (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
 type RestRouteImplementations<Route, Output = {}> = Route extends readonly [infer First, ...infer Rest]
   ? First extends string
@@ -80,6 +82,20 @@ export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRe
 }
 
 const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRouteIds>> = {
+  // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
+  '/download/fichiers/:documentId': { download: fichier },
+  '/fichiers/:documentId': { download: fichier },
+  '/titres/:id': { download: titre },
+  '/titres': { download: titres },
+  '/titres_qgis': { download: titres },
+  '/demarches': { download: demarches },
+  '/activites': { download: activites },
+  '/utilisateurs': { download: utilisateurs },
+  '/etape/zip/:etapeId': { download: etapeTelecharger },
+  '/etape/:etapeId/:fichierNom': { download: etapeFichier },
+  '/entreprises': { download: entreprises },
+  // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
+
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
@@ -111,20 +127,6 @@ const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRout
 
 export const restWithPool = (dbPool: Pool) => {
   const rest = express.Router()
-  // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
-  // rest.get(CaminoRestRoutes.downloadDownloadFichier, restDownload(fichier))
-  // rest.get(CaminoRestRoutes.downloadFichier, restDownload(fichier))
-
-  // rest.get(CaminoRestRoutes.downloadTitre, restDownload(titre))
-  // rest.get(CaminoRestRoutes.downloadTitres, restDownload(titres))
-  // rest.get(CaminoRestRoutes.downloadTitres_qgis, restDownload(titres))
-  // rest.get(CaminoRestRoutes.downloadDemarches, restDownload(demarches))
-  // rest.get(CaminoRestRoutes.downloadActivites, restDownload(activites))
-  // rest.get(CaminoRestRoutes.downloadUtilisateurs, restDownload(utilisateurs))
-  // rest.get(CaminoRestRoutes.downloadEtape, restDownload(etapeTelecharger))
-  // rest.get(CaminoRestRoutes.downloadEtapeFichier, restDownload(etapeFichier))
-  // rest.get(CaminoRestRoutes.downloadEntreprises, restDownload(entreprises))
-  // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
   Object.keys(restRouteImplementations)
     .filter(isCaminoRestRoute)
@@ -143,6 +145,10 @@ export const restWithPool = (dbPool: Pool) => {
 
         if ('delete' in maRoute) {
           rest.delete(route, restCatcher(maRoute.delete(dbPool)))
+        }
+
+        if ('download' in maRoute) {
+          rest.get(route, restDownload(maRoute.download(dbPool)))
         }
       }
     })

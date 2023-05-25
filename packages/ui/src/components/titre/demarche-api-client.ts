@@ -2,7 +2,6 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { getWithJson } from '@/api/client-rest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheGet, DemarcheId } from 'camino-common/src/demarche'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import gql from 'graphql-tag'
 
 export interface InputDemarcheCreation {

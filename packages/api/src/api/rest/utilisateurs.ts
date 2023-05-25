@@ -169,36 +169,38 @@ interface IUtilisateursQueryInput {
   emails?: string | null
 }
 
-export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
-  const utilisateurs = await utilisateursGet(
-    {
-      colonne,
-      ordre,
-      entrepriseIds: entrepriseIds?.split(','),
-      administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole),
-      noms,
-      emails,
-    },
-    {},
-    user
-  )
+export const utilisateurs =
+  (_pool: Pool) =>
+  async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
+    const utilisateurs = await utilisateursGet(
+      {
+        colonne,
+        ordre,
+        entrepriseIds: entrepriseIds?.split(','),
+        administrationIds: administrationIds?.split(','),
+        roles: roles?.split(',').filter(isRole),
+        noms,
+        emails,
+      },
+      {},
+      user
+    )
 
-  let contenu
+    let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = utilisateursFormatTable(utilisateurs)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = utilisateursFormatTable(utilisateurs)
 
-    contenu = tableConvert('utilisateurs', elements, format)
-  } else {
-    contenu = JSON.stringify(utilisateurs, null, 2)
+      contenu = tableConvert('utilisateurs', elements, format)
+    } else {
+      contenu = JSON.stringify(utilisateurs, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+          format,
+          contenu,
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-        format,
-        contenu,
-      }
-    : null
-}

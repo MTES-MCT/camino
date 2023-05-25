@@ -10,11 +10,12 @@ import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statis
 import { fiscaliteValidator } from './fiscalite'
 import { caminoConfigValidator } from './static/config'
 
-export type CaminoRoute = {
+type CaminoRoute = {
   get?: { output: ZodType }
   post?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
   delete?: true
+  download?: true
 }
 
 const IDS = [
@@ -45,14 +46,24 @@ const IDS = [
   '/rest/etapesTypes/:demarcheId/:date',
   '/deconnecter',
   '/changerMotDePasse',
+  // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
+  '/download/fichiers/:documentId',
+  '/fichiers/:documentId',
+  '/titres/:id',
+  '/titres',
+  '/titres_qgis',
+  '/demarches',
+  '/activites',
+  '/utilisateurs',
+  '/etape/zip/:etapeId',
+  '/etape/:etapeId/:fichierNom',
+  '/entreprises',
+  // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
 ] as const
 
 export type CaminoRestRoute = (typeof IDS)[number]
 export type CaminoRestRouteIds = typeof IDS
 
-// TODO 2022-09-23:
-// use ParseUrlParams like here: https://type-level-typescript.com/ to type the url params
-// type the Return types of these routes
 export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
   '/moi': { get: { output: userValidator } },
@@ -88,22 +99,18 @@ export const CaminoRestRoutes = {
   '/rest/etapesTypes/:demarcheId/:date': { get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
+  '/download/fichiers/:documentId': { download: true },
+  '/fichiers/:documentId': { download: true },
+  '/titres/:id': { download: true },
+  '/titres': { download: true },
+  '/titres_qgis': { download: true },
+  '/demarches': { download: true },
+  '/activites': { download: true },
+  '/utilisateurs': { download: true },
+  '/etape/zip/:etapeId': { download: true },
+  '/etape/:etapeId/:fichierNom': { download: true },
+  '/entreprises': { download: true },
 } as const satisfies Record<CaminoRestRoute, CaminoRoute>
-
-// FIXME à faire
-//  // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
-// downloadDownloadFichier: { route: '/download/fichiers/:documentId', input: z.void()},
-// downloadFichier: { route: '/fichiers/:documentId', input: z.void()},
-// downloadTitre: { route: '/titres/:id', input: z.void()},
-// downloadTitres: { route: '/titres', input: z.void()},
-// downloadTitres_qgis: { route: '/titres_qgis', input: z.void()},
-// downloadDemarches: { route: '/demarches', input: z.void()},
-// downloadActivites: { route: '/activites', input: z.void()},
-// downloadUtilisateurs: { route: '/utilisateurs', input: z.void()},
-// downloadEtape: { route: '/etape/zip/:etapeId', input: z.void()},
-// downloadEtapeFichier: { route: '/etape/:etapeId/:fichierNom', input: z.void()},
-// downloadEntreprises: { route: '/entreprises', input: z.void()},
-// NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
 
 export const DOWNLOAD_FORMATS = {
   Excel: 'xlsx',
@@ -125,9 +132,9 @@ export type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPat
   ? { [k in param]: string }
   : {} // eslint-disable-line @typescript-eslint/ban-types
 
-type can<T, Method extends 'post' | 'get' | 'put' | 'delete'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
+type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete'> = Route extends readonly [infer First, ...infer Rest]
+type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = Route extends readonly [infer First, ...infer Rest]
   ? First extends can<First, Method>
     ? [First, ...CaminoRestRouteList<Rest, Method>]
     : CaminoRestRouteList<Rest, Method>
@@ -136,6 +143,7 @@ type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete'
 export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
+export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
 export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]
 
 export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>) => {

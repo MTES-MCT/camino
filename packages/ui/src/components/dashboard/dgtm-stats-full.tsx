@@ -1,9 +1,8 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { AsyncData, getWithJson } from '@/api/client-rest'
 import { ChartWithExport } from '@/components/_charts/chart-with-export'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 import {
   sdomChartConfiguration,

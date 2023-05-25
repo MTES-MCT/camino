@@ -1,6 +1,5 @@
 import { getWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { ChartWithExport } from '../_charts/chart-with-export'
 
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -280,8 +279,8 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
       if (data.value.status === 'LOADED') {
         selsFiscalite.value =
           (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]?.[annee] ?? 0) +
-            (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
-            (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
+          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]?.[annee] ?? 0) +
+          (data.value.value.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]?.[annee] ?? 0)
       }
     }
   }
@@ -293,7 +292,9 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
         status: 'LOADED',
         value: stats,
       }
-      anneesBauxite.value = Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite] ?? {}).filter(isAnnee).sort()
+      anneesBauxite.value = Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite] ?? {})
+        .filter(isAnnee)
+        .sort()
       anneesSels.value = [
         ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_] ?? {}),
         ...Object.keys(stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage] ?? {}),

@@ -1,12 +1,11 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { AsyncData, getUiRestRoute } from '@/api/client-rest'
+import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { EntrepriseApiClient } from './entreprise-api-client'
 import { DocumentId, EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise'
 import { dateFormat } from 'camino-common/src/date'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
 import { User } from 'camino-common/src/roles'
@@ -72,7 +71,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
                     {items.map(item => (
                       <tr>
                         <td>
-                          <a href={getUiRestRoute(CaminoRestRoutes.downloadFichier, { documentId: item.id })} title={`Télécharger le document ${DocumentsTypes[item.type_id].nom}`} target="_blank">
+                          <a href={getDownloadRestRoute('/fichiers/:documentId', { documentId: item.id })} title={`Télécharger le document ${DocumentsTypes[item.type_id].nom}`} target="_blank">
                             {DocumentsTypes[item.type_id].nom}
                           </a>
                         </td>

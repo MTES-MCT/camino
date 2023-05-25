@@ -1,9 +1,9 @@
-import { FunctionalComponent, HTMLAttributes } from 'vue'
+import { HTMLAttributes } from 'vue'
 import { LocationQuery } from 'vue-router'
 import { Icon } from '../_ui/icon'
 import { saveAs } from 'file-saver'
-import { CaminoRestRoute, DownloadFormat, ParseUrlParams } from 'camino-common/src/rest'
-import { getUiRestRoute } from '../../api/client-rest'
+import { DownloadFormat, DownloadRestRoutes, ParseUrlParams } from 'camino-common/src/rest'
+import { getDownloadRestRoute } from '../../api/client-rest'
 
 export type Props<T> = {
   downloadRoute: T
@@ -14,10 +14,10 @@ export type Props<T> = {
   matomo?: { trackLink: (url: string, params: string) => void }
 } & HTMLAttributes
 
-async function download<T extends CaminoRestRoute>(props: Props<T>) {
+async function download<T extends DownloadRestRoutes>(props: Props<T>) {
   props.onClicked()
 
-  const url = getUiRestRoute(props.downloadRoute, props.params, { format: props.format, ...props.query })
+  const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: props.format, ...props.query })
 
   saveAs(url)
 
@@ -26,7 +26,7 @@ async function download<T extends CaminoRestRoute>(props: Props<T>) {
   }
 }
 
-export const Download = <T extends CaminoRestRoute>(props: Props<T>): JSX.Element => {
+export const Download = <T extends DownloadRestRoutes>(props: Props<T>): JSX.Element => {
   return (
     <button class="flex" onClick={() => download(props)}>
       <span class="mt-xxs">{props.format}</span>

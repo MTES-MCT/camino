@@ -1,7 +1,7 @@
 import { uploadCall } from '@/api/_upload'
 import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
-import { EntrepriseId, EntrepriseType, Siren, EntrepriseDocument, DocumentId , entrepriseDocumentInputValidator, documentIdValidator } from 'camino-common/src/entreprise'
+import { EntrepriseId, EntrepriseType, Siren, EntrepriseDocument, DocumentId, entrepriseDocumentInputValidator, documentIdValidator } from 'camino-common/src/entreprise'
 import { Fiscalite } from 'camino-common/src/fiscalite'
 import { z } from 'zod'
 
@@ -41,14 +41,14 @@ export const entrepriseApiClient: EntrepriseApiClient = {
   getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
     return getWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
-    })  
+    })
   },
   creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput): Promise<DocumentId> => {
     const tempDocumentName = await uploadCall(uiEntrepriseDocumentInput.document, _progress => {})
 
     const { document, ...entrepriseDocumentInput } = uiEntrepriseDocumentInput
 
-    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName });
+    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName })
     const parsed = documentIdValidator.safeParse(createDocument)
     if (parsed.success) {
       return parsed.data

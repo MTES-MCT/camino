@@ -117,12 +117,16 @@ export const delaiPerConcessionChartConfiguration = (data: StatistiquesDGTM): Ch
   const datasets = [
     {
       label: 'PER',
-      data: annees.map(annee => Math.round((data.delais[annee]?.prm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.prm?.delaiInstructionEnJours?.length ?? 1) / 30)),
+      data: annees.map(annee =>
+        Math.round((data.delais[annee]?.prm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.prm?.delaiInstructionEnJours?.length ?? 1) / 30)
+      ),
       ...datasetParams(0),
     },
     {
       label: 'Concession',
-      data: annees.map(annee => Math.round((data.delais[annee]?.cxm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.cxm?.delaiInstructionEnJours?.length ?? 1) / 30)),
+      data: annees.map(annee =>
+        Math.round((data.delais[annee]?.cxm?.delaiInstructionEnJours?.reduce((acc, current) => acc + current, 0) ?? 0) / (data.delais[annee]?.cxm?.delaiInstructionEnJours?.length ?? 1) / 30)
+      ),
       ...datasetParams(1),
     },
   ]
@@ -214,7 +218,9 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
     },
     {
       label: 'instruction',
-      data: annees.map(annee => Math.round((item.delais[annee]?.axm?.delaiInstructionEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiInstructionEnJours?.length ?? 1) / 30)),
+      data: annees.map(annee =>
+        Math.round((item.delais[annee]?.axm?.delaiInstructionEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiInstructionEnJours?.length ?? 1) / 30)
+      ),
       ...datasetParams(1),
     },
     {
@@ -232,13 +238,17 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
     {
       label: 'CDM',
       data: annees.map(annee =>
-        Math.round((item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? []).reduce((acc, current) => acc + current, 0) / (item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours?.length ?? 1) / 30)
+        Math.round(
+          (item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? []).reduce((acc, current) => acc + current, 0) /
+            (item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours?.length ?? 1) /
+            30
+        )
       ),
       ...datasetParams(4),
     },
     {
       label: 'CDM max',
-      data: annees.map(annee => Math.round(Math.max(...(item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? [] )) / 30)),
+      data: annees.map(annee => Math.round(Math.max(...(item.delais[annee]?.axm?.delaiCommissionDepartementaleEnJours ?? [])) / 30)),
       hidden: true,
       ...datasetParams(5),
     },

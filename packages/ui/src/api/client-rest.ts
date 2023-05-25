@@ -1,5 +1,5 @@
-import { CaminoRestRoute, CaminoRestRoutes,  DeleteRestRoutes,  getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest'
-import {z} from 'zod'
+import { CaminoRestRoute, CaminoRestRoutes, DeleteRestRoutes, DownloadRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest'
+import { z } from 'zod'
 
 type Loading = { status: 'LOADING' }
 type Error = { status: 'ERROR'; message: string }
@@ -10,7 +10,7 @@ type UiRestRoute = string & { __camino: 'RestRoute' }
 
 const baseRoute = '/apiUrl'
 
-export const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
+const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
   const urlParams = new URLSearchParams()
   Object.keys(searchParams).forEach(key => {
     urlParams.append(key, searchParams[key])
@@ -18,8 +18,18 @@ export const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: Pars
   return `${baseRoute}${getRestRoute(route, params)}?${urlParams}` as UiRestRoute
 }
 
+// TODO 2023-05-25: move into Download component and make download component display href
+export const getDownloadRestRoute = <T extends DownloadRestRoutes>(route: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
+  return getUiRestRoute(route, params, searchParams)
+}
 
-const callFetch =  async <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'put' | 'get' | 'delete', searchParams: Record<string, string> = {}, body?: any): Promise<any> => {
+const callFetch = async <T extends CaminoRestRoute>(
+  path: T,
+  params: ParseUrlParams<T>,
+  method: 'post' | 'put' | 'get' | 'delete',
+  searchParams: Record<string, string> = {},
+  body?: any
+): Promise<any> => {
   const url = getUiRestRoute(path, params, searchParams)
 
   const defaultOptions = {
@@ -27,7 +37,7 @@ const callFetch =  async <T extends CaminoRestRoute>(path: T, params: ParseUrlPa
     headers: { 'Content-Type': 'application/json' },
   }
 
-  const fetched = await fetch(url, body ? {...defaultOptions, body: JSON.stringify(body)} : defaultOptions)
+  const fetched = await fetch(url, body ? { ...defaultOptions, body: JSON.stringify(body) } : defaultOptions)
   if (fetched.ok) {
     if (fetched.status === 200) {
       const body = await fetched.json()
@@ -42,12 +52,23 @@ const callFetch =  async <T extends CaminoRestRoute>(path: T, params: ParseUrlPa
   throw new Error(`Une erreur s'est produite lors de la récupération des données`)
 }
 
+export const getWithJson = async <T extends GetRestRoutes>(
+  path: T,
+  params: ParseUrlParams<T>,
+  searchParams: Record<string, string> = {}
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
 
-export const getWithJson = async <T extends GetRestRoutes>(path: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): Promise<z.infer<typeof CaminoRestRoutes[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
+export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): Promise<void> =>
+  await callFetch(path, params, 'delete', searchParams)
 
-export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: ParseUrlParams<T>, searchParams: Record<string, string> = {}): Promise<void> => await callFetch(path, params, 'delete', searchParams)
+export const postWithJson = async <T extends PostRestRoutes>(
+  path: T,
+  params: ParseUrlParams<T>,
+  body: z.infer<(typeof CaminoRestRoutes)[T]['post']['input']>
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['post']['output']>> => await callFetch(path, params, 'post', {}, body)
 
-export const postWithJson = async <T extends PostRestRoutes>(path: T, params: ParseUrlParams<T>, body: z.infer<typeof CaminoRestRoutes[T]['post']['input']>): Promise<z.infer<typeof CaminoRestRoutes[T]['post']['output']>> => await callFetch(path, params, 'post', {}, body)
-
-export const putWithJson = async <T extends PutRestRoutes>(path: T, params: ParseUrlParams<T>, body: z.infer<typeof CaminoRestRoutes[T]['put']['input']>): Promise<z.infer<typeof CaminoRestRoutes[T]['put']['output']>> => await callFetch(path, params, 'put', {}, body)
-
+export const putWithJson = async <T extends PutRestRoutes>(
+  path: T,
+  params: ParseUrlParams<T>,
+  body: z.infer<(typeof CaminoRestRoutes)[T]['put']['input']>
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['put']['output']>> => await callFetch(path, params, 'put', {}, body)
