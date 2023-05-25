@@ -11,7 +11,7 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, ParseUrlParams,ZodParseUrlParams, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams } from 'camino-common/src/rest.js'
 import { z } from 'zod'
 
 export const queryImport = (nom: string) =>
@@ -39,7 +39,7 @@ export const restUploadCall = async (pool: Pool, user: TestUser) => {
   return jwtSet(req, user)
 }
 
-export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: Route, params: ParseUrlParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
+export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: Route, params: CaminoRestParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
   const req = request(app(pool)).get(getRestRoute(route, params))
 
   return jwtSet(req, user)
@@ -48,7 +48,7 @@ export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: R
 export const restPostCall = async <Route extends PostRestRoutes>(
   pool: Pool,
   caminoRestRoute: Route,
-  params: (typeof CaminoRestRoutes)[Route] extends { params: any } ? { [k in keyof (typeof CaminoRestRoutes)[Route]['params'] ]: z.infer<(typeof CaminoRestRoutes)[Route]['params'][k]> } : undefined,
+  params: CaminoRestParams<Route>,
   user: TestUser | undefined,
   body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
 ): Promise<request.Test> => {
@@ -62,7 +62,7 @@ export const restPostCall = async <Route extends PostRestRoutes>(
 export const restPutCall = async <Route extends PutRestRoutes>(
   pool: Pool,
   path: Route,
-  params: ParseUrlParams<Route>,
+  params: CaminoRestParams<Route>,
   user: TestUser | undefined,
   body: z.infer<(typeof CaminoRestRoutes)[Route]['put']['input']>
 ): Promise<request.Test> => {
@@ -71,7 +71,7 @@ export const restPutCall = async <Route extends PutRestRoutes>(
   return jwtSet(req, user)
 }
 
-export const restDeleteCall = async <Route extends DeleteRestRoutes>(pool: Pool, path: Route, params: ParseUrlParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
+export const restDeleteCall = async <Route extends DeleteRestRoutes>(pool: Pool, path: Route, params: CaminoRestParams<Route>, user: TestUser | undefined): Promise<request.Test> => {
   const req = request(app(pool)).delete(getRestRoute(path, params)).send()
 
   return jwtSet(req, user)

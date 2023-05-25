@@ -3,7 +3,7 @@ import { HTMLAttributes, inject, ref } from 'vue'
 import { useRoute, RouteLocationNormalized } from 'vue-router'
 import { Dropdown } from '../_ui/dropdown'
 import { Download } from './download'
-import { DownloadRestRoutes, DownloadFormat, ParseUrlParams } from 'camino-common/src/rest'
+import { DownloadRestRoutes, DownloadFormat, CaminoRestParams } from 'camino-common/src/rest'
 
 const DownloadsGeneric = <T extends DownloadRestRoutes>() =>
   caminoDefineComponent<Omit<Props<T>, 'route' | 'matomo'>>(['formats', 'downloadRoute', 'params'], props => {
@@ -20,7 +20,7 @@ export const Downloads = <T extends DownloadRestRoutes>(props: Omit<Props<T>, 'r
 export interface Props<T extends DownloadRestRoutes> {
   formats: DownloadFormat[]
   downloadRoute: T
-  params: ParseUrlParams<T>
+  params: CaminoRestParams<T>
   route: RouteLocationNormalized
   matomo?: { trackLink: (url: string, params: string) => void }
 }

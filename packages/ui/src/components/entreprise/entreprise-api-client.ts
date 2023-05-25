@@ -6,7 +6,7 @@ import { Fiscalite } from 'camino-common/src/fiscalite'
 import { z } from 'zod'
 
 export interface EntrepriseApiClient {
-  getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: string) => Promise<Fiscalite>
+  getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>

@@ -5,6 +5,7 @@ import { userSuper } from '../../database/user-super.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import type { Pool } from 'pg'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -20,13 +21,13 @@ afterAll(async () => {
 
 describe('getDemarche', () => {
   test('ne peut pas récupérer une démarche (utilisateur non super)', async () => {
-    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: 'not existing' }, undefined)
+    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: newDemarcheId('not existing') }, undefined)
 
     expect(tested.statusCode).toBe(403)
   })
 
   test('ne peut pas récupérer une démarche inexistante', async () => {
-    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: 'not existing' }, userSuper)
+    const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: newDemarcheId('not existing') }, userSuper)
 
     expect(tested.statusCode).toBe(404)
   })
