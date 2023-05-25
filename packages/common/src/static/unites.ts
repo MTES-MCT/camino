@@ -16,7 +16,7 @@ export const UNITE_IDS = {
   tonne: 'mtt',
   'tonnes par an': 'txa',
   '100 000 mètres cubes': 'vmd',
-} as const satisfies Record<string, (typeof IDS)[number]>
+} as const satisfies Record<string, UniteId>
 
 export interface Unite<T = UniteId> {
   id: T
