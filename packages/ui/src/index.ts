@@ -42,7 +42,7 @@ Promise.resolve().then(async (): Promise<void> => {
         integrations: [
           new BrowserTracing({
             routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-            tracingOrigins: ['localhost', configFromJson.uiHost, /^\//],
+            tracingOrigins: ['localhost', /^\//],
           }),
         ],
         release: `camino-ui-${caminoApplicationVersion}`,
