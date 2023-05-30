@@ -1,2 +1,7 @@
 [servers]
-preprod.camino.beta.gouv.fr env=preprod ansible_port=212 ansible_python_interpreter=/usr/bin/python3
+preprod.camino.beta.gouv.fr
+
+[servers:vars]
+env=preprod
+ansible_port=212
+ansible_python_interpreter=/usr/bin/python3

@@ -28,3 +28,25 @@
     owner: git
     group: users
   become: True
+- name: Ajoute les variables liées au bon environnement
+  ansible.builtin.include_vars:
+    file: "{{ env }}.yml"
+- name: Ajoute les variables chiffrées liées au bon environnement
+  ansible.builtin.include_vars:
+    file: "{{ env }}_crypt.yml"
+- name: Restic
+  block:
+    - name: Install restic
+      ansible.builtin.apt:
+        name: restic
+        state: latest
+      become: True
+    - name: Ajoute les variables d'environnement
+      ansible.builtin.template:
+        src: restic_data
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+        backup: yes
+      become: True

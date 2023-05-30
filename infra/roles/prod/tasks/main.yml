@@ -1,13 +1,4 @@
 ---
-- name: Ajoute les variables d'environnement
-  ansible.builtin.template:
-    src: restic_data
-    dest: /srv/scripts/
-    mode: u=rwx,g=rx,o=r
-    owner: git
-    group: users
-    backup: yes
-  become: True
 - name: Ajoute le script de backup
   ansible.builtin.template:
     src: backup
@@ -25,21 +16,3 @@
     job: "/srv/scripts/backup"
     user: git
   become: True
-- name: Transfert des données de la prod vers les autres environnements
-  block:
-    - name: Ajoute le script pour pouvoir transférer les données de la prod vers les autres environnements
-      ansible.builtin.template:
-        src: transfer_data_to_dev_and_preprod
-        dest: /srv/scripts/
-        mode: u=rwx,g=rx,o=r
-        owner: git
-        group: users
-      become: True
-    - name: Ajoute le job de copie des données de la prod vers les autres environnements
-      ansible.builtin.cron:
-        name: "transfer_data"
-        minute: "0"
-        hour: "5"
-        job: "/srv/scripts/transfer_data_to_dev_and_preprod"
-        user: git
-      become: True
