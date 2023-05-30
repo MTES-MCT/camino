@@ -7,23 +7,12 @@
     owner: git
     group: users
   become: True
-- name: Ajoute l'utilisateur "prod"
-  ansible.builtin.user:
-    name: prod
-    group: users
-    home: /srv/backups
-  become: True
-- name: Donne les droits à la home de l'utilisateur "prod"
+- name: Donne les droits du dossier de backup à l'utilisateur "git"
   file:
     path: /srv/backups
     owner: git
     group: users
   become: True
-# FIXME remove this from dev and preprod
-# REMOVE 'prod' user
-# Remove transfer_data_to_dev_and_preprod from prod
-# Remove transfer_data_to_dev_and_preprod cron from prod
-# Remove camino_for_transfer.sql from prod
 - name: Ajoute le job de restauration du backup de la prod
   ansible.builtin.cron:
     name: "backup"
