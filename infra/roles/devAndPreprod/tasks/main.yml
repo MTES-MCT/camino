@@ -23,6 +23,7 @@
 # REMOVE 'prod' user
 # Remove transfer_data_to_dev_and_preprod from prod
 # Remove transfer_data_to_dev_and_preprod cron from prod
+# Remove camino_for_transfer.sql from prod
 - name: Ajoute le job de restauration du backup de la prod
   ansible.builtin.cron:
     name: "backup"
