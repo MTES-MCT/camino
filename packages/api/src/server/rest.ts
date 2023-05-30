@@ -67,7 +67,6 @@ export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRe
     sentryDsn: process.env.SENTRY_DSN,
     caminoStage: process.env.CAMINO_STAGE,
     environment: process.env.ENV ?? 'dev',
-    uiHost: process.env.UI_HOST,
     matomoHost: process.env.API_MATOMO_URL,
     matomoSiteId: process.env.API_MATOMO_ID,
   }
