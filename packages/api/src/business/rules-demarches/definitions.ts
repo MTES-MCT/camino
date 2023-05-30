@@ -1,7 +1,5 @@
 import { IContenuValeur, ITitreEtape } from '../../types.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { restrictionsArmRet } from './arm/ret.js'
-import { restrictionsArmRenPro } from './arm/ren-pro.js'
 import { etatsDefinitionPrmOct } from './prm/oct.js'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find.js'
 import { CaminoMachines } from './machines.js'
@@ -14,6 +12,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -75,6 +74,7 @@ export interface ITitreCondition {
   contenu: IContenuCondition
 }
 
+const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
 export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
@@ -84,14 +84,8 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
   },
   {
     titreTypeId: 'arm',
-    demarcheTypeIds: ['ret'],
-    restrictions: restrictionsArmRet,
-    dateDebut: toCaminoDate('2019-10-31'),
-  },
-  {
-    titreTypeId: 'arm',
     demarcheTypeIds: ['ren', 'pro'],
-    restrictions: restrictionsArmRenPro,
+    machine: new ArmRenProMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
   },
   {
@@ -143,8 +137,7 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     titreTypeId: 'pxg',
     demarcheTypeIds: ['oct'],
     machine: new PxgOctMachine(),
-    // Cette date est la plus ancienne trouvée en base
-    dateDebut: toCaminoDate('1717-01-09'),
+    dateDebut: plusVieilleDateEnBase,
     demarcheIdExceptions: [
       // Ne respectent pas le cacoo
       newDemarcheId('fqDEYKmkLijEx0b7HRmkXxUP'),
