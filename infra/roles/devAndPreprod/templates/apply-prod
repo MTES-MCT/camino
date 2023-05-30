@@ -7,12 +7,16 @@ if [ "$(id -u)" != "{{git_user_uid}}" ]; then
 fi
 
 echo 'Mise en place des fichiers de prod'
-rsync --delete -r /srv/backups/camino_prod/files/ /srv/www/camino/files
+rm -rf /srv/backups/*
+restic restore latest --no-lock -t /
+rsync --delete -r /srv/backups/files/ /srv/www/camino/files
 echo "Arrêt de l'api et de keycloak"
 docker stop camino_api_app camino_keycloak
 echo "Insertion du dump de la BDD"
 docker exec -i camino_api_db dropdb --username=postgres camino
 docker exec -i camino_api_db createdb  --username=postgres camino
-docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino_prod.sql
+docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino.sql
 echo "Redémarrage de l'api et de keycloak"
 docker restart camino_api_app camino_keycloak camino_ui_app
+
+curl -i -X POST -H 'Content-Type: application/json' -d "{\"text\": \":tada: Dernier backup appliqué sur {{ env }} $(restic snapshots --no-lock | tail -3 | head -1 | cut -d' ' -f3) :tada:\"}" {{ mattermost_hook_url }}

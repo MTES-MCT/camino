@@ -8,8 +8,8 @@ preprod: build
 prod: build
 	ansible-playbook -i inventory_prod --ask-become-pass --vault-id camino@prompt deploy.yml
 edit-dev:
-	ansible-vault edit --vault-id camino@prompt roles/camino/vars/dev_crypt.yml
+	ansible-vault edit --vault-id camino@prompt roles/init/vars/dev_crypt.yml
 edit-preprod:
-	ansible-vault edit --vault-id camino@prompt roles/camino/vars/preprod_crypt.yml
+	ansible-vault edit --vault-id camino@prompt roles/init/vars/preprod_crypt.yml
 edit-prod:
-	ansible-vault edit --vault-id camino@prompt roles/camino/vars/prod_crypt.yml
+	ansible-vault edit --vault-id camino@prompt roles/init/vars/prod_crypt.yml

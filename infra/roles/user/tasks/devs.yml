@@ -28,5 +28,4 @@
   ansible.builtin.lineinfile:
     path: "/home/{{ camino_dev.nom }}/.bashrc"
     line: source /srv/scripts/restic_data
-  when: env == 'prod'
   become: True

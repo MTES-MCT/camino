@@ -1,2 +1,8 @@
 [servers]
-dev.camino.beta.gouv.fr env=dev ansible_port=212 ansible_python_interpreter=/usr/bin/python3
+dev.camino.beta.gouv.fr
+
+
+[servers:vars]
+env=dev
+ansible_port=212
+ansible_python_interpreter=/usr/bin/python3
