@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ZodType, z } from 'zod'
 import {
   documentIdValidator,
