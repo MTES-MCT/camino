@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ZodType, z } from 'zod'
-import { documentIdValidator, entrepriseDocumentInputValidator, entrepriseDocumentValidator, entrepriseModificationValidator, entrepriseTypeValidator, sirenValidator } from './entreprise.js'
-import { demarcheGetValidator } from './demarche.js'
+import {
+  documentIdValidator,
+  entrepriseDocumentInputValidator,
+  entrepriseDocumentValidator,
+  entrepriseIdValidator,
+  entrepriseModificationValidator,
+  entrepriseTypeValidator,
+  sirenValidator,
+} from './entreprise.js'
+import { demarcheGetValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
   editableTitreValidator,
@@ -13,13 +22,13 @@ import {
   utilisateurTitreAbonneValidator,
 } from './titres.js'
 import { userValidator } from './roles.js'
-import { caminoDateValidator } from './date.js'
+import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
 
-type CaminoRoute = {
+type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
   post?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
@@ -76,50 +85,52 @@ export type CaminoRestRouteIds = typeof IDS
 export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
   '/moi': { get: { output: userValidator } },
-  '/rest/utilisateurs/:id/newsletter': { get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
-  '/rest/utilisateurs/:id': { delete: true },
-  '/rest/utilisateurs/:id/permission': { post: { input: utilisateurToEdit, output: z.void() } },
+  '/rest/utilisateurs/:id/newsletter': { params: { id: z.string() }, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  '/rest/utilisateurs/:id': { params: { id: z.string() }, delete: true },
+  '/rest/utilisateurs/:id/permission': { params: { id: z.string() }, post: { input: utilisateurToEdit, output: z.void() } },
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/titreSections/:titreId': { get: { output: z.array(sectionValidator) } },
-  '/rest/demarches/:demarcheId': { get: { output: demarcheGetValidator } },
-  '/rest/titres/:titreId': { get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
-  '/rest/titres/:titreId/abonne': { post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
-  '/rest/titres/:titreId/date': { get: { output: caminoDateValidator.nullable() } },
+  '/rest/titreSections/:titreId': { params: { titreId: z.string() }, get: { output: z.array(sectionValidator) } },
+  '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdValidator }, get: { output: demarcheGetValidator } },
+  '/rest/titres/:titreId': { params: { titreId: z.string() }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
+  '/rest/titres/:titreId/abonne': { params: { titreId: z.string() }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
+  '/rest/titres/:titreId/date': { params: { titreId: z.string() }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresPTMG': { get: { output: z.array(titrePtmgValidator) } },
   '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },
-  '/rest/titres/:id/titreLiaisons': { get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
+  '/rest/titres/:id/titreLiaisons': { params: { id: z.string() }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
-  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { get: { output: fiscaliteValidator } },
+  '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },
   '/rest/entreprises': { post: { input: z.object({ siren: sirenValidator }), output: z.void() } },
   '/rest/entreprises/:entrepriseId': {
+    params: { entrepriseId: entrepriseIdValidator },
     get: { output: entrepriseTypeValidator },
     put: { input: entrepriseModificationValidator, output: z.void() },
   },
   '/rest/entreprises/:entrepriseId/documents': {
+    params: { entrepriseId: entrepriseIdValidator },
     post: { input: entrepriseDocumentInputValidator, output: z.union([documentIdValidator, z.custom<Error>()]) },
     get: { output: z.array(entrepriseDocumentValidator) },
   },
-  '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: true },
+  '/rest/entreprises/:entrepriseId/documents/:documentId': { params: { entrepriseId: entrepriseIdValidator, documentId: documentIdValidator }, delete: true },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
-  '/rest/etapesTypes/:demarcheId/:date': { get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
-  '/download/fichiers/:documentId': { download: true },
-  '/fichiers/:documentId': { download: true },
-  '/titres/:id': { download: true },
+  '/download/fichiers/:documentId': { params: { documentId: documentIdValidator }, download: true },
+  '/fichiers/:documentId': { params: { documentId: documentIdValidator }, download: true },
+  '/titres/:id': { params: { id: z.string() }, download: true },
   '/titres': { download: true },
   '/titres_qgis': { download: true },
   '/demarches': { download: true },
   '/activites': { download: true },
   '/utilisateurs': { download: true },
-  '/etape/zip/:etapeId': { download: true },
-  '/etape/:etapeId/:fichierNom': { download: true },
+  '/etape/zip/:etapeId': { params: { etapeId: z.string() }, download: true },
+  '/etape/:etapeId/:fichierNom': { params: { etapeId: z.string(), fichierNom: z.string() }, download: true },
   '/entreprises': { download: true },
-} as const satisfies Record<CaminoRestRoute, CaminoRoute>
+} as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 
 export const DOWNLOAD_FORMATS = {
   Excel: 'xlsx',
@@ -133,12 +144,12 @@ export const DOWNLOAD_FORMATS = {
 
 export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
 
-export type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
-  ? ParseUrlParams<path> & Partial<ParseUrlParams<optionalPath>>
+type ZodParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
+  ? ZodParseUrlParams<path> & Partial<ZodParseUrlParams<optionalPath>>
   : url extends `${infer start}/${infer rest}`
-  ? ParseUrlParams<start> & ParseUrlParams<rest>
+  ? ZodParseUrlParams<start> & ZodParseUrlParams<rest>
   : url extends `:${infer param}`
-  ? { [k in param]: string }
+  ? { [k in param]: ZodType }
   : {} // eslint-disable-line @typescript-eslint/ban-types
 
 type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
@@ -155,7 +166,11 @@ export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
 export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]
 
-export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>) => {
+export type CaminoRestParams<Route extends CaminoRestRoute> = (typeof CaminoRestRoutes)[Route] extends { params: any }
+  ? { [k in keyof (typeof CaminoRestRoutes)[Route]['params']]: z.infer<(typeof CaminoRestRoutes)[Route]['params'][k]> }
+  : {}
+
+export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoRestParams<T>) => {
   const url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), path)
   // clean url
 

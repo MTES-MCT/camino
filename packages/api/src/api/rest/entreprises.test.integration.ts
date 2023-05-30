@@ -11,7 +11,7 @@ import type { Pool } from 'pg'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeCreate, titresEtapesJustificatifsUpsert } from '../../database/queries/titres-etapes.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { ITitreEtapeJustificatif } from '../../types.js'
 import { constants } from 'http2'
 import { mkdirSync, writeFileSync } from 'fs'
@@ -51,7 +51,7 @@ describe('fiscalite', () => {
       id: newEntrepriseId('plop'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/fiscalite/:annee', { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
+    const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/fiscalite/:annee', { entrepriseId: entreprise.id, annee: toCaminoAnnee('2022') }, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
   })

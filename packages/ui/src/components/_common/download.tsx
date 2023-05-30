@@ -2,12 +2,12 @@ import { HTMLAttributes } from 'vue'
 import { LocationQuery } from 'vue-router'
 import { Icon } from '../_ui/icon'
 import { saveAs } from 'file-saver'
-import { DownloadFormat, DownloadRestRoutes, ParseUrlParams } from 'camino-common/src/rest'
+import { DownloadFormat, DownloadRestRoutes, CaminoRestParams } from 'camino-common/src/rest'
 import { getDownloadRestRoute } from '../../api/client-rest'
 
-export type Props<T> = {
+export type Props<T extends DownloadRestRoutes> = {
   downloadRoute: T
-  params: ParseUrlParams<T>
+  params: CaminoRestParams<T>
   format: DownloadFormat
   query: LocationQuery
   onClicked: () => void
