@@ -18,3 +18,5 @@ docker exec -i camino_api_db createdb  --username=postgres camino
 docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino.sql
 echo "Redémarrage de l'api et de keycloak"
 docker restart camino_api_app camino_keycloak camino_ui_app
+
+curl -i -X POST -H 'Content-Type: application/json' -d "{\"text\": \":tada: Dernier backup appliqué sur {{ env }} $(restic snapshots --no-lock | tail -3 | head -1 | cut -d' ' -f3) :tada:\"}" {{ mattermost_hook_url }}
