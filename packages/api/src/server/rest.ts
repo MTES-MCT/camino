@@ -13,7 +13,7 @@ import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntre
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
-import { CaminoRestRoutes, DownloadFormat, CaminoRestRouteIds, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute, DownloadRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DownloadFormat, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute, DownloadRestRoutes, CaminoRestRoute } from 'camino-common/src/rest.js'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
@@ -62,12 +62,6 @@ type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route>
   (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
   (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
-type RestRouteImplementations<Route, Output = {}> = Route extends readonly [infer First, ...infer Rest]
-  ? First extends string
-    ? RestRouteImplementations<Rest, { [key in First]: Transform<First> } & Output>
-    : Output
-  : Output
-
 export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const config: CaminoConfig = {
     sentryDsn: process.env.SENTRY_DSN,
@@ -81,7 +75,7 @@ export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRe
   res.json(caminoConfigValidator.parse(config))
 }
 
-const restRouteImplementations: Readonly<RestRouteImplementations<CaminoRestRouteIds>> = {
+const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> }> = {
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
   '/download/fichiers/:documentId': { download: fichier },
   '/fichiers/:documentId': { download: fichier },
