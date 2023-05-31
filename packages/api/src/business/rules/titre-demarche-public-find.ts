@@ -114,8 +114,8 @@ const titreDemarchePublicLectureFind = (
   }
 
   // Si le type de titre est ARM et que le type de démarche est renonciation
-  // et que l’expertise de l’onf est cours, ou si la démarche a été désistée ou si classée sans suite
-  if (titreTypeId === 'arm' && ['ren', 'pro'].includes(demarcheTypeId) && ['eof', 'css', 'des'].includes(titreEtape.typeId)) {
+  // et que l’expertise de l’onf est cours (recevabilité de la demande faite), ou si la démarche a été désistée ou si classée sans suite
+  if (titreTypeId === 'arm' && ['ren', 'pro'].includes(demarcheTypeId) && ['mcr', 'css', 'des'].includes(titreEtape.typeId)) {
     return true
   }
 

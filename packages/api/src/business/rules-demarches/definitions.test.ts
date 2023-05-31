@@ -1,5 +1,4 @@
 import { demarchesDefinitions, IEtapeTypeIdCondition, isDemarcheDefinitionMachine, isDemarcheDefinitionRestriction } from './definitions.js'
-import { restrictionsArmRet } from './arm/ret.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -7,6 +6,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapesTypes, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { etatsDefinitionPrmOct } from './prm/oct.js'
 
 test('isDemarcheDefinitionMachine', () => {
   expect(
@@ -22,7 +22,7 @@ test('isDemarcheDefinitionMachine', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: restrictionsArmRet,
+      restrictions: etatsDefinitionPrmOct,
     })
   ).toBe(false)
   expect(isDemarcheDefinitionMachine(undefined)).toBe(false)
@@ -41,7 +41,7 @@ test('isDemarcheDefinitionRestriction', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: restrictionsArmRet,
+      restrictions: etatsDefinitionPrmOct,
     })
   ).toBe(true)
 })

@@ -13,7 +13,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { vi, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 test('teste EtatsValidate', () => {
-  const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', toCaminoDate('2021-01-01'))
+  const octEtatsValidate = demarcheEtatsValidate('oct', 'prm', toCaminoDate('2021-01-01'))
 
   expect(octEtatsValidate).toBeTruthy()
   expect(octEtatsValidate([], {})).toHaveLength(0)

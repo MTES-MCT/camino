@@ -1,24 +1,9 @@
 import { ITitreEtape } from '../../types.js'
 
 import { etapesSuivantesEnAttenteGet, titreEtapeTypeIdRestrictionsFind } from './titre-etape-etat-validate.js'
-import { restrictionsArmRet } from '../rules-demarches/arm/ret.js'
 import { etatInformationsGet } from '../rules-demarches/etat-cycles.js'
 import { describe, test, expect } from 'vitest'
 describe('teste etapesSuivantesEnAttenteGet', () => {
-  test('retourne la seule étape déjà effectuée', () => {
-    const etapes = [{ typeId: 'ide' }] as ITitreEtape[]
-    const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], restrictionsArmRet)
-    expect(etapesEnAttente).toHaveLength(1)
-    expect(etapesEnAttente[0]).toEqual({ typeId: 'ide' })
-  })
-
-  test('retourne la dernière étape d’un arbre avec un seul acteur', () => {
-    const etapes = [{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'css' }] as ITitreEtape[]
-    const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], restrictionsArmRet)
-    expect(etapesEnAttente).toHaveLength(1)
-    expect(etapesEnAttente[0]).toEqual({ typeId: 'css' })
-  })
-
   test('retourne les 2 dernières étapes des chemins parallèles', () => {
     const etapes = [{ typeId: 'mfr' }, { typeId: 'mdp' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {

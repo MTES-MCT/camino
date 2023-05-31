@@ -583,15 +583,12 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]),
+          etapes: etapesBuild([{ typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2017-01-01') }]),
           titreId: 'titreId',
         },
         'arm'
       )
     ).toMatchObject({ publicLecture: false })
-  })
-
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande n'est pas publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -599,12 +596,49 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'mcr' }]),
+          etapes: etapesBuild([
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
+          ]),
           titreId: 'titreId',
         },
         'arm'
       )
     ).toMatchObject({ publicLecture: false })
+  })
+
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est recevabilité de la demande est publique", demarcheTypeId => {
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: demarcheTypeId,
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2017-01-01') }]),
+          titreId: 'titreId',
+        },
+        'arm'
+      )
+    ).toMatchObject({ publicLecture: true })
+
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: demarcheTypeId,
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
+          ]),
+          titreId: 'titreId',
+        },
+        'arm'
+      )
+    ).toMatchObject({ publicLecture: true })
   })
 
   test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est l’expertise de l’onf est publique", demarcheTypeId => {
@@ -615,15 +649,15 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'eof' }]),
+          etapes: etapesBuild([
+            { typeId: 'mcr', date: toCaminoDate('2017-01-01') },
+            { typeId: 'eof', date: toCaminoDate('2017-01-01') },
+          ]),
           titreId: 'titreId',
         },
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
-  })
-
-  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est la décisision de classement sans suite est publique", demarcheTypeId => {
     expect(
       titreDemarchePublicFind(
         {
@@ -631,7 +665,46 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'css' }]),
+          etapes: etapesBuild([
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
+            { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-01-05') },
+          ]),
+          titreId: 'titreId',
+        },
+        'arm'
+      )
+    ).toMatchObject({ publicLecture: true })
+  })
+
+  test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est la décision de classement sans suite est publique", demarcheTypeId => {
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: demarcheTypeId,
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: 'css', date: toCaminoDate('2017-01-01') }]),
+          titreId: 'titreId',
+        },
+        'arm'
+      )
+    ).toMatchObject({ publicLecture: true })
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: demarcheTypeId,
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
+            { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
+            { typeId: 'css', statutId: 'fai', date: toCaminoDate('2020-01-05') },
+          ]),
           titreId: 'titreId',
         },
         'arm'
@@ -640,6 +713,21 @@ describe("publicité d'une démarche", () => {
   })
 
   test.each<DemarcheTypeId>(['ren', 'pro'])("une démarche %s dont l'étape la plus récente est le désistement est publique", demarcheTypeId => {
+    // sans machine
+    expect(
+      titreDemarchePublicFind(
+        {
+          typeId: demarcheTypeId,
+          demarcheDateDebut: toCaminoDate('2017-01-01'),
+          demarcheDateFin: toCaminoDate('2021-01-01'),
+          id: newDemarcheId(),
+          etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2017-01-01') }]),
+          titreId: 'titreId',
+        },
+        'arm'
+      )
+    ).toMatchObject({ publicLecture: true })
+    // avec machine
     expect(
       titreDemarchePublicFind(
         {
@@ -647,7 +735,11 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
-          etapes: etapesBuild([{ typeId: 'des' }]),
+          etapes: etapesBuild([
+            { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
+            { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
+            { typeId: 'des', statutId: 'fai', date: toCaminoDate('2020-01-05') },
+          ]),
           titreId: 'titreId',
         },
         'arm'
