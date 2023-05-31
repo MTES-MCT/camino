@@ -58,7 +58,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   NOTIFIER_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, mainStep: true },
   DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: false },
   CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: false },
-  NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_, mainStep: false },
+  NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_, mainStep: true },
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
