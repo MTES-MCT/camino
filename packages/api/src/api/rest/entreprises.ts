@@ -46,6 +46,7 @@ import fileRename from '../../tools/file-rename.js'
 import { newDocumentId } from '../../database/models/_format/id-create.js'
 import { FICHIERS_TYPES } from 'camino-common/src/static/documentsTypes.js'
 import { dbQueryAndValidate } from '../../pg-database.js'
+import { isGuyane } from 'camino-common/src/static/pays'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -112,9 +113,7 @@ export const bodyBuilder = (
       const titreGuyannais = titre.communes
         .map(({ id }) => toDepartementId(id))
         .filter(isNotNullNorUndefined)
-        .some(departementId => {
-          return Regions[Departements[departementId].regionId].paysId === 'GF'
-        })
+        .some(departementId => isGuyane(Regions[Departements[departementId].regionId].paysId))
 
       if (!titre.substances) {
         throw new Error(`les substances du titre ${activite.titreId} ne sont pas chargées`)

@@ -5,6 +5,9 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { Departements } from 'camino-common/src/static/departement.js'
+import { Regions } from 'camino-common/src/static/region.js'
+import { PaysId } from 'camino-common/src/static/pays.js'
 
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
@@ -12,6 +15,7 @@ export interface Etape {
   etapeStatutId: EtapeStatutId
   date: CaminoDate
   contenu?: IContenu
+  paysId?: PaysId
 }
 
 export interface CaminoCommonContext {
@@ -27,7 +31,7 @@ export const toMachineEtapes = (etapes: Pick<ITitreEtape, 'ordre' | 'typeId' | '
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 
-const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date' | 'contenu'>): Etape => {
+const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date' | 'contenu' | 'communes'>): Etape => {
   let typeId
   if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId
@@ -49,6 +53,9 @@ const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date
   }
   if (dbEtape.contenu) {
     machineEtape.contenu = dbEtape.contenu
+  }
+  if (dbEtape.communes?.length && dbEtape.communes[0].departementId) {
+    machineEtape.paysId = Regions[Departements[dbEtape.communes[0].departementId].regionId].paysId
   }
 
   return machineEtape

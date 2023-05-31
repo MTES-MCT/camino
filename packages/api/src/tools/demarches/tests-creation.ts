@@ -22,7 +22,7 @@ const writeEtapesForTest = async () => {
       {
         fields: {
           titre: { id: {}, demarches: { etapes: { id: {} } } },
-          etapes: { id: {} },
+          etapes: { communes: { id: {} } },
           type: { etapesTypes: { id: {} } },
         },
       },
@@ -36,26 +36,6 @@ const writeEtapesForTest = async () => {
 
         return (date ?? '') > demarcheDefinition.dateDebut && !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
       })
-      .filter(({ titreId }) => {
-        if (
-          [
-            // décision du propriétaire du sol avant le dépôt de la demande
-            'EI4lAxLbhdFOoHb6LWL0y9pO',
-            'e8ZYqaA9HB3bXuOeRlXz5g76',
-            // visibilité publique
-            'z0DZo6TKEvP28D6oQyAuTvwA',
-            'RGOrc6hTOErMD8SBkUChbTyg',
-            '8KsDiNBHR9lAHv229GIqA7fw',
-            '8pY4eoUKtuR3is8l3Vy0vmJC',
-          ].includes(titreId)
-        ) {
-          console.info('On ignore le titre ' + titreId)
-
-          return false
-        }
-
-        return true
-      })
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
           demarche?.etapes
@@ -65,6 +45,10 @@ const writeEtapesForTest = async () => {
                 etape.contenu = { arm: etape.contenu?.arm }
               } else {
                 delete etape.contenu
+              }
+
+              if (etape.communes?.length) {
+                etape.communes = etape.communes.map(({ departementId }) => ({ nom: '', id: '', departementId }))
               }
 
               return etape

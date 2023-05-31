@@ -46,3 +46,7 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
 }
 
 export const isPaysId = (value: string): value is PaysId => paysIdValidator.safeParse(value).success
+
+export const isGuyane = (pays: PaysId | null): boolean => pays === 'GF'
+export const isMetropole = (pays: PaysId | null): boolean => pays === 'FR'
+export const isOutreMer = (pays: PaysId | null): boolean => !isMetropole(pays)

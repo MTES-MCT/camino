@@ -94,6 +94,15 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     demarcheTypeIds: ['oct'],
     machine: new PrmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
+    demarcheIdExceptions: [
+      newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'),
+      newDemarcheId('lynG9hx3x05LaqpySr0qxeca'),
+      newDemarcheId('xjvFNG3I8YOv2xLw6FQJjTab'),
+      newDemarcheId('fWlR3sADjURm21wM2j7UZF3R'),
+      newDemarcheId('eySDrrpK4KKukIw3II3nk3G1'),
+      newDemarcheId('PYrSWWMeDDDYfJfgWa09LVlp'),
+      newDemarcheId('R0XYcNUZrJFzZ8DghumpwqXw'),
+    ],
   },
   {
     titreTypeId: 'axm',

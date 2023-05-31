@@ -683,7 +683,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
     publicationsEtNotificationsMachine: {
       type: 'parallel',
       states: {
-        notificationDuDemadeurMachine: {
+        notificationDuDemandeurMachine: {
           initial: 'notificationDuDemandeurAFaire',
           states: {
             notificationDuDemandeurAFaire: {
