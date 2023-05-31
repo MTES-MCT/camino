@@ -1,6 +1,5 @@
 import { IContenuValeur, ITitreEtape } from '../../types.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { etatsDefinitionPrmOct } from './prm/oct.js'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find.js'
 import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
@@ -13,6 +12,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
+import { PrmOctMachine } from './prm/oct.machine.js'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -49,6 +49,7 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
+// FIXME à supprimer
 export interface DemarcheDefinitionRestriction extends DemarcheDefinitionCommon {
   restrictions: IDemarcheDefinitionRestrictions
 }
@@ -91,7 +92,7 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'prm',
     demarcheTypeIds: ['oct'],
-    restrictions: etatsDefinitionPrmOct,
+    machine: new PrmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
   },
   {
