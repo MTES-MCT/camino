@@ -6,7 +6,6 @@
     mode: u=rwx,g=rx,o=r
     owner: git
     group: users
-    backup: yes
   become: True
 - name: Ajoute le job de backup de la prod
   ansible.builtin.cron:
@@ -16,3 +15,31 @@
     job: "/srv/scripts/backup"
     user: git
   become: True
+- name: Configure le S3 pour les backups
+  block:
+    - name: Install s3cmd
+      ansible.builtin.apt:
+        name: s3cmd
+        state: present
+      become: True
+    - name: Ajoute le fichier owner
+      ansible.builtin.template:
+        src: owner.cfg
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+      register: owner
+    - name: Ajoute le fichier bucket-ro
+      ansible.builtin.template:
+        src: bucket-ro.json
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+      register: bucket_ro
+    - name: Applique les policies sur le bucket s3
+      shell: 's3cmd -c /srv/scripts/owner.cfg setpolicy /srv/scripts/bucket-ro.json s3://Camino'
+      when: bucket_ro.changed or owner.changed
