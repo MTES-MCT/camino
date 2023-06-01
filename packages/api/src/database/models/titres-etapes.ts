@@ -9,9 +9,15 @@ import TitresDemarches from './titres-demarches.js'
 import TitresPoints from './titres-points.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
-import Communes from './communes.js'
-import Forets from './forets.js'
 import Journaux from './journaux.js'
+
+// FIXME supprimer departementId de la table communes
+// FIXME supprimer la table titres_communes (remplacer par colonne jsonb avec id et surface)
+// FIXME supprimer la table titres_forets (remplacer par colonne jsonb avec id)
+// FIXME mettre les forêts dans le common
+// FIXME le monthly doit remonter les erreurs si les forêts récupérées ne matchent pas avec le common
+// attention aux filtres par territoire
+// attention aux administrations locales des étapes
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -46,6 +52,8 @@ class TitresEtapes extends Model {
       decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
+      communes: { type: ['array', 'null'] },
+      forets: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
@@ -127,33 +135,6 @@ class TitresEtapes extends Model {
           to: 'titresEtapesJustificatifs.documentId',
         },
         to: 'documents.id',
-      },
-    },
-
-    communes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Communes,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresCommunes.titreEtapeId',
-          to: 'titresCommunes.communeId',
-          extra: ['surface'],
-        },
-        to: 'communes.id',
-      },
-    },
-
-    forets: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Forets,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId',
-        },
-        to: 'forets.id',
       },
     },
     journaux: {
