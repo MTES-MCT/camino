@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Id": "dev-and-preprod-ro",
+    "Statement": [
+        {
+            "Sid": "user-read",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::75dd54128e7a43e8b3357fd9d02f33d6:root"
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::Camino/*",
+                "arn:aws:s3:::Camino"
+            ]
+        }
+    ]
+}

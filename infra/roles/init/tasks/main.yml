@@ -48,5 +48,4 @@
         mode: u=rwx,g=rx,o=r
         owner: git
         group: users
-        backup: yes
       become: True
