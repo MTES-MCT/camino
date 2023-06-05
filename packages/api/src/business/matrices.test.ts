@@ -3,6 +3,7 @@ import { ITitre } from '../types.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { describe, expect, test } from 'vitest'
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -95,9 +96,8 @@ describe('matrices', () => {
         slug: 'slug-titre-1',
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: '973',
           },
         ],
       },
@@ -114,14 +114,12 @@ describe('matrices', () => {
         slug: 'slug-titre-2',
         communes: [
           {
-            id: '97358',
+            id: toCommuneId('97358'),
             nom: 'Saint-Élie',
-            departementId: '973',
           },
           {
-            id: '97312',
+            id: toCommuneId('97312'),
             nom: 'Sinnamary',
-            departementId: '973',
           },
         ],
       },
@@ -140,9 +138,8 @@ describe('matrices', () => {
         slug: 'slug-titre-3',
         communes: [
           {
-            id: '97311',
+            id: toCommuneId('97311'),
             nom: 'Saint-Laurent-du-Maroni',
-            departementId: '973',
           },
         ],
       },

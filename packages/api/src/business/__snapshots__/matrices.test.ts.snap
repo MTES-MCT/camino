@@ -262,12 +262,10 @@ exports[`matrices > buildMatrices 1`] = `
   "rawLines": [
     {
       "commune": {
-        "departementId": "973",
         "id": "97310",
         "nom": "Roura",
       },
       "communePrincipale": {
-        "departementId": "973",
         "id": "97310",
         "nom": "Roura",
       },
@@ -297,12 +295,10 @@ exports[`matrices > buildMatrices 1`] = `
     },
     {
       "commune": {
-        "departementId": "973",
         "id": "97358",
         "nom": "Saint-Élie",
       },
       "communePrincipale": {
-        "departementId": "973",
         "id": "97312",
         "nom": "Sinnamary",
       },
@@ -332,12 +328,10 @@ exports[`matrices > buildMatrices 1`] = `
     },
     {
       "commune": {
-        "departementId": "973",
         "id": "97312",
         "nom": "Sinnamary",
       },
       "communePrincipale": {
-        "departementId": "973",
         "id": "97312",
         "nom": "Sinnamary",
       },
@@ -367,12 +361,10 @@ exports[`matrices > buildMatrices 1`] = `
     },
     {
       "commune": {
-        "departementId": "973",
         "id": "97311",
         "nom": "Saint-Laurent-du-Maroni",
       },
       "communePrincipale": {
-        "departementId": "973",
         "id": "97311",
         "nom": "Saint-Laurent-du-Maroni",
       },

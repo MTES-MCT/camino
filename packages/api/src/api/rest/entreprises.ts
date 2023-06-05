@@ -18,7 +18,7 @@ import TitresActivites from '../../database/models/titres-activites.js'
 import Titres from '../../database/models/titres.js'
 import { CustomResponse } from './express-type.js'
 import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
@@ -110,7 +110,7 @@ export const bodyBuilder = (
       console.warn(`le titre ${activite.titreId} appartient à l'entreprise amodiataire et n'est pas dans la liste des entreprises à analyser`)
     } else if (entreprise) {
       const titreGuyannais = titre.communes
-        .map(({ departementId }) => departementId)
+        .map(({ id }) => toDepartementId(id))
         .filter(isNotNullNorUndefined)
         .some(departementId => {
           return Regions[Departements[departementId].regionId].paysId === 'GF'

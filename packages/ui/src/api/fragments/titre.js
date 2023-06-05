@@ -103,7 +103,7 @@ const fragmentTitres = gql`
       ...titresEntreprises
     }
     communes {
-      departementId
+      id
     }
     secteursMaritime
     references {

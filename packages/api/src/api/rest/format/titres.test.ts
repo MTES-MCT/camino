@@ -1,21 +1,21 @@
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { titreTerritoiresFind } from './titres.js'
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import { describe, expect, test } from 'vitest'
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des communes', () => {
     expect(
       titreTerritoiresFind([
-        { nom: 'Flée', surface: 100000, departementId: DEPARTEMENT_IDS.Sarthe },
+        { id: toCommuneId('72500'), nom: 'Flée', surface: 100000 },
         {
+          id: toCommuneId('72200'),
           nom: 'Montval-sur-loir',
           surface: 105020,
-          departementId: DEPARTEMENT_IDS.Sarthe,
         },
 
         {
+          id: toCommuneId('37000'),
           nom: 'Tours',
           surface: 99999,
-          departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
         },
       ])
     ).toMatchInlineSnapshot(`
@@ -56,9 +56,9 @@ describe('titreTerritoiresFind', () => {
       titreTerritoiresFind(
         [
           {
+            id: toCommuneId('37000'),
             nom: 'Tours',
             surface: 99999,
-            departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
           },
         ],
 

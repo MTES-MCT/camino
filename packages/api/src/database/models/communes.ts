@@ -14,7 +14,6 @@ class Communes extends Model {
     properties: {
       id: { type: 'string', maxLength: 8 },
       nom: { type: 'string' },
-      departementId: { type: 'string' },
     },
   }
 }

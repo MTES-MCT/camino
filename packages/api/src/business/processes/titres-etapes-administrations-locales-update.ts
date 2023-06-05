@@ -2,7 +2,7 @@ import { IAdministration, ITitreEtape, ICommune } from '../../types.js'
 
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
-import { DepartementId, Departements } from 'camino-common/src/static/departement.js'
+import { DepartementId, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { getDepartementsBySecteurs, SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { AdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations.js'
@@ -20,7 +20,7 @@ const titreEtapeAdministrationsDepartementsBuild = (communes: ICommune[] | undef
     throw new Error('les communes ne sont pas chargées')
   }
 
-  const departements = communes.map(({ departementId }) => departementId).filter((departementId): departementId is DepartementId => !!departementId)
+  const departements = communes.map(({ id }) => toDepartementId(id))
 
   if (secteursMaritimes) {
     departements.push(...getDepartementsBySecteurs(secteursMaritimes))

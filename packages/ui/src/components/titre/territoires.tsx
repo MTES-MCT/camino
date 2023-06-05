@@ -1,15 +1,16 @@
-import { numberFormat } from '@/utils/number-format'
-import { DepartementId, Departements } from 'camino-common/src/static/departement'
+import { DepartementId, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-common/src/static/facades'
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
 import { FunctionalComponent } from 'vue'
 import { TagList } from '../_ui/tag-list'
+import { CommuneId } from 'camino-common/src/static/communes'
+import { numberFormat } from 'camino-common/src/number'
 
 export interface TerritoiresCommune {
   nom: string
-  departementId: DepartementId
+  id: CommuneId
 }
 export interface TerritoiresForet {
   nom: string
@@ -27,13 +28,13 @@ type RegionsComputed = {
   id: string
   nom: string
   paysId: PaysId
-  departements: { id: string; nom: string; communes: string[] }[]
+  departements: { id: DepartementId; nom: string; communes: string[] }[]
 }[]
 
 function CommunesEtRegions(communes: TerritoiresCommune[]) {
   if (communes.length) {
     const regions: RegionsComputed = communes.reduce((acc, commune) => {
-      const departement = Departements[commune.departementId]
+      const departement = Departements[toDepartementId(commune.id)]
       const region = Regions[departement.regionId]
 
       let regionToUpdate = acc.find(({ id }) => id === region.id)

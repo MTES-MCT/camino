@@ -8,7 +8,7 @@ import { entreprisesGet } from '../database/queries/entreprises.js'
 import { Fiscalite, fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
 import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
 import carbone from 'carbone'
 
@@ -127,7 +127,7 @@ type Matrices = {
   sip: Sips
   index: number
   titulaire: Titulaire
-  departementLabel: string
+  departementLabel: DepartementLabel
   titreLabel: string
   surfaceCommunaleProportionnee: number
   surfaceCommunale: number
@@ -195,7 +195,7 @@ export const buildMatrices = (
 
         const titreLabel = titre.slug ?? ''
 
-        const departement = commune.departementId ? Departements[commune.departementId].nom : ''
+        const departement = Departements[toDepartementId(commune.id)].nom
 
         let sip: Sips = 'saintLaurentDuMaroni'
         if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {

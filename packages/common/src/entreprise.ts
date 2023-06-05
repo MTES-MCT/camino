@@ -8,6 +8,7 @@ import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { TitreReference } from './titres-references.js'
+import { CommuneId } from './static/communes.js'
 
 export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof entrepriseIdValidator>
@@ -60,7 +61,7 @@ export interface TitreEntreprise {
   id: string
   slug: string
   nom: string
-  communes?: { departementId: DepartementId }[]
+  communes?: { id: CommuneId }[]
   secteursMaritime?: [SecteursMaritimes]
   references?: TitreReference[]
   coordonnees?: { x: number; y: number }

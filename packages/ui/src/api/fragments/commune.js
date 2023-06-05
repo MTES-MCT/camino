@@ -4,6 +4,5 @@ export const fragmentCommune = gql`
   fragment commune on Commune {
     id
     nom
-    departementId
   }
 `

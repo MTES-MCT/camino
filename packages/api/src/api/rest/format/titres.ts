@@ -1,5 +1,5 @@
 import { ITitre, Index, ICommune } from '../../../types.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales.js'
 import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
@@ -151,7 +151,7 @@ export const titresGeojsonFormat = (titres: ITitre[]) => ({
 
 // FOR TESTING
 export const titreTerritoiresFind = (
-  communes?: Pick<ICommune, 'nom' | 'departementId' | 'surface'>[] | null | undefined,
+  communes?: Pick<ICommune, 'id' | 'nom' | 'surface'>[] | null | undefined,
   secteursMaritime?: SecteursMaritimes[] | null | undefined
 ): { communes: string[]; departements: string[]; regions: string[] } => {
   const result: {
@@ -176,7 +176,7 @@ export const titreTerritoiresFind = (
   ;(communes ?? []).forEach(commune => {
     result.communes.push(`${commune.nom} (${Math.round(commune.surface! / 100) / 10000})`)
 
-    const departement = Departements[commune.departementId!]
+    const departement = Departements[toDepartementId(commune.id)]
 
     if (!result.departements.includes(departement.nom)) {
       result.departements.push(departement.nom)

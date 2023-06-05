@@ -1,3 +1,4 @@
+import { CommuneId } from './communes.js'
 import { PAYS_IDS } from './pays.js'
 import { RegionId, Regions } from './region.js'
 import { z } from 'zod'
@@ -127,7 +128,7 @@ export type CodePostal = z.infer<typeof codePostalValidator>
 export const checkCodePostal = (codePostal: string): CodePostal => {
   return codePostalValidator.parse(codePostal)
 }
-export const toDepartementId = (codePostal: CodePostal): DepartementId => {
+export const toDepartementId = (codePostal: CodePostal | CommuneId): DepartementId => {
   let departementId = codePostal.substring(0, 2)
   if (isDepartementId(departementId)) {
     return departementId
@@ -139,7 +140,7 @@ export const toDepartementId = (codePostal: CodePostal): DepartementId => {
   throw new Error(`impossible de trouver l'id de département dans le code postal ${codePostal}`)
 }
 
-export const Departements: { [key in DepartementId]: Departement<key> } = {
+export const Departements = {
   '01': { id: '01', nom: 'Ain', regionId: '84' },
   '02': { id: '02', nom: 'Aisne', regionId: '32' },
   '03': { id: '03', nom: 'Allier', regionId: '84' },
@@ -241,7 +242,9 @@ export const Departements: { [key in DepartementId]: Departement<key> } = {
   '973': { id: '973', nom: 'Guyane', regionId: '03' },
   '974': { id: '974', nom: 'La Réunion', regionId: '04' },
   '976': { id: '976', nom: 'Mayotte', regionId: '06' },
-}
+} as const satisfies { [key in DepartementId]: Departement<key> }
+
+export type DepartementLabel = (typeof Departements)[DepartementId]['nom']
 
 export const isDepartementId = (departementId: string | null | undefined): departementId is DepartementId => departementIdValidator.safeParse(departementId).success
 

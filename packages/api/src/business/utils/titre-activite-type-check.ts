@@ -1,5 +1,5 @@
 import { IActiviteTypePays, ICommune, ITitreType } from '../../types.js'
-import { Departements, isDepartementId } from 'camino-common/src/static/departement.js'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 
 /**
@@ -15,7 +15,7 @@ export interface ActiviteTypeReduced {
 
 export interface TitreReduced {
   typeId: string
-  communes?: Pick<ICommune, 'departementId'>[] | undefined | null
+  communes?: Pick<ICommune, 'id'>[] | undefined | null
 }
 export const titreActiviteTypeCheck = (activiteType: ActiviteTypeReduced, titre: TitreReduced) => {
   // si le type d'activité est relié au type de titre
@@ -30,8 +30,7 @@ export const titreActiviteTypeCheck = (activiteType: ActiviteTypeReduced, titre:
 
   if (activiteType.titresTypes.some(titreType => titreType.id === titre.typeId)) {
     const titrePaysIds = titre.communes
-      ?.map(({ departementId }) => departementId)
-      .filter(isDepartementId)
+      ?.map(({ id }) => toDepartementId(id))
       .map(departementId => Departements[departementId].regionId)
       .map(regionId => Regions[regionId].paysId)
 

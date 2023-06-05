@@ -1,5 +1,6 @@
 import { Territoires } from './territoires'
 import { Meta, StoryFn } from '@storybook/vue3'
+import { toCommuneId } from 'camino-common/src/static/communes'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const meta: Meta = {
@@ -18,10 +19,10 @@ export const All: StoryFn = () => (
     surface={4}
     forets={[{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]}
     communes={[
-      { nom: 'Flée', departementId: DEPARTEMENT_IDS.Sarthe },
-      { nom: 'Montval-sur-loir', departementId: DEPARTEMENT_IDS.Sarthe },
-      { nom: 'Tours', departementId: DEPARTEMENT_IDS['Indre-et-Loire'] },
-      { nom: 'Ville de Guyane', departementId: DEPARTEMENT_IDS.Guyane },
+      { nom: 'Flée', id: toCommuneId('72000') },
+      { nom: 'Montval-sur-loir', id: toCommuneId('72000') },
+      { nom: 'Tours', id: toCommuneId('37000') },
+      { nom: 'Ville de Guyane', id: toCommuneId('97300') },
     ]}
     secteursMaritimes={['Balagne', 'Bretagne nord', 'Bretagne sud']}
     sdomZones={['1', '0']}

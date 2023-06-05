@@ -1,12 +1,12 @@
 import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 
-import { titresEtapesCommunesVides, titresEtapesCommunesMemeCommune } from './__mocks__/titres-etapes-administrations-locales-update-etapes.js'
 import { ICommune, ITitreEtape } from '../../types.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titresEtapesGet: vi.fn(),
 }))
@@ -37,9 +37,8 @@ describe("administrations d'une étape", () => {
         typeId: 'dpu',
         communes: [
           {
-            id: 'paris',
+            id: toCommuneId('97300'),
             nom: 'paris',
-            departementId: '973',
           },
         ],
       },
@@ -51,9 +50,8 @@ describe("administrations d'une étape", () => {
         typeId: 'aac',
         communes: [
           {
-            id: 'issy',
+            id: toCommuneId('87000'),
             nom: 'issy',
-            departementId: '87',
           },
         ],
       },
@@ -66,6 +64,21 @@ describe("administrations d'une étape", () => {
   })
 
   test("n'ajoute pas deux fois une administration en doublon ", async () => {
+    const titresEtapesCommunesMemeCommune: ITitreEtape[] = [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+        typeId: 'dpu',
+        statutId: 'acc',
+        ordre: 2,
+        date: toCaminoDate('1988-03-11'),
+        communes: [
+          { id: toCommuneId('29200'), nom: 'nom de commune' },
+          { id: toCommuneId('29300'), nom: 'nom autre commune' },
+        ],
+      },
+    ]
+
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesMemeCommune)
 
     const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
@@ -74,6 +87,17 @@ describe("administrations d'une étape", () => {
   })
 
   test("ne met pas à jour les administrations d'une étape qui n'a pas de commune", async () => {
+    const titresEtapesCommunesVides: ITitreEtape[] = [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+        typeId: 'dpu',
+        statutId: 'acc',
+        ordre: 2,
+        date: toCaminoDate('1988-03-11'),
+        communes: [],
+      },
+    ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesVides)
 
     const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()

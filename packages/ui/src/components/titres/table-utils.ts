@@ -8,7 +8,7 @@ import { CoordonneesIcone } from '../_common/coordonnees-icone'
 import { ActivitesPills } from '../activites/activites-pills'
 import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { Departement, Departements } from 'camino-common/src/static/departement'
+import { Departement, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
@@ -188,7 +188,7 @@ export const activitesCell = (titre: { activitesAbsentes: number | null; activit
 })
 export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boolean, ordre = 'asc'): TableRow[] =>
   titres.map(titre => {
-    const departements: Departement[] = [...(titre.communes?.map(({ departementId }) => departementId) ?? []), ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])]
+    const departements: Departement[] = [...(titre.communes?.map(({ id }) => toDepartementId(id)) ?? []), ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])]
       .filter(onlyUnique)
       .map(departementId => Departements[departementId])
 

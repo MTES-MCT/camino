@@ -28,6 +28,7 @@ import { DemarcheId } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
 import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
+import { CommuneId } from 'camino-common/src/static/communes'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -198,8 +199,9 @@ interface IArea {
   nom: string
 }
 
-interface ICommune extends IArea {
-  departementId?: DepartementId | null
+interface ICommune {
+  id: CommuneId
+  nom: string
   surface?: number | null
 }
 

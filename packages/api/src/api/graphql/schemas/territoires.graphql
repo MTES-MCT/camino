@@ -41,9 +41,6 @@ type Commune {
 
   "Surface couverte par le titre"
   surface: Int
-
-  "Id du département"
-  departementId: ID
 }
 
 "Forêt"

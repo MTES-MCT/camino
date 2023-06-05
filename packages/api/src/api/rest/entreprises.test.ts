@@ -1,8 +1,8 @@
 import { bodyBuilder, responseExtractor } from './entreprises.js'
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import Titres from '../../database/models/titres.js'
 import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 
 const entreprise = {
   id: newEntrepriseId('entrepriseId'),
@@ -72,9 +72,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         amodiataires: [],
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 1006827,
           },
         ],
@@ -84,9 +83,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         substances: ['auru', 'scoc'],
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 6036587,
           },
         ],
@@ -100,9 +98,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         amodiataires: [],
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 19805494,
           },
         ],
@@ -114,9 +111,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         amodiataires: [entreprise2],
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 5143845,
           },
         ],
@@ -128,9 +124,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         amodiataires: [],
         communes: [
           {
-            id: '97310',
+            id: toCommuneId('97310'),
             nom: 'Roura',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 7676552,
           },
         ],
@@ -142,9 +137,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         amodiataires: [],
         communes: [
           {
-            id: '97311',
+            id: toCommuneId('97311'),
             nom: 'Saint-Laurent-du-Maroni',
-            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 35604009,
           },
         ],
