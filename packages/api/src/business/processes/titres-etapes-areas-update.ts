@@ -1,13 +1,13 @@
 /* eslint-disable sql/no-unsafe-query */
 import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes, geojsonIntersectsSecteursMaritime, geojsonIntersectsForets, geojsonIntersectsSDOM } from '../../tools/geojson.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
-import TitresCommunes from '../../database/models/titres-communes.js'
-import TitresForets from '../../database/models/titres-forets.js'
 import { userSuper } from '../../database/user-super.js'
 import { Feature } from 'geojson'
 import { ITitreEtape } from '../../types.js'
 import { getSecteurMaritime, SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { knex } from '../../knex.js'
+import { ForetId, isForetId } from 'camino-common/src/static/forets.js'
+import { CommuneId, toCommuneId } from 'camino-common/src/static/communes.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -23,8 +23,6 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]): Promi
     {
       fields: {
         points: { id: {} },
-        communes: { id: {} },
-        forets: { id: {} },
       },
     },
     userSuper
@@ -77,20 +75,13 @@ async function intersectForets(multipolygonGeojson: Feature, titreEtape: Pick<IT
   if (foretIds.fallback) {
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
   }
-  for (const foretId of foretIds.data) {
-    if (!titreEtape.forets.some(({ id }) => id === foretId)) {
-      await TitresForets.query().insert({
-        titreEtapeId: titreEtape.id,
-        foretId,
-      })
-      console.info(`Ajout de la forêt ${foretId} sur l'étape ${titreEtape.id}`)
-    }
-  }
-  for (const foret of titreEtape.forets) {
-    if (!foretIds.data.some(id => id === foret.id)) {
-      await TitresForets.query().delete().where('titreEtapeId', titreEtape.id).andWhere('foretId', foret.id)
-      console.info(`Suppression de la forêt ${foret.id} sur l'étape ${titreEtape.id}`)
-    }
+
+  const foretsNew: ForetId[] = foretIds.data.filter(isForetId).sort()
+  if (titreEtape.forets?.length !== foretsNew.length || titreEtape.forets.some((value, index) => value !== foretsNew[index])) {
+    console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${titreEtape.forets}', nouveaux: '${foretsNew}'`)
+    await knex('titres_etapes')
+      .update({ forets: JSON.stringify(foretsNew) })
+      .where('id', titreEtape.id)
   }
 }
 
@@ -104,30 +95,13 @@ async function intersectCommunes(multipolygonGeojson: Feature, titreEtape: Pick<
   if (communes.fallback) {
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
   }
-  for (const commune of communes.data) {
-    const oldCommune = titreEtape.communes.find(({ id }) => id === commune.id)
-    if (!oldCommune) {
-      await TitresCommunes.query().insert({
-        titreEtapeId: titreEtape.id,
-        communeId: commune.id,
-        surface: commune.surface,
-      })
-      console.info(`Ajout de la commune ${commune.id} sur l'étape ${titreEtape.id}`)
-    } else if (oldCommune.surface !== commune.surface) {
-      await TitresCommunes.query()
-        .patch({
-          surface: commune.surface,
-        })
-        .where('titreEtapeId', titreEtape.id)
-        .andWhere('communeId', commune.id)
-      console.info(`Mise à jour de la surface de la commune ${commune.id} sur l'étape ${titreEtape.id} (${oldCommune.surface} -> ${commune.surface})`)
-    }
-  }
-  for (const commune of titreEtape.communes) {
-    if (!communes.data.some(({ id }) => id === commune.id)) {
-      await TitresCommunes.query().delete().where('titreEtapeId', titreEtape.id).andWhere('communeId', commune.id)
-      console.info(`Suppression de la commune ${commune.id} sur l'étape ${titreEtape.id}`)
-    }
+
+  const communesNew: { id: CommuneId; surface: number }[] = communes.data.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
+  if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
+    console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.communes}', nouveaux: '${communesNew}'`)
+    await knex('titres_etapes')
+      .update({ communes: JSON.stringify(communesNew) })
+      .where('id', titreEtape.id)
   }
 }
 

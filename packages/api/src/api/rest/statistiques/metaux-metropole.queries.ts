@@ -5,7 +5,7 @@ import { IGetSubstancesByEntrepriseCategoryByAnneeQuery, IGetTitreActiviteSubsta
 import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
 import { z } from 'zod'
 import { caminoAnneeValidator } from 'camino-common/src/date.js'
-import { codePostalValidator } from 'camino-common/src/static/departement.js'
+import { communeIdValidator } from 'camino-common/src/static/communes.js'
 
 export const getTitreActiviteSubstanceParAnnee = sql<Redefine<IGetTitreActiviteSubstanceParAnneeQuery, { substanceFiscale: SubstanceFiscaleId }, AnneeCountStatistique>>`
 select
@@ -19,7 +19,7 @@ where
 
 export const substancesByAnneeByCommuneValidator = z.object({
   annee: caminoAnneeValidator,
-  commune_id: codePostalValidator,
+  communes: z.array(z.object({ id: communeIdValidator })),
   substances: z.record(substanceFiscaleIdValidator, z.coerce.number()),
 })
 
@@ -27,12 +27,12 @@ type substancesByAnneeByCommune = z.infer<typeof substancesByAnneeByCommuneValid
 export const getsubstancesByAnneeByCommune = sql<Redefine<IGetsubstancesByAnneeByCommuneQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
 select distinct on ("titres"."slug", "titres_activites"."annee")
     "titres_activites"."annee",
-    "tc"."commune_id",
+    "te"."communes",
     titres_activites.contenu -> 'substancesFiscales' as substances
 from
     "titres_activites"
     left join "titres" on "titres"."id" = "titres_activites"."titre_id"
-    left join titres_communes tc on tc.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'
+    left join titres_etapes te on te.id = titres.props_titre_etapes_ids ->> 'points'
 where
     EXISTS (
         SELECT

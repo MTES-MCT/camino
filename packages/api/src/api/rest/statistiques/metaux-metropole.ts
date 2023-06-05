@@ -65,7 +65,7 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
           etapes: { id: {} },
           type: { id: {} },
         },
-        communes: { id: {} },
+        pointsEtape: { id: {} },
       },
     },
     userSuper
@@ -152,7 +152,11 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
     (acc, stat) => {
       const annee = stat.annee
 
-      const regionId = Departements[toDepartementId(stat.commune_id)].regionId
+      const regions = stat.communes.map(({ id }) => Departements[toDepartementId(id)].regionId).filter(onlyUnique)
+      if (regions.length !== 1) {
+        console.error('plusieurs régions associées à une activité')
+      }
+      const regionId = regions[0]
 
       for (const substance of sels) {
         if (!acc[substance][annee]) {

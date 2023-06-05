@@ -9,6 +9,9 @@ import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 import { Domaines } from 'camino-common/src/static/domaines.js'
+import { Forets } from 'camino-common/src/static/forets.js'
+import { Pool } from 'pg'
+import { getCommunesIndex } from '../../../database/queries/communes.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
@@ -39,8 +42,13 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
     }, {} as Index<string>)
 }
 
-export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
-  titresDemarches.map(titreDemarche => {
+export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: ITitreDemarche[]) => {
+  const communesIndex = await getCommunesIndex(
+    pool,
+    titresDemarches.flatMap(titreDemarche => titreDemarche.etapes?.flatMap(etape => etape.communes?.map(({ id }) => id) ?? []) ?? [])
+  )
+
+  return titresDemarches.map(titreDemarche => {
     const titre = titreDemarche.titre!
 
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
@@ -65,9 +73,10 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
       amodiataires_adresses: titre.amodiataires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(';'),
       amodiataires_legal: titre.amodiataires!.map(e => e.legalEtranger || e.legalSiren).join(';'),
       ...etapesTypesStatuts,
-      forets: etapeWithPoints ? etapeWithPoints.forets?.map(f => f.nom).join(';') : '',
-      communes: etapeWithPoints ? etapeWithPoints.communes?.map(f => f.nom).join(';') : '',
+      forets: etapeWithPoints ? etapeWithPoints.forets?.map(fId => Forets[fId].nom).join(';') : '',
+      communes: etapeWithPoints ? etapeWithPoints.communes?.map(f => communesIndex[f.id]).join(';') : '',
     }
 
     return titreDemarcheNew
   })
+}

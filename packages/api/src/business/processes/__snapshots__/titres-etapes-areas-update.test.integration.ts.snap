@@ -3,43 +3,15 @@
 exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 1`] = `
 [
   {
-    "communeId": "97358",
-    "surface": 292012,
-    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
-  },
-  {
-    "communeId": "97312",
-    "surface": 716357,
-    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
-  },
-]
-`;
-
-exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 2`] = `
-[
-  {
-    "foretId": "DBR",
-    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
-  },
-]
-`;
-
-exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 3`] = `
-[
-  {
     "administrationsLocales": null,
     "archive": false,
     "communes": [
       {
-        "departementId": "973",
         "id": "97312",
-        "nom": "Sinnamary",
         "surface": 716357,
       },
       {
-        "departementId": "973",
         "id": "97358",
-        "nom": "Saint-Élie",
         "surface": 292012,
       },
     ],
@@ -51,10 +23,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "decisionsAnnexesSections": null,
     "duree": null,
     "forets": [
-      {
-        "id": "DBR",
-        "nom": "Deux Branches",
-      },
+      "DBR",
     ],
     "heritageContenu": null,
     "heritageProps": null,
@@ -75,22 +44,18 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
 ]
 `;
 
-exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 4`] = `
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 2`] = `
 [
   {
     "administrationsLocales": null,
     "archive": false,
     "communes": [
       {
-        "departementId": "973",
         "id": "97312",
-        "nom": "Sinnamary",
         "surface": 716357,
       },
       {
-        "departementId": "973",
         "id": "97358",
-        "nom": "Saint-Élie",
         "surface": 292012,
       },
     ],
@@ -99,16 +64,23 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "doublonTitreId": null,
     "entreprisesLecture": false,
     "forets": [
-      {
-        "id": "DBR",
-        "nom": "Deux Branches",
-      },
+      "DBR",
     ],
     "id": "titreIdUniquePourMiseAJourAreas",
     "nom": "nom-titreIdUniquePourMiseAJourAreas",
     "pointsEtape": {
       "administrationsLocales": null,
       "archive": false,
+      "communes": [
+        {
+          "id": "97312",
+          "surface": 716357,
+        },
+        {
+          "id": "97358",
+          "surface": 292012,
+        },
+      ],
       "contenu": null,
       "date": "2022-03-09",
       "dateDebut": null,
@@ -116,6 +88,9 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "decisionsAnnexesContenu": null,
       "decisionsAnnexesSections": null,
       "duree": null,
+      "forets": [
+        "DBR",
+      ],
       "heritageContenu": null,
       "heritageProps": null,
       "id": "titreEtapeIdUniquePourMiseAJourAreas",

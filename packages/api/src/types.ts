@@ -26,9 +26,10 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
-import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
-import { CommuneId } from 'camino-common/src/static/communes'
+import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
+import { CommuneId } from 'camino-common/src/static/communes.js'
+import { ForetId } from 'camino-common/src/static/forets.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -194,14 +195,8 @@ interface IAdministration {
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }
 
-interface IArea {
-  id: string
-  nom: string
-}
-
 interface ICommune {
   id: CommuneId
-  nom: string
   surface?: number | null
 }
 
@@ -310,8 +305,6 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-interface IForet extends IArea {}
-
 type IGeoJsonProperties = Index<string | number>
 
 interface IGeoJson {
@@ -331,11 +324,6 @@ interface IGeoJsonCentre {
 interface IGeometry {
   type: string
   coordinates: number[] | number[][] | number[][][] | number[][][][]
-}
-
-interface IForet {
-  id: string
-  nom: string
 }
 
 interface IActiviteTypeTitreType {
@@ -388,7 +376,7 @@ interface ITitre {
   surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
-  forets?: IForet[] | null
+  forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
@@ -423,19 +411,6 @@ interface ITitreActivite {
   modification?: boolean | null
   suppression?: boolean | null
   deposable?: boolean | null
-}
-
-interface ITitreArea {
-  titreEtapeId: string
-}
-
-interface ITitreCommune extends ITitreArea {
-  communeId: string
-  surface: number
-}
-
-interface ITitreForet extends ITitreArea {
-  foretId: string
 }
 
 interface ITitreEtapeJustificatif {
@@ -519,7 +494,7 @@ interface ITitreEtape {
   justificatifs?: IDocument[] | null
   justificatifIds?: string[] | null
   communes?: ICommune[] | null
-  forets?: IForet[] | null
+  forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   incertitudes?: ITitreIncertitudes | null
@@ -700,7 +675,6 @@ export {
   IActiviteTypeDocumentType,
   IAdministration,
   ICommune,
-  IArea,
   IContenu,
   IContenuElement,
   IContenuValeur,
@@ -713,7 +687,6 @@ export {
   IEntreprise,
   IEntrepriseEtablissement,
   IEtapeType,
-  IForet,
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
@@ -723,9 +696,6 @@ export {
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
-  ITitreCommune,
-  ITitreForet,
-  ITitreArea,
   ITitreDemarche,
   IDocument,
   ITitreEtape,

@@ -62,7 +62,7 @@ const administrations = {
   },
 }
 
-const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires', 'communes', 'forets', 'justificatifs']
+const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires', 'justificatifs']
 
 const titresEtapesRelateFalse = [
   'titulaires.etablissements',
@@ -82,8 +82,7 @@ const titresEtapes = {
     documents.${documents.graph},
     justificatifs.${documents.graph},
     titulaires.${entreprises.graph},
-    amodiataires.${entreprises.graph},
-    forets
+    amodiataires.${entreprises.graph}
   ]`,
 
   update: {
@@ -164,8 +163,6 @@ const titresRelateFalse = [
   ...titresTypesRelateFalse.map(k => `type.${k}`),
   'points',
   'points.references',
-  'communes',
-  'forets',
   'substancesEtape',
   'pointsEtape',
   'titulaires',
@@ -188,7 +185,6 @@ const titres = {
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     demarches(orderDesc).${titresDemarches.graph},
-    forets,
     activites(orderDesc).${titresActivites.graph},
    ]`,
 

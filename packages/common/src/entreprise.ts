@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { CaminoDate, caminoDateValidator } from './date.js'
 import { User } from './roles.js'
-import { DepartementId } from './static/departement.js'
 import { DocumentTypeId, entrepriseDocumentTypeIdValidator } from './static/documentsTypes.js'
 import { SecteursMaritimes } from './static/facades.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'

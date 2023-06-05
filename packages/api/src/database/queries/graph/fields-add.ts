@@ -39,7 +39,7 @@ export const titresFieldsAdd = (fields: IFields) => {
     }
   }
 
-  if (fields.secteursMaritime || fields.administrationsLocale || fields.administrations || fields.sdomZones) {
+  if (fields.secteursMaritime || fields.administrationsLocale || fields.administrations || fields.sdomZones || fields.communes || fields.forets) {
     if (!fields.pointsEtape) {
       fields.pointsEtape = { id: {} }
     }

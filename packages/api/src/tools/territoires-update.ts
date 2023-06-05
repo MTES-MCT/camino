@@ -4,11 +4,11 @@ import { knex } from '../knex.js'
 import fetch from 'node-fetch'
 import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
-import Forets from '../database/models/forets.js'
 import { Readable } from 'stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
+import { ForetId, ForetIds, Forets } from 'camino-common/src/static/forets.js'
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
 const { withParser } = require('stream-json/filters/Pick')
@@ -99,16 +99,17 @@ const foretsUpdate = async () => {
 
   const geojson = await geoguyaneFileGet(foretsUrlGenerator)
 
-  const foretsIdsKnown = (await Forets.query()).map(({ id }) => id)
   const foretsPostgisIdsKnown: string[] = (await knex.select('id').from('forets_postgis')).map(({ id }: { id: string }) => id)
 
   console.info('Traitement du fichier des forets')
 
+  const ids: ForetId[] = []
   for (const foret of geojson.features) {
     try {
       const result = await knex.raw(`select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(foret.geometry)}'), 4326)) as result`)
 
-      const id = foret.properties.code_for
+      const id: ForetId = foret.properties.code_for
+      ids.push(id)
       if (foretsPostgisIdsKnown.includes(id)) {
         await knex('forets_postgis').where('id', id).update({
           geometry: result.rows[0].result,
@@ -119,19 +120,16 @@ const foretsUpdate = async () => {
           geometry: result.rows[0].result,
         })
       }
-      if (foretsIdsKnown.includes(id)) {
-        await knex('forets').where('id', id).update({
-          nom: foret.properties.foret,
-        })
-      } else {
-        await knex('forets').insert({
-          id,
-          nom: foret.properties.foret,
-        })
+      if (Forets[id] && Forets[id].nom !== foret.properties.foret) {
+        console.error(`Le nom de la forêt ${id} a changé '${Forets[id].nom}' --> ${foret.properties.foret}`)
       }
     } catch (e) {
       console.error(foret.properties.nom, e)
     }
+  }
+
+  if (ids.some(id => !ForetIds.includes(id)) || ForetIds.some(fId => !ids.includes(fId))) {
+    console.error(`les forêts ne sont pas à jour dans le common: ${ForetIds} --> ${ids}`)
   }
 }
 

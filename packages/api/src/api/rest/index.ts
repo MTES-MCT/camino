@@ -42,8 +42,6 @@ const titreFields = {
   amodiataires: { id: {} },
   surfaceEtape: { id: {} },
   points: { id: {} },
-  communes: { id: {} },
-  forets: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
     type: { etapesTypes: { id: {} } },
@@ -60,7 +58,7 @@ interface ITitreInput {
 }
 
 export const titre =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async ({ query: { format = 'json' }, params: { id } }: ITitreInput, user: User) => {
     formatCheck(['geojson', 'json'], format)
 
@@ -74,7 +72,7 @@ export const titre =
     let contenu
 
     if (format === 'geojson') {
-      const titreGeojson = titreGeojsonFormat(titreFormatted)
+      const titreGeojson = await titreGeojsonFormat(pool, titreFormatted)
 
       contenu = JSON.stringify(titreGeojson, null, 2)
     } else {
@@ -108,7 +106,7 @@ interface ITitresQueryInput {
 }
 
 export const titres =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (
     {
       query: {
@@ -162,11 +160,11 @@ export const titres =
     let contenu
 
     if (format === 'geojson') {
-      const elements = titresGeojsonFormat(titresFormatted)
+      const elements = await titresGeojsonFormat(pool, titresFormatted)
 
       contenu = JSON.stringify(elements, null, 2)
     } else if (['csv', 'xlsx', 'ods'].includes(format)) {
-      const elements = titresTableFormat(titresFormatted)
+      const elements = await titresTableFormat(pool, titresFormatted)
 
       contenu = tableConvert('titres', elements, format)
     } else {
@@ -227,7 +225,7 @@ interface ITitresDemarchesQueryInput {
 }
 
 export const demarches =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (
     {
       query: {
@@ -280,8 +278,6 @@ export const demarches =
             amodiataires: { id: {} },
           },
           etapes: {
-            forets: { id: {} },
-            communes: { id: {} },
             points: { id: {} },
             type: {
               id: {},
@@ -297,7 +293,7 @@ export const demarches =
     let contenu
 
     if (['csv', 'xlsx', 'ods'].includes(format)) {
-      const elements = titresDemarchesFormatTable(demarchesFormatted)
+      const elements = await titresDemarchesFormatTable(pool, demarchesFormatted)
 
       contenu = tableConvert('demarches', elements, format)
     } else {
@@ -331,7 +327,7 @@ interface ITitresActivitesQueryInput {
 }
 
 export const activites =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async (
     {
       query: {
@@ -374,7 +370,7 @@ export const activites =
       {
         fields: {
           type: { id: {} },
-          titre: { communes: { id: {} } },
+          titre: { pointsEtape: { id: {} } },
         },
       },
       user
@@ -385,7 +381,7 @@ export const activites =
     let contenu
 
     if (['csv', 'xlsx', 'ods'].includes(format)) {
-      const elements = titresActivitesFormatTable(titresActivitesFormatted)
+      const elements = await titresActivitesFormatTable(pool, titresActivitesFormatted)
 
       contenu = tableConvert('activites', elements, format)
     } else {

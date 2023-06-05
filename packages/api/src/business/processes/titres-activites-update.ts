@@ -23,7 +23,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
         demarches: {
           etapes: { id: {} },
         },
-        communes: { id: {} },
+        pointsEtape: { id: {} },
         activites: { id: {} },
         titulaires: { utilisateurs: { id: {} } },
       },

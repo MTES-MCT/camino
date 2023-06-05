@@ -97,7 +97,6 @@ describe('matrices', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
           },
         ],
       },
@@ -115,11 +114,9 @@ describe('matrices', () => {
         communes: [
           {
             id: toCommuneId('97358'),
-            nom: 'Saint-Élie',
           },
           {
             id: toCommuneId('97312'),
-            nom: 'Sinnamary',
           },
         ],
       },
@@ -139,52 +136,74 @@ describe('matrices', () => {
         communes: [
           {
             id: toCommuneId('97311'),
-            nom: 'Saint-Laurent-du-Maroni',
           },
         ],
       },
     ]
 
     expect(
-      buildMatrices(openFiscaResponse, titres, 2021, {
-        substances: {
-          aloh: { tarifCommunal: 636.4, tarifDepartemental: 127.1 },
-          anti: { tarifCommunal: 13.1, tarifDepartemental: 3 },
-          arge: { tarifCommunal: 270.2, tarifDepartemental: 53.8 },
-          arse: { tarifCommunal: 731.7, tarifDepartemental: 148.7 },
-          auru: { tarifCommunal: 166.3, tarifDepartemental: 33.2 },
-          bism: { tarifCommunal: 64.1, tarifDepartemental: 13 },
-          cfxa: { tarifCommunal: 254.1, tarifDepartemental: 123.4 },
-          cfxb: { tarifCommunal: 972.9, tarifDepartemental: 192.6 },
-          cfxc: { tarifCommunal: 236.3, tarifDepartemental: 52.4 },
-          coox: { tarifCommunal: 356.2, tarifDepartemental: 72.8 },
-          cuiv: { tarifCommunal: 21.3, tarifDepartemental: 4.3 },
-          etai: { tarifCommunal: 132.5, tarifDepartemental: 26.2 },
-          fera: { tarifCommunal: 545.3, tarifDepartemental: 111.4 },
-          ferb: { tarifCommunal: 375.7, tarifDepartemental: 78.1 },
-          fluo: { tarifCommunal: 827.3, tarifDepartemental: 168.1 },
-          hyda: { tarifCommunal: 1635.1, tarifDepartemental: 325.4 },
-          hydb: { tarifCommunal: 54.5, tarifDepartemental: 11.3 },
-          hydc: { tarifCommunal: 1221.2, tarifDepartemental: 1569.1 },
-          hydd: { tarifCommunal: 9.3, tarifDepartemental: 7.3 },
-          hyde: { tarifCommunal: 8.6, tarifDepartemental: 6.5 },
-          hydf: { tarifCommunal: 351.4, tarifDepartemental: 513 },
-          kclx: { tarifCommunal: 286.6, tarifDepartemental: 57.1 },
-          lith: { tarifCommunal: 54.5, tarifDepartemental: 11.2 },
-          mang: { tarifCommunal: 406.3, tarifDepartemental: 82.2 },
-          moly: { tarifCommunal: 270.2, tarifDepartemental: 54.5 },
-          naca: { tarifCommunal: 786.7, tarifDepartemental: 159.9 },
-          nacb: { tarifCommunal: 478.9, tarifDepartemental: 94.4 },
-          nacc: { tarifCommunal: 159.9, tarifDepartemental: 31 },
-          plom: { tarifCommunal: 686.4, tarifDepartemental: 132.5 },
-          souf: { tarifCommunal: 3.1, tarifDepartemental: 1.7 },
-          uran: { tarifCommunal: 323.7, tarifDepartemental: 64.3 },
-          wolf: { tarifCommunal: 148.7, tarifDepartemental: 29.1 },
-          zinc: { tarifCommunal: 545.3, tarifDepartemental: 111.4 },
+      buildMatrices(
+        openFiscaResponse,
+        titres,
+        2021,
+        {
+          substances: {
+            aloh: { tarifCommunal: 636.4, tarifDepartemental: 127.1 },
+            anti: { tarifCommunal: 13.1, tarifDepartemental: 3 },
+            arge: { tarifCommunal: 270.2, tarifDepartemental: 53.8 },
+            arse: { tarifCommunal: 731.7, tarifDepartemental: 148.7 },
+            auru: { tarifCommunal: 166.3, tarifDepartemental: 33.2 },
+            bism: { tarifCommunal: 64.1, tarifDepartemental: 13 },
+            cfxa: { tarifCommunal: 254.1, tarifDepartemental: 123.4 },
+            cfxb: { tarifCommunal: 972.9, tarifDepartemental: 192.6 },
+            cfxc: { tarifCommunal: 236.3, tarifDepartemental: 52.4 },
+            coox: { tarifCommunal: 356.2, tarifDepartemental: 72.8 },
+            cuiv: { tarifCommunal: 21.3, tarifDepartemental: 4.3 },
+            etai: { tarifCommunal: 132.5, tarifDepartemental: 26.2 },
+            fera: { tarifCommunal: 545.3, tarifDepartemental: 111.4 },
+            ferb: { tarifCommunal: 375.7, tarifDepartemental: 78.1 },
+            fluo: { tarifCommunal: 827.3, tarifDepartemental: 168.1 },
+            hyda: { tarifCommunal: 1635.1, tarifDepartemental: 325.4 },
+            hydb: { tarifCommunal: 54.5, tarifDepartemental: 11.3 },
+            hydc: { tarifCommunal: 1221.2, tarifDepartemental: 1569.1 },
+            hydd: { tarifCommunal: 9.3, tarifDepartemental: 7.3 },
+            hyde: { tarifCommunal: 8.6, tarifDepartemental: 6.5 },
+            hydf: { tarifCommunal: 351.4, tarifDepartemental: 513 },
+            kclx: { tarifCommunal: 286.6, tarifDepartemental: 57.1 },
+            lith: { tarifCommunal: 54.5, tarifDepartemental: 11.2 },
+            mang: { tarifCommunal: 406.3, tarifDepartemental: 82.2 },
+            moly: { tarifCommunal: 270.2, tarifDepartemental: 54.5 },
+            naca: { tarifCommunal: 786.7, tarifDepartemental: 159.9 },
+            nacb: { tarifCommunal: 478.9, tarifDepartemental: 94.4 },
+            nacc: { tarifCommunal: 159.9, tarifDepartemental: 31 },
+            plom: { tarifCommunal: 686.4, tarifDepartemental: 132.5 },
+            souf: { tarifCommunal: 3.1, tarifDepartemental: 1.7 },
+            uran: { tarifCommunal: 323.7, tarifDepartemental: 64.3 },
+            wolf: { tarifCommunal: 148.7, tarifDepartemental: 29.1 },
+            zinc: { tarifCommunal: 545.3, tarifDepartemental: 111.4 },
+          },
+          tarifTaxeMinierePME: 498.06,
+          tarifTaxeMiniereAutre: 123.97,
         },
-        tarifTaxeMinierePME: 498.06,
-        tarifTaxeMiniereAutre: 123.97,
-      })
+        [
+          {
+            id: toCommuneId('97311'),
+            nom: 'Saint-Laurent-du-Maroni',
+          },
+          {
+            id: toCommuneId('97358'),
+            nom: 'Saint-Élie',
+          },
+          {
+            id: toCommuneId('97312'),
+            nom: 'Sinnamary',
+          },
+          {
+            id: toCommuneId('97310'),
+            nom: 'Roura',
+          },
+        ]
+      )
     ).toMatchSnapshot()
   })
 })

@@ -4,20 +4,25 @@ import { describe, expect, test } from 'vitest'
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des communes', () => {
     expect(
-      titreTerritoiresFind([
-        { id: toCommuneId('72500'), nom: 'Flée', surface: 100000 },
+      titreTerritoiresFind(
         {
-          id: toCommuneId('72200'),
-          nom: 'Montval-sur-loir',
-          surface: 105020,
+          [toCommuneId('72500')]: 'Flée',
+          [toCommuneId('72200')]: 'Montval-sur-loir',
+          [toCommuneId('37000')]: 'Tours',
         },
+        [
+          { id: toCommuneId('72500'), surface: 100000 },
+          {
+            id: toCommuneId('72200'),
+            surface: 105020,
+          },
 
-        {
-          id: toCommuneId('37000'),
-          nom: 'Tours',
-          surface: 99999,
-        },
-      ])
+          {
+            id: toCommuneId('37000'),
+            surface: 99999,
+          },
+        ]
+      )
     ).toMatchInlineSnapshot(`
       {
         "communes": [
@@ -37,7 +42,7 @@ describe('titreTerritoiresFind', () => {
     `)
   })
   test('titreTerritoiresFind uniquement des secteurs maritimes', () => {
-    expect(titreTerritoiresFind(null, ['Baie de Seine'])).toMatchInlineSnapshot(`
+    expect(titreTerritoiresFind({}, null, ['Baie de Seine'])).toMatchInlineSnapshot(`
         {
           "communes": [],
           "departements": [
@@ -54,10 +59,12 @@ describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement', () => {
     expect(
       titreTerritoiresFind(
+        {
+          [toCommuneId('37000')]: 'Tours',
+        },
         [
           {
             id: toCommuneId('37000'),
-            nom: 'Tours',
             surface: 99999,
           },
         ],

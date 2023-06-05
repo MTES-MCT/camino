@@ -169,63 +169,64 @@ export const titresFiltersQueryModify = (
     q.groupBy(`${root}.id`)
   }
 
+  // FIXME
   // TODO 2023-03-01: demander à didier leclerc de mettre à jour le plugin camino qgis pour utiliser le split communes/regions/departements...
-  if (territoires) {
-    const territoiresArray = stringSplit(territoires)
+  // if (territoires) {
+  //   const territoiresArray = stringSplit(territoires)
 
-    const departementIds: DepartementId[] = territoiresArray.flatMap(territoire => {
-      const result: DepartementId[] = []
-      if (isPaysId(territoire)) {
-        result.push(...regionsStatic.filter(({ paysId }) => paysId === territoire).flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id)))
-      } else {
-        result.push(
-          ...regionsStatic
-            .filter(({ nom }) => nom.toLowerCase().includes(territoire.toLowerCase()))
-            .flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id))
-        )
+  //   const departementIds: DepartementId[] = territoiresArray.flatMap(territoire => {
+  //     const result: DepartementId[] = []
+  //     if (isPaysId(territoire)) {
+  //       result.push(...regionsStatic.filter(({ paysId }) => paysId === territoire).flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id)))
+  //     } else {
+  //       result.push(
+  //         ...regionsStatic
+  //           .filter(({ nom }) => nom.toLowerCase().includes(territoire.toLowerCase()))
+  //           .flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id))
+  //       )
 
-        result.push(...departementsStatic.filter(({ nom, id }) => nom.toLowerCase().includes(territoire.toLowerCase()) || id === territoire).map(({ id }) => id))
-      }
+  //       result.push(...departementsStatic.filter(({ nom, id }) => nom.toLowerCase().includes(territoire.toLowerCase()) || id === territoire).map(({ id }) => id))
+  //     }
 
-      return result
-    })
+  //     return result
+  //   })
 
-    q.leftJoinRelated(jointureFormat(name, 'communes'))
-      .where(b => {
-        territoiresArray.forEach(t => {
-          b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communes.nom'), `%${t.toLowerCase()}%`])
-          b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communes.id'), t])
-        })
-        b.orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
-      })
-      .groupBy(`${root}.id`)
-  }
+  //   q.leftJoinRelated(jointureFormat(name, 'communes'))
+  //     .where(b => {
+  //       territoiresArray.forEach(t => {
+  //         b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communes.nom'), `%${t.toLowerCase()}%`])
+  //         b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communes.id'), t])
+  //       })
+  //       b.orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
+  //     })
+  //     .groupBy(`${root}.id`)
+  // }
 
-  if (communes) {
-    const communesArray = stringSplit(communes)
-    q.leftJoinRelated(`${jointureFormat(name, 'communes')} as communesFilter`)
-      .where(b => {
-        communesArray.forEach(t => {
-          b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communesFilter.nom'), `%${t.toLowerCase()}%`])
-          b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communesFilter.id'), t])
-        })
-      })
-      .groupBy(`${root}.id`)
-  }
-  const departementIds: DepartementId[] = []
-  if (departements) {
-    departementIds.push(...departements)
-  }
+  // if (communes) {
+  //   const communesArray = stringSplit(communes)
+  //   q.leftJoinRelated(`${jointureFormat(name, 'communes')} as communesFilter`)
+  //     .where(b => {
+  //       communesArray.forEach(t => {
+  //         b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communesFilter.nom'), `%${t.toLowerCase()}%`])
+  //         b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communesFilter.id'), t])
+  //       })
+  //     })
+  //     .groupBy(`${root}.id`)
+  // }
+  // const departementIds: DepartementId[] = []
+  // if (departements) {
+  //   departementIds.push(...departements)
+  // }
 
-  if (regions) {
-    departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
-  }
+  // if (regions) {
+  //   departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
+  // }
 
-  if (departementIds.length > 0) {
-    q.leftJoinRelated(`${jointureFormat(name, 'communes')} as departementsFilter`)
-      .whereIn(fieldFormat(name, 'departementsFilter.departementId'), departementIds.filter(onlyUnique))
-      .groupBy(`${root}.id`)
-  }
+  // if (departementIds.length > 0) {
+  //   q.leftJoinRelated(`${jointureFormat(name, 'communes')} as departementsFilter`)
+  //     .whereIn(fieldFormat(name, 'departementsFilter.departementId'), departementIds.filter(onlyUnique))
+  //     .groupBy(`${root}.id`)
+  // }
 
   if (facadesMaritimes && facadesMaritimes.length > 0) {
     const secteurs = facadesMaritimes.flatMap(facade => getSecteurs(facade))

@@ -11,11 +11,11 @@ import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Journaux from './journaux.js'
 
-// FIXME supprimer departementId de la table communes
-// FIXME supprimer la table titres_communes (remplacer par colonne jsonb avec id et surface)
-// FIXME supprimer la table titres_forets (remplacer par colonne jsonb avec id)
-// FIXME mettre les forêts dans le common
-// FIXME le monthly doit remonter les erreurs si les forêts récupérées ne matchent pas avec le common
+// [X] FIXME supprimer departementId de la table communes
+// [X] FIXME mettre les forêts dans le common
+// [x] FIXME supprimer la table titres_communes (remplacer par colonne jsonb avec id et surface)
+// [x] FIXME supprimer la table titres_forets (remplacer par colonne jsonb avec id)
+// [x] FIXME le monthly doit remonter les erreurs si les forêts récupérées ne matchent pas avec le common
 // Ajouter une route pour récupérer les noms des communes à partir de leurs IDs
 // attention aux filtres par territoire
 // attention aux administrations locales des étapes

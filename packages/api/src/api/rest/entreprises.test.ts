@@ -73,7 +73,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
             surface: 1006827,
           },
         ],
@@ -84,7 +83,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
             surface: 6036587,
           },
         ],
@@ -99,7 +97,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
             surface: 19805494,
           },
         ],
@@ -112,7 +109,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
             surface: 5143845,
           },
         ],
@@ -125,7 +121,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97310'),
-            nom: 'Roura',
             surface: 7676552,
           },
         ],
@@ -138,7 +133,6 @@ describe('construit le corps de la requête pour openFisca', () => {
         communes: [
           {
             id: toCommuneId('97311'),
-            nom: 'Saint-Laurent-du-Maroni',
             surface: 35604009,
           },
         ],

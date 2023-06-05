@@ -64,7 +64,7 @@ export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?:
   console.info()
   console.info('administrations locales associées aux étapes…')
 
-  const etapes = await titresEtapesGet({ titresEtapesIds }, { fields: { communes: { id: {} } } }, userSuper)
+  const etapes = await titresEtapesGet({ titresEtapesIds }, { fields: { id: {} } }, userSuper)
   const titresEtapesAdministrationsLocalesUpdated: {
     titreEtapeId: string
     administrations: AdministrationId[]

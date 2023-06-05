@@ -38,7 +38,7 @@ describe("administrations d'une étape", () => {
         communes: [
           {
             id: toCommuneId('97300'),
-            nom: 'paris',
+            surface: 12,
           },
         ],
       },
@@ -51,7 +51,7 @@ describe("administrations d'une étape", () => {
         communes: [
           {
             id: toCommuneId('87000'),
-            nom: 'issy',
+            surface: 12,
           },
         ],
       },
@@ -73,8 +73,8 @@ describe("administrations d'une étape", () => {
         ordre: 2,
         date: toCaminoDate('1988-03-11'),
         communes: [
-          { id: toCommuneId('29200'), nom: 'nom de commune' },
-          { id: toCommuneId('29300'), nom: 'nom autre commune' },
+          { id: toCommuneId('29200'), surface: 12 },
+          { id: toCommuneId('29300'), surface: 12 },
         ],
       },
     ]

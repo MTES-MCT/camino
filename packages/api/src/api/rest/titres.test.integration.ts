@@ -15,6 +15,7 @@ import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { constants } from 'http2'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -26,7 +27,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
 
-  await knex('communes').insert({ id: 97300, nom: 'Une ville en Guyane', departement_id: 973 })
+  await knex('communes').insert({ id: 97300, nom: 'Une ville en Guyane' })
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {
@@ -47,6 +48,7 @@ beforeAll(async () => {
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
+        communes: [{ id: toCommuneId('97300'), surface: 12 }],
       },
       {
         typeId: 'mdp',
@@ -149,7 +151,6 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
     .where('id', titre.id)
-  await knex('titres_communes').insert({ titre_etape_id: etapesCrees[0].id, commune_id: 97300, surface: 12 })
 }
 
 describe('titresONF', () => {

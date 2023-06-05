@@ -538,7 +538,7 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
             titulaires: { id: {} },
             amodiataires: { id: {} },
             substancesEtape: { id: {} },
-            communes: { id: {} },
+            pointsEtape: { id: {} },
           },
         },
         user
