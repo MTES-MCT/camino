@@ -8,6 +8,7 @@ fi
 
 echo 'Mise en place des fichiers de prod'
 rm -rf /srv/backups/*
+source /srv/scripts/restic_data
 restic restore latest --no-lock -t /
 rsync --delete -r /srv/backups/files/ /srv/www/camino/files
 echo "Arrêt de l'api et de keycloak"
