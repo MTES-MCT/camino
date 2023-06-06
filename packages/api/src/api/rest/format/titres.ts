@@ -44,8 +44,8 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
     pool,
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
   )
-  
-return titres.map(titre => {
+
+  return titres.map(titre => {
     if (!titre.secteursMaritime) {
       throw new Error('les secteurs maritimes ne sont pas chargés')
     }

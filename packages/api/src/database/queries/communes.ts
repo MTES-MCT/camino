@@ -8,7 +8,7 @@ export const getCommunesIndex = async (pool: Pool, ids: CommuneId[]): Promise<Re
 
   return communes.reduce<Record<CommuneId, string>>((acc, commune) => {
     acc[commune.id] = commune.nom
-    
-return acc
+
+    return acc
   }, {})
 }
