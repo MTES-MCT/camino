@@ -169,7 +169,6 @@ export const titresFiltersQueryModify = (
     q.groupBy(`${root}.id`)
   }
 
-  // FIXME
   // TODO 2023-03-01: demander à didier leclerc de mettre à jour le plugin camino qgis pour utiliser le split communes/regions/departements...
   if (territoires) {
     const territoiresArray = stringSplit(territoires)

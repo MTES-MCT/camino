@@ -182,7 +182,6 @@ export const titreTerritoiresFind = (
     regions: RegionLabel[]
   } = { communes: [], departements: [], regions: [] }
 
-  // const communesWithNames = communes ? await dbQueryAndValidate(getCommunes, {ids: communes.map(({id}) => id).filter(isNotNullNorUndefined)}, pool, getCommunesValidator) : []
   getDepartementsBySecteurs(secteursMaritime ?? [])
     .filter(onlyUnique)
     .forEach(departementId => {

@@ -184,7 +184,7 @@ export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoR
       urlParams.append(key, params)
     } else {
       for (const param of params) {
-        urlParams.append(key, param)
+        urlParams.append(`${key}[]`, param)
       }
     }
   })

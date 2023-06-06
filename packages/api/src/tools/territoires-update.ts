@@ -9,12 +9,18 @@ import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
 import { ForetId, ForetIds, Forets } from 'camino-common/src/static/forets.js'
+import {Pool} from 'pg'
+import { insertCommune } from '../database/queries/communes.queries.js'
+import { dbQueryAndValidate } from '../pg-database.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
+import {z} from 'zod'
+
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
 const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
-const communesUpdate = async () => {
+const communesUpdate = async (pool: Pool) => {
   const communesIdsKnown: string[] = (await Communes.query()).map(({ id }) => id)
   const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
@@ -52,10 +58,11 @@ const communesUpdate = async () => {
             nom: commune.properties.nom,
           })
         } else {
-          await knex('communes').insert({
-            id: commune.properties.code,
+          await dbQueryAndValidate(insertCommune,{
+            id: toCommuneId(commune.properties.code),
             nom: commune.properties.nom,
-          })
+          }, pool, z.void() )
+          
         }
       } catch (e) {
         console.error(commune.properties.nom, e)
@@ -230,10 +237,10 @@ const sdomZonesUpdate = async () => {
   }
 }
 
-export async function updateTerritoires() {
+export async function updateTerritoires(pool: Pool) {
   console.info('Mise à jour des territoires')
   try {
-    await communesUpdate()
+    await communesUpdate(pool)
   } catch (e) {
     console.error(`impossible de mettre à jour les communes`, e)
   }

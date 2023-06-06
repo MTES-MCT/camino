@@ -34,9 +34,14 @@ describe('getCommunes', () => {
     await dbQueryAndValidate(insertCommune, {id: toCommuneId('37000'), nom: 'Tours'}, dbPool, z.void())
     await dbQueryAndValidate(insertCommune, {id: toCommuneId('31000'), nom: 'Toulouse'}, dbPool, z.void())
 
-    const tested = await restCall(dbPool, '/rest/communes', { }, undefined, {['ids[]']: ['72000', '37000']})
+    let tested = await restCall(dbPool, '/rest/communes', { }, undefined, {ids: ['72000', '37000']})
 
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
     expect(tested.body).toStrictEqual([{id: toCommuneId('72000'), nom: 'Le Mans'}, {id: toCommuneId('37000'), nom: 'Tours'}])
+
+    tested = await restCall(dbPool, '/rest/communes', { }, undefined, {ids: ['72000']})
+
+    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(tested.body).toStrictEqual([{id: toCommuneId('72000'), nom: 'Le Mans'}])
   })
 })
