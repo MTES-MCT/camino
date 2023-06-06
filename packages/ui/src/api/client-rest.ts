@@ -10,12 +10,9 @@ type UiRestRoute = string & { __camino: 'RestRoute' }
 
 const baseRoute = '/apiUrl'
 
-const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: CaminoRestParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
-  const urlParams = new URLSearchParams()
-  Object.keys(searchParams).forEach(key => {
-    urlParams.append(key, searchParams[key])
-  })
-  return `${baseRoute}${getRestRoute(route, params)}?${urlParams}` as UiRestRoute
+const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): UiRestRoute => {
+
+  return `${baseRoute}${getRestRoute(route, params, searchParams)}` as UiRestRoute
 }
 
 // TODO 2023-05-25: move into Download component and make download component display href
@@ -27,7 +24,7 @@ const callFetch = async <T extends CaminoRestRoute>(
   path: T,
   params: CaminoRestParams<T>,
   method: 'post' | 'put' | 'get' | 'delete',
-  searchParams: Record<string, string> = {},
+  searchParams: Record<string, string | string[]> = {},
   body?: any
 ): Promise<any> => {
   const url = getUiRestRoute(path, params, searchParams)
@@ -55,10 +52,10 @@ const callFetch = async <T extends CaminoRestRoute>(
 export const getWithJson = async <T extends GetRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
-  searchParams: Record<string, string> = {}
+  searchParams: Record<string, string | string[]> = {}
 ): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
 
-export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string> = {}): Promise<void> =>
+export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string| string[]> = {}): Promise<void> =>
   await callFetch(path, params, 'delete', searchParams)
 
 export const postWithJson = async <T extends PostRestRoutes>(

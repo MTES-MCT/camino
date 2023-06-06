@@ -38,3 +38,20 @@ export interface IGetLastJournalQuery {
   result: IGetLastJournalResult;
 }
 
+/** 'GetTitreCommunes' parameters type */
+export interface IGetTitreCommunesParams {
+  id?: string | null | void;
+}
+
+/** 'GetTitreCommunes' return type */
+export interface IGetTitreCommunesResult {
+  id: string;
+  nom: string;
+}
+
+/** 'GetTitreCommunes' query type */
+export interface IGetTitreCommunesQuery {
+  params: IGetTitreCommunesParams;
+  result: IGetTitreCommunesResult;
+}
+

@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { newEntrepriseId, toDocumentId } from 'camino-common/src/entreprise'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'

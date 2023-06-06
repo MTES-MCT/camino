@@ -1,7 +1,7 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = ['domaines', 'points', 'references', 'etapesTypes', 'titresTypes']
-const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
-const titreFieldsToRemove: string[] = ['geojsonCentre', 'references', 'communes']
+const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps', 'communes']
+const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
 const titrePropsEtapesFields = ['surface', 'substances']
 

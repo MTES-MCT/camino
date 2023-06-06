@@ -22,6 +22,7 @@ console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
+let titreId1: string | null = null
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
@@ -39,7 +40,7 @@ beforeAll(async () => {
     {}
   )
 
-  await createTitreWithEtapes(
+  titreId1 = await createTitreWithEtapes(
     'titre1',
     [
       {
@@ -151,6 +152,7 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
     .where('id', titre.id)
+    return titre.id
 }
 
 describe('titresONF', () => {
@@ -519,4 +521,16 @@ test('utilisateurTitreAbonner', async () => {
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+})
+
+test('peut récupérer les communes d’un titre', async () => {
+
+  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, userSuper)
+
+  expect(tested.statusCode).toBe(200)
+  expect(tested.body).toEqual([{ id: '97300', nom: 'Une ville en Guyane' }])
+
+  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, undefined)
+
+  expect(tested.statusCode).toBe(403)
 })

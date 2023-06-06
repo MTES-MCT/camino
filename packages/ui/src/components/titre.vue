@@ -23,11 +23,12 @@
     />
 
     <TitreTerritoires
-      :communes="titre.communes ?? []"
+      :titreId="titre.id"
       :forets="titre.forets ?? []"
       :sdomZones="titre.sdomZones ?? []"
       :surface="titre.surface ?? 0"
       :secteursMaritimes="titre.secteursMaritime ?? []"
+      :apiClient="apiClient()"
     />
 
     <div class="line width-full mb-xl" />

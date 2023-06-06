@@ -17,3 +17,18 @@ export interface IGetCommunesQuery {
   result: IGetCommunesResult;
 }
 
+/** 'InsertCommune' parameters type */
+export interface IInsertCommuneParams {
+  id?: string | null | void;
+  nom?: string | null | void;
+}
+
+/** 'InsertCommune' return type */
+export type IInsertCommuneResult = void;
+
+/** 'InsertCommune' query type */
+export interface IInsertCommuneQuery {
+  params: IInsertCommuneParams;
+  result: IInsertCommuneResult;
+}
+

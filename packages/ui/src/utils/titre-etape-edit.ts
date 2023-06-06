@@ -164,12 +164,11 @@ type CaminoDocumentEdit = CaminoDocument & {
   fichierNouveau: null
 }
 
-export type EtapeEdit = Omit<Etape, 'administrations' | 'documents' | 'communes' | 'points'> & { documents: CaminoDocument[] } & EtapePointEnhanced
+export type EtapeEdit = Omit<Etape, 'administrations' | 'documents' | 'points'> & { documents: CaminoDocument[] } & EtapePointEnhanced
 export const etapeEditFormat = (etape: Etape): EtapeEdit => {
   const newEtape: Etape = cloneAndClean(etape)
 
   delete newEtape.administrations
-  delete newEtape.communes
   delete newEtape.geojsonPoints
   delete newEtape.geojsonMultiPolygon
   const entreprisesPropIds = ['titulaires', 'amodiataires'] as const

@@ -8,7 +8,7 @@ import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre, getTitreDate } from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre, getTitreDate, getTitreCommunes } from '../api/rest/titres.js'
 import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntrepriseDocuments, postEntrepriseDocument, deleteEntrepriseDocument } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -21,6 +21,7 @@ import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
+import { getCommunes } from '../api/rest/communes.js'
 const contentTypes: Record<DownloadFormat, string> = {
   csv: 'text/csv',
   geojson: 'application/geo+json',
@@ -92,6 +93,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
+  "/rest/titres/:id/communes": {get: getTitreCommunes},
   '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/demarches/:demarcheId': { get: getDemarche },
@@ -114,6 +116,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
+  '/rest/communes': { get: getCommunes },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
 } as const

@@ -25,3 +25,7 @@ export type DeepReadonly<T> = {
 export const exhaustiveCheck = (param: never): never => {
   throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
 }
+export type NonEmptyArray<T> = [T, ...T[]];
+export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
+  return arr.length > 0;
+}

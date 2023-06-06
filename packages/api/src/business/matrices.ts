@@ -12,9 +12,10 @@ import { DepartementLabel, Departements, toDepartementId } from 'camino-common/s
 import fs from 'fs'
 import carbone from 'carbone'
 import { Pool } from 'pg'
-import { getCommunes, GetCommunesOutput, getCommunesValidator } from '../database/queries/communes.queries.js'
+import { getCommunes } from '../database/queries/communes.queries.js'
 import { dbQueryAndValidate } from '../pg-database.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
 
 const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
 
@@ -162,7 +163,7 @@ export const buildMatrices = (
   titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[],
   annee: number,
   openfiscaConstants: OpenfiscaConstants,
-  communes: GetCommunesOutput[]
+  communes: Commune[]
 ): {
   matrice1121: Matrice1121[]
   matrice1122: Matrice1122[]
@@ -451,7 +452,7 @@ export const matrices = async (annee: number, pool: Pool) => {
     .flatMap(({ communes }) => communes?.map(({ id }) => id))
     .filter(onlyUnique)
     .filter(isNotNullNorUndefined)
-  const communes = await dbQueryAndValidate(getCommunes, { ids: communesIds }, pool, getCommunesValidator)
+  const communes = isNonEmptyArray(communesIds) ? await dbQueryAndValidate(getCommunes, { ids: communesIds }, pool, communeValidator) : []
 
   const body = bodyBuilder(activites, activitesTrimestrielles, titres, annee, entreprises)
   if (Object.keys(body.articles).length > 0) {
