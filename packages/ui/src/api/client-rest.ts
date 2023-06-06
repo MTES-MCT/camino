@@ -11,7 +11,6 @@ type UiRestRoute = string & { __camino: 'RestRoute' }
 const baseRoute = '/apiUrl'
 
 const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): UiRestRoute => {
-
   return `${baseRoute}${getRestRoute(route, params, searchParams)}` as UiRestRoute
 }
 
@@ -55,7 +54,7 @@ export const getWithJson = async <T extends GetRestRoutes>(
   searchParams: Record<string, string | string[]> = {}
 ): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> => await callFetch(path, params, 'get', searchParams)
 
-export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string| string[]> = {}): Promise<void> =>
+export const deleteWithJson = async <T extends DeleteRestRoutes>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}): Promise<void> =>
   await callFetch(path, params, 'delete', searchParams)
 
 export const postWithJson = async <T extends PostRestRoutes>(

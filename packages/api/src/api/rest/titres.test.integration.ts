@@ -31,7 +31,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
 
-  await dbQueryAndValidate(insertCommune, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' }, pool, z.void() )
+  await dbQueryAndValidate(insertCommune, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' }, pool, z.void())
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {
@@ -155,7 +155,8 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
     .where('id', titre.id)
-    return titre.id
+
+  return titre.id
 }
 
 describe('titresONF', () => {
@@ -527,7 +528,6 @@ test('utilisateurTitreAbonner', async () => {
 })
 
 test('peut récupérer les communes d’un titre', async () => {
-
   let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, userSuper)
 
   expect(tested.statusCode).toBe(200)

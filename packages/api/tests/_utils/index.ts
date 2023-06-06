@@ -39,7 +39,13 @@ export const restUploadCall = async (pool: Pool, user: TestUser) => {
   return jwtSet(req, user)
 }
 
-export const restCall = async <Route extends GetRestRoutes>(pool: Pool, route: Route, params: CaminoRestParams<Route>, user: TestUser | undefined, searchParams?: Record<string, string | string[]>): Promise<request.Test> => {
+export const restCall = async <Route extends GetRestRoutes>(
+  pool: Pool,
+  route: Route,
+  params: CaminoRestParams<Route>,
+  user: TestUser | undefined,
+  searchParams?: Record<string, string | string[]>
+): Promise<request.Test> => {
   const req = request(app(pool)).get(getRestRoute(route, params, searchParams))
 
   return jwtSet(req, user)

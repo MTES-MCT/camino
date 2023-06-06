@@ -8,7 +8,19 @@ import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner, getTitre, getTitreDate, getTitreCommunes } from '../api/rest/titres.js'
+import {
+  getTitreLiaisons,
+  postTitreLiaisons,
+  removeTitre,
+  titresDREAL,
+  titresONF,
+  titresPTMG,
+  updateTitre,
+  utilisateurTitreAbonner,
+  getTitre,
+  getTitreDate,
+  getTitreCommunes,
+} from '../api/rest/titres.js'
 import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntrepriseDocuments, postEntrepriseDocument, deleteEntrepriseDocument } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -93,7 +105,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
-  "/rest/titres/:id/communes": {get: getTitreCommunes},
+  '/rest/titres/:id/communes': { get: getTitreCommunes },
   '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/demarches/:demarcheId': { get: getDemarche },

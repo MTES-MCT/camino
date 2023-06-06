@@ -3,7 +3,6 @@ import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest
 import { CaminoDate } from 'camino-common/src/date'
 import { Commune } from 'camino-common/src/static/communes'
 
-
 export interface TitreApiClient {
   loadTitreSections: (titreId: string) => Promise<Section[]>
   removeTitre: (titreId: string) => Promise<void>

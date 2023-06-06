@@ -103,7 +103,7 @@ export const CaminoRestRoutes = {
   '/rest/titresPTMG': { get: { output: z.array(titrePtmgValidator) } },
   '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: { id: z.string() }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  "/rest/titres/:id/communes": { params: {id: z.string()}, get: {output: z.array(communeValidator)}},
+  '/rest/titres/:id/communes': { params: { id: z.string() }, get: { output: z.array(communeValidator) } },
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },
@@ -121,7 +121,7 @@ export const CaminoRestRoutes = {
   '/rest/entreprises/:entrepriseId/documents/:documentId': { params: { entrepriseId: entrepriseIdValidator, documentId: documentIdValidator }, delete: true },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
-  '/rest/communes': {get: {output:z.array(communeValidator) }},
+  '/rest/communes': { get: { output: z.array(communeValidator) } },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: documentIdValidator }, download: true },
@@ -176,7 +176,6 @@ export type CaminoRestParams<Route extends CaminoRestRoute> = (typeof CaminoRest
   : {}
 
 export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoRestParams<T>, searchParams: Record<string, string | string[]> = {}) => {
-
   const urlParams = new URLSearchParams()
   Object.keys(searchParams).forEach(key => {
     const params = searchParams[key]
@@ -188,11 +187,11 @@ export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoR
       }
     }
   })
-  
+
   const url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), path)
   // clean url
 
-  return `${url.replace(/(\(|\)|\/?:[^/]+)/g, '')}${Object.keys(searchParams).length !== 0 ? `?${urlParams}`: ''}`
+  return `${url.replace(/(\(|\)|\/?:[^/]+)/g, '')}${Object.keys(searchParams).length !== 0 ? `?${urlParams}` : ''}`
 }
 
 export const isCaminoRestRoute = (route: string): route is CaminoRestRoute => IDS.includes(route)

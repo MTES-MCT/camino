@@ -37,13 +37,15 @@ order by
 LIMIT 1
 `
 
-export const getTitreCommunes = sql<Redefine<IGetTitreCommunesQuery, {id: string}, Commune>>`
-select 
-    c.id, c.nom
-from 
+export const getTitreCommunes = sql<Redefine<IGetTitreCommunesQuery, { id: string }, Commune>>`
+select
+    c.id,
+    c.nom
+from
     titres t
-    join titres_etapes te on te.id = t.props_titre_etapes_ids->>'points'
+    join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
     join jsonb_array_elements(te.communes) as etapes_communes on true
-    join communes c on c.id = etapes_communes->>'id' 
-where t.id = $id
+    join communes c on c.id = etapes_communes ->> 'id'
+where
+    t.id = $ id
 `

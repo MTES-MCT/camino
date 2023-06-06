@@ -1,7 +1,7 @@
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { CommuneId, communeValidator } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
-import { getCommunes} from './communes.queries.js'
+import { getCommunes } from './communes.queries.js'
 import { isNonEmptyArray } from 'camino-common/src/typescript-tools.js'
 
 export const getCommunesIndex = async (pool: Pool, ids: CommuneId[]): Promise<Record<CommuneId, string>> => {

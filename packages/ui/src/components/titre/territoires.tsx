@@ -33,7 +33,7 @@ type RegionsComputed = {
   departements: { id: DepartementId; nom: string; communes: string[] }[]
 }[]
 
-function CommunesEtRegions({communes}: {communes: Commune[]}) {
+function CommunesEtRegions({ communes }: { communes: Commune[] }) {
   if (communes.length) {
     const regions: RegionsComputed = communes.reduce((acc, commune) => {
       const departement = Departements[toDepartementId(commune.id)]
@@ -88,7 +88,7 @@ function CommunesEtRegions({communes}: {communes: Commune[]}) {
   return null
 }
 
-function ForetsComp({forets}: {forets: ForetId[]}) {
+function ForetsComp({ forets }: { forets: ForetId[] }) {
   return forets.length ? (
     <div>
       <div>
@@ -139,15 +139,14 @@ function Surface(surface?: number) {
 }
 
 const TerritoiresSansSurface = caminoDefineComponent<Omit<TerritoiresProps, 'surface'>>(['forets', 'sdomZones', 'secteursMaritimes', 'titreId', 'apiClient'], (props: TerritoiresProps) => {
-
-  const communesAsyncData = ref<AsyncData<Commune[]>>({status: 'LOADING'})
+  const communesAsyncData = ref<AsyncData<Commune[]>>({ status: 'LOADING' })
 
   onMounted(async () => {
-    try{
-      communesAsyncData.value = {status: 'LOADING'}
+    try {
+      communesAsyncData.value = { status: 'LOADING' }
       const communes = await props.apiClient.getTitreCommunes(props.titreId)
 
-      communesAsyncData.value = {status: 'LOADED', value: communes}
+      communesAsyncData.value = { status: 'LOADED', value: communes }
     } catch (e: any) {
       console.error('error', e)
       communesAsyncData.value = {
@@ -157,16 +156,24 @@ const TerritoiresSansSurface = caminoDefineComponent<Omit<TerritoiresProps, 'sur
     }
   })
 
-  return () =>
-    <LoadingElement data={communesAsyncData.value} renderItem={(item) =><>
-      {props.forets.length || props.sdomZones?.length || props.secteursMaritimes.length || item.length ? (
-        <div class="tablet-blob-3-4">
-      <h5>Territoires</h5>
-      <CommunesEtRegions communes={item}/>
-      <ForetsComp forets={props.forets} />
-      {SdomZones(props.sdomZones)}
-      {SecteursMaritimesTsx(props.secteursMaritimes)}
-    </div>): null} </>}/>
+  return () => (
+    <LoadingElement
+      data={communesAsyncData.value}
+      renderItem={item => (
+        <>
+          {props.forets.length || props.sdomZones?.length || props.secteursMaritimes.length || item.length ? (
+            <div class="tablet-blob-3-4">
+              <h5>Territoires</h5>
+              <CommunesEtRegions communes={item} />
+              <ForetsComp forets={props.forets} />
+              {SdomZones(props.sdomZones)}
+              {SecteursMaritimesTsx(props.secteursMaritimes)}
+            </div>
+          ) : null}{' '}
+        </>
+      )}
+    />
+  )
 })
 
 export const Territoires: FunctionalComponent<TerritoiresProps> = (props: TerritoiresProps) => {

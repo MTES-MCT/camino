@@ -203,7 +203,7 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   jcf: { id: 'jcf', nom: 'Justificatif des capacités financières' },
   jct: { id: 'jct', nom: 'Justificatif des capacités techniques' },
   jeg: { id: 'jeg', nom: 'Justification d’existence du gisement' },
-  jid: { id: 'jid', nom: "Justificatif d’identité" },
+  jid: { id: 'jid', nom: 'Justificatif d’identité' },
   jpa: { id: 'jpa', nom: 'Justificatif de paiement' },
   kbi: { id: 'kbi', nom: 'Kbis' },
   lac: { id: 'lac', nom: "Lettre de saisine des services de l'administration centrale" },

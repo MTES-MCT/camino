@@ -15,8 +15,8 @@ import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import {Pool} from 'pg'
-import {z } from 'zod'
+import { Pool } from 'pg'
+import { z } from 'zod'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -36,10 +36,10 @@ describe('titresEtapesAreasUpdate', () => {
   test('met à jour les communes, forêts et zone du SDOM sur une étape', async () => {
     const baisieuxId = toCommuneId('59044')
     const saintElieId = toCommuneId('97358')
-    await dbQueryAndValidate(insertCommune, { id: saintElieId, nom: 'Saint-Élie' }, dbPool, z.void() )
-    await dbQueryAndValidate(insertCommune, { id: baisieuxId, nom: 'Baisieux' }, dbPool, z.void() )
-    await dbQueryAndValidate(insertCommune, { id: toCommuneId('97312'), nom: 'Sinnamary' }, dbPool, z.void() )
-    
+    await dbQueryAndValidate(insertCommune, { id: saintElieId, nom: 'Saint-Élie' }, dbPool, z.void())
+    await dbQueryAndValidate(insertCommune, { id: baisieuxId, nom: 'Baisieux' }, dbPool, z.void())
+    await dbQueryAndValidate(insertCommune, { id: toCommuneId('97312'), nom: 'Sinnamary' }, dbPool, z.void())
+
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('${saintElieId}','${SaintEliePerimetre}')`)
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('${baisieuxId}', '${BaisieuxPerimetre}')`)
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('97312', '${SinnamaryPerimetre}')`)

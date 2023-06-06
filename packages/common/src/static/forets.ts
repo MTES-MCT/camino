@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 // prettier-ignore
 const IDS = [  '3PI','ZDUARBAL','ZDUARMAT','BSL','BSM','BEL','CHA','CORA','COUN','PTS','CKA','CPG','DBR','EGY','ZDUGABAL','ZDUGAKOU','GDS','KAW','LPS','LDD','MAL','MAN','MPA','PAR','MCA','MDF','MSO','MBV','NANC','ZDUPAFAV','ZDUPAMAC','PAP','PAUL','AMO','PTI','FRG','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SLU','SPA','STE','STJ','SMA'] as const
@@ -51,12 +51,10 @@ export const Forets = {
   STE: { id: 'STE', nom: 'St Elie' },
   STJ: { id: 'STJ', nom: 'St Jean' },
   SMA: { id: 'SMA', nom: 'St Maurice' },
-} as const satisfies Record<ForetId, {id: ForetId, nom: string}>
-
+} as const satisfies Record<ForetId, { id: ForetId; nom: string }>
 
 export const foretIdValidator = z.enum(IDS)
 export type ForetId = z.infer<typeof foretIdValidator>
 export const isForetId = (value: string): value is ForetId => foretIdValidator.safeParse(value).success
 
 export const ForetIds = IDS
-

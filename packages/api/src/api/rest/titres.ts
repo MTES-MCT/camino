@@ -440,8 +440,8 @@ export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: 
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const communes = await dbQueryAndValidate(getTitreCommunesQuery, {id: titreId}, pool, communeValidator)
-      
+      const communes = await dbQueryAndValidate(getTitreCommunesQuery, { id: titreId }, pool, communeValidator)
+
       res.json(communes)
     }
   }
