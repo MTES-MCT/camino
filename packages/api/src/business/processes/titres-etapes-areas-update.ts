@@ -78,7 +78,7 @@ async function intersectForets(multipolygonGeojson: Feature, titreEtape: Pick<IT
 
   const foretsNew: ForetId[] = foretIds.data.filter(isForetId).sort()
   if (titreEtape.forets?.length !== foretsNew.length || titreEtape.forets.some((value, index) => value !== foretsNew[index])) {
-    console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${titreEtape.forets}', nouveaux: '${foretsNew}'`)
+    console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(foretsNew)}'`)
     await knex('titres_etapes')
       .update({ forets: JSON.stringify(foretsNew) })
       .where('id', titreEtape.id)
@@ -98,7 +98,7 @@ async function intersectCommunes(multipolygonGeojson: Feature, titreEtape: Pick<
 
   const communesNew: { id: CommuneId; surface: number }[] = communes.data.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
   if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
-    console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.communes}', nouveaux: '${communesNew}'`)
+    console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.communes)}', nouveaux: '${JSON.stringify(communesNew)}'`)
     await knex('titres_etapes')
       .update({ communes: JSON.stringify(communesNew) })
       .where('id', titreEtape.id)

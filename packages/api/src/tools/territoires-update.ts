@@ -50,13 +50,11 @@ const communesUpdate = async () => {
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
-            departementId: commune.properties.departement,
           })
         } else {
           await knex('communes').insert({
             id: commune.properties.code,
             nom: commune.properties.nom,
-            departementId: commune.properties.departement,
           })
         }
       } catch (e) {

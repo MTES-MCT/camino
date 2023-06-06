@@ -5,7 +5,7 @@ import { stringSplit } from './_utils.js'
 import Titres from '../models/titres.js'
 import TitresDemarches from '../models/titres-demarches.js'
 import TitresActivites from '../models/titres-activites.js'
-import { DepartementId, departements as departementsStatic } from 'camino-common/src/static/departement.js'
+import { DepartementId, departements as departementsStatic, isDepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId, regions as regionsStatic } from 'camino-common/src/static/region.js'
 import { isPaysId } from 'camino-common/src/static/pays.js'
 import { FacadesMaritimes, getSecteurs } from 'camino-common/src/static/facades.js'
@@ -171,62 +171,80 @@ export const titresFiltersQueryModify = (
 
   // FIXME
   // TODO 2023-03-01: demander à didier leclerc de mettre à jour le plugin camino qgis pour utiliser le split communes/regions/departements...
-  // if (territoires) {
-  //   const territoiresArray = stringSplit(territoires)
+  if (territoires) {
+    const territoiresArray = stringSplit(territoires)
 
-  //   const departementIds: DepartementId[] = territoiresArray.flatMap(territoire => {
-  //     const result: DepartementId[] = []
-  //     if (isPaysId(territoire)) {
-  //       result.push(...regionsStatic.filter(({ paysId }) => paysId === territoire).flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id)))
-  //     } else {
-  //       result.push(
-  //         ...regionsStatic
-  //           .filter(({ nom }) => nom.toLowerCase().includes(territoire.toLowerCase()))
-  //           .flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id))
-  //       )
+    const departementIds: DepartementId[] = territoiresArray.flatMap(territoire => {
+      const result: DepartementId[] = []
+      if (isPaysId(territoire)) {
+        result.push(...regionsStatic.filter(({ paysId }) => paysId === territoire).flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id)))
+      } else {
+        result.push(
+          ...regionsStatic
+            .filter(({ nom }) => nom.toLowerCase().includes(territoire.toLowerCase()))
+            .flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id))
+        )
 
-  //       result.push(...departementsStatic.filter(({ nom, id }) => nom.toLowerCase().includes(territoire.toLowerCase()) || id === territoire).map(({ id }) => id))
-  //     }
+        result.push(...departementsStatic.filter(({ nom, id }) => nom.toLowerCase().includes(territoire.toLowerCase()) || id === territoire).map(({ id }) => id))
+      }
 
-  //     return result
-  //   })
+      return result
+    })
 
-  //   q.leftJoinRelated(jointureFormat(name, 'communes'))
-  //     .where(b => {
-  //       territoiresArray.forEach(t => {
-  //         b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communes.nom'), `%${t.toLowerCase()}%`])
-  //         b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communes.id'), t])
-  //       })
-  //       b.orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
-  //     })
-  //     .groupBy(`${root}.id`)
-  // }
+    q.joinRelated(jointureFormat(name, 'pointsEtape'))
+    q.joinRaw(`join jsonb_array_elements(${jointureFormat(name, 'points_etape')}.communes) as c on true`)
+    q.joinRaw(`join communes on c->>'id' = communes.id`)
+      .where(b => {
+        territoiresArray.forEach(t => {
+          b.orWhereRaw('lower(communes.nom) like ? OR communes.id = ?', [`%${t.toLowerCase()}%`, t])
+        })
+        if (departementIds.length) {
+          b.orWhereRaw(
+            `((substring(c ->> 'id', 1, 2) != '97' and substring(c ->> 'id', 1, 2) in (${departementIds.map(() => '?').join(',')})) or substring(c ->> 'id', 1, 3) in (${departementIds
+              .map(() => '?')
+              .join(',')}))`,
+            [...departementIds, ...departementIds]
+          )
+        }
+      })
+      .groupBy(`${root}.id`)
+  }
 
-  // if (communes) {
-  //   const communesArray = stringSplit(communes)
-  //   q.leftJoinRelated(`${jointureFormat(name, 'communes')} as communesFilter`)
-  //     .where(b => {
-  //       communesArray.forEach(t => {
-  //         b.orWhereRaw(`lower(??) like ?`, [fieldFormat(name, 'communesFilter.nom'), `%${t.toLowerCase()}%`])
-  //         b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communesFilter.id'), t])
-  //       })
-  //     })
-  //     .groupBy(`${root}.id`)
-  // }
-  // const departementIds: DepartementId[] = []
-  // if (departements) {
-  //   departementIds.push(...departements)
-  // }
+  if (communes) {
+    const communesArray = stringSplit(communes)
+    q.leftJoinRelated(`${jointureFormat(name, 'pointsEtape')} as communes_filter`)
+    q.joinRaw(`join jsonb_array_elements(communes_filter.communes) as communes_filter_communes on true`)
+    q.joinRaw(`join communes as communes_filter_communes_communes on communes_filter_communes->>'id' = communes_filter_communes_communes.id`)
 
-  // if (regions) {
-  //   departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
-  // }
+      .where(b => {
+        communesArray.forEach(t => {
+          b.orWhereRaw('lower(communes_filter_communes_communes.nom) like ? OR communes_filter_communes_communes.id = ?', [`%${t.toLowerCase()}%`, t])
+        })
+      })
+      .groupBy(`${root}.id`)
+  }
+  let departementIds: DepartementId[] = []
+  if (departements) {
+    departementIds.push(...departements)
+  }
 
-  // if (departementIds.length > 0) {
-  //   q.leftJoinRelated(`${jointureFormat(name, 'communes')} as departementsFilter`)
-  //     .whereIn(fieldFormat(name, 'departementsFilter.departementId'), departementIds.filter(onlyUnique))
-  //     .groupBy(`${root}.id`)
-  // }
+  if (regions) {
+    departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
+  }
+
+  departementIds = departementIds.filter(onlyUnique).filter(isDepartementId)
+
+  if (departementIds.length > 0) {
+    q.leftJoinRelated(`${jointureFormat(name, 'pointsEtape')} as departements_filter`)
+      .joinRaw(`join jsonb_array_elements(departements_filter.communes) as departements_filter_communes on true`)
+      .whereRaw(
+        `((substring(departements_filter_communes ->> 'id', 1, 2) != '97' and substring(departements_filter_communes ->> 'id', 1, 2) in (${departementIds
+          .map(() => '?')
+          .join(',')})) or substring(departements_filter_communes ->> 'id', 1, 3) in (${departementIds.map(() => '?').join(',')}))`,
+        [...departementIds, ...departementIds]
+      )
+      .groupBy(`${root}.id`)
+  }
 
   if (facadesMaritimes && facadesMaritimes.length > 0) {
     const secteurs = facadesMaritimes.flatMap(facade => getSecteurs(facade))
