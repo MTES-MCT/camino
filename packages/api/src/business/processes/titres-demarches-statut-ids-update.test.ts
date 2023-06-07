@@ -3,7 +3,7 @@ import { vi, describe, expect, test } from 'vitest'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import {Pool} from 'pg'
+import { Pool } from 'pg'
 
 vi.mock('./titres-etapes-heritage-contenu-update', () => ({
   getDemarches: vi.fn().mockResolvedValue(true),
@@ -36,7 +36,7 @@ describe("statut des démarches d'un titre", () => {
             date: toCaminoDate('1988-03-11'),
             communes: [],
             contenu: {},
-            heritageContenu: {}
+            heritageContenu: {},
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -47,7 +47,7 @@ describe("statut des démarches d'un titre", () => {
             date: toCaminoDate('1988-03-06'),
             communes: [],
             contenu: {},
-            heritageContenu: {}
+            heritageContenu: {},
           },
         ],
       },
@@ -75,7 +75,7 @@ describe("statut des démarches d'un titre", () => {
             date: toCaminoDate('1988-03-11'),
             communes: [],
             contenu: {},
-            heritageContenu: {}
+            heritageContenu: {},
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -86,7 +86,7 @@ describe("statut des démarches d'un titre", () => {
             date: toCaminoDate('1988-03-06'),
             communes: [],
             contenu: {},
-            heritageContenu: {}
+            heritageContenu: {},
           },
         ],
       },
@@ -100,7 +100,7 @@ describe("statut des démarches d'un titre", () => {
     getDemarchesMock.mockResolvedValue({
       [newDemarcheId('')]: {
         id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-        titreId: 'h-cx-courdemanges-1988',
+        titreId: newTitreId('h-cx-courdemanges-1988'),
         titreTypeId: 'cxh',
         typeId: 'oct',
         statutId: 'ind',

@@ -147,7 +147,7 @@ const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuVa
 
 export const etapeFichier =
   (_pool: Pool) =>
-  async ({ params: { etapeId, fichierNom } }: { params: { etapeId?: string; fichierNom?: string } }, user: User) => {
+  async ({ params: { etapeId, fichierNom } }: { params: { etapeId?: EtapeId; fichierNom?: string } }, user: User) => {
     if (!etapeId) {
       throw new Error('id de l’étape absent')
     }

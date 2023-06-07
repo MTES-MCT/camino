@@ -167,7 +167,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
     const etapes: TitreEtapeForMachine[] = [
       {
-        id: 'idMfr',
+        id: newEtapeId('idMfr'),
 
         typeId: 'mfr',
         statutId: 'fai',
@@ -175,7 +175,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         contenu: { arm: { mecanise: true, franchissements: 2 } },
       },
       {
-        id: 'idMdp',
+        id: newEtapeId('idMdp'),
 
         typeId: 'mdp',
         statutId: 'fai',
@@ -192,14 +192,14 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
     const etapes: TitreEtapeForMachine[] = [
       {
-        id: 'idMfr',
+        id: newEtapeId('idMfr'),
         typeId: 'mfr',
         statutId: 'fai',
         date: toCaminoDate('2022-05-16'),
         contenu: { arm: { mecanise: false } },
       },
       {
-        id: 'idMdp',
+        id: newEtapeId('idMdp'),
         typeId: 'mdp',
         statutId: 'fai',
         date: toCaminoDate('2022-05-17'),
@@ -216,7 +216,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     console.warn = vi.fn()
     const etapes: TitreEtapeForMachine[] = [
       {
-        id: 'idMfr',
+        id: newEtapeId('idMfr'),
         date: toCaminoDate('2021-11-02'),
         typeId: 'mfr',
         statutId: 'fai',
@@ -229,7 +229,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 3,
       },
       {
-        id: 'idrcm',
+        id: newEtapeId('idrcm'),
         date: toCaminoDate('2021-11-17'),
         typeId: 'rcm',
         statutId: 'fai',
@@ -242,28 +242,28 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 7,
       },
       {
-        id: 'idMcp',
+        id: newEtapeId('idMcp'),
         date: toCaminoDate('2021-11-05'),
         typeId: 'mcp',
         statutId: 'inc',
         ordre: 5,
       },
       {
-        id: 'idmcp',
+        id: newEtapeId('idmcp'),
         date: toCaminoDate('2021-11-17'),
         typeId: 'mcp',
         statutId: 'com',
         ordre: 8,
       },
       {
-        id: 'ideof',
+        id: newEtapeId('ideof'),
         date: toCaminoDate('2021-11-22'),
         typeId: 'eof',
         statutId: 'fai',
         ordre: 11,
       },
       {
-        id: 'iddae',
+        id: newEtapeId('iddae'),
         date: toCaminoDate('2021-10-15'),
         typeId: 'dae',
         statutId: 'exe',
@@ -271,7 +271,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 1,
       },
       {
-        id: 'idmcr',
+        id: newEtapeId('idmcr'),
         date: toCaminoDate('2021-11-22'),
         typeId: 'mcr',
         statutId: 'fav',
@@ -279,7 +279,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 10,
       },
       {
-        id: 'idmcb',
+        id: newEtapeId('idmcb'),
         date: toCaminoDate('2021-12-09'),
         typeId: 'mcb',
         statutId: 'fai',
@@ -287,35 +287,35 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 13,
       },
       {
-        id: 'idedm',
+        id: newEtapeId('idedm'),
         date: toCaminoDate('2021-11-30'),
         typeId: 'edm',
         statutId: 'fav',
         ordre: 12,
       },
       {
-        id: 'idvfd',
+        id: newEtapeId('idvfd'),
         date: toCaminoDate('2021-11-19'),
         typeId: 'vfd',
         statutId: 'fai',
         ordre: 9,
       },
       {
-        id: 'idpfd',
+        id: newEtapeId('idpfd'),
         date: toCaminoDate('2021-10-26'),
         typeId: 'pfd',
         statutId: 'fai',
         ordre: 2,
       },
       {
-        id: 'idmdp',
+        id: newEtapeId('idmdp'),
         date: toCaminoDate('2021-11-02'),
         typeId: 'mdp',
         statutId: 'fai',
         ordre: 4,
       },
       {
-        id: 'idmcm',
+        id: newEtapeId('idmcm'),
         date: toCaminoDate('2021-11-05'),
         typeId: 'mcm',
         statutId: 'fai',
@@ -332,7 +332,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
     const etapes: TitreEtapeForMachine[] = [
       {
-        id: 'id3',
+        id: newEtapeId('id3'),
         typeId: 'mfr',
         statutId: 'fai',
         date: toCaminoDate('2022-06-23'),
@@ -345,14 +345,14 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 3,
       },
       {
-        id: 'id1',
+        id: newEtapeId('id1'),
         typeId: 'dae',
         statutId: 'exe',
         date: toCaminoDate('2021-06-22'),
         ordre: 1,
       },
       {
-        id: 'id4',
+        id: newEtapeId('id4'),
 
         typeId: 'mdp',
         statutId: 'fai',
@@ -360,7 +360,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         ordre: 4,
       },
       {
-        id: 'id2',
+        id: newEtapeId('id2'),
 
         typeId: 'pfd',
         statutId: 'fai',

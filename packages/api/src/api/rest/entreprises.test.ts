@@ -50,19 +50,19 @@ describe('construit le corps de la requête pour openFisca', () => {
 
   test('avec activités', () => {
     const activitesAnnuelles = [
-      { titreId: 'titre2', contenu: { substancesFiscales: { auru: 39.715 } } },
-      { titreId: 'titre3', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre1', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre4', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre5', contenu: { substancesFiscales: { auru: 8.91 } } },
+      { titreId: newTitreId('titre2'), contenu: { substancesFiscales: { auru: 39.715 } } },
+      { titreId: newTitreId('titre3'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre1'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre4'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre5'), contenu: { substancesFiscales: { auru: 8.91 } } },
     ]
     const activitesTrimestrielles = [
       {
-        titreId: 'titre2',
+        titreId: newTitreId('titre2'),
         contenu: { renseignements: { environnement: 7300 } },
       },
       {
-        titreId: 'titre3',
+        titreId: newTitreId('titre3'),
         contenu: { renseignements: { environnement: 1000 } },
       },
     ]

@@ -24,7 +24,7 @@ import {
 } from './titres.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
@@ -99,7 +99,7 @@ export const CaminoRestRoutes = {
   '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdValidator }, get: { output: demarcheGetValidator } },
   '/rest/titres/:titreId': { params: { titreId: titreIdValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
-  '/rest/titres/:titreId/date': { params: { titreId:titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
+  '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresPTMG': { get: { output: z.array(titrePtmgValidator) } },
   '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },

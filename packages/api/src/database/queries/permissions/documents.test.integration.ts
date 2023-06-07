@@ -10,7 +10,7 @@ import Document from '../../models/documents.js'
 import { documentCreate, documentGet } from '../documents.js'
 import { etapeTypeDocumentTypeUsedCheck } from './documents.js'
 import { Knex } from 'knex'
-import { newDemarcheId, newDocumentId, newEtapeId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newDocumentId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -88,7 +88,7 @@ describe('documentSupprimer', () => {
     await TitresActivites.query().insertGraph({
       id: 'titreActiviteId',
       typeId: 'grx',
-      titreId: '',
+      titreId: newTitreId(''),
       date: getCurrent(),
       activiteStatutId,
       periodeId: 1,
