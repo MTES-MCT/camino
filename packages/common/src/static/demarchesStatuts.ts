@@ -1,6 +1,6 @@
 import { Definition } from '../definition.js'
 import { Couleur } from './couleurs.js'
-import {z } from 'zod'
+import { z } from 'zod'
 
 const IDS = ['acc', 'cls', 'dep', 'des', 'eco', 'fpm', 'ind', 'ini', 'ins', 'rej', 'ter'] as const
 export const DemarchesStatutsIds = {
@@ -15,8 +15,7 @@ export const DemarchesStatutsIds = {
   EnInstruction: 'ins',
   Rejete: 'rej',
   Termine: 'ter',
-} as const satisfies Record<string, typeof IDS[number]>
-
+} as const satisfies Record<string, (typeof IDS)[number]>
 
 export const demarcheStatutIdValidator = z.enum(IDS)
 export type DemarcheStatutId = z.infer<typeof demarcheStatutIdValidator>

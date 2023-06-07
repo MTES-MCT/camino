@@ -126,7 +126,6 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     )
   })
 
-
   test('ne peut pas créer une "rpu" après une "dex" rejetée', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14'), paysId: PAYS_IDS['République Française'] },
@@ -151,9 +150,9 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-06-01') },
     ]
 
-    expect(() => 
-    orderAndInterpretMachine(prmOctMachine,etapes)
-    ).toThrowErrorMatchingInlineSnapshot('"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"ordre\\":3,\\"date\\":\\"2022-06-01\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"spp_fai\\",\\"mcr_fav\\",\\"anf_fai\\",\\"ssr_fai\\",\\"aof_fav\\",\\"ppu_fai\\",\\"ppc_ter\\",\\"apd_fav\\",\\"app_fav\\",\\"cac_fai\\",\\"scg_fai\\",\\"rcg_fav\\",\\"acg_fav\\",\\"sas_fai\\",\\"dex_rej\\",\\"npp_fai\\",\\"mno_fai\\"]\'. The event {\\"type\\":\\"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS\\"} should be one of \'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF,RENDRE_DECISION_ABROGATION,RENDRE_DECISION_RETRAIT\'"')
+    expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"ordre\\":3,\\"date\\":\\"2022-06-01\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"spp_fai\\",\\"mcr_fav\\",\\"anf_fai\\",\\"ssr_fai\\",\\"aof_fav\\",\\"ppu_fai\\",\\"ppc_ter\\",\\"apd_fav\\",\\"app_fav\\",\\"cac_fai\\",\\"scg_fai\\",\\"rcg_fav\\",\\"acg_fav\\",\\"sas_fai\\",\\"dex_rej\\",\\"npp_fai\\",\\"mno_fai\\"]\'. The event {\\"type\\":\\"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS\\"} should be one of \'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF,RENDRE_DECISION_ABROGATION,RENDRE_DECISION_RETRAIT\'"'
+    )
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`

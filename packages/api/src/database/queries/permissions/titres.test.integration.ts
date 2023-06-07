@@ -51,8 +51,8 @@ describe('titresQueryModify', () => {
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [
           {
-         id: demarcheId, 
-         titreId: id,
+            id: demarcheId,
+            titreId: id,
             typeId: 'oct',
             etapes: [
               {

@@ -263,11 +263,14 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
   }
 }
 
-export const documentsLier = async (context: Context, documentIds: string[],
+export const documentsLier = async (
+  context: Context,
+  documentIds: string[],
 
-  {parentId, propParentId}: {parentId: EtapeId, propParentId:  'titreEtapeId'} | {parentId: string, propParentId: 'titreActiviteId'} , 
-  
-  oldParent?: { documents?: IDocument[] | null }) => {
+  { parentId, propParentId }: { parentId: EtapeId; propParentId: 'titreEtapeId' } | { parentId: string; propParentId: 'titreActiviteId' },
+
+  oldParent?: { documents?: IDocument[] | null }
+) => {
   if (oldParent?.documents?.length) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
@@ -289,9 +292,9 @@ export const documentsLier = async (context: Context, documentIds: string[],
 
       if (document.fichier) {
         const documentPath = await documentFilePathFind(document)
-        if( propParentId === 'titreEtapeId'){
+        if (propParentId === 'titreEtapeId') {
           document[propParentId] = parentId
-        }else{
+        } else {
           document[propParentId] = parentId
         }
         const newDocumentPath = await documentFilePathFind(document, true)

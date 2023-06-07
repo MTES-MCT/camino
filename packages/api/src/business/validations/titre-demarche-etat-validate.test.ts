@@ -182,7 +182,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid).toHaveLength(0)
   })
 
-  test("ajoute une étape sans statut à une démarche sans machine", () => {
+  test('ajoute une étape sans statut à une démarche sans machine', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
       currentDate,
       { id: 'oct', nom: 'oct' } as IDemarcheType,
@@ -210,7 +210,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     expect(valid).toHaveLength(0)
   })
 
-  test("ajoute une étape à une démarche sans machine", () => {
+  test('ajoute une étape à une démarche sans machine', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
       currentDate,
       { id: 'oct', nom: 'oct' } as IDemarcheType,

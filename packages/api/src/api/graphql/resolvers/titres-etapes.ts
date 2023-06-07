@@ -270,7 +270,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
-    await documentsLier(context, documentIds, { parentId: etapeUpdated.id, propParentId: 'titreEtapeId'})
+    await documentsLier(context, documentIds, { parentId: etapeUpdated.id, propParentId: 'titreEtapeId' })
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -416,7 +416,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    await documentsLier(context, documentIds, {parentId: etape.id, propParentId: 'titreEtapeId'}, titreEtapeOld)
+    await documentsLier(context, documentIds, { parentId: etape.id, propParentId: 'titreEtapeId' }, titreEtapeOld)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu

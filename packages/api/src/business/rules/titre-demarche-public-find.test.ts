@@ -18,7 +18,10 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
 describe("publicité d'une démarche", () => {
   test("une démarche sans étape n'est pas publique", () => {
     expect(
-      titreDemarchePublicFind({ id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: newTitreId('titreId'), demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') }, 'arm')
+      titreDemarchePublicFind(
+        { id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: newTitreId('titreId'), demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') },
+        'arm'
+      )
     ).toMatchObject({
       publicLecture: false,
       entreprisesLecture: false,
@@ -785,7 +788,14 @@ describe("publicité d'une démarche", () => {
   test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', () => {
     expect(
       titreDemarchePublicFind(
-        { id: newDemarcheId(), typeId: 'pr1', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: null, etapes: etapesBuild([{ typeId: 'mfr' }, { typeId: 'mdp' }]), titreId: newTitreId('titreId') },
+        {
+          id: newDemarcheId(),
+          typeId: 'pr1',
+          demarcheDateDebut: toCaminoDate('2020-01-01'),
+          demarcheDateFin: null,
+          etapes: etapesBuild([{ typeId: 'mfr' }, { typeId: 'mdp' }]),
+          titreId: newTitreId('titreId'),
+        },
         'prm'
       )
     ).toMatchObject({ publicLecture: true })

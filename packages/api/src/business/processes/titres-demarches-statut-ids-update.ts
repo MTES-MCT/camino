@@ -3,7 +3,7 @@ import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
-import {Pool} from 'pg'
+import { Pool } from 'pg'
 
 // met à jour le statut des démarches d'un titre
 export const titresDemarchesStatutIdUpdate = async (pool: Pool, titresId?: TitreId) => {
