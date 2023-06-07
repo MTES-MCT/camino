@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
@@ -13,7 +14,7 @@ export default meta
 
 const titres: LinkableTitre[] = [
   {
-    id: 'id1',
+    id: titreIdValidator.parse('id1'),
     nom: 'Abttis Coucou',
     titreStatutId: 'ech',
     demarches: [
@@ -24,7 +25,7 @@ const titres: LinkableTitre[] = [
     ],
   },
   {
-    id: 'id2',
+    id: titreIdValidator.parse('id2'),
     nom: 'Affluent Crique Saint Bernard',
     titreStatutId: 'ech',
     demarches: [
@@ -35,7 +36,7 @@ const titres: LinkableTitre[] = [
     ],
   },
   {
-    id: 'id3',
+    id: titreIdValidator.parse('id3'),
     nom: 'Nouveau titre',
     titreStatutId: 'ech',
     demarches: [
@@ -53,7 +54,12 @@ export const AXM: StoryFn = () => (
 )
 
 export const AXMWithAlreadySelectedTitre: StoryFn = () => (
-  <TitresLink config={{ type: 'single', selectedTitreId: 'id1' }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+  <TitresLink
+    config={{ type: 'single', selectedTitreId: titreIdValidator.parse('id1') }}
+    loadLinkableTitres={() => Promise.resolve(titres)}
+    onSelectTitre={onSelectTitre}
+    onSelectTitres={onSelectTitres}
+  />
 )
 
 export const DemarcheFusion: StoryFn = () => (
@@ -61,14 +67,19 @@ export const DemarcheFusion: StoryFn = () => (
 )
 
 export const DemarcheFusionWithAlreadySelectedTitre: StoryFn = () => (
-  <TitresLink config={{ type: 'multiple', selectedTitreIds: ['id1', 'id2'] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+  <TitresLink
+    config={{ type: 'multiple', selectedTitreIds: [titreIdValidator.parse('id1'), titreIdValidator.parse('id2')] }}
+    loadLinkableTitres={() => Promise.resolve(titres)}
+    onSelectTitre={onSelectTitre}
+    onSelectTitres={onSelectTitres}
+  />
 )
 
 export const Loading: StoryFn = () => (
   <TitresLink
     config={{
       type: 'multiple',
-      selectedTitreIds: ['id1'],
+      selectedTitreIds: [titreIdValidator.parse('id1')],
     }}
     loadLinkableTitres={() => new Promise<LinkableTitre[]>(resolve => {})}
     onSelectTitre={onSelectTitre}
@@ -80,7 +91,7 @@ export const WithError: StoryFn = () => (
   <TitresLink
     config={{
       type: 'multiple',
-      selectedTitreIds: ['id1'],
+      selectedTitreIds: [titreIdValidator.parse('id1')],
     }}
     loadLinkableTitres={() => Promise.reject(new Error('because reasons'))}
     onSelectTitre={onSelectTitre}

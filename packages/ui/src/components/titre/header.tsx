@@ -3,7 +3,7 @@ import { canDeleteTitre } from 'camino-common/src/permissions/titres'
 import { User } from 'camino-common/src/roles'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { EditableTitre } from 'camino-common/src/titres'
+import { EditableTitre, TitreId } from 'camino-common/src/titres'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -17,7 +17,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 
 interface Props {
   titre: {
-    id: string
+    id: TitreId
     nom: string
     typeId: TitreTypeId
     abonnement: boolean
@@ -73,7 +73,7 @@ export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'],
     store.dispatch('messageAdd', { value: 'le titre a été mis à jour', type: 'success' }, { root: true })
   }
 
-  const abonne = async (titreId: string, abonner: boolean) => {
+  const abonne = async (titreId: TitreId, abonner: boolean) => {
     await titreApiClient.titreUtilisateurAbonne(titreId, abonner)
     store.commit('titre/set', { ...props.titre, abonnement: abonner })
 

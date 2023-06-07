@@ -2,6 +2,7 @@ import { etapeEditFormat } from './titre-etape-edit'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { etapeIdValidator } from 'camino-common/src/etape'
 
 // dateFormat
 describe('etapeEditFormat', () => {
@@ -9,7 +10,7 @@ describe('etapeEditFormat', () => {
     expect(
       // @ts-ignore
       etapeEditFormat({
-        id: 'etape-id',
+        id: etapeIdValidator.parse('etape-id'),
       })
     ).toEqual({
       id: 'etape-id',
@@ -38,7 +39,7 @@ describe('etapeEditFormat', () => {
     expect(
       // @ts-ignore
       etapeEditFormat({
-        id: 'etape-id',
+        id: etapeIdValidator.parse('etape-id'),
         points: [
           {
             id: 'point-id-111',
@@ -98,7 +99,7 @@ describe('etapeEditFormat', () => {
 
     expect(
       etapeEditFormat({
-        id: 'etape-id',
+        id: etapeIdValidator.parse('etape-id'),
         type: { id: 'aac', nom: 'plop' },
         // @ts-ignore
         statutId: 'etape-statut-id',

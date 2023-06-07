@@ -9,14 +9,14 @@ import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Icon } from '@/components/_ui/icon'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { TitreLink, TitreLinks } from 'camino-common/src/titres'
+import { TitreId, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { ApiClient } from '@/api/api-client'
 import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 
 export interface Props {
   user: User
   titre: {
-    id: string
+    id: TitreId
     typeId: TitreTypeId
     administrations: AdministrationId[]
     demarches: { typeId: DemarcheTypeId }[]

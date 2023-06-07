@@ -1,6 +1,6 @@
 import { PurePTMGDashboard } from './pure-ptmg-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { CommonTitrePTMG } from 'camino-common/src/titres'
+import { CommonTitrePTMG, titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/PTMG',
@@ -10,7 +10,7 @@ export default meta
 
 const titres: CommonTitrePTMG[] = [
   {
-    id: 'firstId',
+    id: titreIdValidator.parse('firstId'),
     slug: 'first-id-slug',
     nom: 'first-name',
     titre_statut_id: 'dmi',
@@ -24,7 +24,7 @@ const titres: CommonTitrePTMG[] = [
     enAttenteDePTMG: true,
   },
   {
-    id: 'secondId',
+    id: titreIdValidator.parse('secondId'),
     slug: 'second-slug',
     nom: 'Second Nom de titre',
     titre_statut_id: 'dmi',
@@ -44,7 +44,7 @@ const titres: CommonTitrePTMG[] = [
     enAttenteDePTMG: true,
   },
   {
-    id: 'thirdId',
+    id: titreIdValidator.parse('thirdId'),
     slug: 'third-id-slug',
     nom: 'third-name',
     titre_statut_id: 'dmi',
@@ -58,7 +58,7 @@ const titres: CommonTitrePTMG[] = [
     enAttenteDePTMG: false,
   },
   {
-    id: 'fourthId',
+    id: titreIdValidator.parse('fourthId'),
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
     titre_statut_id: 'dmi',

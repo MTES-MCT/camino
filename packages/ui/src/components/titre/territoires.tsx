@@ -1,4 +1,4 @@
-import { DepartementId, Departements, toDepartementId } from 'camino-common/src/static/departement'
+import { DepartementId, DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-common/src/static/facades'
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
@@ -12,6 +12,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { caminoDefineComponent } from '../../utils/vue-tsx-utils'
 import { AsyncData } from '../../api/client-rest'
 import { TitreApiClient } from './titre-api-client'
+import { TitreId } from 'camino-common/src/titres'
 
 export interface TerritoiresCommune {
   id: CommuneId
@@ -22,7 +23,7 @@ export interface TerritoiresProps {
   surface?: number
   forets: ForetId[]
   sdomZones?: SDOMZoneId[]
-  titreId: string
+  titreId: TitreId
   secteursMaritimes: SecteursMaritimes[]
 }
 
@@ -30,7 +31,7 @@ type RegionsComputed = {
   id: string
   nom: string
   paysId: PaysId
-  departements: { id: DepartementId; nom: string; communes: string[] }[]
+  departements: { id: DepartementId; nom: DepartementLabel; communes: string[] }[]
 }[]
 
 function CommunesEtRegions({ communes }: { communes: Commune[] }) {

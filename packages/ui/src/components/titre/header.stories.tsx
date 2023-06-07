@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { TitreApiClient } from './titre-api-client'
 import { toCaminoDate } from 'camino-common/src/date'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/Header',
@@ -39,7 +40,7 @@ const apiClientMock: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre'
 export const Default: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [],
       abonnement: false,
       modification: false,
@@ -55,7 +56,7 @@ export const Default: StoryFn = () => (
 export const AbonneAuTitre: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [],
       abonnement: true,
       modification: false,
@@ -71,7 +72,7 @@ export const AbonneAuTitre: StoryFn = () => (
 export const CanDeleteTitre: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [],
       abonnement: false,
       modification: false,
@@ -87,7 +88,7 @@ export const CanDeleteTitre: StoryFn = () => (
 export const CanEditTitre: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [{ nom: 'cette-ref', referenceTypeId: 'brg' }],
       abonnement: false,
       modification: true,
@@ -103,7 +104,7 @@ export const CanEditTitre: StoryFn = () => (
 export const Loading: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [{ nom: 'cette-ref', referenceTypeId: 'brg' }],
       abonnement: false,
       modification: true,
@@ -124,7 +125,7 @@ export const Loading: StoryFn = () => (
 export const WithError: StoryFn = () => (
   <PureHeader
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       references: [{ nom: 'cette-ref', referenceTypeId: 'brg' }],
       abonnement: false,
       modification: true,
