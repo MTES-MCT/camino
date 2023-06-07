@@ -5,7 +5,7 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
 
@@ -54,8 +54,8 @@ const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date
   if (dbEtape.contenu) {
     machineEtape.contenu = dbEtape.contenu
   }
-  if (dbEtape.communes?.length && dbEtape.communes[0].departementId) {
-    machineEtape.paysId = Regions[Departements[dbEtape.communes[0].departementId].regionId].paysId
+  if (dbEtape.communes?.length) {
+    machineEtape.paysId = Regions[Departements[toDepartementId(dbEtape.communes[0].id)].regionId].paysId
   }
 
   return machineEtape

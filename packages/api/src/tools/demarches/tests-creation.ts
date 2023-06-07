@@ -8,6 +8,7 @@ import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-c
 import { demarchesDefinitions, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 
 const writeEtapesForTest = async () => {
   const demarcheDefinitionMachines = demarchesDefinitions.filter(isDemarcheDefinitionMachine)
@@ -48,7 +49,7 @@ const writeEtapesForTest = async () => {
               }
 
               if (etape.communes?.length) {
-                etape.communes = etape.communes.map(({ departementId }) => ({ nom: '', id: '', departementId }))
+                etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
               }
 
               return etape
