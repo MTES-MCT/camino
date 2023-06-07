@@ -19,7 +19,7 @@ import { constants } from 'http2'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId, TitreId } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -296,7 +296,7 @@ describe('titresLiaisons', () => {
 })
 
 describe('titreModifier', () => {
-  let id: TitreIdd = ''
+  let id: TitreId = ''
 
   beforeEach(async () => {
     const titre = await titreCreate(

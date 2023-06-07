@@ -3,6 +3,7 @@ import Titres from '../../database/models/titres.js'
 import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { newTitreId } from '../../database/models/_format/id-create.js'
 
 const entreprise = {
   id: newEntrepriseId('entrepriseId'),
@@ -76,7 +77,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 1006827,
           },
         ],
-        id: 'titreSansActivite',
+        id: newTitreId('titreSansActivite'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -88,7 +89,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         ],
         titulaires: [entreprise2],
         amodiataires: [],
-        id: 'titre1',
+        id: newTitreId('titre1'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -100,7 +101,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 19805494,
           },
         ],
-        id: 'titre2',
+        id: newTitreId('titre2'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -112,7 +113,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 5143845,
           },
         ],
-        id: 'titre3',
+        id: newTitreId('titre3'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -124,7 +125,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 7676552,
           },
         ],
-        id: 'titre4',
+        id: newTitreId('titre4'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -136,7 +137,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 35604009,
           },
         ],
-        id: 'titre5',
+        id: newTitreId('titre5'),
       },
     ]
 

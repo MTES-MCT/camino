@@ -17,6 +17,7 @@ import {
   titrePtmgValidator,
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
+  titreIdValidator,
 } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
@@ -40,6 +41,7 @@ import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator, getTit
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import {z} from 'zod'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -359,25 +361,23 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     }
   }
 }
-const isStringArray = (stuff: any): stuff is string[] => {
-  return stuff instanceof Array && stuff.every(value => typeof value === 'string')
-}
+
 export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
-  const titreId = req.params.id
-  const titreFromIds = req.body
+  const titreId = titreIdValidator.safeParse(req.params.id)
+  const titreFromIds = z.array(titreIdValidator).safeParse(req.body)
 
-  if (!isStringArray(titreFromIds)) {
+  if (!titreFromIds.success) {
     throw new Error(`un tableau est attendu en corps de message : '${titreFromIds}'`)
   }
 
-  if (!titreId) {
+  if (!titreId.success) {
     throw new Error('le paramètre id est obligatoire')
   }
 
   const titre = await titreGet(
-    titreId,
+    titreId.data,
     {
       fields: {
         pointsEtape: { id: {} },
@@ -396,15 +396,15 @@ export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res
     throw new Error('les démarches ne sont pas chargées')
   }
 
-  const titresFrom = await titresGet({ ids: titreFromIds }, { fields: { id: {} } }, user)
+  const titresFrom = await titresGet({ ids: titreFromIds.data }, { fields: { id: {} } }, user)
 
-  checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
+  checkTitreLinks(titre, titreFromIds.data, titresFrom, titre.demarches)
 
-  await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
+  await linkTitres({ linkTo: titreId.data, linkFrom: titreFromIds.data })
 
   res.json({
-    amont: await titreLinksGet(titreId, 'titreFromId', user),
-    aval: await titreLinksGet(titreId, 'titreToId', user),
+    amont: await titreLinksGet(titreId.data, 'titreFromId', user),
+    aval: await titreLinksGet(titreId.data, 'titreToId', user),
   })
 }
 export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
@@ -459,12 +459,12 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
 export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
-  const titreId: string | undefined = req.params.titreId
-  if (!titreId) {
+  const titreId = titreIdValidator.safeParse(req.params.titreId)
+  if (!titreId.success) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     const titreOld = await titreGet(
-      titreId,
+      titreId.data,
       {
         fields: {
           demarches: { etapes: { id: {} } },
@@ -479,7 +479,7 @@ export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     } else if (!canDeleteTitre(user)) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      await titreArchive(titreId)
+      await titreArchive(titreId.data)
       res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
   }

@@ -396,7 +396,7 @@ interface ITitre {
 interface ITitreActivite {
   id: string
   slug?: string
-  titreId: string
+  titreId: TitreId
   titre?: ITitre | null
   date: CaminoDate
   typeId: string

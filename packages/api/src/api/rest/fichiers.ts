@@ -10,10 +10,11 @@ import { statSync, readFileSync } from 'fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 export const etapeTelecharger =
   (_pool: Pool) =>
-  async ({ params: { etapeId } }: { params: { etapeId?: string } }, user: User) => {
+  async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User) => {
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }
