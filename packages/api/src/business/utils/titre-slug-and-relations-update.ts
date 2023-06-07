@@ -16,6 +16,7 @@ import { titrePointReferenceUpdate, titrePointUpdate } from '../../database/quer
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
 const titreSlugFind = (titre: ITitre) => {
   const { typeId, nom } = titre
@@ -48,7 +49,7 @@ const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) => 
 interface ITitreRelation<T extends string | DemarcheId = string> {
   name: string
   slugFind: (...args: any[]) => string
-  update: ((id: T, element: { slug: string }, user: UserNotNull) => Promise<{ id: T }>) | ((id: T, element: { slug: string }, user: UserNotNull, titreId: string) => Promise<{ id: T }>)
+  update: ((id: T, element: { slug: string }, user: UserNotNull) => Promise<{ id: T }>) | ((id: T, element: { slug: string }, user: UserNotNull, titreId: TitreId) => Promise<{ id: T }>)
   relations?: ITitreRelation[]
 }
 
@@ -61,6 +62,7 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
       {
         name: 'etapes',
         slugFind: titreDemarcheEtapeSlugFind,
+        // @ts-ignore
         update: titreEtapeUpdate,
         relations: [
           {
@@ -86,7 +88,7 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
   },
 ]
 
-const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<DemarcheId> | ITitreRelation)[], titreId: string): Promise<boolean> => {
+const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<DemarcheId> | ITitreRelation)[], titreId: TitreId): Promise<boolean> => {
   let hasChanged = false
   for (const relation of relations) {
     for (const element of parent[relation.name]) {
