@@ -55,7 +55,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   if (!titreDemarche) {
     throw new Error('le titre ne contient pas la démarche en cours de modification')
   }
-  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
+  // pas de validation pour les démarches qui n'ont pas de machine
   if (!demarcheDefinition) {
     if (!titreEtape.statutId) {
       return []

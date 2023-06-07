@@ -164,8 +164,6 @@ export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'tit
   if (titreDemarche.titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z') {
     publicLecture = false
   } else {
-    // si il existe un arbre d’instructions pour cette démarche,
-    // on laisse l’arbre traiter l’unicité des étapes
     const demarcheDefinition = demarcheDefinitionFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
 
     if (demarcheDefinition) {

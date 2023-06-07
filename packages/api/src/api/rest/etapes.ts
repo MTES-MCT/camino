@@ -82,8 +82,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     }
   }
 
-  // si il existe un arbre d’instructions pour cette démarche,
-  // on laisse l’arbre traiter l’unicité des étapes
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
 
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []

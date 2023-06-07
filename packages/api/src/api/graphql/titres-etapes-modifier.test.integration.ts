@@ -62,6 +62,7 @@ async function etapeCreate() {
     {
       typeId: 'mfr',
       statutId: 'fai',
+      ordre: 1,
       titreDemarcheId: titreDemarche.id,
       date: toCaminoDate('2018-01-01'),
     },

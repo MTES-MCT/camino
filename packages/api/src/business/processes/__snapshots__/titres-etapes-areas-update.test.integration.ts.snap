@@ -29,7 +29,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "heritageProps": null,
     "id": "titreEtapeIdUniquePourMiseAJourAreas",
     "incertitudes": null,
-    "ordre": null,
+    "ordre": 0,
     "sdomZones": [
       "1",
     ],
@@ -95,7 +95,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "heritageProps": null,
       "id": "titreEtapeIdUniquePourMiseAJourAreas",
       "incertitudes": null,
-      "ordre": null,
+      "ordre": 0,
       "sdomZones": [
         "1",
       ],

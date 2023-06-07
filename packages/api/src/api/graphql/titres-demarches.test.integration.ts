@@ -225,6 +225,7 @@ describe('demarcheModifier', () => {
         typeId: 'mno',
         titreDemarcheId: demarcheId,
         statutId: 'acc',
+        ordre: 1,
         date: toCaminoDate('2020-01-01'),
       },
       userSuper,

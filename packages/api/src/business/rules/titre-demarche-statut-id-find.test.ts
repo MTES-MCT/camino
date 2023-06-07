@@ -60,7 +60,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi d'un titre PRM dont l'étape de rpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', statutId: 'acc' }]), 'prm', newDemarcheId())).toEqual('acc')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }]), 'prm', newDemarcheId())).toEqual('acc')
   })
 
   test("une démarche de prolongation dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {

@@ -202,7 +202,8 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
           return { type: eventFromEntry, date: etape.date }
         case 'FAIRE_DEMANDE':
           if (!etape.paysId) {
-            throw new Error(`paysId is mandatory in etape ${JSON.stringify(etape)}`)
+            console.error(`paysId is mandatory in etape ${JSON.stringify(etape)}`)
+            return { type: eventFromEntry, paysId: 'FR' }
           }
 
           return { type: eventFromEntry, paysId: etape.paysId }
