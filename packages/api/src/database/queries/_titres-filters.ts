@@ -190,8 +190,8 @@ export const titresFiltersQueryModify = (
       return result
     })
 
-    q.joinRelated(jointureFormat(name, 'pointsEtape'))
-    q.joinRaw(`join jsonb_array_elements(${jointureFormat(name, 'points_etape')}.communes) as c on true`)
+    q.joinRaw(`join titres_etapes as territoires_points_etapes on territoires_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
+    q.joinRaw(`join jsonb_array_elements(territoires_points_etapes.communes) as c on true`)
     q.joinRaw(`join communes on c->>'id' = communes.id`)
       .where(b => {
         territoiresArray.forEach(t => {
@@ -211,8 +211,9 @@ export const titresFiltersQueryModify = (
 
   if (communes) {
     const communesArray = stringSplit(communes)
-    q.leftJoinRelated(`${jointureFormat(name, 'pointsEtape')} as communes_filter`)
-    q.joinRaw(`join jsonb_array_elements(communes_filter.communes) as communes_filter_communes on true`)
+
+    q.joinRaw(`join titres_etapes as communes_points_etapes on communes_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
+    q.joinRaw(`join jsonb_array_elements(communes_points_etapes.communes) as communes_filter_communes on true`)
     q.joinRaw(`join communes as communes_filter_communes_communes on communes_filter_communes->>'id' = communes_filter_communes_communes.id`)
 
       .where(b => {
@@ -234,8 +235,8 @@ export const titresFiltersQueryModify = (
   departementIds = departementIds.filter(onlyUnique).filter(isDepartementId)
 
   if (departementIds.length > 0) {
-    q.leftJoinRelated(`${jointureFormat(name, 'pointsEtape')} as departements_filter`)
-      .joinRaw(`join jsonb_array_elements(departements_filter.communes) as departements_filter_communes on true`)
+    q.joinRaw(`join titres_etapes as departements_points_etapes on departements_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
+      .joinRaw(`join jsonb_array_elements(departements_points_etapes.communes) as departements_filter_communes on true`)
       .whereRaw(
         `((substring(departements_filter_communes ->> 'id', 1, 2) != '97' and substring(departements_filter_communes ->> 'id', 1, 2) in (${departementIds
           .map(() => '?')
@@ -250,7 +251,8 @@ export const titresFiltersQueryModify = (
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
+    q.joinRaw(`join titres_etapes as facades_points_etapes on facades_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
     q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
-    q.whereRaw(`?? \\?| array[${secteurs.map(secteur => `E'${secteur.replaceAll("'", "\\'")}'`).join(',')}]`, fieldFormat(name, 'pointsEtape.secteursMaritime'))
+    q.whereRaw(`?? \\?| array[${secteurs.map(secteur => `E'${secteur.replaceAll("'", "\\'")}'`).join(',')}]`, 'facades_points_etapes.secteursMaritime')
   }
 }
