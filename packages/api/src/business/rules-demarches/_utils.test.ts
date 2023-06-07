@@ -84,6 +84,13 @@ export const demarcheEtatsValidate = (demarcheTypeId: DemarcheTypeId, titreTypeI
       demarches: [titreDemarche] as ITitreDemarche[],
     }
 
-    return titreDemarcheEtatValidate(date, demarcheDefinitionRestrictions!, demarcheTypeId, titreDemarche, titreDemarcheEtapes as ITitreEtape[], titre as ITitre)
+    return titreDemarcheEtatValidate(
+      date,
+      demarcheDefinitionRestrictions!,
+      demarcheTypeId,
+      titreDemarche,
+      titreDemarcheEtapes as Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[],
+      titre as ITitre
+    )
   }
 }

@@ -8,6 +8,7 @@ import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
+import { TitreId } from 'camino-common/src/titres.js'
 
 export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
@@ -26,7 +27,7 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
-      titreId: string
+      titreId: TitreId
     }
   }
 ): Promise<string[]> => {

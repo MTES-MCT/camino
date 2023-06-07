@@ -5,6 +5,7 @@ import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { contenuFilesGet } from '../../business/utils/contenu-element-file-process.js'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { newEtapeId } from '../../database/models/_format/id-create.js'
 
 const etapeGet = (str: string) => str.split('-').slice(0, -1).join('-')
 
@@ -14,7 +15,7 @@ const contenuFilesCheck = async (filePath: string) => {
   const split = filePath.split('/')
 
   const repertoire = split[0]
-  const etapeId = split[1]
+  const etapeId = newEtapeId(split[1])
   const fileName = split[2]
 
   if (repertoire !== 'demarches') {

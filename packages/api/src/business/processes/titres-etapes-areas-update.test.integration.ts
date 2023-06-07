@@ -7,7 +7,7 @@ import TitresEtapes from '../../database/models/titres-etapes.js'
 import TitresPoints from '../../database/models/titres-points.js'
 import { titresEtapesAreasUpdate } from './titres-etapes-areas-update.js'
 import { BaisieuxPerimetre, foret2BranchesPerimetre, foretReginaPerimetre, SaintEliePerimetre, SinnamaryPerimetre } from './__mocks__/titres-etapes-areas-update.js'
-import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
@@ -72,7 +72,7 @@ describe('titresEtapesAreasUpdate', () => {
       },
     ])
 
-    const titreEtapeId = 'titreEtapeIdUniquePourMiseAJourAreas'
+    const titreEtapeId = newEtapeId('titreEtapeIdUniquePourMiseAJourAreas')
     await TitresEtapes.query().insert([
       {
         id: titreEtapeId,

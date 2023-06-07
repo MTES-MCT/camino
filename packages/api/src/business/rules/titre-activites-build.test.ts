@@ -4,7 +4,7 @@ import { titreActivitesBuild } from './titre-activites-build.js'
 
 import { describe, expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes.js'
 describe("construction des activités d'un titre", () => {
   const aujourdhui = toCaminoDate('2021-01-01')
@@ -51,14 +51,14 @@ describe("construction des activités d'un titre", () => {
     const titreActivitesA = titreActivitesBuild(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions M)"], [2018], aujourdhui, 'titre-id', 'pxm', [
       {
         id: newDemarcheId('demarche-id'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         statutId: 'acc',
         typeId: 'oct',
         demarcheDateDebut: toCaminoDate('2018-01-01'),
         demarcheDateFin: toCaminoDate('2018-12-31'),
         etapes: [
           {
-            id: 'etape-id',
+            id: newEtapeId('etape-id'),
             titreDemarcheId: newDemarcheId('demarche-id'),
             date: toCaminoDate('2018-01-01'),
             typeId: 'dpu',

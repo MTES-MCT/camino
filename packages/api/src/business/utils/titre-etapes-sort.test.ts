@@ -11,12 +11,12 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
   { typeId: 'dex', ordre: 1, date: '1988-03-06' },
-] as Pick<Required<ITitreEtape>, "id" | "date" | "communes" | "typeId" | "ordre" | "statutId" | "contenu" | "titreDemarcheId">[]
+] as Pick<Required<ITitreEtape>, 'id' | 'date' | 'communes' | 'typeId' | 'ordre' | 'statutId' | 'contenu' | 'titreDemarcheId'>[]
 
 const titreEtapesSortedAsc = [
   { typeId: 'dex', ordre: 1, date: '1988-03-06' },
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
-] as Pick<Required<ITitreEtape>, "id" | "date" | "communes" | "typeId" | "ordre" | "statutId" | "contenu" | "titreDemarcheId">[]
+] as Pick<Required<ITitreEtape>, 'id' | 'date' | 'communes' | 'typeId' | 'ordre' | 'statutId' | 'contenu' | 'titreDemarcheId'>[]
 
 const titreEtapesSortedDesc = titreEtapesSortedAsc.slice().reverse()
 
@@ -51,24 +51,24 @@ describe('trie les étapes', () => {
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
     const titreEtapesMemesDatesOrdreDesc: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
-        id: '1',
+        id: newEtapeId('1'),
         typeId: 'dex',
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
         communes: [],
-        contenu: {}
+        contenu: {},
       },
       {
-        id: '2',
+        id: newEtapeId('2'),
         typeId: 'dpu',
         ordre: 1,
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fav',
         communes: [],
-        contenu: {}
+        contenu: {},
       },
     ]
 
@@ -81,34 +81,34 @@ describe('trie les étapes', () => {
     const titreDemarcheId = newDemarcheId('1')
     const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
-        id: '1',
+        id: newEtapeId('1'),
         typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
         communes: [],
-        contenu: {}
+        contenu: {},
       },
       {
-        id: '2',
+        id: newEtapeId('2'),
         typeId: ETAPES_TYPES.classementSansSuite,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
         communes: [],
-        contenu: {}
+        contenu: {},
       },
       {
-        id: '3',
+        id: newEtapeId('3'),
         typeId: ETAPES_TYPES.decisionAdministrative,
         ordre: 2,
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
         communes: [],
-        contenu: {}
+        contenu: {},
       },
     ]
     expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
@@ -146,7 +146,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         communes: [],
-        contenu: {}
+        contenu: {},
       },
       {
         id: newEtapeId('2'),
@@ -156,7 +156,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         communes: [],
-        contenu: {}
+        contenu: {},
       },
       {
         id: newEtapeId('3'),
@@ -166,7 +166,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         communes: [],
-        contenu: {}
+        contenu: {},
       },
     ]
 
@@ -179,36 +179,36 @@ describe('trie les étapes', () => {
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
     const etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
-        id: '1',
+        id: newEtapeId('1'),
         typeId: 'mcr',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         ordre: 1,
         communes: [],
-        contenu: null
+        contenu: null,
       },
       {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         typeId: 'bof',
-        id: '2',
+        id: newEtapeId('2'),
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         ordre: 2,
         communes: [],
-        contenu: null
+        contenu: null,
       },
       {
-        id: '3',
+        id: newEtapeId('3'),
         typeId: 'vfd',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         ordre: 3,
         communes: [],
-        contenu: null
+        contenu: null,
       },
     ]
 
@@ -226,7 +226,7 @@ describe('trie les étapes', () => {
       titreDemarcheId: newDemarcheId(),
       ordre: 5,
       contenu: {},
-      communes: []
+      communes: [],
     }
 
     const etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
@@ -238,7 +238,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         contenu: {},
-        communes: []
+        communes: [],
       },
       {
         id: newEtapeId('mdp'),
@@ -248,7 +248,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         contenu: {},
-        communes: []
+        communes: [],
       },
       {
         id: newEtapeId('mcd'),
@@ -258,7 +258,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         contenu: {},
-        communes: []
+        communes: [],
       },
       {
         id: newEtapeId('rcd'),
@@ -268,7 +268,7 @@ describe('trie les étapes', () => {
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
         contenu: {},
-        communes: []
+        communes: [],
       },
       secondMcd,
     ]

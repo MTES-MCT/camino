@@ -10,7 +10,7 @@ import Document from '../../models/documents.js'
 import { documentCreate, documentGet } from '../documents.js'
 import { etapeTypeDocumentTypeUsedCheck } from './documents.js'
 import { Knex } from 'knex'
-import { newDemarcheId, newDocumentId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newDocumentId, newEtapeId } from '../../models/_format/id-create.js'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -45,7 +45,7 @@ describe('documentSupprimer', () => {
     })
 
     await TitresEtapes.query().insertGraph({
-      id: 'titreEtapeId',
+      id: newEtapeId('titreEtapeId'),
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: toCaminoDate('2022-01-01'),
@@ -57,7 +57,7 @@ describe('documentSupprimer', () => {
       id: documentId,
       typeId: 'dec',
       date: toCaminoDate('2023-01-12'),
-      titreEtapeId: 'titreEtapeId',
+      titreEtapeId: newEtapeId('titreEtapeId'),
     })
 
     const documentRes = await documentGet(documentId, {}, userSuper)
@@ -129,7 +129,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     })
 
     await TitresEtapes.query().insertGraph({
-      id: 'titreEtapeId',
+      id: newEtapeId('titreEtapeId'),
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: toCaminoDate('2022-01-01'),
@@ -141,7 +141,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: documentId,
       typeId: 'dec',
       date: toCaminoDate('2023-01-12'),
-      titreEtapeId: 'titreEtapeId',
+      titreEtapeId: newEtapeId('titreEtapeId'),
     })
 
     const check = await etapeTypeDocumentTypeUsedCheck('dpu', 'dec')
@@ -162,7 +162,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     })
 
     await TitresEtapes.query().insertGraph({
-      id: 'titreEtapeId',
+      id: newEtapeId('titreEtapeId'),
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: toCaminoDate('2022-01-01'),
@@ -174,7 +174,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: documentId,
       typeId: 'arr',
       date: toCaminoDate('2023-01-12'),
-      titreEtapeId: 'titreEtapeId',
+      titreEtapeId: newEtapeId('titreEtapeId'),
     })
 
     const check = await etapeTypeDocumentTypeUsedCheck('dpu', 'dec')

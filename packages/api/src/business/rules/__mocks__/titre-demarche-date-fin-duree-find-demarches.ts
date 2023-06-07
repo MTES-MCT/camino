@@ -1,5 +1,5 @@
 import { ITitreDemarche } from '../../../types.js'
-import { newDemarcheId } from '../../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 const titreDemarchesOctDateFin = [
@@ -102,13 +102,13 @@ const titreDemarchesOctDateDebut = [
 const titreDemarchesOctDureeZero = [
   {
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-    titreId: 'h-cx-courdemanges-1988',
+    titreId: newTitreId('h-cx-courdemanges-1988'),
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
     etapes: [
       {
-        id: 'h-cx-courdemanges-1988-oct01-dex01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dex',
         statutId: 'acc',
@@ -124,13 +124,13 @@ const titreDemarchesOctDureeZero = [
 const titreDemarchesOctIhiDureeZero = [
   {
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-    titreId: 'h-cx-courdemanges-1988',
+    titreId: newTitreId('h-cx-courdemanges-1988'),
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
     etapes: [
       {
-        id: 'h-cx-courdemanges-1988-oct01-ihi01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-ihi01'),
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'ihi',
         statutId: 'acc',
@@ -566,13 +566,13 @@ const titreDemarchesRenPointsVideDex = [
 const titreDemarchesRenPointsVideNiDpuNiDex = [
   {
     id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-    titreId: 'h-cx-courdemanges-1988',
+    titreId: newTitreId('h-cx-courdemanges-1988'),
     typeId: 'ren',
     statutId: 'acc',
     ordre: 2,
     etapes: [
       {
-        id: 'h-cx-courdemanges-1988-ren01-mfr01',
+        id: newEtapeId('h-cx-courdemanges-1988-ren01-mfr01'),
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
         typeId: 'mfr',
         statutId: 'acc',

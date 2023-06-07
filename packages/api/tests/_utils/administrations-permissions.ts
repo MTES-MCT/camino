@@ -7,7 +7,7 @@ import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
 import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
-import { newDemarcheId, newDocumentId, newTitreId } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
@@ -273,7 +273,7 @@ export const modificationCheck = async (
 
   const titre = titreBuild(
     {
-      titreId: `${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`,
+      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`),
       titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
@@ -369,7 +369,7 @@ const titreBuild = (
         typeId: 'oct',
         etapes: [
           {
-            id: `${titreId}-demarche-id-etape-id`,
+            id: newEtapeId(`${titreId}-demarche-id-etape-id`),
             typeId: etapeTypeId || 'mcr',
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),

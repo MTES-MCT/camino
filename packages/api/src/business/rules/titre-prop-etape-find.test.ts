@@ -1,7 +1,7 @@
 import { ITitreDemarche, IPropId, ITitreEtape, ITitrePoint, ICommune } from '../../types.js'
 
 import { titreContenuTitreEtapeFind, titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
-import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
@@ -23,7 +23,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1989-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1989-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1989-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -32,7 +32,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [1, 2, 3] as unknown as ITitrePoint[],
               },
               {
-                id: 'h-cx-courdemanges-1989-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1989-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1989-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -48,7 +48,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 2,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1989-mut01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1989-mut01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1989-mut01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -56,7 +56,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 ordre: 2,
               },
               {
-                id: 'h-cx-courdemanges-1989-mut01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1989-mut01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1989-mut01'),
                 typeId: 'dex',
                 date: toCaminoDate('1989-02-02'),
@@ -83,7 +83,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1988-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -92,7 +92,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [],
               },
               {
-                id: 'h-cx-courdemanges-1988-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 date: toCaminoDate('1989-01-01'),
@@ -119,7 +119,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1986-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1986-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-oct01'),
                 typeId: 'dpu',
                 date: toCaminoDate('1986-01-02'),
@@ -127,7 +127,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 ordre: 2,
               },
               {
-                id: 'h-cx-courdemanges-1986-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1986-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -143,7 +143,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 2,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1986-mut01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1986-mut01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-mut01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -152,7 +152,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [1, 2, 3] as unknown as ITitrePoint[],
               },
               {
-                id: 'h-cx-courdemanges-1986-mut01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1986-mut01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-mut01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -179,7 +179,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1986-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1986-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -187,7 +187,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 date: toCaminoDate('1986-01-02'),
               },
               {
-                id: 'h-cx-courdemanges-1986-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1986-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -203,7 +203,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 2,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1986-mut01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1986-mut01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-mut01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -212,7 +212,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 date: toCaminoDate('1986-02-02'),
               },
               {
-                id: 'h-cx-courdemanges-1986-mut01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1986-mut01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1986-mut01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -240,7 +240,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 2,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1985-mut01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1985-mut01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1985-mut01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -249,7 +249,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [1, 2, 3] as unknown as ITitrePoint[],
               },
               {
-                id: 'h-cx-courdemanges-1985-mut01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1985-mut01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1985-mut01'),
                 typeId: 'dex',
                 date: toCaminoDate('1985-01-01'),
@@ -264,7 +264,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'ins',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1985-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1985-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1985-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -273,7 +273,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [1, 2, 3] as unknown as ITitrePoint[],
               },
               {
-                id: 'h-cx-courdemanges-1985-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1985-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1985-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -300,7 +300,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1984-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1984-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1984-oct01'),
                 typeId: 'dpu',
                 statutId: 'rej',
@@ -309,7 +309,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 points: [1, 2, 3] as unknown as undefined,
               },
               {
-                id: newDemarcheId('h-cx-courdemanges-1984-oct01-dex01'),
+                id: newEtapeId('h-cx-courdemanges-1984-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1984-oct01'),
                 date: toCaminoDate('1984-01-01'),
                 typeId: 'dex',
@@ -336,7 +336,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1983-oct01-mfr01',
+                id: newEtapeId('h-cx-courdemanges-1983-oct01-mfr01'),
                 date: toCaminoDate('1983-01-01'),
                 titreDemarcheId: newDemarcheId(newDemarcheId('h-cx-courdemanges-1983-oct01')),
                 typeId: 'mfr',
@@ -344,7 +344,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 ordre: 1,
                 points: [
                   {
-                    id: 'id',
+                    id: newEtapeId('id'),
                     titreEtapeId: 'h-cx-courdemanges-1983-oct01-mfr01',
                     groupe: 1,
                     contour: 1,
@@ -374,7 +374,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'ins',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-pro01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-pro01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-pro01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -390,7 +390,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
                 typeId: 'dpu',
                 date: toCaminoDate('1981-01-01'),
@@ -417,7 +417,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'ins',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-pro01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-pro01-dpu01'),
                 titreDemarcheId: newDemarcheId(newDemarcheId('h-cx-courdemanges-1981-pro01')),
                 date: '1981-01-01',
                 typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -432,7 +432,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
                 typeId: 'dpu',
                 date: toCaminoDate('1981-01-01'),
@@ -459,7 +459,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'ins',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-mut01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-mut01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-mut01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -475,7 +475,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
                 typeId: 'dpu',
                 date: toCaminoDate('1981-01-01'),
@@ -505,7 +505,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
               ordre: 2,
               etapes: [
                 {
-                  id: 'h-cx-courdemanges-1981-pro01-dpu01',
+                  id: newEtapeId('h-cx-courdemanges-1981-pro01-dpu01'),
                   date: toCaminoDate('1981-01-01'),
                   titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-pro01'),
                   typeId: 'aac',
@@ -525,7 +525,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
               ordre: 1,
               etapes: [
                 {
-                  id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                  id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                   titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
                   typeId: 'dpu',
                   statutId: 'acc',
@@ -558,7 +558,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 2,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-pro01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-pro01-dpu01'),
                 date: toCaminoDate('1981-01-01'),
                 titreDemarcheId: newDemarcheId(newDemarcheId('h-cx-courdemanges-1981-pro01')),
                 typeId: 'aac',
@@ -579,7 +579,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             ordre: 1,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId(newDemarcheId('h-cx-courdemanges-1981-oct01')),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -611,7 +611,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1982-oct01-mfr01',
+                id: newEtapeId('h-cx-courdemanges-1982-oct01-mfr01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1982-oct01'),
                 typeId: 'mfr',
                 statutId: 'aco',
@@ -645,7 +645,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             demarcheDateFin: toCaminoDate('2018-12-31'),
             etapes: [
               {
-                id: 'h-cx-courdemanges-1982-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1982-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1982-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -675,7 +675,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1982-amo01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1982-amo01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1982-amo01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -712,7 +712,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-amo01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-amo01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-amo01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -728,7 +728,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-pro01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-pro01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-pro01'),
                 typeId: 'dpu',
                 date: toCaminoDate('1981-01-01'),
@@ -743,7 +743,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
             statutId: 'acc',
             etapes: [
               {
-                id: 'h-cx-courdemanges-1981-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1981-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
                 date: toCaminoDate('1981-01-01'),
                 typeId: 'dpu',
@@ -764,7 +764,7 @@ describe("id de l'étape qui a un contenu", () => {
     const etape1 = titreContenuTitreEtapeFind(
       currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
-      [{ id: newDemarcheId('demarche-id'), etapes: [{ id: 'etape-id' }] }] as ITitreDemarche[],
+      [{ id: newDemarcheId('demarche-id'), etapes: [{ id: newEtapeId('etape-id') }] }] as ITitreDemarche[],
       'val'
     )
 
@@ -775,7 +775,7 @@ describe("id de l'étape qui a un contenu", () => {
         {
           id: newDemarcheId('demarche-id'),
           statutId: 'acc',
-          etapes: [{ id: 'etape-id', statutId: 'fai' }],
+          etapes: [{ id: newEtapeId('etape-id'), statutId: 'fai' }],
         },
       ] as ITitreDemarche[],
       'val'
@@ -795,7 +795,7 @@ describe("id de l'étape qui a un contenu", () => {
           demarcheDateFin: toCaminoDate('2020-01-02'),
           etapes: [
             {
-              id: 'etape-id',
+              id: newEtapeId('etape-id'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: toCaminoDate('2020-01-01'),
@@ -824,7 +824,7 @@ describe("id de l'étape qui a un contenu", () => {
           typeId: 'oct',
           etapes: [
             {
-              id: 'etape-id',
+              id: newEtapeId('etape-id'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: toCaminoDate('2020-01-03'),
@@ -839,7 +839,7 @@ describe("id de l'étape qui a un contenu", () => {
           typeId: 'pro',
           etapes: [
             {
-              id: 'etape-id-2',
+              id: newEtapeId('etape-id-2'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dex',
               date: toCaminoDate('2020-01-01'),
@@ -861,7 +861,7 @@ describe("id de l'étape qui a un contenu", () => {
           typeId: 'pro',
           etapes: [
             {
-              id: 'etape-id',
+              id: newEtapeId('etape-id'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: toCaminoDate('2020-01-01'),
@@ -889,7 +889,7 @@ describe("id de l'étape qui a un contenu", () => {
           typeId: 'oct',
           etapes: [
             {
-              id: 'etape-id',
+              id: newEtapeId('etape-id'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
               date: toCaminoDate('2020-01-03'),
@@ -915,7 +915,7 @@ describe("id de l'étape qui a un contenu", () => {
           typeId: 'oct',
           etapes: [
             {
-              id: 'etape-id',
+              id: newEtapeId('etape-id'),
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
               date: toCaminoDate('2020-01-03'),

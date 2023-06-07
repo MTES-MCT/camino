@@ -1,6 +1,7 @@
 import { IHeritageProps, IFields, IHeritageContenu } from '../../../types.js'
 import { userSuper } from '../../user-super.js'
 import { titreEtapeGet } from '../../queries/titres-etapes.js'
+import { newEtapeId } from './id-create.js'
 
 const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of Object.keys(heritageProps)) {
@@ -12,7 +13,7 @@ const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
         fields[propId] = { id: {} }
       }
 
-      const titreEtape = await titreEtapeGet(heritageProps[propId].etapeId!, { fields }, userSuper)
+      const titreEtape = await titreEtapeGet(newEtapeId(heritageProps[propId].etapeId!), { fields }, userSuper)
 
       heritageProps[propId].etape = titreEtape
     }
@@ -27,7 +28,7 @@ const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {
         if (heritageContenu[sectionId][elementId].etapeId) {
-          const titreEtape = await titreEtapeGet(heritageContenu[sectionId][elementId].etapeId!, { fields }, userSuper)
+          const titreEtape = await titreEtapeGet(newEtapeId(heritageContenu[sectionId][elementId].etapeId!), { fields }, userSuper)
 
           heritageContenu[sectionId][elementId].etape = titreEtape
         }

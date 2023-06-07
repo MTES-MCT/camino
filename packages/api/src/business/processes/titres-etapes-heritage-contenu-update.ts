@@ -1,5 +1,5 @@
 /* eslint-disable sql/no-unsafe-query */
-import { IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
@@ -7,11 +7,7 @@ import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/
 import { UserNotNull } from 'camino-common/src/roles'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { knex } from '../../knex.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
@@ -21,14 +17,15 @@ import { getEtapesByDemarche, getEtapesByDemarcheValidator } from './titres-etap
 import { TitreId } from 'camino-common/src/titres.js'
 
 export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?: TitreId) => {
-  const etapes = await dbQueryAndValidate(getEtapesByDemarche, {demarcheId, titreId}, pool, getEtapesByDemarcheValidator)
+  const etapes = await dbQueryAndValidate(getEtapesByDemarche, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
+
   return etapes.reduce<{
     [key: DemarcheId]: {
       etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'heritageContenu' | 'titreDemarcheId' | 'communes'>[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
-      titreId: string
+      titreId: TitreId
       statutId: DemarcheStatutId
     }
   }>((acc, row) => {
@@ -52,7 +49,7 @@ export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?
       contenu: row.contenu,
       heritageContenu: row.heritage_contenu,
       titreDemarcheId: row.demarche_id,
-      communes: row.communes
+      communes: row.communes,
     })
 
     return acc
@@ -104,7 +101,7 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
             titresEtapesIdsUpdated.push(titreEtape.id)
 
             titreEtape.contenu = contenu ?? null
-            titreEtape.heritageContenu = heritageContenu ?? null
+            titreEtape.heritageContenu = heritageContenu ?? null
           }
         }
       }
