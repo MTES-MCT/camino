@@ -6,7 +6,6 @@ entity "**activites_types**" {
   + ""id"": //character varying(3) [PK]//
   --
   *""nom"": //character varying(255) //
-  *""sections"": //jsonb[] //
   *""frequence_id"": //character varying(3) //
   *""date_debut"": //character varying(255) //
   ""delai_mois"": //integer //
@@ -63,7 +62,6 @@ entity "**communes**" {
   + ""id"": //character varying(5) [PK]//
   --
   *""nom"": //character varying(255) //
-  *""departement_id"": //character varying(3) //
 }
 
 entity "**communes_postgis**" {
@@ -95,7 +93,7 @@ entity "**documents**" {
   *""date"": //character varying(10) //
   ""entreprise_id"": //character varying(64) [FK]//
   ""titre_etape_id"": //character varying(128) [FK]//
-  ""description"": //character varying(1024) //
+  *""description"": //character varying(1024) //
   ""titre_activite_id"": //character varying(128) [FK]//
   ""fichier"": //boolean //
   ""fichier_type_id"": //character varying(3) //
@@ -167,7 +165,6 @@ entity "**etapes_types**" {
   ""unique"": //boolean //
   ""acceptation_auto"": //boolean //
   ""date_fin"": //character varying(10) //
-  ""sections"": //jsonb[] //
   ""public_lecture"": //boolean //
   ""entreprises_lecture"": //boolean //
 }
@@ -178,12 +175,6 @@ entity "**etapes_types__justificatifs_types**" {
   --
   ""optionnel"": //boolean //
   ""description"": //text //
-}
-
-entity "**forets**" {
-  + ""id"": //character varying(30) [PK]//
-  --
-  *""nom"": //character varying(255) //
 }
 
 entity "**forets_postgis**" {
@@ -244,16 +235,13 @@ entity "**titres**" {
   *""nom"": //character varying(255) //
   *""type_id"": //character varying(3) [FK]//
   *""titre_statut_id"": //character varying(3) //
-  ""date_debut"": //character varying(10) //
-  ""date_fin"": //character varying(10) //
-  ""date_demande"": //character varying(10) //
   ""public_lecture"": //boolean //
   ""entreprises_lecture"": //boolean //
   ""doublon_titre_id"": //character varying(128) //
   ""contenus_titre_etapes_ids"": //jsonb //
   ""coordonnees"": //point //
   ""props_titre_etapes_ids"": //jsonb //
-  ""slug"": //character varying(255) //
+  *""slug"": //character varying(255) //
   *""archive"": //boolean //
   *""references"": //jsonb //
 }
@@ -269,12 +257,12 @@ entity "**titres_activites**" {
   --
   ""titre_id"": //character varying(128) [FK]//
   ""utilisateur_id"": //character varying(128) [FK]//
-  ""date"": //character varying(10) //
+  *""date"": //character varying(10) //
   ""date_saisie"": //character varying(10) //
   ""contenu"": //jsonb //
   *""type_id"": //character varying(3) [FK]//
   *""activite_statut_id"": //character varying(3) //
-  ""annee"": //integer //
+  *""annee"": //integer //
   ""periode_id"": //integer //
   ""sections"": //jsonb[] //
   ""suppression"": //boolean //
@@ -286,13 +274,6 @@ entity "**titres_amodiataires**" {
   + ""entreprise_id"": //character varying(64) [PK][FK]//
   --
   ""operateur"": //boolean //
-}
-
-entity "**titres_communes**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""commune_id"": //character varying(8) [PK][FK]//
-  --
-  ""surface"": //integer //
 }
 
 entity "**titres_demarches**" {
@@ -341,17 +322,13 @@ entity "**titres_etapes**" {
   ""secteurs_maritime"": //jsonb //
   ""administrations_locales"": //jsonb //
   ""sdom_zones"": //jsonb //
+  *""forets"": //jsonb //
+  *""communes"": //jsonb //
 }
 
 entity "**titres_etapes_justificatifs**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""document_id"": //character varying(255) [PK][FK]//
-  --
-}
-
-entity "**titres_forets**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""foret_id"": //character varying(8) [PK][FK]//
   --
 }
 
@@ -365,7 +342,6 @@ entity "**titres_points**" {
   *""point"": //integer //
   ""nom"": //character varying(255) //
   ""description"": //text //
-  ""securite"": //boolean //
   ""subsidiaire"": //boolean //
   ""lot"": //integer //
   ""slug"": //character varying(255) //
@@ -403,7 +379,6 @@ entity "**titres_types__demarches_types__etapes_types**" {
   + ""etape_type_id"": //character varying(3) [PK][FK]//
   --
   ""ordre"": //integer //
-  ""sections"": //jsonb[] //
 }
 
 entity "**titres_types__demarches_types__etapes_types__justificatifs_t**" {
@@ -534,14 +509,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres_amodiataires**"   }--  "**titres_etapes**"
 
-"**titres_communes**"   }--  "**communes**"
-
-"**titres_communes**"   }--  "**communes**"
-
-"**titres_communes**"   }--  "**titres_etapes**"
-
-"**titres_communes**"   }--  "**titres_etapes**"
-
 "**titres_demarches**"   }--  "**titres**"
 
 "**titres_demarches**"   }--  "**demarches_types**"
@@ -565,14 +532,6 @@ entity "**utilisateurs__titres**" {
 "**titres_etapes_justificatifs**"   }--  "**titres_etapes**"
 
 "**titres_etapes_justificatifs**"   }--  "**titres_etapes**"
-
-"**titres_forets**"   }--  "**forets**"
-
-"**titres_forets**"   }--  "**forets**"
-
-"**titres_forets**"   }--  "**titres_etapes**"
-
-"**titres_forets**"   }--  "**titres_etapes**"
 
 "**titres_points**"   }--  "**titres_etapes**"
 
