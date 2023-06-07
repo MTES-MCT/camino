@@ -49,4 +49,4 @@ export const isPaysId = (value: string): value is PaysId => paysIdValidator.safe
 
 export const isGuyane = (pays: PaysId | null): boolean => pays === 'GF'
 export const isMetropole = (pays: PaysId | null): boolean => pays === 'FR'
-export const isOutreMer = (pays: PaysId | null): boolean => !isMetropole(pays)
+export const isOutreMer = (pays: PaysId | null): boolean => pays !== null && !isMetropole(pays)
