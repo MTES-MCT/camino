@@ -24,6 +24,7 @@ from
     titres_etapes et
     join titres_demarches td on td.id = et.titre_demarche_id
     join titres t on t.id = td.titre_id
+    join titres_etapes etapes_communes on t.props_titre_etapes_ids ->> 'points' = etapes_communes.id
 where
     et.type_id = $ etapeTypeId
     and et.archive is false
@@ -34,7 +35,7 @@ where
         select
             *
         from
-            jsonb_array_elements(et.communes) as c
+            jsonb_array_elements(etapes_communes.communes) as c
         where (substring(c ->> 'id', 1, 2) != '97'
             and substring(c ->> 'id', 1, 2) in $$ departements)
         or substring(c ->> 'id', 1, 3) in $$ departements)
@@ -122,6 +123,7 @@ from
     titres_etapes et
     join titres_demarches td on td.id = et.titre_demarche_id
     join titres t on t.id = td.titre_id
+    join titres_etapes etapes_communes on t.props_titre_etapes_ids ->> 'points' = etapes_communes.id
 where ((et.type_id in $$ etapesTypesDecisionRefus
         and et.statut_id = $ etapeStatutRejet)
     or (et.type_id = $ etapeTypeClassementSansSuite
@@ -135,7 +137,7 @@ and exists (
     select
         *
     from
-        jsonb_array_elements(et.communes) as c
+        jsonb_array_elements(etapes_communes.communes) as c
     where (substring(c ->> 'id', 1, 2) != '97'
         and substring(c ->> 'id', 1, 2) in $$ departements)
     or substring(c ->> 'id', 1, 3) in $$ departements)
