@@ -4,7 +4,7 @@ import { titreCreate } from '../../database/queries/titres.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitre } from '../../types.js'
 import { userSuper } from '../../database/user-super'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
@@ -27,7 +27,7 @@ afterAll(async () => {
 })
 
 const titrePublicLectureFalse: ITitre = {
-  id: 'titre-id',
+  id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
   publicLecture: false,
@@ -35,7 +35,7 @@ const titrePublicLectureFalse: ITitre = {
 }
 
 const titreDemarchesPubliques: ITitre = {
-  id: 'titre-id',
+  id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
   publicLecture: true,
@@ -43,20 +43,20 @@ const titreDemarchesPubliques: ITitre = {
   demarches: [
     {
       id: newDemarcheId('titre-id-demarche-oct'),
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'oct',
       publicLecture: true,
     },
     {
       id: newDemarcheId('titre-id-demarche-pro'),
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'pro',
       publicLecture: false,
     },
   ],
 }
 const titreEtapesPubliques: ITitre = {
-  id: 'titre-id',
+  id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
   publicLecture: true,
@@ -64,13 +64,13 @@ const titreEtapesPubliques: ITitre = {
   demarches: [
     {
       id: newDemarcheId('titre-id-demarche-id'),
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'oct',
       statutId: 'acc',
       publicLecture: true,
       etapes: [
         {
-          id: 'titre-id-demarche-id-aof',
+          id: newEtapeId('titre-id-demarche-id-aof'),
           typeId: 'aof',
           ordre: 8,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -78,7 +78,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-eof',
+          id: newEtapeId('titre-id-demarche-id-eof'),
           typeId: 'eof',
           ordre: 7,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -86,7 +86,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-edm',
+          id: newEtapeId('titre-id-demarche-id-edm'),
           typeId: 'edm',
           ordre: 6,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -94,7 +94,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-ede',
+          id: newEtapeId('titre-id-demarche-id-ede'),
           typeId: 'ede',
           ordre: 5,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -102,7 +102,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-pfd',
+          id: newEtapeId('titre-id-demarche-id-pfd'),
           typeId: 'pfd',
           ordre: 4,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -110,7 +110,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-pfc',
+          id: newEtapeId('titre-id-demarche-id-pfc'),
           typeId: 'pfc',
           ordre: 3,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -118,7 +118,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-vfd',
+          id: newEtapeId('titre-id-demarche-id-vfd'),
           typeId: 'vfd',
           ordre: 2,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -126,7 +126,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-vfc',
+          id: newEtapeId('titre-id-demarche-id-vfc'),
           typeId: 'vfc',
           ordre: 1,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -134,7 +134,7 @@ const titreEtapesPubliques: ITitre = {
           date: toCaminoDate('2020-02-02'),
         },
         {
-          id: 'titre-id-demarche-id-dpu',
+          id: newEtapeId('titre-id-demarche-id-dpu'),
           typeId: 'dpu',
           ordre: 0,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -148,14 +148,14 @@ const titreEtapesPubliques: ITitre = {
 }
 
 const titreWithActiviteGrp: ITitre = {
-  id: 'titre-id',
+  id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'axm',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   activites: [
     {
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       id: 'titre-id-grp-2020-03',
       date: toCaminoDate('2020-10-01'),
       typeId: 'grp',
@@ -187,12 +187,12 @@ const titreWithActiviteGrp: ITitre = {
   demarches: [
     {
       id: newDemarcheId('titre-id-demarche-id'),
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'oct',
       publicLecture: true,
       etapes: [
         {
-          id: 'titre-id-demarche-id-dpu',
+          id: newEtapeId('titre-id-demarche-id-dpu'),
           typeId: 'dpu',
           ordre: 0,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
@@ -206,7 +206,7 @@ const titreWithActiviteGrp: ITitre = {
 }
 
 const titreActivites: ITitre = {
-  id: 'titre-id',
+  id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
   publicLecture: true,
@@ -214,7 +214,7 @@ const titreActivites: ITitre = {
   activites: [
     {
       id: 'titre-id-activites-oct',
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'grp',
       date: toCaminoDate('2020-01-01'),
       activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
@@ -243,7 +243,7 @@ const titreActivites: ITitre = {
     },
     {
       id: 'titre-id-activites-pro',
-      titreId: 'titre-id',
+      titreId: newTitreId('titre-id'),
       typeId: 'gra',
       date: toCaminoDate('2020-01-01'),
       activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
@@ -276,7 +276,7 @@ describe('titre', () => {
 
   test('peut voir un titre qui est en "lecture publique" (utilisateur anonyme)', async () => {
     const titrePublicLecture: ITitre = {
-      id: 'titre-id',
+      id: newTitreId('titre-id'),
       nom: 'mon titre',
       typeId: 'arm',
       publicLecture: true,
@@ -306,7 +306,7 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
       titre: {
-        id: 'titre-id',
+        id: newTitreId('titre-id'),
         demarches: [{ id: 'titre-id-demarche-oct' }],
       },
     })
@@ -321,7 +321,7 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
       titre: {
-        id: 'titre-id',
+        id: newTitreId('titre-id'),
       },
     })
 
@@ -335,7 +335,7 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
       titre: {
-        id: 'titre-id',
+        id: newTitreId('titre-id'),
         demarches: [
           {
             id: 'titre-id-demarche-id',

@@ -1,7 +1,7 @@
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate, newDemarcheId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../models/_format/id-create.js'
 import { userSuper } from '../../user-super.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import { titreDemarcheSuppressionSelectQuery, titresDemarchesQueryModify } from './titres-demarches.js'
@@ -51,7 +51,7 @@ describe('titresDemarchesQueryModify', () => {
       [{ role: 'defaut' }, false],
       [undefined, false],
     ])('un utilisateur $user peut supprimer $suppression une démarche qui n’a pas d’étape', async (user, suppression) => {
-      const titreId = idGenerate()
+      const titreId = newTitreId()
       await Titres.query().insert([
         {
           id: titreId,
@@ -107,7 +107,7 @@ describe('titresDemarchesQueryModify', () => {
       [{ role: 'defaut' }, false],
       [undefined, false],
     ])('un utilisateur $role peut supprimer une démarche qui a au moins une étape', async (user, suppression) => {
-      const titreId = idGenerate()
+      const titreId = newTitreId()
       await Titres.query().insert([
         {
           id: titreId,
@@ -157,7 +157,7 @@ describe('titresDemarchesQueryModify', () => {
   })
   describe('titresDemarchesArchive', () => {
     test('Vérifie si le statut archivé masque la démarche du titre', async () => {
-      const titreId = idGenerate()
+      const titreId = newTitreId()
       await Titres.query().insert([
         {
           id: titreId,

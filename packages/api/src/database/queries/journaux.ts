@@ -8,6 +8,7 @@ import { fieldsFormat } from './graph/fields-format.js'
 import options from './_options.js'
 import { IJournauxQueryParams } from '../../api/graphql/resolvers/journaux.js'
 import { User } from 'camino-common/src/roles'
+import { TitreId } from 'camino-common/src/titres.js'
 
 const diffPatcher = create({
   // on filtre certaines proprietés qu’on ne souhaite pas voir apparaitre dans les journaux
@@ -91,7 +92,7 @@ export const upsertJournalCreate = async <T extends Model>(
   options: UpsertGraphOptions,
   relations: RelationExpression<T>,
   userId: string,
-  titreId: string
+  titreId: TitreId
 ): Promise<T> => {
   const oldValue = id ? await model.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 

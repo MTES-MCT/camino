@@ -8,6 +8,8 @@ import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs.js'
 import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
 import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
 import { User, UserNotNull } from 'camino-common/src/roles'
+import { TitreId } from 'camino-common/src/titres.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : options.titresEtapes.graph
@@ -22,7 +24,7 @@ const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) =>
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-const titreEtapeGet = async (titreEtapeId: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
+const titreEtapeGet = async (titreEtapeId: EtapeId, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -76,11 +78,11 @@ const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserN
   return newValue
 }
 
-const titreEtapeUpdate = async (id: string, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: string): Promise<TitresEtapes> => {
+const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
   return patchJournalCreate<TitresEtapes>(id, titreEtape, TitresEtapes, user.id, titreId)
 }
 
-const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: string) =>
+const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) =>
   upsertJournalCreate<TitresEtapes>(titreEtape.id, titreEtape, TitresEtapes, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
 
 const titresEtapesJustificatifsUpsert = async (titresEtapesJustificatifs: ITitreEtapeJustificatif[]) =>

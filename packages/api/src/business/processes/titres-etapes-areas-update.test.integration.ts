@@ -7,7 +7,7 @@ import TitresEtapes from '../../database/models/titres-etapes.js'
 import TitresPoints from '../../database/models/titres-points.js'
 import { titresEtapesAreasUpdate } from './titres-etapes-areas-update.js'
 import { BaisieuxPerimetre, foret2BranchesPerimetre, foretReginaPerimetre, SaintEliePerimetre, SinnamaryPerimetre } from './__mocks__/titres-etapes-areas-update.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
@@ -52,7 +52,7 @@ describe('titresEtapesAreasUpdate', () => {
     // Pour simplifier le test, on utilise des forêts en tant que zone de sdom
     await knex!.raw(`insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone1}','${foret2BranchesPerimetre}')`)
     await knex!.raw(`insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone2}','${foretReginaPerimetre}')`)
-    const titreId = 'titreIdUniquePourMiseAJourAreas'
+    const titreId = newTitreId('titreIdUniquePourMiseAJourAreas')
     await Titres.query().insert({
       id: titreId,
       slug: `slug-${titreId}`,

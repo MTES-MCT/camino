@@ -1,7 +1,7 @@
 import { ITitreEtape } from '../../types.js'
 
 import { titreEtapesSortAscByDate, titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from './titre-etapes-sort.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
 import { vi, describe, test, expect } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
@@ -11,12 +11,12 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
   { typeId: 'dex', ordre: 1, date: '1988-03-06' },
-] as ITitreEtape[]
+] as Pick<Required<ITitreEtape>, "id" | "date" | "communes" | "typeId" | "ordre" | "statutId" | "contenu" | "titreDemarcheId">[]
 
 const titreEtapesSortedAsc = [
   { typeId: 'dex', ordre: 1, date: '1988-03-06' },
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
-] as ITitreEtape[]
+] as Pick<Required<ITitreEtape>, "id" | "date" | "communes" | "typeId" | "ordre" | "statutId" | "contenu" | "titreDemarcheId">[]
 
 const titreEtapesSortedDesc = titreEtapesSortedAsc.slice().reverse()
 
@@ -49,7 +49,7 @@ describe('trie les étapes', () => {
   })
 
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
-    const titreEtapesMemesDatesOrdreDesc: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const titreEtapesMemesDatesOrdreDesc: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
         id: '1',
         typeId: 'dex',
@@ -57,6 +57,8 @@ describe('trie les étapes', () => {
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
+        communes: [],
+        contenu: {}
       },
       {
         id: '2',
@@ -65,6 +67,8 @@ describe('trie les étapes', () => {
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fav',
+        communes: [],
+        contenu: {}
       },
     ]
 
@@ -75,7 +79,7 @@ describe('trie les étapes', () => {
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
     const titreDemarcheId = newDemarcheId('1')
-    const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
         id: '1',
         typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
@@ -83,6 +87,8 @@ describe('trie les étapes', () => {
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
+        communes: [],
+        contenu: {}
       },
       {
         id: '2',
@@ -91,6 +97,8 @@ describe('trie les étapes', () => {
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
+        communes: [],
+        contenu: {}
       },
       {
         id: '3',
@@ -99,6 +107,8 @@ describe('trie les étapes', () => {
         date: toCaminoDate('1988-03-06'),
         titreDemarcheId,
         statutId: 'fav',
+        communes: [],
+        contenu: {}
       },
     ]
     expect(titreEtapesSortAscByDate(titreEtapesMemesDatesOrdreEtapesTypesDesc, titreDemarcheId, DEMARCHES_TYPES_IDS.Retrait, TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX)).toMatchObject([
@@ -127,27 +137,36 @@ describe('trie les étapes', () => {
   })
 
   test('tri selon l’arbre si les étapes ont la même date', () => {
-    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
-        id: '1',
+        id: newEtapeId('1'),
         typeId: 'pfd',
+        ordre: 1,
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        communes: [],
+        contenu: {}
       },
       {
-        id: '2',
+        id: newEtapeId('2'),
         typeId: 'mfr',
+        ordre: 2,
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        communes: [],
+        contenu: {}
       },
       {
-        id: '3',
+        id: newEtapeId('3'),
         typeId: 'mdp',
+        ordre: 3,
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        communes: [],
+        contenu: {}
       },
     ]
 
@@ -158,13 +177,16 @@ describe('trie les étapes', () => {
   })
 
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
-    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
         id: '1',
         typeId: 'mcr',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        ordre: 1,
+        communes: [],
+        contenu: null
       },
       {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -174,6 +196,9 @@ describe('trie les étapes', () => {
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        ordre: 2,
+        communes: [],
+        contenu: null
       },
       {
         id: '3',
@@ -181,6 +206,9 @@ describe('trie les étapes', () => {
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        ordre: 3,
+        communes: [],
+        contenu: null
       },
     ]
 
@@ -190,42 +218,57 @@ describe('trie les étapes', () => {
   })
 
   test('utilise l’id pour trier des étapes totalement identiques', () => {
-    const secondMcd: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'> = {
-      id: 'mcd2',
+    const secondMcd: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'> = {
+      id: newEtapeId('mcd2'),
       typeId: 'mcd',
       date: toCaminoDate('2020-01-01'),
       statutId: 'fai',
       titreDemarcheId: newDemarcheId(),
+      ordre: 5,
+      contenu: {},
+      communes: []
     }
 
-    const etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[] = [
+    const etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[] = [
       {
-        id: 'mfr',
+        id: newEtapeId('mfr'),
+        ordre: 1,
         typeId: 'mfr',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        contenu: {},
+        communes: []
       },
       {
-        id: 'mdp',
+        id: newEtapeId('mdp'),
+        ordre: 2,
         typeId: 'mdp',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        contenu: {},
+        communes: []
       },
       {
-        id: 'mcd',
+        id: newEtapeId('mcd'),
+        ordre: 3,
         typeId: 'mcd',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        contenu: {},
+        communes: []
       },
       {
-        id: 'rcd',
+        id: newEtapeId('rcd'),
+        ordre: 4,
         typeId: 'rcd',
         date: toCaminoDate('2020-01-01'),
         statutId: 'fai',
         titreDemarcheId: newDemarcheId(),
+        contenu: {},
+        communes: []
       },
       secondMcd,
     ]

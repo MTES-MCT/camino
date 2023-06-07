@@ -42,6 +42,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -62,7 +63,7 @@ const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { d
   return result
 }
 
-const etape = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -461,7 +462,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
   }
 }
 
-const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -589,7 +590,7 @@ const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, inf
   }
 }
 
-const etapeSupprimer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 

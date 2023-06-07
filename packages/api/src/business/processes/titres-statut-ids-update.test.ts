@@ -2,7 +2,7 @@ import { titresStatutIdsUpdate } from './titres-statut-ids-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 
 import { vi, describe, expect, test, beforeEach } from 'vitest'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
@@ -22,7 +22,7 @@ describe("statut d'un titre", () => {
   test('met à jour un titre si son statut est obsolète', async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'm-pr-saint-pierre-1914',
+        id: newTitreId('m-pr-saint-pierre-1914'),
         nom: 'unused',
         typeId: 'prm',
         propsTitreEtapesIds: {},
@@ -30,7 +30,7 @@ describe("statut d'un titre", () => {
         demarches: [
           {
             id: newDemarcheId('m-pr-saint-pierre-1914-oct01'),
-            titreId: 'm-pr-saint-pierre-1914',
+            titreId: newTitreId('m-pr-saint-pierre-1914'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,
@@ -49,7 +49,7 @@ describe("statut d'un titre", () => {
   test("ne met pas à jour le statut d'un titre", async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'm-pr-saint-pierre-2014',
+        id: newTitreId('m-pr-saint-pierre-2014'),
         nom: 'nom',
         typeId: 'prm',
         titreStatutId: 'val',
@@ -57,7 +57,7 @@ describe("statut d'un titre", () => {
         demarches: [
           {
             id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
-            titreId: 'm-pr-saint-pierre-2014',
+            titreId: newTitreId('m-pr-saint-pierre-2014'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,

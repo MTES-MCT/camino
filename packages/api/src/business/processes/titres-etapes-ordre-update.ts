@@ -7,12 +7,13 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { Pool } from 'pg'
 
-export const titresEtapesOrdreUpdate = async (user: UserNotNull, demarcheId?: DemarcheId) => {
+export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
   console.info('ordre des étapes…')
 
-  const titresDemarches = await getDemarches(demarcheId)
+  const titresDemarches = await getDemarches(pool, demarcheId)
 
   return titresEtapesOrdreUpdateVisibleForTesting(user, titresDemarches)
 }
@@ -21,7 +22,7 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
   user: UserNotNull,
   titresDemarches: {
     [key: DemarcheId]: {
-      etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[]
+      etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId

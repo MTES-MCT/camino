@@ -2,7 +2,7 @@ import { ITitreEtape } from '../../types.js'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
@@ -18,7 +18,7 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
 describe("publicité d'une démarche", () => {
   test("une démarche sans étape n'est pas publique", () => {
     expect(
-      titreDemarchePublicFind({ id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: 'titreId', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') }, 'arm')
+      titreDemarchePublicFind({ id: newDemarcheId(), typeId: 'oct', etapes: [], titreId: newTitreId('titreId'), demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2021-01-01') }, 'arm')
     ).toMatchObject({
       publicLecture: false,
       entreprisesLecture: false,
@@ -32,7 +32,7 @@ describe("publicité d'une démarche", () => {
           id: newDemarcheId(),
           typeId: 'oct',
           etapes: etapesBuild([{ typeId: 'dae' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
         },
@@ -50,7 +50,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'spp' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -66,7 +66,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'spp' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -82,7 +82,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'spp' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -98,7 +98,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'mfr' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -114,7 +114,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'dex', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arg'
       )
@@ -130,7 +130,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'css' }, { typeId: 'mfr' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -146,7 +146,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2000-01-01') }, { typeId: 'css' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'axm'
       )
@@ -162,7 +162,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'sca', date: toCaminoDate('2000-01-01') }, { typeId: 'css' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -178,7 +178,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -194,7 +194,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'axm'
       )
@@ -210,7 +210,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'mcr' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'cxf'
       )
@@ -226,7 +226,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -242,7 +242,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'mcr' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'cxf'
       )
@@ -258,7 +258,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'anf' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -274,7 +274,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'apu' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -290,7 +290,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'ane' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -306,7 +306,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'ppu' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -322,7 +322,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'def', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -338,7 +338,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'aca', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -354,7 +354,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'sca', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -370,7 +370,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([{ typeId: 'dim', statutId: 'acc' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -389,7 +389,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'anf', statutId: 'fai' },
             { typeId: 'dim', statutId: 'rej' },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'cxf'
       )
@@ -405,7 +405,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'dex', statutId: 'rej' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -424,7 +424,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mcr', date: toCaminoDate('2000-01-01') },
             { typeId: 'dex', statutId: 'rej' },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'axm'
       )
@@ -440,7 +440,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'dex', statutId: 'acc', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'axm'
       )
@@ -456,7 +456,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'dpu', statutId: 'acc' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -472,7 +472,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'dux' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -488,7 +488,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'dup' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -504,7 +504,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'rpu' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -520,7 +520,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2001-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'sco', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -536,7 +536,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'sco', date: toCaminoDate('2000-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -552,7 +552,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'and', statutId: 'fav' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -568,7 +568,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'and', statutId: 'fai' }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'pcc'
       )
@@ -584,7 +584,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2017-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -600,7 +600,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2020-01-01') },
             { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -616,7 +616,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'mcr', date: toCaminoDate('2017-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -634,7 +634,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
             { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -653,7 +653,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mcr', date: toCaminoDate('2017-01-01') },
             { typeId: 'eof', date: toCaminoDate('2017-01-01') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -671,7 +671,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
             { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-01-05') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -687,7 +687,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'css', date: toCaminoDate('2017-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -705,7 +705,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-03') },
             { typeId: 'css', statutId: 'fai', date: toCaminoDate('2020-01-05') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -722,7 +722,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'des', date: toCaminoDate('2017-01-01') }]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -740,7 +740,7 @@ describe("publicité d'une démarche", () => {
             { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2020-01-02') },
             { typeId: 'des', statutId: 'fai', date: toCaminoDate('2020-01-05') },
           ]),
-          titreId: 'titreId',
+          titreId: newTitreId('titreId'),
         },
         'arm'
       )
@@ -758,7 +758,7 @@ describe("publicité d'une démarche", () => {
             demarcheDateFin: toCaminoDate('2021-01-01'),
             id: newDemarcheId(),
             etapes: etapesBuild([{ typeId: etapeTypeId }]),
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
           },
           'pcc'
         )
@@ -775,7 +775,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           id: newDemarcheId(),
           etapes: etapesBuild([{ typeId: 'ane' }]),
-          titreId: 'WQaZgPfDcQw9tFliMgBIDH3Z',
+          titreId: newTitreId('WQaZgPfDcQw9tFliMgBIDH3Z'),
         },
         'pcc'
       )
@@ -785,7 +785,7 @@ describe("publicité d'une démarche", () => {
   test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', () => {
     expect(
       titreDemarchePublicFind(
-        { id: newDemarcheId(), typeId: 'pr1', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: null, etapes: etapesBuild([{ typeId: 'mfr' }, { typeId: 'mdp' }]), titreId: 'titreId' },
+        { id: newDemarcheId(), typeId: 'pr1', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: null, etapes: etapesBuild([{ typeId: 'mfr' }, { typeId: 'mdp' }]), titreId: newTitreId('titreId') },
         'prm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -794,7 +794,7 @@ describe("publicité d'une démarche", () => {
   test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', () => {
     expect(
       titreDemarchePublicFind(
-        { id: newDemarcheId(), typeId: 'pr1', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: null, etapes: etapesBuild([{ typeId: 'mfr' }]), titreId: 'titreId' },
+        { id: newDemarcheId(), typeId: 'pr1', demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: null, etapes: etapesBuild([{ typeId: 'mfr' }]), titreId: newTitreId('titreId') },
         'prm'
       )
     ).toMatchObject({ publicLecture: false })

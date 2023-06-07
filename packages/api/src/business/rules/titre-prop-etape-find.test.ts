@@ -1,7 +1,7 @@
 import { ITitreDemarche, IPropId, ITitreEtape, ITitrePoint, ICommune } from '../../types.js'
 
 import { titreContenuTitreEtapeFind, titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
@@ -789,7 +789,7 @@ describe("id de l'étape qui a un contenu", () => {
       [
         {
           id: newDemarcheId('demarche-id'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'pro',
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2020-01-02'),
@@ -820,7 +820,7 @@ describe("id de l'étape qui a un contenu", () => {
       [
         {
           id: newDemarcheId('demarche-id'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'oct',
           etapes: [
             {
@@ -835,7 +835,7 @@ describe("id de l'étape qui a un contenu", () => {
         },
         {
           id: newDemarcheId('demarche-id-2'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'pro',
           etapes: [
             {
@@ -857,7 +857,7 @@ describe("id de l'étape qui a un contenu", () => {
       [
         {
           id: newDemarcheId('demarche-id'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'pro',
           etapes: [
             {
@@ -885,7 +885,7 @@ describe("id de l'étape qui a un contenu", () => {
       [
         {
           id: newDemarcheId('demarche-id'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'oct',
           etapes: [
             {
@@ -911,7 +911,7 @@ describe("id de l'étape qui a un contenu", () => {
       [
         {
           id: newDemarcheId('demarche-id'),
-          titreId: 'titre-id',
+          titreId: newTitreId('titre-id'),
           typeId: 'oct',
           etapes: [
             {

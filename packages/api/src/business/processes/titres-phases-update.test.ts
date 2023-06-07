@@ -3,7 +3,7 @@ import { titresGet } from '../../database/queries/titres.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitre } from '../../types.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { Pool } from 'pg'
 import { updateDatesDemarcheDb } from './titres-phases-update.queries.js'
@@ -34,20 +34,20 @@ describe("phases d'un titre", () => {
   test('met à jour un titre dont une phase est créée', async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'h-cx-courdemanges-1988',
+        id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
         propsTitreEtapesIds: {},
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            titreId: 'h-cx-courdemanges-1988',
+            titreId: newTitreId('h-cx-courdemanges-1988'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,
             etapes: [
               {
-                id: 'h-cx-courdemanges-1988-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -56,7 +56,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
               },
               {
-                id: 'h-cx-courdemanges-1988-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -84,14 +84,14 @@ describe("phases d'un titre", () => {
   test('met à jour un titre dont une phase est modifiée', async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'h-cx-courdemanges-1988',
+        id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
         propsTitreEtapesIds: {},
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            titreId: 'h-cx-courdemanges-1988',
+            titreId: newTitreId('h-cx-courdemanges-1988'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,
@@ -99,7 +99,7 @@ describe("phases d'un titre", () => {
             demarcheDateDebut: toCaminoDate('2300-01-01'),
             etapes: [
               {
-                id: 'h-cx-courdemanges-1988-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -108,7 +108,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
               },
               {
-                id: 'h-cx-courdemanges-1988-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -135,14 +135,14 @@ describe("phases d'un titre", () => {
   test('met à jour un titre dont une phase est supprimée', async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'h-cx-courdemanges-1988',
+        id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'test',
         typeId: 'cxh',
         propsTitreEtapesIds: {},
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            titreId: 'h-cx-courdemanges-1988',
+            titreId: newTitreId('h-cx-courdemanges-1988'),
             typeId: 'oct',
             statutId: 'acc',
             demarcheDateDebut: toCaminoDate('2200-01-01'),
@@ -163,14 +163,14 @@ describe("phases d'un titre", () => {
   test("ne met pas à jour un titre si aucune phase n'est modifiée", async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'h-cx-courdemanges-1988',
+        id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         propsTitreEtapesIds: {},
         typeId: 'cxh',
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            titreId: 'h-cx-courdemanges-1988',
+            titreId: newTitreId('h-cx-courdemanges-1988'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,
@@ -178,7 +178,7 @@ describe("phases d'un titre", () => {
             demarcheDateDebut: toCaminoDate('2200-01-01'),
             etapes: [
               {
-                id: 'h-cx-courdemanges-1988-oct01-dpu01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dpu',
                 statutId: 'acc',
@@ -187,7 +187,7 @@ describe("phases d'un titre", () => {
                 dateFin: toCaminoDate('2500-01-01'),
               },
               {
-                id: 'h-cx-courdemanges-1988-oct01-dex01',
+                id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
@@ -209,14 +209,14 @@ describe("phases d'un titre", () => {
   test("ne met pas à jour un titre si aucune phase n'existe", async () => {
     titresGetMock.mockResolvedValue([
       {
-        id: 'h-cx-courdemanges-1988',
+        id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
         propsTitreEtapesIds: {},
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            titreId: 'h-cx-courdemanges-1988',
+            titreId: newTitreId('h-cx-courdemanges-1988'),
             typeId: 'oct',
             statutId: 'acc',
             ordre: 1,

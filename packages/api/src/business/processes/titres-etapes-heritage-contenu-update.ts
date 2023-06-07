@@ -15,39 +15,16 @@ import { knex } from '../../knex.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { Pool } from 'pg'
+import { dbQueryAndValidate } from '../../pg-database.js'
+import { getEtapesByDemarche, getEtapesByDemarcheValidator } from './titres-etapes-heritage-contenu-update.queries.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
-export const getDemarches = async (demarcheId?: DemarcheId, titreId?: string) => {
-  const etapes: {
-    rows: {
-      titre_id: string
-      titre_type_id: TitreTypeId
-      id: string
-      ordre: number
-      type_id: EtapeTypeId
-      statut_id: EtapeStatutId
-      date: CaminoDate
-      contenu: IContenu
-      heritage_contenu: IHeritageContenu
-      demarche_id: DemarcheId
-      demarche_type_id: DemarcheTypeId
-      demarche_statut_id: DemarcheStatutId
-    }[]
-  } =
-    await knex.raw(`SELECT titre.id as titre_id, titre.type_id as titre_type_id, etape.id, etape.ordre, etape.type_id, etape.statut_id, etape.date, etape.contenu, etape.heritage_contenu, demarche.id as demarche_id, demarche.type_id as demarche_type_id, demarche.statut_id as demarche_statut_id
-  from titres_etapes etape
-      join titres_demarches demarche on etape.titre_demarche_id = demarche.id
-      join titres titre on demarche.titre_id = titre.id
-      where etape.archive = false
-      and demarche.archive = false
-      and titre.archive = false
-      ${demarcheId ? `and demarche.id = '${demarcheId}'` : ''}
-      ${titreId ? `and titre.id = '${titreId}'` : ''}
-
-  order by demarche.id, etape.ordre`)
-
-  return etapes.rows.reduce<{
+export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?: TitreId) => {
+  const etapes = await dbQueryAndValidate(getEtapesByDemarche, {demarcheId, titreId}, pool, getEtapesByDemarcheValidator)
+  return etapes.reduce<{
     [key: DemarcheId]: {
-      etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'heritageContenu' | 'titreDemarcheId'>[]
+      etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'heritageContenu' | 'titreDemarcheId' | 'communes'>[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
@@ -75,16 +52,17 @@ export const getDemarches = async (demarcheId?: DemarcheId, titreId?: string) =>
       contenu: row.contenu,
       heritageContenu: row.heritage_contenu,
       titreDemarcheId: row.demarche_id,
+      communes: row.communes
     })
 
     return acc
   }, {})
 }
-export const titresEtapesHeritageContenuUpdate = async (user: UserNotNull, demarcheId?: DemarcheId) => {
+export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
   console.info('héritage des contenus des étapes…')
 
-  const titresDemarches = await getDemarches(demarcheId)
+  const titresDemarches = await getDemarches(pool, demarcheId)
 
   // lorsqu'une étape est mise à jour par un utilisateur,
   // l'objet heritageContenu reçu ne contient pas d'id d'étape
@@ -125,8 +103,8 @@ export const titresEtapesHeritageContenuUpdate = async (user: UserNotNull, demar
 
             titresEtapesIdsUpdated.push(titreEtape.id)
 
-            titreEtape.contenu = contenu
-            titreEtape.heritageContenu = heritageContenu
+            titreEtape.contenu = contenu ?? null
+            titreEtape.heritageContenu = heritageContenu ?? null
           }
         }
       }

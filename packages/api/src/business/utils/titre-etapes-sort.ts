@@ -13,7 +13,7 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>>(
+export const titreEtapesSortAscByDate = <T extends Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>>(
   titreEtapes: T[],
   demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,

@@ -47,7 +47,7 @@ export const titreDemarcheEtatValidate = (
   demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
   demarcheTypeId: DemarcheTypeId,
   titreDemarche: ITitreDemarche,
-  titreEtapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[],
+  titreEtapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId' | 'communes'>[],
   titre: ITitre
 ) => {
   // Si on tente d’insérer ou de modifier une étape, il faut regarder

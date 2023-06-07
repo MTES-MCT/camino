@@ -1,5 +1,6 @@
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
 import type { DemarcheId } from 'camino-common/src/demarche.js'
+import type { EtapeId } from 'camino-common/src/etape.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
 import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public-update.js'
@@ -24,7 +25,7 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 import type { UserNotNull } from 'camino-common/src/roles.js'
 import type { Pool } from 'pg'
 
-const titreEtapeUpdate = async (pool: Pool, titreEtapeId: string | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
+const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
   try {
     console.info()
     console.info('- - -')
@@ -42,13 +43,13 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: string | null, titreDe
       throw new Error(`la démarche ${titreDemarche} n'existe pas`)
     }
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(user, titreDemarcheId)
+    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, user, titreDemarcheId)
 
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
-    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(user, titreDemarcheId)
+    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, user, titreDemarcheId)
 
     const titreId = titreDemarche.titreId
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(titreId)
+    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool, titreId)
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
