@@ -5,7 +5,6 @@ import { fragmentGeojsonMultiPolygon } from './geojson'
 import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
-import { fragmentCommune } from '@/api/fragments/commune'
 
 const fragmentIncertitudes = gql`
   fragment incertitudes on Incertitudes {
@@ -145,9 +144,6 @@ const fragmentTitreEtape = gql`
     heritageProps {
       ...heritageProps
     }
-    communes {
-      ...commune
-    }
     contenu
     heritageContenu
     decisionsAnnexesSections
@@ -161,8 +157,6 @@ const fragmentTitreEtape = gql`
   ${fragmentPoint}
 
   ${fragmentGeojsonMultiPolygon}
-
-  ${fragmentCommune}
 
   ${fragmentDocument}
 
@@ -280,9 +274,6 @@ const fragmentEtape = gql`
     heritageProps {
       ...heritageProps
     }
-    communes {
-      ...commune
-    }
     contenu
     heritageContenu
     decisionsAnnexesSections
@@ -294,8 +285,6 @@ const fragmentEtape = gql`
   ${fragmentPoint}
 
   ${fragmentGeojsonMultiPolygon}
-
-  ${fragmentCommune}
 
   ${fragmentDocument}
 

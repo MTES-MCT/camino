@@ -5,6 +5,7 @@ import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
 import { Entreprise, EntrepriseDocument, EntrepriseType, toDocumentId, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
+import { toCommuneId } from 'camino-common/src/static/communes'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -173,7 +174,7 @@ const completeEntreprise: EntrepriseType = {
       ],
       communes: [
         {
-          departementId: '973',
+          id: toCommuneId('97300'),
         },
       ],
     },
@@ -198,7 +199,7 @@ const completeEntreprise: EntrepriseType = {
       ],
       communes: [
         {
-          departementId: '973',
+          id: toCommuneId('97300'),
         },
       ],
       references: [
@@ -229,7 +230,7 @@ const completeEntreprise: EntrepriseType = {
       ],
       communes: [
         {
-          departementId: '973',
+          id: toCommuneId('97300'),
         },
       ],
     },
@@ -256,7 +257,7 @@ const completeEntreprise: EntrepriseType = {
       ],
       communes: [
         {
-          departementId: '973',
+          id: toCommuneId('97300'),
         },
       ],
     },

@@ -95,7 +95,7 @@ type Titre {
   activitesAbsentes: Int
 
   "Forets"
-  forets: [Foret]
+  forets: [String]
 
   "Zones du SDOM de Guyane"
   sdomZones: [String]

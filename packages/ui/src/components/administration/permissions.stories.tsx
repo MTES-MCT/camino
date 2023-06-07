@@ -18,7 +18,7 @@ export const Default: StoryFn = () => (
   />
 )
 
-export const error: StoryFn = () => (
+export const WithError: StoryFn = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{

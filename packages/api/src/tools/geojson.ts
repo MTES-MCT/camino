@@ -108,7 +108,6 @@ export const geojsonIntersectsSDOM = async (geojson: Feature<any>): Promise<GeoJ
     )
   } catch (e) {
     fallback = true
-    console.warn("Une erreur est survenue lors du calcul de l'intersection avec des zones du sdom, tentative de correction automatique")
     result = await knex.raw(
       `select sdom_zones_postgis.id from sdom_zones_postgis
              where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), sdom_zones_postgis.geometry) is true`
@@ -128,7 +127,6 @@ export const geojsonIntersectsForets = async (geojson: Feature<any>): Promise<Ge
     )
   } catch (e) {
     fallback = true
-    console.warn("Une erreur est survenue lors du calcul de l'intersection avec des forêts, tentative de correction automatique")
     result = await knex.raw(
       `select forets_postgis.id from forets_postgis 
            where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), forets_postgis.geometry) is true`
@@ -148,7 +146,6 @@ export const geojsonIntersectsSecteursMaritime = async (geojson: Feature<any>): 
     )
   } catch (e) {
     fallback = true
-    console.warn("Une erreur est survenue lors du calcul de l'intersection avec des secteurs maritimes, tentative de correction automatique")
     result = await knex.raw(
       `select secteurs_maritime_postgis.id from secteurs_maritime_postgis 
            where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), secteurs_maritime_postgis.geometry) is true`
@@ -170,7 +167,6 @@ export const geojsonIntersectsCommunes = async (geojson: Feature<any>): Promise<
     )
   } catch (e) {
     fallback = true
-    console.warn("Une erreur est survenue lors du calcul de l'intersection avec des communes, tentative de correction automatique")
     result = await knex.raw(
       `select communes_postgis.id,
                 ST_Area(ST_INTERSECTION(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), communes_postgis.geometry), true) as surface

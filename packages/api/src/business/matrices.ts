@@ -8,9 +8,14 @@ import { entreprisesGet } from '../database/queries/entreprises.js'
 import { Fiscalite, fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
 import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
 import carbone from 'carbone'
+import { Pool } from 'pg'
+import { getCommunes } from '../database/queries/communes.queries.js'
+import { dbQueryAndValidate } from '../pg-database.js'
+import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
 
 const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
 
@@ -127,7 +132,7 @@ type Matrices = {
   sip: Sips
   index: number
   titulaire: Titulaire
-  departementLabel: string
+  departementLabel: DepartementLabel
   titreLabel: string
   surfaceCommunaleProportionnee: number
   surfaceCommunale: number
@@ -157,7 +162,8 @@ export const buildMatrices = (
   result: OpenfiscaResponse,
   titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[],
   annee: number,
-  openfiscaConstants: OpenfiscaConstants
+  openfiscaConstants: OpenfiscaConstants,
+  communes: Commune[]
 ): {
   matrice1121: Matrice1121[]
   matrice1122: Matrice1122[]
@@ -195,7 +201,7 @@ export const buildMatrices = (
 
         const titreLabel = titre.slug ?? ''
 
-        const departement = commune.departementId ? Departements[commune.departementId].nom : ''
+        const departement = Departements[toDepartementId(commune.id)].nom
 
         let sip: Sips = 'saintLaurentDuMaroni'
         if (sips.saintLaurentDuMaroni.communes.includes(commune.id)) {
@@ -212,8 +218,8 @@ export const buildMatrices = (
         const titulaireTitre = titre.titulaires[0]
 
         return {
-          communePrincipale,
-          commune,
+          communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
+          commune: communes.find(({ id }) => id === commune.id) ?? commune,
           fiscalite,
           quantiteOrExtrait: precisionGramme(quantiteOrExtrait),
           sip,
@@ -238,7 +244,7 @@ export const buildMatrices = (
 
     return {
       "Numéro d'ordre de la matrice": line.index,
-      "Commune du lieu principal d'exploitation": line.communePrincipale.nom,
+      "Commune du lieu principal d'exploitation": communes.find(({ id }) => id === line.communePrincipale.id)?.nom,
       'Désignation et adresse des concessionnaires, titulaires de permis d’exploitation ou exploitants': titulaireToString(line.titulaire),
       'Nature des substances extraites': 'Minerais aurifères',
       'Base des redevances | Nature': "Kilogramme d'or contenu",
@@ -264,7 +270,7 @@ export const buildMatrices = (
       'Désignation des concessionnaires': titulaireToString(line.titulaire),
       'Désignation des concessions': line.titreLabel,
       'Départements sur le territoire desquels fonctionnent les exploitations': line.departementLabel,
-      'Communes sur le territoire desquels fonctionnent les exploitations': `${line.commune?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
+      'Communes sur le territoire desquels fonctionnent les exploitations': `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
       "Tonnages extraits ou cours de l'année précédente | par département": line.quantiteOrExtrait,
       "Tonnages extraits ou cours de l'année précédente | par commune": line.quantiteOrExtrait,
       Observations: "production en kilogramme d'or",
@@ -355,7 +361,7 @@ export const buildMatrices = (
           departements: line.departementLabel,
           // TODO 2022-09-19 on est dans une impasse, impossible de répartir correctement la redevance entre la commune principale et les autres.
           // pour le moment, on fait comme les années précédences, en attendant une correction
-          communes: line.communePrincipale.nom,
+          communes: communes.find(({ id }) => id === line.communePrincipale.id)?.nom ?? '',
           elementsDeBase_revenusImposablesALaTFPB: 0,
           elementsDeBase_tonnagesExtraits: line.quantiteOrExtrait,
           redevanceDepartementale_produitNetDeLaRedevance: line.fiscalite.redevanceDepartementale,
@@ -385,7 +391,7 @@ export const buildMatrices = (
   return { matrice1121, matrice1122, matrice1403, matrice1404, rawLines }
 }
 
-export const matrices = async (annee: number) => {
+export const matrices = async (annee: number, pool: Pool) => {
   const anneePrecedente = annee - 1
 
   const titres = await titresGet(
@@ -442,13 +448,19 @@ export const matrices = async (annee: number) => {
 
   const entreprises = await entreprisesGet({}, { fields: { id: {} } }, userSuper)
 
+  const communesIds = titres
+    .flatMap(({ communes }) => communes?.map(({ id }) => id))
+    .filter(onlyUnique)
+    .filter(isNotNullNorUndefined)
+  const communes = isNonEmptyArray(communesIds) ? await dbQueryAndValidate(getCommunes, { ids: communesIds }, pool, communeValidator) : []
+
   const body = bodyBuilder(activites, activitesTrimestrielles, titres, annee, entreprises)
   if (Object.keys(body.articles).length > 0) {
     const result = await apiOpenfiscaCalculate(body)
 
     const openfiscaConstants = await apiOpenfiscaConstantsFetch(annee)
 
-    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, annee, openfiscaConstants)
+    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, annee, openfiscaConstants, communes)
 
     const worksheet1121 = xlsx.utils.json_to_sheet(matrice1121)
     const csv1121 = xlsx.utils.sheet_to_csv(worksheet1121)
@@ -627,7 +639,7 @@ export const matrices = async (annee: number) => {
             {
               ...matrice,
               departement: matriceLine.departementLabel,
-              commune: matriceLine.commune.nom,
+              commune: communes.find(({ id }) => id === matriceLine.commune.id)?.nom,
               role: matriceLine.titreLabel,
               titulaire: matriceLine.titulaire,
               titreLabel: matriceLine.titreLabel,

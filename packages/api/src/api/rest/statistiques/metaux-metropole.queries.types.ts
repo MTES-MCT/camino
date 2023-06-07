@@ -26,7 +26,7 @@ export interface IGetsubstancesByAnneeByCommuneParams {
 /** 'GetsubstancesByAnneeByCommune' return type */
 export interface IGetsubstancesByAnneeByCommuneResult {
   annee: number;
-  commune_id: string;
+  communes: Json;
   substances: Json | null;
 }
 

@@ -56,4 +56,7 @@ export const Regions: { [key in RegionId]: Region<key> } = {
   '93': { id: '93', nom: "Provence-Alpes-Côte d'Azur", paysId: 'FR' },
   '94': { id: '94', nom: 'Corse', paysId: 'FR' },
 }
+
+export type RegionLabel = (typeof Regions)[RegionId]['nom']
+
 export const regions = Object.values(Regions)

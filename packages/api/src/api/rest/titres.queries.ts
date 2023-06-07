@@ -1,9 +1,10 @@
 import { sql } from '@pgtyped/runtime'
 import { TitreGet } from 'camino-common/src/titres'
 import { Redefine } from '../../pg-database.js'
-import { IGetLastJournalQuery, IGetTitreQuery } from './titres.queries.types.js'
+import { IGetLastJournalQuery, IGetTitreCommunesQuery, IGetTitreQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
+import { Commune } from 'camino-common/src/static/communes.js'
 
 export const getTitre = sql<Redefine<IGetTitreQuery, { id: string }, TitreGet>>`
 select
@@ -34,4 +35,17 @@ where
 order by
     date desc
 LIMIT 1
+`
+
+export const getTitreCommunes = sql<Redefine<IGetTitreCommunesQuery, { id: string }, Commune>>`
+select
+    c.id,
+    c.nom
+from
+    titres t
+    join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
+    join jsonb_array_elements(te.communes) as etapes_communes on true
+    join communes c on c.id = etapes_communes ->> 'id'
+where
+    t.id = $ id
 `

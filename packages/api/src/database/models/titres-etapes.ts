@@ -9,8 +9,6 @@ import TitresDemarches from './titres-demarches.js'
 import TitresPoints from './titres-points.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
-import Communes from './communes.js'
-import Forets from './forets.js'
 import Journaux from './journaux.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
@@ -46,6 +44,8 @@ class TitresEtapes extends Model {
       decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
+      communes: { type: ['array', 'null'] },
+      forets: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
@@ -127,33 +127,6 @@ class TitresEtapes extends Model {
           to: 'titresEtapesJustificatifs.documentId',
         },
         to: 'documents.id',
-      },
-    },
-
-    communes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Communes,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresCommunes.titreEtapeId',
-          to: 'titresCommunes.communeId',
-          extra: ['surface'],
-        },
-        to: 'communes.id',
-      },
-    },
-
-    forets: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Forets,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId',
-        },
-        to: 'forets.id',
       },
     },
     journaux: {

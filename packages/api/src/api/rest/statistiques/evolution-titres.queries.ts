@@ -24,6 +24,7 @@ from
     titres_etapes et
     join titres_demarches td on td.id = et.titre_demarche_id
     join titres t on t.id = td.titre_id
+    join titres_etapes etapes_communes on t.props_titre_etapes_ids ->> 'points' = etapes_communes.id
 where
     et.type_id = $ etapeTypeId
     and et.archive is false
@@ -34,11 +35,10 @@ where
         select
             *
         from
-            titres_communes tc
-            join communes c on c.id = tc.commune_id
-        where
-            tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points'
-            and c.departement_id::text in $$ departements)
+            jsonb_array_elements(etapes_communes.communes) as c
+        where (substring(c ->> 'id', 1, 2) != '97'
+            and substring(c ->> 'id', 1, 2) in $$ departements)
+        or substring(c ->> 'id', 1, 3) in $$ departements)
 group by
     substring(et. "date", 0, 5)
 `
@@ -56,6 +56,7 @@ select
 from
     titres_demarches td
     join titres t on t.id = td.titre_id
+    join titres_etapes t_points on t_points.id = t.props_titre_etapes_ids ->> 'points'
 where
     td.type_id in $$ demarcheTypeIds
     and t.type_id = $ titreTypeId
@@ -64,11 +65,10 @@ where
         select
             *
         from
-            titres_communes tc
-            join communes c on c.id = tc.commune_id
-        where
-            tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points'
-            and c.departement_id::text in $$ departements)
+            jsonb_array_elements(t_points.communes) as c
+        where (substring(c ->> 'id', 1, 2) != '97'
+            and substring(c ->> 'id', 1, 2) in $$ departements)
+        or substring(c ->> 'id', 1, 3) in $$ departements)
 group by
     substring(td. "demarche_date_debut", 0, 5)
 `
@@ -87,6 +87,7 @@ from
     titres_demarches td
     join titres t on t.id = td.titre_id
     join titres_etapes t_surface on t_surface.id = t.props_titre_etapes_ids ->> 'surface'
+    join titres_etapes t_points on t_points.id = t.props_titre_etapes_ids ->> 'points'
 where
     td.type_id in $$ demarcheTypeIds
     and t.type_id = $ titreTypeId
@@ -95,11 +96,10 @@ where
         select
             *
         from
-            titres_communes tc
-            join communes c on c.id = tc.commune_id
-        where
-            tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points'
-            and c.departement_id::text in $$ departements)
+            jsonb_array_elements(t_points.communes) as c
+        where (substring(c ->> 'id', 1, 2) != '97'
+            and substring(c ->> 'id', 1, 2) in $$ departements)
+        or substring(c ->> 'id', 1, 3) in $$ departements)
 group by
     substring(td. "demarche_date_debut", 0, 5)
 `
@@ -123,6 +123,7 @@ from
     titres_etapes et
     join titres_demarches td on td.id = et.titre_demarche_id
     join titres t on t.id = td.titre_id
+    join titres_etapes etapes_communes on t.props_titre_etapes_ids ->> 'points' = etapes_communes.id
 where ((et.type_id in $$ etapesTypesDecisionRefus
         and et.statut_id = $ etapeStatutRejet)
     or (et.type_id = $ etapeTypeClassementSansSuite
@@ -136,11 +137,10 @@ and exists (
     select
         *
     from
-        titres_communes tc
-        join communes c on c.id = tc.commune_id
-    where
-        tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points'
-        and c.departement_id::text in $$ departements)
+        jsonb_array_elements(etapes_communes.communes) as c
+    where (substring(c ->> 'id', 1, 2) != '97'
+        and substring(c ->> 'id', 1, 2) in $$ departements)
+    or substring(c ->> 'id', 1, 3) in $$ departements)
 group by
     substring(et. "date", 0, 5)
 `

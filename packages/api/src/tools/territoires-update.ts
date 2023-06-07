@@ -4,17 +4,23 @@ import { knex } from '../knex.js'
 import fetch from 'node-fetch'
 import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
-import Forets from '../database/models/forets.js'
 import { Readable } from 'stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
+import { ForetId, ForetIds, Forets } from 'camino-common/src/static/forets.js'
+import { Pool } from 'pg'
+import { insertCommune } from '../database/queries/communes.queries.js'
+import { dbQueryAndValidate } from '../pg-database.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { z } from 'zod'
+
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
 const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
-const communesUpdate = async () => {
+const communesUpdate = async (pool: Pool) => {
   const communesIdsKnown: string[] = (await Communes.query()).map(({ id }) => id)
   const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
@@ -50,14 +56,17 @@ const communesUpdate = async () => {
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
-            departementId: commune.properties.departement,
           })
         } else {
-          await knex('communes').insert({
-            id: commune.properties.code,
-            nom: commune.properties.nom,
-            departementId: commune.properties.departement,
-          })
+          await dbQueryAndValidate(
+            insertCommune,
+            {
+              id: toCommuneId(commune.properties.code),
+              nom: commune.properties.nom,
+            },
+            pool,
+            z.void()
+          )
         }
       } catch (e) {
         console.error(commune.properties.nom, e)
@@ -99,16 +108,17 @@ const foretsUpdate = async () => {
 
   const geojson = await geoguyaneFileGet(foretsUrlGenerator)
 
-  const foretsIdsKnown = (await Forets.query()).map(({ id }) => id)
   const foretsPostgisIdsKnown: string[] = (await knex.select('id').from('forets_postgis')).map(({ id }: { id: string }) => id)
 
   console.info('Traitement du fichier des forets')
 
+  const ids: ForetId[] = []
   for (const foret of geojson.features) {
     try {
       const result = await knex.raw(`select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(foret.geometry)}'), 4326)) as result`)
 
-      const id = foret.properties.code_for
+      const id: ForetId = foret.properties.code_for
+      ids.push(id)
       if (foretsPostgisIdsKnown.includes(id)) {
         await knex('forets_postgis').where('id', id).update({
           geometry: result.rows[0].result,
@@ -119,19 +129,16 @@ const foretsUpdate = async () => {
           geometry: result.rows[0].result,
         })
       }
-      if (foretsIdsKnown.includes(id)) {
-        await knex('forets').where('id', id).update({
-          nom: foret.properties.foret,
-        })
-      } else {
-        await knex('forets').insert({
-          id,
-          nom: foret.properties.foret,
-        })
+      if (Forets[id] && Forets[id].nom !== foret.properties.foret) {
+        console.error(`Le nom de la forêt ${id} a changé '${Forets[id].nom}' --> ${foret.properties.foret}`)
       }
     } catch (e) {
       console.error(foret.properties.nom, e)
     }
+  }
+
+  if (ids.some(id => !ForetIds.includes(id)) || ForetIds.some(fId => !ids.includes(fId))) {
+    console.error(`les forêts ne sont pas à jour dans le common: ${ForetIds} --> ${ids}`)
   }
 }
 
@@ -234,10 +241,10 @@ const sdomZonesUpdate = async () => {
   }
 }
 
-export async function updateTerritoires() {
+export async function updateTerritoires(pool: Pool) {
   console.info('Mise à jour des territoires')
   try {
-    await communesUpdate()
+    await communesUpdate(pool)
   } catch (e) {
     console.error(`impossible de mettre à jour les communes`, e)
   }

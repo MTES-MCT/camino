@@ -13,20 +13,25 @@ import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vit
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
+import { dbQueryAndValidate } from '../../pg-database.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { constants } from 'http2'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { z } from 'zod'
+import { insertCommune } from '../../database/queries/communes.queries.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
+let titreId1: string | null = null
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
   knex = knexInstance
 
-  await knex('communes').insert({ id: 97300, nom: 'Une ville en Guyane', departement_id: 973 })
+  await dbQueryAndValidate(insertCommune, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' }, pool, z.void())
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {
@@ -38,7 +43,7 @@ beforeAll(async () => {
     {}
   )
 
-  await createTitreWithEtapes(
+  titreId1 = await createTitreWithEtapes(
     'titre1',
     [
       {
@@ -47,6 +52,7 @@ beforeAll(async () => {
         date: toCaminoDate('2022-01-01'),
         ordre: 0,
         administrationsLocales: [ADMINISTRATION_IDS['DGTM - GUYANE']],
+        communes: [{ id: toCommuneId('97300'), surface: 12 }],
       },
       {
         typeId: 'mdp',
@@ -149,7 +155,8 @@ async function createTitreWithEtapes(nomTitre: string, etapes: Omit<ITitreEtape,
   await knex('titres')
     .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id, points: etapesCrees[0].id } })
     .where('id', titre.id)
-  await knex('titres_communes').insert({ titre_etape_id: etapesCrees[0].id, commune_id: 97300, surface: 12 })
+
+  return titre.id
 }
 
 describe('titresONF', () => {
@@ -518,4 +525,15 @@ test('utilisateurTitreAbonner', async () => {
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+})
+
+test('peut récupérer les communes d’un titre', async () => {
+  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, userSuper)
+
+  expect(tested.statusCode).toBe(200)
+  expect(tested.body).toEqual([{ id: '97300', nom: 'Une ville en Guyane' }])
+
+  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, undefined)
+
+  expect(tested.statusCode).toBe(403)
 })

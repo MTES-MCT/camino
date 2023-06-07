@@ -76,9 +76,6 @@ type Etape {
   "Administrations en charge du titre"
   administrations: [String]
 
-  "Territoires du titre"
-  communes: [Commune]
-
   "Zones du SDOM"
   sdomZones: [String]
 

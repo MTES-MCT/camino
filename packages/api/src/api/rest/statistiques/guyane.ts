@@ -162,7 +162,7 @@ export const statistiquesGuyane = async () => {
       {
         domainesIds: ['m'],
         typesIds: ['ar', 'pr', 'ax', 'px', 'cx'],
-        territoires: 'guyane',
+        departements: [DEPARTEMENT_IDS.Guyane],
       },
       {
         fields: {
@@ -175,7 +175,7 @@ export const statistiquesGuyane = async () => {
 
     const titresActivites = await titresActivitesGet(
       {
-        titresTerritoires: 'guyane',
+        titresDepartements: [DEPARTEMENT_IDS.Guyane],
         annees: annees.map(annee => +annee),
         typesIds: ['grp', 'gra', 'grx'],
       },

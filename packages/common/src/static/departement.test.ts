@@ -1,3 +1,4 @@
+import { communeIdValidator } from './communes.js'
 import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement.js'
 import { test, expect } from 'vitest'
 
@@ -11,6 +12,7 @@ test('toDepartementId', () => {
   expect(toDepartementId(checkCodePostal('97311'))).toBe('973')
   expect(toDepartementId(checkCodePostal('71056'))).toBe('71')
   expect(toDepartementId(checkCodePostal('06093'))).toBe('06')
+  expect(toDepartementId(communeIdValidator.parse('06093'))).toBe('06')
 })
 
 test('departementsMetropole', () => {

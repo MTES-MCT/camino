@@ -1,23 +1,28 @@
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { titreTerritoiresFind } from './titres.js'
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import { describe, expect, test } from 'vitest'
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des communes', () => {
     expect(
-      titreTerritoiresFind([
-        { nom: 'Flée', surface: 100000, departementId: DEPARTEMENT_IDS.Sarthe },
+      titreTerritoiresFind(
         {
-          nom: 'Montval-sur-loir',
-          surface: 105020,
-          departementId: DEPARTEMENT_IDS.Sarthe,
+          [toCommuneId('72500')]: 'Flée',
+          [toCommuneId('72200')]: 'Montval-sur-loir',
+          [toCommuneId('37000')]: 'Tours',
         },
+        [
+          { id: toCommuneId('72500'), surface: 100000 },
+          {
+            id: toCommuneId('72200'),
+            surface: 105020,
+          },
 
-        {
-          nom: 'Tours',
-          surface: 99999,
-          departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
-        },
-      ])
+          {
+            id: toCommuneId('37000'),
+            surface: 99999,
+          },
+        ]
+      )
     ).toMatchInlineSnapshot(`
       {
         "communes": [
@@ -37,7 +42,7 @@ describe('titreTerritoiresFind', () => {
     `)
   })
   test('titreTerritoiresFind uniquement des secteurs maritimes', () => {
-    expect(titreTerritoiresFind(null, ['Baie de Seine'])).toMatchInlineSnapshot(`
+    expect(titreTerritoiresFind({}, null, ['Baie de Seine'])).toMatchInlineSnapshot(`
         {
           "communes": [],
           "departements": [
@@ -54,11 +59,13 @@ describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement', () => {
     expect(
       titreTerritoiresFind(
+        {
+          [toCommuneId('37000')]: 'Tours',
+        },
         [
           {
-            nom: 'Tours',
+            id: toCommuneId('37000'),
             surface: 99999,
-            departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
           },
         ],
 

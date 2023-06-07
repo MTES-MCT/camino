@@ -6,20 +6,26 @@ import TitresDemarches from '../../database/models/titres-demarches.js'
 import TitresEtapes from '../../database/models/titres-etapes.js'
 import TitresPoints from '../../database/models/titres-points.js'
 import { titresEtapesAreasUpdate } from './titres-etapes-areas-update.js'
-import TitresCommunes from '../../database/models/titres-communes.js'
 import { BaisieuxPerimetre, foret2BranchesPerimetre, foretReginaPerimetre, SaintEliePerimetre, SinnamaryPerimetre } from './__mocks__/titres-etapes-areas-update.js'
-import TitresForets from '../../database/models/titres-forets.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { ForetId } from 'camino-common/src/static/forets.js'
+import { dbQueryAndValidate } from '../../pg-database.js'
+import { insertCommune } from '../../database/queries/communes.queries.js'
+import { Pool } from 'pg'
+import { z } from 'zod'
 
 console.info = vi.fn()
 console.error = vi.fn()
+let dbPool: Pool
 let knex: Knex | undefined
 beforeAll(async () => {
-  const { knex: knexInstance } = await dbManager.populateDb()
+  const { knex: knexInstance, pool } = await dbManager.populateDb()
   knex = knexInstance
+  dbPool = pool
 })
 
 afterAll(async () => {
@@ -28,19 +34,18 @@ afterAll(async () => {
 
 describe('titresEtapesAreasUpdate', () => {
   test('met à jour les communes, forêts et zone du SDOM sur une étape', async () => {
-    const baisieuxId = '59044'
-    const saintElieId = '97358'
-    await knex!.raw(`insert into communes (nom, id, departement_id) values ('Saint-Élie', '${saintElieId}', '973')`)
-    await knex!.raw(`insert into communes (nom, id, departement_id) values ('Baisieux', '${baisieuxId}', '59')`)
-    await knex!.raw(`insert into communes (nom, id, departement_id) values ('Sinnamary', '97312', '973')`)
+    const baisieuxId = toCommuneId('59044')
+    const saintElieId = toCommuneId('97358')
+    await dbQueryAndValidate(insertCommune, { id: saintElieId, nom: 'Saint-Élie' }, dbPool, z.void())
+    await dbQueryAndValidate(insertCommune, { id: baisieuxId, nom: 'Baisieux' }, dbPool, z.void())
+    await dbQueryAndValidate(insertCommune, { id: toCommuneId('97312'), nom: 'Sinnamary' }, dbPool, z.void())
+
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('${saintElieId}','${SaintEliePerimetre}')`)
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('${baisieuxId}', '${BaisieuxPerimetre}')`)
     await knex!.raw(`insert into communes_postgis (id, geometry) values ('97312', '${SinnamaryPerimetre}')`)
 
-    const reginaId = 'FRG'
-    const deuxBranchesId = 'DBR'
-    await knex!.raw(`insert into forets (nom, id) values ('Deux Branches', '${deuxBranchesId}')`)
-    await knex!.raw(`insert into forets (nom, id) values ('Regina', '${reginaId}')`)
+    const reginaId: ForetId = 'FRG'
+    const deuxBranchesId: ForetId = 'DBR'
     await knex!.raw(`insert into forets_postgis (id, geometry) values ('${deuxBranchesId}','${foret2BranchesPerimetre}')`)
     await knex!.raw(`insert into forets_postgis (id, geometry) values ('${reginaId}','${foretReginaPerimetre}')`)
 
@@ -77,6 +82,11 @@ describe('titresEtapesAreasUpdate', () => {
         titreDemarcheId,
         archive: false,
         sdomZones: [SDOMZoneIds.Zone2],
+        forets: [reginaId],
+        communes: [
+          { id: baisieuxId, surface: 12 },
+          { id: saintElieId, surface: 12 },
+        ],
       },
     ])
 
@@ -111,29 +121,12 @@ describe('titresEtapesAreasUpdate', () => {
       },
     ])
 
-    // ajoute baisieux et saintElie à l’étape
-    await TitresCommunes.query().insert({
-      titreEtapeId,
-      communeId: baisieuxId,
-      surface: 12,
-    })
-    await TitresCommunes.query().insert({
-      titreEtapeId,
-      communeId: saintElieId,
-      surface: 12,
-    })
-
-    // ajoute la forêt Regina
-    await TitresForets.query().insert({ titreEtapeId, foretId: reginaId })
-
     await titresEtapesAreasUpdate([titreEtapeId])
 
-    expect(await TitresCommunes.query().where('titreEtapeId', titreEtapeId)).toMatchSnapshot()
-    expect(await TitresForets.query().where('titreEtapeId', titreEtapeId)).toMatchSnapshot()
-    expect(await TitresEtapes.query().where('id', titreEtapeId).withGraphFetched('[forets, communes]')).toMatchSnapshot()
+    expect(await TitresEtapes.query().where('id', titreEtapeId)).toMatchSnapshot()
     await Titres.query()
       .patch({ propsTitreEtapesIds: { points: titreEtapeId } })
       .where({ id: titreId })
-    expect(await Titres.query().where('id', titreId).withGraphFetched('[pointsEtape, forets, communes]')).toMatchSnapshot()
+    expect(await Titres.query().where('id', titreId).withGraphFetched('[pointsEtape]')).toMatchSnapshot()
   })
 })

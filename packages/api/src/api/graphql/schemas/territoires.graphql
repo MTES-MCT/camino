@@ -36,23 +36,8 @@ type Commune {
   "Id de la commune composée de 5 chiffres (code INSEE)"
   id: ID!
 
-  "Nom de la commune"
-  nom: String!
-
   "Surface couverte par le titre"
   surface: Int
-
-  "Id du département"
-  departementId: ID
-}
-
-"Forêt"
-type Foret {
-  "Id de la forêt correspondant à son code"
-  id: ID!
-
-  "Nom de la forêt"
-  nom: String!
 }
 
 "Zone de SDOM de Guyane"

@@ -1,25 +1,28 @@
-import { numberFormat } from '@/utils/number-format'
-import { DepartementId, Departements } from 'camino-common/src/static/departement'
+import { DepartementId, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-common/src/static/facades'
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
-import { FunctionalComponent } from 'vue'
+import { FunctionalComponent, onMounted, ref } from 'vue'
 import { TagList } from '../_ui/tag-list'
+import { Commune, CommuneId } from 'camino-common/src/static/communes'
+import { numberFormat } from 'camino-common/src/number'
+import { ForetId, Forets } from 'camino-common/src/static/forets'
+import { LoadingElement } from '../_ui/functional-loader'
+import { caminoDefineComponent } from '../../utils/vue-tsx-utils'
+import { AsyncData } from '../../api/client-rest'
+import { TitreApiClient } from './titre-api-client'
 
 export interface TerritoiresCommune {
-  nom: string
-  departementId: DepartementId
-}
-export interface TerritoiresForet {
-  nom: string
+  id: CommuneId
 }
 
 export interface TerritoiresProps {
+  apiClient: Pick<TitreApiClient, 'getTitreCommunes'>
   surface?: number
-  forets: TerritoiresForet[]
+  forets: ForetId[]
   sdomZones?: SDOMZoneId[]
-  communes: TerritoiresCommune[]
+  titreId: string
   secteursMaritimes: SecteursMaritimes[]
 }
 
@@ -27,13 +30,13 @@ type RegionsComputed = {
   id: string
   nom: string
   paysId: PaysId
-  departements: { id: string; nom: string; communes: string[] }[]
+  departements: { id: DepartementId; nom: string; communes: string[] }[]
 }[]
 
-function CommunesEtRegions(communes: TerritoiresCommune[]) {
+function CommunesEtRegions({ communes }: { communes: Commune[] }) {
   if (communes.length) {
     const regions: RegionsComputed = communes.reduce((acc, commune) => {
-      const departement = Departements[commune.departementId]
+      const departement = Departements[toDepartementId(commune.id)]
       const region = Regions[departement.regionId]
 
       let regionToUpdate = acc.find(({ id }) => id === region.id)
@@ -85,12 +88,12 @@ function CommunesEtRegions(communes: TerritoiresCommune[]) {
   return null
 }
 
-function Forets(forets: TerritoiresForet[]) {
+function ForetsComp({ forets }: { forets: ForetId[] }) {
   return forets.length ? (
     <div>
       <div>
         <h6 class="mb-s">Forêts</h6>
-        <TagList elements={forets.map(f => f.nom)} />
+        <TagList elements={forets.map(id => Forets[id].nom)} />
       </div>
     </div>
   ) : null
@@ -135,23 +138,49 @@ function Surface(surface?: number) {
   ) : null
 }
 
-function TerritoiresSansSurface(props: TerritoiresProps) {
-  return props.communes.length || props.forets.length || props.sdomZones?.length || props.secteursMaritimes.length ? (
-    <div class="tablet-blob-3-4">
-      <h5>Territoires</h5>
-      {CommunesEtRegions(props.communes)}
-      {Forets(props.forets)}
-      {SdomZones(props.sdomZones)}
-      {SecteursMaritimesTsx(props.secteursMaritimes)}
-    </div>
-  ) : null
-}
+const TerritoiresSansSurface = caminoDefineComponent<Omit<TerritoiresProps, 'surface'>>(['forets', 'sdomZones', 'secteursMaritimes', 'titreId', 'apiClient'], (props: TerritoiresProps) => {
+  const communesAsyncData = ref<AsyncData<Commune[]>>({ status: 'LOADING' })
+
+  onMounted(async () => {
+    try {
+      communesAsyncData.value = { status: 'LOADING' }
+      const communes = await props.apiClient.getTitreCommunes(props.titreId)
+
+      communesAsyncData.value = { status: 'LOADED', value: communes }
+    } catch (e: any) {
+      console.error('error', e)
+      communesAsyncData.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      }
+    }
+  })
+
+  return () => (
+    <LoadingElement
+      data={communesAsyncData.value}
+      renderItem={item => (
+        <>
+          {props.forets.length || props.sdomZones?.length || props.secteursMaritimes.length || item.length ? (
+            <div class="tablet-blob-3-4">
+              <h5>Territoires</h5>
+              <CommunesEtRegions communes={item} />
+              <ForetsComp forets={props.forets} />
+              {SdomZones(props.sdomZones)}
+              {SecteursMaritimesTsx(props.secteursMaritimes)}
+            </div>
+          ) : null}{' '}
+        </>
+      )}
+    />
+  )
+})
 
 export const Territoires: FunctionalComponent<TerritoiresProps> = (props: TerritoiresProps) => {
   return (
     <div class="tablet-blobs mb-xl">
       <div class="tablet-blob-1-4">{Surface(props.surface)}</div>
-      {TerritoiresSansSurface(props)}
+      <TerritoiresSansSurface {...props} />
     </div>
   )
 }

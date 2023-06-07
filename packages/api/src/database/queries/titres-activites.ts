@@ -11,6 +11,7 @@ import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresActivites from '../models/titres-activites.js'
 import { titresActivitesQueryModify, titresActivitesPropsQueryModify } from './permissions/titres-activites.js'
 import { isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
+import { DepartementId } from 'camino-common/src/static/departement.js'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -38,6 +39,7 @@ const titresActivitesFiltersQueryModify = (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
+    titresDepartements,
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
@@ -50,6 +52,7 @@ const titresActivitesFiltersQueryModify = (
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
+    titresDepartements?: DepartementId[] | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
@@ -82,6 +85,7 @@ const titresActivitesFiltersQueryModify = (
       substancesIds: titresSubstancesIds,
       references: titresReferences,
       territoires: titresTerritoires,
+      departements: titresDepartements,
     },
     q,
     'titre',
@@ -202,6 +206,7 @@ const titresActivitesGet = async (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
+    titresDepartements,
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
@@ -218,6 +223,7 @@ const titresActivitesGet = async (
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
+    titresDepartements?: DepartementId[] | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
@@ -238,6 +244,7 @@ const titresActivitesGet = async (
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
+      titresDepartements,
       titresTypesIds,
       titresDomainesIds,
       titresStatutsIds,

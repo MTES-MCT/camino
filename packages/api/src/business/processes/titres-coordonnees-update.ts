@@ -8,7 +8,7 @@ export const titresCoordonneesUpdate = async (titresIds?: string[]) => {
 
   const titres = await titresGet({ ids: titresIds }, { fields: { points: { id: {} } } }, userSuper)
 
-  const titresCoordonneesUpdated = [] as string[]
+  const titresCoordonneesUpdated: string[] = []
 
   for (const titre of titres) {
     const coordonnees = titreCoordonneesFind(titre.points)

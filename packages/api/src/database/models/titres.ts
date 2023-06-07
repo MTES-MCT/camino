@@ -1,13 +1,11 @@
 import { Model, Pojo, QueryContext, ref } from 'objection'
 
 import { ITitre } from '../../types.js'
-import Communes from './communes.js'
 import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
 import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
-import Forets from './forets.js'
 import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
@@ -122,34 +120,6 @@ class Titres extends Model {
       },
     },
 
-    communes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Communes,
-      join: {
-        // les communes sont générées sur les étapes qui ont des points
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        through: {
-          from: 'titresCommunes.titreEtapeId',
-          to: 'titresCommunes.communeId',
-          extra: ['surface'],
-        },
-        to: 'communes.id',
-      },
-    },
-
-    forets: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Forets,
-      join: {
-        // les forêts sont générées sur les étapes qui ont des points
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        through: {
-          from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId',
-        },
-        to: 'forets.id',
-      },
-    },
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -189,14 +159,20 @@ class Titres extends Model {
       this.secteursMaritime = []
       this.administrationsLocales = []
       this.sdomZones = []
+      this.forets = []
+      this.communes = []
     } else if (this.pointsEtape === undefined) {
       this.secteursMaritime = undefined
       this.administrationsLocales = undefined
       this.sdomZones = undefined
+      this.forets = undefined
+      this.communes = undefined
     } else {
       this.secteursMaritime = this.pointsEtape.secteursMaritime
       this.administrationsLocales = this.pointsEtape.administrationsLocales
       this.sdomZones = this.pointsEtape.sdomZones
+      this.forets = this.pointsEtape.forets
+      this.communes = this.pointsEtape.communes
     }
   }
 

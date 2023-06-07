@@ -4,8 +4,17 @@ import { mailjetSend } from '../tools/api-mailjet/emails.js'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'
 import * as Console from 'console'
 import { monthly } from '../business/monthly.js'
+import pg from 'pg'
 
 const logFile = '/tmp/monthly.log'
+
+// Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
+const pool = new pg.Pool({
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+})
 
 const output = createWriteStream(logFile)
 if (process.env.CAMINO_STAGE) {
@@ -20,7 +29,7 @@ const tasks = async () => {
   // Réinitialise les logs qui seront envoyés par email
   writeFileSync(logFile, '')
   try {
-    await monthly()
+    await monthly(pool)
   } catch (e) {
     console.error('Erreur durant le monthly', e)
   }

@@ -36,9 +36,10 @@ import { isAdministration, isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator } from './titres.queries.js'
+import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator, getTitreCommunes as getTitreCommunesQuery } from './titres.queries.js'
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
+import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -423,6 +424,25 @@ export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res:
         aval: await titreLinksGet(titreId, 'titreToId', user),
       }
       res.json(titreLinksValidator.parse(value))
+    }
+  }
+}
+
+export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Commune[]>) => {
+  const user = req.auth
+
+  const titreId = req.params.id
+
+  if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    const titre = await titreGet(titreId, { fields: { id: {} } }, user)
+    if (!titre) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      const communes = await dbQueryAndValidate(getTitreCommunesQuery, { id: titreId }, pool, communeValidator)
+
+      res.json(communes)
     }
   }
 }

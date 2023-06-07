@@ -33,8 +33,6 @@ fragment titre on Titre {
   }
   communes {
     id
-    nom
-    departementId
   }
   demarches {
     ...demarche

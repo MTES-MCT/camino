@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import { TitreEntreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { toCommuneId } from 'camino-common/src/static/communes'
 
 const meta: Meta = {
   title: 'Components/Dashboard/Entreprise',
@@ -34,7 +35,7 @@ const titres: TitreEntreprise[] = [
         nom: 'NINOR',
       },
     ],
-    communes: [{ departementId: DEPARTEMENT_IDS.Moselle }],
+    communes: [{ id: toCommuneId('57000') }],
     references: [
       {
         referenceTypeId: 'rnt',
@@ -57,7 +58,7 @@ const titres: TitreEntreprise[] = [
         nom: "CHAMB'OR",
       },
     ],
-    communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
+    communes: [{ id: toCommuneId('97300') }],
     references: [
       {
         referenceTypeId: 'dea',
@@ -123,7 +124,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
                 nom: "CHAMB'OR",
               },
             ],
-            communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
+            communes: [{ id: toCommuneId('97300') }],
             references: [
               {
                 referenceTypeId: 'dea',
