@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { constants } from 'http2'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { ITitreEtape } from '../../types.js'
 import { etapeTypeIsValidCheck } from '../_format/etapes-types.js'
 import { User } from 'camino-common/src/roles.js'
@@ -20,7 +20,6 @@ import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.j
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { EtapeId } from 'camino-common/src/etape.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Pool } from 'pg'
 
@@ -88,19 +87,17 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   const demarcheDefinition = demarcheDefinitionFind(titre.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
 
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
-  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+  if (demarcheDefinition) {
     if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
     etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, titreDemarche.etapes, titreEtapeId, date))
   } else {
     // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
     let etapesTypesTDE = getEtapesTDE(titre.typeId, titreDemarche.typeId)
 
-    if (!demarcheDefinition) {
-      const etapeTypesExistants = titreDemarche.etapes?.map(({ typeId }) => typeId) ?? []
-      etapesTypesTDE = etapesTypesTDE
-        .filter(typeId => !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
-        .filter(etapeTypeId => etapeTypeIsValidCheck(etapeTypeId, date, titre, titreDemarche.type!, titreDemarche.id, titreDemarche.etapes, titreEtape))
-    }
+    const etapeTypesExistants = titreDemarche.etapes?.map(({ typeId }) => typeId) ?? []
+    etapesTypesTDE = etapesTypesTDE
+      .filter(typeId => !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
+      .filter(etapeTypeId => etapeTypeIsValidCheck(etapeTypeId, date, titre, titreDemarche.type!, titreDemarche.id, titreDemarche.etapes, titreEtape))
     etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
   }
 

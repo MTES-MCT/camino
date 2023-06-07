@@ -5,15 +5,13 @@ import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 import { writeFileSync } from 'fs'
 import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
-import { demarchesDefinitions, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 
 const writeEtapesForTest = async () => {
-  const demarcheDefinitionMachines = demarchesDefinitions.filter(isDemarcheDefinitionMachine)
-
-  for (const demarcheDefinition of demarcheDefinitionMachines) {
+  for (const demarcheDefinition of demarchesDefinitions) {
     const demarches = await titresDemarchesGet(
       {
         titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],

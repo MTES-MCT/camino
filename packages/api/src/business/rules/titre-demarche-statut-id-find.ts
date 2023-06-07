@@ -3,7 +3,7 @@ import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
@@ -310,7 +310,7 @@ export const titreDemarcheStatutIdFind = (
 
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
-  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+  if (demarcheDefinition) {
     return demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
   }
 

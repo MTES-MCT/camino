@@ -19,7 +19,7 @@ import {
   utilisateurTitreAbonneValidator,
   titreIdValidator,
 } from 'camino-common/src/titres.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
 import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools.js'
@@ -41,7 +41,7 @@ import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator, getTit
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
-import {z} from 'zod'
+import { z } from 'zod'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -162,8 +162,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
       }
 
       const dd = demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes, octARM.id)
-      const hasMachine = isDemarcheDefinitionMachine(dd)
-      const blockedByMe: boolean = hasMachine && dd.machine.whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
+      const blockedByMe: boolean = dd !== undefined && dd.machine.whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
@@ -311,7 +310,7 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
               const etapesDerniereDemarche = toMachineEtapes(demarcheLaPlusRecente.etapes)
               derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
               const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
-              if (isDemarcheDefinitionMachine(dd)) {
+              if (dd) {
                 try {
                   enAttenteDeDREAL = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
                   const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())

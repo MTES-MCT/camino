@@ -1,4 +1,4 @@
-import { IContenuValeur, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find.js'
 import { CaminoMachines } from './machines.js'
@@ -10,38 +10,8 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
 import { PrmOctMachine } from './prm/oct.machine.js'
-
-export interface IEtapeTypeIdCondition {
-  etapeTypeId?: string
-  statutId?: string
-  titre?: ITitreCondition
-  contextCheck?: (_etapes: ITitreEtape[]) => boolean
-}
-
-export type IDemarcheDefinitionRestrictions = { [key in EtapeTypeId]?: IDemarcheDefinitionRestrictionsProps }
-
-export interface IDemarcheDefinitionRestrictionsProps {
-  separation?: string[]
-  final?: boolean
-  avant?: IEtapeTypeIdCondition[][]
-  apres?: IEtapeTypeIdCondition[][]
-  justeApres: IEtapeTypeIdCondition[][]
-}
-
-export interface IDemarcheDefinitionRestrictionsElements extends IDemarcheDefinitionRestrictionsProps {
-  etapeTypeId?: string
-}
-export type IDemarcheDefinition = DemarcheDefinitionRestriction | DemarcheDefinitionMachine
-
-export const isDemarcheDefinitionRestriction = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionRestriction => {
-  return dd !== undefined && 'restrictions' in dd
-}
-export const isDemarcheDefinitionMachine = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionMachine => {
-  return dd !== undefined && 'machine' in dd
-}
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -49,34 +19,12 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
-// FIXME à supprimer
-export interface DemarcheDefinitionRestriction extends DemarcheDefinitionCommon {
-  restrictions: IDemarcheDefinitionRestrictions
-}
-export interface DemarcheDefinitionMachine extends DemarcheDefinitionCommon {
+export interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
 
-type IContenuOperation = {
-  valeur: IContenuValeur
-  operation?: 'NOT_EQUAL' | 'EQUAL'
-}
-
-export interface IContenuElementCondition {
-  [id: string]: IContenuOperation | undefined
-}
-
-interface IContenuCondition {
-  [id: string]: IContenuElementCondition
-}
-
-export interface ITitreCondition {
-  statutId?: string
-  contenu: IContenuCondition
-}
-
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
-export const demarchesDefinitions: IDemarcheDefinition[] = [
+export const demarchesDefinitions: DemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
@@ -162,7 +110,7 @@ export const demarcheDefinitionFind = (
   demarcheTypeId: DemarcheTypeId,
   titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
   demarcheId: DemarcheId
-): IDemarcheDefinition | undefined => {
+): DemarcheDefinition | undefined => {
   const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
   const definition = demarchesDefinitions
