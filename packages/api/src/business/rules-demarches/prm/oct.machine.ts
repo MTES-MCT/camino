@@ -46,7 +46,6 @@ export type XStateEvent =
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
-  | { type: 'MODIFIER_LA_DEMANDE' }
   | RendreAvisMiseEnConcurrentJORF
   | { type: 'DEPOSER_DEMANDE_CONCURRENTE' }
   | OuvrirParticipationDuPublic
@@ -92,8 +91,6 @@ export type XStateEvent =
 
 export type Event = XStateEvent['type']
 
-// FIXME faire les mainstep
-
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
   DEPOSER_DEMANDE: { db: EtapesTypesEtapesStatuts.depotDeLaDemande, mainStep: true },
@@ -112,9 +109,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
     },
     mainStep: true,
   },
-  MODIFIER_LA_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: true },
   RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF: { db: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
-  DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: true },
+  DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: false },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.ouvertureDeLaParticipationDuPublic, mainStep: true },
   CLOTURER_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.clotureDeLaParticipationDuPublic, mainStep: true },
   FAIRE_SAISINE_DES_SERVICES: { db: EtapesTypesEtapesStatuts.saisineDesServices, mainStep: true },
@@ -143,7 +139,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ADMINISTRATION_ACCEPTE: { db: { ACCEPTE: EtapesTypesEtapesStatuts.decisionDeLadministration.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETE: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDeLadministration.REJETE }, mainStep: true },
   FAIRE_PUBLICATION_AU_JORF: { db: EtapesTypesEtapesStatuts.publicationDeDecisionAuJORF, mainStep: true },
-  NOTIFIER_PREFET: { db: EtapesTypesEtapesStatuts.notificationAuPrefet, mainStep: false },
+  NOTIFIER_PREFET: { db: EtapesTypesEtapesStatuts.notificationAuPrefet, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur, mainStep: true },
   PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { db: EtapesTypesEtapesStatuts.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: EtapesTypesEtapesStatuts.publicationDansUnJournalLocalOuNational, mainStep: true },
@@ -151,8 +147,8 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDuJugeAdministratif.REJETE }, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: EtapesTypesEtapesStatuts.abrogationDeLaDecision, mainStep: true },
   RENDRE_DECISION_RETRAIT: { db: EtapesTypesEtapesStatuts.retraitDeLaDecision, mainStep: true },
-  DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: true },
-  CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: true },
+  DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: false },
+  CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: false },
   MODIFIER_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: false },
   DEMANDER_INFORMATIONS: { db: EtapesTypesEtapesStatuts.demandeDinformations, mainStep: false },
   RECEVOIR_INFORMATIONS: { db: EtapesTypesEtapesStatuts.receptionDinformation, mainStep: false },
@@ -343,7 +339,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             visibilite: 'publique',
           }),
         },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'recevabiliteDeLaDemandeAFaire',
       },
     },
     complementsPourRecevabiliteAFaire: {
@@ -356,15 +352,9 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             visibilite: 'publique',
           }),
         },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'complementsPourRecevabiliteAFaire',
       },
     },
-    modificationDeLaDemandeAFaire: {
-      on: {
-        MODIFIER_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
-      },
-    },
-    // FIXME gérer guyane et superficie < 50km²
     avisDeMiseEnConcurrenceAuJORFAFaire: {
       always: {
         cond: estExempteDeLaMiseEnConcurrence,
