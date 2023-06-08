@@ -200,6 +200,7 @@ export const SUBSTANCES_LEGALES_IDS = {
   yttrium: 'ytri',
   ytterbium: 'ytte',
   hydrogène: 'hydrog',
+  co2: 'co2',
 } as const
 
 export type SubstanceLegaleId = (typeof SUBSTANCES_LEGALES_IDS)[keyof typeof SUBSTANCES_LEGALES_IDS]
@@ -903,7 +904,8 @@ export const SubstancesLegale: {
   },
   ytri: { id: 'ytri', nom: 'yttrium', domaineIds: ['m'] },
   ytte: { id: 'ytte', nom: 'ytterbium', domaineIds: ['m'] },
-  hydrog: { id: 'hydrog', nom: 'hydrogène', domaineIds: ['m'] },
+  hydrog: { id: 'hydrog', nom: 'hydrogène', domaineIds: ['m', 's'] },
+  co2: { id: 'co2', nom: 'dioxyde de carbone (CO₂)', domaineIds: ['s'] },
 }
 
 export const SubstancesLegales = Object.values(SubstancesLegale)
