@@ -39,9 +39,9 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 export const titreDemarcheUpdatedEtatValidate = (
   demarcheType: IDemarcheType,
   titre: ITitre,
-  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu'| 'communes' | 'surface'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu'  | 'communes' | 'surface'>[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>[] | null,
   suppression = false
 ): string[] => {
   let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
@@ -87,7 +87,7 @@ export const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   try {
-    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({id: true}).partial({ordre: true}).parse(etape))
+    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true }).partial({ ordre: true }).parse(etape))
     const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
     if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')

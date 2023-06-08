@@ -14,9 +14,9 @@ import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etape
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
-import { Etape, TitreEtapeForMachine, isTitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
@@ -115,8 +115,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     )
   )
 }
-
-
 
 // export type TitreEtapeForMachine = Pick<Required<ITitreEtape>, 'ordre' | 'id' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'communes' | 'surface'>
 // VISIBLE_FOR_TESTING

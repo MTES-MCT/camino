@@ -1,6 +1,4 @@
 /* eslint-disable sql/no-unsafe-query */
-import { ITitreEtape } from '../../types.js'
-
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
@@ -17,7 +15,11 @@ import { getEtapesByDemarche, getEtapesByDemarcheValidator } from './titres-etap
 import { TitreId } from 'camino-common/src/titres.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 
-export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?: TitreId): Promise<{
+export const getDemarches = async (
+  pool: Pool,
+  demarcheId?: DemarcheId,
+  titreId?: TitreId
+): Promise<{
   [key: DemarcheId]: {
     etapes: TitreEtapeForMachine[]
     id: DemarcheId

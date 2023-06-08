@@ -13,12 +13,7 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(
-  titreEtapes: T[],
-  demarcheId: DemarcheId,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId
-): T[] => {
+export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
   if (demarcheDefinition) {
     const etapes = demarcheDefinition.machine.orderMachine(toMachineEtapes(titreEtapes))

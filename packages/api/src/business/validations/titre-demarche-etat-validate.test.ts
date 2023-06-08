@@ -7,7 +7,6 @@ import { describe, test, expect, vi } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
-
 console.warn = vi.fn()
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
@@ -40,16 +39,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         } as unknown as ITitreType,
         demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
       } as ITitre,
-      {id: newEtapeId(), typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2022-05-04'),        communes: null,
-      contenu: null,
-      ordre: 1,
-      surface: null },
+      { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2022-05-04'), communes: null, contenu: null, ordre: 1, surface: null },
       newDemarcheId(),
 
-      [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2022-05-03'),communes: null,
-      contenu: null,
-      ordre: 1,
-      surface: null }]
+      [{ id: newEtapeId('1'), typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2022-05-03'), communes: null, contenu: null, ordre: 1, surface: null }]
     )
 
     expect(valid).toHaveLength(0)
@@ -74,19 +67,13 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         communes: null,
         contenu: null,
         ordre: 1,
-        surface: null
+        surface: null,
       },
       newDemarcheId(),
 
       [
-        { id: newEtapeId('1'), typeId: 'mfr', date: toCaminoDate('2022-05-03'), statutId: 'fai',         communes: null,
-        contenu: null,
-        ordre: 1,
-        surface: null },
-        { id: newEtapeId('2'), typeId: 'mdp', date: toCaminoDate('2022-05-04'), statutId: 'fai',         communes: null,
-        contenu: null,
-        ordre: 2,
-        surface: null },
+        { id: newEtapeId('1'), typeId: 'mfr', date: toCaminoDate('2022-05-03'), statutId: 'fai', communes: null, contenu: null, ordre: 1, surface: null },
+        { id: newEtapeId('2'), typeId: 'mdp', date: toCaminoDate('2022-05-04'), statutId: 'fai', communes: null, contenu: null, ordre: 2, surface: null },
       ]
     )
 

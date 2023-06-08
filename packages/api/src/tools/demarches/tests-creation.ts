@@ -37,22 +37,23 @@ const writeEtapesForTest = async () => {
       })
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
-          (demarche?.etapes
-            ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
-            ?.map(etape => {
-              if (etape?.contenu?.arm) {
-                etape.contenu = { arm: etape.contenu?.arm }
-              } else {
-                delete etape.contenu
-              }
+          (
+            demarche?.etapes
+              ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
+              ?.map(etape => {
+                if (etape?.contenu?.arm) {
+                  etape.contenu = { arm: etape.contenu?.arm }
+                } else {
+                  delete etape.contenu
+                }
 
-              if (etape.communes?.length) {
-                etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
-              }
+                if (etape.communes?.length) {
+                  etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
+                }
 
-
-              return etape
-            }) ?? []).map((etape) => titreEtapeForMachineValidator.parse(etape))
+                return etape
+              }) ?? []
+          ).map(etape => titreEtapeForMachineValidator.parse(etape))
         )
         // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
         // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois

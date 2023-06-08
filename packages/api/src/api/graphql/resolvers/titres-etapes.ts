@@ -222,12 +222,11 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       }
       sdomZones.push(...geoJsonResult.data)
 
-      const titreEtapeCommu  = await geojsonIntersectsCommunes(geojsonFeatures)
+      const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
       if (titreEtapeCommu.fallback) {
         console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
       }
       etape.communes = titreEtapeCommu.data
-      
     } else {
       etape.communes = []
     }

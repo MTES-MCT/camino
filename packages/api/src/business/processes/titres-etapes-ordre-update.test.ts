@@ -12,14 +12,8 @@ vi.mock('../../database/queries/titres-etapes', () => ({
 const titresDemarchesEtapes = {
   '': {
     etapes: [
-      {id: newEtapeId(), ordre: 1, date: '1988-03-06',typeId: 'aac',
-      statutId: 'acc',
-      surface: 0,
-      communes: null, },
-      {id: newEtapeId(), ordre: 1, date: '1988-03-08',typeId: 'aac',
-      statutId: 'acc',
-      surface: 0,
-      communes: null, },
+      { id: newEtapeId(), ordre: 1, date: '1988-03-06', typeId: 'aac', statutId: 'acc', surface: 0, communes: null },
+      { id: newEtapeId(), ordre: 1, date: '1988-03-08', typeId: 'aac', statutId: 'acc', surface: 0, communes: null },
     ],
     titre: null,
   } as TitresDemarches,

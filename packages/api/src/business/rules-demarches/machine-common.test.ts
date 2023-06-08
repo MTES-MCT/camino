@@ -1,7 +1,6 @@
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { TitreEtapeForMachine, toMachineEtapes } from './machine-common.js'
 import { describe, expect, test, vi } from 'vitest'
-import { newEtapeId } from '../../database/models/_format/id-create.js'
 
 console.error = vi.fn()
 describe('toMachineEtapes', () => {
@@ -71,8 +70,6 @@ describe('toMachineEtapes', () => {
           date: '2022-01-01',
         } as unknown as TitreEtapeForMachine,
       ])
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\"}"`
-    )
+    ).toThrowErrorMatchingInlineSnapshot(`"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\"}"`)
   })
 })

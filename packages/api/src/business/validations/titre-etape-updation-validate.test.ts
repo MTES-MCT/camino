@@ -6,7 +6,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { userSuper } from '../../database/user-super.js'
 import { describe, test, expect } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
 
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, boolean]>([

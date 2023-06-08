@@ -70,15 +70,9 @@ describe('Visibilité des étapes', () => {
 })
 
 describe('Création des étapes', () => {
-  test('un utilisateur admin de l’administration min-mtes-dgaln-01 peut créer une étape $etapeTypeId sur un titre CXM', () =>
-    creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'cxm')
-  )
+  test('un utilisateur admin de l’administration min-mtes-dgaln-01 peut créer une étape $etapeTypeId sur un titre CXM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'cxm'))
 
-  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PRM', () =>
-    creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'prm')
-  )
+  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PRM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'prm'))
 
-  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PXM', () =>
-    creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'pxm')
-  )
+  test('un utilisateur admin de l’administration "min-mtes-dgaln-01" peut créer une étape mfr sur un titre PXM', () => creationCheck(dbPool, 'min-mtes-dgaln-01', true, 'etapes', 'pxm'))
 })

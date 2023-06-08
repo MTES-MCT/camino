@@ -1,5 +1,3 @@
-import { ITitreEtape } from '../../types.js'
-
 import { titreEtapesSortAscByDate, titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from './titre-etapes-sort.js'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
 import { vi, describe, test, expect } from 'vitest'

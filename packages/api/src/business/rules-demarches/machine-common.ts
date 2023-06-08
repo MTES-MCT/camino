@@ -8,8 +8,8 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
 import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
-import { communeIdValidator, communeValidator } from 'camino-common/src/static/communes.js'
-import {z} from 'zod'
+import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { z } from 'zod'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
@@ -34,8 +34,8 @@ export const titreEtapeForMachineValidator = z.object({
   date: caminoDateValidator,
   contenu: z.any().nullable(),
   heritageContenu: z.any().nullable(),
-  communes: z.array(z.object({id: communeIdValidator})).nullable(),
-  surface: z.number().nullable()
+  communes: z.array(z.object({ id: communeIdValidator })).nullable(),
+  surface: z.number().nullable(),
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>

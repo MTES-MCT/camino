@@ -5,7 +5,6 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
 import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays.js'
-import { formatDiagnosticsWithColorAndContext } from 'typescript'
 
 type RendreAvisMiseEnConcurrentJORF = {
   date: CaminoDate
@@ -157,7 +156,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
 export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
-
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 
 export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
@@ -207,6 +205,7 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
         case 'FAIRE_DEMANDE':
           if (!etape.paysId) {
             console.error(`paysId is mandatory in etape ${JSON.stringify(etape)}`)
+
             return { type: eventFromEntry, paysId: 'FR', surface: etape.surface ?? 0 }
           }
 
@@ -245,16 +244,17 @@ const peutRendreAvisCDM = (context: PrmOctContext, event: RendreAvisCDM): boolea
   return isOutreMer(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
 }
 
-const estExempteDeLaMiseEnConcurrence = (context: PrmOctContext): boolean => { 
+const estExempteDeLaMiseEnConcurrence = (context: PrmOctContext): boolean => {
   if (isGuyane(context.paysId)) {
     if (context.surface === null) {
       throw new Error('la surface est obligatoire quand on est en Guyane')
     }
+
     return context.surface < SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF
   }
+
   return false
 }
-
 
 const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
   predictableActionArguments: true,
@@ -309,7 +309,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             },
             surface: (_context, event) => {
               return event.surface
-            }
+            },
           }),
         },
       },
@@ -562,8 +562,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
           states: {
             participationDuPublicPasEncorePossible: {
               on: {
-                DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', 
-              cond: (context) => !estExempteDeLaMiseEnConcurrence(context)},
+                DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', cond: context => !estExempteDeLaMiseEnConcurrence(context) },
                 OUVRIR_PARTICIPATION_DU_PUBLIC: { target: 'clotureParticipationDuPublicAFaire', cond: peutOuvrirParticipationDuPublic },
               },
             },

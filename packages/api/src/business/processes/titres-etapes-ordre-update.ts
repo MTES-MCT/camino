@@ -1,5 +1,3 @@
-import { ITitreEtape } from '../../types.js'
-
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
