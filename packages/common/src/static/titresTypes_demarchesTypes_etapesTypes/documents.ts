@@ -6,6 +6,8 @@ import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes.js'
 import { TDEType } from './index.js'
 
 const EtapesTypesDocumentsTypes = {
+  [ETAPES_TYPES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
+  [ETAPES_TYPES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
   [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
   [ETAPES_TYPES.abrogationDeLaDecision]: [DOCUMENTS_TYPES_IDS.arrete],
