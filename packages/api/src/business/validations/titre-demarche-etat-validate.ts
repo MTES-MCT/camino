@@ -2,12 +2,11 @@
 import type { ITitre, ITitreEtape, IDemarcheType } from '../../types.js'
 
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
-import { CaminoDate } from 'camino-common/src/date.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
-const titreDemarcheEtapesBuild = <T extends Pick<ITitreEtape, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
+const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
   if (!titreDemarcheEtapes?.length) {
     return [titreEtape]
   }
@@ -38,12 +37,11 @@ const titreDemarcheEtapesBuild = <T extends Pick<ITitreEtape, 'id'>>(titreEtape:
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
-  date: CaminoDate,
   demarcheType: IDemarcheType,
   titre: ITitre,
-  titreEtape: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu'| 'communes' | 'surface'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu'  | 'communes' | 'surface'>[] | null,
   suppression = false
 ): string[] => {
   let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
@@ -89,7 +87,8 @@ export const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   try {
-    const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(titreDemarcheEtapesNew)))
+    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({id: true}).partial({ordre: true}).parse(etape))
+    const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
     if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }

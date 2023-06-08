@@ -4,14 +4,14 @@ import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { ITitreEtape, ITitreDemarche } from '../../types.js'
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
   demarcheTypeEtapesTypes: readonly EtapeTypeId[],
-  titreEtape: ITitreEtape,
+  titreEtape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
   demarche: Pick<ITitreDemarche, 'demarcheDateFin' | 'demarcheDateDebut'>,
   titreTypeId?: TitreTypeId
 ) => {
@@ -167,7 +167,7 @@ export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'tit
     const demarcheDefinition = demarcheDefinitionFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
 
     if (demarcheDefinition) {
-      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).publique
+      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
     } else {
       const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)
       publicLecture = titreDemarcheEtapes.reduce(

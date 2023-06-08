@@ -2,7 +2,7 @@ import { ITitreEtape } from '../../types.js'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
@@ -10,6 +10,10 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>
       ({
+        id: newEtapeId(`${i}+1`),
+        communes: null,
+        surface: null,
+        contenu: null,
         ...etapeProps,
         ordre: i + 1,
       } as unknown as ITitreEtape)

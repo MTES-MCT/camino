@@ -29,7 +29,6 @@ describe("statut des démarches d'un titre", () => {
         etapes: [
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
-            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -37,10 +36,10 @@ describe("statut des démarches d'un titre", () => {
             communes: [],
             contenu: {},
             heritageContenu: {},
+            surface: null,
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
-            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -48,6 +47,7 @@ describe("statut des démarches d'un titre", () => {
             communes: [],
             contenu: {},
             heritageContenu: {},
+            surface: null,
           },
         ],
       },
@@ -68,7 +68,6 @@ describe("statut des démarches d'un titre", () => {
         etapes: [
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
-            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -76,10 +75,10 @@ describe("statut des démarches d'un titre", () => {
             communes: [],
             contenu: {},
             heritageContenu: {},
+            surface: null,
           },
           {
             id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
-            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -87,6 +86,7 @@ describe("statut des démarches d'un titre", () => {
             communes: [],
             contenu: {},
             heritageContenu: {},
+            surface: null,
           },
         ],
       },

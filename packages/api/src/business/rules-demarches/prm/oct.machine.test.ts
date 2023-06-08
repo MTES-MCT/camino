@@ -46,7 +46,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
 
   test('peut créer une demande d’octroi de PRM en Guyane', () => {
     const etapes = [
-      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14'), paysId: PAYS_IDS['Département de la Guyane'] },
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14'), paysId: PAYS_IDS['Département de la Guyane'], surface: 200 },
       { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
       { ...ETES.saisineDuPrefet.FAIT, date: toCaminoDate('2022-04-16') },
       { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: toCaminoDate('2022-04-17') },

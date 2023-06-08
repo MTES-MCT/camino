@@ -4,6 +4,7 @@ import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
+import { newEtapeId } from '../../database/models/_format/id-create.js'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titreEtapeUpdate: vi.fn().mockResolvedValue(true),
 }))
@@ -11,8 +12,14 @@ vi.mock('../../database/queries/titres-etapes', () => ({
 const titresDemarchesEtapes = {
   '': {
     etapes: [
-      { ordre: 1, date: '1988-03-06' },
-      { ordre: 1, date: '1988-03-08' },
+      {id: newEtapeId(), ordre: 1, date: '1988-03-06',typeId: 'aac',
+      statutId: 'acc',
+      surface: 0,
+      communes: null, },
+      {id: newEtapeId(), ordre: 1, date: '1988-03-08',typeId: 'aac',
+      statutId: 'acc',
+      surface: 0,
+      communes: null, },
     ],
     titre: null,
   } as TitresDemarches,

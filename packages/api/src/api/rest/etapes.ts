@@ -8,16 +8,15 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
-import { ITitreEtape } from '../../types.js'
 import { etapeTypeIsValidCheck } from '../_format/etapes-types.js'
 import { User } from 'camino-common/src/roles.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
-import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { Etape, TitreEtapeForMachine, isTitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
@@ -87,7 +86,8 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   const etapesTypes: EtapeTypeEtapeStatutWithMainStep[] = []
   if (demarcheDefinition) {
     if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
-    etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, titreDemarche.etapes, titreEtapeId, date))
+    const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+    etapesTypes.push(...etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(demarcheDefinition.machine, etapes, titreEtapeId, date))
   } else {
     // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
     let etapesTypesTDE = getEtapesTDE(titre.typeId, titreDemarche.typeId)
@@ -116,7 +116,9 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   )
 }
 
-export type TitreEtapeForMachine = Pick<ITitreEtape, 'ordre' | 'id' | 'typeId' | 'statutId' | 'date' | 'contenu'>
+
+
+// export type TitreEtapeForMachine = Pick<Required<ITitreEtape>, 'ordre' | 'id' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'communes' | 'surface'>
 // VISIBLE_FOR_TESTING
 export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,

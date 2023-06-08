@@ -6,13 +6,14 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
+const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
       ({
         ...etapeProps,
         ordre: i + 1,
-      } as unknown as ITitreEtape)
+      } as unknown as TitreEtapeForMachine)
   )
 
 describe("statut d'une démarche", () => {

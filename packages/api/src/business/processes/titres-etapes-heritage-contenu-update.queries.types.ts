@@ -19,6 +19,7 @@ export interface IGetEtapesByDemarcheResult {
   id: string;
   ordre: number;
   statut_id: string;
+  surface: number | null;
   titre_id: string;
   titre_type_id: string;
   type_id: string;

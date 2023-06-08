@@ -28,7 +28,7 @@ import { titreAdministrationsGet } from '../_format/titres.js'
 import { canDeleteTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
-import { toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -162,7 +162,8 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
       }
 
       const dd = demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes, octARM.id)
-      const blockedByMe: boolean = dd !== undefined && dd.machine.whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
+      const etapes = octARM.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+      const blockedByMe: boolean = dd !== undefined && dd.machine.whoIsBlocking(toMachineEtapes(etapes)).includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
@@ -307,7 +308,8 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
             if (demarcheLaPlusRecente.statutId === DemarchesStatutsIds.EnConstruction) {
               return null
             } else {
-              const etapesDerniereDemarche = toMachineEtapes(demarcheLaPlusRecente.etapes)
+              const etapes = demarcheLaPlusRecente.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+              const etapesDerniereDemarche = toMachineEtapes(etapes)
               derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
               const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
               if (dd) {

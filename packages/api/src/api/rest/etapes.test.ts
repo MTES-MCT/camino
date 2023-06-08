@@ -1,9 +1,10 @@
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape, TitreEtapeForMachine } from './etapes.js'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './etapes.js'
 import { ArmOctMachine } from '../../business/rules-demarches/arm/oct.machine.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test, vi } from 'vitest'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { newEtapeId } from '../../database/models/_format/id-create.js'
+import { TitreEtapeForMachine } from '../../business/rules-demarches/machine-common.js'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const etapes: TitreEtapeForMachine[] = [
@@ -14,6 +15,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ordre: 16,
       date: toCaminoDate('2020-08-17'),
       contenu: { arm: { mecanise: true } },
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId1'),
@@ -22,6 +25,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ordre: 1,
       date: toCaminoDate('2019-09-19'),
       contenu: { arm: { mecanise: true, franchissements: 19 } },
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId5'),
@@ -29,6 +34,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'com',
       ordre: 5,
       date: toCaminoDate('2019-11-27'),
+      contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId10'),
@@ -36,6 +44,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fav',
       ordre: 10,
       date: toCaminoDate('2019-12-04'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId9'),
@@ -43,6 +54,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 9,
       date: toCaminoDate('2019-12-04'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId14'),
@@ -50,6 +64,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 14,
       date: toCaminoDate('2020-05-22'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId8'),
@@ -57,6 +74,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fav',
       ordre: 8,
       date: toCaminoDate('2019-12-04'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId4'),
@@ -64,6 +84,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 4,
       date: toCaminoDate('2019-11-20'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId15'),
@@ -71,6 +94,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 15,
       date: toCaminoDate('2020-05-22'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId13'),
@@ -78,6 +104,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 13,
       date: toCaminoDate('2020-05-18'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId12'),
@@ -85,6 +114,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fav',
       ordre: 12,
       date: toCaminoDate('2020-05-13'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId6'),
@@ -92,6 +124,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fav',
       ordre: 6,
       date: toCaminoDate('2019-12-04'),
+      communes: [],
+      surface: null,
       contenu: { arm: { franchissements: 19 } },
     },
     {
@@ -100,6 +134,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 2,
       date: toCaminoDate('2019-09-20'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId7'),
@@ -107,6 +144,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 7,
       date: toCaminoDate('2019-12-04'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId11'),
@@ -114,6 +154,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 11,
       date: toCaminoDate('2020-05-04'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId3'),
@@ -121,6 +164,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'exe',
       ordre: 3,
       date: toCaminoDate('2019-10-11'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
     {
       id: newEtapeId('etapeId17'),
@@ -128,6 +174,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       statutId: 'fai',
       ordre: 17,
       date: toCaminoDate('2022-05-05'),
+            contenu: null,
+      communes: [],
+      surface: null,
     },
   ]
 
@@ -168,18 +217,23 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('idMfr'),
-
+        ordre: 1,
         typeId: 'mfr',
         statutId: 'fai',
         date: toCaminoDate('2022-05-16'),
         contenu: { arm: { mecanise: true, franchissements: 2 } },
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('idMdp'),
-
+        ordre: 2,
         typeId: 'mdp',
         statutId: 'fai',
         date: toCaminoDate('2022-05-17'),
+        contenu: null,
+        communes: [],
+        surface: null,
       },
     ]
 
@@ -193,16 +247,23 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const etapes: TitreEtapeForMachine[] = [
       {
         id: newEtapeId('idMfr'),
+        ordre: 1,
         typeId: 'mfr',
         statutId: 'fai',
         date: toCaminoDate('2022-05-16'),
         contenu: { arm: { mecanise: false } },
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('idMdp'),
+        ordre: 2,
         typeId: 'mdp',
         statutId: 'fai',
         date: toCaminoDate('2022-05-17'),
+        contenu: null,
+        communes: [],
+        surface: null,
       },
     ]
 
@@ -227,6 +288,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           },
         },
         ordre: 3,
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('idrcm'),
@@ -240,6 +303,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           },
         },
         ordre: 7,
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('idMcp'),
@@ -247,6 +312,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcp',
         statutId: 'inc',
         ordre: 5,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idmcp'),
@@ -254,6 +322,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcp',
         statutId: 'com',
         ordre: 8,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('ideof'),
@@ -261,6 +332,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'eof',
         statutId: 'fai',
         ordre: 11,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('iddae'),
@@ -269,6 +343,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'exe',
 
         ordre: 1,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idmcr'),
@@ -277,6 +354,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'fav',
         contenu: null,
         ordre: 10,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idmcb'),
@@ -285,6 +364,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'fai',
 
         ordre: 13,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idedm'),
@@ -292,6 +374,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'edm',
         statutId: 'fav',
         ordre: 12,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idvfd'),
@@ -299,6 +384,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'vfd',
         statutId: 'fai',
         ordre: 9,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idpfd'),
@@ -306,6 +394,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'pfd',
         statutId: 'fai',
         ordre: 2,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idmdp'),
@@ -313,6 +404,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         ordre: 4,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
       {
         id: newEtapeId('idmcm'),
@@ -320,6 +414,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcm',
         statutId: 'fai',
         ordre: 6,
+              contenu: null,
+      communes: [],
+      surface: null,
       },
     ]
 
@@ -343,6 +440,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           },
         },
         ordre: 3,
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('id1'),
@@ -350,6 +449,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'exe',
         date: toCaminoDate('2021-06-22'),
         ordre: 1,
+        contenu: null,
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('id4'),
@@ -358,6 +460,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'fai',
         date: toCaminoDate('2022-07-01'),
         ordre: 4,
+        contenu: null,
+        communes: [],
+        surface: null,
       },
       {
         id: newEtapeId('id2'),
@@ -366,6 +471,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'fai',
         date: toCaminoDate('2021-07-05'),
         ordre: 2,
+        contenu: null,
+        communes: [],
+        surface: null,
       },
     ]
 

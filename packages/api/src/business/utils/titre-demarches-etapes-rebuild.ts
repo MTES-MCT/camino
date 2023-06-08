@@ -3,6 +3,7 @@ import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-fin
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { titrePhasesFind } from '../rules/titre-phases-find.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { titreEtapeForMachineValidator } from '../rules-demarches/machine-common.js'
 
 /**
  * Filtre les étapes antérieures à une date
@@ -31,7 +32,8 @@ export const titreDemarchesEtapesRebuild = (date: CaminoDate, titreDemarches: IT
 
       titreDemarche.etapes = titreEtapesFiltered
 
-      titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarche.etapes, titreTypeId, titreDemarche.id)
+      const etapes = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+      titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, etapes, titreTypeId, titreDemarche.id)
 
       acc.push(titreDemarche)
     }

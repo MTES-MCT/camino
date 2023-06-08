@@ -4,7 +4,7 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 import { writeFileSync } from 'fs'
-import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
@@ -37,7 +37,7 @@ const writeEtapesForTest = async () => {
       })
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
-          demarche?.etapes
+          (demarche?.etapes
             ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
             ?.map(etape => {
               if (etape?.contenu?.arm) {
@@ -50,8 +50,9 @@ const writeEtapesForTest = async () => {
                 etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
               }
 
+
               return etape
-            }) ?? []
+            }) ?? []).map((etape) => titreEtapeForMachineValidator.parse(etape))
         )
         // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
         // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois

@@ -202,7 +202,6 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
           titreDemarcheId,
           date: '2022-01-01',
           duree: 10,
-          ordre: 1,
           heritageProps: titreEtapePropsIds.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }

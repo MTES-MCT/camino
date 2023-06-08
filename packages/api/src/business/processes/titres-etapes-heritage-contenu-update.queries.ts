@@ -26,6 +26,7 @@ export const getEtapesByDemarcheValidator = z.object({
   titre_id: titreIdValidator,
   titre_type_id: titreTypeIdValidator,
   communes: z.array(z.object({ id: communeIdValidator })),
+  surface: z.number().nullable(),
   type_id: etapeTypeIdValidator,
 })
 
@@ -39,6 +40,7 @@ SELECT
     etape.statut_id,
     etape.date,
     etape.contenu,
+    etape.surface,
     etape.heritage_contenu,
     demarche.id as demarche_id,
     demarche.type_id as demarche_type_id,

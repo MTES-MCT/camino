@@ -5,6 +5,7 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date.js'
 import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays.js'
+import { formatDiagnosticsWithColorAndContext } from 'typescript'
 
 type RendreAvisMiseEnConcurrentJORF = {
   date: CaminoDate
@@ -34,6 +35,7 @@ type RendreRapportDREAL = {
 type FaireDemande = {
   type: 'FAIRE_DEMANDE'
   paysId: PaysId
+  surface: number
 }
 
 export type XStateEvent =
@@ -44,6 +46,7 @@ export type XStateEvent =
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
+  | { type: 'MODIFIER_LA_DEMANDE' }
   | RendreAvisMiseEnConcurrentJORF
   | { type: 'DEPOSER_DEMANDE_CONCURRENTE' }
   | OuvrirParticipationDuPublic
@@ -109,6 +112,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
     },
     mainStep: true,
   },
+  MODIFIER_LA_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: true },
   RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF: { db: EtapesTypesEtapesStatuts.avisDeMiseEnConcurrenceAuJORF, mainStep: true },
   DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: true },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.ouvertureDeLaParticipationDuPublic, mainStep: true },
@@ -157,6 +161,9 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
 export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
+
+const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
+
 export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
   constructor() {
     super(prmOctMachine, trad)
@@ -172,9 +179,10 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
         return [{ type: event, date }]
       case 'FAIRE_DEMANDE':
         return [
-          { type: event, paysId: PAYS_IDS['Département de la Guyane'] },
-          { type: event, paysId: PAYS_IDS['Wallis-et-Futuna'] },
-          { type: event, paysId: PAYS_IDS['République Française'] },
+          { type: event, paysId: PAYS_IDS['Département de la Guyane'], surface: SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF + 1 },
+          { type: event, paysId: PAYS_IDS['Département de la Guyane'], surface: SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF - 1 },
+          { type: event, paysId: PAYS_IDS['Wallis-et-Futuna'], surface: 0 },
+          { type: event, paysId: PAYS_IDS['République Française'], surface: 0 },
         ]
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
@@ -203,11 +211,14 @@ export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
         case 'FAIRE_DEMANDE':
           if (!etape.paysId) {
             console.error(`paysId is mandatory in etape ${JSON.stringify(etape)}`)
-
-            return { type: eventFromEntry, paysId: 'FR' }
+            return { type: eventFromEntry, paysId: 'FR', surface: etape.surface ?? 0 }
           }
 
-          return { type: eventFromEntry, paysId: etape.paysId }
+          if (etape.paysId === 'GF' && etape.surface === null && etape.surface === undefined) {
+            throw new Error(`la surface pour la demande est obligatoire quand la demande est en Guyane  ${JSON.stringify(etape)}`)
+          }
+
+          return { type: eventFromEntry, paysId: etape.paysId, surface: etape.surface ?? 0 }
         default:
           // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -223,10 +234,11 @@ interface PrmOctContext extends CaminoCommonContext {
   dateAvisMiseEnConcurrentJorf: CaminoDate | null
   dateSaisineDesServices: CaminoDate | null
   paysId: PaysId | null
+  surface: number | null
 }
 
 const peutOuvrirParticipationDuPublic = (context: PrmOctContext, event: OuvrirParticipationDuPublic): boolean => {
-  return context.dateAvisMiseEnConcurrentJorf !== null && daysBetween(dateAddMonths(context.dateAvisMiseEnConcurrentJorf, 1), event.date) >= 0
+  return estExempteDeLaMiseEnConcurrence(context) || (context.dateAvisMiseEnConcurrentJorf !== null && daysBetween(dateAddMonths(context.dateAvisMiseEnConcurrentJorf, 1), event.date) >= 0)
 }
 
 const peutRendreRapportDREAL = (context: PrmOctContext, event: RendreRapportDREAL): boolean => {
@@ -236,6 +248,17 @@ const peutRendreRapportDREAL = (context: PrmOctContext, event: RendreRapportDREA
 const peutRendreAvisCDM = (context: PrmOctContext, event: RendreAvisCDM): boolean => {
   return isOutreMer(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
 }
+
+const estExempteDeLaMiseEnConcurrence = (context: PrmOctContext): boolean => { 
+  if (isGuyane(context.paysId)) {
+    if (context.surface === null) {
+      throw new Error('la surface est obligatoire quand on est en Guyane')
+    }
+    return context.surface < SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF
+  }
+  return false
+}
+
 
 const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
   predictableActionArguments: true,
@@ -247,6 +270,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
     visibilite: 'confidentielle',
     demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paysId: null,
+    surface: null,
   },
   on: {
     MODIFIER_DEMANDE: {
@@ -287,6 +311,9 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             paysId: (_context, event) => {
               return event.paysId
             },
+            surface: (_context, event) => {
+              return event.surface
+            }
           }),
         },
       },
@@ -313,12 +340,10 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
           target: 'avisDeMiseEnConcurrenceAuJORFAFaire',
           actions: assign<CaminoCommonContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
-            // FIXME à voir avec l’ancien code
             visibilite: 'publique',
           }),
         },
-        // FIXME
-        // FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
       },
     },
     complementsPourRecevabiliteAFaire: {
@@ -331,12 +356,20 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             visibilite: 'publique',
           }),
         },
-        // FIXME
-        // FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+      },
+    },
+    modificationDeLaDemandeAFaire: {
+      on: {
+        MODIFIER_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
       },
     },
     // FIXME gérer guyane et superficie < 50km²
     avisDeMiseEnConcurrenceAuJORFAFaire: {
+      always: {
+        cond: estExempteDeLaMiseEnConcurrence,
+        target: 'saisinesEtMiseEnConcurrence',
+      },
       on: {
         RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF: {
           target: 'saisinesEtMiseEnConcurrence',
@@ -348,7 +381,6 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
         },
       },
     },
-    // FIXME gérer la fin de mise en concurrence (générer automatiquement l’étape à sa date future, ajouter une description à l’avis de mise en concurrence…)
     saisinesEtMiseEnConcurrence: {
       type: 'parallel',
       states: {
@@ -540,7 +572,8 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
           states: {
             participationDuPublicPasEncorePossible: {
               on: {
-                DEPOSER_DEMANDE_CONCURRENTE: 'participationDuPublicPasEncorePossible',
+                DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', 
+              cond: (context) => !estExempteDeLaMiseEnConcurrence(context)},
                 OUVRIR_PARTICIPATION_DU_PUBLIC: { target: 'clotureParticipationDuPublicAFaire', cond: peutOuvrirParticipationDuPublic },
               },
             },

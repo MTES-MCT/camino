@@ -15,13 +15,23 @@ import { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { getEtapesByDemarche, getEtapesByDemarcheValidator } from './titres-etapes-heritage-contenu-update.queries.js'
 import { TitreId } from 'camino-common/src/titres.js'
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 
-export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?: TitreId) => {
+export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?: TitreId): Promise<{
+  [key: DemarcheId]: {
+    etapes: TitreEtapeForMachine[]
+    id: DemarcheId
+    typeId: DemarcheTypeId
+    titreTypeId: TitreTypeId
+    titreId: TitreId
+    statutId: DemarcheStatutId
+  }
+}> => {
   const etapes = await dbQueryAndValidate(getEtapesByDemarche, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
 
   return etapes.reduce<{
     [key: DemarcheId]: {
-      etapes: Pick<Required<ITitreEtape>, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'heritageContenu' | 'titreDemarcheId' | 'communes'>[]
+      etapes: TitreEtapeForMachine[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
@@ -48,8 +58,8 @@ export const getDemarches = async (pool: Pool, demarcheId?: DemarcheId, titreId?
       date: row.date,
       contenu: row.contenu,
       heritageContenu: row.heritage_contenu,
-      titreDemarcheId: row.demarche_id,
       communes: row.communes,
+      surface: row.surface,
     })
 
     return acc

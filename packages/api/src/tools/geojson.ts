@@ -7,6 +7,7 @@ import { knex } from '../knex.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
 import { Feature } from 'geojson'
+import { CommuneId } from 'camino-common/src/static/communes.js'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'
@@ -155,8 +156,8 @@ export const geojsonIntersectsSecteursMaritime = async (geojson: Feature<any>): 
   return { fallback, data: result.rows.map(({ id }) => id) }
 }
 
-export const geojsonIntersectsCommunes = async (geojson: Feature<any>): Promise<GeoJsonResult<{ id: string; surface: number }[]>> => {
-  let result: { rows: { id: string; surface: string }[] }
+export const geojsonIntersectsCommunes = async (geojson: Feature<any>): Promise<GeoJsonResult<{ id: CommuneId; surface: number }[]>> => {
+  let result: { rows: { id: CommuneId; surface: string }[] }
   let fallback = false
   try {
     result = await knex.raw(

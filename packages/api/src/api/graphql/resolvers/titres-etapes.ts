@@ -23,7 +23,7 @@ import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathG
 import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
-import { geojsonFeatureMultiPolygon } from '../../../tools/geojson.js'
+import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes } from '../../../tools/geojson.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
@@ -33,7 +33,7 @@ import { Feature } from 'geojson'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { CaminoDate, getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
@@ -198,6 +198,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
     etape.date = date
+    etape.surface = etape.surface ?? null
 
     const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType)
 
@@ -220,6 +221,15 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
         console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
       }
       sdomZones.push(...geoJsonResult.data)
+
+      const titreEtapeCommu  = await geojsonIntersectsCommunes(geojsonFeatures)
+      if (titreEtapeCommu.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+      etape.communes = titreEtapeCommu.data
+      
+    } else {
+      etape.communes = []
     }
 
     const typeId = titreDemarche?.titre?.typeId
@@ -227,7 +237,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
-      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -395,7 +404,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
-      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -652,8 +660,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, 
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const currentDate = getCurrent()
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(currentDate, titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
