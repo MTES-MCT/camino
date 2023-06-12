@@ -21,7 +21,9 @@ test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeI
 
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
   { titreTypeId: 'arm', demarcheTypeId: 'dep', canEdit: false },
-  { titreTypeId: 'arm', demarcheTypeId: 'dec', canEdit: false },
+  { titreTypeId: 'arm', demarcheTypeId: 'oct', canEdit: false },
+  { titreTypeId: 'arm', demarcheTypeId: 'dec', canEdit: true },
+  { titreTypeId: 'arm', demarcheTypeId: 'pro', canEdit: true },
   { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true },
 ])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) => expect(canEditDuree(titreTypeId, demarcheTypeId)).toEqual(canEdit))
 
