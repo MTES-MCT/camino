@@ -20,20 +20,22 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/new-section'
 import { FunctionalComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
-import { Section } from 'camino-common/src/titres'
+import { Section, TitreId } from 'camino-common/src/titres'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DemarcheId } from 'camino-common/src/demarche'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 export interface Entreprise {
-  id: string
+  id: EntrepriseId
   nom: string
   legalSiren?: string
   operateur: boolean
 }
 
 interface Demarche {
-  id: string
+  id: DemarcheId
   typeId: DemarcheTypeId
   demarcheDateDebut: CaminoDate | null
   demarcheDateFin: CaminoDate | null
@@ -42,7 +44,7 @@ interface Demarche {
 export interface Props {
   currentDay?: CaminoDate
   titre: {
-    id: string
+    id: TitreId
     typeId: TitreTypeId
     titreStatutId: TitreStatutId
     demarches: Demarche[]

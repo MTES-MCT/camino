@@ -2,7 +2,7 @@ import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-admini
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 
 import { ICommune, ITitreEtape } from '../../types.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
@@ -30,7 +30,7 @@ describe("administrations d'une étape", () => {
   test('ajoute des administrations dans deux étapes', async () => {
     const titresEtapesCommunes: ITitreEtape[] = [
       {
-        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
@@ -43,7 +43,7 @@ describe("administrations d'une étape", () => {
         ],
       },
       {
-        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
         date: toCaminoDate('2022-01-01'),
@@ -66,7 +66,7 @@ describe("administrations d'une étape", () => {
   test("n'ajoute pas deux fois une administration en doublon ", async () => {
     const titresEtapesCommunesMemeCommune: ITitreEtape[] = [
       {
-        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
@@ -89,7 +89,7 @@ describe("administrations d'une étape", () => {
   test("ne met pas à jour les administrations d'une étape qui n'a pas de commune", async () => {
     const titresEtapesCommunesVides: ITitreEtape[] = [
       {
-        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
         typeId: 'dpu',
         statutId: 'acc',
@@ -107,7 +107,7 @@ describe("administrations d'une étape", () => {
 
   test("n'ajoute pas d'administration si elle existe déjà dans l'étape", async () => {
     const titreEtape: ITitreEtape = {
-      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId(),
       statutId: 'fai',
       date: toCaminoDate('2022-01-01'),
@@ -127,7 +127,7 @@ describe("administrations d'une étape", () => {
     const titreEtape: ITitreEtape = {
       statutId: 'fai',
       date: toCaminoDate('2022-01-01'),
-      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
       titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       typeId: 'dpu',
       communes: [] as ICommune[],

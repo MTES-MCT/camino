@@ -1,7 +1,8 @@
+import { TitreId } from 'camino-common/src/titres.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
 import { getLinkConfig } from 'camino-common/src/permissions/titres.js'
 
-export const checkTitreLinks = (titre: Pick<ITitre, 'typeId'>, titreFromIds: string[], titresFrom: ITitre[], demarches: ITitreDemarche[]) => {
+export const checkTitreLinks = (titre: Pick<ITitre, 'typeId'>, titreFromIds: TitreId[], titresFrom: ITitre[], demarches: ITitreDemarche[]) => {
   const linkConfig = getLinkConfig(titre.typeId, demarches)
   if (!linkConfig) {
     throw new Error('ce titre ne peut pas être lié à d’autres titres')

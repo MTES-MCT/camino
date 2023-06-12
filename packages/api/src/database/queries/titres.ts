@@ -16,7 +16,7 @@ import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
-import { EditableTitre } from 'camino-common/src/titres.js'
+import { EditableTitre, TitreId } from 'camino-common/src/titres.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -290,9 +290,9 @@ const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: IFi
   return Titres.query().withGraphFetched(graph).insertGraph(titre, options.titres.update)
 }
 
-const titreUpdate = async (id: string, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
+const titreUpdate = async (id: TitreId, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
 
-export const titreArchive = async (id: string) => {
+export const titreArchive = async (id: TitreId) => {
   // archive le titre
   await titreUpdate(id, { archive: true })
 

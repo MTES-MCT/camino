@@ -6,13 +6,14 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
+import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
+const etapesBuild = (etapesProps: Partial<ITitreEtape>[]): TitreEtapeForMachine[] =>
   etapesProps.map(
     (etapeProps, i) =>
       ({
         ...etapeProps,
         ordre: i + 1,
-      } as unknown as ITitreEtape)
+      } as unknown as TitreEtapeForMachine)
   )
 
 describe("statut d'une démarche", () => {
@@ -60,7 +61,7 @@ describe("statut d'une démarche", () => {
   })
 
   test("une démarche d'octroi d'un titre PRM dont l'étape de rpu la plus récente est acceptée a le statut “accepté”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', statutId: 'acc' }]), 'prm', newDemarcheId())).toEqual('acc')
+    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rpu', date: toCaminoDate('2010-01-01'), statutId: 'acc' }]), 'prm', newDemarcheId())).toEqual('acc')
   })
 
   test("une démarche de prolongation dont l'étape de dpu la plus récente est acceptée a le statut “accepté”", () => {

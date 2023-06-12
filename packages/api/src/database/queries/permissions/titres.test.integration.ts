@@ -3,7 +3,7 @@ import { IEntreprise, ITitre, ITitreDemarche } from '../../../types.js'
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate } from '../../models/_format/id-create.js'
+import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
 import { titresArmEnDemandeQuery, titresConfidentielSelect, titresModificationSelectQuery, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
 import { userSuper } from '../../user-super.js'
 import { AdministrationRole } from 'camino-common/src/roles.js'
@@ -15,6 +15,7 @@ import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -39,7 +40,9 @@ describe('titresQueryModify', () => {
         nom: 'monEntrepriseNom',
       } as IEntreprise
 
-      const etapeId = idGenerate()
+      const id = newTitreId()
+      const demarcheId = newDemarcheId()
+      const etapeId = newEtapeId()
 
       const mockTitre: Omit<ITitre, 'id'> = {
         nom: 'titre1',
@@ -48,11 +51,14 @@ describe('titresQueryModify', () => {
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [
           {
+            id: demarcheId,
+            titreId: id,
             typeId: 'oct',
             etapes: [
               {
                 id: etapeId,
-                date: '2020-01-01',
+                titreDemarcheId: demarcheId,
+                date: toCaminoDate('2020-01-01'),
                 typeId: 'mfr',
                 statutId: 'fai',
                 titulaires: withTitulaire ? [mockEntreprise1] : [],
@@ -174,9 +180,9 @@ describe('titresQueryModify', () => {
         nom: 'monEntrepriseNom',
       } as IEntreprise
 
-      const etapeId = idGenerate()
-
-      const id = idGenerate()
+      const etapeId = newEtapeId()
+      const demarcheId = newDemarcheId()
+      const id = newTitreId()
 
       const mockTitre: ITitre = {
         id,
@@ -188,12 +194,15 @@ describe('titresQueryModify', () => {
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [
           {
+            id: demarcheId,
+            titreId: id,
             typeId: 'oct',
             statutId: 'ins',
             etapes: [
               {
                 id: etapeId,
-                date: '2020-01-01',
+                titreDemarcheId: demarcheId,
+                date: toCaminoDate('2020-01-01'),
                 typeId: 'mcr',
                 statutId: 'fav',
                 titulaires: withTitulaire ? [mockEntreprise1] : [],
@@ -294,8 +303,8 @@ describe('titresQueryModify', () => {
 
   describe('titresArchive', () => {
     test('Vérifie si le statut archivé masque le titre', async () => {
-      const archivedTitreId = idGenerate()
-      const titreId = idGenerate()
+      const archivedTitreId = newTitreId()
+      const titreId = newTitreId()
       await Titres.query().insert([
         {
           id: archivedTitreId,

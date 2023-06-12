@@ -6,13 +6,14 @@ import { Icon as IconSprite } from '../_ui/iconSpriteType'
 import { Download } from './download'
 import { CamionCommonMap, Props as CaminoCommonMapProps } from './map'
 import { Points } from './points'
+import { TitreId } from 'camino-common/src/titres'
 
 export type TabId = 'carte' | 'points'
 export interface Props {
   points?: Point[]
   geojsonMultiPolygon: CaminoCommonMapProps['geojson']
   titreTypeId: TitreTypeId
-  titreId?: string
+  titreId?: TitreId
   isMain?: boolean
   tabId?: TabId
   tabUpdate: (tabId: TabId) => void

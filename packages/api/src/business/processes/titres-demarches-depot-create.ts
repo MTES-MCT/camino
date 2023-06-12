@@ -50,7 +50,7 @@ const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarc
 // visibleForTesting
 export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean => {
   const demarcheDefinition = demarcheDefinitionFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
-  // On peut déposer automatiquement seulement les démarches qui possèdent un arbre d’instructions
+  // On peut déposer automatiquement seulement les démarches qui possèdent une machine
   if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite

@@ -1,17 +1,24 @@
 import { IContenu, ITitreEtape } from '../../types.js'
-import { EtapeStatutId, EtapeStatutKey, ETAPES_STATUTS, isStatut } from 'camino-common/src/static/etapesStatuts.js'
-import { EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeStatutId, EtapeStatutKey, ETAPES_STATUTS, isStatut, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeTypeId, etapeTypeIdValidator, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-
+import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
+import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
+import { Regions } from 'camino-common/src/static/region.js'
+import { PaysId } from 'camino-common/src/static/pays.js'
+import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { z } from 'zod'
+import { etapeIdValidator } from 'camino-common/src/etape.js'
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId
   date: CaminoDate
   contenu?: IContenu
+  paysId?: PaysId
+  surface?: number
 }
 
 export interface CaminoCommonContext {
@@ -19,7 +26,22 @@ export interface CaminoCommonContext {
   visibilite: 'confidentielle' | 'publique'
 }
 
-export const toMachineEtapes = (etapes: Pick<ITitreEtape, 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu'>[]): Etape[] => {
+export const titreEtapeForMachineValidator = z.object({
+  ordre: z.number(),
+  id: etapeIdValidator,
+  typeId: etapeTypeIdValidator,
+  statutId: etapeStatutIdValidator,
+  date: caminoDateValidator,
+  contenu: z.any().nullable(),
+  heritageContenu: z.any().nullable(),
+  communes: z.array(z.object({ id: communeIdValidator })).nullable(),
+  surface: z.number().nullable(),
+})
+
+export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
+export const isTitreEtapeForMachine = (etape: Omit<ITitreEtape, 'titreDemarcheId'>): etape is TitreEtapeForMachine => titreEtapeForMachineValidator.safeParse(etape).success
+
+export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
   // FIXME si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .slice()
@@ -27,7 +49,7 @@ export const toMachineEtapes = (etapes: Pick<ITitreEtape, 'ordre' | 'typeId' | '
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 
-const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date' | 'contenu'>): Etape => {
+const toMachineEtape = (dbEtape: Omit<TitreEtapeForMachine, 'id' | 'ordre'>): Etape => {
   let typeId
   if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId
@@ -49,6 +71,12 @@ const toMachineEtape = (dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date
   }
   if (dbEtape.contenu) {
     machineEtape.contenu = dbEtape.contenu
+  }
+  if (dbEtape.communes?.length) {
+    machineEtape.paysId = Regions[Departements[toDepartementId(dbEtape.communes[0].id)].regionId].paysId
+  }
+  if (dbEtape.surface !== null) {
+    machineEtape.surface = dbEtape.surface
   }
 
   return machineEtape

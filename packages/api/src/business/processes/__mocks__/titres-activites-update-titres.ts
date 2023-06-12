@@ -1,9 +1,10 @@
+import { newTitreId } from '../../../database/models/_format/id-create.js'
 import ActivitesTypes from '../../../database/models/activites-types.js'
 import Titres from '../../../database/models/titres.js'
 
 const titresSansActivite = [
   {
-    id: 'h-cx-courdemanges-1988',
+    id: newTitreId('h-cx-courdemanges-1988'),
     activites: [],
     titulaires: [{ utilisateurs: [{ email: 'email' }] }],
   },
@@ -11,7 +12,7 @@ const titresSansActivite = [
 
 const titresToutesActivites = [
   {
-    id: 'h-cx-courdemanges-1988',
+    id: newTitreId('h-cx-courdemanges-1988'),
     activites: [
       { annee: 2018, periodeId: 1 },
       { annee: 2018, periodeId: 2 },

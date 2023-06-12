@@ -3,7 +3,12 @@ import { IContenuValeur, Index, ITitreEtape } from '../../types.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
-export const heritageContenuFind = (sectionId: string, elementId: string, titreEtape: Pick<ITitreEtape, 'contenu' | 'heritageContenu'>, prevTitreEtape?: ITitreEtape | null) => {
+export const heritageContenuFind = (
+  sectionId: string,
+  elementId: string,
+  titreEtape: Pick<ITitreEtape, 'contenu' | 'heritageContenu'>,
+  prevTitreEtape?: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'> | null
+) => {
   let hasChanged = false
   let value = (titreEtape.contenu && titreEtape.contenu[sectionId] && titreEtape.contenu[sectionId][elementId]) as IContenuValeur
 
@@ -45,7 +50,7 @@ export const heritageContenuFind = (sectionId: string, elementId: string, titreE
 }
 
 export const titreEtapeHeritageContenuFind = (
-  titreEtapes: ITitreEtape[],
+  titreEtapes: Omit<ITitreEtape, 'titreDemarcheId'>[],
   titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
   etapeSectionsDictionary: Index<DeepReadonly<Section[]>>
 ) => {

@@ -1,6 +1,7 @@
 import { EditPopup } from './edit-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/EditPopup',
@@ -15,7 +16,7 @@ const close = action('close')
 export const DefaultNoReference: StoryFn = () => (
   <EditPopup
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       nom: 'Nom du titre',
       references: [],
     }}
@@ -30,7 +31,7 @@ export const DefaultNoReference: StoryFn = () => (
 export const OneReference: StoryFn = () => (
   <EditPopup
     titre={{
-      id: 'id',
+      id: titreIdValidator.parse('id'),
       nom: 'Nom du titre',
       references: [{ nom: 'RefValue', referenceTypeId: 'brg' }],
     }}

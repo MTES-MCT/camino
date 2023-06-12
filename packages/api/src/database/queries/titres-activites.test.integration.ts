@@ -1,7 +1,7 @@
 import { titresActivitesGet } from './titres-activites.js'
 import TitresActivites from '../models/titres-activites.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { idGenerate } from '../models/_format/id-create.js'
+import { newTitreId } from '../models/_format/id-create.js'
 import Titres from '../models/titres.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
@@ -19,11 +19,11 @@ describe('teste les requêtes sur les activités', () => {
   test('vérifie que le filtrage fonctionne pour les administrations', async () => {
     await TitresActivites.query().delete()
 
-    const titreId = idGenerate()
+    const titreId = newTitreId()
 
     await Titres.query().insert({
       id: titreId,
-      nom: idGenerate(),
+      nom: titreId,
       titreStatutId: 'val',
       typeId: 'arm',
     })

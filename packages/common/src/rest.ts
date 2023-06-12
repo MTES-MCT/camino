@@ -16,6 +16,7 @@ import {
   sectionValidator,
   titreDrealValidator,
   titreGetValidator,
+  titreIdValidator,
   titreLinksValidator,
   titreOnfValidator,
   titrePtmgValidator,
@@ -23,7 +24,7 @@ import {
 } from './titres.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
@@ -94,16 +95,16 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/titreSections/:titreId': { params: { titreId: z.string() }, get: { output: z.array(sectionValidator) } },
+  '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionValidator) } },
   '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdValidator }, get: { output: demarcheGetValidator } },
-  '/rest/titres/:titreId': { params: { titreId: z.string() }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
-  '/rest/titres/:titreId/abonne': { params: { titreId: z.string() }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
-  '/rest/titres/:titreId/date': { params: { titreId: z.string() }, get: { output: caminoDateValidator.nullable() } },
+  '/rest/titres/:titreId': { params: { titreId: titreIdValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
+  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
+  '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresPTMG': { get: { output: z.array(titrePtmgValidator) } },
   '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },
-  '/rest/titres/:id/titreLiaisons': { params: { id: z.string() }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/titres/:id/communes': { params: { id: z.string() }, get: { output: z.array(communeValidator) } },
+  '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
+  '/rest/titres/:id/communes': { params: { id: titreIdValidator }, get: { output: z.array(communeValidator) } },
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },
@@ -126,14 +127,14 @@ export const CaminoRestRoutes = {
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: documentIdValidator }, download: true },
   '/fichiers/:documentId': { params: { documentId: documentIdValidator }, download: true },
-  '/titres/:id': { params: { id: z.string() }, download: true },
+  '/titres/:id': { params: { id: titreIdValidator }, download: true },
   '/titres': { download: true },
   '/titres_qgis': { download: true },
   '/demarches': { download: true },
   '/activites': { download: true },
   '/utilisateurs': { download: true },
-  '/etape/zip/:etapeId': { params: { etapeId: z.string() }, download: true },
-  '/etape/:etapeId/:fichierNom': { params: { etapeId: z.string(), fichierNom: z.string() }, download: true },
+  '/etape/zip/:etapeId': { params: { etapeId: etapeIdValidator }, download: true },
+  '/etape/:etapeId/:fichierNom': { params: { etapeId: etapeIdValidator, fichierNom: z.string() }, download: true },
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 

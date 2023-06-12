@@ -1,123 +1,20 @@
-import { demarchesDefinitions, IEtapeTypeIdCondition, isDemarcheDefinitionMachine, isDemarcheDefinitionRestriction } from './definitions.js'
-import { ArmOctMachine } from './arm/oct.machine.js'
-import { expect, test } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
-import { EtapesTypes, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { etatsDefinitionPrmOct } from './prm/oct.js'
+import { test, expect } from 'vitest'
+import { demarcheDefinitionFind } from './definitions'
+import { toCaminoDate } from 'camino-common/src/date'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
-test('isDemarcheDefinitionMachine', () => {
-  expect(
-    isDemarcheDefinitionMachine({
-      titreTypeId: 'pxm',
-      demarcheTypeIds: [],
-      dateDebut: toCaminoDate('2022-01-01'),
-      machine: new ArmOctMachine(),
-    })
-  ).toBe(true)
-  expect(
-    isDemarcheDefinitionMachine({
-      titreTypeId: 'pxm',
-      demarcheTypeIds: [],
-      dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: etatsDefinitionPrmOct,
-    })
-  ).toBe(false)
-  expect(isDemarcheDefinitionMachine(undefined)).toBe(false)
-})
-test('isDemarcheDefinitionRestriction', () => {
-  expect(
-    isDemarcheDefinitionRestriction({
-      titreTypeId: 'pxm',
-      demarcheTypeIds: [],
-      dateDebut: toCaminoDate('2022-01-01'),
-      machine: new ArmOctMachine(),
-    })
-  ).toBe(false)
-  expect(
-    isDemarcheDefinitionRestriction({
-      titreTypeId: 'pxm',
-      demarcheTypeIds: [],
-      dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: etatsDefinitionPrmOct,
-    })
-  ).toBe(true)
+test('demarcheDefinitionFind retourne une machine', () => {
+  expect(demarcheDefinitionFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], newDemarcheId('demarcheId'))).not.toBeUndefined()
 })
 
-test('tdeValidate', () => {
-  const etapeTypeIdsGet = (contraintes?: IEtapeTypeIdCondition[][]) => {
-    const etapeTypeIds = [] as string[]
-    if (contraintes?.length) {
-      contraintes.forEach(contrainte => {
-        contrainte.forEach(c => {
-          if (c.etapeTypeId) {
-            etapeTypeIds.push(c.etapeTypeId)
-          }
-        })
-      })
-    }
+test("demarcheDefinitionFind retourne une machine quand il n'y a pas d'étape", () => {
+  expect(demarcheDefinitionFind('prm', 'oct', [], newDemarcheId('demarcheId'))).not.toBeUndefined()
+})
 
-    return etapeTypeIds
-  }
+test('demarcheDefinitionFind ne retourne pas une machine quand la démarche fait partie des exceptions', () => {
+  expect(demarcheDefinitionFind('prm', 'oct', [{ date: toCaminoDate('2023-06-07'), typeId: 'mdp' }], newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'))).toBeUndefined()
+})
 
-  const etapesTypesIdsGet = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => getEtapesTDE(titreTypeId, demarcheTypeId).filter(etapeTypeId => !EtapesTypes[etapeTypeId].dateFin)
-
-  const errors: string[] = []
-
-  const definitionsWithRestrictions = demarchesDefinitions.filter(isDemarcheDefinitionRestriction)
-
-  for (const demarcheDefinition of definitionsWithRestrictions) {
-    for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
-      const demarcheEtatsEtapeTypeIds = Object.keys(demarcheDefinition.restrictions)
-        .filter(isEtapeTypeId)
-        .reduce((acc, etapeTypeId) => {
-          acc.push(etapeTypeId)
-          const restriction = demarcheDefinition.restrictions[etapeTypeId]
-          if (restriction?.separation) {
-            acc.push(...restriction.separation)
-          }
-          acc.push(...etapeTypeIdsGet(restriction?.avant ?? []))
-          acc.push(...etapeTypeIdsGet(restriction?.apres ?? []))
-          acc.push(...etapeTypeIdsGet(restriction?.justeApres ?? []))
-
-          return acc
-        }, [] as string[])
-        .map(type => type.split('-')[0])
-
-      const tdeEtapeTypeIds = etapesTypesIdsGet(demarcheDefinition.titreTypeId, demarcheTypeId)
-
-      // on vérifie que toutes les étapes définies dans l’arbre existent dans TDE
-      demarcheEtatsEtapeTypeIds.forEach(demarcheEtatsEtapeTypeId => {
-        if (!tdeEtapeTypeIds.includes(demarcheEtatsEtapeTypeId)) {
-          errors.push(`titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${demarcheEtatsEtapeTypeId}" présent dans l’arbre d’instructions mais pas dans TDE`)
-        }
-      })
-
-      // on vérifie que toutes les étapes définies dans TDE existent dans l’arbre
-      tdeEtapeTypeIds.forEach(tdeEtapeTypeId => {
-        if (!demarcheEtatsEtapeTypeIds.includes(tdeEtapeTypeId)) {
-          errors.push(`titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${tdeEtapeTypeId}" présent dans TDE mais pas dans l’arbre d’instructions`)
-        }
-      })
-    }
-  }
-
-  // on vérifie qu’il existe un bloc dans l’arbre par étapes définies dans TDE
-  for (const demarcheDefinition of definitionsWithRestrictions) {
-    for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
-      const demarcheEtatsEtapeTypeIds = Object.keys(demarcheDefinition.restrictions)
-
-      const tdeEtapeTypeIds = etapesTypesIdsGet(demarcheDefinition.titreTypeId, demarcheTypeId)
-
-      tdeEtapeTypeIds.forEach(tdeEtapeTypeId => {
-        if (!demarcheEtatsEtapeTypeIds.includes(tdeEtapeTypeId)) {
-          errors.push(`bloc manquant "${tdeEtapeTypeId}" dans l’arbre des démarches "${demarcheTypeId}" des titres "${demarcheDefinition.titreTypeId}"`)
-        }
-      })
-    }
-  }
-
-  expect(errors).toStrictEqual([])
+test('demarcheDefinitionFind ne retourne pas une machine quand les étapes sont trop anciennes', () => {
+  expect(demarcheDefinitionFind('prm', 'oct', [{ date: toCaminoDate('2010-06-07'), typeId: 'mdp' }], newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'))).toBeUndefined()
 })

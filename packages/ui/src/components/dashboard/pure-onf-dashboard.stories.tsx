@@ -1,6 +1,6 @@
 import { PureONFDashboard } from './pure-onf-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { CommonTitreONF } from 'camino-common/src/titres'
+import { CommonTitreONF, titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/ONF',
@@ -13,7 +13,7 @@ export default meta
 
 const onfs: CommonTitreONF[] = [
   {
-    id: 'firstId',
+    id: titreIdValidator.parse('firstId'),
     slug: 'first-id-slug',
     nom: 'first-name',
     titre_statut_id: 'dmi',
@@ -30,7 +30,7 @@ const onfs: CommonTitreONF[] = [
     enAttenteDeONF: true,
   },
   {
-    id: 'secondId',
+    id: titreIdValidator.parse('secondId'),
     slug: 'second-slug',
     nom: 'Second Nom de titre',
     titre_statut_id: 'dmi',
@@ -53,7 +53,7 @@ const onfs: CommonTitreONF[] = [
     enAttenteDeONF: true,
   },
   {
-    id: 'thirdId',
+    id: titreIdValidator.parse('thirdId'),
     slug: 'third-id-slug',
     nom: 'third-name',
     titre_statut_id: 'dmi',
@@ -70,7 +70,7 @@ const onfs: CommonTitreONF[] = [
     enAttenteDeONF: false,
   },
   {
-    id: 'fourthId',
+    id: titreIdValidator.parse('fourthId'),
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
     titre_statut_id: 'dmi',

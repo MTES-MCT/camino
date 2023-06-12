@@ -1,19 +1,12 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import type { ITitre, ITitreEtape, IDemarcheType, ITitreDemarche } from '../../types.js'
+import type { ITitre, ITitreEtape, IDemarcheType } from '../../types.js'
 
-import { demarcheDefinitionFind, IDemarcheDefinitionRestrictions, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
-import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
-import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
-import { titreEtapeEtatValidate } from './titre-etape-etat-validate.js'
-import { objectClone } from '../../tools/index.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
-import { contenuFormat } from '../../api/rest/titre-contenu.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
-const titreDemarcheEtapesBuild = <T extends Pick<ITitreEtape, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
+const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
   if (!titreDemarcheEtapes?.length) {
     return [titreEtape]
   }
@@ -41,56 +34,14 @@ const titreDemarcheEtapesBuild = <T extends Pick<ITitreEtape, 'id'>>(titreEtape:
   return titreEtapes
 }
 
-// vérifie que  la démarche est valide par rapport aux définitions des types d'étape
-export const titreDemarcheEtatValidate = (
-  date: CaminoDate,
-  demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
-  demarcheTypeId: DemarcheTypeId,
-  titreDemarche: ITitreDemarche,
-  titreEtapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[],
-  titre: ITitre
-) => {
-  // Si on tente d’insérer ou de modifier une étape, il faut regarder
-  // qu’on puisse la mettre avec son nouveau etapeTypeId à la nouvelle date souhaitée
-  // et que les étapes après celle-ci soient toujours possibles
-
-  titreEtapes = titreEtapesSortAscByDate(titreEtapes, titreDemarche.id, demarcheTypeId, titre.typeId)
-
-  // on copie la démarche car on va les modifier en ajoutant les étapes une à une
-  const demarche = objectClone(titreDemarche)
-
-  for (let i = 0; i < titreEtapes.length; i++) {
-    // On doit recalculer les sections de titre pour chaque étape,
-    // car elles ont peut-être été modifiées après l’étape en cours
-    const etapes = titreEtapes.slice(0, i)
-    demarche.etapes = etapes
-
-    const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(date, titre.titreStatutId!, [demarche], titre.type!.contenuIds)
-
-    let contenu = null
-    if (contenusTitreEtapesIds) {
-      contenu = contenuFormat({ demarches: [demarche], contenusTitreEtapesIds })
-    }
-
-    const titreEtapeErrors = titreEtapeEtatValidate(demarcheDefinitionRestrictions, titreEtapes[i].typeId!, etapes, contenu)
-
-    if (titreEtapeErrors.length) {
-      return titreEtapeErrors
-    }
-  }
-
-  return []
-}
-
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
-  date: CaminoDate,
   demarcheType: IDemarcheType,
   titre: ITitre,
-  titreEtape: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId'>,
+  titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>,
   demarcheId: DemarcheId,
-  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId'>[] | null,
+  titreDemarcheEtapes?: Pick<ITitreEtape, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>[] | null,
   suppression = false
 ): string[] => {
   let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
@@ -102,7 +53,7 @@ export const titreDemarcheUpdatedEtatValidate = (
   if (!titreDemarche) {
     throw new Error('le titre ne contient pas la démarche en cours de modification')
   }
-  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
+  // pas de validation pour les démarches qui n'ont pas de machine
   if (!demarcheDefinition) {
     if (!titreEtape.statutId) {
       return []
@@ -135,31 +86,15 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
 
   // vérifie que toutes les étapes existent dans l’arbre
-  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    try {
-      const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(titreDemarcheEtapesNew)))
-      if (!ok) {
-        titreDemarchesErrors.push('la démarche n’est pas valide')
-      }
-    } catch (e) {
-      console.warn('une erreur est survenue', e)
+  try {
+    const etapes = titreDemarcheEtapesNew.map(etape => titreEtapeForMachineValidator.omit({ id: true }).partial({ ordre: true }).parse(etape))
+    const ok = demarcheDefinition.machine.isEtapesOk(demarcheDefinition.machine.orderMachine(toMachineEtapes(etapes)))
+    if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }
-  } else {
-    if (titreEtape.statutId) {
-      // le type d'étape correspond à la démarche et au type de titre
-      const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titreEtape.typeId, titreEtape.statutId, titreDemarche.type!.etapesTypes, titreDemarche.type!.nom)
-      titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
-    }
-    const etapeTypeIdsValid = Object.keys(demarcheDefinition.restrictions)
-
-    const etapeInconnue = titreDemarcheEtapesNew.find(etape => !etapeTypeIdsValid.includes(etape.typeId!))
-    if (etapeInconnue) {
-      return [`l’étape ${etapeInconnue.typeId} n’existe pas dans l’arbre`]
-    }
-
-    // On vérifie que la nouvelle démarche respecte son arbre d’instructions
-    titreDemarchesErrors.push(...titreDemarcheEtatValidate(date, demarcheDefinition.restrictions, demarcheType.id, titreDemarche, titreDemarcheEtapesNew, titre))
+  } catch (e) {
+    console.warn('une erreur est survenue', e)
+    titreDemarchesErrors.push('la démarche n’est pas valide')
   }
 
   return titreDemarchesErrors

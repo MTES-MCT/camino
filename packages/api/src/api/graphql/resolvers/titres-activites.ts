@@ -298,7 +298,7 @@ const activiteModifier = async ({ activite }: { activite: ITitreActivite & { doc
     const fields = fieldsBuild(info)
 
     const documentIds = activite.documentIds || []
-    await documentsLier(context, documentIds, activite.id, 'titreActiviteId', oldTitreActivite)
+    await documentsLier(context, documentIds, { parentId: activite.id, propParentId: 'titreActiviteId' }, oldTitreActivite)
     delete activite.documentIds
 
     await titreActiviteUpdateQuery(activite.id, activite)

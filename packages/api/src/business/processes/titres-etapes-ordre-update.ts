@@ -1,5 +1,3 @@
-import { ITitreEtape } from '../../types.js'
-
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
@@ -7,12 +5,15 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { Pool } from 'pg'
+import { TitreId } from 'camino-common/src/titres.js'
+import { TitreEtapeForMachine, titreEtapeForMachineValidator } from '../rules-demarches/machine-common.js'
 
-export const titresEtapesOrdreUpdate = async (user: UserNotNull, demarcheId?: DemarcheId) => {
+export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
   console.info('ordre des étapes…')
 
-  const titresDemarches = await getDemarches(demarcheId)
+  const titresDemarches = await getDemarches(pool, demarcheId)
 
   return titresEtapesOrdreUpdateVisibleForTesting(user, titresDemarches)
 }
@@ -21,11 +22,11 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
   user: UserNotNull,
   titresDemarches: {
     [key: DemarcheId]: {
-      etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>[]
+      etapes: TitreEtapeForMachine[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
-      titreId: string
+      titreId: TitreId
     }
   }
 ): Promise<string[]> => {
@@ -33,7 +34,9 @@ export const titresEtapesOrdreUpdateVisibleForTesting = async (
 
   for (const titreDemarche of Object.values(titresDemarches)) {
     if (titreDemarche.etapes) {
-      const etapes = titreEtapesSortAscByDate(titreDemarche.etapes, titreDemarche.id, titreDemarche.typeId, titreDemarche.titreTypeId)
+      const etapesMachine = titreDemarche.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+
+      const etapes = titreEtapesSortAscByDate(etapesMachine, titreDemarche.id, titreDemarche.typeId, titreDemarche.titreTypeId)
       for (let index = 0; index < etapes.length; index++) {
         const titreEtape = etapes[index]
         if (titreEtape.ordre !== index + 1) {

@@ -4,6 +4,7 @@ import { MapPattern } from '../_map/pattern'
 import { Perimetre } from './perimetre'
 import { MultiPolygon, Feature } from 'geojson'
 import { Point } from '@/utils/titre-etape-edit'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Common/Perimetre',
@@ -112,13 +113,13 @@ const tabUpdate = action('tabUpdate')
 export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
-    <Perimetre titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />
+    <Perimetre titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
   </>
 )
 
 export const NoMap: StoryFn = () => (
   <>
     <MapPattern />
-    <Perimetre titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />
+    <Perimetre titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
   </>
 )

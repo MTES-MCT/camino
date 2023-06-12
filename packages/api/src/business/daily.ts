@@ -30,11 +30,11 @@ export const daily = async (pool: Pool) => {
     console.info('- - -')
     console.info('mise à jour quotidienne')
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(userSuper)
+    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, userSuper)
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
-    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
+    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, userSuper)
 
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
+    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool)
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
     const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool)
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()

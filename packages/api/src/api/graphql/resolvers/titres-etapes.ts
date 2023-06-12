@@ -23,7 +23,7 @@ import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathG
 import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
-import { geojsonFeatureMultiPolygon } from '../../../tools/geojson.js'
+import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes } from '../../../tools/geojson.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
@@ -33,7 +33,7 @@ import { Feature } from 'geojson'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { CaminoDate, getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
@@ -42,6 +42,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -62,7 +63,7 @@ const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { d
   return result
 }
 
-const etape = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -197,6 +198,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
     etape.date = date
+    etape.surface = etape.surface ?? null
 
     const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType)
 
@@ -219,6 +221,14 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
         console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
       }
       sdomZones.push(...geoJsonResult.data)
+
+      const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
+      if (titreEtapeCommu.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+      etape.communes = titreEtapeCommu.data
+    } else {
+      etape.communes = []
     }
 
     const typeId = titreDemarche?.titre?.typeId
@@ -226,7 +236,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
-      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -269,7 +278,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
-    await documentsLier(context, documentIds, etapeUpdated.id, 'titreEtapeId')
+    await documentsLier(context, documentIds, { parentId: etapeUpdated.id, propParentId: 'titreEtapeId' })
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -394,7 +403,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
-      getCurrent(),
       etape,
       titreDemarche,
       titreDemarche.titre,
@@ -415,7 +423,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    await documentsLier(context, documentIds, etape.id, 'titreEtapeId', titreEtapeOld)
+    await documentsLier(context, documentIds, { parentId: etape.id, propParentId: 'titreEtapeId' }, titreEtapeOld)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
@@ -461,7 +469,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
   }
 }
 
-const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -589,7 +597,7 @@ const etapeDeposer = async ({ id }: { id: string }, { user, pool }: Context, inf
   }
 }
 
-const etapeSupprimer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -651,8 +659,7 @@ const etapeSupprimer = async ({ id }: { id: string }, { user, pool }: Context, i
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const currentDate = getCurrent()
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(currentDate, titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

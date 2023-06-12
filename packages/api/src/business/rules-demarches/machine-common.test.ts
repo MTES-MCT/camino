@@ -1,7 +1,8 @@
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { ITitreEtape } from '../../types.js'
-import { toMachineEtapes } from './machine-common.js'
-import { describe, expect, test } from 'vitest'
+import { TitreEtapeForMachine, toMachineEtapes } from './machine-common.js'
+import { describe, expect, test, vi } from 'vitest'
+
+console.error = vi.fn()
 describe('toMachineEtapes', () => {
   test('transforme une étape de la bdd en étape de machine', () => {
     expect(
@@ -10,6 +11,10 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
+          communes: [],
+          ordre: 0,
+          surface: null,
+          contenu: null,
         },
       ])
     ).toEqual([
@@ -27,6 +32,9 @@ describe('toMachineEtapes', () => {
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
           contenu: { arm: { mecanise: true } },
+          communes: [],
+          ordre: 0,
+          surface: null,
         },
       ])
     ).toEqual([
@@ -47,8 +55,7 @@ describe('toMachineEtapes', () => {
           typeId: 'iii',
           statutId: 'fai',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche',
-        } as unknown as ITitreEtape,
+        } as unknown as TitreEtapeForMachine,
       ])
     ).toThrowErrorMatchingInlineSnapshot(`"l'état iii est inconnu"`)
   })
@@ -61,11 +68,8 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'ffi',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche',
-        } as unknown as ITitreEtape,
+        } as unknown as TitreEtapeForMachine,
       ])
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`
-    )
+    ).toThrowErrorMatchingInlineSnapshot(`"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\"}"`)
   })
 })

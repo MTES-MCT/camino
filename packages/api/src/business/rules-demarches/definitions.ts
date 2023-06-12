@@ -1,6 +1,5 @@
-import { IContenuValeur, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { etatsDefinitionPrmOct } from './prm/oct.js'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find.js'
 import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
@@ -11,37 +10,8 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ArmRenProMachine } from './arm/ren-pro.machine.js'
-
-export interface IEtapeTypeIdCondition {
-  etapeTypeId?: string
-  statutId?: string
-  titre?: ITitreCondition
-  contextCheck?: (_etapes: ITitreEtape[]) => boolean
-}
-
-export type IDemarcheDefinitionRestrictions = { [key in EtapeTypeId]?: IDemarcheDefinitionRestrictionsProps }
-
-export interface IDemarcheDefinitionRestrictionsProps {
-  separation?: string[]
-  final?: boolean
-  avant?: IEtapeTypeIdCondition[][]
-  apres?: IEtapeTypeIdCondition[][]
-  justeApres: IEtapeTypeIdCondition[][]
-}
-
-export interface IDemarcheDefinitionRestrictionsElements extends IDemarcheDefinitionRestrictionsProps {
-  etapeTypeId?: string
-}
-export type IDemarcheDefinition = DemarcheDefinitionRestriction | DemarcheDefinitionMachine
-
-export const isDemarcheDefinitionRestriction = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionRestriction => {
-  return dd !== undefined && 'restrictions' in dd
-}
-export const isDemarcheDefinitionMachine = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionMachine => {
-  return dd !== undefined && 'machine' in dd
-}
+import { PrmOctMachine } from './prm/oct.machine.js'
 
 interface DemarcheDefinitionCommon {
   titreTypeId: TitreTypeId
@@ -49,33 +19,12 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
-export interface DemarcheDefinitionRestriction extends DemarcheDefinitionCommon {
-  restrictions: IDemarcheDefinitionRestrictions
-}
-export interface DemarcheDefinitionMachine extends DemarcheDefinitionCommon {
+export interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
 
-type IContenuOperation = {
-  valeur: IContenuValeur
-  operation?: 'NOT_EQUAL' | 'EQUAL'
-}
-
-export interface IContenuElementCondition {
-  [id: string]: IContenuOperation | undefined
-}
-
-interface IContenuCondition {
-  [id: string]: IContenuElementCondition
-}
-
-export interface ITitreCondition {
-  statutId?: string
-  contenu: IContenuCondition
-}
-
 const plusVieilleDateEnBase = toCaminoDate('1717-01-09')
-export const demarchesDefinitions: IDemarcheDefinition[] = [
+export const demarchesDefinitions: DemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
@@ -91,8 +40,17 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'prm',
     demarcheTypeIds: ['oct'],
-    restrictions: etatsDefinitionPrmOct,
+    machine: new PrmOctMachine(),
     dateDebut: toCaminoDate('2019-10-31'),
+    demarcheIdExceptions: [
+      newDemarcheId('FfJTtP9EEfvf3VZy81hpF7ms'),
+      newDemarcheId('lynG9hx3x05LaqpySr0qxeca'),
+      newDemarcheId('xjvFNG3I8YOv2xLw6FQJjTab'),
+      newDemarcheId('fWlR3sADjURm21wM2j7UZF3R'),
+      newDemarcheId('eySDrrpK4KKukIw3II3nk3G1'),
+      newDemarcheId('PYrSWWMeDDDYfJfgWa09LVlp'),
+      newDemarcheId('R0XYcNUZrJFzZ8DghumpwqXw'),
+    ],
   },
   {
     titreTypeId: 'axm',
@@ -152,7 +110,7 @@ export const demarcheDefinitionFind = (
   demarcheTypeId: DemarcheTypeId,
   titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
   demarcheId: DemarcheId
-): IDemarcheDefinition | undefined => {
+): DemarcheDefinition | undefined => {
   const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
   const definition = demarchesDefinitions

@@ -1,3 +1,4 @@
+import { newEtapeId } from '../../database/models/_format/id-create.js'
 import { contenuFormat, titreSectionsGet } from './titre-contenu.js'
 import { describe, test, expect } from 'vitest'
 describe('formatage du contenu', () => {
@@ -11,7 +12,7 @@ describe('formatage du contenu', () => {
           {
             etapes: [
               {
-                id: 'etape-id',
+                id: newEtapeId('etape-id'),
                 contenu: {
                   section: {
                     prop1: 'valeur 1',
@@ -75,7 +76,7 @@ describe('titreSectionsGet', () => {
             typeId: 'oct',
             etapes: [
               {
-                id: 'etape-id',
+                id: newEtapeId('etape-id'),
                 typeId: 'mfr',
                 contenu: {
                   arm: {

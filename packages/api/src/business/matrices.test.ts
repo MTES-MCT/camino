@@ -4,6 +4,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { describe, expect, test } from 'vitest'
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { newTitreId } from '../database/models/_format/id-create.js'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -84,7 +85,7 @@ describe('matrices', () => {
     }
     const titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[] = [
       {
-        id: 'titre1',
+        id: newTitreId('titre1'),
         titulaires: [
           {
             id: newEntrepriseId(''),
@@ -101,7 +102,7 @@ describe('matrices', () => {
         ],
       },
       {
-        id: 'titre2',
+        id: newTitreId('titre2'),
         titulaires: [
           {
             id: newEntrepriseId(''),
@@ -121,7 +122,7 @@ describe('matrices', () => {
         ],
       },
       {
-        id: 'titre3',
+        id: newTitreId('titre3'),
         titulaires: [
           {
             id: newEntrepriseId(''),

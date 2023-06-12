@@ -8,6 +8,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 
 import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
+import { newEtapeId } from '../../database/models/_format/id-create.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -220,10 +221,11 @@ describe('demarcheModifier', () => {
 
     await titreEtapeUpsert(
       {
-        id: `${demarcheId}-mno01`,
+        id: newEtapeId(`${demarcheId}-mno01`),
         typeId: 'mno',
         titreDemarcheId: demarcheId,
         statutId: 'acc',
+        ordre: 1,
         date: toCaminoDate('2020-01-01'),
       },
       userSuper,

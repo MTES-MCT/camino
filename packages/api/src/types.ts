@@ -30,6 +30,8 @@ import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_d
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
+import { TitreId } from 'camino-common/src/titres.js'
+import { EtapeId } from 'camino-common/src/etape'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -347,12 +349,12 @@ interface IAdministrationActiviteTypeEmail {
 }
 
 export interface ITitreTitre {
-  titreFromId: string
-  titreToId: string
+  titreFromId: TitreId
+  titreToId: TitreId
 }
 
 interface ITitre {
-  id: string
+  id: TitreId
   slug?: string
   nom: string
   typeId: TitreTypeId
@@ -394,7 +396,7 @@ interface ITitre {
 interface ITitreActivite {
   id: string
   slug?: string
-  titreId: string
+  titreId: TitreId
   titre?: ITitre | null
   date: CaminoDate
   typeId: string
@@ -422,7 +424,7 @@ interface ITitreDemarche {
   id: DemarcheId
   description?: string
   slug?: string
-  titreId: string
+  titreId: TitreId
   titre?: ITitre | null
   typeId: DemarcheTypeId
   statutId?: DemarcheStatutId | null
@@ -457,7 +459,7 @@ interface IDocument {
   nor?: string | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
-  titreEtapeId?: string | null
+  titreEtapeId?: EtapeId | null
   etape?: ITitreEtape | null
   titreActiviteId?: string | null
   activite?: ITitreActivite | null
@@ -466,7 +468,7 @@ interface IDocument {
   suppression?: boolean | null
 }
 interface ITitreEtape {
-  id: string
+  id: EtapeId
   slug?: string
   typeId: EtapeTypeId
   type?: IEtapeType | null

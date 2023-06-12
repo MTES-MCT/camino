@@ -1,6 +1,6 @@
 import { FondamentalesEdit, Props } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeFondamentale } from 'camino-common/src/etape'
+import { EtapeFondamentale, etapeIdValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta
 
 const etape: EtapeFondamentale = {
-  id: 'id',
+  id: etapeIdValidator.parse('id'),
   type: {
     id: 'mfr',
     nom: 'demande',

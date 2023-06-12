@@ -3,8 +3,8 @@ import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
+import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes.js'
@@ -293,12 +293,7 @@ const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
  * @param titreTypeId - id du type de titre
  */
 
-export const titreDemarcheStatutIdFind = (
-  demarcheTypeId: DemarcheTypeId,
-  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'ordre' | 'statutId' | 'contenu'>[],
-  titreTypeId: TitreTypeId,
-  demarcheId: DemarcheId
-): DemarcheStatutId => {
+export const titreDemarcheStatutIdFind = (demarcheTypeId: DemarcheTypeId, titreDemarcheEtapes: TitreEtapeForMachine[], titreTypeId: TitreTypeId, demarcheId: DemarcheId): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
   if (!titreDemarcheEtapes.length) return DemarchesStatutsIds.Indetermine
@@ -310,7 +305,7 @@ export const titreDemarcheStatutIdFind = (
 
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
-  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+  if (demarcheDefinition) {
     return demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
   }
 

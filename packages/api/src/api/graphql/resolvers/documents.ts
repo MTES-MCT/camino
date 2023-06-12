@@ -22,6 +22,7 @@ import { documentFilePathFind } from '../../../tools/documents/document-path-fin
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = await documentFilePathFind(document, true)
@@ -262,7 +263,14 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
   }
 }
 
-export const documentsLier = async (context: Context, documentIds: string[], parentId: string, propParentId: 'titreActiviteId' | 'titreEtapeId', oldParent?: { documents?: IDocument[] | null }) => {
+export const documentsLier = async (
+  context: Context,
+  documentIds: string[],
+
+  { parentId, propParentId }: { parentId: EtapeId; propParentId: 'titreEtapeId' } | { parentId: string; propParentId: 'titreActiviteId' },
+
+  oldParent?: { documents?: IDocument[] | null }
+) => {
   if (oldParent?.documents?.length) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
@@ -284,8 +292,11 @@ export const documentsLier = async (context: Context, documentIds: string[], par
 
       if (document.fichier) {
         const documentPath = await documentFilePathFind(document)
-        document[propParentId] = parentId
-
+        if (propParentId === 'titreEtapeId') {
+          document[propParentId] = parentId
+        } else {
+          document[propParentId] = parentId
+        }
         const newDocumentPath = await documentFilePathFind(document, true)
 
         await fileRename(documentPath, newDocumentPath)

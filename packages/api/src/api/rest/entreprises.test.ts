@@ -3,6 +3,7 @@ import Titres from '../../database/models/titres.js'
 import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { newTitreId } from '../../database/models/_format/id-create.js'
 
 const entreprise = {
   id: newEntrepriseId('entrepriseId'),
@@ -49,19 +50,19 @@ describe('construit le corps de la requête pour openFisca', () => {
 
   test('avec activités', () => {
     const activitesAnnuelles = [
-      { titreId: 'titre2', contenu: { substancesFiscales: { auru: 39.715 } } },
-      { titreId: 'titre3', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre1', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre4', contenu: { substancesFiscales: { auru: 0 } } },
-      { titreId: 'titre5', contenu: { substancesFiscales: { auru: 8.91 } } },
+      { titreId: newTitreId('titre2'), contenu: { substancesFiscales: { auru: 39.715 } } },
+      { titreId: newTitreId('titre3'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre1'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre4'), contenu: { substancesFiscales: { auru: 0 } } },
+      { titreId: newTitreId('titre5'), contenu: { substancesFiscales: { auru: 8.91 } } },
     ]
     const activitesTrimestrielles = [
       {
-        titreId: 'titre2',
+        titreId: newTitreId('titre2'),
         contenu: { renseignements: { environnement: 7300 } },
       },
       {
-        titreId: 'titre3',
+        titreId: newTitreId('titre3'),
         contenu: { renseignements: { environnement: 1000 } },
       },
     ]
@@ -76,7 +77,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 1006827,
           },
         ],
-        id: 'titreSansActivite',
+        id: newTitreId('titreSansActivite'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -88,7 +89,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         ],
         titulaires: [entreprise2],
         amodiataires: [],
-        id: 'titre1',
+        id: newTitreId('titre1'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -100,7 +101,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 19805494,
           },
         ],
-        id: 'titre2',
+        id: newTitreId('titre2'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -112,7 +113,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 5143845,
           },
         ],
-        id: 'titre3',
+        id: newTitreId('titre3'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -124,7 +125,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 7676552,
           },
         ],
-        id: 'titre4',
+        id: newTitreId('titre4'),
       },
       {
         substances: ['auru', 'scoc'],
@@ -136,7 +137,7 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 35604009,
           },
         ],
-        id: 'titre5',
+        id: newTitreId('titre5'),
       },
     ]
 

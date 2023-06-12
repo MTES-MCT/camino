@@ -3,15 +3,15 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { ITitreEtape, ITitreDemarche } from '../../types.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
   demarcheTypeEtapesTypes: readonly EtapeTypeId[],
-  titreEtape: ITitreEtape,
+  titreEtape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
   demarche: Pick<ITitreDemarche, 'demarcheDateFin' | 'demarcheDateDebut'>,
   titreTypeId?: TitreTypeId
 ) => {
@@ -164,12 +164,10 @@ export const titreDemarchePublicFind = (titreDemarche: Pick<ITitreDemarche, 'tit
   if (titreDemarche.titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z') {
     publicLecture = false
   } else {
-    // si il existe un arbre d’instructions pour cette démarche,
-    // on laisse l’arbre traiter l’unicité des étapes
     const demarcheDefinition = demarcheDefinitionFind(titreTypeId, titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.id)
 
-    if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).publique
+    if (demarcheDefinition) {
+      publicLecture = demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes.map(etape => titreEtapeForMachineValidator.parse(etape)))).publique
     } else {
       const demarcheTypeEtapesTypes = getEtapesTDE(titreTypeId, titreDemarche.typeId)
       publicLecture = titreDemarcheEtapes.reduce(

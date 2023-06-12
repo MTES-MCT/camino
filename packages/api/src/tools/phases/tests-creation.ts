@@ -11,7 +11,7 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { idGenerate, newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-phases-find.js'
 
 const writePhasesForTest = async () => {
@@ -62,7 +62,7 @@ const writePhasesForTest = async () => {
     }
 
     const fakeDemarcheId = newDemarcheId()
-    const fakeTitreId = idGenerate()
+    const fakeTitreId = newTitreId()
 
     const etapes: TitreEtapePhaseFind[] = etapesDb.rows
       .filter(({ titre_demarche_id }) => titre_demarche_id === row.id)

@@ -1,5 +1,5 @@
 import { ITitreDemarche } from '../../../types.js'
-import { newDemarcheId } from '../../../database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId } from '../../../database/models/_format/id-create.js'
 
 const titreDemarcheOctEtapeMen = [
   {
@@ -24,7 +24,7 @@ const titreDemarcheOctEtapeMen = [
 const titreDemarcheOctSansEtapes = [
   {
     id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-    titreId: 'h-cx-courdemanges-1988',
+    titreId: newTitreId('h-cx-courdemanges-1988'),
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,

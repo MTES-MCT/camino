@@ -14,18 +14,19 @@ import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
 import { dbQueryAndValidate } from '../../pg-database.js'
-import { idGenerate } from '../../database/models/_format/id-create.js'
+import { idGenerate, newTitreId } from '../../database/models/_format/id-create.js'
 import { constants } from 'http2'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 import { insertCommune } from '../../database/queries/communes.queries.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
-let titreId1: string | null = null
+let titreId1: TitreId | null = null
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
@@ -295,7 +296,7 @@ describe('titresLiaisons', () => {
 })
 
 describe('titreModifier', () => {
-  let id = ''
+  let id = newTitreId('')
 
   beforeEach(async () => {
     const titre = await titreCreate(
@@ -377,7 +378,7 @@ describe('titreModifier', () => {
 })
 
 describe('titreSupprimer', () => {
-  let id = ''
+  let id = newTitreId('')
 
   beforeEach(async () => {
     const titre = await titreCreate(
@@ -404,20 +405,20 @@ describe('titreSupprimer', () => {
   })
 
   test('ne peut pas supprimer un titre inexistant (utilisateur super)', async () => {
-    const tested = await restDeleteCall(dbPool, '/rest/titres/:titreId', { titreId: 'toto' }, userSuper)
+    const tested = await restDeleteCall(dbPool, '/rest/titres/:titreId', { titreId: newTitreId('toto') }, userSuper)
     expect(tested.statusCode).toBe(404)
   })
 })
 
 describe('getTitre', () => {
   test('ne peut pas récupérer un titre (utilisateur non super)', async () => {
-    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: 'not existing' }, undefined)
+    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: newTitreId('not existing') }, undefined)
 
     expect(tested.statusCode).toBe(403)
   })
 
   test('ne peut pas récupérer un titre inexistant', async () => {
-    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: 'not existing' }, userSuper)
+    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: newTitreId('not existing') }, userSuper)
 
     expect(tested.statusCode).toBe(404)
   })
@@ -528,12 +529,12 @@ test('utilisateurTitreAbonner', async () => {
 })
 
 test('peut récupérer les communes d’un titre', async () => {
-  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, userSuper)
+  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, userSuper)
 
   expect(tested.statusCode).toBe(200)
   expect(tested.body).toEqual([{ id: '97300', nom: 'Une ville en Guyane' }])
 
-  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: titreId1 ?? '' }, undefined)
+  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, undefined)
 
   expect(tested.statusCode).toBe(403)
 })

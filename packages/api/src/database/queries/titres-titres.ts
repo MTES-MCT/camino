@@ -1,8 +1,9 @@
 import TitresTitres from '../models/titres--titres.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
 interface LinkTitre {
-  linkTo: string
-  linkFrom: string[]
+  linkTo: TitreId
+  linkFrom: TitreId[]
 }
 export const linkTitres = async (link: LinkTitre): Promise<void> => {
   await TitresTitres.query().where('titreToId', link.linkTo).delete()

@@ -7,6 +7,7 @@ import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import { fieldsBuild } from './_fields-build.js'
 
 import { entrepriseFormat } from '../../_format/entreprises.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const entreprisesTitresCreation = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -33,7 +34,7 @@ const entreprises = async (
     archive,
     etapeUniquement,
   }: {
-    etapeId?: string | null
+    etapeId?: EtapeId | null
     page?: number | null
     intervalle?: number | null
     ordre?: 'asc' | 'desc' | null

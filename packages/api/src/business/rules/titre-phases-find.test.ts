@@ -2,7 +2,7 @@ import { ITitreDemarche } from '../../types.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
@@ -20,7 +20,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreid',
+            titreId: newTitreId('titreid'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -59,7 +59,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -76,7 +76,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-ax-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -107,7 +107,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('m-pr-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -138,7 +138,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -179,7 +179,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -204,7 +204,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-pro01'),
             typeId: 'pro',
             statutId: 'acc',
@@ -248,7 +248,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -273,7 +273,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
             typeId: 'ren',
             statutId: 'acc',
@@ -311,7 +311,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
             typeId: 'oct',
             statutId: 'acc',
@@ -336,7 +336,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'titreId',
+            titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
             typeId: 'ren',
             statutId: 'acc',
@@ -355,7 +355,7 @@ describe("phases d'une démarche", () => {
                 statutId: 'acc',
                 ordre: 1,
                 date: toCaminoDate('2019-01-02'),
-                points: [{ id: 'point' }],
+                points: [{ id: newEtapeId('point') }],
               },
             ],
           },
@@ -371,7 +371,7 @@ describe("phases d'une démarche", () => {
   })
 
   test('cas sans date de fin et avec plein de css', () => {
-    const titreId = 'titreId'
+    const titreId = newTitreId('titreId')
     const demarcheId1 = newDemarcheId('demarcheId1')
     const demarcheId2 = newDemarcheId('demarcheId2')
     const demarcheId3 = newDemarcheId('demarcheId3')
@@ -391,9 +391,9 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'cls',
         etapes: [
-          { titreDemarcheId: demarcheId1, id: '3', ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
-          { titreDemarcheId: demarcheId1, id: '1', ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
-          { titreDemarcheId: demarcheId1, id: '2', ordre: 3, date: toCaminoDate('2017-04-07'), typeId: 'css', statutId: 'fai' },
+          { titreDemarcheId: demarcheId1, id: newEtapeId('3'), ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
+          { titreDemarcheId: demarcheId1, id: newEtapeId('1'), ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
+          { titreDemarcheId: demarcheId1, id: newEtapeId('2'), ordre: 3, date: toCaminoDate('2017-04-07'), typeId: 'css', statutId: 'fai' },
         ],
       },
       {
@@ -403,9 +403,9 @@ describe("phases d'une démarche", () => {
         typeId: 'pro',
         statutId: 'cls',
         etapes: [
-          { titreDemarcheId: demarcheId2, id: '4', ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
-          { titreDemarcheId: demarcheId2, id: '5', ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
-          { titreDemarcheId: demarcheId2, id: '6', ordre: 3, date: toCaminoDate('2017-04-07'), typeId: 'css', statutId: 'fai' },
+          { titreDemarcheId: demarcheId2, id: newEtapeId('4'), ordre: 1, date: toCaminoDate('2016-12-28'), duree: 1920, surface: 5.51, typeId: 'mfr', statutId: 'fai' },
+          { titreDemarcheId: demarcheId2, id: newEtapeId('5'), ordre: 2, date: toCaminoDate('2016-12-28'), typeId: 'mdp', statutId: 'fai' },
+          { titreDemarcheId: demarcheId2, id: newEtapeId('6'), ordre: 3, date: toCaminoDate('2017-04-07'), typeId: 'css', statutId: 'fai' },
         ],
       },
       {
@@ -415,9 +415,9 @@ describe("phases d'une démarche", () => {
         typeId: 'dam',
         statutId: 'ins',
         etapes: [
-          { id: '7', titreDemarcheId: demarcheId3, ordre: 3, date: toCaminoDate('2014-12-23'), typeId: 'wpp', statutId: 'fai' },
-          { id: '8', titreDemarcheId: demarcheId3, ordre: 1, date: toCaminoDate('2013-08-01'), typeId: 'wfd', statutId: 'fai' },
-          { id: '9', titreDemarcheId: demarcheId3, ordre: 2, date: toCaminoDate('2014-08-25'), typeId: 'wre', statutId: 'fav' },
+          { id: newEtapeId('7'), titreDemarcheId: demarcheId3, ordre: 3, date: toCaminoDate('2014-12-23'), typeId: 'wpp', statutId: 'fai' },
+          { id: newEtapeId('8'), titreDemarcheId: demarcheId3, ordre: 1, date: toCaminoDate('2013-08-01'), typeId: 'wfd', statutId: 'fai' },
+          { id: newEtapeId('9'), titreDemarcheId: demarcheId3, ordre: 2, date: toCaminoDate('2014-08-25'), typeId: 'wre', statutId: 'fav' },
         ],
       },
       {
@@ -427,8 +427,8 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'acc',
         etapes: [
-          { id: '10', titreDemarcheId: demarcheId4, ordre: 1, date: toCaminoDate('2002-12-24'), typeId: 'dex', statutId: 'acc' },
-          { titreDemarcheId: demarcheId4, id: '11', ordre: 2, date: toCaminoDate('2003-01-08'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('10'), titreDemarcheId: demarcheId4, ordre: 1, date: toCaminoDate('2002-12-24'), typeId: 'dex', statutId: 'acc' },
+          { titreDemarcheId: demarcheId4, id: newEtapeId('11'), ordre: 2, date: toCaminoDate('2003-01-08'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
       {
@@ -438,8 +438,8 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'acc',
         etapes: [
-          { id: '12', titreDemarcheId: demarcheId5, ordre: 1, date: toCaminoDate('2000-09-26'), typeId: 'dex', statutId: 'acc' },
-          { id: '13', titreDemarcheId: demarcheId5, ordre: 2, date: toCaminoDate('2000-10-06'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('12'), titreDemarcheId: demarcheId5, ordre: 1, date: toCaminoDate('2000-09-26'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('13'), titreDemarcheId: demarcheId5, ordre: 2, date: toCaminoDate('2000-10-06'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
       {
@@ -449,8 +449,8 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'acc',
         etapes: [
-          { id: 'id', titreDemarcheId: demarcheId6, ordre: 1, date: toCaminoDate('1975-11-24'), typeId: 'dex', statutId: 'acc' },
-          { id: '15', titreDemarcheId: demarcheId6, ordre: 2, date: toCaminoDate('1975-11-27'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('id'), titreDemarcheId: demarcheId6, ordre: 1, date: toCaminoDate('1975-11-24'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('15'), titreDemarcheId: demarcheId6, ordre: 2, date: toCaminoDate('1975-11-27'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
       {
@@ -461,8 +461,8 @@ describe("phases d'une démarche", () => {
 
         statutId: 'acc',
         etapes: [
-          { id: '16', titreDemarcheId: demarcheId7, ordre: 1, date: toCaminoDate('1970-11-16'), typeId: 'dex', statutId: 'acc' },
-          { id: '17', titreDemarcheId: demarcheId7, ordre: 2, date: toCaminoDate('1970-11-19'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('16'), titreDemarcheId: demarcheId7, ordre: 1, date: toCaminoDate('1970-11-16'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('17'), titreDemarcheId: demarcheId7, ordre: 2, date: toCaminoDate('1970-11-19'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
       {
@@ -472,8 +472,8 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'acc',
         etapes: [
-          { id: '18', titreDemarcheId: demarcheId8, ordre: 2, date: toCaminoDate('1949-08-31'), typeId: 'dpu', statutId: 'acc' },
-          { id: '19', titreDemarcheId: demarcheId8, ordre: 1, date: toCaminoDate('1949-08-23'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('18'), titreDemarcheId: demarcheId8, ordre: 2, date: toCaminoDate('1949-08-31'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('19'), titreDemarcheId: demarcheId8, ordre: 1, date: toCaminoDate('1949-08-23'), typeId: 'dex', statutId: 'acc' },
         ],
       },
       {
@@ -483,8 +483,8 @@ describe("phases d'une démarche", () => {
         typeId: 'exp',
         statutId: 'acc',
         etapes: [
-          { id: '20', titreDemarcheId: demarcheId9, ordre: 1, date: toCaminoDate('1889-02-27'), typeId: 'dex', statutId: 'acc' },
-          { id: '21', titreDemarcheId: demarcheId9, ordre: 2, date: toCaminoDate('1889-02-27'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('20'), titreDemarcheId: demarcheId9, ordre: 1, date: toCaminoDate('1889-02-27'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('21'), titreDemarcheId: demarcheId9, ordre: 2, date: toCaminoDate('1889-02-27'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
       {
@@ -494,8 +494,8 @@ describe("phases d'une démarche", () => {
         typeId: 'exp',
         statutId: 'acc',
         etapes: [
-          { id: '22', titreDemarcheId: demarcheId10, ordre: 2, date: toCaminoDate('1879-11-14'), typeId: 'dpu', statutId: 'acc' },
-          { id: '23', titreDemarcheId: demarcheId10, ordre: 1, date: toCaminoDate('1879-07-26'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('22'), titreDemarcheId: demarcheId10, ordre: 2, date: toCaminoDate('1879-11-14'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('23'), titreDemarcheId: demarcheId10, ordre: 1, date: toCaminoDate('1879-07-26'), typeId: 'dex', statutId: 'acc' },
         ],
       },
       {
@@ -505,8 +505,8 @@ describe("phases d'une démarche", () => {
         typeId: 'oct',
         statutId: 'acc',
         etapes: [
-          { id: '24', titreDemarcheId: demarcheId11, ordre: 1, date: toCaminoDate('1858-03-24'), typeId: 'dex', statutId: 'acc' },
-          { id: '25', titreDemarcheId: demarcheId11, ordre: 2, date: toCaminoDate('1858-03-24'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('24'), titreDemarcheId: demarcheId11, ordre: 1, date: toCaminoDate('1858-03-24'), typeId: 'dex', statutId: 'acc' },
+          { id: newEtapeId('25'), titreDemarcheId: demarcheId11, ordre: 2, date: toCaminoDate('1858-03-24'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
     ]
@@ -521,7 +521,7 @@ describe("phases d'une démarche", () => {
   })
 
   test('cas de survie provisoire avec la prolongation en classement sans suite après la fin de l’octroi', () => {
-    const titreId = 'titreId'
+    const titreId = newTitreId('titreId')
     const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
     const demarcheIdProlongation = newDemarcheId('demarcheIdProlongation')
     const demarches: ITitreDemarche[] = [
@@ -532,9 +532,9 @@ describe("phases d'une démarche", () => {
         typeId: 'pro',
         statutId: 'cls',
         etapes: [
-          { titreDemarcheId: demarcheIdProlongation, id: '2', ordre: 3, date: toCaminoDate('2011-04-07'), typeId: 'css', statutId: 'fai' },
-          { titreDemarcheId: demarcheIdProlongation, id: '1', ordre: 2, date: toCaminoDate('2008-12-28'), typeId: 'mdp', statutId: 'fai' },
-          { titreDemarcheId: demarcheIdProlongation, id: '3', ordre: 1, date: toCaminoDate('2008-12-28'), duree: 60, typeId: 'mfr', statutId: 'fai' },
+          { titreDemarcheId: demarcheIdProlongation, id: newEtapeId('2'), ordre: 3, date: toCaminoDate('2011-04-07'), typeId: 'css', statutId: 'fai' },
+          { titreDemarcheId: demarcheIdProlongation, id: newEtapeId('1'), ordre: 2, date: toCaminoDate('2008-12-28'), typeId: 'mdp', statutId: 'fai' },
+          { titreDemarcheId: demarcheIdProlongation, id: newEtapeId('3'), ordre: 1, date: toCaminoDate('2008-12-28'), duree: 60, typeId: 'mfr', statutId: 'fai' },
         ],
       },
       {
@@ -544,8 +544,8 @@ describe("phases d'une démarche", () => {
         typeId: 'oct',
         statutId: 'acc',
         etapes: [
-          { id: '24', titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
-          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'acc' },
+          { id: newEtapeId('24'), titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
+          { id: newEtapeId('25'), titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'acc' },
         ],
       },
     ]
@@ -564,7 +564,7 @@ describe("phases d'une démarche", () => {
   })
 
   test('un octroi rejeté ne génère pas de phase', () => {
-    const titreId = 'titreId'
+    const titreId = newTitreId('titreId')
     const demarcheIdOctroi = newDemarcheId('demarcheIdOctroi')
     const demarches: ITitreDemarche[] = [
       {
@@ -574,8 +574,8 @@ describe("phases d'une démarche", () => {
         typeId: 'oct',
         statutId: 'acc',
         etapes: [
-          { id: '24', titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
-          { id: '25', titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'rej' },
+          { id: newEtapeId('24'), titreDemarcheId: demarcheIdOctroi, ordre: 1, date: toCaminoDate('2000-03-24'), typeId: 'dex', statutId: 'acc', duree: 120 },
+          { id: newEtapeId('25'), titreDemarcheId: demarcheIdOctroi, ordre: 2, date: toCaminoDate('2000-03-24'), typeId: 'dpu', statutId: 'rej' },
         ],
       },
     ]
@@ -588,13 +588,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -602,7 +602,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('1970-09-17'),
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -613,14 +613,14 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId2'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'mut',
         statutId: 'acc',
         ordre: 2,
         slug: 'm-cx-pontaubert-1970-mut01',
         etapes: [
           {
-            id: 'demarcheId2EtapeId2',
+            id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -630,7 +630,7 @@ describe("phases d'une démarche", () => {
             duree: 600,
           },
           {
-            id: 'demarcheId2EtapeId1',
+            id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dex',
             statutId: 'acc',
@@ -642,13 +642,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId3'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'ren',
         statutId: 'acc',
         ordre: 3,
         etapes: [
           {
-            id: 'demarcheId3etapeId1',
+            id: newEtapeId('demarcheId3etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mfr',
             statutId: 'fai',
@@ -656,7 +656,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2019-10-22'),
           },
           {
-            id: 'demarcheId3etapeId2',
+            id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mdp',
             statutId: 'fai',
@@ -664,7 +664,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2019-11-20'),
           },
           {
-            id: 'demarcheId3etapeId5',
+            id: newEtapeId('demarcheId3etapeId5'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dex',
             statutId: 'acc',
@@ -672,7 +672,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2022-05-09'),
           },
           {
-            id: 'demarcheId3etapeId6',
+            id: newEtapeId('demarcheId3etapeId6'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -680,7 +680,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2022-05-09'),
           },
           {
-            id: 'demarcheId3etapeId3',
+            id: newEtapeId('demarcheId3etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'apd',
             statutId: 'fav',
@@ -688,7 +688,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2020-05-11'),
           },
           {
-            id: 'demarcheId3etapeId4',
+            id: newEtapeId('demarcheId3etapeId4'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'app',
             statutId: 'fav',
@@ -718,13 +718,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -732,7 +732,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('1970-09-17'),
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -743,13 +743,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId2'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'mut',
         statutId: 'acc',
         ordre: 2,
         etapes: [
           {
-            id: 'demarcheId2EtapeId2',
+            id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -759,7 +759,7 @@ describe("phases d'une démarche", () => {
             duree: 600,
           },
           {
-            id: 'demarcheId2EtapeId1',
+            id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dex',
             statutId: 'acc',
@@ -771,13 +771,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId3'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'ren',
         statutId: 'acc',
         ordre: 3,
         etapes: [
           {
-            id: 'demarcheId3etapeId1',
+            id: newEtapeId('demarcheId3etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mfr',
             statutId: 'fai',
@@ -785,7 +785,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2019-10-22'),
           },
           {
-            id: 'demarcheId3etapeId2',
+            id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mdp',
             statutId: 'fai',
@@ -793,7 +793,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2019-11-20'),
           },
           {
-            id: 'demarcheId3etapeId3',
+            id: newEtapeId('demarcheId3etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'apd',
             statutId: 'fav',
@@ -801,7 +801,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2020-05-11'),
           },
           {
-            id: 'demarcheId3etapeId5',
+            id: newEtapeId('demarcheId3etapeId5'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dim',
             statutId: 'acc',
@@ -809,7 +809,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2022-05-09'),
           },
           {
-            id: 'demarcheId3etapeId4',
+            id: newEtapeId('demarcheId3etapeId4'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'app',
             statutId: 'fav',
@@ -839,13 +839,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -853,7 +853,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('1968-01-24'),
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -864,13 +864,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId2'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
         statutId: 'acc',
         ordre: 2,
         etapes: [
           {
-            id: 'demarcheId2EtapeId2',
+            id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -879,7 +879,7 @@ describe("phases d'une démarche", () => {
             dateFin: toCaminoDate('2031-09-13'),
           },
           {
-            id: 'demarcheId2EtapeId1',
+            id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dex',
             statutId: 'acc',
@@ -908,13 +908,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -923,7 +923,7 @@ describe("phases d'une démarche", () => {
             duree: 60,
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -934,13 +934,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId2'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: DEMARCHES_TYPES_IDS.Prolongation1,
         statutId: DemarchesStatutsIds.EnConstruction,
         ordre: 2,
         etapes: [
           {
-            id: 'demarcheId2EtapeId2',
+            id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'mfr',
             statutId: 'fai',
@@ -970,13 +970,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -985,7 +985,7 @@ describe("phases d'une démarche", () => {
             duree: 60,
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -996,13 +996,13 @@ describe("phases d'une démarche", () => {
       },
       {
         id: newDemarcheId('demarcheId2'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: DEMARCHES_TYPES_IDS.Prolongation1,
         statutId: DemarchesStatutsIds.EnConstruction,
         ordre: 2,
         etapes: [
           {
-            id: 'demarcheId2EtapeId2',
+            id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'mfr',
             statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
@@ -1028,13 +1028,13 @@ describe("phases d'une démarche", () => {
     const demarches: ITitreDemarche[] = [
       {
         id: newDemarcheId('demarcheId1'),
-        titreId: 'titreId',
+        titreId: newTitreId('titreId'),
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
         etapes: [
           {
-            id: 'demarcheId1etapeId3',
+            id: newEtapeId('demarcheId1etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'rej',
@@ -1042,7 +1042,7 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2018-11-11'),
           },
           {
-            id: 'demarcheId1etapeId2',
+            id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
@@ -1051,7 +1051,7 @@ describe("phases d'une démarche", () => {
             duree: 60,
           },
           {
-            id: 'demarcheId1etapeId1',
+            id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
@@ -1072,7 +1072,7 @@ describe("phases d'une démarche", () => {
   })
 
   test("2 démarches avec des phases en cours ne génère qu'une seule phase en modification en instance", () => {
-    const titreId = 'titreId'
+    const titreId = newTitreId('titreId')
     const demarcheId1 = newDemarcheId('demarcheId1')
     const demarcheId2 = newDemarcheId('demarcheId2')
     const demarcheId3 = newDemarcheId('demarcheId3')
@@ -1374,7 +1374,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'nJ10z3Z74xi9OTh4oG6YXQBo',
+            titreId: newTitreId('nJ10z3Z74xi9OTh4oG6YXQBo'),
             statutId: 'acc',
             ordre: 1,
             typeId: 'oct',
@@ -1405,7 +1405,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'EW9cDeM6PfXS4TPznkjsNZVO',
+            titreId: newTitreId('EW9cDeM6PfXS4TPznkjsNZVO'),
             statutId: 'rej',
             ordre: 2,
             typeId: 'pr1',
@@ -1437,7 +1437,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'o3RzmZvqZcKMNmaE3nwXdvkE',
+            titreId: newTitreId('o3RzmZvqZcKMNmaE3nwXdvkE'),
             statutId: 'acc',
             ordre: 1,
             typeId: 'oct',
@@ -1468,7 +1468,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'Mef8FKNlX0WtohaO9wGOMQZs',
+            titreId: newTitreId('Mef8FKNlX0WtohaO9wGOMQZs'),
             statutId: 'des',
             ordre: 2,
             typeId: 'pr1',
@@ -1503,7 +1503,7 @@ describe("phases d'une démarche", () => {
       titrePhasesFind(
         [
           {
-            titreId: 'nJ10z3Z74xi9OTh4oG6YXQBo',
+            titreId: newTitreId('nJ10z3Z74xi9OTh4oG6YXQBo'),
             statutId: 'acc',
             ordre: 1,
             typeId: 'oct',
@@ -1534,7 +1534,7 @@ describe("phases d'une démarche", () => {
             ],
           },
           {
-            titreId: 'EW9cDeM6PfXS4TPznkjsNZVO',
+            titreId: newTitreId('EW9cDeM6PfXS4TPznkjsNZVO'),
             statutId: 'rej',
             ordre: 2,
             typeId: 'pr1',

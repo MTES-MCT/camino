@@ -85,6 +85,7 @@ describe('documentSupprimer', () => {
       {
         typeId: 'mfr',
         statutId: 'aco',
+        ordre: 1,
         titreDemarcheId: titreDemarche.id,
         date: toCaminoDate('2021-01-01'),
       },

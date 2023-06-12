@@ -2,11 +2,9 @@ import { demarchesDefinitions } from '../../business/rules-demarches/definitions
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { userSuper } from '../../database/user-super.js'
-import { getCurrent } from 'camino-common/src/date.js'
 
 const demarchesValidate = async () => {
   const errors = [] as string[]
-  const currentDate = getCurrent()
   for (const demarcheDefinition of demarchesDefinitions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
       const demarches = await titresDemarchesGet(
@@ -29,7 +27,7 @@ const demarchesValidate = async () => {
         .filter(demarche => demarche.etapes?.length)
         .forEach(demarche => {
           try {
-            const errs = titreDemarcheUpdatedEtatValidate(currentDate, demarche.type!, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
+            const errs = titreDemarcheUpdatedEtatValidate(demarche.type!, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
 
             if (errs.length) {
               errors.push(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}" : ${errs}`)

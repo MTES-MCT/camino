@@ -4,15 +4,14 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 import { writeFileSync } from 'fs'
-import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
-import { demarchesDefinitions, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { Etape, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { demarchesDefinitions } from '../../business/rules-demarches/definitions.js'
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { toCommuneId } from 'camino-common/src/static/communes.js'
 
 const writeEtapesForTest = async () => {
-  const demarcheDefinitionMachines = demarchesDefinitions.filter(isDemarcheDefinitionMachine)
-
-  for (const demarcheDefinition of demarcheDefinitionMachines) {
+  for (const demarcheDefinition of demarchesDefinitions) {
     const demarches = await titresDemarchesGet(
       {
         titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
@@ -22,7 +21,7 @@ const writeEtapesForTest = async () => {
       {
         fields: {
           titre: { id: {}, demarches: { etapes: { id: {} } } },
-          etapes: { id: {} },
+          etapes: { communes: { id: {} } },
           type: { etapesTypes: { id: {} } },
         },
       },
@@ -36,39 +35,25 @@ const writeEtapesForTest = async () => {
 
         return (date ?? '') > demarcheDefinition.dateDebut && !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
       })
-      .filter(({ titreId }) => {
-        if (
-          [
-            // décision du propriétaire du sol avant le dépôt de la demande
-            'EI4lAxLbhdFOoHb6LWL0y9pO',
-            'e8ZYqaA9HB3bXuOeRlXz5g76',
-            // visibilité publique
-            'z0DZo6TKEvP28D6oQyAuTvwA',
-            'RGOrc6hTOErMD8SBkUChbTyg',
-            '8KsDiNBHR9lAHv229GIqA7fw',
-            '8pY4eoUKtuR3is8l3Vy0vmJC',
-          ].includes(titreId)
-        ) {
-          console.info('On ignore le titre ' + titreId)
-
-          return false
-        }
-
-        return true
-      })
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
-          demarche?.etapes
-            ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
-            ?.map(etape => {
-              if (etape?.contenu?.arm) {
-                etape.contenu = { arm: etape.contenu?.arm }
-              } else {
-                delete etape.contenu
-              }
+          (
+            demarche?.etapes
+              ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
+              ?.map(etape => {
+                if (etape?.contenu?.arm) {
+                  etape.contenu = { arm: etape.contenu?.arm }
+                } else {
+                  delete etape.contenu
+                }
 
-              return etape
-            }) ?? []
+                if (etape.communes?.length) {
+                  etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
+                }
+
+                return etape
+              }) ?? []
+          ).map(etape => titreEtapeForMachineValidator.parse(etape))
         )
         // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
         // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois

@@ -17,8 +17,9 @@ import {
   titrePtmgValidator,
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
+  titreIdValidator,
 } from 'camino-common/src/titres.js'
-import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
 import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools.js'
@@ -27,7 +28,7 @@ import { titreAdministrationsGet } from '../_format/titres.js'
 import { canDeleteTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
-import { toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -40,6 +41,7 @@ import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator, getTit
 import type { Pool } from 'pg'
 import { dbQueryAndValidate } from '../../pg-database.js'
 import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import { z } from 'zod'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -160,8 +162,8 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
       }
 
       const dd = demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes, octARM.id)
-      const hasMachine = isDemarcheDefinitionMachine(dd)
-      const blockedByMe: boolean = hasMachine && dd.machine.whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
+      const etapes = octARM.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+      const blockedByMe: boolean = dd !== undefined && dd.machine.whoIsBlocking(toMachineEtapes(etapes)).includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
@@ -306,10 +308,11 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
             if (demarcheLaPlusRecente.statutId === DemarchesStatutsIds.EnConstruction) {
               return null
             } else {
-              const etapesDerniereDemarche = toMachineEtapes(demarcheLaPlusRecente.etapes)
+              const etapes = demarcheLaPlusRecente.etapes.map(etape => titreEtapeForMachineValidator.parse(etape))
+              const etapesDerniereDemarche = toMachineEtapes(etapes)
               derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
               const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
-              if (isDemarcheDefinitionMachine(dd)) {
+              if (dd) {
                 try {
                   enAttenteDeDREAL = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
                   const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
@@ -359,25 +362,23 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     }
   }
 }
-const isStringArray = (stuff: any): stuff is string[] => {
-  return stuff instanceof Array && stuff.every(value => typeof value === 'string')
-}
+
 export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
   const user = req.auth
 
-  const titreId = req.params.id
-  const titreFromIds = req.body
+  const titreId = titreIdValidator.safeParse(req.params.id)
+  const titreFromIds = z.array(titreIdValidator).safeParse(req.body)
 
-  if (!isStringArray(titreFromIds)) {
+  if (!titreFromIds.success) {
     throw new Error(`un tableau est attendu en corps de message : '${titreFromIds}'`)
   }
 
-  if (!titreId) {
+  if (!titreId.success) {
     throw new Error('le paramètre id est obligatoire')
   }
 
   const titre = await titreGet(
-    titreId,
+    titreId.data,
     {
       fields: {
         pointsEtape: { id: {} },
@@ -396,15 +397,15 @@ export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res
     throw new Error('les démarches ne sont pas chargées')
   }
 
-  const titresFrom = await titresGet({ ids: titreFromIds }, { fields: { id: {} } }, user)
+  const titresFrom = await titresGet({ ids: titreFromIds.data }, { fields: { id: {} } }, user)
 
-  checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
+  checkTitreLinks(titre, titreFromIds.data, titresFrom, titre.demarches)
 
-  await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
+  await linkTitres({ linkTo: titreId.data, linkFrom: titreFromIds.data })
 
   res.json({
-    amont: await titreLinksGet(titreId, 'titreFromId', user),
-    aval: await titreLinksGet(titreId, 'titreToId', user),
+    amont: await titreLinksGet(titreId.data, 'titreFromId', user),
+    aval: await titreLinksGet(titreId.data, 'titreToId', user),
   })
 }
 export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreLinks>) => {
@@ -459,12 +460,12 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
 export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
-  const titreId: string | undefined = req.params.titreId
-  if (!titreId) {
+  const titreId = titreIdValidator.safeParse(req.params.titreId)
+  if (!titreId.success) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     const titreOld = await titreGet(
-      titreId,
+      titreId.data,
       {
         fields: {
           demarches: { etapes: { id: {} } },
@@ -479,7 +480,7 @@ export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     } else if (!canDeleteTitre(user)) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      await titreArchive(titreId)
+      await titreArchive(titreId.data)
       res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
   }

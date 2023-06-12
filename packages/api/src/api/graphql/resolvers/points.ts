@@ -17,6 +17,7 @@ import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -246,7 +247,7 @@ export const titreEtapePerimetreInformations = async (
   {
     titreEtapeId,
   }: {
-    titreEtapeId: string
+    titreEtapeId: EtapeId
   },
   { user }: Context
 ): Promise<IPerimetreInformations> => {

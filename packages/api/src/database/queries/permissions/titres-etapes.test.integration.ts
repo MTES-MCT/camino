@@ -1,7 +1,7 @@
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate, newDemarcheId } from '../../models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
 import { userSuper } from '../../user-super.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import { titresEtapesQueryModify } from './titres-etapes.js'
@@ -22,7 +22,7 @@ afterAll(async () => {
 describe('titresEtapesQueryModify', () => {
   describe('titresEtapesArchive', () => {
     test("Vérifie si le statut archivé masque l'étape de la démarche", async () => {
-      const titreId = idGenerate()
+      const titreId = newTitreId()
       await Titres.query().insert([
         {
           id: titreId,
@@ -41,8 +41,8 @@ describe('titresEtapesQueryModify', () => {
         titreId,
         archive: false,
       })
-      const titreEtapeId = idGenerate()
-      const archivedTitreEtapeId = idGenerate()
+      const titreEtapeId = newEtapeId()
+      const archivedTitreEtapeId = newEtapeId()
       await TitresEtapes.query().insert([
         {
           id: titreEtapeId,

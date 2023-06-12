@@ -1,6 +1,6 @@
 import { TitresLinkForm, Props } from './titres-link-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { TitreLink, TitreLinks } from 'camino-common/src/titres'
+import { TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -14,7 +14,7 @@ export default meta
 
 const linkableTitres: LinkableTitre[] = [
   {
-    id: 'id1',
+    id: titreIdValidator.parse('id1'),
     nom: 'Abttis Coucou',
     titreStatutId: 'ech',
     demarches: [
@@ -25,7 +25,7 @@ const linkableTitres: LinkableTitre[] = [
     ],
   },
   {
-    id: 'id2',
+    id: titreIdValidator.parse('id2'),
     nom: 'Affluent Crique Saint Bernard',
     titreStatutId: 'ech',
     demarches: [
@@ -36,7 +36,7 @@ const linkableTitres: LinkableTitre[] = [
     ],
   },
   {
-    id: 'id3',
+    id: titreIdValidator.parse('id3'),
     nom: 'Nouveau titre',
     titreStatutId: 'ech',
     demarches: [
@@ -48,7 +48,7 @@ const linkableTitres: LinkableTitre[] = [
   },
 ]
 
-const titresTo: TitreLink[] = [{ id: 'id10', nom: 'Titre fils' }]
+const titresTo: TitreLink[] = [{ id: titreIdValidator.parse('id10'), nom: 'Titre fils' }]
 const titresFrom: TitreLink[] = [linkableTitres[0]]
 
 const apiClient: Props['apiClient'] = {
@@ -58,7 +58,7 @@ const apiClient: Props['apiClient'] = {
 }
 
 export const AxmWithAlreadySelectedTitre: StoryFn = () => (
-  <TitresLinkForm user={{ role: 'super', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
+  <TitresLinkForm user={{ role: 'super', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }} apiClient={apiClient} />
 )
 
 export const FusionWithAlreadySelectedTitre: StoryFn = () => (
@@ -67,7 +67,7 @@ export const FusionWithAlreadySelectedTitre: StoryFn = () => (
     titre={{
       typeId: 'cxm',
       administrations: [],
-      id: 'titreId',
+      id: titreIdValidator.parse('titreId'),
       demarches: [{ typeId: 'fus' }],
     }}
     apiClient={apiClient}
@@ -77,7 +77,7 @@ export const FusionWithAlreadySelectedTitre: StoryFn = () => (
 export const TitreWithTitreLinksLoading: StoryFn = () => (
   <TitresLinkForm
     user={{ role: 'super', ...testBlankUser }}
-    titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
+    titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }}
     apiClient={{
       ...apiClient,
       loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
@@ -86,5 +86,5 @@ export const TitreWithTitreLinksLoading: StoryFn = () => (
 )
 
 export const DefautCantUpdateLinks: StoryFn = () => (
-  <TitresLinkForm user={{ role: 'defaut', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
+  <TitresLinkForm user={{ role: 'defaut', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: titreIdValidator.parse('titreId'), demarches: [] }} apiClient={apiClient} />
 )

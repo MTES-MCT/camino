@@ -1,6 +1,6 @@
 import { ITitreEtape } from '../../types.js'
-import { demarcheDefinitionFind, IDemarcheDefinitionRestrictions, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
-import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
+import { TitreEtapeForMachine, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
@@ -13,19 +13,12 @@ export const titreEtapesSortDescByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>
 export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(titreEtapes: T[]): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'>>(
-  titreEtapes: T[],
-  demarcheId: DemarcheId,
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId
-): T[] => {
-  let demarcheDefinitionRestrictions = undefined as IDemarcheDefinitionRestrictions | undefined
-
+export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEtapes: T[], demarcheId: DemarcheId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): T[] => {
   const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreEtapes, demarcheId)
-  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+  if (demarcheDefinition) {
     const etapes = demarcheDefinition.machine.orderMachine(toMachineEtapes(titreEtapes))
     if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-      console.error(`impossible de trouver un ordre pour la démarche '${titreEtapes[0]?.titreDemarcheId}' où ces étapes sont valides ${JSON.stringify(etapes)}`)
+      console.error(`impossible de trouver un ordre pour la démarche '${demarcheId}' où ces étapes sont valides ${JSON.stringify(etapes)}`)
     }
 
     const result: T[] = []
@@ -39,58 +32,12 @@ export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, 'id' | 'ord
 
     return result
   } else {
-    demarcheDefinitionRestrictions = demarcheDefinition?.restrictions
-
     return titreEtapes.slice().sort((a, b) => {
       const dateA = new Date(a.date)
       const dateB = new Date(b.date)
 
       if (dateA < dateB) return -1
       if (dateA > dateB) return 1
-
-      // si les deux étapes ont la même date
-
-      // on utilise l'arbre pour trouver quelle étape provoque l’autre
-
-      if (demarcheDefinition && demarcheDefinitionRestrictions) {
-        const bRestriction = demarcheDefinitionRestrictions[b.typeId]
-
-        if (!bRestriction) {
-          console.error(`${demarcheId}: impossible de trier l’étape car son type ${b.typeId} n’existe pas dans les définitions`)
-
-          return -1
-        }
-
-        const aRestriction = demarcheDefinitionRestrictions[a.typeId]
-
-        if (!aRestriction) {
-          console.error(`${demarcheId}: impossible de trier l’étape car son type ${a.typeId} n’existe pas dans les définitions`)
-
-          return -1
-        }
-
-        const bJusteApresA = bRestriction.justeApres.flat(2).find(b => b.etapeTypeId === a.typeId)
-
-        const aJusteApresB = aRestriction.justeApres.flat(2).find(a => a.etapeTypeId === b.typeId)
-
-        if (bJusteApresA && !aJusteApresB) {
-          return -1
-        }
-
-        if (aJusteApresB && !bJusteApresA) {
-          return 1
-        }
-
-        if (aRestriction.final) {
-          return 1
-        }
-
-        if (bRestriction.final) {
-          return -1
-        }
-      }
-
-      // on utilise l'ordre du type d'étape
 
       const etapes = getEtapesTDE(titreTypeId, demarcheTypeId)
 

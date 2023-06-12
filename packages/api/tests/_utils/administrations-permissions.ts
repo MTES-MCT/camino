@@ -7,7 +7,7 @@ import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
 import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
-import { newDemarcheId, newDocumentId } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
@@ -19,6 +19,7 @@ import { AdministrationId, sortedAdministrations } from 'camino-common/src/stati
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import type { Pool } from 'pg'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { TitreId } from 'camino-common/src/titres.js'
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -36,7 +37,7 @@ export const visibleCheck = async (
 
   const titre = titreBuild(
     {
-      titreId: `${titreTypeId}${locale ? '-local' : ''}-${cible}-admin-${administrationId}`,
+      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}-${cible}-admin-${administrationId}`),
       titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
@@ -272,7 +273,7 @@ export const modificationCheck = async (
 
   const titre = titreBuild(
     {
-      titreId: `${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`,
+      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`),
       titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
@@ -348,7 +349,7 @@ const titreBuild = (
     titreId,
     titreTypeId,
   }: {
-    titreId: string
+    titreId: TitreId
     titreTypeId: TitreTypeId
   },
   administrationIdGestionnaire?: AdministrationId,
@@ -368,7 +369,7 @@ const titreBuild = (
         typeId: 'oct',
         etapes: [
           {
-            id: `${titreId}-demarche-id-etape-id`,
+            id: newEtapeId(`${titreId}-demarche-id-etape-id`),
             typeId: etapeTypeId || 'mcr',
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),

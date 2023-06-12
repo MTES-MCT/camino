@@ -19,8 +19,11 @@ import { deviseIdValidator } from './static/devise.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
 
+export const titreIdValidator = z.string().brand<'TitreId'>()
+export type TitreId = z.infer<typeof titreIdValidator>
+
 export const commonTitreValidator = z.object({
-  id: z.string(),
+  id: titreIdValidator,
   nom: z.string(),
   slug: z.string(),
   type_id: titreTypeIdValidator,
@@ -36,7 +39,7 @@ export const commonTitreValidator = z.object({
 
 /** @deprecated use CommonRestTitre */
 export interface CommonTitre {
-  id: string
+  id: TitreId
   nom: string
   slug: string
   typeId: TitreTypeId

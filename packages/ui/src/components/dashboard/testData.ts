@@ -1,11 +1,11 @@
 import { toCaminoDate, toCaminoAnnee } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CommonTitreDREAL } from 'camino-common/src/titres'
+import { CommonTitreDREAL, titreIdValidator } from 'camino-common/src/titres'
 
 export const titresDreal: CommonTitreDREAL[] = [
   {
-    id: 'firstId',
+    id: titreIdValidator.parse('firstId'),
     slug: 'first-id-slug',
     nom: 'first-name',
     type_id: 'prm',
@@ -23,7 +23,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
   {
-    id: 'secondId',
+    id: titreIdValidator.parse('secondId'),
     slug: 'second-slug',
     nom: 'Second Nom de titre',
     type_id: 'prm',
@@ -47,7 +47,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
   {
-    id: 'thirdId',
+    id: titreIdValidator.parse('thirdId'),
     slug: 'third-id-slug',
     nom: 'third-name',
     type_id: 'prm',
@@ -65,7 +65,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
   {
-    id: 'fourthId',
+    id: titreIdValidator.parse('fourthId'),
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
     type_id: 'arc',
