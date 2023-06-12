@@ -10,7 +10,10 @@ type UserAdmin = { role: 'admin' } & AdminUserNotNull
 type UserLecteur = { role: 'lecteur' } & AdminUserNotNull
 type UserEditeur = { role: 'editeur' } & AdminUserNotNull
 
-const baseUserNotNullValidator = z.object({ id: z.string(), email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string() })
+export const utilisateurIdValidator = z.string().brand('UtilisateurId')
+export type UtilisateurId = z.infer<typeof utilisateurIdValidator>
+
+const baseUserNotNullValidator = z.object({ id: utilisateurIdValidator, email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string() })
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
 const superRoleValidator = z.literal('super')

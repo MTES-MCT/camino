@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo } from 'graphql'
-import cryptoRandomString from 'crypto-random-string'
 
 import { Context, IUtilisateursColonneId } from '../../../types.js'
 
@@ -8,11 +7,12 @@ import { fieldsBuild } from './_fields-build.js'
 import { userGet, utilisateurGet, utilisateursCount, utilisateursGet } from '../../../database/queries/utilisateurs.js'
 
 import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter.js'
-import { Role } from 'camino-common/src/roles.js'
+import { Role, UtilisateurId } from 'camino-common/src/roles.js'
 import { canReadUtilisateurs, canReadUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
+import { newUtilisateurId } from '../../../database/models/_format/id-create.js'
 
-export const userIdGenerate = async (): Promise<string> => {
-  const id = cryptoRandomString({ length: 6 })
+export const userIdGenerate = async (): Promise<UtilisateurId> => {
+  const id = newUtilisateurId()
   const utilisateurWithTheSameId = await userGet(id)
   if (utilisateurWithTheSameId) {
     return userIdGenerate()
@@ -21,7 +21,7 @@ export const userIdGenerate = async (): Promise<string> => {
   return id
 }
 
-export const utilisateur = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+export const utilisateur = async ({ id }: { id: UtilisateurId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!canReadUtilisateur(user, id)) {
       return null

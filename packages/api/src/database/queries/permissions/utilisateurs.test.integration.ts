@@ -7,6 +7,7 @@ import { Administrations } from 'camino-common/src/static/administrations.js'
 import options from '../_options.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { testBlankUser, TestUser } from 'camino-common/src/tests-utils.js'
+import { newUtilisateurId } from '../../models/_format/id-create.js'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {
@@ -21,7 +22,7 @@ afterAll(async () => {
 const mockAdministration = Administrations['aut-97300-01']
 
 const mockUser: IUtilisateur = {
-  id: 'utilisateurId',
+  id: newUtilisateurId('utilisateurId'),
   role: 'editeur',
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',

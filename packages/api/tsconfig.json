@@ -26,8 +26,8 @@
       "html-to-text": ["./src/@types/html-to-text"],
       "matomo-tracker": ["./src/@types/matomo-tracker"],
       "momoa": ["./src/@types/momoa"],
-      "turf-center": ["./src/@types/turf-center"],
-      "tus-node-server": ["./src/@types/tus-node-server"]
-    }
-  }
+      "turf-center": ["./src/@types/turf-center"]
+    },
+  },
+  "include": ["src/**/*", "tests/**/*"]
 }

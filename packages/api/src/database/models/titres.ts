@@ -9,7 +9,6 @@ import Types from './titres-types.js'
 import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
-import cryptoRandomString from 'crypto-random-string'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 
@@ -139,7 +138,7 @@ class Titres extends Model {
     }
 
     if (!this.slug && this.typeId && this.nom) {
-      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${cryptoRandomString({ length: 4 })}`
+      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`
     }
 
     return super.$beforeInsert(context)

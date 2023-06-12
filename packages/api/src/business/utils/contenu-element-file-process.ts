@@ -1,5 +1,4 @@
 import { FileUpload } from 'graphql-upload'
-import cryptoRandomString from 'crypto-random-string'
 import { join } from 'path'
 
 import { IContenu, IContenuValeur, IDocumentRepertoire, ITitreEtape } from '../../types.js'
@@ -9,6 +8,7 @@ import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
 import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
 
 const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: DeepReadonly<SectionsElement>) => {
   const newFiles = [] as FileUpload[]
@@ -20,9 +20,7 @@ const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, section
     }
 
     if (fileUpload?.file) {
-      const fileName = `${cryptoRandomString({
-        length: 4,
-      })}-${fileUpload.file.filename}`
+      const fileName = `${idGenerate(4)}-${fileUpload.file.filename}`
       fileUpload.file.filename = fileName
       newFiles.push(fileUpload?.file)
       newValue = fileName

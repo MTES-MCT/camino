@@ -31,8 +31,6 @@ vi.mock('../../tools/file-delete', () => ({
 }))
 const fileDeleteMock = vi.mocked(fileDelete, true)
 
-vi.mock('crypto-random-string', () => ({ default: () => 'prefix' }))
-
 afterEach(() => {
   vi.resetAllMocks()
 })

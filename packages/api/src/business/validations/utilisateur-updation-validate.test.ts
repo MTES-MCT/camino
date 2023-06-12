@@ -4,6 +4,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { test, expect } from 'vitest'
 import { utilisateurUpdationValidate } from './utilisateur-updation-validate'
+import { newUtilisateurId } from '../../database/models/_format/id-create.js'
 
 const users: Record<Role, UserNotNull> = {
   super: { ...testBlankUser, role: 'super' },
@@ -58,77 +59,81 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
 })
 
 test('utilisateurUpdationValidate incorrect users throw error', () => {
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"l\'utilisateur n\'existe pas"'
-  )
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'super', administrationId: null, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
 
   expect(() =>
-    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'super', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', administrationId: 'aut-97300-01', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
-
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"l\'utilisateur n\'existe pas"'
-  )
   expect(() =>
-    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'super', administrationId: 'aut-97300-01', entreprises: [] }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', administrationId: 'aut-97300-01', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
 
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
   expect(() =>
-    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', administrationId: fakeAdministrationId, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
-
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"utilisateur incorrect"'
-  )
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'defaut', administrationId: null, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
   expect(() =>
-    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: fakeAdministrationId, entreprises: [newEntrepriseId('entrepriseId')] }, undefined)
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'defaut', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'defaut', administrationId: 'aut-97300-01', entreprises: [] }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', entreprises: [], administrationId: null }, undefined)).toThrowErrorMatchingInlineSnapshot(
-    '"l\'utilisateur n\'existe pas"'
-  )
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'admin', administrationId: null, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'admin', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'admin', administrationId: fakeAdministrationId, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'entreprise', administrationId: null, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'entreprise', administrationId: null, entreprises: [] }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      { id: newUtilisateurId('utilisateurId'), role: 'entreprise', administrationId: fakeAdministrationId, entreprises: [newEntrepriseId('entrepriseId')] },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: newUtilisateurId('utilisateurId'), role: 'super', entreprises: [], administrationId: null }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
 
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
-      { ...testBlankUser, id: 'fakeId', role: 'admin', administrationId: 'aut-97300-01' }
+      { id: newUtilisateurId('utilisateurId'), role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: newUtilisateurId('fakeId'), role: 'admin', administrationId: 'aut-97300-01' }
     )
   ).not.toThrowError()
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      { id: 'utilisateurId', role: 'admin', administrationId: 'aut-97300-01', entreprises: [] },
-      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-97300-01' }
+      { id: newUtilisateurId('utilisateurId'), role: 'admin', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: newUtilisateurId('fakeId'), role: 'editeur', administrationId: 'aut-97300-01' }
     )
   ).not.toThrowError()
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-mrae-guyane-01', entreprises: [] },
-      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-97300-01' }
+      { id: newUtilisateurId('utilisateurId'), role: 'editeur', administrationId: 'aut-mrae-guyane-01', entreprises: [] },
+      { ...testBlankUser, id: newUtilisateurId('fakeId'), role: 'editeur', administrationId: 'aut-97300-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
-      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-mrae-guyane-01' }
+      { id: newUtilisateurId('utilisateurId'), role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: newUtilisateurId('fakeId'), role: 'editeur', administrationId: 'aut-mrae-guyane-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 

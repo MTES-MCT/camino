@@ -6,6 +6,7 @@ import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import type { Pool } from 'pg'
 import { constants } from 'http2'
 import { userSuper } from '../../database/user-super.js'
+import { newUtilisateurId } from '../../database/models/_format/id-create.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -45,7 +46,7 @@ describe('moi', () => {
 describe('utilisateurModifier', () => {
   test('ne peut pas modifier un compte (utilisateur anonyme)', async () => {
     const utilisateurToEdit: UtilisateurToEdit = {
-      id: 'test',
+      id: newUtilisateurId('test'),
       role: 'defaut',
       entreprises: [],
       administrationId: null,
