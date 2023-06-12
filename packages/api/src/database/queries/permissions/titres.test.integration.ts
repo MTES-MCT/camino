@@ -3,7 +3,7 @@ import { IEntreprise, ITitre, ITitreDemarche } from '../../../types.js'
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
+import { idGenerate, newDemarcheId, newEtapeId, newTitreId, newUtilisateurId } from '../../models/_format/id-create.js'
 import { titresArmEnDemandeQuery, titresConfidentielSelect, titresModificationSelectQuery, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
 import { userSuper } from '../../user-super.js'
 import { AdministrationRole } from 'camino-common/src/roles.js'
@@ -268,7 +268,7 @@ describe('titresQueryModify', () => {
       q.select(
         titresModificationSelectQuery(q, {
           email: '',
-          id: '',
+          id: newUtilisateurId(''),
           nom: '',
           prenom: '',
           role: 'admin',

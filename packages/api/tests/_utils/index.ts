@@ -13,6 +13,7 @@ import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams } from 'camino-common/src/rest.js'
 import { z } from 'zod'
+import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 
 export const queryImport = (nom: string) =>
   fs
@@ -98,15 +99,17 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
 }
 
 export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
-  let id = 'super'
+  let idToBuild = 'super'
 
   if (!isSuperRole(user.role)) {
-    id = `${user.role}-user`
+    idToBuild = `${user.role}-user`
 
     if (isAdministrationRole(user.role)) {
-      id += `-${(user as AdminUserNotNull).administrationId}`
+      idToBuild += `-${(user as AdminUserNotNull).administrationId}`
     }
   }
+
+  const id = newUtilisateurId(idToBuild)
 
   let userInDb = await utilisateurGet(id, undefined, userSuper)
 

@@ -1,5 +1,5 @@
 import { fiscaliteVisible, fraisGestion } from './fiscalite.js'
-import { UserNotNull } from './roles.js'
+import { UserNotNull, toUtilisateurId } from './roles.js'
 import { CommonRestTitre } from './titres.js'
 import { test, expect } from 'vitest'
 import { newEntrepriseId } from './entreprise.js'
@@ -20,7 +20,7 @@ test('fraisGestion', () => {
 
   expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toBe(2.06)
 })
-const roleLessUser: Omit<UserNotNull, 'role'> = { id: 'id', nom: 'nom', email: 'email', prenom: 'prenom' }
+const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom' }
 
 test('fiscaliteVisible', () => {
   const titres: Partial<Pick<CommonRestTitre, 'type_id'>>[] = [{ type_id: 'arm' }, { type_id: 'prw' }]

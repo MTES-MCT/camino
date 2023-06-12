@@ -29,9 +29,9 @@ vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: vi.fn(),
 }))
-const fileDeleteMock = vi.mocked(fileDelete, true)
 
-vi.mock('crypto-random-string', () => ({ default: () => 'prefix' }))
+vi.mock('../../database/models/_format/id-create', () => ({ idGenerate: () => 'prefix' }))
+const fileDeleteMock = vi.mocked(fileDelete, true)
 
 afterEach(() => {
   vi.resetAllMocks()

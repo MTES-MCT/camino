@@ -1,7 +1,7 @@
 import { titresActivitesGet } from './titres-activites.js'
 import TitresActivites from '../models/titres-activites.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { newTitreId } from '../models/_format/id-create.js'
+import { newTitreId, newUtilisateurId } from '../models/_format/id-create.js'
 import Titres from '../models/titres.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
@@ -40,7 +40,7 @@ describe('teste les requêtes sur les activités', () => {
     })
 
     const adminDGALN: UserNotNull = {
-      id: 'utilisateurId',
+      id: newUtilisateurId('utilisateurId'),
       role: 'admin',
       nom: 'utilisateurNom',
       prenom: 'utilisateurPrenom',

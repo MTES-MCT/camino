@@ -4,6 +4,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur } from './utilisateur'
 import { UtilisateurApiClient } from './utilisateur/utilisateur-api-client'
+import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Utilisateur',
@@ -21,7 +22,7 @@ const editNewsletter = action('editNewsletter')
 const apiClientMock: UtilisateurApiClient = {
   getUtilisateur: () =>
     Promise.resolve({
-      id: 'id',
+      id: toUtilisateurId('id'),
       email: 'email@gmail.com',
       nom: 'nom',
       prenom: 'prenom',
@@ -44,11 +45,13 @@ const apiClientMock: UtilisateurApiClient = {
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
-export const MySelf: StoryFn = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+export const MySelf: StoryFn = () => (
+  <PureUtilisateur user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+)
 
 export const Loading: StoryFn = () => (
   <PureUtilisateur
-    user={{ ...testBlankUser, id: 'id', role: 'super' }}
+    user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
     apiClient={{
@@ -60,7 +63,7 @@ export const Loading: StoryFn = () => (
 
 export const error: StoryFn = () => (
   <PureUtilisateur
-    user={{ ...testBlankUser, id: 'anotherId', role: 'super' }}
+    user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
     apiClient={{
@@ -71,4 +74,6 @@ export const error: StoryFn = () => (
   />
 )
 
-export const AnotherUser: StoryFn = () => <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+export const AnotherUser: StoryFn = () => (
+  <PureUtilisateur user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+)

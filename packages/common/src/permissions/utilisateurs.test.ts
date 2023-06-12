@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { Role, UserNotNull } from '../roles'
+import { Role, UserNotNull, toUtilisateurId } from '../roles'
 import { testBlankUser } from '../tests-utils'
 import { canEditPermission, getAssignableRoles } from './utilisateurs'
 
@@ -18,18 +18,18 @@ test('getAssignableRoles', () => {
 })
 
 test('canEditPermission', () => {
-  expect(canEditPermission(users.super, { ...testBlankUser, id: 'idFake', role: 'admin', administrationId: 'aut-97300-01' })).toEqual(true)
-  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'lecteur', administrationId: 'aut-97300-01' })).toEqual(true)
-  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'editeur', administrationId: 'aut-97300-01' })).toEqual(true)
-  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(true)
-  expect(canEditPermission(users.admin, { ...testBlankUser, id: 'idFake', role: 'admin', administrationId: 'aut-97300-01' })).toEqual(true)
+  expect(canEditPermission(users.super, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'admin', administrationId: 'aut-97300-01' })).toEqual(true)
+  expect(canEditPermission(users.admin, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'lecteur', administrationId: 'aut-97300-01' })).toEqual(true)
+  expect(canEditPermission(users.admin, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'editeur', administrationId: 'aut-97300-01' })).toEqual(true)
+  expect(canEditPermission(users.admin, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(true)
+  expect(canEditPermission(users.admin, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'admin', administrationId: 'aut-97300-01' })).toEqual(true)
 
-  expect(canEditPermission(users.defaut, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users.lecteur, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users.editeur, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users.entreprise, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users['bureau d’études'], { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
-  expect(canEditPermission(users.defaut, { ...testBlankUser, id: 'idFake', role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users.defaut, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users.lecteur, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users.editeur, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users.entreprise, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users['bureau d’études'], { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
+  expect(canEditPermission(users.defaut, { ...testBlankUser, id: toUtilisateurId('idFake'), role: 'defaut' })).toEqual(false)
 })
 
 test('canEditPermission yourself', () => {

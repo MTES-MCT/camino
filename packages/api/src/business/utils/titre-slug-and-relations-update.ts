@@ -9,7 +9,6 @@ import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
 import titreDemarcheOctroiDateDebutFind from '../rules/titre-demarche-octroi-date-debut-find.js'
 import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
-import cryptoRandomString from 'crypto-random-string'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titrePointReferenceUpdate, titrePointUpdate } from '../../database/queries/titres-points.js'
@@ -17,6 +16,7 @@ import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitreId } from 'camino-common/src/titres.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
 
 const titreSlugFind = (titre: ITitre) => {
   const { typeId, nom } = titre
@@ -115,7 +115,7 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
 
   if (titreWithTheSameSlug?.length > 1 || (titreWithTheSameSlug?.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
     if (!titre.slug?.startsWith(slug)) {
-      slug += `-${cryptoRandomString({ length: 8 })}`
+      slug += `-${idGenerate(8)}`
       doublonTitreId = titreWithTheSameSlug[0].id
     } else {
       slug = titre.slug

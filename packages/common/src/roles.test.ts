@@ -10,6 +10,7 @@ import {
   ROLES,
   isBureauDEtudes,
   BaseUserNotNull,
+  toUtilisateurId,
 } from './roles.js'
 import { ADMINISTRATION_IDS } from './static/administrations.js'
 import { test, expect, describe } from 'vitest'
@@ -17,7 +18,7 @@ const administrationId = ADMINISTRATION_IDS.CACEM
 describe('role', () => {
   const baseRole: Omit<BaseUserNotNull, 'role'> = {
     email: '',
-    id: '',
+    id: toUtilisateurId(''),
     nom: '',
     prenom: '',
   }

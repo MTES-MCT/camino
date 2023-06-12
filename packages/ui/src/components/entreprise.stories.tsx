@@ -6,6 +6,7 @@ import { Entreprise, EntrepriseDocument, EntrepriseType, toDocumentId, newEntrep
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
+import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -126,7 +127,7 @@ const completeEntreprise: EntrepriseType = {
   ],
   utilisateurs: [
     {
-      id: 'anId',
+      id: toUtilisateurId('anId'),
       nom: 'Nom user',
       prenom: 'Prénon',
       email: 'email@plop.wu',
@@ -139,7 +140,7 @@ const completeEntreprise: EntrepriseType = {
       role: 'entreprise',
     },
     {
-      id: 'anotherId',
+      id: toUtilisateurId('anotherId'),
       nom: 'Other user',
       prenom: 'Other prenom',
       email: 'anotheremail@nothing.wu',

@@ -253,6 +253,6 @@ export const titresFiltersQueryModify = (
     }
     q.joinRaw(`join titres_etapes as facades_points_etapes on facades_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
     q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
-    q.whereRaw(`?? \\?| array[${secteurs.map(secteur => `E'${secteur.replaceAll("'", "\\'")}'`).join(',')}]`, 'facades_points_etapes.secteursMaritime')
+    q.whereRaw(`?? \\?| array[${secteurs.map(secteur => `E'${secteur.replace(/'/g, "\\'")}'`).join(',')}]`, 'facades_points_etapes.secteursMaritime')
   }
 }

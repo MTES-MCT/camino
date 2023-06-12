@@ -1,9 +1,9 @@
-import { AdministrationRole, AdminUserNotNull, EntrepriseUserNotNull, UserDefaut, UserNotNull, UserSuper } from './roles.js'
+import { AdministrationRole, AdminUserNotNull, EntrepriseUserNotNull, toUtilisateurId, UserDefaut, UserNotNull, UserSuper } from './roles.js'
 import { AdministrationId } from './static/administrations'
 
 export type TestUser = Pick<UserSuper, 'role'> | Pick<UserDefaut, 'role'> | Pick<AdminUserNotNull, 'role' | 'administrationId'> | Pick<EntrepriseUserNotNull, 'role' | 'entreprises'>
 export const testBlankUser: Omit<UserNotNull, 'role'> = {
-  id: 'id',
+  id: toUtilisateurId('id'),
   email: 'email@gmail.com',
   nom: 'nom',
   prenom: 'prenom',

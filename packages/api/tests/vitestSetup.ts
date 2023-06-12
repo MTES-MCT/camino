@@ -19,7 +19,6 @@ function assertObject(stuff: unknown): asserts stuff is object {
   }
 }
 vi.resetAllMocks()
-vi.mock('tus-node-server')
 vi.mock('../src/server/upload', async () => {
   const origUpload = await vi.importActual('../src/server/upload')
 

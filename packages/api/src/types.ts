@@ -3,7 +3,7 @@ import { AdministrationId, AdministrationTypeId } from 'camino-common/src/static
 import { CodePostal, DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull } from 'camino-common/src/roles.js'
+import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
@@ -586,7 +586,7 @@ interface ITitreTypeDemarcheTypeEtapeType {
 }
 
 interface IUtilisateur {
-  id: string
+  id: UtilisateurId
   email?: string | null
   dateCreation: string
   nom?: string | null
