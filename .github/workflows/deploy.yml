@@ -16,10 +16,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.1'
+          node-version: '20.3'
           cache: 'npm'
-      - name: Force npm upgrade waiting for node 20.3
-        run: npm update -g npm
       - name: Install
         run: make install
       - name: Release
