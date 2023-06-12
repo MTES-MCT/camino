@@ -998,6 +998,11 @@ exports[`substances > peut voir toutes les substances 1`] = `
       "id": "hydrog",
       "nom": "hydrogène",
     },
+    {
+      "description": null,
+      "id": "co2",
+      "nom": "dioxyde de carbone (CO₂)",
+    },
   ],
 }
 `;
