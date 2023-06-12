@@ -70,8 +70,8 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
     return false
   }
 
-  // la durée pour les ARM est fixée à 4 mois par l’API
-  return titreTypeId !== 'arm'
+  // la durée pour les demandes d’ARM est fixée à 4 mois par l’API
+  return titreTypeId !== 'arm' || demarcheTypeId !== 'oct'
 }
 
 export const canCreateOrEditEtape = (
