@@ -13,6 +13,8 @@ type UserEditeur = { role: 'editeur' } & AdminUserNotNull
 export const utilisateurIdValidator = z.string().brand('UtilisateurId')
 export type UtilisateurId = z.infer<typeof utilisateurIdValidator>
 
+export const toUtilisateurId = (utilisateurId: string): UtilisateurId => utilisateurIdValidator.parse(utilisateurId)
+
 const baseUserNotNullValidator = z.object({ id: utilisateurIdValidator, email: z.string(), role: z.enum(ROLES), nom: z.string(), prenom: z.string() })
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 

@@ -29,6 +29,5 @@
       "turf-center": ["./src/@types/turf-center"],
       "type-fest": ["./src/@types/type-fest"],
     },
-  },
-  "include": ["src/**/*", "tests/**/*"]
+  }
 }

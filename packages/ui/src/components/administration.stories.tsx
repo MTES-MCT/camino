@@ -6,6 +6,7 @@ import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/a
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 import { administrationMetas } from './administration/permissions.stub'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Administration',
@@ -37,7 +38,7 @@ export const Default: StoryFn = () => (
             prenom: 'Jean',
             nom: 'Michel',
             email: 'jean.michel@gmail.com',
-            id: 'jeanmichel',
+            id: toUtilisateurId('jeanmichel'),
             role: 'super',
             administrationId: undefined,
           },
