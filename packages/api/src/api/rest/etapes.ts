@@ -116,7 +116,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   )
 }
 
-// export type TitreEtapeForMachine = Pick<Required<ITitreEtape>, 'ordre' | 'id' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'communes' | 'surface'>
 // VISIBLE_FOR_TESTING
 export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,
