@@ -152,10 +152,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
     delete fields.type.documentsTypes
 
-    if (!fields.type.justificatifsTypes) {
-      fields.type.justificatifsTypes = { id: {} }
-    }
-
     if (!fields.demarche) {
       fields.demarche = { id: {} }
     }

@@ -4,7 +4,6 @@ import {
   titresTypes,
   titresTypesDemarchesTypesEtapesTypes,
   etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
 } from '@/api/metas'
 
@@ -243,6 +242,8 @@ const metasIndex = {
     ],
     ids: ['etapeTypeId', 'documentTypeId'],
   },
+
+  //FIXME
   'etapes-types--justificatifs-types': {
     get: etapesTypesJustificatifsTypes,
     nom: 'Types des étapes | Types des justificatifs',

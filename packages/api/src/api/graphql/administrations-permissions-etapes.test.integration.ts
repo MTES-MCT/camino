@@ -1,6 +1,5 @@
 import { dbManager } from '../../../tests/db-manager.js'
 import { creationCheck, visibleCheck } from '../../../tests/_utils/administrations-permissions.js'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
 import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -29,8 +28,6 @@ let dbPool: Pool
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
   dbPool = pool
-
-  await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
 })
 
 afterAll(async () => {

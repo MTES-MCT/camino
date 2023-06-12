@@ -15,8 +15,6 @@ import TitresTypesTypes from '../models/titres-types-types.js'
 
 import TitresTypes from '../models/titres-types.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
-import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types.js'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -54,12 +52,7 @@ const titreTypeDemarcheTypeEtapeTypeGet = async (
   return TitresTypesDemarchesTypesEtapesTypes.query().findById([titreTypeId, demarcheTypeId, etapeTypeId]).withGraphFetched(graph)
 }
 
-const titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet = async () =>
-  TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().orderBy(['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'])
-
 const etapesTypesDocumentsTypesGet = () => toDocuments()
-
-const etapesTypesJustificatifsTypesGet = async () => EtapesTypesJustificatifsTypes.query().orderBy(['etapeTypeId', 'documentTypeId'])
 
 const demarchesStatutsGet = () => sortedDemarchesStatuts
 
@@ -118,17 +111,7 @@ const documentsTypesGet = async ({ repertoire, typeId }: { repertoire?: IDocumen
       })
 
       q.select(raw('?? is true', ['et_dt.optionnel']).as('optionnel'))
-    } else if (repertoire === 'entreprises') {
-      if (typeId) {
-        q.join('etapesTypes__justificatifsTypes as et_jt', b => {
-          b.on(knex.raw('?? = ?', ['et_jt.etapeTypeId', typeId]))
-          b.on(knex.raw('?? = ??', ['et_jt.documentTypeId', 'documentsTypes.id']))
-        })
-        q.select(raw('?? is true', ['et_jt.optionnel']).as('optionnel'))
-      } else {
-        q.join('entreprises__documentsTypes as e_dt', 'e_dt.documentTypeId', 'documentsTypes.id')
-      }
-    }
+    } 
   }
 
   return q
@@ -148,7 +131,5 @@ export {
   documentTypeGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   titreTypeDemarcheTypeEtapeTypeGet,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet,
   etapesTypesDocumentsTypesGet,
-  etapesTypesJustificatifsTypesGet,
 }

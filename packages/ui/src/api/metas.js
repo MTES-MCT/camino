@@ -8,8 +8,6 @@ import {
   fragmentTitreType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentEtapeTypeDocumentType,
-  fragmentEtapeTypeJustificatifType,
-  fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
 } from './fragments/metas'
 
 const titresTypesTypes = apiGraphQLFetch(
@@ -84,17 +82,7 @@ const titresTypesDemarchesTypesEtapesTypes = apiGraphQLFetch(
   `
 )
 
-const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = apiGraphQLFetch(
-  gql`
-    query titresTypesDemarchesTypesEtapesTypesJustificatifsTypes {
-      titresTypesDemarchesTypesEtapesTypesJustificatifsTypes {
-        ...titreTypeDemarcheTypeEtapeTypeDocumentType
-      }
-    }
 
-    ${fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType}
-  `
-)
 
 const etapesTypesDocumentsTypes = apiGraphQLFetch(
   gql`
@@ -108,17 +96,7 @@ const etapesTypesDocumentsTypes = apiGraphQLFetch(
   `
 )
 
-const etapesTypesJustificatifsTypes = apiGraphQLFetch(
-  gql`
-    query EtapesTypesJustificatifsTypes {
-      etapesTypesJustificatifsTypes {
-        ...etapeTypeJustificatifType
-      }
-    }
 
-    ${fragmentEtapeTypeJustificatifType}
-  `
-)
 
 export {
   titresTypesTypes,
@@ -127,7 +105,5 @@ export {
   documentsTypes,
   titresTypes,
   titresTypesDemarchesTypesEtapesTypes,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-  etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes,
+  etapesTypesDocumentsTypes
 }

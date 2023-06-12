@@ -274,6 +274,8 @@ export default {
         })
       }
 
+      //FIXME
+
       if (this.heritageLoaded && this.etape.type.justificatifsTypes?.length) {
         steps.push({ id: 'justificatifs', name: 'Justificatifs d’entreprise' })
       }

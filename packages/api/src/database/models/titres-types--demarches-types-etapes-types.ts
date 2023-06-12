@@ -1,7 +1,6 @@
 import { Model } from 'objection'
 import { ITitreTypeDemarcheTypeEtapeType } from '../../types.js'
 import EtapesTypes from './etapes-types.js'
-import DocumentsTypes from './documents-types.js'
 import DemarchesTypes from './demarches-types.js'
 
 interface TitresTypesDemarchesTypesEtapesTypes extends ITitreTypeDemarcheTypeEtapeType {}
@@ -40,25 +39,7 @@ class TitresTypesDemarchesTypesEtapesTypes extends Model {
         from: 'titresTypes__demarchesTypes__etapesTypes.demarcheTypeId',
         to: 'demarchesTypes.id',
       },
-    },
-
-    justificatifsTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: DocumentsTypes,
-      join: {
-        from: ['titresTypes__demarchesTypes__etapesTypes.titreTypeId', 'titresTypes__demarchesTypes__etapesTypes.demarcheTypeId', 'titresTypes__demarchesTypes__etapesTypes.etapeTypeId'],
-        through: {
-          from: [
-            'titresTypes__demarchesTypes__etapesTypes__justificatifsT.titreTypeId',
-            'titresTypes__demarchesTypes__etapesTypes__justificatifsT.demarcheTypeId',
-            'titresTypes__demarchesTypes__etapesTypes__justificatifsT.etapeTypeId',
-          ],
-          to: 'titresTypes__demarchesTypes__etapesTypes__justificatifsT.documentTypeId',
-          extra: ['optionnel'],
-        },
-        to: 'documentsTypes.id',
-      },
-    },
+    }
   })
 }
 

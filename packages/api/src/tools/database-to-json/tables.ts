@@ -22,13 +22,8 @@ export const tables = [
   { name: 'documents_types', orderBy: ['id'] },
   { name: 'domaines', orderBy: ['id'] },
   { name: 'entreprises', orderBy: ['id'] },
-  { name: 'entreprises__documents_types', orderBy: ['document_type_id'] },
   { name: 'entreprises_etablissements', orderBy: ['id'] },
   { name: 'etapes_types', orderBy: ['id'] },
-  {
-    name: 'etapes_types__justificatifs_types',
-    orderBy: ['etape_type_id', 'document_type_id'],
-  },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   { name: 'titres_amodiataires', orderBy: ['titre_etape_id', 'entreprise_id'] },
@@ -49,10 +44,6 @@ export const tables = [
   {
     name: 'titres_types__demarches_types__etapes_types',
     orderBy: ['titre_type_id', 'demarche_type_id', 'etape_type_id'],
-  },
-  {
-    name: 'titres_types__demarches_types__etapes_types__justificatifs_t',
-    orderBy: ['titre_type_id', 'demarche_type_id', 'etape_type_id', 'document_type_id'],
   },
   { name: 'titres_types_types', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },

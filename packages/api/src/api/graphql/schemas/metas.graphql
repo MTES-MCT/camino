@@ -158,8 +158,6 @@ type EtapeType {
   entreprisesLecture: Boolean
 
   documentsTypes: [DocumentType]
-
-  justificatifsTypes: [DocumentType]
 }
 
 "Statut d'une étape de démarche de titre minier"
@@ -264,23 +262,8 @@ type TitreTypeDemarcheTypeEtapeType {
   sections: Json
 }
 
-type TitreTypeDemarcheTypeEtapeTypeDocumentType {
-  titreTypeId: ID!
-  demarcheTypeId: ID!
-  etapeTypeId: ID!
-  documentTypeId: ID!
-  optionnel: Boolean
-  description: String
-}
 
 type EtapeTypeDocumentType {
-  etapeTypeId: ID!
-  documentTypeId: ID!
-  optionnel: Boolean
-  description: String
-}
-
-type EtapeTypeJustificatifType {
   etapeTypeId: ID!
   documentTypeId: ID!
   optionnel: Boolean

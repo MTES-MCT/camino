@@ -38,12 +38,6 @@ export default defineComponent({
                     joinTable: 'titres-types--demarches-types--etapes-types--documents-types',
                     definitions: [],
                   },
-                  {
-                    id: 'documents-types',
-                    foreignKey: 'documentTypeId',
-                    joinTable: 'titres-types--demarches-types--etapes-types--justificatifs-types',
-                    definitions: [],
-                  },
                 ],
               },
             ],

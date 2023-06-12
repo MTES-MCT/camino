@@ -158,9 +158,7 @@ type Query {
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
 
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
-  etapesTypesJustificatifsTypes: [EtapeTypeJustificatifType]
 
   activitesTypesTitresTypes: [ActiviteTypeTitreType]
   activitesTypesDocumentsTypes: [ActiviteTypeDocumentType]

@@ -17,6 +17,7 @@ import { DocumentType, DocumentsTypes } from 'camino-common/src/static/documents
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
@@ -26,16 +27,17 @@ export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
-  sections: DeepReadonly<Section[]>,
   documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
-  justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
   sdomZones: SDOMZoneId[] | null | undefined,
   user: User,
   titreEtapeOld?: ITitreEtape
 ) => {
   const errors = []
+
+
+  const sections = getSections(titre.typeId, titreDemarche.typeId, titreEtape.typeId)
 
   // le champ heritageContenu est cohérent avec les sections
   const errorsHeritageContenu = heritageContenuValidate(sections, titreEtape.heritageContenu)
@@ -114,7 +116,7 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, documentsTypes, documents, justificatifsTypes, justificatifs, sdomZones))
+    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, documentsTypes, documents, justificatifs, sdomZones))
   }
 
   if (errors.length) {
@@ -130,7 +132,6 @@ export const titreEtapeCompleteValidate = (
   demarcheTypeId: DemarcheTypeId,
   documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
-  justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
   sdomZones: SDOMZoneId[] | null | undefined
 ) => {
@@ -166,8 +167,11 @@ export const titreEtapeCompleteValidate = (
     }
   }
 
+
   // les justificatifs obligatoires sont tous présents
-  const justificatifsTypesIds = [] as string[]
+const justificatifsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
+
+  const justificatifsTypesIds: string[] = []
   if (justificatifs?.length) {
     for (const justificatif of justificatifs) {
       if (!justificatifsTypes.map(({ id }) => id).includes(justificatif!.typeId)) {

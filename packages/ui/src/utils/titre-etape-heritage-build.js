@@ -14,6 +14,7 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
     newEtape.documents = stateEtape.documents.filter(document => documentsTypesIds?.includes(document.typeId))
   }
 
+  //FIXME
   if (stateEtape.justificatifs) {
     const justificatifsTypesIds = apiEtape.type.justificatifsTypes?.map(({ id }) => id)
     newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
