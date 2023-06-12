@@ -29,6 +29,8 @@ vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: vi.fn(),
 }))
+
+vi.mock('../../database/models/_format/id-create', () => ({ idGenerate: () => 'prefix' }))
 const fileDeleteMock = vi.mocked(fileDelete, true)
 
 afterEach(() => {
