@@ -301,6 +301,7 @@ describe('titreModifier', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
       },
       {}
@@ -383,6 +384,7 @@ describe('titreSupprimer', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
       },
       {}
@@ -426,6 +428,7 @@ describe('getTitre', () => {
       {
         nom: 'mon nouveau titre',
         typeId: 'arm',
+        titreStatutId: 'ind',
         slug: 'arm-slug',
         propsTitreEtapesIds: {},
       },

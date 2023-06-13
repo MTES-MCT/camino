@@ -23,17 +23,13 @@ const documentGet = async (documentId: string, { fields }: { fields?: IFields },
   return document as IDocument
 }
 
-const documentsGet = async ({ ids, entreprisesIds }: { ids?: string[]; entreprisesIds?: string[] }, { fields }: { fields?: IFields }, user: User) => {
+const documentsGet = async ({ ids }: { ids?: string[] }, { fields }: { fields?: IFields }, user: User) => {
   const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)
 
   if (ids?.length) {
     q.whereIn('documents.id', ids)
-  }
-
-  if (entreprisesIds?.length) {
-    q.whereIn('entrepriseId', entreprisesIds)
   }
 
   documentsQueryModify(q, user)

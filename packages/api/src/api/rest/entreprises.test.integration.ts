@@ -1,4 +1,4 @@
-import { EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
+import { entrepriseDocumentIdValidator, EntrepriseDocumentInput, newEntrepriseId, Siren, sirenValidator, tempDocumentNameValidator } from 'camino-common/src/entreprise.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { restCall, restDeleteCall, restPostCall, restPutCall } from '../../../tests/_utils/index.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
@@ -10,13 +10,14 @@ import { entreprise, entrepriseAndEtablissements } from '../../../tests/__mocks_
 import type { Pool } from 'pg'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
-import { titreEtapeCreate, titresEtapesJustificatifsUpsert } from '../../database/queries/titres-etapes.js'
+import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
-import { ITitreEtapeJustificatif } from '../../types.js'
 import { constants } from 'http2'
 import { mkdirSync, writeFileSync } from 'fs'
 import { idGenerate } from '../../database/models/_format/id-create'
-
+import { dbQueryAndValidate } from '../../pg-database.js'
+import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
+import { z } from 'zod'
 console.info = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
@@ -259,7 +260,7 @@ describe('postEntrepriseDocument', () => {
       date: '2023-05-16',
       description: 'desc',
       id: expect.any(String),
-      type_id: 'kbi',
+      entreprise_document_type_id: 'kbi',
     })
   })
 })
@@ -272,6 +273,7 @@ describe('getEntrepriseDocument', () => {
       {
         nom: '',
         typeId: 'arm',
+        titreStatutId: 'ind',
         slug: 'arm-slug',
         propsTitreEtapesIds: {},
       },
@@ -319,7 +321,8 @@ describe('getEntrepriseDocument', () => {
     const secondDocumentCall = await restPostCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' }, secondDocumentToInsert)
     expect(secondDocumentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
-    await titresEtapesJustificatifsUpsert([{ documentId: documentCall.body, titreEtapeId: titreEtape.id } as ITitreEtapeJustificatif])
+    const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentCall.body)
+    await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id }, dbPool, z.void())
 
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
@@ -329,20 +332,20 @@ describe('getEntrepriseDocument', () => {
       date: '2023-01-12',
       description: 'desc',
       id: documentCall.body,
-      type_id: 'atf',
+      entreprise_document_type_id: 'atf',
     })
     expect(tested.body[1]).toMatchObject({
       can_delete_document: true,
       date: '2023-02-12',
       description: 'descSecondDocument',
       id: secondDocumentCall.body,
-      type_id: 'kbi',
+      entreprise_document_type_id: 'kbi',
     })
 
     const deletePossible = await restDeleteCall(
       dbPool,
-      '/rest/entreprises/:entrepriseId/documents/:documentId',
-      { entrepriseId, documentId: secondDocumentCall.body },
+      '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
+      { entrepriseId, entrepriseDocumentId: secondDocumentCall.body },
       { ...testBlankUser, role: 'super' }
     )
 
@@ -350,8 +353,8 @@ describe('getEntrepriseDocument', () => {
 
     const deleteNotPossible = await restDeleteCall(
       dbPool,
-      '/rest/entreprises/:entrepriseId/documents/:documentId',
-      { entrepriseId, documentId: documentCall.body },
+      '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
+      { entrepriseId, entrepriseDocumentId: documentCall.body },
       { ...testBlankUser, role: 'super' }
     )
 

@@ -33,6 +33,8 @@ const getters = {
       return []
     }
 
+    // TODO 2023-06-14 faire une méthode qui récupère les types de documents en fonction de TDE, arm mécanisé et des zones du SDOM
+    // state.metas.sdomZonesDocumentTypeIds et state.element.type.documentsTypes ne doivent plus être utilisés
     const documentsTypes = JSON.parse(JSON.stringify(state.element.type.documentsTypes))
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
@@ -283,10 +285,6 @@ const actions = {
       commit('loadingRemove', 'surfaceRefresh', { root: true })
     }
   },
-
-  entrepriseDocumentAdd({ commit }, { entrepriseId, document }) {
-    commit('entrepriseDocumentAdd', { entrepriseId, document })
-  },
 }
 
 const mutations = {
@@ -331,13 +329,6 @@ const mutations = {
         state.metas[id] = data[id]
       }
     })
-  },
-
-  entrepriseDocumentAdd(state, { entrepriseId, document }) {
-    const entreprise = state.metas.entreprises.find(({ id }) => id === entrepriseId)
-
-    entreprise.documents.push(document)
-    state.element.justificatifs.push({ id: document.id })
   },
 
   documentsSet(state, documents) {

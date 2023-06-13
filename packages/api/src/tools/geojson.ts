@@ -2,27 +2,26 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { IGeometry, ITitrePoint } from '../types.js'
+import { ITitrePoint } from '../types.js'
 import { knex } from '../knex.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
-import { Feature } from 'geojson'
+import { Feature, MultiPolygon } from 'geojson'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'
 
-export const geojsonFeatureMultiPolygon = (points: ITitrePoint[]) => ({
+export const geojsonFeatureMultiPolygon = (points: ITitrePoint[]): Feature => ({
   type: 'Feature',
   properties: { etapeId: points[0].titreEtapeId },
-  coordinates: [],
   geometry: rewind(
     {
       type: 'MultiPolygon',
       coordinates: geojsonMultiPolygonCoordinates(points),
     },
     false
-  ) as IGeometry,
+  ) as MultiPolygon,
 })
 
 // convertit des points

@@ -34,6 +34,7 @@ describe('demarcheCreer', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         publicLecture: true,
       },
@@ -57,6 +58,7 @@ describe('demarcheCreer', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         publicLecture: true,
       },
@@ -291,6 +293,7 @@ const demarcheCreate = async () => {
     {
       nom: 'mon titre',
       typeId: 'arm',
+      titreStatutId: 'ind',
       propsTitreEtapesIds: {},
     },
     {}

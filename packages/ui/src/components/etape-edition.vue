@@ -70,6 +70,7 @@ import FormSaveBtn from './etape/pure-form-save-btn.vue'
 import DeposePopup from './etape/depose-popup.vue'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
+// TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
   components: { Loader, Edit, InputDate, FormSaveBtn },
 

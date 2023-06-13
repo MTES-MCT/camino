@@ -20,7 +20,7 @@ import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DocumentType, DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { DocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
@@ -345,7 +345,7 @@ interface ITitre {
   nom: string
   typeId: TitreTypeId
   type?: ITitreType | null
-  titreStatutId?: TitreStatutId | null
+  titreStatutId: TitreStatutId
   references?: TitreReference[] | null
   activitesDeposees?: number | null
   activitesEnConstruction?: number | null
@@ -401,11 +401,6 @@ interface ITitreActivite {
   deposable?: boolean | null
 }
 
-interface ITitreEtapeJustificatif {
-  documentId: string
-  titreEtapeId: string
-}
-
 interface ITitreDemarche {
   id: DemarcheId
   description?: string
@@ -447,8 +442,6 @@ interface IDocument {
   etape?: ITitreEtape | null
   titreActiviteId?: string | null
   activite?: ITitreActivite | null
-  entrepriseId?: string | null
-  entreprise?: IEntreprise | null
   suppression?: boolean | null
 }
 interface ITitreEtape {
@@ -476,8 +469,7 @@ interface ITitreEtape {
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
-  justificatifs?: IDocument[] | null
-  justificatifIds?: string[] | null
+  entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   communes?: ICommune[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
@@ -486,7 +478,6 @@ interface ITitreEtape {
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
-  deposable?: boolean | null
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionsElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
 }
@@ -548,7 +539,7 @@ interface ITitreType {
   typeId: TitreTypeTypeId
   archive?: boolean | null
   type: ITitreTypeType
-  // FIXME à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
+  // TODO 2023-02-19 à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
   contenuIds?: IContenuId[] | null
 }
 
@@ -689,7 +680,6 @@ export {
   ITitreDemarche,
   IDocument,
   ITitreEtape,
-  ITitreEtapeJustificatif,
   ITitreEtapeFiltre,
   ITitreIncertitudes,
   ITitrePoint,

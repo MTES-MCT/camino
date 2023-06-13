@@ -21,7 +21,7 @@
         :etiquette="etiquette"
         :boutonVisualisation="true"
         :boutonSuppression="boutonSuppression && document.suppression"
-        :boutonModification="boutonModification && document.modification"
+        :boutonModification="boutonModification"
         :boutonDissociation="boutonDissociation"
         :manquantShow="manquantShow"
         :helpShow="helpShow"

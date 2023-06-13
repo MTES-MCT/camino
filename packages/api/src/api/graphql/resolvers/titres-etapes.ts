@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IContenu, IDecisionAnnexeContenu, IDocument, ITitreEtape, ITitrePoint } from '../../../types.js'
+import { Context, IContenu, IDecisionAnnexeContenu, IDocument, ITitre, ITitreEtape } from '../../../types.js'
 
 import { titreFormat } from '../../_format/titres.js'
 
@@ -9,7 +9,7 @@ import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { titreGet } from '../../../database/queries/titres.js'
 
 import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
-import { titreEtapeHeritageBuild, titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
+import { titreEtapeHeritageBuild } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
 import { fieldsBuild } from './_fields-build.js'
@@ -28,19 +28,22 @@ import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { Feature } from 'geojson'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
-import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { EtapeId } from 'camino-common/src/etape.js'
-
+import { getSDOMZoneByPoints } from './points.js'
+import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
+import { dbQueryAndValidate } from '../../../pg-database.js'
+import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
+import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { z } from 'zod'
+import { Pool } from 'pg'
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
@@ -178,25 +181,17 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     etape.date = date
     etape.surface = etape.surface ?? null
 
-    const justificatifs = etape.justificatifIds?.length ? await documentsGet({ ids: etape.justificatifIds }, { fields: { type: { id: {} } } }, userSuper) : null
-    delete etape.justificatifIds
-    etape.justificatifs = justificatifs
+    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
+    delete etape.entrepriseDocumentIds
 
     const documentIds = etape.documentIds || []
     const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
-    const sdomZones: SDOMZoneId[] = []
-    let titreEtapePoints = null
-    if (etape.points?.length) {
-      titreEtapePoints = titreEtapePointsCalc(etape.points)
-      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints as ITitrePoint[]) as Feature
+    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
-      if (geoJsonResult.fallback) {
-        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
-      }
-      sdomZones.push(...geoJsonResult.data)
+    if (etape.points?.length) {
+      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
       const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
       if (titreEtapeCommu.fallback) {
@@ -211,7 +206,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     if (!typeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, getDocuments(typeId, titreDemarche.typeId, etape.typeId), documents, justificatifs, sdomZones, user)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
@@ -244,6 +239,10 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
+    for (const document of entrepriseDocuments) {
+      await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id }, context.pool, z.void())
+    }
+
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
     await documentsLier(context, documentIds, { parentId: etapeUpdated.id, propParentId: 'titreEtapeId' })
@@ -266,6 +265,40 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     throw e
   }
+}
+
+const validateAndGetEntrepriseDocuments = async (
+  pool: Pool,
+  etape: Pick<ITitreEtape, 'heritageProps' | 'titulaires' | 'amodiataires' | 'entrepriseDocumentIds'>,
+  titre: Pick<ITitre, 'titulaires' | 'amodiataires'>,
+  user: User
+): Promise<EntrepriseDocument[]> => {
+  const entrepriseDocuments: EntrepriseDocument[] = []
+
+  // si l’héritage est désactivé => on récupère les titulaires sur l’étape
+  // sinon on les trouve sur le titre
+  const titulaires = !etape.heritageProps?.titulaires.actif ? etape.titulaires : titre.titulaires
+  const amodiataires = !etape.heritageProps?.amodiataires.actif ? etape.amodiataires : titre.amodiataires
+  if (etape.entrepriseDocumentIds && isNonEmptyArray(etape.entrepriseDocumentIds)) {
+    let entrepriseIds: EntrepriseId[] = []
+    if (titulaires) {
+      entrepriseIds.push(...titulaires.map(({ id }) => id))
+    }
+    if (amodiataires) {
+      entrepriseIds.push(...amodiataires.map(({ id }) => id))
+    }
+    entrepriseIds = entrepriseIds.filter(onlyUnique)
+
+    if (isNonEmptyArray(entrepriseIds)) {
+      entrepriseDocuments.push(...(await getEntrepriseDocuments(etape.entrepriseDocumentIds, entrepriseIds, pool, user)))
+    }
+
+    if (etape.entrepriseDocumentIds.length !== entrepriseDocuments.length) {
+      throw new Error("document d'entreprise incorrects")
+    }
+  }
+
+  return entrepriseDocuments
 }
 
 const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
@@ -322,6 +355,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
           type: { etapesTypes: { id: {} } },
           titre: {
             demarches: { etapes: { id: {} } },
+            titulaires: { id: {} },
+            amodiataires: { id: {} },
           },
           etapes: { type: { id: {} } },
         },
@@ -342,25 +377,17 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     etape.statutId = statutId
     etape.date = date
 
-    const justificatifs = etape.justificatifIds?.length ? await documentsGet({ ids: etape.justificatifIds }, { fields: { type: { id: {} } } }, userSuper) : null
-    delete etape.justificatifIds
-    etape.justificatifs = justificatifs
+    const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
+    delete etape.entrepriseDocumentIds
 
     const documentIds = etape.documentIds || []
     const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
-    const sdomZones: SDOMZoneId[] = []
-    let titreEtapePoints = null
-    if (etape.points?.length) {
-      titreEtapePoints = titreEtapePointsCalc(etape.points)
-      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints as ITitrePoint[]) as Feature
+    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
-      if (geoJsonResult.fallback) {
-        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
-      }
-      sdomZones.push(...geoJsonResult.data)
+    if (etape.points?.length) {
+      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
       const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
       if (titreEtapeCommu.fallback) {
@@ -370,22 +397,12 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     } else {
       etape.communes = []
     }
-
     const typeId = titreDemarche?.titre?.typeId
     if (!typeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
-    const rulesErrors = titreEtapeUpdationValidate(
-      etape,
-      titreDemarche,
-      titreDemarche.titre,
-      getDocuments(typeId, titreDemarche.typeId, etape.typeId),
-      documents,
-      justificatifs,
-      sdomZones,
-      user,
-      titreEtapeOld
-    )
+
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user, titreEtapeOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -408,6 +425,11 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
+
+    await dbQueryAndValidate(deleteTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id }, context.pool, z.void())
+    for (const document of entrepriseDocuments) {
+      await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id }, context.pool, z.void())
+    }
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
@@ -448,7 +470,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
       throw new Error("l'étape n'existe pas")
     }
 
-    let titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} } } }, user)
+    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, points: { references: { id: {} } } } }, user)
 
     if (!titreEtape) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
@@ -457,15 +479,31 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
       titreEtape.titreDemarcheId,
       {
         fields: {
-          titre: { id: {} },
+          titre: { pointsEtape: { id: {} }, titulaires: { id: {} } },
         },
       },
       userSuper
     )
 
-    titreEtape = titreEtapeFormat(titreEtape)
+    if (!titreDemarche) throw new Error("la démarche n'existe pas")
+    if (!titreDemarche.titre) throw new Error("le titre n'est pas chargé")
+    if (titreDemarche.titre.administrationsLocales === undefined) throw new Error('les administrations locales du titre ne sont pas chargées')
+    if (titreDemarche.titre.titulaires === undefined) throw new Error('les titulaires du titre ne sont pas chargés')
 
-    if (!titreEtape.deposable || !titreDemarche) throw new Error('droits insuffisants')
+    const { sdomZones } = await getSDOMZoneByPoints(titreDemarche.id, titreEtape.points)
+
+    const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
+    // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titreDemarche.titre
+    const deposable = isEtapeDeposable(
+      user,
+      { ...titreDemarche.titre, titulaires: titreDemarche.titre.titulaires ?? [], administrationsLocales: titreDemarche.titre.administrationsLocales ?? [] },
+      titreDemarche.typeId,
+      titreEtape,
+      titreEtape.documents,
+      entrepriseDocuments,
+      sdomZones
+    )
+    if (!deposable) throw new Error('droits insuffisants')
 
     const statutIdAndDate = statutIdAndDateGet(titreEtape, user, true)
 

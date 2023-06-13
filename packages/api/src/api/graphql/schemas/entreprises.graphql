@@ -32,7 +32,6 @@ type Entreprise {
   utilisateurs: [Utilisateur]
   titulaireTitres: [Titre]
   amodiataireTitres: [Titre]
-  documents: [Document]
 
   archive: Boolean
   operateur: Boolean

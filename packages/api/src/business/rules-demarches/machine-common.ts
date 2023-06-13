@@ -42,7 +42,7 @@ export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
 export const isTitreEtapeForMachine = (etape: Omit<ITitreEtape, 'titreDemarcheId'>): etape is TitreEtapeForMachine => titreEtapeForMachineValidator.safeParse(etape).success
 
 export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
-  // FIXME si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
+  // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .slice()
     .sort((a, b) => a.ordre! - b.ordre!)

@@ -134,6 +134,7 @@
           "*.tsx"
         ],
         "rules": {
+          "vue/require-prop-types": 0,
           "vue/require-explicit-emits": 0
         }
       }

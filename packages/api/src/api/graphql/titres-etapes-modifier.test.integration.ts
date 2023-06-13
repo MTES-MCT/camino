@@ -49,6 +49,7 @@ async function etapeCreate() {
     {
       nom: 'mon titre',
       typeId: 'arm',
+      titreStatutId: 'ind',
       propsTitreEtapesIds: {},
     },
     {}

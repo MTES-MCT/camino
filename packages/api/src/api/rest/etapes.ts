@@ -21,6 +21,27 @@ import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesType
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Pool } from 'pg'
+import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
+import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+
+export const getEtapeEntrepriseDocuments =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<EtapeEntrepriseDocument[]>): Promise<void> => {
+    const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+    const user = req.auth
+
+    if (!etapeIdParsed.success) {
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        const result = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user)
+        res.json(result)
+      } catch (e) {
+        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
+    }
+  }
 
 export const getEtapesTypesEtapesStatusWithMainStep =
   (_pool: Pool) =>

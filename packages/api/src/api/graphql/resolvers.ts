@@ -5,7 +5,7 @@ import { titre, titres, titreCreer } from './resolvers/titres.js'
 
 import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer } from './resolvers/titres-etapes.js'
 
-import { documents, documentCreer, documentModifier, documentSupprimer } from './resolvers/documents.js'
+import { documentCreer, documentModifier, documentSupprimer } from './resolvers/documents.js'
 
 import { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
@@ -67,7 +67,6 @@ export default {
   demarchesTypes,
   demarchesStatuts,
   devises,
-  documents,
   documentsTypes,
   domaines,
   etapesTypes,

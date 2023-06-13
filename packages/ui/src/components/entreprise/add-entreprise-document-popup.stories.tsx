@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { newEntrepriseId, toDocumentId } from 'camino-common/src/entreprise'
+import { newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'
 import { EntrepriseApiClient } from './entreprise-api-client'
 
@@ -17,7 +17,7 @@ const save = action('save')
 const apiClient: Pick<EntrepriseApiClient, 'creerEntrepriseDocument'> = {
   creerEntrepriseDocument: (entepriseId, document) => {
     save(entepriseId, document)
-    return Promise.resolve(toDocumentId(document.date, document.typeId, '12345678'))
+    return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
   },
 }
 export const Default: StoryFn = () => <AddEntrepriseDocumentPopup close={close} entrepriseId={newEntrepriseId('entrepriseId')} apiClient={apiClient} />

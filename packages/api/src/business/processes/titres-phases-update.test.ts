@@ -36,6 +36,7 @@ describe("phases d'un titre", () => {
         id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         demarches: [
           {
@@ -81,6 +82,7 @@ describe("phases d'un titre", () => {
         id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         demarches: [
           {
@@ -127,6 +129,7 @@ describe("phases d'un titre", () => {
         id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'test',
         typeId: 'cxh',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         demarches: [
           {
@@ -156,6 +159,7 @@ describe("phases d'un titre", () => {
         nom: 'nom',
         propsTitreEtapesIds: {},
         typeId: 'cxh',
+        titreStatutId: 'ind',
         demarches: [
           {
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
@@ -201,6 +205,7 @@ describe("phases d'un titre", () => {
         id: newTitreId('h-cx-courdemanges-1988'),
         nom: 'nom',
         typeId: 'cxh',
+        titreStatutId: 'ind',
         propsTitreEtapesIds: {},
         demarches: [
           {

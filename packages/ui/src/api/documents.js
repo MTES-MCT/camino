@@ -3,7 +3,7 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentDocument } from './fragments/documents'
 import { fragmentDocumentType } from './fragments/metas'
 
-const documentMetas = apiGraphQLFetch(
+export const documentMetas = apiGraphQLFetch(
   gql`
     query MetasDocument($repertoire: ID, $typeId: ID) {
       documentsTypes(repertoire: $repertoire, typeId: $typeId) {
@@ -15,7 +15,7 @@ const documentMetas = apiGraphQLFetch(
   `
 )
 
-const documentCreer = apiGraphQLFetch(gql`
+export const documentCreer = apiGraphQLFetch(gql`
   mutation DocumentCreer($document: InputDocumentCreation!) {
     documentCreer(document: $document) {
       ...document
@@ -25,7 +25,7 @@ const documentCreer = apiGraphQLFetch(gql`
   ${fragmentDocument}
 `)
 
-const documentModifier = apiGraphQLFetch(gql`
+export const documentModifier = apiGraphQLFetch(gql`
   mutation DocumentModifier($document: InputDocumentModification!) {
     documentModifier(document: $document) {
       ...document
@@ -35,10 +35,8 @@ const documentModifier = apiGraphQLFetch(gql`
   ${fragmentDocument}
 `)
 
-const documentSupprimer = apiGraphQLFetch(gql`
+export const documentSupprimer = apiGraphQLFetch(gql`
   mutation DocumentSupprimer($id: ID!) {
     documentSupprimer(id: $id)
   }
 `)
-
-export { documentMetas, documentCreer, documentModifier, documentSupprimer }

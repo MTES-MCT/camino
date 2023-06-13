@@ -26,7 +26,6 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
         fichierNouveau: null,
         fichierTypeId: null,
         date: getCurrent(),
-        modification: true,
         suppression: false,
       })
     }

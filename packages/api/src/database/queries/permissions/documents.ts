@@ -1,12 +1,11 @@
 import { QueryBuilder, raw } from 'objection'
 
 import Documents from '../../models/documents.js'
-import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs.js'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types.js'
 import { isBureauDEtudes, isDefault, isEntreprise, User } from 'camino-common/src/roles.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 
-const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]>, user: User) => {
+export const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]>, user: User) => {
   q.select('documents.*')
 
   q.joinRelated('type')
@@ -25,7 +24,6 @@ const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]
 
       // autorise à voir les docs temporaires
       b.orWhere(c => {
-        c.whereNull('documents.entrepriseId')
         c.whereNull('documents.titreEtapeId')
         c.whereNull('documents.titreActiviteId')
       })
@@ -48,24 +46,15 @@ const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]
               e.orWhereIn('activite:titre:titulaires.id', entreprisesIds)
               e.orWhereIn('activite:titre:amodiataires.id', entreprisesIds)
             })
-
-            d.orWhereIn('documents.entrepriseId', entreprisesIds)
           })
         })
       }
     })
   }
 
-  q.select(raw('(not exists(?))', [titreEtapeJustificatifsQuery]).as('modification'))
-  q.select(
-    raw('(not exists(?) and not exists(?) and not exists(?))', [titreEtapeJustificatifsQuery, documentTypeActiviteTypeQuery('documents.typeId', 'documents.titreActiviteId'), etapeStatutNotAco()]).as(
-      'suppression'
-    )
-  )
+  q.select(raw('(not exists(?) and not exists(?))', [documentTypeActiviteTypeQuery('documents.typeId', 'documents.titreActiviteId'), etapeStatutNotAco()]).as('suppression'))
 }
 const etapeStatutNotAco = () => TitresEtapes.query().whereRaw('?? = ??', ['id', 'documents.titreEtapeId']).andWhereRaw('?? != ?', ['titresEtapes.statutId', 'aco'])
-
-const titreEtapeJustificatifsQuery = TitresEtapesJustificatifs.query().alias('documentsModification').whereRaw('?? = ??', ['documentsModification.documentId', 'documents.id'])
 
 const documentTypeActiviteTypeQuery = (typeIdAlias: string, activiteIdAlias: string) =>
   ActivitesTypesDocumentsTypes.query()
@@ -74,17 +63,3 @@ const documentTypeActiviteTypeQuery = (typeIdAlias: string, activiteIdAlias: str
     .andWhereRaw('?? = ??', ['documentTypeId', typeIdAlias])
     .andWhereRaw('?? is not true', ['optionnel'])
     .andWhereRaw('?? not in (?, ?)', ['titresActivites.activiteStatutId', 'abs', 'enc'])
-
-const etapeTypeDocumentTypeUsedCheck = async (etapeTypeId: string, documentTypeId: string) => {
-  const res = await Documents.query().joinRelated('etape').where('etape.typeId', etapeTypeId).andWhere('documents.typeId', documentTypeId).resultSize()
-
-  return res !== 0
-}
-
-const etapeTypeJustificatifTypeUsedCheck = async (etapeTypeId: string, documentTypeId: string) => {
-  const res = await TitresEtapesJustificatifs.query().joinRelated('etape').joinRelated('document').where('etape.typeId', etapeTypeId).andWhere('document.typeId', documentTypeId).resultSize()
-
-  return res !== 0
-}
-
-export { documentsQueryModify, etapeTypeDocumentTypeUsedCheck, etapeTypeJustificatifTypeUsedCheck }

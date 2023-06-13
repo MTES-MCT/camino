@@ -1,4 +1,4 @@
-import { ITitreEtape, ITitreDemarche, ITitre, IDocument, IContenu, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitre, IDocument, ITitreEntreprise } from '../../types.js'
 
 import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
@@ -7,18 +7,11 @@ import { propsNumbersCheck } from './utils/props-numbers-check.js'
 import { contenuNumbersCheck } from './utils/contenu-numbers-check.js'
 import { propsDatesCheck } from './utils/props-dates-check.js'
 import { contenuDatesCheck } from './utils/contenu-dates-check.js'
-import { documentsTypesValidate } from './documents-types-validate.js'
-import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape.js'
-import { objectClone } from '../../tools/index.js'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DocumentType, DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, isEtapeComplete } from 'camino-common/src/permissions/titres-etapes.js'
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { EntrepriseDocument } from 'camino-common/src/entreprise.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
@@ -27,9 +20,8 @@ export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
-  documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
-  justificatifs: IDocument[] | null | undefined,
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   user: User,
   titreEtapeOld?: ITitreEtape
@@ -115,7 +107,10 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, documentsTypes, documents, justificatifs, sdomZones))
+    const etapeComplete = isEtapeComplete(titreEtape, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones)
+    if (!etapeComplete.valid) {
+      errors.push(...etapeComplete.errors)
+    }
   }
 
   if (errors.length) {
@@ -123,89 +118,6 @@ export const titreEtapeUpdationValidate = (
   }
 
   return titreEtapeUpdationBusinessValidate(titreEtape, titreDemarche, titre)
-}
-
-export const titreEtapeCompleteValidate = (
-  titreEtape: ITitreEtape,
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId,
-  documentsTypes: DocumentType[],
-  documents: IDocument[] | null | undefined,
-  justificatifs: IDocument[] | null | undefined,
-  sdomZones: SDOMZoneId[] | null | undefined
-) => {
-  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
-  const errors = [] as string[]
-  // les éléments non optionnel des sections sont renseignés
-  if (sections.length) {
-    errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
-  }
-
-  // les décisions annexes sont complètes
-  if (titreEtape.decisionsAnnexesSections) {
-    errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
-  }
-
-  const dts = (objectClone(documentsTypes) || []) as DocumentType[]
-  if (sdomZones?.length) {
-    // Ajoute les documents obligatoires en fonction des zones du SDOM
-    const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
-
-    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false }))
-  }
-
-  // les fichiers obligatoires sont tous renseignés et complets
-  if (dts!.length) {
-    // ajoute des documents obligatoires pour les arm mécanisées
-    if (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm) {
-      dts.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !titreEtape.contenu?.arm.mecanise))
-    }
-    const documentsErrors = documentsTypesValidate(documents, dts)
-    if (documentsErrors.length) {
-      errors.push(...documentsErrors)
-    }
-  }
-
-  // les justificatifs obligatoires sont tous présents
-  const justificatifsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
-
-  const justificatifsTypesIds: string[] = []
-  if (justificatifs?.length) {
-    for (const justificatif of justificatifs) {
-      if (!justificatifsTypes.map(({ id }) => id).includes(justificatif!.typeId)) {
-        errors.push(`impossible de lier un justificatif de type ${justificatif!.typeId}`)
-      }
-      justificatifsTypesIds.push(justificatif!.typeId)
-    }
-  }
-  justificatifsTypes
-    .filter(({ optionnel }) => !optionnel)
-    .forEach(jt => {
-      if (!justificatifsTypesIds.includes(jt.id)) {
-        errors.push(`le justificatif « ${jt.nom} » obligatoire est manquant`)
-      }
-    })
-
-  // Si c’est une demande d’AEX ou d’ARM, certaines informations sont obligatoires
-  if (titreEtape.typeId === 'mfr' && ['arm', 'axm'].includes(titreTypeId)) {
-    // le périmètre doit être défini
-    if (!titreEtape.points) {
-      errors.push('le périmètre doit être renseigné')
-    } else if (titreEtape.points.length < 4) {
-      errors.push('le périmètre doit comporter au moins 4 points')
-    }
-
-    // il doit exister au moins une substance
-    if (!titreEtape.substances || !titreEtape.substances.length || !titreEtape.substances.some(substanceId => !!substanceId)) {
-      errors.push('au moins une substance doit être renseignée')
-    }
-  }
-
-  if (!titreEtape.duree && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
-    errors.push('la durée doit être renseignée')
-  }
-
-  return errors
 }
 
 const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, titre: ITitre) => {
@@ -224,21 +136,6 @@ const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarc
       errors.push(error)
     }
   }
-
-  return errors
-}
-
-const contenuCompleteValidate = (sections: DeepReadonly<Section[]>, contenu: IContenu | null | undefined): string[] => {
-  const errors: string[] = []
-  sections.forEach(s =>
-    s.elements?.forEach(e => {
-      if (!e.optionnel && !['radio', 'checkbox'].includes(e.type)) {
-        if (!contenu || !contenu[s.id] || contenu[s.id][e.id] === undefined || contenu[s.id][e.id] === null || contenu[s.id][e.id] === '') {
-          errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
-        }
-      }
-    })
-  )
 
   return errors
 }

@@ -20,7 +20,6 @@ describe('documents', () => {
         fichierNouveau: null,
         fichierTypeId: null,
         id: 'aaa',
-        modification: true,
         publicLecture: false,
         suppression: false,
         type: {

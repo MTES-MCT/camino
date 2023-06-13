@@ -1,13 +1,15 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canCreateOrEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
+import { IsEtapeCompleteEtape, canCreateOrEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
+import { SubstanceLegaleId } from '../static/substancesLegales.js'
+import { toCaminoDate } from '../date.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -213,4 +215,153 @@ test.each<{
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
   expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' }, 'modification')).toBe(canEdit)
+})
+
+const etapeComplete: IsEtapeCompleteEtape = {
+  typeId: 'mfr',
+  substances: ['auru'],
+  points: [{}, {}, {}, {}],
+  duree: 4,
+}
+
+const armDocuments: Parameters<typeof isEtapeComplete>[3] = [
+  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'dom', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'for', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'jpa', date: toCaminoDate('2023-01-01'), fichier: true },
+]
+const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
+  { entreprise_document_type_id: 'cur' },
+  { entreprise_document_type_id: 'jid' },
+  { entreprise_document_type_id: 'jct' },
+  { entreprise_document_type_id: 'kbi' },
+  { entreprise_document_type_id: 'jcf' },
+  { entreprise_document_type_id: 'atf' },
+]
+
+const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
+  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'lem', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'idm', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'mes', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'met', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'sch', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'prg', date: toCaminoDate('2023-01-01'), fichier: true },
+]
+
+const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
+  { entreprise_document_type_id: 'lis' },
+  { entreprise_document_type_id: 'jac' },
+  { entreprise_document_type_id: 'bil' },
+  { entreprise_document_type_id: 'ref' },
+  { entreprise_document_type_id: 'deb' },
+  { entreprise_document_type_id: 'atf' },
+  { entreprise_document_type_id: 'jid' },
+  { entreprise_document_type_id: 'jct' },
+]
+
+test('teste la complétude d’une demande d’ARM', () => {
+  expect(isEtapeComplete(etapeComplete, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])).toStrictEqual({ valid: true })
+})
+
+test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+  [[], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
+  [[], 'mfr', 'axm', armDocuments, armEntrepriseDocuments, true],
+  [[], 'rde', 'arm', armDocuments, [], false],
+  [[], 'mfr', 'prm', armDocuments, armEntrepriseDocuments, false],
+  [['auru'], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
+  [['auru'], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
+  [[], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
+])('teste la complétude des substances', (substances, etapeType, titreType, testDocuments, entrepriseDocuments, error) => {
+  const titreEtape = {
+    ...etapeComplete,
+    substances,
+    typeId: etapeType,
+  }
+
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', testDocuments, entrepriseDocuments, [])
+
+  const errorLabel = 'au moins une substance doit être renseignée'
+
+  if (error) {
+    if (!result.valid) {
+      expect(result.errors).toContain(errorLabel)
+    } else {
+      throw new Error('')
+    }
+  } else {
+    expect(result).toStrictEqual({ valid: true })
+  }
+})
+
+test.each<[unknown[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+  [[], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
+  [[], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
+  [[], 'rde', 'arm', armDocuments, [], false],
+  [[], 'mfr', 'prm', [], [], false],
+  [[{}, {}, {}, {}], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
+  [[{}, {}, {}, {}], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
+  [[{}, {}, {}], 'mfr', 'axm', armDocuments, armEntrepriseDocuments, true],
+])('teste la complétude du périmètre', (points, etapeType, titreType, documents, entrepriseDocuments, error) => {
+  const titreEtape = {
+    ...etapeComplete,
+    points,
+    typeId: etapeType,
+  }
+
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [])
+
+  const errorLabel = 'le périmètre doit comporter au moins 4 points'
+  if (error) {
+    if (!result.valid) {
+      expect(result.errors).toContain(errorLabel)
+    } else {
+      throw new Error('')
+    }
+  } else {
+    expect(result).toStrictEqual({ valid: true })
+  }
+})
+
+test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+  const errors = isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: true } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])
+  expect(errors).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document \\"dep\\" est obligatoire",
+        "le document \\"doe\\" est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+})
+
+test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+  [undefined, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
+  [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
+  [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
+  [0, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
+  [0, 'mfr', 'prm', armDocuments, armEntrepriseDocuments, false],
+  [0, 'rde', 'arm', [], [], false],
+  [3, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
+  [3, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
+])('teste la complétude de la durée', (duree, etapeType, titreType, documents, entreprisedocuments, error) => {
+  const titreEtape = {
+    ...etapeComplete,
+    duree,
+    typeId: etapeType,
+  }
+
+  const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entreprisedocuments, [])
+
+  const errorLabel = 'la durée doit être renseignée'
+  if (error) {
+    if (!result.valid) {
+      expect(result.errors).toContain(errorLabel)
+    } else {
+      throw new Error('')
+    }
+  } else {
+    expect(result).toStrictEqual({ valid: true })
+  }
 })

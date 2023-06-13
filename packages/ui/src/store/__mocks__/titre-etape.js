@@ -62,7 +62,6 @@ const titreEtapeEdited = {
   },
   substances: [],
   documents: [],
-  justificatifs: [],
 }
 
 const titreEtapeCreation = {

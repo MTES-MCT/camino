@@ -1,11 +1,11 @@
 import { IContenu, IDocument } from '../../types.js'
 
-import { documentsTypesValidate } from './documents-types-validate.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { isDocumentsComplete } from 'camino-common/src/permissions/documents.js'
 
-export const titreActiviteCompleteCheck = (sections: DeepReadonly<Section[]>, contenu?: IContenu | null, documents?: IDocument[] | null, documentsTypes?: DocumentType[]) => {
+export const titreActiviteCompleteCheck = (sections: DeepReadonly<Section[]>, contenu?: IContenu | null, documents?: IDocument[] | null, documentsTypes?: DocumentType[]): boolean => {
   const activiteComplete = sections.every(s =>
     s.elements?.every(
       e =>
@@ -18,7 +18,7 @@ export const titreActiviteCompleteCheck = (sections: DeepReadonly<Section[]>, co
     return false
   }
 
-  const documentsErrors = documentsTypesValidate(documents, documentsTypes)
+  const documentsCheck = isDocumentsComplete(documents ?? [], documentsTypes)
 
-  return !documentsErrors.length
+  return documentsCheck.valid
 }

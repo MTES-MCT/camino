@@ -2,9 +2,7 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
-import { fragmentEtapeMetasEntreprises } from './fragments/entreprises'
-
-const titreEtapeMetas = apiGraphQLFetch(
+export const titreEtapeMetas = apiGraphQLFetch(
   gql`
     query TitreEtapeMetas($titreDemarcheId: ID!, $id: ID) {
       demarche(id: $titreDemarcheId) {
@@ -21,16 +19,15 @@ const titreEtapeMetas = apiGraphQLFetch(
 
       entreprises(archive: false, etapeId: $id) {
         elements {
-          ...etapeMetasEntreprises
+          id
+          nom
         }
       }
     }
-
-    ${fragmentEtapeMetasEntreprises}
   `
 )
 
-const etape = apiGraphQLFetch(gql`
+export const etape = apiGraphQLFetch(gql`
   query Etape($id: ID!) {
     etape(id: $id) {
       ...etape
@@ -40,7 +37,7 @@ const etape = apiGraphQLFetch(gql`
   ${fragmentEtape}
 `)
 
-const etapeHeritage = apiGraphQLFetch(gql`
+export const etapeHeritage = apiGraphQLFetch(gql`
   query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!) {
     etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId) {
       ...etapeHeritage
@@ -50,7 +47,7 @@ const etapeHeritage = apiGraphQLFetch(gql`
   ${fragmentEtapeHeritage}
 `)
 
-const etapeCreer = apiGraphQLFetch(gql`
+export const etapeCreer = apiGraphQLFetch(gql`
   mutation EtapeCreer($etape: InputEtapeCreation!) {
     etapeCreer(etape: $etape) {
       id
@@ -58,7 +55,7 @@ const etapeCreer = apiGraphQLFetch(gql`
   }
 `)
 
-const etapeModifier = apiGraphQLFetch(gql`
+export const etapeModifier = apiGraphQLFetch(gql`
   mutation EtapeModifier($etape: InputEtapeModification!) {
     etapeModifier(etape: $etape) {
       id
@@ -66,7 +63,7 @@ const etapeModifier = apiGraphQLFetch(gql`
   }
 `)
 
-const etapeSupprimer = apiGraphQLFetch(gql`
+export const etapeSupprimer = apiGraphQLFetch(gql`
   mutation EtapeSupprimer($id: ID!) {
     etapeSupprimer(id: $id) {
       slug
@@ -74,12 +71,10 @@ const etapeSupprimer = apiGraphQLFetch(gql`
   }
 `)
 
-const etapeDeposer = apiGraphQLFetch(gql`
+export const etapeDeposer = apiGraphQLFetch(gql`
   mutation EtapeDeposer($id: ID!) {
     etapeDeposer(id: $id) {
       slug
     }
   }
 `)
-
-export { etape, etapeHeritage, titreEtapeMetas, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer }

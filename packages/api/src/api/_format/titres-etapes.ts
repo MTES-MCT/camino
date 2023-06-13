@@ -5,9 +5,6 @@ import { DocumentTypeData, etapeTypeFormat } from './etapes-types.js'
 import { entrepriseFormat } from './entreprises.js'
 import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
-import { titreEtapeCompleteValidate } from '../../business/validations/titre-etape-updation-validate.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
 export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFormatFields, documentTypeData: DocumentTypeData | null = null) => {
   if (titreEtape.demarche) {
@@ -39,20 +36,6 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
   titreEtape.titulaires = titreEtape.titulaires?.map(entrepriseFormat)
 
   titreEtape.amodiataires = titreEtape.amodiataires?.map(entrepriseFormat)
-
-  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION && titreEtape.modification) {
-    const errors = titreEtapeCompleteValidate(
-      titreEtape,
-      titreEtape.demarche!.titre!.typeId,
-      titreEtape.demarche!.typeId,
-      titreEtape?.type?.documentsTypes ?? [],
-      titreEtape.documents,
-      titreEtape.justificatifs,
-      titreEtape.sdomZones
-    )
-
-    titreEtape.deposable = errors.length === 0
-  }
 
   return titreEtape
 }

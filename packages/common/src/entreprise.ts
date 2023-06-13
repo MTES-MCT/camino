@@ -102,15 +102,22 @@ export const entrepriseTypeValidator = z.object({
 
 export type EntrepriseType = z.infer<typeof entrepriseTypeValidator>
 
+export const entrepriseDocumentIdValidator = z.string().brand<'EntrepriseDocumentId'>()
+export type EntrepriseDocumentId = z.infer<typeof entrepriseDocumentIdValidator>
+
 export const entrepriseDocumentValidator = z.object({
-  id: documentIdValidator,
+  id: entrepriseDocumentIdValidator,
   description: z.string().nullable(),
   date: caminoDateValidator,
-  type_id: entrepriseDocumentTypeIdValidator,
+  entreprise_document_type_id: entrepriseDocumentTypeIdValidator,
+  entreprise_id: entrepriseIdValidator,
   can_delete_document: z.boolean(),
 })
 
 export type EntrepriseDocument = z.infer<typeof entrepriseDocumentValidator>
+
+export const etapeEntrepriseDocumentValidator = entrepriseDocumentValidator.omit({ can_delete_document: true })
+export type EtapeEntrepriseDocument = z.infer<typeof etapeEntrepriseDocumentValidator>
 
 export const newEntrepriseId = (value: string): EntrepriseId => {
   return entrepriseIdValidator.parse(value)
@@ -118,4 +125,8 @@ export const newEntrepriseId = (value: string): EntrepriseId => {
 
 export const toDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId, hash: string): DocumentId => {
   return documentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
+}
+
+export const toEntrepriseDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId, hash: string): EntrepriseDocumentId => {
+  return entrepriseDocumentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
 }

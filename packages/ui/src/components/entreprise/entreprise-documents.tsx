@@ -1,11 +1,11 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { onMounted, ref } from 'vue'
+import { FunctionalComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { EntrepriseApiClient } from './entreprise-api-client'
-import { DocumentId, EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise'
+import { DocumentId, EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { dateFormat } from 'camino-common/src/date'
-import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
+import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
 import { User } from 'camino-common/src/roles'
@@ -21,7 +21,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
 
   const addPopup = ref<boolean>(false)
   const deletePopup = ref<boolean>(false)
-  const deleteDocument = ref<{ nom: string; id: DocumentId } | null>(null)
+  const deleteDocument = ref<{ nom: string; id: EntrepriseDocumentId } | null>(null)
 
   const reloadDocuments = async () => {
     data.value = { status: 'LOADING' }
@@ -71,9 +71,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
                     {items.map(item => (
                       <tr>
                         <td>
-                          <a href={getDownloadRestRoute('/fichiers/:documentId', { documentId: item.id })} title={`Télécharger le document ${DocumentsTypes[item.type_id].nom}`} target="_blank">
-                            {DocumentsTypes[item.type_id].nom}
-                          </a>
+                          <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
                         </td>
                         <td>{dateFormat(item.date)}</td>
                         <td>{item.description}</td>
@@ -81,9 +79,9 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
                           {item.can_delete_document ? (
                             <button
                               class={['fr-btn', 'fr-icon-delete-line', 'fr-btn--secondary', 'fr-mb-0']}
-                              title={`Supprimer le document ${DocumentsTypes[item.type_id].nom}`}
+                              title={`Supprimer le document ${DocumentsTypes[item.entreprise_document_type_id].nom}`}
                               onClick={() => {
-                                deleteDocument.value = { nom: DocumentsTypes[item.type_id].nom, id: item.id }
+                                deleteDocument.value = { nom: DocumentsTypes[item.entreprise_document_type_id].nom, id: item.id }
                                 deletePopup.value = true
                               }}
                             />
@@ -132,3 +130,12 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
     </div>
   )
 })
+
+type EntrepriseDocumentLinkProps = { documentId: DocumentId | EntrepriseDocumentId; documentTypeId: DocumentTypeId }
+export const EntrepriseDocumentLink: FunctionalComponent<EntrepriseDocumentLinkProps> = (props: EntrepriseDocumentLinkProps) => {
+  return (
+    <a href={getDownloadRestRoute('/fichiers/:documentId', { documentId: props.documentId })} title={`Télécharger le document ${DocumentsTypes[props.documentTypeId].nom}`} target="_blank">
+      {DocumentsTypes[props.documentTypeId].nom}
+    </a>
+  )
+}

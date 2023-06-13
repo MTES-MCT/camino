@@ -64,21 +64,15 @@
     </Accordion>
 
     <Accordion
-      v-if="stepJustificatifs"
-      id="step-justificatifs"
-      :step="stepJustificatifs"
-      :opened="opened['justificatifs']"
-      :complete="stepJustificatifsComplete"
+      v-if="stepEntrepriseDocuments"
+      id="step-entrepriseDocuments"
+      :step="stepEntrepriseDocuments"
+      :opened="opened['entrepriseDocuments']"
+      :complete="stepEntrepriseDocumentsComplete"
       :enConstruction="enConstruction"
-      @toggle="toggle('justificatifs')"
+      @toggle="toggle('entrepriseDocuments')"
     >
-      <JustificatifsEdit
-        v-model:justificatifs="etape.justificatifs"
-        :entreprises="titulairesAndAmodiataires"
-        :apiClient="entrepriseApiClient"
-        :tde="tde"
-        :completeUpdate="justificatifsCompleteUpdate"
-      />
+      <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="entrepriseApiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
     </Accordion>
 
     <Accordion
@@ -103,7 +97,7 @@ import { FondamentalesEdit } from './fondamentales-edit'
 import { PointsEdit } from './points-edit'
 import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
-import { JustificatifsEdit } from './justificatifs-edit'
+import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { etapeApiClient } from './etape-api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -119,7 +113,7 @@ export default {
     PointsEdit,
     SectionsEdit,
     DocumentsEdit,
-    JustificatifsEdit,
+    EntrepriseDocumentsEdit,
     DateEdit,
   },
 
@@ -142,16 +136,16 @@ export default {
       perimetreComplete: false,
       sectionsComplete: false,
       documentsComplete: false,
-      justificatifsComplete: false,
+      entrepriseDocumentsComplete: false,
       decisionsAnnexesComplete: false,
-      justificatifs: false,
+      entrepriseDocuments: false,
       opened: {
         type: true,
         fondamentales: false,
         points: false,
         sections: false,
         documents: false,
-        justificatifs: false,
+        entrepriseDocuments: false,
         decisionsAnnexes: false,
       },
       help: {},
@@ -214,7 +208,7 @@ export default {
         this.stepPerimetreComplete &&
         this.stepSectionsComplete &&
         this.stepDocumentsComplete &&
-        this.stepJustificatifsComplete &&
+        this.stepEntrepriseDocumentsComplete &&
         this.stepDecisionsAnnexesComplete
       )
     },
@@ -235,8 +229,8 @@ export default {
       return !this.stepDocuments || this.documentsComplete
     },
 
-    stepJustificatifsComplete() {
-      return !this.stepJustificatifs || this.justificatifsComplete
+    stepEntrepriseDocumentsComplete() {
+      return !this.stepEntrepriseDocuments || this.entrepriseDocumentsComplete
     },
 
     stepDecisionsAnnexesComplete() {
@@ -275,10 +269,10 @@ export default {
         })
       }
 
-      const hasJustificatifs = this.etapeType?.id ? getEntrepriseDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id).length > 0 : false
+      const hasEntrepriseDocuments = this.etapeType?.id ? getEntrepriseDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id).length > 0 : false
 
-      if (this.heritageLoaded && hasJustificatifs) {
-        steps.push({ id: 'justificatifs', name: 'Justificatifs d’entreprise' })
+      if (this.heritageLoaded && hasEntrepriseDocuments) {
+        steps.push({ id: 'entrepriseDocuments', name: 'Documents d’entreprise' })
       }
 
       if (this.etape.decisionsAnnexesSections) {
@@ -315,8 +309,8 @@ export default {
       return this.steps.find(s => s.id === 'documents')
     },
 
-    stepJustificatifs() {
-      return this.steps.find(s => s.id === 'justificatifs')
+    stepEntrepriseDocuments() {
+      return this.steps.find(s => s.id === 'entrepriseDocuments')
     },
 
     stepDecisionsAnnexes() {
@@ -358,8 +352,8 @@ export default {
           'Pour la Guyane, le système géographique de référence est le RGFG95 / UTM zone 22N (2972). Pour le renseigner, cliquez sur « ajouter un système géographique » et choisissez le système RGFG95. Vous pouvez ensuite cliquer sur « ajouter un point », renseigner le nom, (le décrire si besoin) et renseigner les coordonnées (l’abscisse « X » en coordonnées cartésiennes correspond à la longitude en coordonnées géographiques et l’ordonnée « Y » correspond à une  latitude ). Vous devez reproduire cette étape pour tous les sommets du ou des périmètres du titre. La surface du titre est calculée automatiquement d’après les sommets renseignés.',
         sections: 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)',
         documents: 'Toutes les pièces obligatoires, spécifiques à la demande, doivent être déposées dans cette rubrique en format pdf.',
-        justificatifs:
-          "Les justificatifs sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces justificatifs sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel.",
+        entrepriseDocuments:
+          "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel.",
       }
 
       this.help.axm = this.help.arm
@@ -379,8 +373,9 @@ export default {
       this.documentsComplete = complete
     },
 
-    justificatifsCompleteUpdate(complete) {
-      this.justificatifsComplete = complete
+    entrepriseDocumentsCompleteUpdate(entrepriseDocumentIds, complete) {
+      this.etape.entrepriseDocumentIds = entrepriseDocumentIds
+      this.entrepriseDocumentsComplete = complete
     },
 
     sectionsCompleteUpdate(complete) {

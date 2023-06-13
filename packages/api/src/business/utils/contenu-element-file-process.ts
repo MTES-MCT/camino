@@ -3,7 +3,7 @@ import { join } from 'path'
 
 import { IContenu, IContenuValeur, IDocumentRepertoire, ITitreEtape } from '../../types.js'
 
-import dirCreate from '../../tools/dir-create.js'
+import { dirCreate } from '../../tools/dir-create.js'
 import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
 import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
@@ -92,7 +92,7 @@ const contenuFilesPathGet = (repertoire: IDocumentRepertoire, parentId: string) 
 const contenuElementFilesCreate = async (newFiles: FileUpload[], repertoire: IDocumentRepertoire, parentId: string) => {
   if (newFiles.length) {
     const dirPath = `files/${repertoire}/${parentId}`
-    await dirCreate(join(process.cwd(), dirPath))
+    dirCreate(join(process.cwd(), dirPath))
     // on enregistre tous les nouveaux fichiers sur le disque
     for (const file of newFiles) {
       if (file) {

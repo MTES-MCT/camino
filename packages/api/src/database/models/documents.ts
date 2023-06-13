@@ -4,7 +4,6 @@ import { IDocument } from '../../types.js'
 import DocumentsTypes from './documents-types.js'
 import TitresEtapes from './titres-etapes.js'
 import TitresActivites from './titres-activites.js'
-import Entreprises from './entreprises.js'
 
 interface Document extends IDocument {}
 class Document extends Model {
@@ -20,7 +19,6 @@ class Document extends Model {
       date: { type: 'string' },
       titreEtapeId: { type: ['string', 'null'] },
       titreActiviteId: { type: ['string', 'null'] },
-      entrepriseId: { type: ['string', 'null'] },
       description: { type: ['string', 'null'] },
       fichier: { type: ['boolean', 'null'] },
       fichierTypeId: { type: ['string', 'null'] },
@@ -58,15 +56,6 @@ class Document extends Model {
       join: {
         from: 'documents.titreActiviteId',
         to: 'titresActivites.id',
-      },
-    },
-
-    entreprise: {
-      relation: Model.HasOneRelation,
-      modelClass: Entreprises,
-      join: {
-        from: 'documents.entrepriseId',
-        to: 'entreprises.id',
       },
     },
   })

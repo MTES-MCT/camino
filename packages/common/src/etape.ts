@@ -24,8 +24,9 @@ export interface EtapeEntreprise {
   operateur: boolean
 }
 
+// TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
 export interface CaminoDocument {
-  type: { id: DocumentTypeId }
+  typeId: DocumentTypeId
 }
 
 type EtapeBase = {

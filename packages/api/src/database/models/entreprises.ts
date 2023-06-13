@@ -4,7 +4,6 @@ import { IEntreprise } from '../../types.js'
 import EntreprisesEtablissements from './entreprises-etablissements.js'
 import Utilisateurs from './utilisateurs.js'
 import Titres from './titres.js'
-import Document from './documents.js'
 
 interface Entreprises extends IEntreprise {}
 
@@ -81,15 +80,6 @@ class Entreprises extends Model {
           to: 'titresAmodiataires.titreEtapeId',
         },
         to: ref('titres.propsTitreEtapesIds:amodiataires').castText(),
-      },
-    },
-
-    documents: {
-      relation: Model.HasManyRelation,
-      modelClass: Document,
-      join: {
-        from: 'entreprises.id',
-        to: 'documents.entrepriseId',
       },
     },
   })

@@ -56,6 +56,7 @@ const demarcheCreate = async () => {
     {
       nom: 'mon titre',
       typeId: 'arm',
+      titreStatutId: 'ind',
       propsTitreEtapesIds: {},
     },
     {}
@@ -295,7 +296,7 @@ describe('etapeCreer', () => {
     )
 
     expect(res.body.errors[0].message).toMatchInlineSnapshot(
-      '"impossible d’éditer la durée, le justificatif « Attestation fiscale » obligatoire est manquant, le justificatif « Curriculum vitae » obligatoire est manquant, le justificatif « Justificatif d’identité » obligatoire est manquant, le justificatif « Justificatif des capacités techniques » obligatoire est manquant, le justificatif « Kbis » obligatoire est manquant, le justificatif « Justificatif des capacités financières » obligatoire est manquant"'
+      "\"impossible d’éditer la durée, le document d'entreprise « Attestation fiscale » obligatoire est manquant, le document d'entreprise « Curriculum vitae » obligatoire est manquant, le document d'entreprise « Justificatif d’identité » obligatoire est manquant, le document d'entreprise « Justificatif des capacités techniques » obligatoire est manquant, le document d'entreprise « Kbis » obligatoire est manquant, le document d'entreprise « Justificatif des capacités financières » obligatoire est manquant\""
     )
   })
 

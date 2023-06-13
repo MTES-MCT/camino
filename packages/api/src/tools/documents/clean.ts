@@ -12,10 +12,10 @@ export const documentsClean = async (pool: Pool) => {
   console.info('suppression des documents orphelins')
   console.info()
 
-  const documents = await Document.query().whereNull('titreEtapeId').whereNull('titreActiviteId').whereNull('entrepriseId')
+  const documents = await Document.query().whereNull('titreEtapeId').whereNull('titreActiviteId')
 
   for (const document of documents) {
-    const path = await documentFilePathFind(document)
+    const path = documentFilePathFind(document)
 
     try {
       const { mtime } = fs.statSync(path)

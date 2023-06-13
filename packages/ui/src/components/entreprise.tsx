@@ -7,7 +7,7 @@ import { EntrepriseFiscalite } from './entreprise/entreprise-fiscalite'
 
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles'
+import { User } from 'camino-common/src/roles'
 import { Icon } from './_ui/icon'
 import { CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { computed, onMounted, watch, defineComponent, ref } from 'vue'
@@ -114,22 +114,8 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
     }
     return []
   })
-  const documentNew = computed(() => ({
-    entrepriseId: props.entrepriseId,
-    entreprisesLecture: false,
-    publicLecture: false,
-    fichier: null,
-    fichierNouveau: null,
-    fichierTypeId: null,
-    typeId: '',
-  }))
-
   const editPopup = ref(false)
 
-  const route = computed(() => ({
-    id: props.entrepriseId,
-    name: 'entreprise',
-  }))
   const fiscaliteVisible = computed<boolean>(() => {
     if (entreprise.value.status === 'LOADED') {
       return fiscaliteVisibleFunc(props.user, props.entrepriseId, [
@@ -139,10 +125,6 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
     }
     return false
   })
-
-  const canDeleteDocument = (entreprise: EntrepriseType, user: User): boolean => {
-    return canEditEntreprise(user, entreprise.id) && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user))
-  }
 
   const refreshEntreprise = async () => {
     try {

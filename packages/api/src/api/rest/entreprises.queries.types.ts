@@ -2,16 +2,18 @@
 
 /** 'GetEntrepriseDocumentsInternal' parameters type */
 export interface IGetEntrepriseDocumentsInternalParams {
-  entrepriseId?: string | null | void;
+  entrepriseDocumentIds: readonly (string | null | void)[];
+  entrepriseIds: readonly (string | null | void)[];
 }
 
 /** 'GetEntrepriseDocumentsInternal' return type */
 export interface IGetEntrepriseDocumentsInternalResult {
   can_delete_document: boolean | null;
   date: string;
-  description: string;
+  description: string | null;
+  entreprise_document_type_id: string;
+  entreprise_id: string | null;
   id: string;
-  type_id: string;
 }
 
 /** 'GetEntrepriseDocumentsInternal' query type */
@@ -20,28 +22,24 @@ export interface IGetEntrepriseDocumentsInternalQuery {
   result: IGetEntrepriseDocumentsInternalResult;
 }
 
-/** 'InsertEntrepriseDocumentInternal' parameters type */
-export interface IInsertEntrepriseDocumentInternalParams {
+/** 'InsertEntrepriseDocument' parameters type */
+export interface IInsertEntrepriseDocumentParams {
   date?: string | null | void;
   description?: string | null | void;
+  entreprise_document_type_id?: string | null | void;
   entreprise_id?: string | null | void;
-  entreprises_lecture?: boolean | null | void;
-  fichier?: boolean | null | void;
-  fichier_type_id?: string | null | void;
   id?: string | null | void;
-  public_lecture?: boolean | null | void;
-  type_id?: string | null | void;
 }
 
-/** 'InsertEntrepriseDocumentInternal' return type */
-export interface IInsertEntrepriseDocumentInternalResult {
+/** 'InsertEntrepriseDocument' return type */
+export interface IInsertEntrepriseDocumentResult {
   id: string;
 }
 
-/** 'InsertEntrepriseDocumentInternal' query type */
-export interface IInsertEntrepriseDocumentInternalQuery {
-  params: IInsertEntrepriseDocumentInternalParams;
-  result: IInsertEntrepriseDocumentInternalResult;
+/** 'InsertEntrepriseDocument' query type */
+export interface IInsertEntrepriseDocumentQuery {
+  params: IInsertEntrepriseDocumentParams;
+  result: IInsertEntrepriseDocumentResult;
 }
 
 /** 'DeleteEntrepriseDocumentQuery' parameters type */

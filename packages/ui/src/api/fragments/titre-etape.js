@@ -107,6 +107,7 @@ const fragmentTitreEtape = gql`
     dateFin
     duree
     surface
+    typeId
     type {
       id
       nom
@@ -132,9 +133,6 @@ const fragmentTitreEtape = gql`
     documents {
       ...document
     }
-    justificatifs {
-      ...document
-    }
     incertitudes {
       ...incertitudes
     }
@@ -145,8 +143,7 @@ const fragmentTitreEtape = gql`
     heritageContenu
     decisionsAnnexesSections
     decisionsAnnexesContenu
-
-    deposable
+    sdomZones
   }
 
   ${fragmentTitreEntreprises}
@@ -254,9 +251,6 @@ const fragmentEtape = gql`
     }
     substances
     documents {
-      ...document
-    }
-    justificatifs {
       ...document
     }
     incertitudes {
