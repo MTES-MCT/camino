@@ -36,7 +36,6 @@ export const titreEtapeUpdationValidate = (
 ) => {
   const errors = []
 
-
   const sections = getSections(titre.typeId, titreDemarche.typeId, titreEtape.typeId)
 
   // le champ heritageContenu est cohérent avec les sections
@@ -167,9 +166,8 @@ export const titreEtapeCompleteValidate = (
     }
   }
 
-
   // les justificatifs obligatoires sont tous présents
-const justificatifsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
+  const justificatifsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
 
   const justificatifsTypesIds: string[] = []
   if (justificatifs?.length) {

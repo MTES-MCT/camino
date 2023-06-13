@@ -79,7 +79,6 @@ const fragmentTitreTypeDemarcheTypeEtapeType = gql`
   }
 `
 
-
 const fragmentEtapeTypeDocumentType = gql`
   fragment etapeTypeDocumentType on EtapeTypeDocumentType {
     etapeTypeId
@@ -89,12 +88,4 @@ const fragmentEtapeTypeDocumentType = gql`
   }
 `
 
-export {
-  fragmentTitreTypeType,
-  fragmentTitreStatut,
-  fragmentEtapeType,
-  fragmentTitreType,
-  fragmentDocumentType,
-  fragmentTitreTypeDemarcheTypeEtapeType,
-  fragmentEtapeTypeDocumentType
-}
+export { fragmentTitreTypeType, fragmentTitreStatut, fragmentEtapeType, fragmentTitreType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType }

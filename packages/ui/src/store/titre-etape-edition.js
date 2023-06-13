@@ -111,7 +111,7 @@ const actions = {
     commit('dateSet', date)
   },
 
-  async heritageGet({ commit, state, dispatch }, { typeId }) {
+  async heritageGet({ commit, state, dispatch }, { titreTypeId, demarcheTypeId, etapeTypeId }) {
     try {
       commit('loadingAdd', 'titreEtapeHeritageGet', { root: true })
       commit('heritageLoaded', false)
@@ -119,11 +119,11 @@ const actions = {
       const data = await etapeHeritage({
         titreDemarcheId: state.metas.demarche.id,
         date: state.element.date,
-        typeId,
+        etapeTypeId,
       })
 
       const apiEtape = etapeEditFormat(data)
-      const newEtape = etapeHeritageBuild(state.element, apiEtape)
+      const newEtape = etapeHeritageBuild(state.element, apiEtape, titreTypeId, demarcheTypeId, etapeTypeId)
 
       commit('heritageSet', { etape: newEtape })
       await dispatch('documentInit', state.element.documents)
@@ -131,7 +131,7 @@ const actions = {
       const { alertes } = await perimetreInformations({
         points: [],
         demarcheId: state.metas.demarche.id,
-        etapeTypeId: typeId,
+        etapeTypeId,
       })
       commit('metasSet', {
         alertes,

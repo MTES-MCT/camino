@@ -28,10 +28,6 @@ export const tables = [
   { name: 'titres_activites', orderBy: ['id'] },
   { name: 'titres_amodiataires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_demarches', orderBy: ['id'] },
-  {
-    name: 'titres_demarches_liens',
-    orderBy: ['enfant_titre_demarche_id', 'parent_titre_demarche_id'],
-  },
   { name: 'titres_etapes', orderBy: ['id'] },
   {
     name: 'titres_etapes_justificatifs',

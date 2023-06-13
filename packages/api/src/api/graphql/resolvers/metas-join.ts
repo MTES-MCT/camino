@@ -1,10 +1,6 @@
 import { Context } from '../../../types.js'
 
-import {
-  titresTypesGet,
-  titresTypesDemarchesTypesEtapesTypesGet,
-  etapesTypesDocumentsTypesGet,
-} from '../../../database/queries/metas.js'
+import { titresTypesGet, titresTypesDemarchesTypesEtapesTypesGet, etapesTypesDocumentsTypesGet } from '../../../database/queries/metas.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
 import { isSuper } from 'camino-common/src/roles.js'
@@ -52,7 +48,6 @@ export const titresTypesDemarchesTypesEtapesTypes = async (_: never, { user }: C
   }
 }
 //
-
 
 export const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
   try {

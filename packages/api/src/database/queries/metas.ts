@@ -111,7 +111,7 @@ const documentsTypesGet = async ({ repertoire, typeId }: { repertoire?: IDocumen
       })
 
       q.select(raw('?? is true', ['et_dt.optionnel']).as('optionnel'))
-    } 
+    }
   }
 
   return q

@@ -20,7 +20,5 @@ export const seed = seeding(async ({ insert }) => {
     insert('documentsTypes', documentsTypes),
   ])
   await Promise.all([insert('titresTypes', titresTypes)])
-  await Promise.all([
-    insert('titresTypes__demarchesTypes__etapesTypes', titresTypes_demarchesTypes_etapesTypes),
-  ])
+  await Promise.all([insert('titresTypes__demarchesTypes__etapesTypes', titresTypes_demarchesTypes_etapesTypes)])
 })

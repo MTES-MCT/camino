@@ -82,8 +82,6 @@ const titresTypesDemarchesTypesEtapesTypes = apiGraphQLFetch(
   `
 )
 
-
-
 const etapesTypesDocumentsTypes = apiGraphQLFetch(
   gql`
     query EtapesTypesDocumentsTypes {
@@ -96,14 +94,4 @@ const etapesTypesDocumentsTypes = apiGraphQLFetch(
   `
 )
 
-
-
-export {
-  titresTypesTypes,
-  titresStatuts,
-  etapesTypes,
-  documentsTypes,
-  titresTypes,
-  titresTypesDemarchesTypesEtapesTypes,
-  etapesTypesDocumentsTypes
-}
+export { titresTypesTypes, titresStatuts, etapesTypes, documentsTypes, titresTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes }

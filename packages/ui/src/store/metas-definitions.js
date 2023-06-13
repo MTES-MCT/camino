@@ -1,11 +1,4 @@
-import {
-  etapesTypes,
-  documentsTypes,
-  titresTypes,
-  titresTypesDemarchesTypesEtapesTypes,
-  etapesTypesDocumentsTypes,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-} from '@/api/metas'
+import { etapesTypes, documentsTypes, titresTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
 import { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays } from '@/api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
@@ -17,6 +10,7 @@ import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { etapesTypesEntrepriseDocumentsTypesMetas, TDEEntrepriseDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -189,7 +183,10 @@ const metasIndex = {
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId'],
   },
   'titres-types--demarches-types--etapes-types--justificatifs-types': {
-    get: titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
+    get: () => {
+      console.log(TDEEntrepriseDocumentsTypesMetas)
+      return TDEEntrepriseDocumentsTypesMetas
+    },
     nom: 'Types des titres | Types des démarches | Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -243,9 +240,8 @@ const metasIndex = {
     ids: ['etapeTypeId', 'documentTypeId'],
   },
 
-  //FIXME
   'etapes-types--justificatifs-types': {
-    get: etapesTypesJustificatifsTypes,
+    get: () => etapesTypesEntrepriseDocumentsTypesMetas,
     nom: 'Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -260,8 +256,6 @@ const metasIndex = {
         type: 'entities',
         entities: 'documents-types',
       },
-      { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
-      { id: 'description', nom: 'Description', type: String, optional: true },
     ],
     ids: ['etapeTypeId', 'documentTypeId'],
   },

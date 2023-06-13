@@ -150,13 +150,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, tit
   return { contenu, heritageContenu }
 }
 
-export const titreEtapeHeritageBuild = (
-  date: string,
-  etapeType: IEtapeType,
-  titreDemarche: ITitreDemarche,
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId
-) => {
+export const titreEtapeHeritageBuild = (date: string, etapeType: IEtapeType, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => {
   let titreEtape = {} as ITitreEtape
 
   if (etapeType.fondamentale) {

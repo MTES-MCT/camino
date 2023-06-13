@@ -262,7 +262,6 @@ type TitreTypeDemarcheTypeEtapeType {
   sections: Json
 }
 
-
 type EtapeTypeDocumentType {
   etapeTypeId: ID!
   documentTypeId: ID!

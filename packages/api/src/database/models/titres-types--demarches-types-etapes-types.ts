@@ -39,7 +39,7 @@ class TitresTypesDemarchesTypesEtapesTypes extends Model {
         from: 'titresTypes__demarchesTypes__etapesTypes.demarcheTypeId',
         to: 'demarchesTypes.id',
       },
-    }
+    },
   })
 }
 

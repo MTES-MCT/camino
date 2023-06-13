@@ -1,8 +1,8 @@
-import { isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
+import { getKeys, isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes.js'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, EntrepriseDocumentTypeId, EntrepriseDocumentType, isEntrepriseDocumentTypeId } from '../documentsTypes.js'
 import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from '../etapesTypes.js'
-import { TitreTypeId, TITRES_TYPES_IDS } from '../titresTypes.js'
+import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from '../titresTypes.js'
 import { TDEType } from './index.js'
 
 const EtapesTypesEntrepriseDocumentsTypes = {
@@ -20,9 +20,18 @@ const EtapesTypesEntrepriseDocumentsTypes = {
   [ETAPES_TYPES.modificationDeLaDemande]: [DOCUMENTS_TYPES_IDS.attestationFiscale, DOCUMENTS_TYPES_IDS.justificatifDesCapacitesFinancieres],
 } as const satisfies { [key in EtapeTypeId]?: readonly EntrepriseDocumentTypeId[] }
 
-const isEtapesTypesEntrepriseDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesEntrepriseDocumentsTypes => {
+const isEtapesTypesEntrepriseDocumentsTypes = (etapeTypeId?: EtapeTypeId | string): etapeTypeId is keyof typeof EtapesTypesEntrepriseDocumentsTypes => {
   return Object.keys(EtapesTypesEntrepriseDocumentsTypes).includes(etapeTypeId)
 }
+
+export const etapesTypesEntrepriseDocumentsTypesMetas = Object.keys(EtapesTypesEntrepriseDocumentsTypes)
+  .filter(isEtapesTypesEntrepriseDocumentsTypes)
+  .flatMap(etapeTypeId => {
+    return EtapesTypesEntrepriseDocumentsTypes[etapeTypeId].map(documentTypeId => ({
+      etapeTypeId,
+      documentTypeId,
+    }))
+  })
 
 const TDEEntrepriseDocumentsTypes = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -78,6 +87,36 @@ const TDEEntrepriseDocumentsTypes = {
   }
 }
 
+type TDEEntrepriseDocumentsTypesUnleashed = {
+  [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in EntrepriseDocumentTypeId]: { optionnel: boolean; description?: string } } } }
+}
+
+export const TDEEntrepriseDocumentsTypesMetas = Object.keys(TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)
+  .filter(isTitreType)
+  .flatMap(titreTypeId => {
+    return getKeys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId] ?? {}, isDemarcheTypeId).flatMap(demarcheTypeId => {
+      return getKeys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)?.[titreTypeId]?.[demarcheTypeId] ?? {}, isEtapeTypeId).flatMap(etapeTypeId => {
+        const TDE = (TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)?.[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? null
+        if (!TDE) {
+          return []
+        }
+
+        return Object.keys(TDE)
+          .filter(isEntrepriseDocumentTypeId)
+          .map(documentTypeId => {
+            return {
+              titreTypeId,
+              demarcheTypeId,
+              etapeTypeId,
+              documentTypeId,
+              optionnel: TDE[documentTypeId].optionnel,
+              description: TDE[documentTypeId].description,
+            }
+          })
+      })
+    })
+  })
+
 export const toEntrepriseDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: EntrepriseDocumentTypeId; optionnel: boolean; description: string | null }[] => {
   return Object.entries(EtapesTypesEntrepriseDocumentsTypes).flatMap(([key, values]) => {
     if (isEtapeTypeId(key)) {
@@ -94,9 +133,6 @@ export const getEntrepriseDocuments = (titreTypeId?: TitreTypeId, demarcheTypeId
 
     if (isEtapesTypesEntrepriseDocumentsTypes(etapeTypeId)) {
       documentsIds.push(...EtapesTypesEntrepriseDocumentsTypes[etapeTypeId])
-    }
-    type TDEEntrepriseDocumentsTypesUnleashed = {
-      [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in EntrepriseDocumentTypeId]: { optionnel: boolean; description?: string } } } }
     }
 
     documentsIds.push(...Object.keys((TDEEntrepriseDocumentsTypes as TDEEntrepriseDocumentsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? {}).filter(isEntrepriseDocumentTypeId))
