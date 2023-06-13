@@ -32,7 +32,7 @@
     "packages/api/**/*.{js,ts}": ["eslint --cache --fix", "prettier --write"],
     "packages/api/**/*.{graphql,md}": "prettier --write",
     "packages/common/**/*.ts": [
-      "npm run format -w packages/common"
+      "eslint --cache --fix", "prettier --write"
     ],
     "packages/ui/src/components/_ui/iconSprite.vue": [
       "npm run -w packages/ui generate-icon-types",
