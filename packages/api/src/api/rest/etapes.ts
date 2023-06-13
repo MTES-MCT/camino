@@ -8,7 +8,7 @@ import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
-import { etapeTypeIsValidCheck } from '../_format/etapes-types.js'
+import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User } from 'camino-common/src/roles.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
@@ -94,8 +94,8 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
     const etapeTypesExistants = titreDemarche.etapes?.map(({ typeId }) => typeId) ?? []
     etapesTypesTDE = etapesTypesTDE
-      .filter(typeId => !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
-      .filter(etapeTypeId => etapeTypeIsValidCheck(etapeTypeId, date, titre, titreDemarche.type!, titreDemarche.id, titreDemarche.etapes, titreEtape))
+      .filter(typeId => titreEtape?.typeId === typeId || !etapeTypesExistants.includes(typeId) || !EtapesTypes[typeId].unique)
+      .filter(etapeTypeId => etapeTypeDateFinCheck(etapeTypeId, titreDemarche.etapes))
     etapesTypes.push(...etapesTypesTDE.flatMap(etapeTypeId => getEtapesStatuts(etapeTypeId).map(etapeStatut => ({ etapeTypeId, etapeStatutId: etapeStatut.id, mainStep: false }))))
   }
 

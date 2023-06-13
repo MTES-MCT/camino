@@ -1,6 +1,5 @@
-import { IDemarcheType, ITitre, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
-import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -8,8 +7,6 @@ import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { CaminoDate } from 'camino-common/src/date.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
 
 export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
@@ -62,7 +59,7 @@ export const etapeTypeFormat = (etape: ITitreEtape, justificatifsTypesSpecifique
   return etapeType
 }
 
-const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null) => {
+export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null): boolean => {
   const etapeTypeDateFin = EtapesTypes[etapeTypeId].dateFin
   if (!etapeTypeDateFin || !titreEtapes) return true
 
@@ -75,27 +72,4 @@ const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEta
   // Exemple: Si on a pas de date de demande, on ne peut pas proposer la « décision de l’ONF »
   // car cette étape est proposable que pour les demandes antérieures au 01/01/2020
   return dateDemande ? dateDemande < etapeTypeDateFin : false
-}
-
-export const etapeTypeIsValidCheck = (
-  etapeTypeId: EtapeTypeId,
-  date: CaminoDate,
-  titre: ITitre,
-  demarcheType: IDemarcheType,
-  demarcheId: DemarcheId,
-  titreDemarcheEtapes?: ITitreEtape[] | null,
-  titreEtape?: ITitreEtape
-) => {
-  const isDateFinValid = etapeTypeDateFinCheck(etapeTypeId, titreDemarcheEtapes)
-
-  if (!isDateFinValid) return false
-
-  if (!titreEtape) {
-    titreEtape = {} as ITitreEtape
-  }
-
-  titreEtape.typeId = etapeTypeId
-  titreEtape.date = date
-
-  return !titreDemarcheUpdatedEtatValidate(demarcheType, titre, titreEtape, demarcheId, titreDemarcheEtapes).length
 }
