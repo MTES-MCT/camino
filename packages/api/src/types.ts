@@ -277,19 +277,6 @@ interface ITitreEntreprise extends IEntreprise {
   operateur?: boolean
 }
 
-interface IEtapeTypeDocumentType {
-  etapeTypeId: string
-  documentTypeId: string
-  optionnel?: boolean
-}
-
-interface IEtapeTypeJustificatifType extends IEtapeTypeDocumentType {}
-
-interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType extends IEtapeTypeDocumentType {
-  titreTypeId: string
-  demarcheTypeId: string
-}
-
 interface IEtapeType {
   id: EtapeTypeId
   nom: string
@@ -302,7 +289,6 @@ interface IEtapeType {
   demarcheTypeId?: string | null
   unique?: boolean | null
   documentsTypes?: DocumentType[]
-  justificatifsTypes?: DocumentType[]
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
 }
@@ -433,8 +419,6 @@ interface ITitreDemarche {
   titreType?: ITitreType | null
   demarcheDateDebut?: CaminoDate | null
   demarcheDateFin?: CaminoDate | null
-  parents?: ITitreDemarche[] | null
-  enfants?: ITitreDemarche[] | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
   modification?: boolean | null
@@ -481,7 +465,6 @@ interface ITitreEtape {
   documents?: IDocument[] | null
   modification?: boolean | null
   documentIds?: string[] | null
-  justificatifsTypesSpecifiques?: DocumentType[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: CaminoDate | null
@@ -582,7 +565,6 @@ interface ITitreTypeDemarcheTypeEtapeType {
   ordre: number
   etapeType?: IEtapeType
   documentsTypes?: DocumentType[] | null
-  justificatifsTypes?: DocumentType[] | null
 }
 
 interface IUtilisateur {
@@ -693,7 +675,6 @@ export {
   IGeoJsonProperties,
   IGeometry,
   IActiviteTypeTitreType,
-  IEtapeTypeJustificatifType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitre,
@@ -709,7 +690,6 @@ export {
   ITitreType,
   ITitreTypeType,
   ITitreTypeDemarcheTypeEtapeType,
-  ITitreTypeDemarcheTypeEtapeTypeJustificatifType,
   ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,

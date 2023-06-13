@@ -1,12 +1,4 @@
-import {
-  etapesTypes,
-  documentsTypes,
-  titresTypes,
-  titresTypesDemarchesTypesEtapesTypes,
-  etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-} from '@/api/metas'
+import { etapesTypes, documentsTypes, titresTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
 import { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays } from '@/api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
@@ -18,6 +10,11 @@ import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { titresTypesDemarcheTypesMetas } from 'camino-common/src/static/titresTypesDemarchesTypes'
+import { etapesTypesEntrepriseDocumentsTypesMetas, TDEEntrepriseDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
+import { TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { etapesTypesEtapesStatutsMetas } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -80,6 +77,61 @@ const metasIndex = {
       { id: 'publicLecture', nom: 'Public', type: Boolean, optional: true },
     ],
     ids: ['titreTypeId', 'titreStatutId'],
+  },
+  'titres-types--demarches-types': {
+    get: () => titresTypesDemarcheTypesMetas,
+    nom: 'Types des titres | Types des démarches',
+    colonnes: [
+      {
+        id: 'titreTypeId',
+        nom: 'Type de titre',
+        type: 'entities',
+        entities: 'titres-types',
+      },
+      {
+        id: 'demarcheTypeId',
+        nom: 'Type de démarche',
+        type: 'entities',
+        entities: 'demarches-types',
+      },
+    ],
+    ids: ['titreTypeId', 'demarcheTypeId'],
+  },
+  'etapes-statuts': {
+    get: () => Object.values(EtapesStatuts),
+    labelGet,
+    nom: 'Statuts des étapes',
+    colonnes: [
+      { id: 'id', nom: 'Id' },
+      { id: 'nom', nom: 'Nom', type: String },
+      { id: 'description', nom: 'Description', type: String, optional: true },
+      {
+        id: 'couleur',
+        nom: 'Couleur',
+        type: Array,
+        elements: ['warning', 'neutral', 'success', 'error'],
+      },
+    ],
+  },
+  'etapes-types--etapes-statuts': {
+    get: () => etapesTypesEtapesStatutsMetas,
+    nom: 'Types des étapes | Statuts des étapes',
+    colonnes: [
+      {
+        id: 'etapeTypeId',
+        nom: "Type d'étape",
+        type: 'entities',
+        entities: 'etapes-types',
+      },
+      {
+        id: 'etapeStatutId',
+        nom: "Statut d'étape",
+        type: 'entities',
+        entities: 'etapes-statuts',
+      },
+      { id: 'ordre', nom: 'Ordre', type: Number },
+    ],
+    ids: ['etapeTypeId', 'etapeStatutId'],
   },
   'demarches-types': {
     get: () => sortedDemarchesTypes,
@@ -189,8 +241,41 @@ const metasIndex = {
     ],
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId'],
   },
+  'titres-types--demarches-types--etapes-types--documents-types': {
+    get: () => TDEDocumentsTypesMetas,
+    nom: 'Types des titres | Types des démarches | Types des étapes | Types des documents',
+    colonnes: [
+      {
+        id: 'titreTypeId',
+        nom: 'Type de titre',
+        type: 'entities',
+        entities: 'titres-types',
+      },
+      {
+        id: 'demarcheTypeId',
+        nom: 'Type de démarche',
+        type: 'entities',
+        entities: 'demarches-types',
+      },
+      {
+        id: 'etapeTypeId',
+        nom: "Type d'étape",
+        type: 'entities',
+        entities: 'etapes-types',
+      },
+      {
+        id: 'documentTypeId',
+        nom: 'Type de document',
+        type: 'entities',
+        entities: 'documents-types',
+      },
+      { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
+      { id: 'description', nom: 'Description', type: String, optional: true },
+    ],
+    ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'],
+  },
   'titres-types--demarches-types--etapes-types--justificatifs-types': {
-    get: titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
+    get: () => TDEEntrepriseDocumentsTypesMetas,
     nom: 'Types des titres | Types des démarches | Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -243,8 +328,9 @@ const metasIndex = {
     ],
     ids: ['etapeTypeId', 'documentTypeId'],
   },
+
   'etapes-types--justificatifs-types': {
-    get: etapesTypesJustificatifsTypes,
+    get: () => etapesTypesEntrepriseDocumentsTypesMetas,
     nom: 'Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -259,8 +345,6 @@ const metasIndex = {
         type: 'entities',
         entities: 'documents-types',
       },
-      { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
-      { id: 'description', nom: 'Description', type: String, optional: true },
     ],
     ids: ['etapeTypeId', 'documentTypeId'],
   },

@@ -64,9 +64,6 @@ const fragmentEtapeType = gql`
     documentsTypes {
       ...documentType
     }
-    justificatifsTypes {
-      ...documentType
-    }
   }
 
   ${fragmentDocumentType}
@@ -82,17 +79,6 @@ const fragmentTitreTypeDemarcheTypeEtapeType = gql`
   }
 `
 
-const fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType = gql`
-  fragment titreTypeDemarcheTypeEtapeTypeDocumentType on TitreTypeDemarcheTypeEtapeTypeDocumentType {
-    titreTypeId
-    demarcheTypeId
-    etapeTypeId
-    documentTypeId
-    optionnel
-    description
-  }
-`
-
 const fragmentEtapeTypeDocumentType = gql`
   fragment etapeTypeDocumentType on EtapeTypeDocumentType {
     etapeTypeId
@@ -102,23 +88,4 @@ const fragmentEtapeTypeDocumentType = gql`
   }
 `
 
-const fragmentEtapeTypeJustificatifType = gql`
-  fragment etapeTypeJustificatifType on EtapeTypeJustificatifType {
-    etapeTypeId
-    documentTypeId
-    optionnel
-    description
-  }
-`
-
-export {
-  fragmentTitreTypeType,
-  fragmentTitreStatut,
-  fragmentEtapeType,
-  fragmentTitreType,
-  fragmentDocumentType,
-  fragmentTitreTypeDemarcheTypeEtapeType,
-  fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
-  fragmentEtapeTypeDocumentType,
-  fragmentEtapeTypeJustificatifType,
-}
+export { fragmentTitreTypeType, fragmentTitreStatut, fragmentEtapeType, fragmentTitreType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType }

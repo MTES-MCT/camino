@@ -9,7 +9,7 @@ import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
 import { SDOMZoneIds, SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { DocumentTypeId, DocumentType, DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes.js'
+import { DocumentTypeId, DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
@@ -150,14 +150,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, tit
   return { contenu, heritageContenu }
 }
 
-export const titreEtapeHeritageBuild = (
-  date: string,
-  etapeType: IEtapeType,
-  titreDemarche: ITitreDemarche,
-  justificatifsTypesSpecifiques: DocumentType[],
-  titreTypeId: TitreTypeId,
-  demarcheTypeId: DemarcheTypeId
-) => {
+export const titreEtapeHeritageBuild = (date: string, etapeType: IEtapeType, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => {
   let titreEtape = {} as ITitreEtape
 
   if (etapeType.fondamentale) {
@@ -176,7 +169,6 @@ export const titreEtapeHeritageBuild = (
 
   titreEtape.type = etapeType
   titreEtape.titreDemarcheId = titreDemarche.id
-  titreEtape.justificatifsTypesSpecifiques = justificatifsTypesSpecifiques
 
   return titreEtape
 }

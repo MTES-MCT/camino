@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 
 import { IEtapeType } from '../../types.js'
-import DocumentsTypes from './documents-types.js'
 
 interface EtapesTypes extends IEtapeType {}
 
@@ -25,25 +24,6 @@ class EtapesTypes extends Model {
       entreprisesLecture: { type: 'boolean' },
     },
   }
-
-  static relationMappings = () => ({
-    justificatifsTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: DocumentsTypes,
-      join: {
-        from: 'etapesTypes.id',
-        through: {
-          from: 'etapesTypes__justificatifsTypes.etapeTypeId',
-          to: 'etapesTypes__justificatifsTypes.documentTypeId',
-          extra: {
-            optionnel: 'optionnel',
-            descriptionSpecifique: 'description',
-          },
-        },
-        to: 'documentsTypes.id',
-      },
-    },
-  })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {

@@ -34,14 +34,7 @@ import {
 
 import { activitesTypes, activitesStatuts, activitesTypesTitresTypes, activitesTypesDocumentsTypes, activitesTypesPays } from './resolvers/metas-activites.js'
 
-import {
-  titresTypes,
-  titresTypesTitresStatuts,
-  titresTypesDemarchesTypesEtapesTypes,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-  etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes,
-} from './resolvers/metas-join.js'
+import { titresTypes, titresTypesTitresStatuts, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from './resolvers/metas-join.js'
 
 import { substances } from './resolvers/substances.js'
 
@@ -104,9 +97,7 @@ export default {
   departements,
   titresTypesTitresStatuts,
   titresTypesDemarchesTypesEtapesTypes,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
   etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes,
   activitesTypes,
   activitesStatuts,
   activitesTypesTitresTypes,

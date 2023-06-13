@@ -37,7 +37,7 @@ export interface DocumentTypeData {
   etapeTypeId: EtapeTypeId
 }
 
-export const etapeTypeFormat = (etape: ITitreEtape, justificatifsTypesSpecifiques: DocumentType[] | null | undefined, documentTypeData: DocumentTypeData | null = null) => {
+export const etapeTypeFormat = (etape: ITitreEtape, documentTypeData: DocumentTypeData | null = null) => {
   const etapeType = etape.type
   if (etapeType) {
     if (documentTypeData === null) {
@@ -52,8 +52,6 @@ export const etapeTypeFormat = (etape: ITitreEtape, justificatifsTypesSpecifique
     } else {
       etapeType.documentsTypes = getDocuments(documentTypeData.titreTypeId, documentTypeData.demarcheTypeId, documentTypeData.etapeTypeId)
     }
-    // on ajoute les justificatifs spécifiques
-    etapeType.justificatifsTypes = documentsTypesFormat(etapeType.justificatifsTypes, justificatifsTypesSpecifiques)
   }
 
   return etapeType

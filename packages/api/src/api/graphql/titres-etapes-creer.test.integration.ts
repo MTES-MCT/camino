@@ -5,7 +5,6 @@ import { titreCreate } from '../../database/queries/titres.js'
 import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find.js'
 import Titres from '../../database/models/titres.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types.js'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
 import { documentCreate } from '../../database/queries/documents.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
@@ -35,8 +34,6 @@ let dbPool: Pool
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
   dbPool = pool
-
-  await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
 
   const mfrTDE = (await TitresTypesDemarchesTypesEtapesTypes.query()
     .where('titreTypeId', 'arm')
@@ -297,7 +294,9 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors[0].message).toMatchInlineSnapshot(`"impossible d’éditer la durée"`)
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(
+      '"impossible d’éditer la durée, le justificatif « Attestation fiscale » obligatoire est manquant, le justificatif « Curriculum vitae » obligatoire est manquant, le justificatif « Justificatif d’identité » obligatoire est manquant, le justificatif « Justificatif des capacités techniques » obligatoire est manquant, le justificatif « Kbis » obligatoire est manquant, le justificatif « Justificatif des capacités financières » obligatoire est manquant"'
+    )
   })
 
   test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {

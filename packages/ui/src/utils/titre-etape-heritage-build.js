@@ -1,4 +1,6 @@
-const etapeHeritageBuild = (stateEtape, apiEtape) => {
+import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
+
+export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTypeId, etapeTypeId) => {
   const newEtape = {
     id: stateEtape.id,
     date: stateEtape.date,
@@ -14,9 +16,12 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
     newEtape.documents = stateEtape.documents.filter(document => documentsTypesIds?.includes(document.typeId))
   }
 
-  if (stateEtape.justificatifs) {
-    const justificatifsTypesIds = apiEtape.type.justificatifsTypes?.map(({ id }) => id)
-    newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
+  if (etapeTypeId) {
+    const justificatifs = getEntrepriseDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id)
+    if (justificatifs.length > 0) {
+      const justificatifsTypesIds = justificatifs.map(({ id }) => id)
+      newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
+    }
   }
 
   // si
@@ -92,5 +97,3 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
 
   return newEtape
 }
-
-export { etapeHeritageBuild }

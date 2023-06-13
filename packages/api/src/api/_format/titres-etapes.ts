@@ -15,7 +15,7 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
   }
 
   if (titreEtape.type) {
-    titreEtape.type = etapeTypeFormat(titreEtape, titreEtape.justificatifsTypesSpecifiques, documentTypeData)
+    titreEtape.type = etapeTypeFormat(titreEtape, documentTypeData)
   }
 
   if (!fields) return titreEtape
@@ -47,7 +47,6 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
       titreEtape.demarche!.typeId,
       titreEtape?.type?.documentsTypes ?? [],
       titreEtape.documents,
-      titreEtape.type!.justificatifsTypes!,
       titreEtape.justificatifs,
       titreEtape.sdomZones
     )

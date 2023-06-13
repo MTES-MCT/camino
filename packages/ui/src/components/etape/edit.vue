@@ -107,6 +107,7 @@ import { JustificatifsEdit } from './justificatifs-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { etapeApiClient } from './etape-api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
@@ -274,7 +275,9 @@ export default {
         })
       }
 
-      if (this.heritageLoaded && this.etape.type.justificatifsTypes?.length) {
+      const hasJustificatifs = this.etapeType?.id ? getEntrepriseDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id).length > 0 : false
+
+      if (this.heritageLoaded && hasJustificatifs) {
         steps.push({ id: 'justificatifs', name: 'Justificatifs d’entreprise' })
       }
 
@@ -424,7 +427,7 @@ export default {
           this.etape.type = {}
         }
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
-          typeId: etapeTypeId,
+          ...this.tde,
         })
       }
       // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.

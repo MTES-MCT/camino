@@ -140,11 +140,6 @@ entity "**entreprises**" {
   ""archive"": //boolean //
 }
 
-entity "**entreprises__documents_types**" {
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-}
-
 entity "**entreprises_etablissements**" {
   + ""id"": //character varying(64) [PK]//
   --
@@ -167,14 +162,6 @@ entity "**etapes_types**" {
   ""date_fin"": //character varying(10) //
   ""public_lecture"": //boolean //
   ""entreprises_lecture"": //boolean //
-}
-
-entity "**etapes_types__justificatifs_types**" {
-  + ""etape_type_id"": //character varying(3) [PK][FK]//
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""optionnel"": //boolean //
-  ""description"": //text //
 }
 
 entity "**forets_postgis**" {
@@ -292,19 +279,13 @@ entity "**titres_demarches**" {
   ""demarche_date_fin"": //character varying(10) //
 }
 
-entity "**titres_demarches_liens**" {
-  + ""enfant_titre_demarche_id"": //character varying(128) [PK][FK]//
-  + ""parent_titre_demarche_id"": //character varying(128) [PK][FK]//
-  --
-}
-
 entity "**titres_etapes**" {
   + ""id"": //character varying(128) [PK]//
   --
   *""titre_demarche_id"": //character varying(128) [FK]//
   *""type_id"": //character varying(3) [FK]//
   *""statut_id"": //character varying(3) //
-  ""ordre"": //integer //
+  *""ordre"": //integer //
   *""date"": //character varying(10) //
   ""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
@@ -381,16 +362,6 @@ entity "**titres_types__demarches_types__etapes_types**" {
   ""ordre"": //integer //
 }
 
-entity "**titres_types__demarches_types__etapes_types__justificatifs_t**" {
-  + ""titre_type_id"": //character varying(3) [PK][FK]//
-  + ""demarche_type_id"": //character varying(7) [PK][FK]//
-  + ""etape_type_id"": //character varying(3) [PK][FK]//
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""optionnel"": //boolean //
-  ""description"": //text //
-}
-
 entity "**titres_types_types**" {
   + ""id"": //character varying(2) [PK]//
   --
@@ -465,23 +436,7 @@ entity "**utilisateurs__titres**" {
 
 "**documents**"   }--  "**documents_types**"
 
-"**entreprises__documents_types**"  ||-||  "**documents_types**"
-
-"**entreprises__documents_types**"  ||-||  "**documents_types**"
-
 "**entreprises_etablissements**"   }--  "**entreprises**"
-
-"**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
-
-"**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
-
-"**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
-
-"**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
-
-"**etapes_types__justificatifs_types**"   }--  "**etapes_types**"
-
-"**etapes_types__justificatifs_types**"   }--  "**etapes_types**"
 
 "**journaux**"   }--  "**titres**"
 
@@ -512,14 +467,6 @@ entity "**utilisateurs__titres**" {
 "**titres_demarches**"   }--  "**titres**"
 
 "**titres_demarches**"   }--  "**demarches_types**"
-
-"**titres_demarches_liens**"   }--  "**titres_demarches**"
-
-"**titres_demarches_liens**"   }--  "**titres_demarches**"
-
-"**titres_demarches_liens**"   }--  "**titres_demarches**"
-
-"**titres_demarches_liens**"   }--  "**titres_demarches**"
 
 "**titres_etapes**"   }--  "**titres_demarches**"
 
@@ -564,34 +511,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
 
 "**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**documents_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**documents_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
 
 "**utilisateurs**"   }--  "**administrations**"
 

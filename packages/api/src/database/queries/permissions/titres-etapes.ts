@@ -29,26 +29,6 @@ const titreEtapeModificationQueryBuild = (user: User) => {
   return raw('false')
 }
 
-const specifiquesAdd = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>) => {
-  // TODO 2023-05-03 à supprimer mais il faut mettre tde_jystificatifs et etapes_justificatifs dans le static
-
-  //  justificatifs spécifiques
-  q.leftJoin('titresTypes__demarchesTypes__etapesTypes__justificatifsT as tdef', b => {
-    b.andOn('tdef.titreTypeId', 'demarche:titre.typeId')
-    b.andOn('tdef.demarcheTypeId', 'demarche.typeId')
-    b.andOn('tdef.etapeTypeId', 'type.id')
-  })
-  q.leftJoin('documentsTypes as dt2', 'dt2.id', 'tdef.documentTypeId')
-  q.select(
-    raw("COALESCE(json_agg(json_build_object('id', dt2.id,'nom', dt2.nom, 'optionnel', tdef.optionnel, 'description', tdef.description)) FILTER (WHERE dt2.id IS NOT NULL), '[]')").as(
-      'justificatifsTypesSpecifiques'
-    )
-  )
-  q.groupBy('titresEtapes.id')
-
-  return q
-}
-
 /**
  * Modifie la requête d'étape(s) pour prendre en compte les permissions de l'utilisateur connecté
  *
@@ -58,8 +38,6 @@ const specifiquesAdd = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtape
  */
 export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: User) => {
   q.select('titresEtapes.*').where('titresEtapes.archive', false).leftJoinRelated('[demarche.titre, type]')
-
-  q = specifiquesAdd(q)
 
   if (!isSuper(user)) {
     q.where(b => {

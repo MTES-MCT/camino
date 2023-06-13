@@ -45,12 +45,6 @@ type Demarche {
   "Étapes effectuées sur la démarche"
   etapes: [Etape]
 
-  "Démarches liées"
-  enfants: [Demarche]
-
-  "Démarches liées"
-  parents: [Demarche]
-
   modification: Boolean
   suppression: Boolean
 }

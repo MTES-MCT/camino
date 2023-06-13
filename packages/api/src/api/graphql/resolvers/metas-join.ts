@@ -1,18 +1,12 @@
 import { Context } from '../../../types.js'
 
-import {
-  titresTypesGet,
-  titresTypesDemarchesTypesEtapesTypesGet,
-  etapesTypesDocumentsTypesGet,
-  etapesTypesJustificatifsTypesGet,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet,
-} from '../../../database/queries/metas.js'
+import { titresTypesGet, titresTypesDemarchesTypesEtapesTypesGet, etapesTypesDocumentsTypesGet } from '../../../database/queries/metas.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts.js'
 
-const titresTypes = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
+export const titresTypes = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
@@ -32,13 +26,13 @@ const titresTypes = async (_: never, { user }: Context, info: GraphQLResolveInfo
 
 //
 
-const titresTypesTitresStatuts = (_: never) => {
+export const titresTypesTitresStatuts = (_: never) => {
   return titreTypesStatutsTitresPublicLecture
 }
 
 //
 
-const titresTypesDemarchesTypesEtapesTypes = async (_: never, { user }: Context) => {
+export const titresTypesDemarchesTypesEtapesTypes = async (_: never, { user }: Context) => {
   try {
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
@@ -55,23 +49,7 @@ const titresTypesDemarchesTypesEtapesTypes = async (_: never, { user }: Context)
 }
 //
 
-const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = async (_: never, { user }: Context) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = await titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet()
-
-    return titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
+export const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
   try {
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
@@ -86,21 +64,3 @@ const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
     throw e
   }
 }
-
-const etapesTypesJustificatifsTypes = async (_: never, { user }: Context) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const etapesTypesJustificatifsTypes = await etapesTypesJustificatifsTypesGet()
-
-    return etapesTypesJustificatifsTypes
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export { titresTypes, titresTypesTitresStatuts, titresTypesDemarchesTypesEtapesTypes, titresTypesDemarchesTypesEtapesTypesJustificatifsTypes, etapesTypesDocumentsTypes, etapesTypesJustificatifsTypes }

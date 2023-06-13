@@ -22,7 +22,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, null, [])
 
     const errorLabel = 'au moins une substance doit être renseignée'
 
@@ -47,7 +47,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, null, [])
 
     const errorLabel = 'le périmètre doit comporter au moins 4 points'
     if (error) {
@@ -73,7 +73,6 @@ describe('valide l’étape avant de l’enregistrer', () => {
         { id: 'aac', optionnel: true, nom: 'aac' },
       ],
       null,
-      [],
       null,
       []
     )
@@ -97,7 +96,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: etapeType,
     } as ITitreEtape
 
-    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, [], null, [])
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], null, null, [])
 
     const errorLabel = 'la durée doit être renseignée'
 
@@ -122,7 +121,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'arm',
     } as unknown as ITitre
 
-    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], userSuper)
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
 
@@ -131,7 +130,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], userSuper)
     expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
     // // AXM
@@ -145,7 +144,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       typeId: 'axm',
     } as unknown as ITitre
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], userSuper)
     expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
     expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
@@ -154,7 +153,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], userSuper)
     expect(errors).toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
   })
 })
