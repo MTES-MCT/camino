@@ -294,7 +294,9 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors[0].message).toMatchInlineSnapshot(`"impossible d’éditer la durée"`)
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(
+      '"impossible d’éditer la durée, le justificatif « Attestation fiscale » obligatoire est manquant, le justificatif « Curriculum vitae » obligatoire est manquant, le justificatif « Justificatif d’identité » obligatoire est manquant, le justificatif « Justificatif des capacités techniques » obligatoire est manquant, le justificatif « Kbis » obligatoire est manquant, le justificatif « Justificatif des capacités financières » obligatoire est manquant"'
+    )
   })
 
   test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {

@@ -76,32 +76,6 @@ class TitresDemarches extends Model {
         to: 'titresEtapes.titreDemarcheId',
       },
     },
-
-    parents: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresDemarches,
-      join: {
-        from: 'titresDemarches.id',
-        through: {
-          from: 'titresDemarchesLiens.enfantTitreDemarcheId',
-          to: 'titresDemarchesLiens.parentTitreDemarcheId',
-        },
-        to: 'titresDemarches.id',
-      },
-    },
-
-    enfants: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresDemarches,
-      join: {
-        from: 'titresDemarches.id',
-        through: {
-          from: 'titresDemarchesLiens.parentTitreDemarcheId',
-          to: 'titresDemarchesLiens.enfantTitreDemarcheId',
-        },
-        to: 'titresDemarches.id',
-      },
-    },
   })
 
   public static modifiers: Modifiers = {

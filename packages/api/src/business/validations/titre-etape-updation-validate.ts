@@ -182,7 +182,7 @@ export const titreEtapeCompleteValidate = (
     .filter(({ optionnel }) => !optionnel)
     .forEach(jt => {
       if (!justificatifsTypesIds.includes(jt.id)) {
-        errors.push(`un justificatif obligatoire est manquant`)
+        errors.push(`le justificatif « ${jt.nom} » obligatoire est manquant`)
       }
     })
 

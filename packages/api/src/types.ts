@@ -419,8 +419,6 @@ interface ITitreDemarche {
   titreType?: ITitreType | null
   demarcheDateDebut?: CaminoDate | null
   demarcheDateFin?: CaminoDate | null
-  parents?: ITitreDemarche[] | null
-  enfants?: ITitreDemarche[] | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
   modification?: boolean | null
