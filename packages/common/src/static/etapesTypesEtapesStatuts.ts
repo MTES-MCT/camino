@@ -1,5 +1,5 @@
 import { EtapesStatuts, EtapeStatut, EtapeStatutId, ETAPES_STATUTS } from './etapesStatuts.js'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './etapesTypes.js'
+import { ETAPES_TYPES, EtapeTypeId } from './etapesTypes.js'
 
 export interface EtapeTypeEtapeStatut<T extends EtapeTypeId, R extends EtapeStatutId> {
   etapeStatutId: R
