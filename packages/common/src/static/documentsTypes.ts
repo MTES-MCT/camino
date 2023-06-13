@@ -48,6 +48,7 @@ export const DOCUMENTS_TYPES_IDS = {
   arreteMinisteriel: 'arm',
   arretePrefectoral: 'arp',
   arrete: 'arr',
+
   attestationFiscale: 'atf',
   avisDeMiseEnConcurrence: 'avc',
   avenant: 'ave',
