@@ -428,6 +428,7 @@ export default {
         }
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
           ...this.tde,
+          etapeTypeId,
         })
       }
       // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.

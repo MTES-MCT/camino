@@ -49,7 +49,6 @@ export const demarchesDefinitions: DemarcheDefinition[] = [
       newDemarcheId('fWlR3sADjURm21wM2j7UZF3R'),
       newDemarcheId('eySDrrpK4KKukIw3II3nk3G1'),
       newDemarcheId('PYrSWWMeDDDYfJfgWa09LVlp'),
-      newDemarcheId('R0XYcNUZrJFzZ8DghumpwqXw'),
     ],
   },
   {

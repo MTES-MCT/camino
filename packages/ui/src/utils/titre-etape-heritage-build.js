@@ -17,7 +17,7 @@ export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTy
   }
 
   if (etapeTypeId) {
-    const justificatifs = getEntrepriseDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id)
+    const justificatifs = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etapeTypeId)
     if (justificatifs.length > 0) {
       const justificatifsTypesIds = justificatifs.map(({ id }) => id)
       newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
