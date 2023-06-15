@@ -119,7 +119,7 @@ const actions = {
       const data = await etapeHeritage({
         titreDemarcheId: state.metas.demarche.id,
         date: state.element.date,
-        etapeTypeId,
+        typeId: etapeTypeId,
       })
 
       const apiEtape = etapeEditFormat(data)
