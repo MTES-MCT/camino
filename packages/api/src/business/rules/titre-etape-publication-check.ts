@@ -7,7 +7,7 @@ const demarcheEtapesTypesPublication: {
 } = {
   arm: [ETAPES_TYPES.decisionDeLOfficeNationalDesForets, ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, ETAPES_TYPES.avenantALautorisationDeRechercheMiniere],
   axm: [ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
-  prm: [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
+  prm: [ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs],
   pxg: [ETAPES_TYPES.decisionDeLadministration],
 } as const
 

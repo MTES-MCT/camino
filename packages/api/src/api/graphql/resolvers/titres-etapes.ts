@@ -360,8 +360,15 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       if (geoJsonResult.fallback) {
         console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
       }
-
       sdomZones.push(...geoJsonResult.data)
+
+      const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
+      if (titreEtapeCommu.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+      etape.communes = titreEtapeCommu.data
+    } else {
+      etape.communes = []
     }
 
     const typeId = titreDemarche?.titre?.typeId
