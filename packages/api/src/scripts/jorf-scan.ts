@@ -1,4 +1,4 @@
-import { CaminoDate, dateAddMonths, toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, dateAddMonths } from 'camino-common/src/date.js'
 import '../init.js'
 import pg from 'pg'
 import { getAllJorfDocuments } from './jorf-scan.queries.js'
@@ -19,7 +19,6 @@ const getLegiFranceToken = async (): Promise<Bearer> => {
     throw new Error('variables LEGIFRANCE_CLIENT_ID and LEGIFRANCE_CLIENT_SECRET must be set')
   }
 
-
   const response = await fetch('https://oauth.piste.gouv.fr/api/oauth/token', {
     method: 'POST',
     body: `grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}&scope=openid`,
@@ -30,26 +29,19 @@ const getLegiFranceToken = async (): Promise<Bearer> => {
   })
 
   if (response.ok) {
+    const responseBody = (await response.json()) as { access_token: string; token_type: 'Bearer'; expires_in: 3600; scope: 'openid resource.READ' }
 
-  
-  const responseBody = await response.json() as {access_token: string, token_type: 'Bearer', expires_in: 3600, scope: 'openid resource.READ'}
-
-
-  return responseBody.access_token as Bearer
+    return responseBody.access_token as Bearer
   } else {
-    console.log('error', await response.text())
+    console.error('error', await response.text())
     throw new Error('Pas de token')
   }
 }
 
-export type Bearer = string & {__caminoType: 'Bearer'}
+export type Bearer = string & { __caminoType: 'Bearer' }
 export const getAllJorfFromDatabase = async (): Promise<void> => {
-  // const token = await getLegiFranceToken()
-  // console.log('token', token)
-  const token = 'IxHucnguRPMSTsWtcl9LrWzOn682k0OKI230hkQHnxkEuT8GaBhANu' as Bearer
-
+  const token = await getLegiFranceToken()
   const documentsFromDatabase = await getAllJorfDocuments(pool)
-  console.log('documents JORF: ' + documentsFromDatabase.length)
 
   let ok = 0
   let strange = 0
@@ -61,9 +53,9 @@ export const getAllJorfFromDatabase = async (): Promise<void> => {
     const document = documentsFromDatabase[index]
     const result = await searchPublication(token, document.titre_nom, document.date)
     switch (result) {
-      case 'strange': 
-      strange++
-      break
+      case 'strange':
+        strange++
+        break
       case 'error':
         error++
         break
@@ -78,19 +70,16 @@ export const getAllJorfFromDatabase = async (): Promise<void> => {
           console.warn(`Publication différente trouvée pour le titre ${document.titre_nom} autour de la date ${document.date}`)
           differente++
         } else {
-
           ok++
         }
-
     }
   }
-  console.log(`trouvé ${ok}/${documentsFromDatabase.length}`)
-  console.log(`error ${error}/${documentsFromDatabase.length}`)
-  console.log(`not_found ${not_found}/${documentsFromDatabase.length}`)
-  console.log(`multiple ${multiple}/${documentsFromDatabase.length}`)
-  console.log(`strange ${strange}/${documentsFromDatabase.length}`)
-  console.log(`differente ${differente}/${documentsFromDatabase.length}`)
-  // await searchPublication(token, "Juan-de-Nova Est", toCaminoDate('2008-12-30'))
+  console.info(`trouvé ${ok}/${documentsFromDatabase.length}`)
+  console.info(`error ${error}/${documentsFromDatabase.length}`)
+  console.info(`not_found ${not_found}/${documentsFromDatabase.length}`)
+  console.info(`multiple ${multiple}/${documentsFromDatabase.length}`)
+  console.info(`strange ${strange}/${documentsFromDatabase.length}`)
+  console.info(`differente ${differente}/${documentsFromDatabase.length}`)
 }
 
 interface EntryResultTitre {
@@ -115,48 +104,44 @@ const searchPublication = async (bearer: Bearer, titre: string, date: CaminoDate
   const oneMonthAfter = dateAddMonths(date, 1)
 
   const criteres = titre.split(' ').map(mot => ({
-    "typeRecherche": "UN_DES_MOTS",
-    "proximite": 2,
-    "valeur": mot,
-    "operateur": "ET"
+    typeRecherche: 'UN_DES_MOTS',
+    proximite: 2,
+    valeur: mot,
+    operateur: 'ET',
   }))
   const search = {
-    "fond": "JORF",
-    "recherche": {
-      "secondSort": "ID",
-      "operateur": "ET",
-      "filtres": [
+    fond: 'JORF',
+    recherche: {
+      secondSort: 'ID',
+      operateur: 'ET',
+      filtres: [
         {
-          "valeurs": [
-            "ARRETE"
-          ],
-          "facette": "NATURE"
+          valeurs: ['ARRETE'],
+          facette: 'NATURE',
         },
         {
-          "dates": {
-            "start": oneMonthBefore,
-            "end": oneMonthAfter
+          dates: {
+            start: oneMonthBefore,
+            end: oneMonthAfter,
           },
-          "facette": "DATE_PUBLICATION"
-        }
+          facette: 'DATE_PUBLICATION',
+        },
       ],
-      "typePagination": "DEFAUT",
-      "pageSize": 10,
-      "pageNumber": 1,
-      "champs": [
+      typePagination: 'DEFAUT',
+      pageSize: 10,
+      pageNumber: 1,
+      champs: [
         {
-          "typeChamp": "TITLE",
-          "operateur": "ET",
-          "criteres": criteres
-        }
+          typeChamp: 'TITLE',
+          operateur: 'ET',
+          criteres,
+        },
       ],
-      "sort": "SIGNATURE_DATE_DESC",
-      "fromAdvancedRecherche": false
-    }
+      sort: 'SIGNATURE_DATE_DESC',
+      fromAdvancedRecherche: false,
+    },
   }
 
-
-  // console.log(JSON.stringify(search))
   const response = await fetch('https://api.piste.gouv.fr/dila/legifrance/lf-engine-app/search', {
     method: 'POST',
     body: JSON.stringify(search),
@@ -168,29 +153,29 @@ const searchPublication = async (bearer: Bearer, titre: string, date: CaminoDate
   })
 
   if (response.ok) {
+    const body = (await response.json()) as Result
 
-    const body = await response.json() as Result
-
-    // console.log(body)
     if (body.results.length === 0) {
       console.warn(`pas de publication trouvée pour titre ${titre} autour de la date ${date}`)
+
       return 'not_found'
     }
     if (body.results.length > 1) {
       console.warn(`plusieurs publications trouvées pour le titre ${titre} autour de la date ${date}`)
+
       return 'multiple_found'
     }
     if (body.results[0].titles.length !== 1) {
       console.warn(`plusieurs titres trouvées pour la publication du titre ${titre} autour de la date ${date}`)
+
       return 'strange'
     }
-    
-    return { nor: body.results[0].nor,
-        jorf: body.results[0].titles[0].cid
-    }
+
+    return { nor: body.results[0].nor, jorf: body.results[0].titles[0].cid }
   } else {
     console.error(response.status)
     console.error(await response.text())
+
     return 'error'
   }
 }
