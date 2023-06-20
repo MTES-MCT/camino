@@ -27,7 +27,7 @@ const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =
 const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId, isEtapeDateEnough: boolean): CaminoDate | null => {
   let dateDebut = null
   if (!demarche.etapes?.length) {
-    return null
+    return dateDebut
   }
 
   // on trie les étapes de façon ascendante pour le cas où

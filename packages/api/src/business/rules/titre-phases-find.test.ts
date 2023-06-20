@@ -1354,11 +1354,11 @@ describe("phases d'une démarche", () => {
     ).toMatchInlineSnapshot(`
       {
         "demarcheId1": {
-          "dateDebut": "2010-11-05",
-          "dateFin": "2013-11-05",
+          "dateDebut": "2010-10-18",
+          "dateFin": "2013-10-18",
         },
         "demarcheId2": {
-          "dateDebut": "2013-11-05",
+          "dateDebut": "2013-10-18",
           "dateFin": "2018-11-05",
         },
         "demarcheId3": {
