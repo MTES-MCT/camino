@@ -703,11 +703,11 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
             decisionARendre: {
               on: {
                 RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: 'done',
-                RENDRE_DECISION_ABROGATION: 'publicationAuJORFAFaire',
-                RENDRE_DECISION_RETRAIT: 'publicationAuJORFAFaire',
+                RENDRE_DECISION_ABROGATION: 'publicationAuJORFAFaireSuiteAuRejet',
+                RENDRE_DECISION_RETRAIT: 'publicationAuJORFAFaireSuiteAuRejet',
               },
             },
-            publicationAuJORFAFaire: {
+            publicationAuJORFAFaireSuiteAuRejet: {
               on: {
                 FAIRE_PUBLICATION_AU_JORF: 'done',
               },
