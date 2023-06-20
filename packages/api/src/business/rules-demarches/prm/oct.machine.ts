@@ -604,12 +604,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
     },
     decisionDeLAdministrationARendre: {
       on: {
-        RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
-          target: 'publicationAuJORFAFaire',
-          actions: assign<PrmOctContext, { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }>({
-            demarcheStatut: DemarchesStatutsIds.Accepte,
-          }),
-        },
+        RENDRE_DECISION_ADMINISTRATION_ACCEPTE: 'publicationAuJORFAFaire',
         RENDRE_DECISION_ADMINISTRATION_REJETE: {
           target: 'decisionsEtNotificationsRejetAFaire',
           actions: assign<PrmOctContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
@@ -620,7 +615,12 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
     },
     publicationAuJORFAFaire: {
       on: {
-        FAIRE_PUBLICATION_AU_JORF: 'notificationsAFaire',
+        FAIRE_PUBLICATION_AU_JORF: {
+          target: 'notificationsAFaire',
+          actions: assign<PrmOctContext, { type: 'FAIRE_PUBLICATION_AU_JORF' }>({
+            demarcheStatut: DemarchesStatutsIds.Accepte,
+          }),
+        },
       },
     },
     notificationsAFaire: {
