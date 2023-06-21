@@ -1,9 +1,7 @@
-import chalk from 'chalk'
-
 const errorLog = (error: string, ...args: any[]) => {
   console.error('')
-  console.error(chalk.bgRed.black.bold(' erreur '))
-  console.error(chalk.red.bold(error, ...args))
+  console.error(' erreur ')
+  console.error(error, ...args)
   console.error('')
 }
 

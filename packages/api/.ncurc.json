@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["chalk", "graphql-upload", "express-jwt"]
+  "reject": ["graphql-upload", "express-jwt"]
 }
