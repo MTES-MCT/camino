@@ -34,7 +34,7 @@
     "matrices": "node --loader ts-node/esm/transpile-only ./src/scripts/matrices.ts"
   },
   "@comment dependencies": {
-    "modules esm": "@sindresorhus/slugify, email-regex, decamelize, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
+    "modules esm": "email-regex, decamelize, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
     "express-graphql": "bloque l'upgrade de graphql"
   },
   "dependencies": {
@@ -43,7 +43,6 @@
     "@pgtyped/runtime": "^2.1.0",
     "@sentry/node": "^7.56.0",
     "@sentry/types": "^7.56.0",
-    "@sindresorhus/slugify": "^1.1.2",
     "@turf/center": "^6.5.0",
     "@turf/intersect": "^6.5.0",
     "@tus/file-store": "^1.0.0-beta.1",
