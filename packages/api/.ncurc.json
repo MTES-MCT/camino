@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["@types/node-fetch", "chalk", "email-regex", "decamelize", "dateformat", "node-fetch", "camelcase", "graphql-upload", "express-jwt"]
+  "reject": ["chalk", "graphql-upload", "express-jwt"]
 }

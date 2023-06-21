@@ -2,9 +2,6 @@ import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { StatistiquesGuyaneData } from 'camino-common/src/statistiques.js'
 import { evolutionTitres } from './evolution-titres.js'
-
-import camelcase from 'camelcase'
-
 import { ITitre, ITitreActivite } from '../../../types.js'
 
 import { titresGet } from '../../../database/queries/titres.js'
@@ -15,6 +12,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import type { Pool } from 'pg'
+import { capitalize } from 'camino-common/src/strings.js'
 
 const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: ITitreActivite[], init: { [key: string]: number }) =>
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
@@ -40,7 +38,7 @@ type IStatsGuyaneTitresTypes = 'titresArm' | 'titresPrm' | 'titresAxm' | 'titres
 const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId; surface: number }[]): Record<string, { quantite: number; surface: number }> =>
   titres.reduce(
     (acc, titre) => {
-      const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes
+      const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
 
       acc[id].quantite++
       acc[id].surface += titre.surface
@@ -64,7 +62,7 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
         } else {
           acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
         }
-        const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes
+        const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
 
         acc[id]++
       }

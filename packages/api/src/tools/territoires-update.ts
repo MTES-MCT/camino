@@ -1,10 +1,9 @@
 /* eslint-disable sql/no-unsafe-query */
 import '../init.js'
 import { knex } from '../knex.js'
-import fetch from 'node-fetch'
 import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
-import { Readable } from 'stream'
+import { Readable } from 'node:stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
@@ -32,7 +31,8 @@ const communesUpdate = async (pool: Pool) => {
     throw new Error('Les communes sont vides')
   }
   const pipeline = chain([
-    new Readable().wrap(communesFetch.body),
+    // @ts-expect-error
+    Readable.fromWeb(communesFetch.body),
     withParser({ filter: 'features' }),
     streamArray(),
     async ({ key, value }: { key: number; value: any }) => {
@@ -94,7 +94,7 @@ const geoguyaneFileGet = async (path: string) => {
   console.info('Téléchargement des données', dataUrlJson.data)
   const foretsZip = await fetch(dataUrlJson.data)
 
-  const zipFile = await JSZip.loadAsync(await foretsZip.buffer())
+  const zipFile = await JSZip.loadAsync(await foretsZip.arrayBuffer())
 
   return JSON.parse(await zipFile.file(/.*\.json$/)[0]!.async('string'))
 }

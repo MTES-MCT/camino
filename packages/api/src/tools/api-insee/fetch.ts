@@ -1,7 +1,5 @@
 // https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3&provider=insee
 
-import fetch from 'node-fetch'
-
 import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiSirenUniteLegale } from './types.js'
 
 import errorLog from '../error-log.js'

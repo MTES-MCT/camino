@@ -104,6 +104,7 @@ export const levenshtein = (s: string, t: string): number => {
 
   return h
 }
+
 const decamelize = (value: string): string => {
   return value
     .replace(/([A-Z]{2,})(\d+)/g, '$1 $2')
