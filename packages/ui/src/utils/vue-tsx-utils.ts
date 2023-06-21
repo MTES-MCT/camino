@@ -11,6 +11,7 @@ export function caminoDefineComponent<T>(props: CalculatePermutations<keyof T>, 
   const r = defineComponent(setup)
   // @ts-ignore
   r.props = props
+  // @ts-ignore
   return r
 }
 

@@ -11,9 +11,6 @@ interface Props {
 export const Administration = caminoDefineComponent<Props>(['administrationId', 'onEventTrack'], props => {
   const opened = ref(false)
   const administration = Administrations[props.administrationId]
-  const close = () => {
-    opened.value = false
-  }
 
   const toggle = () => {
     opened.value = !opened.value
@@ -26,7 +23,7 @@ export const Administration = caminoDefineComponent<Props>(['administrationId', 
   }
 
   return () => (
-    <Accordion class="mb" opened={opened.value} slotDefault={true} onClose={close} onToggle={toggle}>
+    <Accordion class="mb" opened={opened.value} slotDefault={true} onToggle={toggle}>
       {{
         title: () => <span>{administration.nom}</span>,
         default: () => (

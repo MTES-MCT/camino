@@ -5,7 +5,7 @@ import PointsLotEdit from './points-lot-edit.vue'
 import { HeritageEdit } from './heritage-edit'
 import PointsImportPopup from './points-import-popup.vue'
 import { Points } from '../_common/points'
-import InputNumber from '../_ui/input-number.vue'
+import { InputNumber } from '../_ui/input-number'
 import { Icon } from '@/components/_ui/icon'
 import { HelpTooltip } from '@/components/_ui/help-tooltip'
 import { computed, onMounted, watch } from 'vue'
@@ -368,7 +368,14 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           propId="surface"
           write={() => (
             <>
-              <InputNumber v-model={props.etape.surface} min="0" placeholder="0" class="mb-s" />
+              <InputNumber
+                initialValue={props.etape.surface}
+                placeholder="0"
+                class="mb-s"
+                numberChanged={value => {
+                  props.etape.surface = value ?? 0
+                }}
+              />
               {props.etape.surface ? (
                 <div class="h6">
                   <label>

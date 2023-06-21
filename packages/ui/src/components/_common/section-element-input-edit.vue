@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-direction-column">
-    <inputNumber v-if="element.type === 'number'" v-model="contenu[element.id]" class="p-s" placeholder="…" />
+    <inputNumber v-if="element.type === 'number'" :initialValue="contenu[element.id]" class="p-s" placeholder="…" :numberChanged="numberChanged" />
 
-    <inputNumber v-if="element.type === 'integer'" v-model="contenu[element.id]" :integer="true" class="p-s" placeholder="…" />
+    <inputNumber v-if="element.type === 'integer'" :initialValue="contenu[element.id]" :integer="true" class="p-s" placeholder="…" :numberChanged="numberChanged" />
 
     <div v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]" class="flex-self-end pt-xxs">Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes</div>
 
@@ -51,7 +51,7 @@
 
 <script>
 import { InputDate } from '../_ui/input-date'
-import InputNumber from '../_ui/input-number.vue'
+import { InputNumber } from '../_ui/input-number'
 import SectionElementFileEdit from './section-element-file-edit.vue'
 import numberFormat from '@/utils/number-format'
 
@@ -96,6 +96,9 @@ export default {
   methods: {
     dateChanged(date) {
       this.contenu[this.element.id] = date
+    },
+    numberChanged(value) {
+      this.contenu[this.element.id] = value
     },
   },
 }

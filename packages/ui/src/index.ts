@@ -2,7 +2,7 @@ import './styles/styles.css'
 import { createApp } from 'vue'
 import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/vue'
-import { BrowserTracing } from '@sentry/tracing'
+import { BrowserTracing } from '@sentry/browser'
 
 import VueMatomo from './stats'
 import { App } from './app'

@@ -34,6 +34,7 @@ import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
+import { SendFileOptions } from 'express-serve-static-core'
 const contentTypes: Record<DownloadFormat, string> = {
   csv: 'text/csv',
   geojson: 'application/geo+json',
@@ -204,7 +205,7 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
     if (filePath || buffer) {
       res.header('x-sent', 'true')
       res.header('x-timestamp', Date.now().toString())
-      const options = {
+      const options: SendFileOptions = {
         dotfiles: 'deny',
         root: join(process.cwd(), 'files'),
       }

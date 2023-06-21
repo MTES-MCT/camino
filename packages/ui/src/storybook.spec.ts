@@ -44,7 +44,7 @@ describe('Storybook Tests', async () => {
       window.dsfr = null
       const mounted = render(value.story(), {
         global: {
-          components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots.default?.()) },
+          components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
         },
       })
       await new Promise<void>(resolve => setTimeout(() => resolve(), 1))

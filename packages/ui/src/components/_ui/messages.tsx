@@ -6,11 +6,11 @@ export interface Props {
 }
 export const Messages = caminoDefineComponent<Props>(['messages'], props => {
   return () => (
-    <TransitionGroup name="slide-bottom" class="list-sans mb-0" tag="ul">
+    <TransitionGroup name="slide-bottom" tag="div">
       {props.messages.map((message, index) => (
-        <li key={index} class={`mb p-s color-bg bg-${message.type}`}>
+        <div key={index} class={`mb p-s color-bg bg-${message.type}`}>
           <span class="cap-first">{message.value}</span>
-        </li>
+        </div>
       ))}
     </TransitionGroup>
   )
