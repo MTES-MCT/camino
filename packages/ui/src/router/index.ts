@@ -64,7 +64,11 @@ const StatistiquesMinerauxMetauxMetropole = async () => {
   const { MinerauxMetauxMetropole } = await import('../components/statistiques/mineraux-metaux-metropole')
   return MinerauxMetauxMetropole
 }
-const Journaux = () => import('../components/journaux.vue')
+const Journaux = async () => {
+  const { Journaux } = await import('../components/journaux')
+  return Journaux
+}
+
 const About = async () => {
   const { About } = await import('../components/content/about')
   return About

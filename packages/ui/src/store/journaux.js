@@ -1,4 +1,3 @@
-import { journaux } from '../api/journaux'
 import { listeActionsBuild, listeMutations } from './_liste-build'
 
 const state = {
@@ -18,7 +17,7 @@ const state = {
   initialized: false,
 }
 
-const actions = listeActionsBuild('journaux', 'journaux', journaux)
-const mutations = Object.assign({}, listeMutations)
+// const actions = listeActionsBuild('journaux', 'journaux', journaux)
+// const mutations = Object.assign({}, listeMutations)
 
-export default { namespaced: true, state, actions, mutations }
+export default { namespaced: true, state, actions: {}, mutations: {} }

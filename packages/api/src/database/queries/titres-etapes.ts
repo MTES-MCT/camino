@@ -70,7 +70,7 @@ const titresEtapesGet = async (
   return q
 }
 
-const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: string) => {
+const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) => {
   const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched(options.titresEtapes.graph)
 
   await createJournalCreate(newValue.id, user.id, titreId)
@@ -79,11 +79,11 @@ const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserN
 }
 
 const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: TitreId): Promise<TitresEtapes> => {
-  return patchJournalCreate<TitresEtapes>(id, titreEtape, TitresEtapes, user.id, titreId)
+  return patchJournalCreate(id, titreEtape, user.id, titreId)
 }
 
 const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) =>
-  upsertJournalCreate<TitresEtapes>(titreEtape.id, titreEtape, TitresEtapes, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
+  upsertJournalCreate(titreEtape.id, titreEtape, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
 
 const titresEtapesJustificatifsUpsert = async (titresEtapesJustificatifs: ITitreEtapeJustificatif[]) =>
   TitresEtapesJustificatifs.query().upsertGraph(titresEtapesJustificatifs, {

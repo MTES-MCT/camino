@@ -2,15 +2,13 @@ import { computed, FunctionalComponent, ref } from 'vue'
 import { Column, Table, TableRow, TableSortEvent } from './table'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import Accordion from './accordion.vue'
-
-const ranges = [10, 50, 200, 500] as const
-type Range = (typeof ranges)[number]
+import { Range, ranges, isRange } from 'camino-common/src/number'
 
 export interface Params {
   page?: number
-  range?: number
+  range?: Range
 }
-interface Props {
+export interface Props {
   data: {
     columns: readonly Column[]
     rows: TableRow[]
@@ -35,7 +33,7 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
     props.paramsUpdate(params)
   }
 
-  const rangeUpdate = (range: number) => {
+  const rangeUpdate = (range: Range) => {
     update({ range })
   }
   const pageUpdate = (page: number) => {
@@ -83,7 +81,6 @@ interface RangeProps {
   rangeUpdate: (range: Range) => void
 }
 
-const isRange = (range: number): range is Range => ranges.includes(range)
 const Ranges = caminoDefineComponent<RangeProps>(['range', 'rangeUpdate'], props => {
   const opened = ref(false)
 
