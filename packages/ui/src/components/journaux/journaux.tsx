@@ -19,7 +19,7 @@ const lignes = (journaux: JournauxData): TableRow[] => {
     const date = new Date(Number.parseInt(journal.date))
     const columns = {
       date: {
-        value: date.toLocaleString('fr-FR'),
+        value: date.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
       },
       titre: {
         value: journal.titre?.nom,
