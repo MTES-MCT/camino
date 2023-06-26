@@ -1,5 +1,3 @@
-import fetch from 'node-fetch'
-
 import { cacheGet, cacheUpsert } from '../../database/queries/caches.js'
 import { Statistiques } from 'camino-common/src/statistiques.js'
 
@@ -7,22 +5,16 @@ interface IMatomoSectionData {
   label: string
   subtable?: {
     label: string
-    // eslint-disable-next-line camelcase
     nb_events: number
   }[]
-  // eslint-disable-next-line camelcase
   nb_events: number
 }
 
 interface IMatomoResult {
   [month: string]: {
-    // eslint-disable-next-line camelcase
     nb_searches: number
-    // eslint-disable-next-line camelcase
     nb_actions_per_visit: number
-    // eslint-disable-next-line camelcase
     avg_time_on_site: string
-    // eslint-disable-next-line camelcase
     nb_downloads: number
     label: string
     subtable: []
@@ -144,7 +136,6 @@ const nbEventsBySectionGet = (monthData: IMatomoSectionData, month: string): num
         nbEventsByAction: number,
         eventAction: {
           label: string
-          // eslint-disable-next-line camelcase
           nb_events: number
         }
       ) => {

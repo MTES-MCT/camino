@@ -9,4 +9,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: StoryFn = () => <PureDownloads formats={['geojson', 'xlsx']} downloadRoute={'/demarches'} params={{}} route={{ query: {} } as RouteLocationNormalized} />
+export const Default: StoryFn = () => (
+  <PureDownloads formats={['geojson', 'xlsx']} downloadRoute={'/demarches'} params={{}} route={{ query: {} } as RouteLocationNormalized} matomo={{ tracklink: () => {} }} />
+)

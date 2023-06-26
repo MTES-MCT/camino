@@ -2,7 +2,7 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { dateFormat } from '../../utils/index'
 import { Tag } from '../_ui/tag'
 import { InputDate } from '../_ui/input-date'
-import InputNumber from '../_ui/input-number.vue'
+import { InputNumber } from '../_ui/input-number'
 import { HeritageEdit } from './heritage-edit'
 import { PropDuree } from './prop-duree'
 import { AutocompleteEntreprise } from './autocomplete-entreprise'
@@ -148,10 +148,28 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               <>
                 <div class="blobs-mini">
                   <div class="blob-mini-1-2">
-                    <InputNumber v-model={ans.value} integer={true} placeholder="années" class="py-s mb-s" onBlur={updateDuree} />
+                    <InputNumber
+                      initialValue={ans.value}
+                      integer={true}
+                      placeholder="années"
+                      class="py-s mb-s"
+                      numberChanged={value => {
+                        ans.value = value ?? 0
+                        updateDuree()
+                      }}
+                    />
                   </div>
                   <div class="blob-mini-1-2">
-                    <InputNumber v-model={mois.value} integer={true} placeholder="mois" class="p-s" onBlur={updateDuree} />
+                    <InputNumber
+                      initialValue={mois.value}
+                      integer={true}
+                      placeholder="mois"
+                      class="p-s"
+                      numberChanged={value => {
+                        mois.value = value ?? 0
+                        updateDuree()
+                      }}
+                    />
                   </div>
                 </div>
                 {ans.value || mois.value ? (

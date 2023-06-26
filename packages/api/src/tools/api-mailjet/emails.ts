@@ -1,8 +1,7 @@
 import { convert } from 'html-to-text'
-import emailRegex from 'email-regex'
-
 import { mailjet } from './index.js'
 import { EmailTemplateId } from './types.js'
+import { emailCheck } from '../email-check.js'
 
 const from = {
   email: process.env.API_MAILJET_EMAIL,
@@ -16,7 +15,7 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
     }
 
     emails.forEach(to => {
-      if (!emailRegex({ exact: true }).test(to)) {
+      if (!emailCheck(to)) {
         throw new Error(`adresse email invalide ${to}`)
       }
     })

@@ -25,7 +25,7 @@ export const App = defineComponent({
 
     const error = computed(() => store.state.error)
 
-    const messages = computed(() => store.state.messages)
+    const messages = computed<{ type: 'error' | 'success'; value: string }[]>(() => store.state.messages)
 
     const popup = computed(() => store.state.popup)
 
@@ -63,7 +63,7 @@ export const App = defineComponent({
         <Footer />
 
         <div class="messages">
-          <Messages id="cmn-app-messages" messages={messages.value} />
+          <Messages messages={messages.value} />
         </div>
 
         <Transition name="fade">{popup.value.component ? <div class="absolute full bg-inverse-alpha" style="z-index: 600" /> : null}</Transition>

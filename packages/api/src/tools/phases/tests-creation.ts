@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import '../../init.js'
 import { writeFileSync } from 'fs'
 

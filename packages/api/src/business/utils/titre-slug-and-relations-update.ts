@@ -1,5 +1,3 @@
-import slugify from '@sindresorhus/slugify'
-
 import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
 
 import { DemarcheId } from 'camino-common/src/demarche.js'
@@ -15,6 +13,7 @@ import { titrePointReferenceUpdate, titrePointUpdate } from '../../database/quer
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { slugify } from 'camino-common/src/strings.js'
 import { TitreId } from 'camino-common/src/titres.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 

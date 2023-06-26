@@ -27,12 +27,19 @@
     "lint": "npm run lint --workspaces"
   },
   "lint-staged": {
-    "packages/ui/**/*.{js,ts,vue,tsx}": ["eslint --cache --fix", "prettier --write"],
+    "packages/ui/**/*.{js,ts,vue,tsx}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ],
     "packages/ui/**/*.css": "prettier --write",
-    "packages/api/**/*.{js,ts}": ["eslint --cache --fix", "prettier --write"],
+    "packages/api/**/*.{js,ts}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ],
     "packages/api/**/*.{graphql,md}": "prettier --write",
     "packages/common/**/*.ts": [
-      "eslint --cache --fix", "prettier --write"
+      "eslint --cache --fix",
+      "prettier --write"
     ],
     "packages/ui/src/components/_ui/iconSprite.vue": [
       "npm run -w packages/ui generate-icon-types",
@@ -40,11 +47,18 @@
       "git add packages/ui/src/components/_ui/iconSpriteType.ts"
     ]
   },
+  "@comment overrides": {
+    "vue": "bug npm avec les workspaces : https://github.com/npm/cli/issues/4834"
+  },
+  "overrides": {
+    "vue": "3.3.4"
+  },
   "devDependencies": {
+    "vue": "3.3.4",
     "@types/react": "file:stub/types__react",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
-    "semantic-release": "^19.0.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "semantic-release": "^21.0.5",
     "semantic-release-mattermost": "^1.1.1"
   },
   "release": {

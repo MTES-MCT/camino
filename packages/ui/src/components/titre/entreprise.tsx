@@ -24,9 +24,6 @@ interface Props {
 
 export const Entreprise = caminoDefineComponent<Props>(['entreprise', 'onEventTrack'], props => {
   const opened = ref(false)
-  const close = () => {
-    opened.value = false
-  }
 
   const toggle = () => {
     opened.value = !opened.value
@@ -59,7 +56,7 @@ export const Entreprise = caminoDefineComponent<Props>(['entreprise', 'onEventTr
     )
   }
   return () => (
-    <Accordion class="mb" opened={opened.value} slotDefault={content.value} slotButtons={true} onClose={close} onToggle={toggle}>
+    <Accordion class="mb" opened={opened.value} slotDefault={content.value} slotButtons={true} onToggle={toggle}>
       {{
         title: () => (
           <>

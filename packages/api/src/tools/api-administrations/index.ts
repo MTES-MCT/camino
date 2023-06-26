@@ -1,6 +1,4 @@
 // https://etablissements-publics.api.gouv.fr
-import fetch from 'node-fetch'
-
 import errorLog from '../error-log.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { Administration, AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'

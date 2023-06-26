@@ -8,7 +8,7 @@ import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
 import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
-import slugify from '@sindresorhus/slugify'
+import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 

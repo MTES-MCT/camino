@@ -1,5 +1,3 @@
-import camelcase from 'camelcase'
-
 import { ITitre, ITitreActivite } from '../../../types.js'
 
 import { titresGet } from '../../../database/queries/titres.js'
@@ -8,6 +6,7 @@ import { userSuper } from '../../../database/user-super.js'
 import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
+import { capitalize } from 'camino-common/src/strings.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(
@@ -39,7 +38,7 @@ type IStatsGranulatsMarinsTitresTypesInstant = 'titresInstructionExploration' | 
 const statistiquesGranulatsMarinsTitresGet = (titres: { id: string; typeId: string; surface: number }[]) =>
   titres.reduce(
     (acc, titre) => {
-      const id = camelcase(`titres-${titre.typeId}`) as IStatsGranulatsMarinsTitresTypesHistorique
+      const id = `titres${capitalize(titre.typeId)}` as IStatsGranulatsMarinsTitresTypesHistorique
 
       acc[id].quantite++
       acc[id].surface += titre.surface
@@ -70,7 +69,7 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
             acc.titresInstructionExploitation++
           }
         }
-        const id = camelcase(`titres-${titre.titreStatutId!}-${titre.typeId!}`) as IStatsGranulatsMarinsTitresTypesInstant
+        const id = `titres${capitalize(titre.titreStatutId!)}${capitalize(titre.typeId!)}` as IStatsGranulatsMarinsTitresTypesInstant
 
         acc[id]++
       }

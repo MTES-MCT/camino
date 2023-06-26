@@ -54,7 +54,6 @@ export interface IApiSirenQuery {
     message: string
   }
   error?: {
-    // eslint-disable-next-line camelcase
     error_description: string
   }
   header: {
@@ -72,6 +71,5 @@ export interface IApiSirenQueryTypes extends IApiSirenQuery {
 }
 
 export interface IApiSirenQueryToken extends IApiSirenQuery {
-  // eslint-disable-next-line camelcase
   access_token: string
 }

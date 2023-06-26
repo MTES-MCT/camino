@@ -12,7 +12,7 @@ export const connection = {
   password: process.env.PGPASSWORD,
 }
 
-export const knexConfig = {
+export const simpleKnexConfig = {
   client: 'pg',
   connection,
   migrations: {
@@ -21,5 +21,8 @@ export const knexConfig = {
     extension: 'ts',
     loadExtensions: ['.ts'],
   },
+}
+export const knexConfig = {
+  ...simpleKnexConfig,
   ...knexSnakeCaseMappers(),
 }

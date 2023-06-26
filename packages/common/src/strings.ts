@@ -104,3 +104,27 @@ export const levenshtein = (s: string, t: string): number => {
 
   return h
 }
+
+const decamelize = (value: string): string => {
+  return value
+    .replace(/([A-Z]{2,})(\d+)/g, '$1 $2')
+    .replace(/([a-z\d]+)([A-Z]{2,})/g, '$1 $2')
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-rt-z\d]+)/g, '$1 $2')
+}
+
+export const slugify = (value: string): string => {
+  return decamelize(value.replace(/^\s+|\s+$/g, ''))
+    .toLowerCase()
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ä/g, 'ae')
+    .replace(/œ/g, 'oe')
+    .replace(/&/g, 'and')
+    .replace(/ß/g, 'ss')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9 -]/g, ' ')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+}

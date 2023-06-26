@@ -1,10 +1,10 @@
 import { rmSync, writeFileSync, mkdirSync } from 'fs'
-import decamelize from 'decamelize'
 
 import { ICoordonnees } from '../../types.js'
-import { knex } from '../../knex.js'
+import { simpleKnexConfig } from '../../knex/config.js'
+import knex from 'knex'
 import { tables } from './tables.js'
-
+const knexInstance = knex(simpleKnexConfig)
 const dir = 'sources'
 
 export const databaseToJsonExport = async () => {
@@ -17,7 +17,7 @@ export const databaseToJsonExport = async () => {
       const filePath = `${dir}/${fileName}`
 
       const json = format(
-        await knex.from(table.name).orderBy(
+        await knexInstance.from(table.name).orderBy(
           table.orderBy.map(column => {
             return { column, order: 'asc' }
           })
@@ -43,7 +43,7 @@ const format = (elements: IFields[]) =>
   elements.map(e =>
     Object.keys(e).reduce((acc: IFields, k: string) => {
       if (e[k]) {
-        acc[decamelize(k)] = fieldFormat(e, k)
+        acc[k] = fieldFormat(e, k)
       }
 
       return acc
