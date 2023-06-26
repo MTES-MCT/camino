@@ -1,11 +1,18 @@
 # import * from 'scalars.graphql'
-# import * from 'utilisateurs.graphql'
-# import * from 'titres.graphql'
 
 enum Operation {
   create
   update
   delete
+}
+
+type JournalUtilisateur {
+  nom: String
+  prenom: String
+}
+
+type JournalTitre {
+  nom: String
 }
 
 type Journal {
@@ -14,7 +21,7 @@ type Journal {
   """
   id: ID!
 
-  utilisateur: Utilisateur
+  utilisateur: JournalUtilisateur
 
   date: String
 
@@ -24,7 +31,7 @@ type Journal {
 
   elementId: ID
 
-  titre: Titre
+  titre: JournalTitre
 }
 
 type Journaux {

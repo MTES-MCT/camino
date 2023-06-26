@@ -3,7 +3,7 @@ import { Icon } from '@/components/_ui/icon'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
-import { ConfigurableChart } from './configurable-chart'
+import { defineAsyncComponent } from 'vue'
 
 export interface Props<T> {
   data: AsyncData<T>
@@ -24,6 +24,11 @@ const exportCsv = (conf: ChartConfiguration) => {
 }
 
 export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
+  const ConfigurableChart = defineAsyncComponent(async () => {
+    const { ConfigurableChart } = await import('./configurable-chart')
+
+    return ConfigurableChart
+  })
   return (
     <LoadingElement
       data={props.data}

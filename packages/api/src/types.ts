@@ -644,11 +644,18 @@ interface ITitreDemande {
 interface IJournaux {
   id: string
   utilisateurId: string
+  utilisateur: {
+    nom: string
+    prenom: string
+  }
   date: string
   elementId: string
   titreId: string
   operation: 'create' | 'update' | 'delete'
   differences: any
+  titre: {
+    nom: string
+  }
 }
 
 export {

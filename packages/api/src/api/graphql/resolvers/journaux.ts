@@ -3,24 +3,18 @@ import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
 import { Context } from '../../../types.js'
 import { canReadJournaux } from 'camino-common/src/permissions/journaux.js'
+import { Journaux, JournauxQueryParams } from 'camino-common/src/journaux.js'
 
-export interface IJournauxQueryParams {
-  page: number
-  intervalle: number
-  recherche: string
-  titreId: string
-}
-
-export const journaux = async (params: IJournauxQueryParams, { user }: Context, info: GraphQLResolveInfo) => {
+export const journaux = async (params: JournauxQueryParams, { user }: Context, info: GraphQLResolveInfo): Promise<Journaux> => {
   try {
     if (!canReadJournaux(user)) {
-      return []
+      return { elements: [], page: 1, intervalle: 10, total: 0 }
     }
     const fields = fieldsBuild(info)
 
     const { results, total } = await journauxGet(params, { fields: fields.elements }, user)
 
-    if (!results.length) return { elements: [], total: 0 }
+    if (!results.length) return { elements: [], page: 1, intervalle: 10, total: 0 }
 
     return {
       elements: results,

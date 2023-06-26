@@ -53,7 +53,7 @@
 
     <TitreDemarches v-if="tabId === 'travaux'" :demarches="travaux" :tabId="tabId" :user="user" @titre-event-track="eventTrack" />
 
-    <Journaux v-if="tabId === 'journaux'" :titreId="titre.id" />
+    <Journaux v-if="tabId === 'journaux'" :apiClient="apiClient()" :titreId="titre.id" />
   </div>
 </template>
 
@@ -67,7 +67,7 @@ import { Territoires as TitreTerritoires } from './titre/territoires'
 import { Repertoire } from './titre/repertoire'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'
-import Journaux from './journaux/journaux.vue'
+import { defineAsyncComponent } from 'vue'
 import { apiClient } from '@/api/api-client'
 
 export default {
@@ -81,7 +81,10 @@ export default {
     TitreDemarches,
     TitreActivitesList,
     Perimetre,
-    Journaux,
+    Journaux: defineAsyncComponent(async () => {
+      const { Journaux } = await import('./journaux/journaux')
+      return Journaux
+    }),
   },
 
   data() {

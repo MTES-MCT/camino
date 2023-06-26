@@ -29,7 +29,6 @@ vi.mock('./statistiques', () => ({ default: { statistiques: vi.fn() } }))
 vi.mock('./definitions', () => ({ default: { definitions: vi.fn() } }))
 vi.mock('./metas', () => ({ default: { metas: vi.fn() } }))
 vi.mock('./meta', () => ({ default: { meta: vi.fn() } }))
-vi.mock('./journaux', () => ({ default: { journaux: vi.fn() } }))
 
 vi.mock('../router', () => ({
   default: {
