@@ -1,51 +1,51 @@
 /** Types generated for queries found in "src/api/rest/statistiques/metaux-metropole.queries.ts" */
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
-/** 'GetTitreActiviteSubstanceParAnnee' parameters type */
-export interface IGetTitreActiviteSubstanceParAnneeParams {
+/** 'GetTitreActiviteSubstanceParAnneeInternal' parameters type */
+export interface IGetTitreActiviteSubstanceParAnneeInternalParams {
   substanceFiscale?: string | null | void;
 }
 
-/** 'GetTitreActiviteSubstanceParAnnee' return type */
-export interface IGetTitreActiviteSubstanceParAnneeResult {
+/** 'GetTitreActiviteSubstanceParAnneeInternal' return type */
+export interface IGetTitreActiviteSubstanceParAnneeInternalResult {
   annee: number;
   count: Json | null;
 }
 
-/** 'GetTitreActiviteSubstanceParAnnee' query type */
-export interface IGetTitreActiviteSubstanceParAnneeQuery {
-  params: IGetTitreActiviteSubstanceParAnneeParams;
-  result: IGetTitreActiviteSubstanceParAnneeResult;
+/** 'GetTitreActiviteSubstanceParAnneeInternal' query type */
+export interface IGetTitreActiviteSubstanceParAnneeInternalQuery {
+  params: IGetTitreActiviteSubstanceParAnneeInternalParams;
+  result: IGetTitreActiviteSubstanceParAnneeInternalResult;
 }
 
-/** 'GetsubstancesByAnneeByCommune' parameters type */
-export interface IGetsubstancesByAnneeByCommuneParams {
+/** 'GetsubstancesByAnneeByCommuneInternal' parameters type */
+export interface IGetsubstancesByAnneeByCommuneInternalParams {
   substancesFiscales: readonly (string | null | void)[];
 }
 
-/** 'GetsubstancesByAnneeByCommune' return type */
-export interface IGetsubstancesByAnneeByCommuneResult {
+/** 'GetsubstancesByAnneeByCommuneInternal' return type */
+export interface IGetsubstancesByAnneeByCommuneInternalResult {
   annee: number;
   communes: Json;
   substances: Json | null;
 }
 
-/** 'GetsubstancesByAnneeByCommune' query type */
-export interface IGetsubstancesByAnneeByCommuneQuery {
-  params: IGetsubstancesByAnneeByCommuneParams;
-  result: IGetsubstancesByAnneeByCommuneResult;
+/** 'GetsubstancesByAnneeByCommuneInternal' query type */
+export interface IGetsubstancesByAnneeByCommuneInternalQuery {
+  params: IGetsubstancesByAnneeByCommuneInternalParams;
+  result: IGetsubstancesByAnneeByCommuneInternalResult;
 }
 
-/** 'GetSubstancesByEntrepriseCategoryByAnnee' parameters type */
-export interface IGetSubstancesByEntrepriseCategoryByAnneeParams {
+/** 'GetSubstancesByEntrepriseCategoryByAnneeInternal' parameters type */
+export interface IGetSubstancesByEntrepriseCategoryByAnneeInternalParams {
   bauxite?: string | null | void;
   selAbattage?: string | null | void;
   selContenu?: string | null | void;
   selSondage?: string | null | void;
 }
 
-/** 'GetSubstancesByEntrepriseCategoryByAnnee' return type */
-export interface IGetSubstancesByEntrepriseCategoryByAnneeResult {
+/** 'GetSubstancesByEntrepriseCategoryByAnneeInternal' return type */
+export interface IGetSubstancesByEntrepriseCategoryByAnneeInternalResult {
   aloh: string | null;
   annee: number;
   categorie: string | null;
@@ -54,9 +54,9 @@ export interface IGetSubstancesByEntrepriseCategoryByAnneeResult {
   nacc: string | null;
 }
 
-/** 'GetSubstancesByEntrepriseCategoryByAnnee' query type */
-export interface IGetSubstancesByEntrepriseCategoryByAnneeQuery {
-  params: IGetSubstancesByEntrepriseCategoryByAnneeParams;
-  result: IGetSubstancesByEntrepriseCategoryByAnneeResult;
+/** 'GetSubstancesByEntrepriseCategoryByAnneeInternal' query type */
+export interface IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery {
+  params: IGetSubstancesByEntrepriseCategoryByAnneeInternalParams;
+  result: IGetSubstancesByEntrepriseCategoryByAnneeInternalResult;
 }
 

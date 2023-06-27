@@ -7,10 +7,9 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toTitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
-import { AnneeCountStatistique, anneeCountStatistiqueValidator, EvolutionTitres } from 'camino-common/src/statistiques.js'
-import { getDepotDb, getEtapesTypesDecisionRefusDb, getOctroiDb, getSurfaceDb } from './evolution-titres.queries.js'
+import { AnneeCountStatistique, EvolutionTitres } from 'camino-common/src/statistiques.js'
+import { getDepot, getEtapesTypesDecisionRefus, getOctroi, getSurface } from './evolution-titres.queries.js'
 import type { Pool } from 'pg'
-import { dbQueryAndValidate } from '../../../pg-database.js'
 
 export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeTypeId, departements: DepartementId[], anneeDepart = 2017): Promise<EvolutionTitres> => {
   let currentYear = new Date().getFullYear()
@@ -25,46 +24,33 @@ export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeType
   // conversion 1 km² = 100 ha
 
   const [depot, octroi, refus, surface] = await Promise.all([
-    dbQueryAndValidate(
-      getDepotDb,
-      {
-        anneeDepart,
-        demarcheTypeIds: demarcheOctroiTypeIds,
-        departements,
-        etapeTypeId: ETAPES_TYPES.depotDeLaDemande,
-        titreTypeId,
-      },
-      pool,
-      anneeCountStatistiqueValidator
-    ),
-    dbQueryAndValidate(
-      getOctroiDb,
-      {
-        anneeDepart,
-        demarcheTypeIds: demarcheOctroiTypeIds,
-        departements,
-        titreTypeId,
-      },
-      pool,
-      anneeCountStatistiqueValidator
-    ),
-    dbQueryAndValidate(
-      getEtapesTypesDecisionRefusDb,
-      {
-        anneeDepart,
-        demarcheTypeIds: demarcheOctroiTypeIds,
-        departements,
-        demarcheStatutIds: [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.ClasseSansSuite],
-        etapeStatutFait: ETAPES_STATUTS.FAIT,
-        etapeStatutRejet: ETAPES_STATUTS.REJETE,
-        etapesTypesDecisionRefus,
-        etapeTypeClassementSansSuite: ETAPES_TYPES.classementSansSuite,
-        titreTypeId,
-      },
-      pool,
-      anneeCountStatistiqueValidator
-    ),
-    dbQueryAndValidate(getSurfaceDb, { anneeDepart, demarcheTypeIds: demarcheOctroiTypeIds, departements, titreTypeId }, pool, anneeCountStatistiqueValidator),
+    getDepot(pool, {
+      anneeDepart,
+      demarcheTypeIds: demarcheOctroiTypeIds,
+      departements,
+      etapeTypeId: ETAPES_TYPES.depotDeLaDemande,
+      titreTypeId,
+    }),
+
+    getOctroi(pool, {
+      anneeDepart,
+      demarcheTypeIds: demarcheOctroiTypeIds,
+      departements,
+      titreTypeId,
+    }),
+
+    getEtapesTypesDecisionRefus(pool, {
+      anneeDepart,
+      demarcheTypeIds: demarcheOctroiTypeIds,
+      departements,
+      demarcheStatutIds: [DemarchesStatutsIds.Rejete, DemarchesStatutsIds.ClasseSansSuite],
+      etapeStatutFait: ETAPES_STATUTS.FAIT,
+      etapeStatutRejet: ETAPES_STATUTS.REJETE,
+      etapesTypesDecisionRefus,
+      etapeTypeClassementSansSuite: ETAPES_TYPES.classementSansSuite,
+      titreTypeId,
+    }),
+    getSurface(pool, { anneeDepart, demarcheTypeIds: demarcheOctroiTypeIds, departements, titreTypeId }),
   ])
 
   return {

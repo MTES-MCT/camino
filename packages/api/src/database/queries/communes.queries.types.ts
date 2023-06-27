@@ -1,34 +1,34 @@
 /** Types generated for queries found in "src/database/queries/communes.queries.ts" */
 
-/** 'GetCommunes' parameters type */
-export interface IGetCommunesParams {
+/** 'GetCommunesInternal' parameters type */
+export interface IGetCommunesInternalParams {
   ids: readonly (string | null | void)[];
 }
 
-/** 'GetCommunes' return type */
-export interface IGetCommunesResult {
+/** 'GetCommunesInternal' return type */
+export interface IGetCommunesInternalResult {
   id: string;
   nom: string;
 }
 
-/** 'GetCommunes' query type */
-export interface IGetCommunesQuery {
-  params: IGetCommunesParams;
-  result: IGetCommunesResult;
+/** 'GetCommunesInternal' query type */
+export interface IGetCommunesInternalQuery {
+  params: IGetCommunesInternalParams;
+  result: IGetCommunesInternalResult;
 }
 
-/** 'InsertCommune' parameters type */
-export interface IInsertCommuneParams {
+/** 'InsertCommuneInternal' parameters type */
+export interface IInsertCommuneInternalParams {
   id?: string | null | void;
   nom?: string | null | void;
 }
 
-/** 'InsertCommune' return type */
-export type IInsertCommuneResult = void;
+/** 'InsertCommuneInternal' return type */
+export type IInsertCommuneInternalResult = void;
 
-/** 'InsertCommune' query type */
-export interface IInsertCommuneQuery {
-  params: IInsertCommuneParams;
-  result: IInsertCommuneResult;
+/** 'InsertCommuneInternal' query type */
+export interface IInsertCommuneInternalQuery {
+  params: IInsertCommuneInternalParams;
+  result: IInsertCommuneInternalResult;
 }
 

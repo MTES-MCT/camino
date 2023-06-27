@@ -1,9 +1,15 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheGet } from 'camino-common/src/demarche'
-import { Redefine } from '../../pg-database'
-import { IGetDemarcheDbQuery } from './demarches.queries.types'
+import { DemarcheGet, DemarcheId, demarcheGetValidator } from 'camino-common/src/demarche.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { IGetDemarcheDbInternalQuery } from './demarches.queries.types.js'
+import { Pool } from 'pg'
 
-export const getDemarcheDb = sql<Redefine<IGetDemarcheDbQuery, { id: string }, DemarcheGet>>`
+export const getDemarcheDb = async (pool: Pool, params: { id: DemarcheId }) => {
+  return dbQueryAndValidate(getDemarcheDbInternal, params, pool, demarcheGetValidator)
+}
+
+const getDemarcheDbInternal = sql<Redefine<IGetDemarcheDbInternalQuery, { id: DemarcheId }, DemarcheGet>>`
 select
     d.titre_id,
     d.type_id

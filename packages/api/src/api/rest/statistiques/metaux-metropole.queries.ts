@@ -1,13 +1,22 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { AnneeCountStatistique } from 'camino-common/src/statistiques.js'
-import { Redefine } from '../../../pg-database.js'
-import { IGetSubstancesByEntrepriseCategoryByAnneeQuery, IGetTitreActiviteSubstanceParAnneeQuery, IGetsubstancesByAnneeByCommuneQuery } from './metaux-metropole.queries.types.js'
+import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques.js'
+import { Redefine, dbQueryAndValidate } from '../../../pg-database.js'
+import {
+  IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery,
+  IGetTitreActiviteSubstanceParAnneeInternalQuery,
+  IGetsubstancesByAnneeByCommuneInternalQuery,
+} from './metaux-metropole.queries.types.js'
 import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId, substanceFiscaleIdValidator } from 'camino-common/src/static/substancesFiscales.js'
 import { z } from 'zod'
 import { caminoAnneeValidator } from 'camino-common/src/date.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { Pool } from 'pg'
 
-export const getTitreActiviteSubstanceParAnnee = sql<Redefine<IGetTitreActiviteSubstanceParAnneeQuery, { substanceFiscale: SubstanceFiscaleId }, AnneeCountStatistique>>`
+export const getTitreActiviteSubstanceParAnnee = async (pool: Pool, params: { substanceFiscale: SubstanceFiscaleId }) =>
+  dbQueryAndValidate(getTitreActiviteSubstanceParAnneeInternal, params, pool, anneeCountStatistiqueValidator)
+
+const getTitreActiviteSubstanceParAnneeInternal = sql<Redefine<IGetTitreActiviteSubstanceParAnneeInternalQuery, { substanceFiscale: SubstanceFiscaleId }, AnneeCountStatistique>>`
 select
     annee,
     titres_activites.contenu -> 'substancesFiscales' -> $ substanceFiscale as count
@@ -24,7 +33,11 @@ export const substancesByAnneeByCommuneValidator = z.object({
 })
 
 type substancesByAnneeByCommune = z.infer<typeof substancesByAnneeByCommuneValidator>
-export const getsubstancesByAnneeByCommune = sql<Redefine<IGetsubstancesByAnneeByCommuneQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
+
+export const getsubstancesByAnneeByCommune = async (pool: Pool, params: { substancesFiscales: readonly SubstanceFiscaleId[] }) =>
+  dbQueryAndValidate(getsubstancesByAnneeByCommuneInternal, params, pool, substancesByAnneeByCommuneValidator)
+
+const getsubstancesByAnneeByCommuneInternal = sql<Redefine<IGetsubstancesByAnneeByCommuneInternalQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
 select distinct on ("titres"."slug", "titres_activites"."annee")
     "titres_activites"."annee",
     "te"."communes",
@@ -55,9 +68,20 @@ export const substancesByEntrepriseCategoryByAnneeValidator = z.object({
 })
 
 type SubstancesByEntrepriseCategoryByAnnee = z.infer<typeof substancesByEntrepriseCategoryByAnneeValidator>
-export const getSubstancesByEntrepriseCategoryByAnnee = sql<
+
+export const getSubstancesByEntrepriseCategoryByAnnee = async (
+  pool: Pool,
+  params: {
+    bauxite: typeof SUBSTANCES_FISCALES_IDS.bauxite
+    selContenu: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+    selSondage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage
+    selAbattage: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+  }
+) => dbQueryAndValidate(getSubstancesByEntrepriseCategoryByAnneeInternal, params, pool, substancesByEntrepriseCategoryByAnneeValidator)
+
+const getSubstancesByEntrepriseCategoryByAnneeInternal = sql<
   Redefine<
-    IGetSubstancesByEntrepriseCategoryByAnneeQuery,
+    IGetSubstancesByEntrepriseCategoryByAnneeInternalQuery,
     {
       bauxite: typeof SUBSTANCES_FISCALES_IDS.bauxite
       selContenu: typeof SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_

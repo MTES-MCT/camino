@@ -11,7 +11,6 @@ import {
   editableTitreValidator,
   TitreLink,
   TitreLinks,
-  titreGetValidator,
   TitreGet,
   titreOnfValidator,
   titrePtmgValidator,
@@ -37,10 +36,9 @@ import { isAdministration, isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getLastJournal, getTitre as getTitreDb, lastJournalGetValidator, getTitreCommunes as getTitreCommunesQuery } from './titres.queries.js'
+import { getLastJournal, getTitre as getTitreDb, getTitreCommunes as getTitreCommunesQuery } from './titres.queries.js'
 import type { Pool } from 'pg'
-import { dbQueryAndValidate } from '../../pg-database.js'
-import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import { Commune } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 
 const etapesAMasquer = [
@@ -441,7 +439,7 @@ export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: 
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const communes = await dbQueryAndValidate(getTitreCommunesQuery, { id: titreId }, pool, communeValidator)
+      const communes = await getTitreCommunesQuery(pool, { id: titreIdValidator.parse(titreId) })
 
       res.json(communes)
     }
@@ -566,7 +564,7 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const titres = await dbQueryAndValidate(getTitreDb, { id: titreId }, pool, titreGetValidator)
+      const titres = await getTitreDb(pool, { id: titreIdValidator.parse(titreId) })
 
       if (titres.length !== 1) {
         res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
@@ -587,7 +585,7 @@ export const getTitreDate = (pool: Pool) => async (req: CaminoRequest, res: Cust
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const journaux = await dbQueryAndValidate(getLastJournal, { titreId }, pool, lastJournalGetValidator)
+      const journaux = await getLastJournal(pool, { titreId: titreIdValidator.parse(titreId) })
 
       if (journaux.length !== 1) {
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)

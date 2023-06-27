@@ -1,10 +1,4 @@
-import {
-  FiscaliteParSubstanceParAnnee,
-  StatistiquesMinerauxMetauxMetropole,
-  StatistiquesMinerauxMetauxMetropoleSels,
-  anneeCountStatistiqueValidator,
-  substancesFiscalesStats,
-} from 'camino-common/src/statistiques.js'
+import { FiscaliteParSubstanceParAnnee, StatistiquesMinerauxMetauxMetropole, StatistiquesMinerauxMetauxMetropoleSels, substancesFiscalesStats } from 'camino-common/src/statistiques.js'
 import { CaminoAnnee, anneeSuivante, toCaminoAnnee } from 'camino-common/src/date.js'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
 import { userSuper } from '../../../database/user-super.js'
@@ -18,14 +12,7 @@ import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { evolutionTitres } from './evolution-titres.js'
 import type { Pool } from 'pg'
-import { dbQueryAndValidate } from '../../../pg-database.js'
-import {
-  getSubstancesByEntrepriseCategoryByAnnee,
-  getTitreActiviteSubstanceParAnnee,
-  getsubstancesByAnneeByCommune,
-  substancesByAnneeByCommuneValidator,
-  substancesByEntrepriseCategoryByAnneeValidator,
-} from './metaux-metropole.queries.js'
+import { getSubstancesByEntrepriseCategoryByAnnee, getTitreActiviteSubstanceParAnnee, getsubstancesByAnneeByCommune } from './metaux-metropole.queries.js'
 
 export const getMinerauxMetauxMetropolesStatsInside = async (pool: Pool): Promise<StatistiquesMinerauxMetauxMetropole> => {
   const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
@@ -121,7 +108,7 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
 
 const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMetauxMetropole, 'substances'>> => {
   const bauxite = SUBSTANCES_FISCALES_IDS.bauxite
-  const resultSubstances = await dbQueryAndValidate(getTitreActiviteSubstanceParAnnee, { substanceFiscale: bauxite }, pool, anneeCountStatistiqueValidator)
+  const resultSubstances = await getTitreActiviteSubstanceParAnnee(pool, { substanceFiscale: bauxite })
 
   const bauxiteResult = resultSubstances.reduce<Record<CaminoAnnee, number>>((acc, dateSubstance) => {
     const annee = dateSubstance.annee
@@ -145,7 +132,7 @@ const buildSubstances = async (pool: Pool): Promise<Pick<StatistiquesMinerauxMet
   bauxiteResult[toCaminoAnnee('2018')] = 138.8
   bauxiteResult[toCaminoAnnee('2019')] = 120.76
 
-  const resultSel = await dbQueryAndValidate(getsubstancesByAnneeByCommune, { substancesFiscales: sels }, pool, substancesByAnneeByCommuneValidator)
+  const resultSel = await getsubstancesByAnneeByCommune(pool, { substancesFiscales: sels })
   const selsStats = resultSel.reduce<{
     [key in Sels]: StatistiquesMinerauxMetauxMetropoleSels
   }>(
@@ -303,17 +290,12 @@ const fiscaliteDetail = async (pool: Pool): Promise<FiscaliteParSubstanceParAnne
     },
   }
 
-  const result = await dbQueryAndValidate(
-    getSubstancesByEntrepriseCategoryByAnnee,
-    {
-      bauxite: SUBSTANCES_FISCALES_IDS.bauxite,
-      selContenu: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
-      selSondage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
-      selAbattage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
-    },
-    pool,
-    substancesByEntrepriseCategoryByAnneeValidator
-  )
+  const result = await getSubstancesByEntrepriseCategoryByAnnee(pool, {
+    bauxite: SUBSTANCES_FISCALES_IDS.bauxite,
+    selContenu: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+    selSondage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+    selAbattage: SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
+  })
 
   const annees: CaminoAnnee[] = []
 

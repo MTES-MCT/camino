@@ -1,12 +1,12 @@
 /** Types generated for queries found in "src/api/rest/entreprises.queries.ts" */
 
-/** 'GetEntrepriseDocuments' parameters type */
-export interface IGetEntrepriseDocumentsParams {
+/** 'GetEntrepriseDocumentsInternal' parameters type */
+export interface IGetEntrepriseDocumentsInternalParams {
   entrepriseId?: string | null | void;
 }
 
-/** 'GetEntrepriseDocuments' return type */
-export interface IGetEntrepriseDocumentsResult {
+/** 'GetEntrepriseDocumentsInternal' return type */
+export interface IGetEntrepriseDocumentsInternalResult {
   can_delete_document: boolean | null;
   date: string;
   description: string;
@@ -14,14 +14,14 @@ export interface IGetEntrepriseDocumentsResult {
   type_id: string;
 }
 
-/** 'GetEntrepriseDocuments' query type */
-export interface IGetEntrepriseDocumentsQuery {
-  params: IGetEntrepriseDocumentsParams;
-  result: IGetEntrepriseDocumentsResult;
+/** 'GetEntrepriseDocumentsInternal' query type */
+export interface IGetEntrepriseDocumentsInternalQuery {
+  params: IGetEntrepriseDocumentsInternalParams;
+  result: IGetEntrepriseDocumentsInternalResult;
 }
 
-/** 'InsertEntrepriseDocument' parameters type */
-export interface IInsertEntrepriseDocumentParams {
+/** 'InsertEntrepriseDocumentInternal' parameters type */
+export interface IInsertEntrepriseDocumentInternalParams {
   date?: string | null | void;
   description?: string | null | void;
   entreprise_id?: string | null | void;
@@ -33,15 +33,15 @@ export interface IInsertEntrepriseDocumentParams {
   type_id?: string | null | void;
 }
 
-/** 'InsertEntrepriseDocument' return type */
-export interface IInsertEntrepriseDocumentResult {
+/** 'InsertEntrepriseDocumentInternal' return type */
+export interface IInsertEntrepriseDocumentInternalResult {
   id: string;
 }
 
-/** 'InsertEntrepriseDocument' query type */
-export interface IInsertEntrepriseDocumentQuery {
-  params: IInsertEntrepriseDocumentParams;
-  result: IInsertEntrepriseDocumentResult;
+/** 'InsertEntrepriseDocumentInternal' query type */
+export interface IInsertEntrepriseDocumentInternalQuery {
+  params: IInsertEntrepriseDocumentInternalParams;
+  result: IInsertEntrepriseDocumentInternalResult;
 }
 
 /** 'DeleteEntrepriseDocumentQuery' parameters type */

@@ -171,6 +171,10 @@
         {
           "message": "no 'run' call from PgTyped allowed. Use dbQueryAndValidate.",
           "selector": "CallExpression[callee.property.name='run'][arguments.length=2]"
+        },
+        {
+          "message": "dbQueryAndValidate is to be used only in .queries.ts files",
+          "selector": "CallExpression[callee.name='dbQueryAndValidate']"
         }
       ],
       "no-console": [

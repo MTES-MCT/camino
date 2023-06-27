@@ -10,8 +10,7 @@ import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
-import { dbQueryAndValidate } from '../../pg-database.js'
-import { getEtapesByDemarche, getEtapesByDemarcheValidator } from './titres-etapes-heritage-contenu-update.queries.js'
+import { getEtapesByDemarche } from './titres-etapes-heritage-contenu-update.queries.js'
 import { TitreId } from 'camino-common/src/titres.js'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common.js'
 
@@ -29,7 +28,7 @@ export const getDemarches = async (
     statutId: DemarcheStatutId
   }
 }> => {
-  const etapes = await dbQueryAndValidate(getEtapesByDemarche, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
+  const etapes = await getEtapesByDemarche(pool, { demarcheId, titreId })
 
   return etapes.reduce<{
     [key: DemarcheId]: {
