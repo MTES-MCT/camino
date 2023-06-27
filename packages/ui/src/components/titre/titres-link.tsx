@@ -1,6 +1,6 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TypeAhead } from '@/components/_ui/typeahead'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Statut } from '@/components/_common/statut'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
