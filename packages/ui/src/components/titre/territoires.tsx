@@ -3,7 +3,7 @@ import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-co
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
-import { FunctionalComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, onMounted, ref, watch } from 'vue'
 import { TagList } from '../_ui/tag-list'
 import { Commune, CommuneId } from 'camino-common/src/static/communes'
 import { numberFormat } from 'camino-common/src/number'
@@ -142,7 +142,7 @@ function Surface(surface?: number) {
 const TerritoiresSansSurface = caminoDefineComponent<Omit<TerritoiresProps, 'surface'>>(['forets', 'sdomZones', 'secteursMaritimes', 'titreId', 'apiClient'], (props: TerritoiresProps) => {
   const communesAsyncData = ref<AsyncData<Commune[]>>({ status: 'LOADING' })
 
-  onMounted(async () => {
+  const loadCommunes = async () => {
     try {
       communesAsyncData.value = { status: 'LOADING' }
       const communes = await props.apiClient.getTitreCommunes(props.titreId)
@@ -155,6 +155,15 @@ const TerritoiresSansSurface = caminoDefineComponent<Omit<TerritoiresProps, 'sur
         message: e.message ?? "Une erreur s'est produite",
       }
     }
+  }
+  watch(
+    () => props.titreId,
+    async _newTitreId => {
+      await loadCommunes()
+    }
+  )
+  onMounted(async () => {
+    await loadCommunes()
   })
 
   return () => (

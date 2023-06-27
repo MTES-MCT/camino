@@ -18,7 +18,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/new-section'
-import { FunctionalComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, onMounted, ref, watch } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section, TitreId } from 'camino-common/src/titres'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
@@ -85,7 +85,8 @@ type InfosSectionsProps = {
 const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiClient'], props => {
   const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
 
-  onMounted(async () => {
+  const loadTitreSections = async () => {
+    load.value = { status: 'LOADING' }
     try {
       const data = await props.apiClient.loadTitreSections(props.titre.id)
       load.value = { status: 'LOADED', value: data }
@@ -96,6 +97,15 @@ const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiCl
         message: e.message ?? "Une erreur s'est produite",
       }
     }
+  }
+  watch(
+    () => props.titre,
+    async _newTitre => {
+      await loadTitreSections()
+    }
+  )
+  onMounted(async () => {
+    await loadTitreSections()
   })
 
   return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
