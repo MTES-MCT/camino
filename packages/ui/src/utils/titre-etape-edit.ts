@@ -160,7 +160,6 @@ export const etapePointsFormat = (points: Point[] | null): EtapePointEnhanced =>
 }
 
 type CaminoDocumentEdit = CaminoDocument & {
-  typeId: DocumentTypeId
   fichierNouveau: null
 }
 
@@ -218,10 +217,6 @@ export const etapeEditFormat = (etape: Etape): EtapeEdit => {
     newEtapePointEnhanced.documents = newEtapePointEnhanced.documents.map(documentEtapeFormat)
   }
 
-  if (!newEtapePointEnhanced.justificatifs) {
-    newEtapePointEnhanced.justificatifs = []
-  }
-
   // @ts-ignore
   delete newEtapePointEnhanced.points
 
@@ -230,5 +225,5 @@ export const etapeEditFormat = (etape: Etape): EtapeEdit => {
 }
 
 export const documentEtapeFormat = (document: CaminoDocument): CaminoDocumentEdit => {
-  return { ...document, typeId: document.type.id, fichierNouveau: null }
+  return { ...document, fichierNouveau: null }
 }

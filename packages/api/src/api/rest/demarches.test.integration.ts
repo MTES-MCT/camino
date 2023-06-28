@@ -37,6 +37,7 @@ describe('getDemarche', () => {
       {
         nom: '',
         typeId: 'arm',
+        titreStatutId: 'ind',
         slug: 'arm-slug',
         propsTitreEtapesIds: {},
       },

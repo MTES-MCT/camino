@@ -4,7 +4,7 @@ import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
 import shpjs from 'shpjs'
 import { FeatureCollection, MultiPolygon, Polygon, Position, Feature } from 'geojson'
-import { documentTypeIdsBySdomZonesGet, titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
+import { titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
 import { geojsonFeatureMultiPolygon, geojsonSurface } from '../../../tools/geojson.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import { etapeTypeGet } from '../../../database/queries/metas.js'
@@ -18,6 +18,9 @@ import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
 import { EtapeId } from 'camino-common/src/etape.js'
+import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -50,8 +53,8 @@ export const pointsImporter = async (
   }: {
     fileUpload: { file: FileUpload }
     geoSystemeId: string
-    demarcheId: string
-    etapeTypeId: string
+    demarcheId: DemarcheId
+    etapeTypeId: EtapeTypeId
   },
   context: Context
 ): Promise<
@@ -85,7 +88,7 @@ export const pointsImporter = async (
       geojson = ((await shpjs.parseShp(buffer, 'EPSG:4326')) as Polygon[]).map(p => p.coordinates)
     }
 
-    const points = [] as Omit<ITitrePoint, 'id' | 'titreEtapeId'>[]
+    const points: Omit<ITitrePoint, 'id' | 'titreEtapeId'>[] = []
 
     geojson.forEach((groupe, groupeIndex) => {
       groupe.forEach((contour, contourIndex) => {
@@ -184,6 +187,24 @@ const sdomZonesInformationsGet = async (
   return { surface, documentTypeIds, alertes }
 }
 
+export const getSDOMZoneByPoints = async (demarcheId: DemarcheId, points: ITitrePoint[] | null | undefined): Promise<{ sdomZones: SDOMZoneId[]; titreEtapePoints: ITitrePoint[] }> => {
+  const sdomZones: SDOMZoneId[] = []
+  let titreEtapePoints: ITitrePoint[] = []
+  if (points && points.length > 2) {
+    titreEtapePoints = titreEtapePointsCalc(points)
+
+    const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
+
+    const result = await titreEtapeSdomZonesGet(geojsonFeatures)
+    if (result.fallback) {
+      console.warn(`utilisation du fallback pour la démarche ${demarcheId}`)
+    }
+    sdomZones.push(...result.data)
+  }
+
+  return { sdomZones, titreEtapePoints }
+}
+
 export const perimetreInformations = async (
   {
     points,
@@ -191,28 +212,14 @@ export const perimetreInformations = async (
     etapeTypeId,
   }: {
     points: ITitrePoint[] | undefined | null
-    demarcheId: string
-    etapeTypeId: string
+    demarcheId: DemarcheId
+    etapeTypeId: EtapeTypeId
   },
   { user }: Context
 ): Promise<IPerimetreInformations & { points: ITitrePoint[] }> => {
   try {
     if (!user) {
       throw new Error('droits insuffisants')
-    }
-
-    const sdomZones: SDOMZoneId[] = []
-    let titreEtapePoints: ITitrePoint[] = []
-    if (points && points.length > 2) {
-      titreEtapePoints = titreEtapePointsCalc(points)
-
-      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints) as Feature
-
-      const result = await titreEtapeSdomZonesGet(geojsonFeatures)
-      if (result.fallback) {
-        console.warn(`utilisation du fallback pour la démarche ${demarcheId}`)
-      }
-      sdomZones.push(...result.data)
     }
 
     const demarche = await titreDemarcheGet(demarcheId, { fields: { id: {} } }, userSuper)
@@ -228,6 +235,8 @@ export const perimetreInformations = async (
       },
       userSuper
     )
+
+    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(demarcheId, points)
 
     const informations = await sdomZonesInformationsGet(titreEtapePoints, sdomZones, titre!.typeId, demarche.typeId, etapeTypeId, titre!.points || [], titre?.sdomZones ?? [], titre!.id, user)
 

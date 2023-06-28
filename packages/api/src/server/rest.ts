@@ -30,7 +30,7 @@ import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/co
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
-import { getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import { getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
@@ -127,8 +127,9 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { get: fiscalite }, // UNTESTED YET
   '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
-  '/rest/entreprises/:entrepriseId/documents/:documentId': { delete: deleteEntrepriseDocument },
+  '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
+  '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/communes': { get: getCommunes },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
@@ -207,7 +208,8 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
       res.header('x-timestamp', Date.now().toString())
       const options: SendFileOptions = {
         dotfiles: 'deny',
-        root: join(process.cwd(), 'files'),
+        // TODO 2023-06-27 hack moche mais on va bientôt travailler sur https://github.com/MTES-MCT/camino/issues/611 et supprimer cette partie du code
+        root: filePath && filePath.includes('entreprises') ? process.cwd() : join(process.cwd(), 'files'),
       }
 
       if (filePath) {

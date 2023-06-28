@@ -116,19 +116,6 @@ class TitresEtapes extends Model {
         to: 'documents.titreEtapeId',
       },
     },
-
-    justificatifs: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Document,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresEtapesJustificatifs.titreEtapeId',
-          to: 'titresEtapesJustificatifs.documentId',
-        },
-        to: 'documents.id',
-      },
-    },
     journaux: {
       relation: Model.HasManyRelation,
       modelClass: Journaux,
@@ -166,7 +153,6 @@ class TitresEtapes extends Model {
   public $formatDatabaseJson(json: Pojo) {
     delete json.modification
     delete json.suppression
-    delete json.deposable
     json = super.$formatDatabaseJson(json)
 
     return json
@@ -211,7 +197,6 @@ class TitresEtapes extends Model {
     delete json.geojsonPoints
     delete json.modification
     delete json.suppression
-    delete json.deposable
     json = super.$parseJson(json)
 
     return json

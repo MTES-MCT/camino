@@ -33,7 +33,6 @@ describe('etapeEditFormat', () => {
         titulaires: false,
       },
       documents: [],
-      justificatifs: [],
     })
 
     expect(
@@ -163,7 +162,7 @@ describe('etapeEditFormat', () => {
           titulaires: false,
         },
         substances: ['auru'],
-        documents: [{ type: { id: 'aac' } }],
+        documents: [{ typeId: 'aac' }],
       })
     ).toEqual({
       id: 'etape-id',
@@ -213,8 +212,7 @@ describe('etapeEditFormat', () => {
         surface: false,
         titulaires: false,
       },
-      documents: [{ fichierNouveau: null, typeId: 'aac', type: { id: 'aac' } }],
-      justificatifs: [],
+      documents: [{ fichierNouveau: null, typeId: 'aac' }],
     })
   })
 })

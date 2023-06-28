@@ -10,7 +10,17 @@ import { canAdministrationModifyEtapes } from '../static/administrationsTitresTy
 import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
 
 import { TitreStatutId } from '../static/titresStatuts.js'
-import { EntrepriseId } from '../entreprise.js'
+import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
+import { Section, getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
+import { SDOMZoneId } from '../static/sdom.js'
+import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
+import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { SubstanceLegaleId } from '../static/substancesLegales.js'
+import { isDocumentsComplete } from './documents.js'
+import { CaminoDate } from '../date.js'
+import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -99,6 +109,179 @@ export const canCreateOrEditEtape = (
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
       titulaires.some(({ id }) => user.entreprises?.some(entreprise => id === entreprise.id))
     )
+  }
+
+  return false
+}
+
+type Contenu = Record<string, Record<string, unknown>> | null | undefined
+const contenuCompleteValidate = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, unknown>> | null | undefined): string[] => {
+  const errors: string[] = []
+  sections.forEach(s =>
+    s.elements?.forEach(e => {
+      if (!e.optionnel && !['radio', 'checkbox'].includes(e.type)) {
+        if (!contenu || !contenu[s.id] || contenu[s.id][e.id] === undefined || contenu[s.id][e.id] === null || contenu[s.id][e.id] === '') {
+          errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
+        }
+      }
+    })
+  )
+
+  return errors
+}
+
+export type IsEtapeCompleteEtape = {
+  typeId: EtapeTypeId
+  contenu?: Contenu
+  decisionsAnnexesSections?: DeepReadonly<Section[]> | null
+  decisionsAnnexesContenu?: Contenu
+  points?: null | unknown[]
+  substances?: null | SubstanceLegaleId[]
+  duree?: number | null
+}
+export const isEtapeComplete = (
+  titreEtape: IsEtapeCompleteEtape,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; uri?: string | null; url?: string | null; date: CaminoDate }[] | null | undefined,
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
+  sdomZones: SDOMZoneId[] | null | undefined
+): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
+  const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
+
+  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
+  const errors: string[] = []
+  // les éléments non optionnel des sections sont renseignés
+  if (sections.length) {
+    errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
+  }
+
+  // les décisions annexes sont complètes
+  if (titreEtape.decisionsAnnexesSections) {
+    errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
+  }
+
+  const dts: DocumentType[] = documentsTypes ? [...documentsTypes] : []
+  if (sdomZones?.length) {
+    // Ajoute les documents obligatoires en fonction des zones du SDOM
+    const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
+
+    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false }))
+  }
+
+  // les fichiers obligatoires sont tous renseignés et complets
+  if (dts!.length) {
+    // ajoute des documents obligatoires pour les arm mécanisées
+    if (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm) {
+      dts.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !titreEtape.contenu?.arm.mecanise))
+    }
+    const documentsErrors = isDocumentsComplete(documents ?? [], dts)
+    if (!documentsErrors.valid) {
+      errors.push(...documentsErrors.errors)
+    }
+  }
+
+  // les documents d'entreprise obligatoires sont tous présents
+  const entrepriseDocumentsTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
+
+  const entrepriseDocumentsTypesIds: EntrepriseDocumentTypeId[] = []
+  if (entrepriseDocuments.length) {
+    for (const entrepriseDocumentType of entrepriseDocuments) {
+      if (!entrepriseDocumentsTypes.map(({ id }) => id).includes(entrepriseDocumentType.entreprise_document_type_id)) {
+        errors.push(`impossible de lier un document d'entreprise de type ${entrepriseDocumentType.entreprise_document_type_id}`)
+      }
+      entrepriseDocumentsTypesIds.push(entrepriseDocumentType.entreprise_document_type_id)
+    }
+  }
+  entrepriseDocumentsTypes
+    .filter(({ optionnel }) => !optionnel)
+    .forEach(jt => {
+      if (!entrepriseDocumentsTypesIds.includes(jt.id)) {
+        errors.push(`le document d'entreprise « ${jt.nom} » obligatoire est manquant`)
+      }
+    })
+
+  // Si c’est une demande d’AEX ou d’ARM, certaines informations sont obligatoires
+  if (titreEtape.typeId === 'mfr' && ['arm', 'axm'].includes(titreTypeId)) {
+    // le périmètre doit être défini
+    if (!titreEtape.points) {
+      errors.push('le périmètre doit être renseigné')
+    } else if (titreEtape.points.length < 4) {
+      errors.push('le périmètre doit comporter au moins 4 points')
+    }
+
+    // il doit exister au moins une substance
+    if (!titreEtape.substances || !titreEtape.substances.length || !titreEtape.substances.some(substanceId => !!substanceId)) {
+      errors.push('au moins une substance doit être renseignée')
+    }
+  }
+
+  if (!titreEtape.duree && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
+    errors.push('la durée doit être renseignée')
+  }
+
+  if (isNonEmptyArray(errors)) {
+    return { valid: false, errors }
+  }
+
+  return { valid: true }
+}
+
+export const isEtapeDeposable = (
+  user: User,
+  titre: {
+    typeId: TitreTypeId
+    titreStatutId: TitreStatutId
+    titulaires: { id: EntrepriseId }[]
+    administrationsLocales: AdministrationId[]
+  },
+  demarcheTypeId: DemarcheTypeId,
+  titreEtape: {
+    typeId: EtapeTypeId
+    statutId: EtapeStatutId
+    contenu?: Contenu
+    decisionsAnnexesSections?: DeepReadonly<Section[]> | null
+    decisionsAnnexesContenu?: Contenu
+    points?: null | unknown[]
+    substances?: null | SubstanceLegaleId[]
+    duree?: number | null
+  },
+  documents:
+    | {
+        typeId: DocumentTypeId
+        fichier?: unknown
+        fichierNouveau?: unknown
+        uri?: string | null
+        url?: string | null
+        date: CaminoDate
+      }[]
+    | null
+    | undefined,
+  entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
+  sdomZones: SDOMZoneId[] | null | undefined
+): boolean => {
+  if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION) {
+    if (
+      canCreateOrEditEtape(
+        user,
+        titreEtape.typeId,
+        titreEtape.statutId,
+        titre.titulaires,
+        titre.administrationsLocales,
+        demarcheTypeId,
+        { typeId: titre.typeId, titreStatutId: titre.titreStatutId },
+        'modification'
+      )
+    ) {
+      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, documents, entrepriseDocuments, sdomZones)
+      if (!complete.valid) {
+        console.warn(complete.errors)
+
+        return false
+      }
+
+      return true
+    }
   }
 
   return false

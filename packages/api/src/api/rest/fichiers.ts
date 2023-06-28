@@ -1,9 +1,9 @@
-import { IContenuElement, IContenuValeur, IDocument, IDocumentRepertoire } from '../../types.js'
+import { IContenuElement, IContenuValeur, IDocumentRepertoire } from '../../types.js'
 
 import { documentGet } from '../../database/queries/documents.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find.js'
-import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
+import { documentFilePathFind, entrepriseDocumentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
@@ -11,9 +11,12 @@ import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { EtapeId } from 'camino-common/src/etape.js'
+import { DocumentId, EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
+import { getEntrepriseDocuments } from './entreprises.queries.js'
+import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 
 export const etapeTelecharger =
-  (_pool: Pool) =>
+  (pool: Pool) =>
   async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User) => {
     if (!etapeId) {
       throw new Error("id d'étape absent")
@@ -25,9 +28,6 @@ export const etapeTelecharger =
           documents: {
             id: {},
           },
-          justificatifs: {
-            id: {},
-          },
         },
       },
       user
@@ -35,24 +35,29 @@ export const etapeTelecharger =
 
     if (!titreEtape) throw new Error("l'étape n'existe pas")
 
-    const documents = titreEtape!.documents
-    const justificatifs = titreEtape!.justificatifs
-    if ((!documents || !documents.length) && (!justificatifs || !justificatifs.length)) {
+    const documents = titreEtape.documents ?? []
+    const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
+
+    if (!documents.length && !entrepriseDocuments.length) {
       throw new Error("aucun document n'a été trouvé pour cette demande")
     }
 
-    let allDocs: IDocument[] = []
-    if (documents?.length) allDocs = allDocs.concat(documents)
-    if (justificatifs?.length) allDocs = allDocs.concat(justificatifs)
-
     const zip = new JSZip()
 
-    for (let i = 0; i < allDocs!.length; i++) {
-      const path = await documentFilePathFind(allDocs[i])
+    for (let i = 0; i < documents.length; i++) {
+      const path = documentFilePathFind(documents[i])
       const filename = path.split('/').pop()
 
       if (statSync(path).isFile()) {
         zip.file(filename!, readFileSync(path))
+      }
+    }
+
+    for (let i = 0; i < entrepriseDocuments.length; i++) {
+      const { fullPath, fileName } = entrepriseDocumentFilePathFind(entrepriseDocuments[i].id, entrepriseDocuments[i].entreprise_id)
+
+      if (statSync(fullPath).isFile()) {
+        zip.file(fileName!, readFileSync(fullPath))
       }
     }
 
@@ -74,8 +79,8 @@ export const etapeTelecharger =
   }
 
 export const fichier =
-  (_pool: Pool) =>
-  async ({ params: { documentId } }: { params: { documentId?: string } }, user: User) => {
+  (pool: Pool) =>
+  async ({ params: { documentId } }: { params: { documentId?: DocumentId | EntrepriseDocumentId } }, user: User) => {
     if (!documentId) {
       throw new Error('id du document absent')
     }
@@ -87,38 +92,53 @@ export const fichier =
           type: { id: {} },
           etape: { id: {} },
           activite: { id: {} },
-          entreprise: { id: {} },
         },
       },
       user
     )
 
-    if (!document || !document.fichier) {
-      throw new Error('fichier inexistant')
-    }
-
-    let dossier
-
-    const repertoire = documentRepertoireFind(document)
-
     const format = DOWNLOAD_FORMATS.PDF
 
-    if (repertoire === 'demarches') {
-      dossier = document.etape!.id
-    } else if (repertoire === 'activites') {
-      dossier = document.activite!.id
-    } else if (repertoire === 'entreprises') {
-      dossier = document.entreprise!.id
-    }
+    if (!document) {
+      const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentId)
+      const entrepriseDocuments = await getEntrepriseDocuments([entrepriseDocumentId], [], pool, user)
 
-    const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
+      if (entrepriseDocuments.length !== 1) {
+        throw new Error('fichier inexistant')
+      }
 
-    const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
+      const entrepriseDocument = entrepriseDocuments[0]
+      const { fullPath } = entrepriseDocumentFilePathFind(entrepriseDocument.id, entrepriseDocument.entreprise_id)
 
-    return {
-      nom,
-      format,
-      filePath,
+      return {
+        nom: entrepriseDocument.id,
+        format,
+        filePath: fullPath,
+      }
+    } else {
+      if (!document.fichier) {
+        throw new Error('fichier inexistant')
+      }
+
+      let dossier
+
+      const repertoire = documentRepertoireFind(document)
+
+      if (repertoire === 'demarches') {
+        dossier = document.etape!.id
+      } else if (repertoire === 'activites') {
+        dossier = document.activite!.id
+      }
+
+      const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
+
+      const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
+
+      return {
+        nom,
+        format,
+        filePath,
+      }
     }
   }
 

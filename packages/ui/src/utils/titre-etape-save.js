@@ -120,7 +120,6 @@ const etapeSaveFormat = etape => {
   etape = JSON.parse(JSON.stringify(etape))
   etape.decisionsAnnexesContenu = decisionsAnnexesContenu
 
-  etape.justificatifIds = etape.justificatifs?.map(({ id }) => id)
   etape.documentIds = etape.documents?.filter(d => d.id !== d.typeId).map(({ id }) => id)
 
   if (etape.type) {

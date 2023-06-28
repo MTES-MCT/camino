@@ -135,8 +135,6 @@ export default {
           document.titreEtapeId = this.parentId
         } else if (this.repertoire === 'activites') {
           document.titreActiviteId = this.parentId
-        } else if (this.repertoire === 'entreprises') {
-          document.entrepriseId = this.parentId
         }
       }
 
@@ -147,7 +145,6 @@ export default {
       document.fichierNouveau = null
 
       delete document.type
-      delete document.modification
       delete document.suppression
 
       this.$store.commit('popupOpen', {

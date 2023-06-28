@@ -1,6 +1,6 @@
 import '../init.js'
 import { daily } from '../business/daily.js'
-import documentsCheck from '../tools/documents/check.js'
+import { documentsCheck } from '../tools/documents/check.js'
 import { matomoCacheInit } from '../tools/api-matomo/index.js'
 import { consoleOverride } from '../config/logger.js'
 import { mailjetSend } from '../tools/api-mailjet/emails.js'
@@ -35,7 +35,7 @@ const tasks = async () => {
     await daily(pool)
     if (process.env.CAMINO_STAGE) {
       await documentsClean(pool)
-      await documentsCheck()
+      await documentsCheck(pool)
       await matomoCacheInit()
     }
   } catch (e) {

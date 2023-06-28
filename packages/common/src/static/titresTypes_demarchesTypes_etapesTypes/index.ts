@@ -3778,7 +3778,6 @@ type TDEDemarchesSubObject = (typeof TDE)[keyof typeof TDE]
 const isDemarcheTypeFromTitreType = (demarches: TDEDemarchesSubObject, demarcheTypeId: DemarcheTypeId): demarcheTypeId is keyof TDEDemarchesSubObject => {
   return Object.keys(demarches).findIndex(demarcheId => demarcheId === demarcheTypeId) !== -1
 }
-// FIXME tests
 export const getEtapesTDE = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): readonly EtapeTypeId[] => {
   if (isDemarcheTypeFromTitreType(TDE[titreTypeId], demarcheTypeId)) {
     return TDE[titreTypeId][demarcheTypeId]

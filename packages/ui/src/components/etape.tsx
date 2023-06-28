@@ -6,8 +6,6 @@ import { AsyncData } from '../api/client-rest'
 import { useStore } from 'vuex'
 import { LoadingElement } from './_ui/functional-loader'
 import { User } from 'camino-common/src/roles'
-import { DemarcheGet } from 'camino-common/src/demarche'
-import { demarcheApiClient } from './titre/demarche-api-client'
 import { titreApiClient } from './titre/titre-api-client'
 import { etapeApiClient, EtapeGet } from './etape/etape-api-client'
 import { TitreGet } from 'camino-common/src/titres'
@@ -19,7 +17,7 @@ export const Etape = defineComponent({
     const store = useStore()
 
     const etapeId = route.params.id
-    const data = ref<AsyncData<{ etape: EtapeGet; demarche: DemarcheGet; titre: TitreGet }>>({ status: 'LOADING' })
+    const data = ref<AsyncData<{ etape: EtapeGet; titre: TitreGet }>>({ status: 'LOADING' })
 
     const user = computed<User>(() => {
       return store.state.user.element
@@ -28,10 +26,8 @@ export const Etape = defineComponent({
     const loadEtape = async () => {
       try {
         const etape = await etapeApiClient.getEtapeById(etapeId as string)
-        const demarche = await demarcheApiClient.getDemarche(etape.demarche.id)
-        const titre = await titreApiClient.getTitreById(demarche.titre_id)
-
-        data.value = { status: 'LOADED', value: { etape, demarche, titre } }
+        const titre = await titreApiClient.getTitreById(etape.demarche.titre.id)
+        data.value = { status: 'LOADED', value: { etape, titre } }
       } catch (e: any) {
         console.error('error', e)
         data.value = {
@@ -51,19 +47,19 @@ export const Etape = defineComponent({
       <>
         <LoadingElement
           data={data.value}
-          renderItem={({ etape, demarche, titre }) => (
+          renderItem={({ etape, titre }) => (
             <>
               <h6>
                 <router-link to={{ name: 'titre', params: { id: titre.slug } }} class="cap-first">
                   {titre.nom}
                 </router-link>
                 <span class="color-neutral"> | </span>
-                <span class="cap-first">{DemarchesTypes[demarche.type_id].nom}</span>
+                <span class="cap-first">{DemarchesTypes[etape.demarche.typeId].nom}</span>
               </h6>
 
               <Preview
                 etape={etape}
-                demarcheTypeId={demarche.type_id}
+                demarcheTypeId={etape.demarche.typeId}
                 titreTypeId={titre.type_id}
                 titreNom={titre.nom}
                 titreId={titre.id}

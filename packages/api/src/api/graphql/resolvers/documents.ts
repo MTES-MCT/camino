@@ -6,7 +6,7 @@ import { Context, IDocument } from '../../../types.js'
 import fileDelete from '../../../tools/file-delete.js'
 import fileStreamCreate from '../../../tools/file-stream-create.js'
 
-import { documentsGet, documentGet, documentCreate, documentUpdate, documentDelete } from '../../../database/queries/documents.js'
+import { documentGet, documentCreate, documentUpdate, documentDelete } from '../../../database/queries/documents.js'
 
 import { documentTypeGet } from '../../../database/queries/metas.js'
 
@@ -25,23 +25,10 @@ import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
-  const documentFilePath = await documentFilePathFind(document, true)
+  const documentFilePath = documentFilePathFind(document, true)
   const { createReadStream } = await fileUpload
 
   await fileStreamCreate(createReadStream(), join(process.cwd(), documentFilePath))
-}
-
-export const documents = async ({ entreprisesIds }: { entreprisesIds?: string[] }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-    const documents = await documentsGet({ entreprisesIds }, { fields }, user)
-
-    return documents
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
 }
 
 const documentPermissionsCheck = async (document: IDocument, user: User) => {
@@ -85,8 +72,6 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
     ) {
       throw new Error('droits insuffisants')
     }
-  } else if (document.entrepriseId) {
-    throw new Error("impossible de gérer les justificatifs d'entreprise")
   } else if (document.titreActiviteId) {
     // si l'activité est récupérée depuis la base
     // alors on a le droit de la visualiser, donc de l'éditer
@@ -114,7 +99,7 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
       throw new Error('type de document manquant')
     }
 
-    const errors = await documentInputValidate(document)
+    const errors = documentInputValidate(document)
 
     const rulesErrors = await documentUpdationValidate(document)
 

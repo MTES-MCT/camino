@@ -8,13 +8,9 @@ import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
-import { SDOMZoneIds, SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { DocumentTypeId, DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes.js'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
-import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
-import { TitreTypeId, toTitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
@@ -180,22 +176,4 @@ export const titreEtapeSdomZonesGet = async (geoJson: Feature<any>): Promise<Geo
     fallback: sdomZoneIds.fallback,
     data: sdomZoneIds.data,
   }
-}
-
-// TODO 2023-05-16: move into common tde documents
-export const documentTypeIdsBySdomZonesGet = (sdomZones: SDOMZoneId[] | null | undefined, titreTypeId: string, demarcheTypeId: string, etapeTypeId: string) => {
-  const documentTypeIds: DocumentTypeId[] = []
-
-  // Pour les demandes d’octroi d’AXM
-  if (etapeTypeId === ETAPES_TYPES.demande && demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi && titreTypeId === toTitreTypeId(TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, DOMAINES_IDS.METAUX)) {
-    if (sdomZones?.find(id => id === SDOMZoneIds.Zone2)) {
-      // dans la zone 2 du SDOM les documents suivants sont obligatoires:
-      documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee)
-      documentTypeIds.push(DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement)
-    } else {
-      documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpact)
-    }
-  }
-
-  return documentTypeIds
 }

@@ -6,7 +6,7 @@
         <Tag v-if="etape.incertitudes && etape.incertitudes.date" :mini="true" color="bg-info" class="ml-xs" text="Incertain" />
       </h5>
 
-      <h3 class="cap-first mb-s">{{ etape.type.nom }}</h3>
+      <h3 class="cap-first mb-s">{{ etapeType.nom }}</h3>
 
       <div class="mb-xs flex flex-center">
         <Statut :color="etapeStatut.couleur" :nom="statutNom" />
@@ -16,7 +16,7 @@
     </template>
 
     <template v-if="canEdit" #buttons>
-      <button v-if="etapeIsDemandeEnConstruction" class="btn btn-primary flex small rnd-0" :disabled="!etape.deposable" :class="{ disabled: !etape.deposable }" @click="etapeDepot">
+      <button v-if="etapeIsDemandeEnConstruction" class="btn btn-primary flex small rnd-0" :disabled="!deposable" :class="{ disabled: !deposable }" @click="etapeDepot">
         <span class="mt-xxs mb-xxs">Déposer…</span>
       </button>
 
@@ -51,7 +51,7 @@
           :documents="etape.documents"
           :etiquette="canEdit"
           :parentId="etape.id"
-          :parentTypeId="etape.type.id"
+          :parentTypeId="etape.typeId"
           repertoire="demarches"
           :title="documentPopupTitle"
         />
@@ -59,22 +59,15 @@
         <hr class="mx--" />
       </div>
 
-      <div v-if="etape.justificatifs?.length">
-        <h4>Justificatifs</h4>
-        <Documents
-          :boutonDissociation="false"
-          :boutonModification="false"
-          :boutonSuppression="false"
-          :documents="etape.justificatifs"
-          :etiquette="canEdit"
-          :parentId="etape.id"
-          :parentTypeId="etape.type.id"
-          repertoire="'entreprises'"
-          :title="documentPopupTitle"
-        />
-
-        <hr class="mx--" />
-      </div>
+      <EntrepriseDocuments
+        :apiClient="entrepriseApiClient"
+        :user="user"
+        :etapeId="etape.id"
+        :titreTypeId="titreTypeId"
+        :demarcheTypeId="demarcheTypeId"
+        :etapeTypeId="etape.typeId"
+        :entrepriseDocuments="entrepriseDocuments"
+      />
 
       <div v-if="etape.decisionsAnnexesSections && etape.decisionsAnnexesContenu">
         <UiSection
@@ -113,11 +106,15 @@ import DeposePopup from './depose-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { onMounted } from 'vue'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { EntrepriseDocuments } from './entreprise-documents'
+import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
   components: {
@@ -130,6 +127,7 @@ export default {
     Fondamentales,
     UiSection,
     Documents,
+    EntrepriseDocuments,
   },
 
   props: {
@@ -141,10 +139,17 @@ export default {
     opened: { type: Boolean, default: false },
     titreStatutId: { type: String, required: true },
     titreAdministrations: { type: Array, required: true },
-    user: { type: Object, required: true },
+    user: { type: [Object, null], required: true },
   },
 
   emits: ['close', 'toggle'],
+
+  data() {
+    return {
+      entrepriseApiClient,
+      entrepriseDocumentsData: [],
+    }
+  },
 
   computed: {
     route() {
@@ -154,17 +159,32 @@ export default {
         id: this.titreId,
       }
     },
+    etapeType() {
+      return EtapesTypes[this.etape.typeId]
+    },
+
+    deposable() {
+      return isEtapeDeposable(
+        this.user,
+        { typeId: this.titreTypeId, titreStatutId: this.titreStatutId, titulaires: this.etape.titulaires, administrationsLocales: this.titreAdministrations },
+        this.demarcheTypeId,
+        this.etape,
+        this.etape.documents,
+        this.entrepriseDocumentsData,
+        this.etape.sdomZones
+      )
+    },
 
     demarcheType() {
       return DemarchesTypes[this.demarcheTypeId]
     },
 
     documentPopupTitle() {
-      return `${cap(this.titreNom)} | ${cap(this.demarcheType.nom)} | ${cap(this.etape.type.nom)}`
+      return `${cap(this.titreNom)} | ${cap(this.demarcheType.nom)} | ${cap(this.etapeType.nom)}`
     },
 
     etapeIsDemandeEnConstruction() {
-      return this.etape.type.id === 'mfr' && this.etapeStatut.id === 'aco'
+      return this.etape.typeId === 'mfr' && this.etapeStatut.id === 'aco'
     },
 
     hasFondamentales() {
@@ -193,7 +213,7 @@ export default {
     },
 
     statutNom() {
-      return this.etapeIsDemandeEnConstruction && !this.etape.deposable ? `${this.etapeStatut.nom} (incomplet)` : this.etapeStatut.nom
+      return this.etapeIsDemandeEnConstruction && !this.deposable ? `${this.etapeStatut.nom} (incomplet)` : this.etapeStatut.nom
     },
 
     userIsAdmin() {
@@ -201,13 +221,13 @@ export default {
     },
 
     canDownloadZip() {
-      return this.etape.type.id === 'mfr' && (this.hasDocuments || this.hasJustificatifs)
+      return this.etape.typeId === 'mfr' && (this.hasDocuments || this.hasJustificatifs)
     },
     etapeStatut() {
       return EtapesStatuts[this.etape.statutId]
     },
     demandeHelp() {
-      if (!this.userIsAdmin && this.etape.type.id === 'mfr') {
+      if (!this.userIsAdmin && this.etape.typeId === 'mfr') {
         if (['arm', 'axm'].includes(this.titreTypeId)) {
           if (this.etapeStatut.id === 'aco') {
             return 'Si vous avez ajouté tous les documents spécifiques à la demande et justificatifs d’entreprise, et que vous considérez que votre demande est complète, vous pouvez la déposer en cliquant sur « Déposer … ». L’ONF et le PTMG seront ainsi notifiés et pourront instruire votre demande.'
@@ -222,7 +242,7 @@ export default {
     canEdit() {
       return canCreateOrEditEtape(
         this.user,
-        this.etape.type.id,
+        this.etape.typeId,
         this.etape.statutId,
         this.etape.titulaires,
         this.titreAdministrations,
@@ -234,7 +254,7 @@ export default {
 
     sections() {
       try {
-        return getSections(this.titreTypeId, this.demarcheTypeId, this.etape.type.id)
+        return getSections(this.titreTypeId, this.demarcheTypeId, this.etape.typeId)
       } catch (e) {
         return []
       }
@@ -242,6 +262,9 @@ export default {
   },
 
   methods: {
+    entrepriseDocuments(entrepriseDocuments) {
+      this.entrepriseDocumentsData.splice(0, this.entrepriseDocumentsData.length, ...entrepriseDocuments)
+    },
     dateFormat(date) {
       return dateFormat(date)
     },
@@ -291,7 +314,7 @@ export default {
       this.$store.commit('popupOpen', {
         component: RemovePopup,
         props: {
-          etapeTypeNom: this.etape.type.nom,
+          etapeTypeNom: this.etapeType.nom,
           etapeId: this.etape.id,
           demarcheTypeNom: this.demarcheType.nom,
           titreNom: this.titreNom,

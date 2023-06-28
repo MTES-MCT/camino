@@ -1,7 +1,17 @@
 import { uploadCall } from '@/api/_upload'
 import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
-import { EntrepriseId, EntrepriseType, Siren, EntrepriseDocument, DocumentId, entrepriseDocumentInputValidator, documentIdValidator } from 'camino-common/src/entreprise'
+import {
+  EntrepriseId,
+  EntrepriseType,
+  Siren,
+  EntrepriseDocument,
+  EtapeEntrepriseDocument,
+  entrepriseDocumentInputValidator,
+  EntrepriseDocumentId,
+  entrepriseDocumentIdValidator,
+} from 'camino-common/src/entreprise'
+import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/fiscalite'
 import { z } from 'zod'
 
@@ -11,8 +21,9 @@ export interface EntrepriseApiClient {
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
   getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
-  creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput) => Promise<DocumentId>
-  deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: DocumentId) => Promise<void>
+  getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
+  creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput) => Promise<EntrepriseDocumentId>
+  deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
 }
 export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true }).extend({
   document: z.instanceof(File),
@@ -43,20 +54,25 @@ export const entrepriseApiClient: EntrepriseApiClient = {
       entrepriseId,
     })
   },
-  creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput): Promise<DocumentId> => {
+  getEtapeEntrepriseDocuments: async (etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> => {
+    return getWithJson('/rest/etapes/:etapeId/entrepriseDocuments', {
+      etapeId,
+    })
+  },
+  creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput): Promise<EntrepriseDocumentId> => {
     const tempDocumentName = await uploadCall(uiEntrepriseDocumentInput.document, _progress => {})
 
     const { document, ...entrepriseDocumentInput } = uiEntrepriseDocumentInput
 
     const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName })
-    const parsed = documentIdValidator.safeParse(createDocument)
+    const parsed = entrepriseDocumentIdValidator.safeParse(createDocument)
     if (parsed.success) {
       return parsed.data
     } else {
       throw createDocument
     }
   },
-  deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, documentId: DocumentId): Promise<void> => {
-    return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:documentId', { entrepriseId, documentId })
+  deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, entrepriseDocumentId: EntrepriseDocumentId): Promise<void> => {
+    return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId', { entrepriseId, entrepriseDocumentId })
   },
 }

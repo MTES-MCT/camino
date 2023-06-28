@@ -80,10 +80,6 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
     documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
   })
 
-  q.modifyGraph('justificatifs', b => {
-    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
-  })
-
   q.modifyGraph('titulaires', b => {
     entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresTitulaires.operateur')
   })

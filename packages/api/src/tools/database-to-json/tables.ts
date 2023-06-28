@@ -30,7 +30,7 @@ export const tables = [
   { name: 'titres_demarches', orderBy: ['id'] },
   { name: 'titres_etapes', orderBy: ['id'] },
   {
-    name: 'titres_etapes_justificatifs',
+    name: 'titres_etapes_entreprises_documents',
     orderBy: ['titre_etape_id', 'document_id'],
   },
   { name: 'titres_points', orderBy: ['id'] },

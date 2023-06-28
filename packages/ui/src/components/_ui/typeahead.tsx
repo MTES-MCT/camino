@@ -164,7 +164,9 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
             onFocus={() => (isInputFocused.value = true)}
             onBlur={() => (isInputFocused.value = false)}
             onKeydown={payload => {
-              // FIXME il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
+              // TODO 2023-06-19 il doit bien y avoir une enum quelque part dans la lib du dom avec la liste des keys non ?
+              // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type
+              // Underlying issue: https://github.com/microsoft/TypeScript/issues/38886
               if (payload.key === 'Backspace') {
                 deleteLastSelected()
               }

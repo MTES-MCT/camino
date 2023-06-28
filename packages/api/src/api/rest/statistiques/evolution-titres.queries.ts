@@ -1,14 +1,14 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DepartementId } from 'camino-common/src/static/departement'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
-import { Redefine, dbQueryAndValidate } from '../../../pg-database'
-import { IGetDepotDbQuery, IGetEtapesTypesDecisionRefusDbQuery, IGetOctroiDbQuery, IGetSurfaceDbQuery } from './evolution-titres.queries.types'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { DepartementId } from 'camino-common/src/static/departement.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques.js'
+import { Redefine, dbQueryAndValidate } from '../../../pg-database.js'
+import { IGetDepotDbQuery, IGetEtapesTypesDecisionRefusDbQuery, IGetOctroiDbQuery, IGetSurfaceDbQuery } from './evolution-titres.queries.types.js'
 import { Pool } from 'pg'
 
 interface GetDepotProps {

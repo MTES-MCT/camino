@@ -41,65 +41,64 @@ const pool = new pg.Pool({
 
 consoleOverride()
 geoSystemesInit()
-filesInit().then(() => {
-  databaseInit(pool).then(() => {
-    const app = express()
-    app.disable('x-powered-by')
+filesInit()
+databaseInit(pool).then(() => {
+  const app = express()
+  app.disable('x-powered-by')
 
-    if (process.env.API_SENTRY_URL) {
-      Sentry.init({
-        dsn: process.env.API_SENTRY_URL,
-        environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV,
-      })
-      app.use(Sentry.Handlers.requestHandler())
+  if (process.env.API_SENTRY_URL) {
+    Sentry.init({
+      dsn: process.env.API_SENTRY_URL,
+      environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV,
+    })
+    app.use(Sentry.Handlers.requestHandler())
+  }
+
+  const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    skip: (request: any, _response: any) => {
+      // On n'applique pas de rate limiting sur le televersement des fichiers
+      return request.url.startsWith('/televersement')
+    },
+  })
+
+  app.use(cors({ credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic, userLoader, cookieParser(), connectedCatcher)
+
+  app.get('/stream/version', async (_req, res) => {
+    const headers = {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
     }
 
-    const limiter = rateLimit({
-      windowMs: 60 * 1000, // 1 minute
-      max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
-      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-      legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-      skip: (request: any, _response: any) => {
-        // On n'applique pas de rate limiting sur le televersement des fichiers
-        return request.url.startsWith('/televersement')
-      },
-    })
+    res.writeHead(200, headers)
+    res.write(`id: ${Date.now()}\n`)
+    res.write(`event: version\n`)
+    res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+    res.flush()
+  })
+  app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(pool))
 
-    app.use(cors({ credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic, userLoader, cookieParser(), connectedCatcher)
+  app.use('/televersement', uploadAllowedMiddleware, restUpload())
 
-    app.get('/stream/version', async (_req, res) => {
-      const headers = {
-        'Content-Type': 'text/event-stream',
-        Connection: 'keep-alive',
-        'Cache-Control': 'no-cache',
-      }
+  app.use('/', graphqlUpload, graphql(pool))
 
-      res.writeHead(200, headers)
-      res.write(`id: ${Date.now()}\n`)
-      res.write(`event: version\n`)
-      res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
-      res.flush()
-    })
-    app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(pool))
+  if (process.env.API_SENTRY_URL) {
+    app.use(Sentry.Handlers.errorHandler())
+  }
 
-    app.use('/televersement', uploadAllowedMiddleware, restUpload())
+  app.listen(port, () => {
+    console.info('')
+    console.info('URL:', url)
+    console.info('ENV:', process.env.ENV)
+    console.info('NODE_ENV:', process.env.NODE_ENV)
 
-    app.use('/', graphqlUpload, graphql(pool))
-
-    if (process.env.API_SENTRY_URL) {
-      app.use(Sentry.Handlers.errorHandler())
+    if (process.env.NODE_DEBUG === 'true') {
+      console.warn('NODE_DEBUG:', process.env.NODE_DEBUG)
     }
-
-    app.listen(port, () => {
-      console.info('')
-      console.info('URL:', url)
-      console.info('ENV:', process.env.ENV)
-      console.info('NODE_ENV:', process.env.NODE_ENV)
-
-      if (process.env.NODE_DEBUG === 'true') {
-        console.warn('NODE_DEBUG:', process.env.NODE_DEBUG)
-      }
-      console.info('')
-    })
+    console.info('')
   })
 })

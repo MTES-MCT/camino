@@ -142,10 +142,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
       fields.documents = { id: {} }
     }
 
-    if (!fields.justificatifs) {
-      fields.justificatifs = { id: {} }
-    }
-
     if (!fields.type) {
       fields.type = { id: {} }
     }

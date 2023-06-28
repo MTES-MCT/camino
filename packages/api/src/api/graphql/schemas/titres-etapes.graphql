@@ -82,9 +82,6 @@ type Etape {
   "Documents relatifs à l'étape"
   documents: [Document]
 
-  "Justificatifs d'entreprises relatifs à l'étape"
-  justificatifs: [Document]
-
   incertitudes: Incertitudes
 
   heritageProps: HeritageProps
@@ -97,8 +94,6 @@ type Etape {
   decisionsAnnexesSections: Json
   "Le contenu des décisions annexes nécessaires à la demande"
   decisionsAnnexesContenu: Json
-
-  deposable: Boolean
 }
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -189,7 +184,7 @@ input InputEtapeCreation {
   heritageContenu: Json
   contenu: Json
   documentIds: [ID]
-  justificatifIds: [ID]
+  entrepriseDocumentIds: [ID]
 }
 
 input InputEtapeModification {
@@ -212,7 +207,7 @@ input InputEtapeModification {
   heritageContenu: Json
   contenu: Json
   documentIds: [ID]
-  justificatifIds: [ID]
+  entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
 }
 

@@ -2,7 +2,7 @@ import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { Entreprise, EntrepriseDocument, EntrepriseType, toDocumentId, newEntrepriseId } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseDocument, EntrepriseType, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
@@ -23,23 +23,26 @@ const getEntrepriseDocumentsAction = action('getEntrepriseDocuments')
 const getEntrepriseAction = action('getEntreprise')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const deleteEntrepriseDocumentAction = action('deleteEntrepriseDocument')
+const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 
 const annee = toCaminoAnnee('2023')
 
 const entrepriseDocuments: EntrepriseDocument[] = [
   {
-    id: toDocumentId(toCaminoDate('2019-08-26'), 'kbi', '12345678'),
-    type_id: 'kbi',
+    id: toEntrepriseDocumentId(toCaminoDate('2019-08-26'), 'kbi', '12345678'),
+    entreprise_document_type_id: 'kbi',
     date: toCaminoDate('2019-08-26'),
     description: 'Kbis',
     can_delete_document: true,
+    entreprise_id: newEntrepriseId(''),
   },
   {
-    id: toDocumentId(toCaminoDate('2019-08-26'), 'idm', '12345678'),
-    type_id: 'idm',
+    id: toEntrepriseDocumentId(toCaminoDate('2019-08-26'), 'idm', '12345678'),
+    entreprise_document_type_id: 'idm',
     date: toCaminoDate('2019-08-26'),
     description: 'Identification pelle mécanique',
     can_delete_document: false,
+    entreprise_id: newEntrepriseId(''),
   },
 ]
 const entreprise: EntrepriseType = {
@@ -61,6 +64,10 @@ const entreprise: EntrepriseType = {
 }
 
 const apiClient: EntrepriseApiClient = {
+  getEtapeEntrepriseDocuments: etapeId => {
+    getEtapeEntrepriseDocumentsAction(etapeId)
+    return Promise.resolve(entrepriseDocuments)
+  },
   getEntreprise: entrepriseId => {
     getEntrepriseAction(entrepriseId)
     return Promise.resolve(entreprise)
@@ -91,7 +98,7 @@ const apiClient: EntrepriseApiClient = {
   },
   creerEntrepriseDocument: (entrepriseId, document) => {
     creerEntrepriseDocumentAction(entrepriseId, document)
-    return Promise.resolve(toDocumentId(document.date, document.typeId, '12345678'))
+    return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
   },
 }
 

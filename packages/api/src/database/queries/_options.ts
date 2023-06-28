@@ -26,11 +26,10 @@ const entreprisesEtablissements = {
   update: { insertMissing: true },
 }
 
-const entreprisesRelateTrue = [] as string[]
-const entreprisesRelateFalse = [...documentsRelateFalse.map(k => `documents.${k}`)]
+const entreprisesRelateTrue: string[] = []
 
 const entreprises = {
-  graph: `[utilisateurs, etablissements(orderDesc), documents.${documents.graph}]`,
+  graph: `[utilisateurs, etablissements(orderDesc)]`,
   update: {
     insertMissing: true,
     relate: entreprisesRelateTrue,
@@ -39,8 +38,7 @@ const entreprises = {
 }
 
 const utilisateursRelateTrue = ['entreprises']
-
-const utilisateursRelateFalse = [...entreprisesRelateFalse.map(k => `entreprises.${k}`)]
+const utilisateursRelateFalse = ['entreprises']
 
 const utilisateurs = {
   graph: `[administration.activitesTypes, entreprises.etablissements]`,
@@ -62,25 +60,15 @@ const administrations = {
   },
 }
 
-const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires', 'justificatifs']
+const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires']
 
-const titresEtapesRelateFalse = [
-  'titulaires.etablissements',
-  'titulaires.utilisateurs',
-  'titulaires.documents',
-  'titulaires.documents.type',
-  'amodiataires.etablissements',
-  'amodiataires.utilisateurs',
-  ...documentsRelateFalse.map(k => `documents.${k}`),
-  ...documentsRelateFalse.map(k => `justificatifs.${k}`),
-]
+const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs', ...documentsRelateFalse.map(k => `documents.${k}`)]
 
 const titresEtapes = {
   graph: `[
     points(orderAsc).${points.graph},
     type,
     documents.${documents.graph},
-    justificatifs.${documents.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph}
   ]`,
@@ -166,8 +154,6 @@ const titresRelateFalse = [
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',
-  'titulaires.documents',
-  'titulaires.documents.type',
   'amodiataires',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',

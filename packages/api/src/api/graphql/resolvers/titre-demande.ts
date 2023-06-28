@@ -35,6 +35,7 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
       {
         nom: titreDemande.nom,
         typeId: titreDemande.typeId,
+        titreStatutId: 'ind',
         references: titreDemande.references,
         propsTitreEtapesIds: {},
       },

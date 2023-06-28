@@ -30,6 +30,7 @@ const titrePublicLectureFalse: ITitre = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
+  titreStatutId: 'ind',
   publicLecture: false,
   propsTitreEtapesIds: {},
 }
@@ -38,6 +39,7 @@ const titreDemarchesPubliques: ITitre = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
+  titreStatutId: 'ind',
   publicLecture: true,
   propsTitreEtapesIds: {},
   demarches: [
@@ -59,6 +61,7 @@ const titreEtapesPubliques: ITitre = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
+  titreStatutId: 'ind',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   demarches: [
@@ -151,6 +154,7 @@ const titreWithActiviteGrp: ITitre = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'axm',
+  titreStatutId: 'ind',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   activites: [
@@ -209,6 +213,7 @@ const titreActivites: ITitre = {
   id: newTitreId('titre-id'),
   nom: 'mon titre',
   typeId: 'arm',
+  titreStatutId: 'ind',
   publicLecture: true,
   propsTitreEtapesIds: {},
   activites: [
@@ -279,6 +284,7 @@ describe('titre', () => {
       id: newTitreId('titre-id'),
       nom: 'mon titre',
       typeId: 'arm',
+      titreStatutId: 'ind',
       publicLecture: true,
       propsTitreEtapesIds: {},
     }

@@ -1,10 +1,10 @@
-import dirCreate from '../tools/dir-create.js'
+import { dirCreate } from '../tools/dir-create.js'
 import { DOCUMENTS_REPERTOIRES } from '../types.js'
 
-export const filesInit = async () => {
-  await dirCreate('files').catch()
+export const filesInit = () => {
+  dirCreate('files')
 
   for (const documentsRepertoire of DOCUMENTS_REPERTOIRES) {
-    await dirCreate(`files/${documentsRepertoire}`).catch()
+    dirCreate(`files/${documentsRepertoire}`)
   }
 }

@@ -1,11 +1,11 @@
 import { FunctionalComponent } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { Alert } from '@/components/_ui/alert'
-import { DocumentId, EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { EntrepriseApiClient } from './entreprise-api-client'
 interface Props {
   entrepriseId: EntrepriseId
-  entrepriseDocument: { nom: string; id: DocumentId }
+  entrepriseDocument: { nom: string; id: EntrepriseDocumentId }
   close: () => void
   apiClient: Pick<EntrepriseApiClient, 'deleteEntrepriseDocument'>
 }

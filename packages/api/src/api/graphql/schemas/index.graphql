@@ -180,7 +180,6 @@ type Query {
 
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
-  documents(entreprisesIds: [ID!]): [Document]
 
   "Définitions et descriptions"
   definitions: [Definition]

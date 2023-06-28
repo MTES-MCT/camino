@@ -47,6 +47,7 @@ describe('titresQueryModify', () => {
       const mockTitre: Omit<ITitre, 'id'> = {
         nom: 'titre1',
         typeId: 'arm',
+        titreStatutId: 'ind',
         entreprisesLecture,
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [

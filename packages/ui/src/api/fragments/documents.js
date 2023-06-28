@@ -4,6 +4,7 @@ import { fragmentDocumentType } from './metas'
 const fragmentDocument = gql`
   fragment document on Document {
     id
+    typeId
     type {
       ...documentType
     }
@@ -18,7 +19,6 @@ const fragmentDocument = gql`
     nor
     publicLecture
     entreprisesLecture
-    modification
     suppression
   }
 

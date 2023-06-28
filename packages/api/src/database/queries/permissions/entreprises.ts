@@ -5,14 +5,12 @@ import { knex } from '../../../knex.js'
 import Entreprises from '../../models/entreprises.js'
 import Utilisateurs from '../../models/utilisateurs.js'
 import Titres from '../../models/titres.js'
-import Documents from '../../models/documents.js'
 
 import { titresQueryModify } from './titres.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
-import { documentsQueryModify } from './documents.js'
 import { User } from 'camino-common/src/roles.js'
 
-const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
+export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
   q.select('entreprises.*')
 
   q.modifyGraph('titulaireTitres', a =>
@@ -33,14 +31,10 @@ const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entre
     utilisateursQueryModify(b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user)
   })
 
-  q.modifyGraph('documents', b => {
-    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
-  })
-
   return q
 }
 
-const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string, { isTitulaire, isAmodiataire }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}) => {
+export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string, { isTitulaire, isAmodiataire }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}) => {
   const q = Entreprises.query().whereIn('entreprises.id', entreprisesIds)
 
   if (isTitulaire) {
@@ -75,5 +69,3 @@ const entreprisesAmodiatairesModify = (q: QueryBuilder<Entreprises, Entreprises 
     b.on(knex.raw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'amodiataires', 't_a.titreEtapeId'])).onIn('t_a.entrepriseId', entreprisesIds)
   })
 }
-
-export { entreprisesQueryModify, entreprisesTitresQuery }

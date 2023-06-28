@@ -1,10 +1,9 @@
-import { ITitreEtape, IFields, ITitreEtapeJustificatif } from '../../types.js'
+import { ITitreEtape, IFields } from '../../types.js'
 import options from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
 import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes.js'
-import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs.js'
 import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
 import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
 import { User, UserNotNull } from 'camino-common/src/roles'
@@ -85,9 +84,4 @@ const titreEtapeUpdate = async (id: EtapeId, titreEtape: Partial<DBTitresEtapes>
 const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: TitreId) =>
   upsertJournalCreate(titreEtape.id, titreEtape, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
 
-const titresEtapesJustificatifsUpsert = async (titresEtapesJustificatifs: ITitreEtapeJustificatif[]) =>
-  TitresEtapesJustificatifs.query().upsertGraph(titresEtapesJustificatifs, {
-    insertMissing: true,
-  })
-
-export { titresEtapesGet, titreEtapeGet, titreEtapeCreate, titreEtapeUpdate, titreEtapeUpsert, titresEtapesJustificatifsUpsert }
+export { titresEtapesGet, titreEtapeGet, titreEtapeCreate, titreEtapeUpdate, titreEtapeUpsert }
