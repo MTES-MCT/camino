@@ -1,14 +1,14 @@
 /** Types generated for queries found in "src/business/processes/titres-etapes-heritage-contenu-update.queries.ts" */
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
-/** 'GetEtapesByDemarche' parameters type */
-export interface IGetEtapesByDemarcheParams {
+/** 'GetEtapesByDemarcheInternal' parameters type */
+export interface IGetEtapesByDemarcheInternalParams {
   demarcheId?: string | null | void;
   titreId?: string | null | void;
 }
 
-/** 'GetEtapesByDemarche' return type */
-export interface IGetEtapesByDemarcheResult {
+/** 'GetEtapesByDemarcheInternal' return type */
+export interface IGetEtapesByDemarcheInternalResult {
   communes: Json;
   contenu: Json | null;
   date: string;
@@ -25,9 +25,9 @@ export interface IGetEtapesByDemarcheResult {
   type_id: string;
 }
 
-/** 'GetEtapesByDemarche' query type */
-export interface IGetEtapesByDemarcheQuery {
-  params: IGetEtapesByDemarcheParams;
-  result: IGetEtapesByDemarcheResult;
+/** 'GetEtapesByDemarcheInternal' query type */
+export interface IGetEtapesByDemarcheInternalQuery {
+  params: IGetEtapesByDemarcheInternalParams;
+  result: IGetEtapesByDemarcheInternalResult;
 }
 

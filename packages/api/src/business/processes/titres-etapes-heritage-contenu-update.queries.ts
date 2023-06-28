@@ -1,6 +1,7 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { IGetEtapesByDemarcheQuery } from './titres-etapes-heritage-contenu-update.queries.types'
-import { Redefine } from '../../pg-database'
+import { IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
+import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts.js'
@@ -12,6 +13,7 @@ import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
 import { z } from 'zod'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { Pool } from 'pg'
 
 export const getEtapesByDemarcheValidator = z.object({
   contenu: z.any(),
@@ -30,7 +32,9 @@ export const getEtapesByDemarcheValidator = z.object({
   type_id: etapeTypeIdValidator,
 })
 
-export const getEtapesByDemarche = sql<Redefine<IGetEtapesByDemarcheQuery, { demarcheId?: DemarcheId; titreId?: TitreId }, z.infer<typeof getEtapesByDemarcheValidator>>>`
+export const getEtapesByDemarche = async (pool: Pool, params: { demarcheId?: DemarcheId; titreId?: TitreId }) =>
+  dbQueryAndValidate(getEtapesByDemarcheInternal, params, pool, getEtapesByDemarcheValidator)
+const getEtapesByDemarcheInternal = sql<Redefine<IGetEtapesByDemarcheInternalQuery, { demarcheId?: DemarcheId; titreId?: TitreId }, z.infer<typeof getEtapesByDemarcheValidator>>>`
 SELECT
     titre.id as titre_id,
     titre.type_id as titre_type_id,

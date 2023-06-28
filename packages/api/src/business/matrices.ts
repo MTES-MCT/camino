@@ -13,9 +13,8 @@ import fs from 'fs'
 import carbone from 'carbone'
 import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries.js'
-import { dbQueryAndValidate } from '../pg-database.js'
 import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import { Commune } from 'camino-common/src/static/communes.js'
 
 const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
 
@@ -452,7 +451,7 @@ export const matrices = async (annee: number, pool: Pool) => {
     .flatMap(({ communes }) => communes?.map(({ id }) => id))
     .filter(onlyUnique)
     .filter(isNotNullNorUndefined)
-  const communes = isNonEmptyArray(communesIds) ? await dbQueryAndValidate(getCommunes, { ids: communesIds }, pool, communeValidator) : []
+  const communes = isNonEmptyArray(communesIds) ? await getCommunes(pool, { ids: communesIds }) : []
 
   const body = bodyBuilder(activites, activitesTrimestrielles, titres, annee, entreprises)
   if (Object.keys(body.articles).length > 0) {

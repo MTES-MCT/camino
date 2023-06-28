@@ -1,11 +1,17 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine } from '../../pg-database.js'
-import { IDeleteEntrepriseDocumentQueryQuery, IGetEntrepriseDocumentsQuery, IInsertEntrepriseDocumentQuery } from './entreprises.queries.types.js'
-import { DocumentId, EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { IDeleteEntrepriseDocumentQueryQuery, IGetEntrepriseDocumentsInternalQuery, IInsertEntrepriseDocumentInternalQuery } from './entreprises.queries.types.js'
+import { DocumentId, EntrepriseDocument, EntrepriseId, documentIdValidator, entrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntrepriseDocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { Pool } from 'pg'
+import { z } from 'zod'
 
-export const getEntrepriseDocuments = sql<Redefine<IGetEntrepriseDocumentsQuery, { entrepriseId: EntrepriseId }, EntrepriseDocument>>`
+export const getEntrepriseDocuments = async (pool: Pool, params: { entrepriseId: EntrepriseId }) => {
+  return dbQueryAndValidate(getEntrepriseDocumentsInternal, params, pool, entrepriseDocumentValidator)
+}
+const getEntrepriseDocumentsInternal = sql<Redefine<IGetEntrepriseDocumentsInternalQuery, { entrepriseId: EntrepriseId }, EntrepriseDocument>>`
 select
     d.id,
     d.description,
@@ -25,9 +31,26 @@ where
     and d.public_lecture != true
 `
 
-export const insertEntrepriseDocument = sql<
+export const insertEntrepriseDocument = async (
+  pool: Pool,
+  params: {
+    id: DocumentId
+    type_id: EntrepriseDocumentTypeId
+    date: CaminoDate
+    entreprise_id: EntrepriseId
+    description: string
+    fichier: true
+    fichier_type_id: FileUploadType
+    entreprises_lecture: true
+    public_lecture: false
+  }
+) => {
+  return dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: documentIdValidator }))
+}
+
+const insertEntrepriseDocumentInternal = sql<
   Redefine<
-    IInsertEntrepriseDocumentQuery,
+    IInsertEntrepriseDocumentInternalQuery,
     {
       id: DocumentId
       type_id: EntrepriseDocumentTypeId
@@ -49,7 +72,10 @@ RETURNING
 
 `
 
-export const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: DocumentId; entrepriseId: EntrepriseId }, void>>`
+export const deleteEntrepriseDocument = async (pool: Pool, params: { id: DocumentId; entrepriseId: EntrepriseId }) => {
+  return dbQueryAndValidate(deleteEntrepriseDocumentQuery, params, pool, z.void())
+}
+const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: DocumentId; entrepriseId: EntrepriseId }, void>>`
 delete from documents
 where id = $ id
     and entreprise_id = $ entrepriseId

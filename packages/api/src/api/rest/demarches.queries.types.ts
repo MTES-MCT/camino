@@ -1,19 +1,19 @@
 /** Types generated for queries found in "src/api/rest/demarches.queries.ts" */
 
-/** 'GetDemarcheDb' parameters type */
-export interface IGetDemarcheDbParams {
+/** 'GetDemarcheDbInternal' parameters type */
+export interface IGetDemarcheDbInternalParams {
   id?: string | null | void;
 }
 
-/** 'GetDemarcheDb' return type */
-export interface IGetDemarcheDbResult {
+/** 'GetDemarcheDbInternal' return type */
+export interface IGetDemarcheDbInternalResult {
   titre_id: string;
   type_id: string;
 }
 
-/** 'GetDemarcheDb' query type */
-export interface IGetDemarcheDbQuery {
-  params: IGetDemarcheDbParams;
-  result: IGetDemarcheDbResult;
+/** 'GetDemarcheDbInternal' query type */
+export interface IGetDemarcheDbInternalQuery {
+  params: IGetDemarcheDbInternalParams;
+  result: IGetDemarcheDbInternalResult;
 }
 

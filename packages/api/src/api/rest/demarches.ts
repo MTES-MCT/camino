@@ -2,9 +2,8 @@ import { constants } from 'http2'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import type { Pool } from 'pg'
-import { DemarcheGet, demarcheGetValidator } from 'camino-common/src/demarche.js'
+import { DemarcheGet, demarcheGetValidator, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { getDemarcheDb } from './demarches.queries.js'
-import { dbQueryAndValidate } from '../../pg-database.js'
 
 export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<DemarcheGet>) => {
   const demarcheId: string | undefined = req.params.demarcheId
@@ -16,7 +15,7 @@ export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: Custo
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const demarches = await dbQueryAndValidate(getDemarcheDb, { id: demarcheId }, pool, demarcheGetValidator)
+      const demarches = await getDemarcheDb(pool, { id: demarcheIdValidator.parse(demarcheId) })
 
       if (demarches.length !== 1) {
         res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)

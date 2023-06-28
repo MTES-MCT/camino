@@ -1,12 +1,16 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet } from 'camino-common/src/titres'
-import { Redefine } from '../../pg-database.js'
-import { IGetLastJournalQuery, IGetTitreCommunesQuery, IGetTitreQuery } from './titres.queries.types.js'
+import { TitreGet, TitreId, titreGetValidator } from 'camino-common/src/titres'
+import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { IGetLastJournalInternalQuery, IGetTitreCommunesInternalQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
-import { Commune } from 'camino-common/src/static/communes.js'
+import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import { Pool } from 'pg'
 
-export const getTitre = sql<Redefine<IGetTitreQuery, { id: string }, TitreGet>>`
+export const getTitre = async (pool: Pool, params: { id: TitreId }) => dbQueryAndValidate(getTitreInternal, params, pool, titreGetValidator)
+
+const getTitreInternal = sql<Redefine<IGetTitreInternalQuery, { id: TitreId }, TitreGet>>`
 select
     t.id,
     t.nom,
@@ -25,7 +29,9 @@ LIMIT 1
 export const lastJournalGetValidator = z.object({ date: caminoDateValidator })
 type LastJournalGet = z.infer<typeof lastJournalGetValidator>
 
-export const getLastJournal = sql<Redefine<IGetLastJournalQuery, { titreId: string }, LastJournalGet>>`
+export const getLastJournal = async (pool: Pool, params: { titreId: TitreId }) => dbQueryAndValidate(getLastJournalInternal, params, pool, lastJournalGetValidator)
+
+const getLastJournalInternal = sql<Redefine<IGetLastJournalInternalQuery, { titreId: TitreId }, LastJournalGet>>`
 select
     to_date(date::text, 'yyyy-mm-dd')::text as date
 from
@@ -37,7 +43,9 @@ order by
 LIMIT 1
 `
 
-export const getTitreCommunes = sql<Redefine<IGetTitreCommunesQuery, { id: string }, Commune>>`
+export const getTitreCommunes = async (pool: Pool, params: { id: TitreId }) => dbQueryAndValidate(getTitreCommunesInternal, params, pool, communeValidator)
+
+const getTitreCommunesInternal = sql<Redefine<IGetTitreCommunesInternalQuery, { id: TitreId }, Commune>>`
 select
     c.id,
     c.nom

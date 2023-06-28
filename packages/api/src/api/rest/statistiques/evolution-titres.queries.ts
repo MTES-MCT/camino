@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -5,9 +6,10 @@ import { DepartementId } from 'camino-common/src/static/departement'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { AnneeCountStatistique } from 'camino-common/src/statistiques'
-import { Redefine } from '../../../pg-database'
+import { AnneeCountStatistique, anneeCountStatistiqueValidator } from 'camino-common/src/statistiques'
+import { Redefine, dbQueryAndValidate } from '../../../pg-database'
 import { IGetDepotDbQuery, IGetEtapesTypesDecisionRefusDbQuery, IGetOctroiDbQuery, IGetSurfaceDbQuery } from './evolution-titres.queries.types'
+import { Pool } from 'pg'
 
 interface GetDepotProps {
   anneeDepart: number
@@ -16,7 +18,8 @@ interface GetDepotProps {
   etapeTypeId?: EtapeTypeId
   titreTypeId?: TitreTypeId
 }
-export const getDepotDb = sql<Redefine<IGetDepotDbQuery, GetDepotProps, AnneeCountStatistique>>`
+export const getDepot = async (pool: Pool, params: GetDepotProps) => dbQueryAndValidate(getDepotDb, params, pool, anneeCountStatistiqueValidator)
+const getDepotDb = sql<Redefine<IGetDepotDbQuery, GetDepotProps, AnneeCountStatistique>>`
 select
     substring(et. "date", 0, 5) as annee,
     count(t.*)
@@ -49,7 +52,9 @@ interface GetOctroiProps {
   departements: DepartementId[]
   titreTypeId?: TitreTypeId
 }
-export const getOctroiDb = sql<Redefine<IGetOctroiDbQuery, GetOctroiProps, AnneeCountStatistique>>`
+export const getOctroi = async (pool: Pool, params: GetOctroiProps) => dbQueryAndValidate(getOctroiDb, params, pool, anneeCountStatistiqueValidator)
+
+const getOctroiDb = sql<Redefine<IGetOctroiDbQuery, GetOctroiProps, AnneeCountStatistique>>`
 select
     substring(td. "demarche_date_debut", 0, 5) as annee,
     count(t.*)
@@ -79,7 +84,9 @@ interface GetSurfaceProps {
   departements: DepartementId[]
   titreTypeId?: TitreTypeId
 }
-export const getSurfaceDb = sql<Redefine<IGetSurfaceDbQuery, GetSurfaceProps, AnneeCountStatistique>>`
+export const getSurface = async (pool: Pool, params: GetSurfaceProps) => dbQueryAndValidate(getSurfaceDb, params, pool, anneeCountStatistiqueValidator)
+
+const getSurfaceDb = sql<Redefine<IGetSurfaceDbQuery, GetSurfaceProps, AnneeCountStatistique>>`
 select
     substring(td. "demarche_date_debut", 0, 5) as annee,
     sum(t_surface.surface * 100) as count
@@ -115,7 +122,11 @@ interface GetEtapesTypesDecisionRefusProps {
   departements: DepartementId[]
   titreTypeId?: TitreTypeId
 }
-export const getEtapesTypesDecisionRefusDb = sql<Redefine<IGetEtapesTypesDecisionRefusDbQuery, GetEtapesTypesDecisionRefusProps, AnneeCountStatistique>>`
+
+export const getEtapesTypesDecisionRefus = async (pool: Pool, params: GetEtapesTypesDecisionRefusProps) =>
+  dbQueryAndValidate(getEtapesTypesDecisionRefusDb, params, pool, anneeCountStatistiqueValidator)
+
+const getEtapesTypesDecisionRefusDb = sql<Redefine<IGetEtapesTypesDecisionRefusDbQuery, GetEtapesTypesDecisionRefusProps, AnneeCountStatistique>>`
 select
     substring(et. "date", 0, 5) as annee,
     count(distinct t.id)

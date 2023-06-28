@@ -13,11 +13,9 @@ import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vit
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
-import { dbQueryAndValidate } from '../../pg-database.js'
 import { idGenerate, newTitreId } from '../../database/models/_format/id-create.js'
 import { constants } from 'http2'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { z } from 'zod'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { TitreId } from 'camino-common/src/titres.js'
 
@@ -32,7 +30,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
 
-  await dbQueryAndValidate(insertCommune, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' }, pool, z.void())
+  await insertCommune(pool, { id: toCommuneId('97300'), nom: 'Une ville en Guyane' })
   const entreprises = await entreprisesUpsert([{ id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }])
   await titreCreate(
     {

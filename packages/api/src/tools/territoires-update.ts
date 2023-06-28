@@ -10,9 +10,7 @@ import { createRequire } from 'node:module'
 import { ForetId, ForetIds, Forets } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { insertCommune } from '../database/queries/communes.queries.js'
-import { dbQueryAndValidate } from '../pg-database.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { z } from 'zod'
 
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
@@ -58,15 +56,10 @@ const communesUpdate = async (pool: Pool) => {
             nom: commune.properties.nom,
           })
         } else {
-          await dbQueryAndValidate(
-            insertCommune,
-            {
-              id: toCommuneId(commune.properties.code),
-              nom: commune.properties.nom,
-            },
-            pool,
-            z.void()
-          )
+          await insertCommune(pool, {
+            id: toCommuneId(commune.properties.code),
+            nom: commune.properties.nom,
+          })
         }
       } catch (e) {
         console.error(commune.properties.nom, e)

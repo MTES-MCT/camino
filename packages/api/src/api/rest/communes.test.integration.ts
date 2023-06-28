@@ -3,10 +3,8 @@ import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { constants } from 'http2'
-import { dbQueryAndValidate } from '../../pg-database.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
-import { z } from 'zod'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -28,9 +26,9 @@ describe('getCommunes', () => {
   })
 
   test('peut récupérer des communes', async () => {
-    await dbQueryAndValidate(insertCommune, { id: toCommuneId('72000'), nom: 'Le Mans' }, dbPool, z.void())
-    await dbQueryAndValidate(insertCommune, { id: toCommuneId('37000'), nom: 'Tours' }, dbPool, z.void())
-    await dbQueryAndValidate(insertCommune, { id: toCommuneId('31000'), nom: 'Toulouse' }, dbPool, z.void())
+    await insertCommune(dbPool, { id: toCommuneId('72000'), nom: 'Le Mans' })
+    await insertCommune(dbPool, { id: toCommuneId('37000'), nom: 'Tours' })
+    await insertCommune(dbPool, { id: toCommuneId('31000'), nom: 'Toulouse' })
 
     let tested = await restCall(dbPool, '/rest/communes', {}, undefined, { ids: ['72000', '37000'] })
 
