@@ -8,7 +8,7 @@
               <div class="fr-header__logo">
                 <p class="fr-logo">République<br>française</p>
               </div>
-              <div class="fr-header__navbar" role="navigation"><button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="headerSearchModalId" id="button-475" title="Rechercher">Rechercher</button><button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="headerNavigationModalId" aria-haspopup="menu" id="button-477" title="Menu">Menu</button></div>
+              <nav class="fr-header__navbar" role="navigation"><button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="headerSearchModalId" id="button-475" title="Rechercher">Rechercher</button><button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="headerNavigationModalId" aria-haspopup="dialog" id="button-477" title="Menu">Menu</button></nav>
             </div>
             <div class="fr-header__service"><a to="{name:homepage}" title="Accueil - Camino - République Française" type="primary">
                 <p class="fr-header__service-title">Camino</p>
@@ -18,12 +18,12 @@
           </div>
           <div class="fr-header__tools">
             <div class="fr-header__tools-links">
-              <ul class="fr-btns-group">
-                <li><a class="fr-btn fr-icon-lock-fill" href="/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F">Se connecter / S’enregistrer</a></li>
-              </ul>
+              <div class="fr-btns-group">
+                <div><a class="fr-btn fr-icon-lock-fill" href="/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F">Se connecter / S’enregistrer</a></div>
+              </div>
             </div>
             <div class="fr-header__search fr-modal" id="headerSearchModalId">
-              <div class="fr-container"><button class="fr-btn--close fr-btn" aria-controls="headerSearchModalId" title="Fermer">Fermer</button>
+              <div class="fr-container"><button title="Fermer la fenêtre de dialogue" aria-label="Fermer la fenêtre de dialogue" class="fr-btn--close fr-btn">Fermer</button>
                 <div class="fr-search-bar" id="search-473" role="search"><label class="fr-label" for="search-473-input">Rechercher</label>
                   <div id="search-473-input_wrapper" class="_typeahead_8eddf1">
                     <div class="flex typeahead-wrapper">
@@ -38,12 +38,12 @@
         </div>
       </div>
     </div>
-    <div class="fr-header__menu fr-modal" id="headerNavigationModalId" aria-labelledby="button-477">
-      <div class="fr-container"><button class="fr-btn--close fr-btn" aria-controls="headerNavigationModalId" title="Fermer">Fermer</button>
+    <div class="fr-header__menu fr-modal" id="headerNavigationModalId" aria-labelledby="button-477" aria-label="Connexion et menu de navigation">
+      <div class="fr-container"><button title="Fermer la fenêtre de dialogue" aria-label="Fermer la fenêtre de dialogue" class="fr-btn--close fr-btn">Fermer</button>
         <div class="fr-header__menu-links">
-          <ul class="fr-btns-group">
-            <li><a class="fr-btn fr-icon-lock-fill" href="/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F">Se connecter / S’enregistrer</a></li>
-          </ul>
+          <div class="fr-btns-group">
+            <div><a class="fr-btn fr-icon-lock-fill" href="/oauth2/sign_in?rd=http%3A%2F%2Flocalhost%3A3000%2F">Se connecter / S’enregistrer</a></div>
+          </div>
         </div>
         <nav class="fr-nav" id="headerNavigationId" role="navigation" aria-label="Menu principal">
           <ul class="fr-nav__list">

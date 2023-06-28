@@ -3,6 +3,7 @@ import { Role, User } from 'camino-common/src/roles'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
+import { Button } from '../_ui/button'
 
 interface Props {
   user: User
@@ -144,14 +145,14 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                       française
                     </p>
                   </div>
-                  <div class="fr-header__navbar" role="navigation">
+                  <nav class="fr-header__navbar" role="navigation">
                     <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} id="button-475" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="menu" id="button-477" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-477" title="Menu">
                       Menu
                     </button>
-                  </div>
+                  </nav>
                 </div>
                 <div class="fr-header__service">
                   <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
@@ -166,9 +167,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                 </div>
                 <div class="fr-header__search fr-modal" id={searchModalId}>
                   <div class="fr-container">
-                    <button class="fr-btn--close fr-btn" aria-controls={searchModalId} title="Fermer">
-                      Fermer
-                    </button>
+                    <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={searchModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
                     <div class="fr-search-bar" id="search-473" role="search">
                       <label class="fr-label" for="search-473-input">
                         Rechercher
@@ -184,11 +183,9 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-477">
+        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-477" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
-            <button class="fr-btn--close fr-btn" aria-controls={navigationModalId} title="Fermer">
-              Fermer
-            </button>
+            <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={navigationModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
             <div class="fr-header__menu-links">
               <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
             </div>
