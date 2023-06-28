@@ -6,7 +6,7 @@ import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 
 interface Props {
   user: User
-  currentMenuSection: MenuSection | undefined
+  currentMenuSection: MenuSection | null
   trackEvent: TrackEventFunction
 }
 

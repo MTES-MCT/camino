@@ -1,51 +1,26 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
 
-/** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
-export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
-  entreprise_document_id?: string | null | void;
-  titre_etape_id?: string | null | void;
-}
+/** Query 'InsertTitreEtapeEntrepriseDocumentInternal' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IInsertTitreEtapeEntrepriseDocumentInternalResult = never;
 
-/** 'InsertTitreEtapeEntrepriseDocumentInternal' return type */
-export type IInsertTitreEtapeEntrepriseDocumentInternalResult = void;
+/** Query 'InsertTitreEtapeEntrepriseDocumentInternal' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IInsertTitreEtapeEntrepriseDocumentInternalParams = never;
 
-/** 'InsertTitreEtapeEntrepriseDocumentInternal' query type */
-export interface IInsertTitreEtapeEntrepriseDocumentInternalQuery {
-  params: IInsertTitreEtapeEntrepriseDocumentInternalParams;
-  result: IInsertTitreEtapeEntrepriseDocumentInternalResult;
-}
+/** Query 'DeleteTitreEtapeEntrepriseDocumentInternal' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IDeleteTitreEtapeEntrepriseDocumentInternalResult = never;
 
-/** 'DeleteTitreEtapeEntrepriseDocumentInternal' parameters type */
-export interface IDeleteTitreEtapeEntrepriseDocumentInternalParams {
-  titre_etape_id?: string | null | void;
-}
+/** Query 'DeleteTitreEtapeEntrepriseDocumentInternal' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IDeleteTitreEtapeEntrepriseDocumentInternalParams = never;
 
-/** 'DeleteTitreEtapeEntrepriseDocumentInternal' return type */
-export type IDeleteTitreEtapeEntrepriseDocumentInternalResult = void;
+/** Query 'GetEntrepriseDocumentIdsByEtapeIdQuery' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IGetEntrepriseDocumentIdsByEtapeIdQueryResult = never;
 
-/** 'DeleteTitreEtapeEntrepriseDocumentInternal' query type */
-export interface IDeleteTitreEtapeEntrepriseDocumentInternalQuery {
-  params: IDeleteTitreEtapeEntrepriseDocumentInternalParams;
-  result: IDeleteTitreEtapeEntrepriseDocumentInternalResult;
-}
-
-/** 'GetEntrepriseDocumentIdsByEtapeIdQuery' parameters type */
-export interface IGetEntrepriseDocumentIdsByEtapeIdQueryParams {
-  titre_etape_id?: string | null | void;
-}
-
-/** 'GetEntrepriseDocumentIdsByEtapeIdQuery' return type */
-export interface IGetEntrepriseDocumentIdsByEtapeIdQueryResult {
-  date: string;
-  description: string | null;
-  entreprise_document_type_id: string;
-  entreprise_id: string | null;
-  id: string;
-}
-
-/** 'GetEntrepriseDocumentIdsByEtapeIdQuery' query type */
-export interface IGetEntrepriseDocumentIdsByEtapeIdQueryQuery {
-  params: IGetEntrepriseDocumentIdsByEtapeIdQueryParams;
-  result: IGetEntrepriseDocumentIdsByEtapeIdQueryResult;
-}
+/** Query 'GetEntrepriseDocumentIdsByEtapeIdQuery' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IGetEntrepriseDocumentIdsByEtapeIdQueryParams = never;
 

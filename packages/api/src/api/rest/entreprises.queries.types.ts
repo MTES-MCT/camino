@@ -1,59 +1,26 @@
 /** Types generated for queries found in "src/api/rest/entreprises.queries.ts" */
 
-/** 'GetEntrepriseDocumentsInternal' parameters type */
-export interface IGetEntrepriseDocumentsInternalParams {
-  entrepriseDocumentIds: readonly (string | null | void)[];
-  entrepriseIds: readonly (string | null | void)[];
-}
+/** Query 'GetEntrepriseDocumentsInternal' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IGetEntrepriseDocumentsInternalResult = never;
 
-/** 'GetEntrepriseDocumentsInternal' return type */
-export interface IGetEntrepriseDocumentsInternalResult {
-  can_delete_document: boolean | null;
-  date: string;
-  description: string | null;
-  entreprise_document_type_id: string;
-  entreprise_id: string | null;
-  id: string;
-}
+/** Query 'GetEntrepriseDocumentsInternal' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IGetEntrepriseDocumentsInternalParams = never;
 
-/** 'GetEntrepriseDocumentsInternal' query type */
-export interface IGetEntrepriseDocumentsInternalQuery {
-  params: IGetEntrepriseDocumentsInternalParams;
-  result: IGetEntrepriseDocumentsInternalResult;
-}
+/** Query 'InsertEntrepriseDocumentInternal' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IInsertEntrepriseDocumentInternalResult = never;
 
-/** 'InsertEntrepriseDocumentInternal' parameters type */
-export interface IInsertEntrepriseDocumentInternalParams {
-  date?: string | null | void;
-  description?: string | null | void;
-  entreprise_document_type_id?: string | null | void;
-  entreprise_id?: string | null | void;
-  id?: string | null | void;
-}
+/** Query 'InsertEntrepriseDocumentInternal' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IInsertEntrepriseDocumentInternalParams = never;
 
-/** 'InsertEntrepriseDocumentInternal' return type */
-export interface IInsertEntrepriseDocumentInternalResult {
-  id: string;
-}
+/** Query 'DeleteEntrepriseDocumentQuery' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IDeleteEntrepriseDocumentQueryResult = never;
 
-/** 'InsertEntrepriseDocumentInternal' query type */
-export interface IInsertEntrepriseDocumentInternalQuery {
-  params: IInsertEntrepriseDocumentInternalParams;
-  result: IInsertEntrepriseDocumentInternalResult;
-}
-
-/** 'DeleteEntrepriseDocumentQuery' parameters type */
-export interface IDeleteEntrepriseDocumentQueryParams {
-  entrepriseId?: string | null | void;
-  id?: string | null | void;
-}
-
-/** 'DeleteEntrepriseDocumentQuery' return type */
-export type IDeleteEntrepriseDocumentQueryResult = void;
-
-/** 'DeleteEntrepriseDocumentQuery' query type */
-export interface IDeleteEntrepriseDocumentQueryQuery {
-  params: IDeleteEntrepriseDocumentQueryParams;
-  result: IDeleteEntrepriseDocumentQueryResult;
-}
+/** Query 'DeleteEntrepriseDocumentQuery' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IDeleteEntrepriseDocumentQueryParams = never;
 
