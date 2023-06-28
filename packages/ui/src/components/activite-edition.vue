@@ -28,11 +28,13 @@
 
       <div class="p-s bg-info color-bg mb">
         Besoin d'aide pour remplir ce rapport ?
-        <a target="_blank" class="p-s bg-info color-bg mb" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" rel="noopener noreferrer">Contactez-nous </a>
+        <a target="_blank" class="p-s bg-info color-bg mb" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" rel="noopener noreferrer" title="Page contact - site externe"
+          >Contactez-nous
+        </a>
       </div>
       <div v-if="shouldDisplayFiscaliteHelp" class="p-s bg-info color-bg mb">
         Les données déclarées sur Camino/Activités permettent de calculer une estimation de votre fiscalité minière, consultable sur
-        <router-link :to="entrepriseUrl" target="_blank" class="bg-info color-bg mb">votre page entreprise </router-link>
+        <router-link :to="entrepriseUrl" target="_blank" class="bg-info color-bg mb" title="Page de l’entreprise - nouvelle fenêtre">votre page entreprise </router-link>
       </div>
 
       <SectionsEdit :contenu="activite.contenu" :sections="activite.sections" @contenu-update="activite.contenu = $event" @complete-update="sectionsComplete = $event" />

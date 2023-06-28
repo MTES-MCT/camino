@@ -226,7 +226,7 @@ export const About: FunctionalComponent = () => {
       <span class="separator" />
       <div class="mb-xxl">
         Plus d’informations relatives à Camino et son équipe sont accessibles sur cette{' '}
-        <a target="_blank" href="https://beta.gouv.fr/startups/camino.html">
+        <a target="_blank" href="https://beta.gouv.fr/startups/camino.html" title="Page de la startup Camino - site externe">
           page
         </a>
         .

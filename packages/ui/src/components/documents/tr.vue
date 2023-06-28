@@ -40,6 +40,7 @@
         :href="`/apiUrl/download/fichiers/${document.id}`"
         :download="document.nom"
         target="_blank"
+        title="Consulter le document - nouvelle fenêtre"
       >
         <Icon name="download" size="M" />
       </a>
@@ -53,6 +54,7 @@
         :href="document.url"
         target="_blank"
         rel="noopener noreferrer"
+        title="Consulter le document - lien externe"
         alt="Url"
       >
         <Icon size="M" name="link" />
@@ -65,6 +67,7 @@
         }"
         :href="document.uri"
         target="_blank"
+        title="Consulter le document - lien externe"
         rel="noopener noreferrer"
         alt="Uri"
       >

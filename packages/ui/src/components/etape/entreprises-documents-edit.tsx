@@ -262,7 +262,12 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                     <div class="tablet-blobs">
                       <div class="tablet-blob-1-3 flex flex-center">
                         {j.id ? (
-                          <a class="mt-s" href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })} title={`Télécharger le document ${j.entrepriseDocumentType.nom}`} target="_blank">
+                          <a
+                            class="mt-s"
+                            href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })}
+                            title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
+                            target="_blank"
+                          >
                             {j.entrepriseDocumentType.nom}
                           </a>
                         ) : (
