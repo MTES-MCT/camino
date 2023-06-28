@@ -56,7 +56,7 @@ export const App = defineComponent({
 
         <Header user={user.value} currentMenuSection={currentMenuSection.value} trackEvent={trackEvent} />
 
-        <main class="main">
+        <main class="main" role="main">
           <div class="container">{error.value ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
         </main>
 

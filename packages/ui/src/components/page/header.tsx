@@ -144,7 +144,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                       française
                     </p>
                   </div>
-                  <div class="fr-header__navbar">
+                  <div class="fr-header__navbar" role="navigation">
                     <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} id="button-475" title="Rechercher">
                       Rechercher
                     </button>
