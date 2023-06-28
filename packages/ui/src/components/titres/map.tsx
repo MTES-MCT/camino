@@ -9,6 +9,7 @@ import { useRouter } from 'vue-router'
 import { Layer, MarkerClusterGroup } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { ButtonIcon } from '../_ui/button-icon'
 interface Props {
   titres: TitreWithPoint[]
 }
@@ -207,19 +208,13 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
           <div class="desktop-blob-1-2 desktop-flex">
             <div class="flex mb-s">
               <div class={`${markerLayersId.value === 'clusters' ? 'active' : ''}`}>
-                <button class="btn-border p-s rnd-l-s" title="regroupe les marqueurs" onClick={() => markerLayersIdSet('clusters')}>
-                  <Icon size="M" name="marker-cluster" />
-                </button>
+                <ButtonIcon class="btn-border p-s rnd-l-s" title="regroupe les marqueurs" onClick={() => markerLayersIdSet('clusters')} icon="marker-cluster" />
               </div>
               <div class={`${markerLayersId.value === 'markers' ? 'active' : ''}`}>
-                <button class="btn-border p-s" title="affiche les marqueurs" onClick={() => markerLayersIdSet('markers')}>
-                  <Icon size="M" name="marker-ungrouped" />
-                </button>
+                <ButtonIcon class="btn-border p-s" title="affiche les marqueurs" onClick={() => markerLayersIdSet('markers')} icon="marker-ungrouped" />
               </div>
               <div class={`${markerLayersId.value === 'none' ? 'active' : ''} mr-s`}>
-                <button class="btn-border p-s rnd-r-s" title="affiche les contours uniquement" onClick={() => markerLayersIdSet('none')}>
-                  <Icon size="M" name="marker-none" />
-                </button>
+                <ButtonIcon class="btn-border p-s rnd-r-s" title="affiche les contours uniquement" onClick={() => markerLayersIdSet('none')} icon="marker-none" />
               </div>
             </div>
           </div>

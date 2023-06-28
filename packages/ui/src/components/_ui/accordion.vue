@@ -15,9 +15,14 @@
 
       <div class="overflow-hidden flex flex-end flex-right">
         <slot name="buttons" />
-        <button v-if="slotDefault" class="btn-alt py-s px-m" :class="{ 'rnd-br-s': !opened }" @click="toggle">
-          <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
-        </button>
+        <ButtonIcon
+          v-if="slotDefault"
+          class="btn-alt py-s px-m"
+          :class="{ 'rnd-br-s': !opened }"
+          :onClick="toggle"
+          :icon="opened ? 'chevron-haut' : 'chevron-bas'"
+          :title="opened ? 'Replier l’accordéon' : 'Déplier l’accordéon'"
+        />
         <div v-else class="py-s" style="width: calc(2.5 * var(--unit))" />
       </div>
     </div>
@@ -30,13 +35,15 @@
         'border-b-s': opened || slotSub,
       }"
       class="accordion-header flex btn-alt py-s px-s"
+      :title="opened ? 'Replier l’accordéon' : 'Déplier l’accordéon'"
+      :aria-label="opened ? 'Replier l’accordéon' : 'Déplier l’accordéon'"
       @click="toggle"
     >
       <div>
         <slot name="title" />
       </div>
       <div class="flex flex-right flex-end">
-        <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
+        <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" aria-hidden="true" />
       </div>
     </button>
 
@@ -58,9 +65,10 @@
 
 <script>
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 export default {
   name: 'UiSytemAccordion',
-  components: { Icon },
+  components: { Icon, ButtonIcon },
   props: {
     opened: { type: Boolean, default: false },
 

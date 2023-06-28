@@ -13,7 +13,7 @@ export const HelpTooltip: FunctionalComponent<Props> = (props): JSX.Element => {
   return (
     <div class={styles.tooltip}>
       <h6 class={styles['tooltip-content']}>{props.text}</h6>
-      <Icon name={props.icon ?? 'help'} size="M" />
+      <Icon name={props.icon ?? 'help'} size="M" role="img" aria-label="Ouvrir l’aide" />
     </div>
   )
 }

@@ -85,13 +85,28 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                     <Statut color={getTitreStatut(ttts.titreStatutId).couleur} nom={getTitreStatut(ttts.titreStatutId).nom} />
                   </td>
                   <td>
-                    <Icon name={ttts.titresModificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttts.titresModificationInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttts.titresModificationInterdit ? 'La modification des titres est interdite' : 'La modification des titres est autorisée'}
+                    />
                   </td>
                   <td>
-                    <Icon name={ttts.demarchesModificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttts.demarchesModificationInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttts.demarchesModificationInterdit ? 'La modification des démarches est interdite' : 'La modification des démarches est autorisée'}
+                    />
                   </td>
                   <td>
-                    <Icon name={ttts.etapesModificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttts.etapesModificationInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttts.etapesModificationInterdit ? 'La modification des étapes est interdite' : 'La modification des étapes est autorisée'}
+                    />
                   </td>
                 </tr>
               ))}
@@ -133,13 +148,28 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                     <span class="small bold cap-first">{EtapesTypes[ttet.etapeTypeId].nom}</span>
                   </td>
                   <td>
-                    <Icon name={ttet.lectureInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttet.lectureInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttet.lectureInterdit ? 'Le type d’étape n’est pas visible' : 'Le type d’étape est visible'}
+                    />
                   </td>
                   <td>
-                    <Icon name={ttet.modificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttet.modificationInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttet.modificationInterdit ? 'Le type d’étape n’est pas modifiable' : 'Le type d’étape est modifiable'}
+                    />
                   </td>
                   <td>
-                    <Icon name={ttet.creationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                    <Icon
+                      name={ttet.creationInterdit ? 'checkbox' : 'checkbox-blank'}
+                      size="M"
+                      role="img"
+                      aria-label={ttet.lectureInterdit ? 'Ne peut créer d’étape de ce type' : 'Peut créer une étape de ce type'}
+                    />
                   </td>
                 </tr>
               ))}
@@ -179,10 +209,20 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                           </span>
                         </td>
                         <td>
-                          <Icon name={activiteType.lectureInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                          <Icon
+                            name={activiteType.lectureInterdit ? 'checkbox' : 'checkbox-blank'}
+                            size="M"
+                            role="img"
+                            aria-label={activiteType.lectureInterdit ? 'Le type d’activité n’est pas visible' : 'Le type d’activité est visible'}
+                          />
                         </td>
                         <td>
-                          <Icon name={activiteType.modificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
+                          <Icon
+                            name={activiteType.modificationInterdit ? 'checkbox' : 'checkbox-blank'}
+                            size="M"
+                            role="img"
+                            aria-label={activiteType.modificationInterdit ? 'Le type d’étape n’est pas modifiable' : 'Le type d’étape est modifiable'}
+                          />
                         </td>
                       </tr>
                     ))}

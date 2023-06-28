@@ -4,6 +4,7 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
 import { defineAsyncComponent } from 'vue'
+import { ButtonIcon } from '../_ui/button-icon'
 
 export interface Props<T> {
   data: AsyncData<T>
@@ -36,9 +37,15 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
         return (
           <div style="position: relative">
             <ConfigurableChart chartConfiguration={props.getConfiguration(item)} />
-            <button class="btn-border py-xs px-s rnd-xs" style="position: absolute; top: 4px; right: 10px" title="Export CSV" onClick={() => exportCsv(props.getConfiguration(item))}>
-              <Icon size="S" name="download" />
-            </button>
+            <ButtonIcon
+              class="btn-border py-xs px-s rnd-xs"
+              style="position: absolute; top: 4px; right: 10px"
+              title="Export CSV"
+              onClick={() => exportCsv(props.getConfiguration(item))}
+              aria-label="Exporter au format CSV"
+              icon="download"
+              iconSize="S"
+            />
           </div>
         )
       }}

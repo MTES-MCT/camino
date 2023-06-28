@@ -63,9 +63,9 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
         </div>
 
         <div class="desktop-blob-1-3">
-          <button class="btn btn-primary small flex" onClick={titreDemandeOpen}>
+          <button class="btn btn-primary small flex" onClick={titreDemandeOpen} title="Demander un titre" aria-label="Demander un titre">
             <span class="mt-xxs">Demander un titre…</span>
-            <Icon name="plus" size="M" class="flex-right" />
+            <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
           </button>
         </div>
       </div>

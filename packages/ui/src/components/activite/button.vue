@@ -5,12 +5,12 @@
       :class="{
         'btn-primary': activite.activiteStatutId !== 'enc' && buttonText,
       }"
+      :title="buttonTitle"
+      :aria-label="buttonTitle"
       @click="activiteEditPopupOpen"
     >
-      <div v-if="buttonText" class="my-xxs">
-        {{ buttonText }}
-      </div>
-      <Icon v-else size="M" name="pencil" />
+      <div v-if="buttonText" class="my-xxs">{{ buttonText }}…</div>
+      <Icon v-else size="M" name="pencil" aria-hidden="true" />
     </button>
     <button
       v-if="activite.activiteStatutId === 'enc'"
@@ -39,7 +39,11 @@ export default {
       if (this.activite.deposable || this.activite.activiteStatutId === 'dep') {
         return null
       }
-      return this.activite.activiteStatutId === 'abs' ? 'Remplir…' : 'Compléter…'
+      return this.activite.activiteStatutId === 'abs' ? 'Remplir' : 'Compléter'
+    },
+
+    buttonTitle() {
+      return `${this.buttonText ? this.buttonText : 'Modifier'} l’activité`
     },
   },
 

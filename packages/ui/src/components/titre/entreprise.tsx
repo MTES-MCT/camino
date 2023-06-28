@@ -76,6 +76,7 @@ export const Entreprise = caminoDefineComponent<Props>(['entreprise', 'onEventTr
                   action: 'titre-entreprise_acceder',
                 })
               }
+              aria-hidden="true"
             />
           </router-link>
         ),

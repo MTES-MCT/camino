@@ -6,6 +6,7 @@ import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
 import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
   administrationId: AdministrationId
@@ -115,9 +116,7 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
                   />
                 </td>
                 <td>
-                  <button class="py-s px-m btn rnd-xs p-s" disabled={!activiteTypeNewActive.value} onClick={activiteTypeEmailUpdate}>
-                    <Icon name="plus" size="M" />
-                  </button>
+                  <ButtonIcon class="py-s px-m btn rnd-xs p-s" disabled={!activiteTypeNewActive.value} onClick={activiteTypeEmailUpdate} icon="plus" title="Ajouter un email pour un type d’activité" />
                 </td>
               </tr>
             ) : null}
@@ -130,9 +129,12 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
                 <td>{activiteTypeEmail.email}</td>
                 {canEditEmailsComp.value ? (
                   <td>
-                    <button class="btn-border py-s px-m my--xs rnd-xs flex-right" onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}>
-                      <Icon name="delete" size="M" />
-                    </button>
+                    <ButtonIcon
+                      class="btn-border py-s px-m my--xs rnd-xs flex-right"
+                      onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}
+                      icon="delete"
+                      title="Supprimer un email pour un type d’activité"
+                    />
                   </td>
                 ) : null}
               </tr>

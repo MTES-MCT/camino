@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="canCreate">
-      <button class="btn small rnd-xs py-s px-m full-x flex mb" @click="demarcheAddPopupOpen">
-        <span class="mt-xxs">Ajouter une démarche {{ tabId === 'travaux' ? 'de travaux' : '' }}</span>
-        <Icon name="plus" size="M" class="flex-right" />
+      <button class="btn small rnd-xs py-s px-m full-x flex mb" :title="demarcheAddText" :aria-label="demarcheAddText" @click="demarcheAddPopupOpen">
+        <span class="mt-xxs">{{ demarcheAddText }}</span>
+        <Icon name="plus" size="M" class="flex-right" :aria-hidden="true" />
       </button>
       <div class="line width-full mb-xxl" />
     </div>
@@ -51,6 +51,9 @@ export default {
     return { open: false }
   },
   computed: {
+    demarcheAddText() {
+      return `Ajouter une démarche ${this.tabId === 'travaux' ? 'de travaux' : ''}`
+    },
     titre() {
       return this.$store.state.titre.element
     },

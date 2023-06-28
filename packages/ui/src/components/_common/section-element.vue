@@ -7,13 +7,11 @@
     <div :class="{ 'tablet-blob-3-4': element.nom, 'tablet-blob-1': !element.nom }">
       <div v-if="element.type === 'file'" class="flex h6 pb-xs">
         <span class="mt-xs flex bold">
-          <Icon size="S" name="file" class="mr-xs" />
+          <Icon size="S" name="file" class="mr-xs" aria-hidden="true" />
           {{ contenu[element.id] ? contenu[element.id].slice(5) : 'Aucun fichier' }}
         </span>
 
-        <button v-if="contenu[element.id]" class="btn-border py-xs px-s rnd-xs flex-right mt--xs" @click="fileDownload(contenu[element.id])">
-          <Icon size="M" name="download" />
-        </button>
+        <ButtonIcon v-if="contenu[element.id]" class="btn-border py-xs px-s rnd-xs flex-right mt--xs" :onClick="fileDownload(contenu[element.id])" icon="download" title="Télécharger le fichier" />
       </div>
 
       <p v-else class="cap-first" :class="{ 'mb-s': element.description }">
@@ -32,10 +30,11 @@
 import { valeurFind } from '../../utils/contenu'
 import numberFormat from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
   name: 'SectionElement',
-  components: { Icon },
+  components: { Icon, ButtonIcon },
   props: {
     element: { type: Object, required: true },
     contenu: { type: Object, required: true },

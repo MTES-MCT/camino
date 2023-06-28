@@ -16,6 +16,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
+import { ButtonIcon } from '../_ui/button-icon'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -295,9 +296,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
 
                           {j.id ? (
                             <div class="flex-right flex flex-center ml-s">
-                              <button class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)}>
-                                <Icon size="M" name="delete" />
-                              </button>
+                              <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)} icon="delete" title="Supprime le document d’entreprise" />
                             </div>
                           ) : null}
                         </div>

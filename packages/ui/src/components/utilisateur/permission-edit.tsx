@@ -11,6 +11,7 @@ import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
 import { Icon } from '../_ui/icon'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
+import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
   user: User
@@ -54,11 +55,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
                 renderItem={item => (
                   <div style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
                     <Pill text={item.role} />{' '}
-                    {canEditPermission(props.user, item) ? (
-                      <button class="btn-alt p-xs rnd-s" title="modifie les permissions" onClick={() => (mode.value = 'edit')}>
-                        <Icon size="M" name="pencil" />
-                      </button>
-                    ) : null}{' '}
+                    {canEditPermission(props.user, item) ? <ButtonIcon class="btn-alt p-xs rnd-s" title="modifie les permissions" onClick={() => (mode.value = 'edit')} icon="pencil" /> : null}{' '}
                   </div>
                 )}
               />

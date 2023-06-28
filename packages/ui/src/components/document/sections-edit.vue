@@ -41,12 +41,8 @@
             {{ (document.fichierNouveau && document.fichierNouveau.name) || `${document.id}.${document.fichierTypeId}` }}
           </p>
           <div class="flex-right flex flex-center pl-s">
-            <button class="btn-border py-s px-m my--xs rnd-l-xs" @click="fileRemove">
-              <Icon size="M" name="delete" />
-            </button>
-            <button class="btn-border py-s px-m my--xs rnd-r-xs" @click="fileDownload">
-              <Icon size="M" name="download" />
-            </button>
+            <ButtonIcon class="btn-border py-s px-m my--xs rnd-l-xs" :onClick="fileRemove" icon="delete" title="Supprime le fichier" />
+            <ButtonIcon class="btn-border py-s px-m my--xs rnd-r-xs" :onClick="fileDownload" icon="download" title="Télécharger le fichier" />
           </div>
         </div>
         <div v-else>
@@ -147,11 +143,11 @@
 import { InputDate } from '../_ui/input-date'
 import InputFile from '../_ui/input-file.vue'
 import { Messages } from '../_ui/messages'
-import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
 
 export default {
-  components: { Icon, Messages, InputFile, InputDate },
+  components: { ButtonIcon, Messages, InputFile, InputDate },
 
   props: {
     document: { type: Object, required: true },

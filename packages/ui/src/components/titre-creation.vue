@@ -43,15 +43,19 @@
         </select>
         <input v-model="reference.nom" type="text" class="p-s mr-s" placeholder="valeur" />
         <div class="flex-right">
-          <button class="btn py-s px-m rnd-xs" @click="referenceRemove(index)">
-            <Icon name="minus" size="M" />
-          </button>
+          <ButtonIcon class="btn py-s px-m rnd-xs" :onClick="referenceRemove(index)" title="Supprimer la référence" icon="minus" />
         </div>
       </div>
 
-      <button v-if="titreDemande.references && !titreDemande.references.find(r => !r.referenceTypeId || !r.nom)" class="btn small rnd-xs py-s px-m full-x mb flex" @click="referenceAdd">
+      <button
+        v-if="titreDemande.references && !titreDemande.references.find(r => !r.referenceTypeId || !r.nom)"
+        class="btn small rnd-xs py-s px-m full-x mb flex"
+        title="Ajouter une référence"
+        aria-label="Ajouter une référence"
+        @click="referenceAdd"
+      >
         <span class="mt-xxs">Ajouter une référence</span>
-        <Icon name="plus" size="M" class="flex-right" />
+        <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
       </button>
 
       <hr />
@@ -92,6 +96,7 @@ import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { apiClient } from '@/api/api-client'
 import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { entreprisesTitresCreation } from '@/api/entreprises'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 
 type Entreprise = {
   id: string

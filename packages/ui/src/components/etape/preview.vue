@@ -16,17 +16,22 @@
     </template>
 
     <template v-if="canEdit" #buttons>
-      <button v-if="etapeIsDemandeEnConstruction" class="btn btn-primary flex small rnd-0" :disabled="!deposable" :class="{ disabled: !deposable }" @click="etapeDepot">
+      <button
+        v-if="etapeIsDemandeEnConstruction"
+        class="btn btn-primary flex small rnd-0"
+        :disabled="!deposable"
+        :class="{ disabled: !deposable }"
+        title="Déposer l’étape"
+        aria-label="Déposer l’étape"
+        :aria-controls="etape.id"
+        @click="etapeDepot"
+      >
         <span class="mt-xxs mb-xxs">Déposer…</span>
       </button>
 
-      <button class="btn py-s px-m mr-px" @click="etapeEdit">
-        <Icon size="M" name="pencil" />
-      </button>
+      <ButtonIcon class="btn py-s px-m mr-px" icon="pencil" title="Modifier l’étape" :aria-controls="etape.id" @click="etapeEdit" />
 
-      <button class="btn py-s px-m mr-px" @click="removePopupOpen">
-        <Icon size="M" name="delete" />
-      </button>
+      <ButtonIcon class="btn py-s px-m mr-px" icon="delete" title="Supprimer l’étape" :aria-controls="etape.id" @click="removePopupOpen" />
     </template>
 
     <div class="px pt-m">
@@ -84,9 +89,7 @@
 
       <div v-if="canDownloadZip" class="flex">
         <span class="small bold mb-0 mt-s flex-grow text-right mr-l pt-xs"> Télécharger l'ensemble de la demande dans un fichier .zip </span>
-        <button class="btn-border rnd-xs flex-right py-s px-m mb-m" @click="demandeDownload">
-          <Icon size="M" name="download" />
-        </button>
+        <ButtonIcon class="btn-border rnd-xs flex-right py-s px-m mb-m" icon="download" title="Télécharger l'ensemble de la demande dans un fichier .zip" @click="demandeDownload" />
       </div>
     </div>
   </Accordion>
@@ -104,7 +107,7 @@ import { Statut } from '../_common/statut'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
-import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { onMounted } from 'vue'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -118,7 +121,7 @@ import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
   components: {
-    Icon,
+    ButtonIcon,
     HelpTooltip,
     Accordion,
     Tag,

@@ -14,6 +14,8 @@ import { titreApiClient, TitreApiClient } from './titre-api-client'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoDate, dateFormat } from 'camino-common/src/date'
 import { LoadingElement } from '../_ui/functional-loader'
+import { ButtonIcon } from '../_ui/button-icon'
+import { Button } from '../_ui/button'
 
 interface Props {
   titre: {
@@ -141,37 +143,41 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
             <div class="tablet-blob-1-2 flex">
               <div class="flex-right flex my-s">
                 {props.user ? (
-                  <button
+                  <Button
                     class={`btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px ${props.titre.abonnement ? 'btn-secondary' : 'btn-primary'}`}
                     onClick={() => props.apiClient.titreUtilisateurAbonne(props.titre.id, !props.titre.abonnement)}
-                  >
-                    <span class="mt-xs">{props.titre.abonnement ? 'Se désabonner du titre' : 'S’abonner au titre'}</span>
-                  </button>
+                    title={props.titre.abonnement ? 'Se désabonner du titre' : 'S’abonner au titre'}
+                    render={() => <span class="mt-xs">{props.titre.abonnement ? 'Se désabonner du titre' : 'S’abonner au titre'}</span>}
+                  />
                 ) : null}
 
-                <button class={`btn-border small px-m py-s lh-2 ${suppression.value || props.titre.modification ? 'mr-px' : 'rnd-r-xs'} ${!props.user ? 'rnd-l-xs' : null}`} onClick={props.emailSend}>
-                  <span class="mt-xs nowrap">Signaler une erreur…</span>
-                </button>
+                <Button
+                  class={`btn-border small px-m py-s lh-2 ${suppression.value || props.titre.modification ? 'mr-px' : 'rnd-r-xs'} ${!props.user ? 'rnd-l-xs' : null}`}
+                  onClick={props.emailSend}
+                  title="Signaler une erreur"
+                  render={() => <span class="mt-xs nowrap">Signaler une erreur…</span>}
+                />
+
                 {props.titre.modification ? (
-                  <button
+                  <ButtonIcon
                     class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`}
                     onClick={() => {
                       editPopup.value = true
                     }}
-                  >
-                    <Icon size="M" name="pencil" />
-                  </button>
+                    icon="pencil"
+                    title="Modifier le titre"
+                  />
                 ) : null}
 
                 {suppression.value ? (
-                  <button
+                  <ButtonIcon
                     class="btn rnd-r-xs py-s px-m"
                     onClick={() => {
                       removePopup.value = true
                     }}
-                  >
-                    <Icon size="M" name="delete" />
-                  </button>
+                    icon="delete"
+                    title="Supprimer le titre"
+                  />
                 ) : null}
               </div>
             </div>

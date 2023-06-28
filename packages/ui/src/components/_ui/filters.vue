@@ -16,9 +16,7 @@
             >{{ label.name }} : {{ label.valueName || label.value }} <span v-if="!opened" class="inline-block align-y-top ml-xs"> <Icon size="S" name="x" color="white" /> </span
           ></span>
         </div>
-        <button class="flex-right btn-alt p-m" @click="labelsReset">
-          <Icon size="M" name="close" />
-        </button>
+        <ButtonIcon class="flex-right btn-alt p-m" :onClick="labelsReset" icon="close" title="Réinitialiser les filtres" />
       </div>
     </template>
 
@@ -54,10 +52,12 @@ import { FiltersCheckboxes } from './filters-checkboxes'
 import { FiltersSelects } from './filters-selects'
 import { InputAutocomplete } from './filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
   components: {
     Icon,
+    ButtonIcon,
     Accordion,
     FiltersInput,
     FiltersCheckboxes,

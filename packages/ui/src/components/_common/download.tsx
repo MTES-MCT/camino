@@ -4,6 +4,7 @@ import { Icon } from '../_ui/icon'
 import { saveAs } from 'file-saver'
 import { DownloadFormat, DownloadRestRoutes, CaminoRestParams } from 'camino-common/src/rest'
 import { getDownloadRestRoute } from '../../api/client-rest'
+import { Button } from '../_ui/button'
 
 export type Props<T extends DownloadRestRoutes> = {
   downloadRoute: T
@@ -28,11 +29,18 @@ async function download<T extends DownloadRestRoutes>(props: Props<T>) {
 
 export const Download = <T extends DownloadRestRoutes>(props: Props<T>): JSX.Element => {
   return (
-    <button class="flex" onClick={() => download(props)}>
-      <span class="mt-xxs">{props.format}</span>
-      <div class="flex-right pl-xs">
-        <Icon size="M" name="download" />
-      </div>
-    </button>
+    <Button
+      class="flex"
+      onClick={() => download(props)}
+      title="Télécharge le fichier"
+      render={() => (
+        <>
+          <span class="mt-xxs">{props.format}</span>
+          <div class="flex-right pl-xs">
+            <Icon size="M" name="download" aria-hidden="true" />
+          </div>
+        </>
+      )}
+    />
   )
 }

@@ -8,9 +8,7 @@
             {{ geoSysteme.nom }} ({{ geoSysteme.id }})
           </option>
         </select>
-        <button class="btn py-s px-m rnd-xs" @click="geoSystemeRemove(etapeGeoSystemeIndex)">
-          <Icon name="minus" size="M" />
-        </button>
+        <ButtonIcon class="btn py-s px-m rnd-xs" icon="minus" title="Supprimer un système géographique" @click="geoSystemeRemove(etapeGeoSystemeIndex)" />
       </div>
 
       <div v-if="etapeGeoSystemeId" class="tablet-blobs">
@@ -24,9 +22,15 @@
         </div>
       </div>
     </div>
-    <button v-if="!etape.geoSystemeIds.some(id => !id)" class="btn small rnd-xs py-s px-m full-x flex mb-s" @click="geoSystemeAdd">
+    <button
+      v-if="!etape.geoSystemeIds.some(id => !id)"
+      class="btn small rnd-xs py-s px-m full-x flex mb-s"
+      title="Ajouter un système géographique"
+      aria-label="Ajouter un système géographique"
+      @click="geoSystemeAdd"
+    >
       <span class="mt-xxs">Ajouter un système géographique</span>
-      <Icon name="plus" size="M" class="flex-right" />
+      <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -34,9 +38,10 @@
 <script>
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
-  components: { Icon },
+  components: { Icon, ButtonIcon },
   props: {
     etape: { type: Object, default: () => ({}) },
   },

@@ -14,6 +14,7 @@ import { caminoDefineComponent, isEventWithTarget } from '../utils/vue-tsx-utils
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
+import { ButtonIcon } from './_ui/button-icon'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -190,22 +191,16 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
             data={utilisateur.value}
             renderItem={item => (
               <>
-                {isMe.value ? (
-                  <button class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate}>
-                    <Icon size="M" name="key" />
-                  </button>
-                ) : null}
+                {isMe.value ? <ButtonIcon class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate} aria-label="Changer de mot de passe" icon="key" /> : null}
                 {canDeleteUtilisateur(props.user, item.id) ? (
-                  <button
-                    id="cmn-utilisateur-button-popup-supprimer"
+                  <ButtonIcon
                     class="btn-alt py-s px-m"
                     title="supprimer le compte utilisateur"
                     onClick={() => {
                       removePopup.value = true
                     }}
-                  >
-                    <Icon size="M" name="delete" />
-                  </button>
+                    icon="delete"
+                  />
                 ) : null}
               </>
             )}
