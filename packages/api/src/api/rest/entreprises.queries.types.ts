@@ -22,8 +22,8 @@ export interface IGetEntrepriseDocumentsInternalQuery {
   result: IGetEntrepriseDocumentsInternalResult;
 }
 
-/** 'InsertEntrepriseDocument' parameters type */
-export interface IInsertEntrepriseDocumentParams {
+/** 'InsertEntrepriseDocumentInternal' parameters type */
+export interface IInsertEntrepriseDocumentInternalParams {
   date?: string | null | void;
   description?: string | null | void;
   entreprise_document_type_id?: string | null | void;
@@ -31,15 +31,15 @@ export interface IInsertEntrepriseDocumentParams {
   id?: string | null | void;
 }
 
-/** 'InsertEntrepriseDocument' return type */
-export interface IInsertEntrepriseDocumentResult {
+/** 'InsertEntrepriseDocumentInternal' return type */
+export interface IInsertEntrepriseDocumentInternalResult {
   id: string;
 }
 
-/** 'InsertEntrepriseDocument' query type */
-export interface IInsertEntrepriseDocumentQuery {
-  params: IInsertEntrepriseDocumentParams;
-  result: IInsertEntrepriseDocumentResult;
+/** 'InsertEntrepriseDocumentInternal' query type */
+export interface IInsertEntrepriseDocumentInternalQuery {
+  params: IInsertEntrepriseDocumentInternalParams;
+  result: IInsertEntrepriseDocumentInternalResult;
 }
 
 /** 'DeleteEntrepriseDocumentQuery' parameters type */

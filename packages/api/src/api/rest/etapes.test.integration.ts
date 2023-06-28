@@ -8,14 +8,12 @@ import { afterAll, beforeAll, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { constants } from 'http2'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
-import { dbQueryAndValidate } from '../../pg-database.js'
 import { insertEntrepriseDocument } from './entreprises.queries.js'
-import { EntrepriseDocumentId, entrepriseDocumentValidator, newEntrepriseId } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentId, newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes.js'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
-import { z } from 'zod'
 import { testBlankUser } from 'camino-common/src/tests-utils.js'
 
 console.info = vi.fn()
@@ -167,19 +165,14 @@ test('getEtapeEntrepriseDocuments', async () => {
 
   const id1: EntrepriseDocumentId = newEnterpriseDocumentId(toCaminoDate('2022-01-01'), 'kbi')
 
-  await dbQueryAndValidate(
-    insertEntrepriseDocument,
-    { id: id1, date: toCaminoDate('2022-01-01'), description: '', entreprise_document_type_id: DOCUMENTS_TYPES_IDS.kbis, entreprise_id: entrepriseId },
-    dbPool,
-    entrepriseDocumentValidator.pick({ id: true })
-  )
+  await insertEntrepriseDocument(dbPool, { id: id1, date: toCaminoDate('2022-01-01'), description: '', entreprise_document_type_id: DOCUMENTS_TYPES_IDS.kbis, entreprise_id: entrepriseId })
 
   let tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, userSuper)
 
   expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
   expect(tested.body).toEqual([])
 
-  await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { entreprise_document_id: id1, titre_etape_id: etape.id }, dbPool, z.void())
+  await insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: id1, titre_etape_id: etape.id })
 
   tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, { role: 'defaut' })
 

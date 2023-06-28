@@ -15,9 +15,7 @@ import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { constants } from 'http2'
 import { mkdirSync, writeFileSync } from 'fs'
 import { idGenerate } from '../../database/models/_format/id-create'
-import { dbQueryAndValidate } from '../../pg-database.js'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
-import { z } from 'zod'
 console.info = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
@@ -322,7 +320,7 @@ describe('getEntrepriseDocument', () => {
     expect(secondDocumentCall.statusCode).toBe(constants.HTTP_STATUS_OK)
 
     const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentCall.body)
-    await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id }, dbPool, z.void())
+    await insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: entrepriseDocumentId, titre_etape_id: titreEtape.id })
 
     const tested = await restCall(dbPool, '/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...testBlankUser, role: 'super' })
     expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)

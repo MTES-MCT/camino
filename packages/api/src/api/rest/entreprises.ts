@@ -38,12 +38,10 @@ import { emailCheck } from '../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
 import { entrepriseFormat } from '../_format/entreprises.js'
 import { Pool } from 'pg'
-import { z } from 'zod'
-import { deleteEntrepriseDocumentQuery, getEntrepriseDocuments as getEntrepriseDocumentsQuery, insertEntrepriseDocument } from './entreprises.queries.js'
+import { deleteEntrepriseDocument as deleteEntrepriseDocumentQuery, getEntrepriseDocuments as getEntrepriseDocumentsQuery, insertEntrepriseDocument } from './entreprises.queries.js'
 import { entrepriseDocumentFilePathFind } from '../../tools/documents/document-path-find.js'
 import fileRename from '../../tools/file-rename.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
-import { dbQueryAndValidate } from '../../pg-database.js'
 import { isGuyane } from 'camino-common/src/static/pays.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
@@ -449,18 +447,13 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
         return
       }
 
-      await dbQueryAndValidate(
-        insertEntrepriseDocument,
-        {
-          id,
-          entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
-          description: entrepriseDocumentInput.data.description,
-          date: entrepriseDocumentInput.data.date,
-          entreprise_id: entrepriseIdParsed.data,
-        },
-        pool,
-        z.object({ id: entrepriseDocumentIdValidator })
-      )
+      await insertEntrepriseDocument(pool, {
+        id,
+        entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
+        description: entrepriseDocumentInput.data.description,
+        date: entrepriseDocumentInput.data.date,
+        entreprise_id: entrepriseIdParsed.data,
+      })
       res.json(id)
     } else {
       res.status(constants.HTTP_STATUS_BAD_REQUEST)
@@ -490,7 +483,7 @@ export const deleteEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<U
     if (!entrepriseDocument || !entrepriseDocument.can_delete_document) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      await dbQueryAndValidate(deleteEntrepriseDocumentQuery, { id: entrepriseDocument.id, entrepriseId: entrepriseIdParsed.data }, pool, z.void())
+      await deleteEntrepriseDocumentQuery(pool, { id: entrepriseDocument.id, entrepriseId: entrepriseIdParsed.data })
       res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
   }

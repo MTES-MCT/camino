@@ -1,13 +1,15 @@
+/* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IDeleteEntrepriseDocumentQueryQuery, IGetEntrepriseDocumentsInternalQuery, IInsertEntrepriseDocumentQuery } from './entreprises.queries.types.js'
-import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import { IDeleteEntrepriseDocumentQueryQuery, IGetEntrepriseDocumentsInternalQuery, IInsertEntrepriseDocumentInternalQuery } from './entreprises.queries.types.js'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, entrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools.js'
 import { Pool } from 'pg'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { User } from 'camino-common/src/roles.js'
+import { z } from 'zod'
 
 const dummy = ['dummy'] as const
 export const getEntrepriseDocuments = async (entrepriseDocumentIds: EntrepriseDocumentId[], entrepriseIds: EntrepriseId[], pool: Pool, user: User) => {
@@ -52,9 +54,19 @@ AND ('dummy' in $$ entrepriseIds
     OR d.entreprise_id in $$ entrepriseIds)
 `
 
-export const insertEntrepriseDocument = sql<
+export const insertEntrepriseDocument = async (
+  pool: Pool,
+  params: {
+    id: EntrepriseDocumentId
+    entreprise_document_type_id: EntrepriseDocumentTypeId
+    date: CaminoDate
+    entreprise_id: EntrepriseId
+    description: string
+  }
+) => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
+const insertEntrepriseDocumentInternal = sql<
   Redefine<
-    IInsertEntrepriseDocumentQuery,
+    IInsertEntrepriseDocumentInternalQuery,
     {
       id: EntrepriseDocumentId
       entreprise_document_type_id: EntrepriseDocumentTypeId
@@ -72,7 +84,9 @@ RETURNING
 
 `
 
-export const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }, void>>`
+export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }) =>
+  dbQueryAndValidate(deleteEntrepriseDocumentQuery, params, pool, z.void())
+const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }, void>>`
 delete from entreprises_documents
 where id = $ id
     and entreprise_id = $ entrepriseId

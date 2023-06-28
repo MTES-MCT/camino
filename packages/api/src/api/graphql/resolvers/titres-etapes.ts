@@ -39,10 +39,8 @@ import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { getSDOMZoneByPoints } from './points.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { dbQueryAndValidate } from '../../../pg-database.js'
 import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
-import { z } from 'zod'
 import { Pool } from 'pg'
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -240,7 +238,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
     for (const document of entrepriseDocuments) {
-      await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id }, context.pool, z.void())
+      await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
@@ -426,9 +424,9 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
-    await dbQueryAndValidate(deleteTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id }, context.pool, z.void())
+    await deleteTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id })
     for (const document of entrepriseDocuments) {
-      await dbQueryAndValidate(insertTitreEtapeEntrepriseDocument, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id }, context.pool, z.void())
+      await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)

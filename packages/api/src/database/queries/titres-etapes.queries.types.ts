@@ -1,32 +1,32 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
 
-/** 'InsertTitreEtapeEntrepriseDocument' parameters type */
-export interface IInsertTitreEtapeEntrepriseDocumentParams {
+/** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
+export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
   entreprise_document_id?: string | null | void;
   titre_etape_id?: string | null | void;
 }
 
-/** 'InsertTitreEtapeEntrepriseDocument' return type */
-export type IInsertTitreEtapeEntrepriseDocumentResult = void;
+/** 'InsertTitreEtapeEntrepriseDocumentInternal' return type */
+export type IInsertTitreEtapeEntrepriseDocumentInternalResult = void;
 
-/** 'InsertTitreEtapeEntrepriseDocument' query type */
-export interface IInsertTitreEtapeEntrepriseDocumentQuery {
-  params: IInsertTitreEtapeEntrepriseDocumentParams;
-  result: IInsertTitreEtapeEntrepriseDocumentResult;
+/** 'InsertTitreEtapeEntrepriseDocumentInternal' query type */
+export interface IInsertTitreEtapeEntrepriseDocumentInternalQuery {
+  params: IInsertTitreEtapeEntrepriseDocumentInternalParams;
+  result: IInsertTitreEtapeEntrepriseDocumentInternalResult;
 }
 
-/** 'DeleteTitreEtapeEntrepriseDocument' parameters type */
-export interface IDeleteTitreEtapeEntrepriseDocumentParams {
+/** 'DeleteTitreEtapeEntrepriseDocumentInternal' parameters type */
+export interface IDeleteTitreEtapeEntrepriseDocumentInternalParams {
   titre_etape_id?: string | null | void;
 }
 
-/** 'DeleteTitreEtapeEntrepriseDocument' return type */
-export type IDeleteTitreEtapeEntrepriseDocumentResult = void;
+/** 'DeleteTitreEtapeEntrepriseDocumentInternal' return type */
+export type IDeleteTitreEtapeEntrepriseDocumentInternalResult = void;
 
-/** 'DeleteTitreEtapeEntrepriseDocument' query type */
-export interface IDeleteTitreEtapeEntrepriseDocumentQuery {
-  params: IDeleteTitreEtapeEntrepriseDocumentParams;
-  result: IDeleteTitreEtapeEntrepriseDocumentResult;
+/** 'DeleteTitreEtapeEntrepriseDocumentInternal' query type */
+export interface IDeleteTitreEtapeEntrepriseDocumentInternalQuery {
+  params: IDeleteTitreEtapeEntrepriseDocumentInternalParams;
+  result: IDeleteTitreEtapeEntrepriseDocumentInternalResult;
 }
 
 /** 'GetEntrepriseDocumentIdsByEtapeIdQuery' parameters type */
