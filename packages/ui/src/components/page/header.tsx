@@ -52,28 +52,28 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = pro
   }
 
   return (
-    <ul class="fr-btns-group">
+    <div class="fr-btns-group">
       {props.user ? (
         <>
-          <li>
+          <div>
             <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`}>
               {`${props.user.nom} ${props.user.prenom}`}
             </router-link>
-          </li>
-          <li>
+          </div>
+          <div>
             <a class="fr-btn fr-icon-lock-line" href={logoutUrl} onClick={logout}>
               Se déconnecter
             </a>
-          </li>
+          </div>
         </>
       ) : (
-        <li>
+        <div>
           <a class="fr-btn fr-icon-lock-fill" href={loginUrl} onClick={login}>
             Se connecter / S’enregistrer
           </a>
-        </li>
+        </div>
       )}
-    </ul>
+    </div>
   )
 }
 
