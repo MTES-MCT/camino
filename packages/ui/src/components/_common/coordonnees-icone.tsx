@@ -9,7 +9,7 @@ export const CoordonneesIcone: FunctionalComponent<Props> = props => {
     <>
       {props.coordonnees ? (
         <div class="p-xs">
-          <Icon size="S" name="globe" />
+          <Icon size="S" name="globe" role="img" aria-label="Possède des coordonnées" />
         </div>
       ) : null}
     </>

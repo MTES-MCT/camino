@@ -4,9 +4,10 @@ import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
 import { Download } from './download'
-import { CamionCommonMap, Props as CaminoCommonMapProps } from './map'
+import { CaminoCommonMap, Props as CaminoCommonMapProps } from './map'
 import { Points } from './points'
 import { TitreId } from 'camino-common/src/titres'
+import { ButtonIcon } from '../_ui/button-icon'
 
 export type TabId = 'carte' | 'points'
 export interface Props {
@@ -43,12 +44,10 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
             return (
               <div key={tab.id} class={`${tabId === tab.id ? 'active' : ''} mr-xs`}>
                 {tabId !== tab.id ? (
-                  <button class="p-m btn-tab rnd-t-s" onClick={() => props.tabUpdate(tab.id)}>
-                    <Icon name={tab.icon} size="M" />
-                  </button>
+                  <ButtonIcon class="p-m btn-tab rnd-t-s" onClick={() => props.tabUpdate(tab.id)} title={`Affiche le périmètre (${tab.nom})`} icon={tab.icon} />
                 ) : (
                   <div class="p-m span-tab rnd-t-s">
-                    <Icon name={tab.icon} size="M" />
+                    <Icon name={tab.icon} size="M" aria-hidden="true" />
                   </div>
                 )}
               </div>
@@ -60,7 +59,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class={`${isMain ? 'width-full' : ''} line-neutral`} />
 
       {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
-        <CamionCommonMap
+        <CaminoCommonMap
           class={`${isMain ? 'width-full' : ''}`}
           geojson={props.geojsonMultiPolygon}
           titreId={props.titreId}

@@ -12,7 +12,9 @@
 
     <div v-if="helpVisible" class="p-s bg-info color-bg mb">
       Besoin d'aide pour déposer votre demande ?
-      <a target="_blank" class="p-s bg-info color-bg mb" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" rel="noopener noreferrer">Contactez-nous</a>
+      <a target="_blank" class="p-s bg-info color-bg mb" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" rel="noopener noreferrer" title="Page contact - site externe"
+        >Contactez-nous</a
+      >
     </div>
 
     <div v-if="dateIsVisible" class="tablet-blobs">

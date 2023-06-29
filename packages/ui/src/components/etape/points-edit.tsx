@@ -11,6 +11,8 @@ import { HelpTooltip } from '@/components/_ui/help-tooltip'
 import { computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { EtapeEdit, GroupeBuildPoint } from '@/utils/titre-etape-edit'
+import { ButtonIcon } from '../_ui/button-icon'
+import { Button } from '../_ui/button'
 
 interface Props {
   etape: EtapeEdit
@@ -200,10 +202,17 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
         propId="points"
         write={() => (
           <>
-            <button class="btn small rnd-xs py-s px-m full-x flex mb-s" onClick={pointsImport}>
-              <span class="mt-xxs">Importer depuis un fichier…</span>
-              <Icon name="plus" size="M" class="flex-right" />
-            </button>
+            <Button
+              class="btn small rnd-xs py-s px-m full-x flex mb-s"
+              onClick={pointsImport}
+              title="Importer depuis un fichier"
+              render={() => (
+                <>
+                  <span class="mt-xxs">Importer depuis un fichier…</span>
+                  <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+                </>
+              )}
+            />
 
             <GeoSystemeEdit etape={props.etape} onUpdate:etape={(newValue: EtapeEdit) => context.emit('update:etape', newValue)} />
 
@@ -236,9 +245,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                         <div class="flex flex-full">
                           <h4 class="color-bg pt-s pl-m mb-s">Groupe {groupeIndex + 1}</h4>
                           <div class="flex-right hide">
-                            <button class="btn-border py-s px-m rnd-xs" onClick={() => groupeRemove(groupeIndex)}>
-                              <Icon name="minus" size="M" />
-                            </button>
+                            <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => groupeRemove(groupeIndex)} icon="minus" title="Supprimer un groupe" />
                           </div>
                         </div>
                       ) : null}
@@ -249,9 +256,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                             <div class="flex flex-full">
                               <h4 class="pt-xs pl-s mb-s">{contourIndex === 0 ? 'Contour' : `Lacune ${contourIndex}`}</h4>
                               <div class="flex-right hide">
-                                <button class="btn-border py-s px-m rnd-xs" onClick={() => contourRemove(groupeIndex, contourIndex)}>
-                                  <Icon name="minus" size="M" />
-                                </button>
+                                <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => contourRemove(groupeIndex, contourIndex)} icon="minus" title="Supprimer un contour" />
                               </div>
                             </div>
                           ) : null}
@@ -262,23 +267,26 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                                 <h4 class="mt-s">{point.lot ? 'Lot de points' : `Point ${point.nom ?? ''}`}</h4>
                                 <div class="flex-right">
                                   {!(props.etape.groupes.length === groupeIndex + 1 && groupeContours.length === contourIndex + 1 && contourPoints.length === pointIndex + 1) ? (
-                                    <button class="btn-border py-s px-m rnd-l-xs" onClick={() => pointMoveDown(groupeIndex, contourIndex, pointIndex)}>
-                                      <Icon size="M" name="move-down" />
-                                    </button>
+                                    <ButtonIcon
+                                      class="btn-border py-s px-m rnd-l-xs"
+                                      onClick={() => pointMoveDown(groupeIndex, contourIndex, pointIndex)}
+                                      icon="move-down"
+                                      title="Déplacer le point vers le bas"
+                                    />
                                   ) : null}
 
                                   {!(groupeIndex === 0 && contourIndex === 0 && pointIndex === 0) ? (
-                                    <button
+                                    <ButtonIcon
                                       class={`btn-border py-s px-m ${
                                         props.etape.groupes.length === groupeIndex + 1 && groupeContours.length === contourIndex + 1 && contourPoints.length === pointIndex + 1 ? 'rnd-l-xs' : ''
                                       }`}
                                       onClick={() => pointMoveUp(groupeIndex, contourIndex, pointIndex)}
-                                    >
-                                      <Icon size="M" name="move-up" />
-                                    </button>
+                                      icon="move-up"
+                                      title="Déplacer le point vers le haut"
+                                    />
                                   ) : null}
 
-                                  <button
+                                  <ButtonIcon
                                     class={`btn py-s px-m rnd-r-xs ${
                                       groupeIndex === 0 &&
                                       contourIndex === 0 &&
@@ -290,9 +298,9 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                                         : ''
                                     } `}
                                     onClick={() => pointRemove(groupeIndex, contourIndex, pointIndex)}
-                                  >
-                                    <Icon name="minus" size="M" />
-                                  </button>
+                                    icon="minus"
+                                    title="Supprimer le point"
+                                  />
                                 </div>
                               </div>
 
@@ -309,26 +317,47 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                             </div>
                           ))}
 
-                          <button class="btn-border rnd-s py-s px-m full-x mb-xs flex small" onClick={() => pointAdd(groupeIndex, contourIndex)}>
-                            <span class="mt-xxs">Ajouter un point</span>
-                            <Icon name="plus" size="M" class="flex-right" />
-                          </button>
+                          <Button
+                            class="btn-border rnd-s py-s px-m full-x mb-xs flex small"
+                            onClick={() => pointAdd(groupeIndex, contourIndex)}
+                            title="Ajouter un point"
+                            render={() => (
+                              <>
+                                <span class="mt-xxs">Ajouter un point</span>
+                                <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+                              </>
+                            )}
+                          />
                         </div>
                       ))}
 
                       {groupeContours.length && groupeContours[0].length ? (
-                        <button class="btn rnd-s py-s px-m full-x mb-xs flex h6" onClick={() => contourAdd(groupeIndex)}>
-                          <span class="mt-xxs">Ajouter {groupeContours.length >= 1 ? 'une lacune' : 'un contour'}</span>
-                          <Icon name="plus" size="M" class="flex-right" />
-                        </button>
+                        <Button
+                          class="btn rnd-s py-s px-m full-x mb-xs flex h6"
+                          onClick={() => contourAdd(groupeIndex)}
+                          title={`Ajouter ${groupeContours.length >= 1 ? 'une lacune' : 'un contour'}`}
+                          render={() => (
+                            <>
+                              <span class="mt-xxs">Ajouter {groupeContours.length >= 1 ? 'une lacune' : 'un contour'}</span>
+                              <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+                            </>
+                          )}
+                        />
                       ) : null}
                     </div>
 
                     {props.etape.groupes.length && props.etape.groupes[0].length && props.etape.groupes[0][0].length ? (
-                      <button class="btn rnd-s py-s px-m full-x mb-s flex h6" onClick={groupeAdd}>
-                        <span class="mt-xxs">Ajouter un groupe</span>
-                        <Icon name="plus" size="M" class="flex-right" />
-                      </button>
+                      <Button
+                        class="btn rnd-s py-s px-m full-x mb-s flex h6"
+                        onClick={groupeAdd}
+                        title="Ajouter un groupe"
+                        render={() => (
+                          <>
+                            <span class="mt-xxs">Ajouter un groupe</span>
+                            <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+                          </>
+                        )}
+                      />
                     ) : null}
 
                     <div class="h6">

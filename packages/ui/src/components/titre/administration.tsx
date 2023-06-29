@@ -94,7 +94,7 @@ export const Administration = caminoDefineComponent<Props>(['administrationId', 
                 </div>
                 <div class="large-blob-5-6">
                   <p class="word-break">
-                    <a href={administration.url} class="btn small bold py-xs px-s rnd" target="_blank" rel="noopener noreferrer">
+                    <a href={administration.url} class="btn small bold py-xs px-s rnd" target="_blank" rel="noopener noreferrer" title="Site de l’administration - lien externe">
                       {administration.url}
                     </a>
                   </p>

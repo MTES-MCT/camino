@@ -4,9 +4,7 @@
       {{ contenuElement && contenuElement.name ? contenuElement.name : contenuElement.slice(5) }}
     </p>
     <div class="flex-right mt--xs">
-      <button class="btn-border py-s px-m my--xs rnd-xs flex-right" @click="fileRemove">
-        <Icon size="M" name="delete" />
-      </button>
+      <ButtonIcon class="btn-border py-s px-m my--xs rnd-xs flex-right" :onClick="fileRemove" title="Supprimer le fichier" icon="delete" />
     </div>
   </div>
   <div v-else>
@@ -17,10 +15,10 @@
 
 <script>
 import InputFile from '../_ui/input-file.vue'
-import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
-  components: { Icon, InputFile },
+  components: { InputFile, ButtonIcon },
 
   props: {
     contenu: { type: [Object], required: true },

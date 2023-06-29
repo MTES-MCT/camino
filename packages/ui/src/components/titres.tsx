@@ -9,14 +9,23 @@ import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
 import { TablePagination } from './titres/table-pagination'
+import { ButtonIcon } from './_ui/button-icon'
+import { Button } from './_ui/button'
 
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
-      <button class="btn btn-primary small flex" onClick={() => router.push({ name: 'titre-creation' })}>
-        <span class="mt-xxs">Demander un titre…</span>
-        <Icon name="plus" size="M" class="flex-right" color="white" />
-      </button>
+      <Button
+        class="btn btn-primary small flex"
+        onClick={() => router.push({ name: 'titre-creation' })}
+        title="Demander un nouveau titre"
+        render={() => (
+          <>
+            <span class="mt-xxs">Demander un titre…</span>
+            <Icon name="plus" size="M" class="flex-right" color="white" aria-hidden="true" />
+          </>
+        )}
+      />
     )
   }
   return null
@@ -98,9 +107,13 @@ export const Titres = defineComponent({
             {vues.map(vue => {
               return (
                 <div key={vue.id} class={vueId.value === vue.id ? 'active mr-xs' : 'mr-xs'}>
-                  <button class="p-m btn-tab rnd-t-s" style={vueId.value === vue.id ? { cursor: 'default' } : {}} onClick={() => vueId.value !== vue.id && vueClick(vue.id)}>
-                    <Icon name={vue.icon} size="M" />
-                  </button>
+                  <ButtonIcon
+                    class="p-m btn-tab rnd-t-s"
+                    style={vueId.value === vue.id ? { cursor: 'default' } : {}}
+                    onClick={() => vueId.value !== vue.id && vueClick(vue.id)}
+                    title={`Format d’affichage : ${vue.id === 'carte' ? 'Carte' : 'Tableau'}`}
+                    icon={vue.icon}
+                  />
                 </div>
               )
             })}

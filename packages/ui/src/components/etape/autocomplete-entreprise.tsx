@@ -1,9 +1,9 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TypeAhead, TypeAheadType } from '@/components/_ui/typeahead'
 import { computed, ref, watch } from 'vue'
-import { Icon } from '@/components/_ui/icon'
 import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
+import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
   nonSelectableEntities?: EntrepriseId[]
@@ -81,9 +81,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
               Opérateur
             </label>
 
-            <button class="btn py-s px-m rnd-xs" style="" onClick={() => removeEntity(entity)}>
-              <Icon name="minus" size="M" />
-            </button>
+            <ButtonIcon class="btn py-s px-m rnd-xs" style="" onClick={() => removeEntity(entity)} icon="minus" title="Supprime l’entreprise" />
           </div>
         </div>
       ))}

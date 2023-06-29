@@ -2,7 +2,6 @@ import { ref, computed, watch, onMounted, Ref } from 'vue'
 import { CaminoMap } from '../_map/index'
 
 import { leafletMarkerBuild, leafletGeojsonBuild, leafletDivIconBuild } from '../_map/leaflet'
-import { Icon } from '@/components/_ui/icon'
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { GeoJsonObject } from 'geojson'
 import { LatLngTuple, LayerGroup, layerGroup, Marker } from 'leaflet'
@@ -11,6 +10,7 @@ import { titresGeoPolygon } from '@/api/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
 import { useRouter } from 'vue-router'
+import { ButtonIcon } from '../_ui/button-icon'
 
 export interface Props {
   geojson: GeoJsonObject
@@ -20,7 +20,7 @@ export interface Props {
   titreId?: string
 }
 
-export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId'], props => {
+export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId'], props => {
   const map = ref<typeof CaminoMap | null>(null)
   const markersVisible = ref<boolean>(true)
   const patternVisible = ref<boolean>(true)
@@ -138,15 +138,21 @@ export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
           </div>
           <div class="desktop-blob-1-2 desktop-flex">
             <div class={`${markersVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <button class="btn-border p-s rnd-s" title="affiche / masque les marqueurs" onClick={() => (markersVisible.value = !markersVisible.value)}>
-                <Icon size="M" name="marker-ungrouped" />
-              </button>
+              <ButtonIcon
+                class="btn-border p-s rnd-s"
+                title={`${markersVisible.value ? 'Masque' : 'Affiche'} les marqueurs`}
+                onClick={() => (markersVisible.value = !markersVisible.value)}
+                icon="marker-ungrouped"
+              />
             </div>
 
             <div class={`${patternVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <button class="btn-border p-s rnd-s" title="affiche / masque la trame" onClick={() => (patternVisible.value = !patternVisible.value)}>
-                <Icon size="M" name="pattern" />
-              </button>
+              <ButtonIcon
+                class="btn-border p-s rnd-s"
+                title={`${patternVisible.value ? 'Masque' : 'Affiche'} la trame`}
+                onClick={() => (patternVisible.value = !patternVisible.value)}
+                icon="pattern"
+              />
             </div>
           </div>
         </div>

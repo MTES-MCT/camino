@@ -19,13 +19,13 @@ export const IconAllSize: StoryFn = () => (
       <tr>
         <td>s</td>
         <td>
-          <Icon size="S" name="download" />
+          <Icon size="S" name="download" aria-hidden="true" />
         </td>
       </tr>
       <tr>
         <td>m</td>
         <td>
-          <Icon size="M" name="download" />
+          <Icon size="M" name="download" aria-hidden="true" />
         </td>
       </tr>
     </table>
@@ -44,7 +44,7 @@ export const AllIcons: StoryFn = () => (
         <tr>
           <td>{iconName}</td>
           <td>
-            <Icon size="M" name={iconName} />
+            <Icon size="M" name={iconName} aria-hidden="true" />
           </td>
         </tr>
       ))}

@@ -6,6 +6,8 @@ import { TagList } from '@/components/_ui/tag-list'
 import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EtapeFondamentale, EtapeWithIncertitudesAndHeritage } from 'camino-common/src/etape'
+import { ButtonIcon } from '../_ui/button-icon'
+import { Button } from '../_ui/button'
 
 export type Props = {
   substances: (SubstanceLegaleId | undefined)[]
@@ -58,29 +60,40 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
                     ))}
                   </select>
                   {substancesLength.value && n + 1 < substancesLength.value ? (
-                    <button class="btn-border py-s px-m rnd-l-xs" onClick={() => substanceMoveDown(n)}>
-                      <Icon size="M" name="move-down" />
-                    </button>
+                    <ButtonIcon class="btn-border py-s px-m rnd-l-xs" onClick={() => substanceMoveDown(n)} title="Diminuer l’importance de la substance" icon="move-down" />
                   ) : null}
 
                   {substancesLength.value && n > 0 && props.substances[n] ? (
-                    <button class={['btn-border', 'py-s', 'px-m', !(substancesLength.value && n + 1 < substancesLength.value) ? 'rnd-l-xs' : null]} onClick={() => substanceMoveUp(n)}>
-                      <Icon size="M" name="move-up" />
-                    </button>
+                    <ButtonIcon
+                      class={['btn-border', 'py-s', 'px-m', !(substancesLength.value && n + 1 < substancesLength.value) ? 'rnd-l-xs' : null]}
+                      onClick={() => substanceMoveUp(n)}
+                      title="Augmenter l’importance de la substances"
+                      icon="move-up"
+                    />
                   ) : null}
 
-                  <button class={['btn', 'py-s', 'px-m', 'rnd-r-xs', !props.substances[n] || substancesLength.value === 1 ? 'rnd-l-xs' : null]} onClick={() => substanceRemove(n)}>
-                    <Icon name="minus" size="M" />
-                  </button>
+                  <ButtonIcon
+                    class={['btn', 'py-s', 'px-m', 'rnd-r-xs', !props.substances[n] || substancesLength.value === 1 ? 'rnd-l-xs' : null]}
+                    onClick={() => substanceRemove(n)}
+                    title="Supprimer la substance"
+                    icon="minus"
+                  />
                 </div>
               </div>
             ))}
 
             {props.substances?.every(substanceId => !!substanceId) ? (
-              <button class="btn small rnd-xs py-s px-m full-x flex mb-s" onClick={substanceAdd}>
-                <span class="mt-xxs">Ajouter une substance</span>
-                <Icon name="plus" size="M" class="flex-right" />
-              </button>
+              <Button
+                class="btn small rnd-xs py-s px-m full-x flex mb-s"
+                onClick={substanceAdd}
+                title="Ajouter une substance"
+                render={() => (
+                  <>
+                    <span class="mt-xxs">Ajouter une substance</span>
+                    <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+                  </>
+                )}
+              />
             ) : null}
 
             {substancesLength.value ? (

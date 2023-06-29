@@ -1,7 +1,7 @@
 <template>
-  <button class="flex small" @click="addPopupOpen">
+  <button class="flex small" title="Ajouter un document" aria-label="Ajouter un document" @click="addPopupOpen">
     <span v-if="large" class="mt-xxs mr-s">Ajouter un document</span>
-    <Icon size="M" name="file-add" class="flex-right" />
+    <Icon size="M" name="file-add" class="flex-right" aria-hidden="true" />
   </button>
 </template>
 

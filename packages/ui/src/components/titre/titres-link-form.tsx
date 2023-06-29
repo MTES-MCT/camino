@@ -12,6 +12,8 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreId, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { ApiClient } from '@/api/api-client'
 import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
+import { ButtonIcon } from '../_ui/button-icon'
+import { Button } from '../_ui/button'
 
 export interface Props {
   user: User
@@ -127,12 +129,8 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
                     ) : null}
 
                     <div class="flex mt-m" style="flex-direction: row-reverse">
-                      <button class="btn-primary ml-s" style="flex: 0 1 min-content" onClick={saveLink}>
-                        Enregistrer
-                      </button>
-                      <button class="btn-secondary" style="flex: 0 1 min-content" onClick={() => (mode.value = 'read')}>
-                        Annuler
-                      </button>
+                      <Button class="btn-primary ml-s" style="flex: 0 1 min-content" onClick={saveLink} render={() => <>Enregistrer</>} title="Enregistrer" />
+                      <Button class="btn-secondary" style="flex: 0 1 min-content" onClick={() => (mode.value = 'read')} render={() => <>Annuler</>} title="Annuler" />
                     </div>
                   </div>
                 ) : (
@@ -147,11 +145,7 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
                       ))}
                     </ul>
 
-                    {canLink.value ? (
-                      <button class="btn-alt p-xs rnd-s" title="modifie les titres liés" onClick={() => (mode.value = 'edit')}>
-                        <Icon size="M" name="pencil" />
-                      </button>
-                    ) : null}
+                    {canLink.value ? <ButtonIcon class="btn-alt p-xs rnd-s" title="modifier les titres liés" onClick={() => (mode.value = 'edit')} icon="pencil" /> : null}
                   </div>
                 )}
               </div>

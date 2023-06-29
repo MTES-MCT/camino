@@ -24,19 +24,17 @@
           >
             <span class="mt-xxs">Ajouter une étape…</span>
           </button>
-          <button v-if="demarche.modification" class="btn py-s px-m mr-px" :class="{ 'rnd-l-xs': !canCreateEtape }" @click="editPopupOpen">
-            <Icon size="M" name="pencil" />
-          </button>
-          <button
+          <ButtonIcon v-if="demarche.modification" class="btn py-s px-m mr-px" :class="{ 'rnd-l-xs': !canCreateEtape }" :onClick="editPopupOpen" title="Modifier la démarche" icon="pencil" />
+          <ButtonIcon
             v-if="demarche.suppression"
             class="btn rnd-r-xs py-s px-m mr-px"
             :class="{
               'rnd-l-xs': !demarche.modification && !canCreateEtape,
             }"
-            @click="removePopupOpen"
-          >
-            <Icon size="M" name="delete" />
-          </button>
+            :onClick="removePopupOpen"
+            title="Supprimer la démarche"
+            icon="delete"
+          />
         </div>
       </div>
     </div>
@@ -87,7 +85,7 @@ import { Statut } from '../_common/statut'
 import TitreEtape from '../etape/preview.vue'
 import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
-import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { canCreateEtapeByDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { demarcheApiClient } from './demarche-api-client'
@@ -95,7 +93,7 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 export default {
   components: {
-    Icon,
+    ButtonIcon,
     Statut,
     TitreEtape,
     DemarcheEditPopup,

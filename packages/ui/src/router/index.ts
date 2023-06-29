@@ -76,7 +76,8 @@ const About = async () => {
 
 declare module 'vue-router' {
   interface RouteMeta {
-    menuSection: MenuSection
+    menuSection: MenuSection | null
+    title: string
   }
 }
 
@@ -86,6 +87,7 @@ const routes: RouteRecordRaw[] = [
     name: 'dashboard',
     component: Dashboard,
     meta: {
+      title: 'Tableau de bord',
       menuSection: 'dashboard',
     },
   },
@@ -94,6 +96,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Stats DGTM',
     component: DGTMStatsFull,
     meta: {
+      title: 'Statistiques de la DGTM',
       menuSection: 'dashboard',
     },
   },
@@ -102,6 +105,7 @@ const routes: RouteRecordRaw[] = [
     name: 'titres',
     component: Titres,
     meta: {
+      title: 'Titres',
       menuSection: 'titres',
     },
   },
@@ -110,6 +114,7 @@ const routes: RouteRecordRaw[] = [
     name: 'titre-creation',
     component: TitreCreation,
     meta: {
+      title: "Création d'un titre",
       menuSection: 'titres',
     },
   },
@@ -118,6 +123,7 @@ const routes: RouteRecordRaw[] = [
     name: 'titre',
     component: Titre,
     meta: {
+      title: 'Détail du titre',
       menuSection: 'titres',
     },
   },
@@ -126,6 +132,7 @@ const routes: RouteRecordRaw[] = [
     name: 'demarches',
     component: Demarches,
     meta: {
+      title: 'Liste des démarches',
       menuSection: 'demarches',
     },
   },
@@ -134,6 +141,7 @@ const routes: RouteRecordRaw[] = [
     name: 'travaux',
     component: Travaux,
     meta: {
+      title: 'Liste des travaux',
       menuSection: 'travaux',
     },
   },
@@ -142,6 +150,7 @@ const routes: RouteRecordRaw[] = [
     name: 'etape',
     component: Etape,
     meta: {
+      title: "Détail d'une étape",
       menuSection: 'titres',
     },
   },
@@ -150,6 +159,7 @@ const routes: RouteRecordRaw[] = [
     name: 'etape-creation',
     component: EtapeEdition,
     meta: {
+      title: "Création d'une étape",
       menuSection: 'titres',
     },
   },
@@ -158,6 +168,7 @@ const routes: RouteRecordRaw[] = [
     name: 'etape-edition',
     component: EtapeEdition,
     meta: {
+      title: "Édition d'une étape",
       menuSection: 'titres',
     },
   },
@@ -166,6 +177,7 @@ const routes: RouteRecordRaw[] = [
     name: 'utilisateurs',
     component: Utilisateurs,
     meta: {
+      title: 'Liste des utilisateurs',
       menuSection: 'utilisateurs',
     },
   },
@@ -174,6 +186,7 @@ const routes: RouteRecordRaw[] = [
     name: 'utilisateur',
     component: Utilisateur,
     meta: {
+      title: "Détail d'un utilisateur",
       menuSection: 'utilisateurs',
     },
   },
@@ -182,6 +195,7 @@ const routes: RouteRecordRaw[] = [
     name: 'entreprises',
     component: Entreprises,
     meta: {
+      title: 'Liste des entreprises',
       menuSection: 'entreprises',
     },
   },
@@ -190,6 +204,7 @@ const routes: RouteRecordRaw[] = [
     name: 'entreprise',
     component: Entreprise,
     meta: {
+      title: "Détail d'une entreprise",
       menuSection: 'entreprises',
     },
   },
@@ -198,6 +213,7 @@ const routes: RouteRecordRaw[] = [
     name: 'administrations',
     component: Administrations,
     meta: {
+      title: 'Liste des administrations',
       menuSection: 'administrations',
     },
   },
@@ -206,6 +222,7 @@ const routes: RouteRecordRaw[] = [
     name: 'administration',
     component: Administration,
     meta: {
+      title: "Détail d'une administration",
       menuSection: 'administrations',
     },
   },
@@ -214,6 +231,7 @@ const routes: RouteRecordRaw[] = [
     name: 'metas',
     component: Metas,
     meta: {
+      title: 'Métas',
       menuSection: 'metas',
     },
   },
@@ -222,6 +240,7 @@ const routes: RouteRecordRaw[] = [
     name: 'meta-titre',
     component: MetaTitre,
     meta: {
+      title: 'Métas des titres',
       menuSection: 'metas',
     },
   },
@@ -230,6 +249,7 @@ const routes: RouteRecordRaw[] = [
     name: 'meta-demarche',
     component: MetaDemarche,
     meta: {
+      title: 'Métas des démarches',
       menuSection: 'metas',
     },
   },
@@ -238,6 +258,7 @@ const routes: RouteRecordRaw[] = [
     name: 'meta-etape',
     component: MetaEtape,
     meta: {
+      title: 'Métas des étapes',
       menuSection: 'metas',
     },
   },
@@ -246,6 +267,7 @@ const routes: RouteRecordRaw[] = [
     name: 'meta-activite',
     component: MetaActivite,
     meta: {
+      title: 'Métas des activités',
       menuSection: 'metas',
     },
   },
@@ -254,6 +276,7 @@ const routes: RouteRecordRaw[] = [
     name: 'meta',
     component: Meta,
     meta: {
+      title: "Détail d'une méta",
       menuSection: 'metas',
     },
   },
@@ -262,6 +285,7 @@ const routes: RouteRecordRaw[] = [
     name: 'activites',
     component: Activites,
     meta: {
+      title: 'Liste des activités',
       menuSection: 'activites',
     },
   },
@@ -270,6 +294,7 @@ const routes: RouteRecordRaw[] = [
     name: 'activite',
     component: Activite,
     meta: {
+      title: "Détail d'une activité",
       menuSection: 'activites',
     },
   },
@@ -278,6 +303,7 @@ const routes: RouteRecordRaw[] = [
     name: 'activite-edition',
     component: ActiviteEdition,
     meta: {
+      title: "Édition de l'activité",
       menuSection: 'activites',
     },
   },
@@ -285,26 +311,46 @@ const routes: RouteRecordRaw[] = [
     path: '/statistiques',
     name: 'statistiques',
     component: Statistiques,
+    meta: {
+      menuSection: null,
+      title: 'Liste des statistiques',
+    },
     children: [
       {
         path: 'guyane',
         name: 'statistiques-guyane',
         component: StatsGuyane,
+        meta: {
+          menuSection: null,
+          title: 'Statistiques de la Guyane',
+        },
       },
       {
         path: 'globales',
         name: 'statistiques-globales',
         component: StatistiquesGlobales,
+        meta: {
+          menuSection: null,
+          title: 'Statistiques globales',
+        },
       },
       {
         path: 'granulats-marins',
         name: 'statistiques-granulats-marins',
         component: StatistiquesGranulatsMarins,
+        meta: {
+          menuSection: null,
+          title: 'Statistiques des granulats marins',
+        },
       },
       {
         path: 'mineraux-metaux-metropole',
         name: 'statistiques-mineraux-metaux-metropole',
         component: StatistiquesMinerauxMetauxMetropole,
+        meta: {
+          menuSection: null,
+          title: 'Statistiques minéraux métaux de la Métropole',
+        },
       },
     ],
   },
@@ -314,6 +360,7 @@ const routes: RouteRecordRaw[] = [
     component: Journaux,
     meta: {
       menuSection: 'journaux',
+      title: 'Journaux',
     },
   },
   // url /stats : demande de Samuel
@@ -326,6 +373,10 @@ const routes: RouteRecordRaw[] = [
     path: '/a-propos',
     name: 'a-propos',
     component: About,
+    meta: {
+      title: 'À propos',
+      menuSection: null,
+    },
   },
   {
     name: 'homepage',
@@ -336,6 +387,10 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: 'erreur',
     component: CaminoError,
+    meta: {
+      title: 'Erreur',
+      menuSection: null,
+    },
     props: {
       couleur: 'error',
       message: 'Page introuvable',
@@ -358,6 +413,8 @@ router.beforeEach(async (to, from, next) => {
   if (!store.getters['user/isLoaded']) {
     await store.dispatch('user/identify')
   }
+
+  document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
 
   next()
 })

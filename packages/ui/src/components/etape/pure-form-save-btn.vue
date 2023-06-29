@@ -4,7 +4,7 @@
       <li v-for="alerte in alertes" :key="alerte.message" class="flex">
         {{ alerte.message }}
         <a v-if="alerte.url" :href="alerte.url" target="_blank" class="ml-s">
-          <Icon name="external-link" size="M" />
+          <Icon name="external-link" size="M" title="Détail de l’alerte - nouvelle fenêtre" aria-hidden="true" />
         </a>
       </li>
     </ul>

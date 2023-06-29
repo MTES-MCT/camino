@@ -3,10 +3,11 @@ import { Role, User } from 'camino-common/src/roles'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
+import { Button } from '../_ui/button'
 
 interface Props {
   user: User
-  currentMenuSection: MenuSection | undefined
+  currentMenuSection: MenuSection | null
   trackEvent: TrackEventFunction
 }
 
@@ -52,28 +53,28 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = pro
   }
 
   return (
-    <ul class="fr-btns-group">
+    <div class="fr-btns-group">
       {props.user ? (
         <>
-          <li>
+          <div>
             <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`}>
               {`${props.user.nom} ${props.user.prenom}`}
             </router-link>
-          </li>
-          <li>
+          </div>
+          <div>
             <a class="fr-btn fr-icon-lock-line" href={logoutUrl} onClick={logout}>
               Se déconnecter
             </a>
-          </li>
+          </div>
         </>
       ) : (
-        <li>
+        <div>
           <a class="fr-btn fr-icon-lock-fill" href={loginUrl} onClick={login}>
             Se connecter / S’enregistrer
           </a>
-        </li>
+        </div>
       )}
-    </ul>
+    </div>
   )
 }
 
@@ -144,14 +145,14 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                       française
                     </p>
                   </div>
-                  <div class="fr-header__navbar">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} id="button-475" title="Rechercher">
+                  <nav class="fr-header__navbar" role="navigation">
+                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="menu" id="button-477" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
                       Menu
                     </button>
-                  </div>
+                  </nav>
                 </div>
                 <div class="fr-header__service">
                   <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
@@ -164,11 +165,9 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                 <div class="fr-header__tools-links">
                   <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
                 </div>
-                <div class="fr-header__search fr-modal" id={searchModalId}>
+                <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
-                    <button class="fr-btn--close fr-btn" aria-controls={searchModalId} title="Fermer">
-                      Fermer
-                    </button>
+                    <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={searchModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
                     <div class="fr-search-bar" id="search-473" role="search">
                       <label class="fr-label" for="search-473-input">
                         Rechercher
@@ -184,11 +183,9 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-477">
+        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
-            <button class="fr-btn--close fr-btn" aria-controls={navigationModalId} title="Fermer">
-              Fermer
-            </button>
+            <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={navigationModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
             <div class="fr-header__menu-links">
               <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
             </div>

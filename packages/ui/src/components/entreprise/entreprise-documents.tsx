@@ -134,7 +134,11 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
 type EntrepriseDocumentLinkProps = { documentId: DocumentId | EntrepriseDocumentId; documentTypeId: DocumentTypeId }
 export const EntrepriseDocumentLink: FunctionalComponent<EntrepriseDocumentLinkProps> = (props: EntrepriseDocumentLinkProps) => {
   return (
-    <a href={getDownloadRestRoute('/fichiers/:documentId', { documentId: props.documentId })} title={`Télécharger le document ${DocumentsTypes[props.documentTypeId].nom}`} target="_blank">
+    <a
+      href={getDownloadRestRoute('/fichiers/:documentId', { documentId: props.documentId })}
+      title={`Télécharger le document ${DocumentsTypes[props.documentTypeId].nom} - nouvelle fenêtre`}
+      target="_blank"
+    >
       {DocumentsTypes[props.documentTypeId].nom}
     </a>
   )

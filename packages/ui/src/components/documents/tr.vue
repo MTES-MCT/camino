@@ -17,19 +17,17 @@
     </td>
     <td class="pt-m">{{ document.description || '–' }}</td>
     <td class="flex text-right">
-      <button v-if="boutonModification" class="btn rnd-l-xs py-s px-m my--xs mr-px" @click="editPopupOpen">
-        <Icon size="M" name="pencil" />
-      </button>
-      <button
+      <ButtonIcon v-if="boutonModification" class="btn rnd-l-xs py-s px-m my--xs mr-px" :onClick="editPopupOpen" icon="pencil" title="Modifier le document" />
+      <ButtonIcon
         v-if="boutonSuppression"
         class="btn py-s px-m my--xs"
         :class="{
           'rnd-r-xs': !document.url && !document.uri && !document.fichier,
         }"
-        @click="removePopupOpen"
-      >
-        <Icon size="M" name="delete" />
-      </button>
+        icon="delete"
+        title="Supprimer le document"
+        :onClick="removePopupOpen"
+      />
       <a
         v-if="document.fichier || document.fichierNouveau"
         class="btn-border py-s px-m my--xs"
@@ -40,8 +38,10 @@
         :href="`/apiUrl/download/fichiers/${document.id}`"
         :download="document.nom"
         target="_blank"
+        title="Consulter le document - nouvelle fenêtre"
+        aria-label="Consulter le document - nouvelle fenêtre"
       >
-        <Icon name="download" size="M" />
+        <Icon name="download" size="M" aria-hidden="true" />
       </a>
       <a
         v-if="document.url"
@@ -53,9 +53,11 @@
         :href="document.url"
         target="_blank"
         rel="noopener noreferrer"
+        title="Consulter le document - lien externe"
+        aria-label="Consulter le document - lien externe"
         alt="Url"
       >
-        <Icon size="M" name="link" />
+        <Icon size="M" name="link" aria-hidden="true" />
       </a>
       <a
         v-if="document.uri"
@@ -65,10 +67,11 @@
         }"
         :href="document.uri"
         target="_blank"
+        title="Consulter le document - lien externe"
         rel="noopener noreferrer"
         alt="Uri"
       >
-        <Icon size="M" name="link" />
+        <Icon size="M" name="link" aria-hidden="true" />
       </a>
     </td>
   </tr>
@@ -81,10 +84,12 @@ import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 
 export default {
   components: {
+    ButtonIcon,
     Icon,
     Tag,
     HelpTooltip,

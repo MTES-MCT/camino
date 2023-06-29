@@ -1,9 +1,9 @@
 <template>
   <Liste nom="entreprises" :filtres="filtres" :colonnes="colonnes" :lignes="lignes" :elements="entreprises" :params="params" :total="total" :initialized="initialized" @params-update="paramsUpdate">
     <template v-if="canCreateEntreprise" #addButton>
-      <button class="btn small rnd-xs py-s px-m full-x flex mb-s" @click="addPopupOpen">
+      <button class="btn small rnd-xs py-s px-m full-x flex mb-s" title="Ajouter une entreprise" aria-label="Ajouter une entreprise" @click="addPopupOpen">
         <span class="mt-xxs">Ajouter une entreprise</span>
-        <Icon name="plus" size="M" class="flex-right" />
+        <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
       </button>
       <EntrepriseAddPopup v-if="popupVisible" :close="close" :user="user" :apiClient="customApiClient()" />
     </template>

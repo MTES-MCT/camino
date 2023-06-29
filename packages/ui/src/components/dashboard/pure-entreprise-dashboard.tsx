@@ -63,9 +63,9 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
         </div>
 
         <div class="desktop-blob-1-3">
-          <button class="btn btn-primary small flex" onClick={titreDemandeOpen}>
+          <button class="btn btn-primary small flex" onClick={titreDemandeOpen} title="Demander un titre" aria-label="Demander un titre">
             <span class="mt-xxs">Demander un titre…</span>
-            <Icon name="plus" size="M" class="flex-right" />
+            <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -80,7 +80,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                   Découvrez l'estimation de votre fiscalité minière pour
                   {props.entreprises.length === 1 ? (
                     <>
-                      <router-link to={entrepriseUrl(props.entreprises[0].id)} target="_blank" class="p-s color-bg mb">
+                      <router-link to={entrepriseUrl(props.entreprises[0].id)} class="p-s color-bg mb" title={`Page de l’entreprise ${props.entreprises[0].nom}`}>
                         {props.entreprises[0].nom}
                       </router-link>
                     </>
@@ -97,7 +97,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                           )
                         )
                         .map(entreprise => (
-                          <router-link to={entrepriseUrl(entreprise.id)} target="_blank" class="p-s color-bg mb">
+                          <router-link to={entrepriseUrl(entreprise.id)} class="p-s color-bg mb" title={`Page de l’entreprise ${entreprise.nom}`}>
                             {entreprise.nom}
                           </router-link>
                         ))}

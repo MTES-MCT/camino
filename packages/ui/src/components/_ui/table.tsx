@@ -1,6 +1,7 @@
 import { watch } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { Button } from './button'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -89,11 +90,24 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'update', 
         <div class="table">
           <div class="tr">
             {props.columns.map(col => (
-              <div key={col.id} class={`th nowrap ${(col.class ?? []).join(' ')}`} onClick={() => sort(col.id)}>
-                <button class={`btn-menu full-x p-0${col.noSort ? ' disabled' : ''}`}>
-                  {col.name || (props.column === col.id ? '' : '–')}
-                  {!col.noSort && props.column === col.id ? <Icon class="right" size="M" name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'} /> : null}
-                </button>
+              <div key={col.id} class={`th nowrap ${(col.class ?? []).join(' ')}`}>
+                <Button
+                  onClick={() => sort(col.id)}
+                  class={`btn-menu full-x p-0${col.noSort ? ' disabled' : ''}`}
+                  title={
+                    props.column !== col.id
+                      ? `Trier par la colonne ${col.name}`
+                      : props.order === 'asc'
+                      ? `Trier par la colonne ${col.name} par ordre descendant`
+                      : `Trier par la colonne ${col.name} par ordre ascendant`
+                  }
+                  render={() => (
+                    <>
+                      {col.name || (props.column === col.id ? '' : '–')}
+                      {!col.noSort && props.column === col.id ? <Icon class="right" size="M" name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'} aria-hidden="true" /> : null}
+                    </>
+                  )}
+                />
               </div>
             ))}
           </div>

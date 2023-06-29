@@ -15,9 +15,7 @@
       <Statut :color="activiteStatut.couleur" :nom="statutNom" class="mb-xs" />
     </template>
     <template #buttons>
-      <button v-if="activite.suppression" class="cmn-activite-btn-supprimer btn small py-s px-m flex mr-px" title="supprimer l'activité'" @click="activiteRemovePopupOpen">
-        <Icon size="M" name="delete" />
-      </button>
+      <ButtonIcon v-if="activite.suppression" class="cmn-activite-btn-supprimer btn small py-s px-m flex mr-px" title="supprimer l'activité" :onClick="activiteRemovePopupOpen" icon="delete" />
       <ActiviteButton v-if="activite.modification" :activite="activite" />
     </template>
 
@@ -64,6 +62,7 @@ import Documents from '../documents/list.vue'
 import { dateFormat } from '@/utils'
 import RemovePopup from './remove-popup.vue'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'

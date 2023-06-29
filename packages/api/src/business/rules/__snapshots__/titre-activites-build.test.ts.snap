@@ -120,7 +120,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" title=\\"Page de l’article - site externe\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
             "type": "number",
@@ -295,7 +295,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" title=\\"Page de l’article - site externe\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
             "type": "number",
@@ -470,7 +470,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" title=\\"Page de l’article - site externe\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
             "type": "number",
@@ -645,7 +645,7 @@ exports[`construction des activités d'un titre > crée des activités 2`] = `
           },
           {
             "dateDebut": "2018-01-01",
-            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
+            "description": "Montant en euros des investissements consentis au cours du trimestre listés à l’<a href=\\"https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569\\" target=\\"_blank\\" title=\\"Page de l’article - site externe\\" rel=\\"noopener noreferrer\\">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.",
             "id": "environnement",
             "nom": "Dépenses relatives à la protection de l’environnement (euros)",
             "type": "number",

@@ -24,10 +24,12 @@ export const Dropdown = caminoDefineComponent<Props>(['open', 'onToggle', 'title
             open.value = !open.value
             props.onToggle(open.value)
           }}
+          title={open.value ? 'Fermer la liste déroulante' : 'Ouvrir la liste déroulante'}
+          aria-label={open.value ? 'Fermer la liste déroulante' : 'Ouvrir la liste déroulante'}
         >
           <div>{props.title()}</div>
           <div class="flex flex-right flex-end">
-            <Icon size="M" name={open.value ? 'chevron-haut' : 'chevron-bas'} />
+            <Icon size="M" name={open.value ? 'chevron-haut' : 'chevron-bas'} aria-hidden="true" />
           </div>
         </button>
 

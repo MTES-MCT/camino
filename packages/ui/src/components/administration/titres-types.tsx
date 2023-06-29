@@ -67,10 +67,20 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
                 <span class="small bold cap-first mt-s">{titreType.titreTypeTypeNom}</span>
               </td>
               <td>
-                <Icon name={titreType.gestionnaire ? 'checkbox' : 'checkbox-blank'} size="M" />
+                <Icon
+                  name={titreType.gestionnaire ? 'checkbox' : 'checkbox-blank'}
+                  size="M"
+                  role="img"
+                  aria-label={titreType.gestionnaire ? 'Est gestionnaire de ce type de titre' : 'N’est pas gestionnaire de ce type de titre'}
+                />
               </td>
               <td>
-                <Icon name={titreType.associee ? 'checkbox' : 'checkbox-blank'} size="M" />
+                <Icon
+                  name={titreType.associee ? 'checkbox' : 'checkbox-blank'}
+                  size="M"
+                  role="img"
+                  aria-label={titreType.associee ? 'Est associée à ce type de titre' : 'N’est pas associée à ce type de titre'}
+                />
               </td>
             </tr>
           ))}

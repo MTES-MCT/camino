@@ -21,6 +21,7 @@ import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
 import { CaminoError } from './error'
+import { ButtonIcon } from './_ui/button-icon'
 
 export const Entreprise = defineComponent({
   setup() {
@@ -152,11 +153,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
             title={() => <span class="cap-first"> Profil </span>}
             buttons={() => {
               if (canEditEntreprise(props.user, props.entrepriseId)) {
-                return (
-                  <button class="btn py-s px-m" onClick={() => (editPopup.value = !editPopup.value)}>
-                    <Icon size="M" name="pencil" />
-                  </button>
-                )
+                return <ButtonIcon class="btn py-s px-m" onClick={() => (editPopup.value = !editPopup.value)} title="Modifier l’entreprise" icon="pencil" />
               } else {
                 return null
               }

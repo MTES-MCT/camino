@@ -76,6 +76,8 @@ export const Entreprise = caminoDefineComponent<Props>(['entreprise', 'onEventTr
                   action: 'titre-entreprise_acceder',
                 })
               }
+              aria-label={`Naviguer vers l'entreprise ${props.entreprise.nom}`}
+              role="img"
             />
           </router-link>
         ),

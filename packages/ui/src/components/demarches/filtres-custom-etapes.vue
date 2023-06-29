@@ -12,9 +12,7 @@
           </option>
         </select>
 
-        <button class="btn py-s px-m rnd-xs" @click="valueRemove(n)">
-          <Icon name="minus" size="M" />
-        </button>
+        <ButtonIcon class="btn py-s px-m rnd-xs" :onClick="valueRemove(n)" icon="minus" title="Supprime la valeur" aria-label="Supprime la valeur" />
       </div>
       <div v-if="value.typeId">
         <div class="blobs mb-s">
@@ -52,9 +50,15 @@
       </div>
       <hr class="mb-s" />
     </div>
-    <button v-if="!filter.value || !filter.value.some(v => v.typeId === '')" class="btn rnd-xs py-s px-m full-x flex mb-s h6" @click="valueAdd">
+    <button
+      v-if="!filter.value || !filter.value.some(v => v.typeId === '')"
+      class="btn rnd-xs py-s px-m full-x flex mb-s h6"
+      title="Ajouter un type d’étape"
+      aria-label="Ajouter un type d’étape"
+      @click="valueAdd"
+    >
       <span class="mt-xxs">Ajouter un type d'étape</span>
-      <Icon name="plus" size="M" class="flex-right" />
+      <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -62,10 +66,11 @@
 <script>
 import { InputDate } from '../_ui/input-date'
 import { Icon } from '@/components/_ui/icon'
+import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export default {
-  components: { Icon, InputDate },
+  components: { Icon, InputDate, ButtonIcon },
 
   props: {
     filter: { type: Object, required: true },
@@ -87,7 +92,7 @@ export default {
     },
 
     valueRemove(n) {
-      this.filter.value.splice(n, 1)
+      return () => this.filter.value.splice(n, 1)
     },
 
     valueReset(n) {

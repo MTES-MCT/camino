@@ -16,6 +16,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
+import { ButtonIcon } from '../_ui/button-icon'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -262,7 +263,12 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                     <div class="tablet-blobs">
                       <div class="tablet-blob-1-3 flex flex-center">
                         {j.id ? (
-                          <a class="mt-s" href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })} title={`Télécharger le document ${j.entrepriseDocumentType.nom}`} target="_blank">
+                          <a
+                            class="mt-s"
+                            href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })}
+                            title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
+                            target="_blank"
+                          >
                             {j.entrepriseDocumentType.nom}
                           </a>
                         ) : (
@@ -290,9 +296,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
 
                           {j.id ? (
                             <div class="flex-right flex flex-center ml-s">
-                              <button class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)}>
-                                <Icon size="M" name="delete" />
-                              </button>
+                              <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)} icon="delete" title="Supprime le document d’entreprise" />
                             </div>
                           ) : null}
                         </div>
