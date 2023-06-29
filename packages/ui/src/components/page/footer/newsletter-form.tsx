@@ -17,7 +17,7 @@ export const PureNewsletterForm: FunctionalComponent<Props> = ({ state, onEmailI
         <div class="fr-col-12">
           <div class="fr-follow__newsletter">
             <div>
-              <h2 class="fr-h5">Abonnez-vous à notre lettre d’information</h2>
+              <p class="fr-h5">Abonnez-vous à notre lettre d’information</p>
             </div>
             <div>
               <form

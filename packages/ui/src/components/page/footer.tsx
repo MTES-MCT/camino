@@ -29,7 +29,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
         <div class="fr-container">
           <div class="fr-grid-row fr-grid-row--start fr-grid-row--gutters">
             <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
-              <h3 class="fr-footer__top-cat">Nous contacter</h3>
+              <p class="fr-footer__top-cat">Nous contacter</p>
               <ul class="fr-footer__top-list">
                 <li>
                   <a class="fr-footer__top-link" href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact" target="_blank" rel="noopener noreferrer" title="Page contact - lien externe">
@@ -44,7 +44,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
               </ul>
             </div>
             <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
-              <h3 class="fr-footer__top-cat">Utiliser Camino</h3>
+              <p class="fr-footer__top-cat">Utiliser Camino</p>
               <ul class="fr-footer__top-list">
                 <li>
                   <a class="fr-footer__top-link" href="https://camino.gitbook.io/guide-dutilisation/camino/glossaire" target="_blank" rel="noopener noreferrer" title="Page glossaire - lien externe">
@@ -70,7 +70,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
               </ul>
             </div>
             <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
-              <h3 class="fr-footer__top-cat">Indicateurs</h3>
+              <p class="fr-footer__top-cat">Indicateurs</p>
               <ul class="fr-footer__top-list">
                 <li>
                   <router-link class="fr-footer__top-link" to="/statistiques">
@@ -80,7 +80,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
               </ul>
             </div>
             <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
-              <h3 class="fr-footer__top-cat">Lien externes</h3>
+              <p class="fr-footer__top-cat">Lien externes</p>
               <ul class="fr-footer__top-list">
                 <li>
                   <a class="fr-footer__top-link" href="http://www.minergies.fr/" target="_blank" rel="noopener noreferrer" title="Site MINergies - lien externe">
