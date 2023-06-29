@@ -40,9 +40,8 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
             <ButtonIcon
               class="btn-border py-xs px-s rnd-xs"
               style="position: absolute; top: 4px; right: 10px"
-              title="Export CSV"
+              title="Exporter au format CSV"
               onClick={() => exportCsv(props.getConfiguration(item))}
-              aria-label="Exporter au format CSV"
               icon="download"
               iconSize="S"
             />

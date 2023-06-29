@@ -138,11 +138,21 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
           </div>
           <div class="desktop-blob-1-2 desktop-flex">
             <div class={`${markersVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <ButtonIcon class="btn-border p-s rnd-s" title="affiche / masque les marqueurs" onClick={() => (markersVisible.value = !markersVisible.value)} icon="marker-ungrouped" />
+              <ButtonIcon
+                class="btn-border p-s rnd-s"
+                title={`${markersVisible.value ? 'Masque' : 'Affiche'} les marqueurs`}
+                onClick={() => (markersVisible.value = !markersVisible.value)}
+                icon="marker-ungrouped"
+              />
             </div>
 
             <div class={`${patternVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <ButtonIcon class="btn-border p-s rnd-s" title="affiche / masque la trame" onClick={() => (patternVisible.value = !patternVisible.value)} icon="pattern" />
+              <ButtonIcon
+                class="btn-border p-s rnd-s"
+                title={`${patternVisible.value ? 'Masque' : 'Affiche'} la trame`}
+                onClick={() => (patternVisible.value = !patternVisible.value)}
+                icon="pattern"
+              />
             </div>
           </div>
         </div>

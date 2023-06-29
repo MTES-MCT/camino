@@ -18,7 +18,7 @@ import InputFile from '../_ui/input-file.vue'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
-  components: { InputFile },
+  components: { InputFile, ButtonIcon },
 
   props: {
     contenu: { type: [Object], required: true },
