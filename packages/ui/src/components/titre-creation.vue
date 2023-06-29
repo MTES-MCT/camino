@@ -215,7 +215,7 @@ const referenceAdd = () => {
   titreDemande.value.references.push({ referenceTypeId: '', nom: '' })
 }
 
-const referenceRemove = (index: number) => {
+const referenceRemove = (index: number) => () => {
   titreDemande.value.references.splice(index, 1)
 }
 </script>

@@ -8,7 +8,7 @@
               <div class="fr-header__logo">
                 <p class="fr-logo">République<br>française</p>
               </div>
-              <nav class="fr-header__navbar" role="navigation"><button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="headerSearchModalId" id="button-475" title="Rechercher">Rechercher</button><button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="headerNavigationModalId" aria-haspopup="dialog" id="button-477" title="Menu">Menu</button></nav>
+              <nav class="fr-header__navbar" role="navigation"><button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="headerSearchModalId" aria-haspopup="dialog" id="button-search" title="Rechercher">Rechercher</button><button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="headerNavigationModalId" aria-haspopup="dialog" id="button-menu" title="Menu">Menu</button></nav>
             </div>
             <div class="fr-header__service"><a to="{name:homepage}" title="Accueil - Camino - République Française" type="primary">
                 <p class="fr-header__service-title">Camino</p>
@@ -23,7 +23,7 @@
                 <div><a class="fr-btn fr-icon-lock-line" href="/apiUrl/deconnecter">Se déconnecter</a></div>
               </div>
             </div>
-            <div class="fr-header__search fr-modal" id="headerSearchModalId">
+            <div class="fr-header__search fr-modal" id="headerSearchModalId" aria-labelledby="button-search" aria-label="Recherche dans le site">
               <div class="fr-container"><button title="Fermer la fenêtre de dialogue" aria-label="Fermer la fenêtre de dialogue" class="fr-btn--close fr-btn">Fermer</button>
                 <div class="fr-search-bar" id="search-473" role="search"><label class="fr-label" for="search-473-input">Rechercher</label>
                   <div id="search-473-input_wrapper" class="_typeahead_8eddf1">
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="fr-header__menu fr-modal" id="headerNavigationModalId" aria-labelledby="button-477" aria-label="Connexion et menu de navigation">
+    <div class="fr-header__menu fr-modal" id="headerNavigationModalId" aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
       <div class="fr-container"><button title="Fermer la fenêtre de dialogue" aria-label="Fermer la fenêtre de dialogue" class="fr-btn--close fr-btn">Fermer</button>
         <div class="fr-header__menu-links">
           <div class="fr-btns-group">
