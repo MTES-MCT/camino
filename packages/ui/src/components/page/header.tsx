@@ -146,10 +146,10 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                     </p>
                   </div>
                   <nav class="fr-header__navbar" role="navigation">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} id="button-475" title="Rechercher">
+                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-477" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
                       Menu
                     </button>
                   </nav>
@@ -165,7 +165,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                 <div class="fr-header__tools-links">
                   <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
                 </div>
-                <div class="fr-header__search fr-modal" id={searchModalId}>
+                <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
                     <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={searchModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
                     <div class="fr-search-bar" id="search-473" role="search">
@@ -183,7 +183,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-477" aria-label="Connexion et menu de navigation">
+        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
             <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={navigationModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
             <div class="fr-header__menu-links">
