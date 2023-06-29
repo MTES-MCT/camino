@@ -10,14 +10,15 @@ import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
 import { TablePagination } from './titres/table-pagination'
 import { ButtonIcon } from './_ui/button-icon'
-import { Button } from './_ui/button'
+import { Navigation } from './_ui/navigation'
 
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
-      <Button
+      <Navigation
         class="btn btn-primary small flex"
-        onClick={() => router.push({ name: 'titre-creation' })}
+        router={router}
+        to={{ name: 'titre-creation' }}
         title="Demander un nouveau titre"
         render={() => (
           <>
