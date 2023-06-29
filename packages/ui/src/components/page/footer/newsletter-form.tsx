@@ -95,10 +95,6 @@ export const NewsletterForm = defineComponent({
       }
     }
 
-    return () => (
-      <div>
-        <PureNewsletterForm state={subscribed.value} onEmailInput={e => (email.value = e)} onSubscribe={() => subscribe()} />
-      </div>
-    )
+    return () => <PureNewsletterForm state={subscribed.value} onEmailInput={e => (email.value = e)} onSubscribe={() => subscribe()} />
   },
 })

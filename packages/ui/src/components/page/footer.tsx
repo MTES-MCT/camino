@@ -110,11 +110,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
             </a>
           </div>
           <div class="fr-footer__content">
-            {props.displayNewsletter ? (
-              <p class="fr-footer__content-desc">
-                <NewsletterForm />
-              </p>
-            ) : null}
+            {props.displayNewsletter ? <NewsletterForm class="fr-footer__content-desc" /> : null}
             <ul class="fr-footer__content-list">
               <li class="fr-footer__content-item">
                 <a class="fr-footer__content-link" target="_blank" href="https://economie.gouv.fr" rel="noopener noreferrer" title="Site du ministère de l’économie - lien externe">
