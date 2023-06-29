@@ -8,7 +8,7 @@
             {{ geoSysteme.nom }} ({{ geoSysteme.id }})
           </option>
         </select>
-        <ButtonIcon class="btn py-s px-m rnd-xs" icon="minus" title="Supprimer un système géographique" @click="geoSystemeRemove(etapeGeoSystemeIndex)" />
+        <ButtonIcon class="btn py-s px-m rnd-xs" icon="minus" title="Supprimer un système géographique" :onClick="geoSystemeRemove(etapeGeoSystemeIndex)" />
       </div>
 
       <div v-if="etapeGeoSystemeId" class="tablet-blobs">
@@ -58,7 +58,7 @@ export default {
     },
 
     geoSystemeRemove(etapeGeoSystemeIndex) {
-      this.etape.geoSystemeIds.splice(etapeGeoSystemeIndex, 1)
+      return () => this.etape.geoSystemeIds.splice(etapeGeoSystemeIndex, 1)
     },
 
     geoSystemeUpdate(etapeGeoSystemeIndex) {

@@ -29,9 +29,9 @@
         <span class="mt-xxs mb-xxs">Déposer…</span>
       </button>
 
-      <ButtonIcon class="btn py-s px-m mr-px" icon="pencil" title="Modifier l’étape" :aria-controls="etape.id" @click="etapeEdit" />
+      <ButtonIcon class="btn py-s px-m mr-px" icon="pencil" title="Modifier l’étape" :aria-controls="etape.id" :onClick="etapeEdit" />
 
-      <ButtonIcon class="btn py-s px-m mr-px" icon="delete" title="Supprimer l’étape" :aria-controls="etape.id" @click="removePopupOpen" />
+      <ButtonIcon class="btn py-s px-m mr-px" icon="delete" title="Supprimer l’étape" :aria-controls="etape.id" :onClick="removePopupOpen" />
     </template>
 
     <div class="px pt-m">
@@ -89,7 +89,7 @@
 
       <div v-if="canDownloadZip" class="flex">
         <span class="small bold mb-0 mt-s flex-grow text-right mr-l pt-xs"> Télécharger l'ensemble de la demande dans un fichier .zip </span>
-        <ButtonIcon class="btn-border rnd-xs flex-right py-s px-m mb-m" icon="download" title="Télécharger l'ensemble de la demande dans un fichier .zip" @click="demandeDownload" />
+        <ButtonIcon class="btn-border rnd-xs flex-right py-s px-m mb-m" icon="download" title="Télécharger l'ensemble de la demande dans un fichier .zip" :onClick="demandeDownload" />
       </div>
     </div>
   </Accordion>

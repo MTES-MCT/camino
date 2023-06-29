@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="canCreate">
-      <button class="btn small rnd-xs py-s px-m full-x flex mb" :title="demarcheAddText" :aria-label="demarcheAddText" @click="demarcheAddPopupOpen">
+      <button class="btn small rnd-xs py-s px-m full-x flex mb" :title="demarcheAddText" :aria-label="demarcheAddText" :onClick="demarcheAddPopupOpen">
         <span class="mt-xxs">{{ demarcheAddText }}</span>
         <Icon name="plus" size="M" class="flex-right" :aria-hidden="true" />
       </button>

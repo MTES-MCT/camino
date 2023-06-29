@@ -1,7 +1,6 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
 import { Card } from './_ui/card'
 import { User } from 'camino-common/src/roles'
-import { Icon } from './_ui/icon'
 import { QGisToken } from './utilisateur/qgis-token'
 import { AsyncData } from '@/api/client-rest'
 import { useStore } from 'vuex'
@@ -191,7 +190,7 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
             data={utilisateur.value}
             renderItem={item => (
               <>
-                {isMe.value ? <ButtonIcon class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate} aria-label="Changer de mot de passe" icon="key" /> : null}
+                {isMe.value ? <ButtonIcon class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate} icon="key" /> : null}
                 {canDeleteUtilisateur(props.user, item.id) ? (
                   <ButtonIcon
                     class="btn-alt py-s px-m"

@@ -208,13 +208,28 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
           <div class="desktop-blob-1-2 desktop-flex">
             <div class="flex mb-s">
               <div class={`${markerLayersId.value === 'clusters' ? 'active' : ''}`}>
-                <ButtonIcon class="btn-border p-s rnd-l-s" title="regroupe les marqueurs" onClick={() => markerLayersIdSet('clusters')} icon="marker-cluster" />
+                <ButtonIcon
+                  class="btn-border p-s rnd-l-s"
+                  title={`${markerLayersId.value === 'clusters' ? 'Dégroupe' : 'Regroupe'} les marqueurs`}
+                  onClick={() => markerLayersIdSet('clusters')}
+                  icon="marker-cluster"
+                />
               </div>
               <div class={`${markerLayersId.value === 'markers' ? 'active' : ''}`}>
-                <ButtonIcon class="btn-border p-s" title="affiche les marqueurs" onClick={() => markerLayersIdSet('markers')} icon="marker-ungrouped" />
+                <ButtonIcon
+                  class="btn-border p-s"
+                  title={`${markerLayersId.value === 'markers' ? 'Masque' : 'Affiche'} les marqueurs`}
+                  onClick={() => markerLayersIdSet('markers')}
+                  icon="marker-ungrouped"
+                />
               </div>
               <div class={`${markerLayersId.value === 'none' ? 'active' : ''} mr-s`}>
-                <ButtonIcon class="btn-border p-s rnd-r-s" title="affiche les contours uniquement" onClick={() => markerLayersIdSet('none')} icon="marker-none" />
+                <ButtonIcon
+                  class="btn-border p-s rnd-r-s"
+                  title={`${markerLayersId.value === 'none' ? 'Masque' : 'Affiche'} les contours uniquement`}
+                  onClick={() => markerLayersIdSet('none')}
+                  icon="marker-none"
+                />
               </div>
             </div>
           </div>

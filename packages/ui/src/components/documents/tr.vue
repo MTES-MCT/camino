@@ -26,7 +26,7 @@
         }"
         icon="delete"
         title="Supprimer le document"
-        @click="removePopupOpen"
+        :onClick="removePopupOpen"
       />
       <a
         v-if="document.fichier || document.fichierNouveau"

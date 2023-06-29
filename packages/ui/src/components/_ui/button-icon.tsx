@@ -9,7 +9,7 @@ type Props = {
   title: string
   icon: IconType
   iconSize?: Size
-} & ButtonHTMLAttributes
+} & Omit<ButtonHTMLAttributes, 'aria-label'>
 export const ButtonIcon: FunctionalComponent<Props> = (props: Props) => {
   const renderIcon = () => <Icon size={props.iconSize ? props.iconSize : 'M'} name={props.icon} aria-hidden="true" />
   return <Button title={props.title} onClick={props.onClick} render={renderIcon} />

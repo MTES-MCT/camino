@@ -53,7 +53,7 @@ export default {
 
   methods: {
     fileDownload(fichier) {
-      this.$emit('file-download', fichier)
+      return () => this.$emit('file-download', fichier)
     },
   },
 }

@@ -92,7 +92,7 @@ export default {
     },
 
     valueRemove(n) {
-      this.filter.value.splice(n, 1)
+      return () => this.filter.value.splice(n, 1)
     },
 
     valueReset(n) {
