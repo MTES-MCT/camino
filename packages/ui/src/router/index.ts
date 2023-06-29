@@ -81,7 +81,7 @@ declare module 'vue-router' {
   }
 }
 
-const routes: RouteRecordRaw[] = [
+const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -396,12 +396,15 @@ const routes: RouteRecordRaw[] = [
       message: 'Page introuvable',
     },
   },
-]
+] as const satisfies Readonly<(Omit<RouteRecordRaw, 'children'> & { children?: Readonly<RouteRecordRaw['children']> })[]>
+
+// TODO 2023-06-29 make children
+export type CaminoRoutePaths = (typeof routes)[number]['path']
 
 const history = createWebHistory()
 
 const router = createRouter({
-  routes,
+  routes: routes as Readonly<RouteRecordRaw[]>,
   history,
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',

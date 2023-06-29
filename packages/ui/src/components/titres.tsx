@@ -17,8 +17,7 @@ function DemandeTitreButton(user: User, router: Router) {
     return (
       <Navigation
         class="btn btn-primary small flex"
-        router={router}
-        to={{ name: 'titre-creation' }}
+        to="/titres/creation"
         title="Demander un nouveau titre"
         render={() => (
           <>
