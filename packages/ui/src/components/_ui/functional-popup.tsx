@@ -54,7 +54,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
     const dialogElement = document.getElementById(id)
     if (dialogElement && dsfr) {
       dsfr(dialogElement).modal.disclose()
-      dialogElement.addEventListener('dsfr.conceal', e => {
+      dialogElement.addEventListener('dsfr.conceal', () => {
         props.close()
       })
     }

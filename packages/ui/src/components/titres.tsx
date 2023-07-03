@@ -1,6 +1,5 @@
 import { defineComponent, computed, onMounted, inject } from 'vue'
 import { Icon } from '@/components/_ui/icon'
-import { Router, useRouter } from 'vue-router'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
@@ -9,10 +8,10 @@ import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
 import { TablePagination } from './titres/table-pagination'
-import { ButtonIcon } from './_ui/button-icon'
 import { Navigation } from './_ui/navigation'
+import { Tab, newTabId, Tabs } from './_ui/tabs'
 
-function DemandeTitreButton(user: User, router: Router) {
+function DemandeTitreButton(user: User) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
       <Navigation
@@ -31,29 +30,8 @@ function DemandeTitreButton(user: User, router: Router) {
   return null
 }
 
-const vues = [
-  { id: 'carte', icon: 'globe' },
-  { id: 'table', icon: 'list' },
-] as const
-
-type VueId = (typeof vues)[number]['id']
-
-function AfficheData(initialized: boolean, vueId: VueId, titres: any, total: number): JSX.Element {
-  if (initialized) {
-    switch (vueId) {
-      case 'carte':
-        return <CaminoTitresMap titres={titres} />
-      case 'table':
-        return <TablePagination titres={titres} total={total} />
-    }
-  } else {
-    return <div class="table-view mb-xxl mt">…</div>
-  }
-}
-
 export const Titres = defineComponent({
   setup() {
-    const router = useRouter()
     const matomo = inject('matomo', null)
     const store = useStore()
     onMounted(() => {
@@ -66,7 +44,7 @@ export const Titres = defineComponent({
     const titres = computed<any[]>(() => store.state.titres.elements)
     const total = computed<number>(() => store.state.titres.total)
 
-    const vueId = computed<VueId>(() => store.state.titres.vueId)
+    const vueId = computed<VueId | null>(() => store.state.titres.vueId)
     const resultat = computed<string>(() => {
       const res = total.value > titres.value.length ? `${titres.value.length} / ${total.value}` : titres.value.length
 
@@ -87,6 +65,13 @@ export const Titres = defineComponent({
       }
     }
 
+    const vues = [
+      { id: newTabId('carte'), icon: 'fr-icon-earth-fill', title: 'Carte', renderContent: () => <CaminoTitresMap titres={titres.value} /> },
+      { id: newTabId('table'), icon: 'fr-icon-list-unordered', title: 'Tableau', renderContent: () => <TablePagination titres={titres.value} total={total.value} /> },
+    ] as const satisfies readonly Tab[]
+
+    type VueId = (typeof vues)[number]['id']
+
     return () => (
       <div>
         <div class="desktop-blobs">
@@ -94,34 +79,17 @@ export const Titres = defineComponent({
             <h1 class="mt-xs mb-m">Titres miniers et autorisations</h1>
           </div>
 
-          <div class="desktop-blob-1-3">{DemandeTitreButton(user.value, router)}</div>
+          <div class="desktop-blob-1-3">{DemandeTitreButton(user.value)}</div>
         </div>
 
         <Filtres initialized={initialized.value} />
-        <div class="tablet-blobs tablet-flex-direction-reverse">
-          <div class="tablet-blob-1-3 flex mb-s">
-            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right full-x downloads" /> : null}
-          </div>
+        {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right full-x downloads" /> : null}
 
-          <div class="tablet-blob-2-3 flex">
-            {vues.map(vue => {
-              return (
-                <div key={vue.id} class={vueId.value === vue.id ? 'active mr-xs' : 'mr-xs'}>
-                  <ButtonIcon
-                    class="p-m btn-tab rnd-t-s"
-                    style={vueId.value === vue.id ? { cursor: 'default' } : {}}
-                    onClick={() => vueId.value !== vue.id && vueClick(vue.id)}
-                    title={`Format d’affichage : ${vue.id === 'carte' ? 'Carte' : 'Tableau'}`}
-                    icon={vue.icon}
-                  />
-                </div>
-              )
-            })}
-            <div class="pl-m pt-m h5 bold">{resultat.value}</div>
-          </div>
+        <div class="pl-m pt-m h5 bold">{resultat.value}</div>
+
+        <div class="dsfr dsfr-container">
+          {vueId.value ? <Tabs initTab={vueId.value} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={tabId => vueId.value !== tabId && vueClick(tabId)} /> : null}
         </div>
-        <div class="line-neutral width-full" />
-        {AfficheData(initialized.value, vueId.value, titres.value, total.value)}
       </div>
     )
   },
