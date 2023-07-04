@@ -145,8 +145,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
                     </span>
                   ) : null}
                   <br />
-                  {administration.value.codePostal}
-                  {administration.value.commune}
+                  {administration.value.codePostal} {administration.value.commune}
                 </p>
               </div>
             </div>

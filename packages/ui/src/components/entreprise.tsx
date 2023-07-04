@@ -205,8 +205,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
                       <p>
                         {item.adresse}
                         <br />
-                        {item.codePostal}
-                        {item.commune}
+                        {item.codePostal} {item.commune}
                       </p>
                     </div>
                   </div>
