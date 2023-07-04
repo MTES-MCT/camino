@@ -29,3 +29,12 @@ export type NonEmptyArray<T> = [T, ...T[]]
 export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
 }
+
+
+declare global {
+  interface NonEmptyArray<T> {
+    map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): NonEmptyArray<U>;
+
+  }
+}
+

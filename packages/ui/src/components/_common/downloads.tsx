@@ -1,8 +1,11 @@
 import { inject, ref, defineComponent, HTMLAttributes } from 'vue'
 import { useRoute, RouteLocationNormalized } from 'vue-router'
-import { Dropdown } from '../_ui/dropdown'
-import { Download } from './download'
+import { Dropdown, Item } from '../_ui/dropdown'
 import { DownloadRestRoutes, DownloadFormat, CaminoRestParams } from 'camino-common/src/rest'
+import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools'
+import { ButtonIcon } from '../_ui/button-icon'
+import { getDownloadRestRoute } from '@/api/client-rest'
+import { saveAs } from 'file-saver'
 
 export const Downloads = defineComponent(
   <T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'> & { class?: HTMLAttributes['class'] }) => {
@@ -14,7 +17,7 @@ export const Downloads = defineComponent(
 )
 
 export interface Props<T extends DownloadRestRoutes> {
-  formats: DownloadFormat[]
+  formats: NonEmptyArray<DownloadFormat>
   downloadRoute: T
   params: CaminoRestParams<T>
   route: RouteLocationNormalized
@@ -23,50 +26,35 @@ export interface Props<T extends DownloadRestRoutes> {
 
 export const PureDownloads = defineComponent(
   <T extends DownloadRestRoutes>(props: Props<T>) => {
+    const downloadFormat = ref<DownloadFormat | null>(null)
 
-    const itemsRecord = {
-    'csv': 'csv',
-    'xlsx': 'xls',
-      'ods': 'ods',
-      'geojson': 'GeoJson',
-      'json': 'Json',
-      'pdf': 'Pdf',
-      'zip': 'Zip'
-    } as const satisfies Record<DownloadFormat, string>
-
-    const items: {id: DownloadFormat, label: string}[] = Object.keys(itemsRecord).reduce<{id: DownloadFormat, label: string}[]>((acc, key) => {
-      const id: DownloadFormat = key as unknown as DownloadFormat
-
-      return [...acc, {id, label: items[id]}]
-    }, [])
-
-    return () => (
-      <Dropdown
-
-          items={}
-        title={() => <span class="h6">Téléchargements</span>}
-        content={() => {
-          return (
-            <div>
-              {props.formats.map(format => {
-                return (
-                  <Download
-                    class="btn-alt small px-s py-s full-x border-b-s"
-                    key={format}
-                    format={format}
-                    downloadRoute={props.downloadRoute}
-                    params={props.params}
-                    query={props.route.query}
-                    matomo={props.matomo}
-                    onClicked={() => toggle(!opened.value)}
-                  />
-                )
-              })}
-            </div>
-          )
-        }}
-      />
-    )
+    const items: Item<DownloadFormat>[] = props.formats.map(f => ({id: f, label: f}))
+    if (isNonEmptyArray(items)) {
+      return () => (
+        <div class="dsfr">
+        <Dropdown
+            items={items}
+            label='Téléchargements'
+            selectedItemId={null}
+            selectItem={(id) => {downloadFormat.value = id}}
+        />
+        <ButtonIcon icon='download' disabled={downloadFormat.value === null} title={`Télécharger au format ${downloadFormat.value}`} onClick={() => download(downloadFormat.value, props)} />
+        </div>
+      )
+    } else {
+      return () => null
+    }
+    
   },
   { props: ['formats', 'downloadRoute', 'params', 'route', 'matomo'] }
 )
+
+async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat, props: Props<T>) {
+  const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...props.route.query })
+
+  saveAs(url)
+
+  if (props.matomo) {
+    props.matomo.trackLink(`${window.location.origin}${url}`, 'download')
+  }
+}
