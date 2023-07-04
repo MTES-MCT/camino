@@ -1,42 +1,29 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { ref, Transition, watch } from 'vue'
-import { Icon } from './icon'
+import { NonEmptyArray } from "camino-common/src/typescript-tools"
+import { isEventWithTarget } from "../../utils/vue-tsx-utils"
 
-export type Props = {
-  open?: boolean
-  onToggle: (newState: boolean) => void
-  title: () => JSX.Element
-  content: () => JSX.Element
+type Item<T> = {id: T, label: string}
+export type Props <T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
+  id?: string
+  items: Items
+  label: string
+  selectedItemId: Items[number]['id'] | null
+  selectItem: (id: T | null) => void
 }
-export const Dropdown = caminoDefineComponent<Props>(['open', 'onToggle', 'title', 'content'], props => {
-  const open = ref<boolean>(props.open ?? false)
-  watch(
-    () => props.open,
-    state => (open.value = state ?? false),
-    { immediate: true }
-  )
-  return () => (
-    <div class="relative flex flex-direction-column dropdown">
-      <div class="absolute border rnd-s bg-bg full-x overflow-hidden">
-        <button
-          class={`${open.value ? 'rnd-t-s border-b-s' : ''} accordion-header flex btn-alt py-s px-s full-x`}
-          onClick={() => {
-            open.value = !open.value
-            props.onToggle(open.value)
-          }}
-          title={open.value ? 'Fermer la liste déroulante' : 'Ouvrir la liste déroulante'}
-          aria-label={open.value ? 'Fermer la liste déroulante' : 'Ouvrir la liste déroulante'}
-        >
-          <div>{props.title()}</div>
-          <div class="flex flex-right flex-end">
-            <Icon size="M" name={open.value ? 'chevron-haut' : 'chevron-bas'} aria-hidden="true" />
-          </div>
-        </button>
 
-        <div class={`${open.value ? 'opened' : ''} overflow-hidden`}>
-          <Transition name="slide">{open.value ? props.content() : null}</Transition>
-        </div>
-      </div>
-    </div>
+
+export const Dropdown =  <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(props: Props<T, Items>): JSX.Element => {
+  const id = props.id ?? `select_${(Math.random() * 1000).toFixed()}`
+
+  return (<span class="dsfr">
+  <div class="fr-select-group">
+  <label class="fr-label" for={id}>
+    {props.label}
+  </label>
+  <select class="fr-select" id={id} name={id} onChange={(event) => isEventWithTarget(event) ? event.target.value : null}>
+    {props.items.map(({id, label}) => <option value={id}>{label}</option>)}
+    <option value="" selected disabled hidden>Selectionnez une option</option>
+  </select>
+</div>
+</span>
   )
-})
+}

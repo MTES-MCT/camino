@@ -1,5 +1,5 @@
 <template>
-  <Filtres :filtres="filtres" :initialized="initialized" :metas="metas" :params="params" @params-update="paramsFiltresUpdate" @toggle="filtresToggle" />
+  <Filtres :filtres="filtres" :initialized="initialized" :metas="metas" :subtitle="subtitle" :params="params" @params-update="paramsFiltresUpdate" @toggle="filtresToggle" />
 </template>
 
 <script>
@@ -12,6 +12,7 @@ export default {
 
   props: {
     initialized: { type: Boolean, required: true },
+    subtitle: { type: String, required: true }
   },
 
   data() {

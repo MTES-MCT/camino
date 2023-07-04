@@ -23,15 +23,27 @@ export interface Props<T extends DownloadRestRoutes> {
 
 export const PureDownloads = defineComponent(
   <T extends DownloadRestRoutes>(props: Props<T>) => {
-    const opened = ref<boolean>(false)
-    const toggle = (newState: boolean) => {
-      opened.value = newState
-    }
+
+    const itemsRecord = {
+    'csv': 'csv',
+    'xlsx': 'xls',
+      'ods': 'ods',
+      'geojson': 'GeoJson',
+      'json': 'Json',
+      'pdf': 'Pdf',
+      'zip': 'Zip'
+    } as const satisfies Record<DownloadFormat, string>
+
+    const items: {id: DownloadFormat, label: string}[] = Object.keys(itemsRecord).reduce<{id: DownloadFormat, label: string}[]>((acc, key) => {
+      const id: DownloadFormat = key as unknown as DownloadFormat
+
+      return [...acc, {id, label: items[id]}]
+    }, [])
+
     return () => (
       <Dropdown
-        class="full-x"
-        open={opened.value}
-        onToggle={toggle}
+
+          items={}
         title={() => <span class="h6">Téléchargements</span>}
         content={() => {
           return (

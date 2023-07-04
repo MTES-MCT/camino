@@ -48,7 +48,7 @@ export const Titres = defineComponent({
     const resultat = computed<string>(() => {
       const res = total.value > titres.value.length ? `${titres.value.length} / ${total.value}` : titres.value.length
 
-      return `${res} résultat${titres.value.length > 1 ? 's' : ''}`
+      return `(${res} résultat${titres.value.length > 1 ? 's' : ''})`
     })
 
     const vueSet = async (vueId: VueId) => {
@@ -75,20 +75,26 @@ export const Titres = defineComponent({
     return () => (
       <div>
         <div class="desktop-blobs">
-          <div class="desktop-blob-2-3">
+          <div class="desktop-blob-1-2">
             <h1 class="mt-xs mb-m">Titres miniers et autorisations</h1>
           </div>
 
-          <div class="desktop-blob-1-3">{DemandeTitreButton(user.value)}</div>
+          <div class="desktop-blob-1-2" style={{display: 'flex', flexDirection: 'row'}}>
+            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right downloads pl-s" /> : null}
+            {DemandeTitreButton(user.value)}
+
+          </div>
         </div>
 
-        <Filtres initialized={initialized.value} />
-        {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right full-x downloads" /> : null}
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <Filtres initialized={initialized.value} subtitle={resultat.value} />
+          {/*  */}
 
-        <div class="pl-m pt-m h5 bold">{resultat.value}</div>
+        </div>
+
 
         <div class="dsfr dsfr-container">
-          {vueId.value ? <Tabs initTab={vueId.value} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={tabId => vueId.value !== tabId && vueClick(tabId)} /> : null}
+          {initialized.value && vueId.value ? <Tabs initTab={vueId.value} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={tabId => vueId.value !== tabId && vueClick(tabId)} /> : null}
         </div>
       </div>
     )

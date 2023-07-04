@@ -1,7 +1,10 @@
 <template>
   <Accordion ref="accordion" :opened="opened" :slotSub="!!labels.length" :slotDefault="true" class="mb-s" @toggle="toggle">
     <template #title>
-      {{ title }}
+      <div style="display: flex; align-items: center">
+        <div>{{title}}</div>
+        <div v-if="subtitle" class="pl-s small">{{subtitle}}</div>
+      </div>
     </template>
 
     <template v-if="labels.length" #sub>
@@ -68,6 +71,7 @@ export default {
   props: {
     filters: { type: Array, default: () => [] },
     title: { type: String, default: 'Filters' },
+    subtitle: { type: String, default: '' },
     button: { type: String, default: 'Ok' },
     opened: { type: Boolean, default: false },
   },

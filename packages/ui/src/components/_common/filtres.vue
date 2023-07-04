@@ -1,5 +1,5 @@
 <template>
-  <Filters v-if="initialized" v-model:filters="filters" class="flex-grow" button="Valider" :opened="opened" title="Filtres" @validate="validate" @toggle="toggle" />
+  <Filters v-if="initialized" v-model:filters="filters" class="flex-grow" button="Valider" :opened="opened" title="Filtres" :subtitle="subtitle" @validate="validate" @toggle="toggle" />
   <div v-else class="py-s px-m mb-s border rnd-s">…</div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
     params: { type: Object, required: true },
     metas: { type: Object, default: () => ({}) },
     initialized: { type: Boolean, required: true },
+    subtitle: { type: String, default: '' }
   },
 
   emits: ['toggle', 'params-update'],
