@@ -67,7 +67,9 @@ export const getAllJorfFromDatabase = async (): Promise<void> => {
         break
       default:
         if (result.jorf !== document.jorf || result.nor !== document.nor) {
-          console.warn(`Publication différente trouvée pour le titre ${document.titre_nom} autour de la date ${document.date}`)
+          console.warn(
+            `Publication différente trouvée pour le titre ${document.titre_nom} autour de la date ${document.date}, en base : ${document.jorf}/${document.nor}, trouvé : ${result.jorf}/${result.nor}`
+          )
           differente++
         } else {
           ok++
@@ -103,7 +105,7 @@ const searchPublication = async (bearer: Bearer, titre: string, date: CaminoDate
   const oneMonthBefore = dateAddMonths(date, -1)
   const oneMonthAfter = dateAddMonths(date, 1)
 
-  const criteres = titre.split(' ').map(mot => ({
+  const criteres = titre.split(/[ -,]+/).map(mot => ({
     typeRecherche: 'UN_DES_MOTS',
     proximite: 2,
     valeur: mot,
