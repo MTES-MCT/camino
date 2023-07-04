@@ -10,6 +10,7 @@ import { Layer, MarkerClusterGroup } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { ButtonIcon } from '../_ui/button-icon'
+import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 interface Props {
   titres: TitreWithPoint[]
 }
@@ -181,59 +182,47 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     { immediate: true }
   )
   return () => (
-    <div class="width-full bg-alt">
+    <div class="dsfr">
       <CaminoMap ref={map} markerLayers={markerLayers.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
-      <div class="container overflow-auto">
-        <div class="desktop-blobs">
-          <div class="desktop-blob-1-2 desktop-flex">
-            <div class="mb-s">
-              <span class="mr-s">
-                <button class="btn-border small rnd-m px-s py-xs" onClick={() => mapFrame()}>
-                  Tout afficher
-                </button>
-              </span>
-            </div>
-            <ul class="list-inline pill-list mb-s">
-              {zones.map(z => (
-                <li key={z.id} class="mr-px mb-px">
-                  <button class="btn-border small pill-item px-s py-xs" onClick={() => mapCenter(z.id)}>
-                    {z.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+          <li>
+            <DsfrButton onClick={() => mapFrame()} title="Tout afficher" buttonType="tertiary" />
+          </li>
+          {zones.map(z => (
+            <li key={z.id}>
+              <DsfrButton buttonType="tertiary" onClick={() => mapCenter(z.id)} title={z.name} />
+            </li>
+          ))}
+        </ul>
 
-          <div class="desktop-blob-1-2 desktop-flex">
-            <div class="flex mb-s">
-              <div class={`${markerLayersId.value === 'clusters' ? 'active' : ''}`}>
-                <ButtonIcon
-                  class="btn-border p-s rnd-l-s"
-                  title={`${markerLayersId.value === 'clusters' ? 'Dégroupe' : 'Regroupe'} les marqueurs`}
-                  onClick={() => markerLayersIdSet('clusters')}
-                  icon="marker-cluster"
-                />
-              </div>
-              <div class={`${markerLayersId.value === 'markers' ? 'active' : ''}`}>
-                <ButtonIcon
-                  class="btn-border p-s"
-                  title={`${markerLayersId.value === 'markers' ? 'Masque' : 'Affiche'} les marqueurs`}
-                  onClick={() => markerLayersIdSet('markers')}
-                  icon="marker-ungrouped"
-                />
-              </div>
-              <div class={`${markerLayersId.value === 'none' ? 'active' : ''} mr-s`}>
-                <ButtonIcon
-                  class="btn-border p-s rnd-r-s"
-                  title={`${markerLayersId.value === 'none' ? 'Masque' : 'Affiche'} les contours uniquement`}
-                  onClick={() => markerLayersIdSet('none')}
-                  icon="marker-none"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+          <li>
+            <DsfrButtonIcon
+              icon="fr-icon-cloud-fill"
+              buttonType={markerLayersId.value === 'clusters' ? 'primary' : 'secondary'}
+              title="Groupe les marqueurs"
+              onClick={() => markerLayersIdSet('clusters')}
+            />
+          </li>
+          <li>
+            <DsfrButtonIcon
+              icon="fr-icon-map-pin-2-fill"
+              buttonType={markerLayersId.value === 'markers' ? 'primary' : 'secondary'}
+              title="Groupe les marqueurs"
+              onClick={() => markerLayersIdSet('markers')}
+            />
+          </li>
+          <li>
+            <DsfrButtonIcon
+              icon="fr-icon-map-pin-2-line"
+              buttonType={markerLayersId.value === 'none' ? 'primary' : 'secondary'}
+              title="Masque les marqueurs"
+              onClick={() => markerLayersIdSet('none')}
+            />
+          </li>
+        </ul>
       </div>
     </div>
   )
