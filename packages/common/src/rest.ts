@@ -154,13 +154,7 @@ export const DOWNLOAD_FORMATS = {
 
 export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
 
-type ZodParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
-  ? ZodParseUrlParams<path> & Partial<ZodParseUrlParams<optionalPath>>
-  : url extends `${infer start}/${infer rest}`
-  ? ZodParseUrlParams<start> & ZodParseUrlParams<rest>
-  : url extends `:${infer param}`
-  ? { [k in param]: ZodType }
-  : {} // eslint-disable-line @typescript-eslint/ban-types
+type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodType } : {} // eslint-disable-line @typescript-eslint/ban-types
 
 type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
 
