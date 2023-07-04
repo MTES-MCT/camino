@@ -5,6 +5,8 @@ import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 import '@gouvfr/dsfr/dist/component/modal/modal.module'
 import '@gouvfr/dsfr/dist/component/header/header.module'
+import '@gouvfr/dsfr/dist/component/tab/tab.module'
+
 import { setup } from '@storybook/vue3'
 import { h } from 'vue'
 import { IconSprite } from '../src/components/_ui/iconSprite'

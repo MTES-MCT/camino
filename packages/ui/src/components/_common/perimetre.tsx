@@ -3,11 +3,12 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
-import { Download } from './download'
 import { CaminoCommonMap, Props as CaminoCommonMapProps } from './map'
 import { Points } from './points'
 import { TitreId } from 'camino-common/src/titres'
 import { ButtonIcon } from '../_ui/button-icon'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { download } from './downloads'
 
 export type TabId = 'carte' | 'points'
 export interface Props {
@@ -24,18 +25,32 @@ const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
   { id: 'carte', nom: 'Carte', icon: 'globe' },
   { id: 'points', nom: 'Points', icon: 'list' },
 ]
+
 export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
   const isMain = props.isMain ?? false
   const tabId = props.tabId ?? 'carte'
   const titreId = props.titreId ?? ''
   return (
     <div>
-      <div class="tablet-blobs tablet-flex-direction-reverse">
-        <div class="tablet-blob-1-2 flex">
+      <div class="tablet-blobs tablet-flex-direction-reverse dsfr" style={{ alignItems: 'center' }}>
+        <div class="tablet-blob-1-2" style={{ display: 'flex', flexDirection: 'row-reverse' }}>
           {props.points?.length && titreId ? (
-            <Download downloadRoute="/titres/:id" params={{ id: titreId }} format="geojson" class="btn-border small pill pl pr-m py-s flex-right" onClicked={() => {}} query={{}}>
-              geojson
-            </Download>
+            <DsfrButtonIcon
+              label="geojson"
+              icon="fr-icon-file-download-line"
+              buttonType="secondary"
+              title="Télécharger le périmètre au format geojson"
+              onClick={() =>
+                download(
+                  'geojson',
+                  {},
+                  {
+                    downloadRoute: '/titres/:id',
+                    params: { id: titreId },
+                  }
+                )
+              }
+            />
           ) : null}
         </div>
 

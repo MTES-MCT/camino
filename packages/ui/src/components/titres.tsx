@@ -76,25 +76,24 @@ export const Titres = defineComponent({
       <div>
         <div class="desktop-blobs">
           <div class="desktop-blob-1-2">
-            <h1 class="mt-xs mb-m">Titres miniers et autorisations</h1>
+            <h1 class="mb-m">Titres miniers et autorisations</h1>
           </div>
 
-          <div class="desktop-blob-1-2" style={{display: 'flex', flexDirection: 'row'}}>
+          <div class="desktop-blob-1-2" style={{ display: 'flex', flexDirection: 'row' }}>
             {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right downloads pl-s" /> : null}
             {DemandeTitreButton(user.value)}
-
           </div>
         </div>
 
-        <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
           <Filtres initialized={initialized.value} subtitle={resultat.value} />
           {/*  */}
-
         </div>
 
-
         <div class="dsfr dsfr-container">
-          {initialized.value && vueId.value ? <Tabs initTab={vueId.value} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={tabId => vueId.value !== tabId && vueClick(tabId)} /> : null}
+          {initialized.value && vueId.value ? (
+            <Tabs initTab={vueId.value} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={tabId => vueId.value !== tabId && vueClick(tabId)} />
+          ) : null}
         </div>
       </div>
     )

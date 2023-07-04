@@ -1,6 +1,5 @@
 import { nextTick, ref } from 'vue'
 
-import '@gouvfr/dsfr/dist/component/tab/tab.module'
 import { DsfrIcon } from './dsfrIconSpriteType'
 import { caminoDefineComponent } from '../../utils/vue-tsx-utils'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
