@@ -2,14 +2,12 @@ import { nextTick, ref, Ref, computed, onMounted, onBeforeUnmount, inject, watch
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
-import { Icon } from '@/components/_ui/icon'
 import { isDomaineId } from 'camino-common/src/static/domaines'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { Layer, MarkerClusterGroup } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { ButtonIcon } from '../_ui/button-icon'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 interface Props {
   titres: TitreWithPoint[]
@@ -182,7 +180,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     { immediate: true }
   )
   return () => (
-    <div class="dsfr">
+    <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
       <CaminoMap ref={map} markerLayers={markerLayers.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -210,7 +208,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
             <DsfrButtonIcon
               icon="fr-icon-map-pin-2-fill"
               buttonType={markerLayersId.value === 'markers' ? 'primary' : 'secondary'}
-              title="Groupe les marqueurs"
+              title="Dégroupe les marqueurs"
               onClick={() => markerLayersIdSet('markers')}
             />
           </li>

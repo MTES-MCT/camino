@@ -15,7 +15,7 @@ function DemandeTitreButton(user: User) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
       <Navigation
-        class="btn btn-primary small flex"
+        class="fr-btn fr-ml-1w"
         to="/titres/creation"
         title="Demander un nouveau titre"
         render={() => (
@@ -79,15 +79,14 @@ export const Titres = defineComponent({
             <h1 class="mb-m">Titres miniers et autorisations</h1>
           </div>
 
-          <div class="desktop-blob-1-2" style={{ display: 'flex', flexDirection: 'row' }}>
-            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right downloads pl-s" /> : null}
+          <div class="desktop-blob-1-2 dsfr" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" class="" params={{}} /> : null}
             {DemandeTitreButton(user.value)}
           </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <Filtres initialized={initialized.value} subtitle={resultat.value} />
-          {/*  */}
         </div>
 
         <div class="dsfr dsfr-container">
