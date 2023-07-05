@@ -70,10 +70,10 @@ export const TablePagination = caminoDefineComponent<Props>(['titres', 'total'],
         total: props.total,
       }}
       pagination={{
-        active: true,
         page: preferences.value.page,
         range: preferences.value.intervalle,
       }}
+      caption="Tableau des titres"
       column={preferences.value.colonne}
       order={preferences.value.ordre}
       paramsUpdate={preferencesUpdate}

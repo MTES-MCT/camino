@@ -1,6 +1,6 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { reactive, watch } from 'vue'
-import { InitialSort, TableRow, TableSortEvent, Table } from './table'
+import { InitialSort, TableRow, TableSortEvent, OldTable } from './table'
 
 export interface Column<T = string> {
   id: T
@@ -66,5 +66,5 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     sort.order = event.order
   }
 
-  return () => <Table columns={props.columns} rows={myRows} column={sort.column} order={sort.order} update={handleChange} />
+  return () => <OldTable columns={props.columns} rows={myRows} column={sort.column} order={sort.order} update={handleChange} />
 })

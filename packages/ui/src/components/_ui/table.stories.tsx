@@ -1,4 +1,4 @@
-import { Column, Table, TableRow } from './table'
+import { Column, OldTable, Table, TableRow } from './table'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import { TitreNom } from '../_common/titre-nom'
@@ -85,4 +85,5 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
 })
 
 const update = action('update')
-export const Simple: StoryFn = () => <Table rows={rows} columns={columns} column="nom" order="asc" update={update} />
+export const Simple: StoryFn = () => <Table rows={rows} columns={columns} caption="Caption cachée" column="nom" order="asc" update={update} />
+export const OldSimple: StoryFn = () => <OldTable rows={rows} columns={columns} column="nom" order="asc" update={update} />

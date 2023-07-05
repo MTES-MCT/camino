@@ -1,7 +1,7 @@
 import { FunctionalComponent, ButtonHTMLAttributes } from 'vue'
 import { DsfrIcon } from './dsfrIconSpriteType'
 
-export const buttonTypes = ['primary', 'secondary', 'tertiary'] as const
+export const buttonTypes = ['primary', 'secondary', 'tertiary', 'tertiary-no-outline'] as const
 type ButtonType = (typeof buttonTypes)[number]
 export const buttonSizes = ['sm', 'md', 'lg'] as const
 type ButtonSize = (typeof buttonSizes)[number]
@@ -9,6 +9,7 @@ type ButtonSize = (typeof buttonSizes)[number]
 type DsfrButtonProps = {
   onClick: () => void
   title: string
+  label?: string
   disabled?: boolean
   buttonType?: ButtonType
   buttonSize?: ButtonSize
@@ -22,12 +23,12 @@ export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButt
       aria-label={props.title}
       onClick={props.onClick}
     >
-      {props.title}
+      {props.label ? props.label : props.title}
     </button>
   )
 }
 
-type DsfrButtonIconProps = DsfrButtonProps & { icon: DsfrIcon; label?: string }
+type DsfrButtonIconProps = DsfrButtonProps & { icon: DsfrIcon }
 
 export const DsfrButtonIcon: FunctionalComponent<DsfrButtonIconProps> = (props: DsfrButtonIconProps) => {
   return (

@@ -53,7 +53,6 @@ export const isTableSortEvent = (event: Params | TableSortEvent): event is Table
 export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], props => {
   const data = ref<AsyncData<JournauxData>>({ status: 'LOADING' })
   const params = ref<JournauxQueryParams>({
-    intervalle: 10,
     page: 1,
     recherche: null,
     titreId: props.titreId,
@@ -92,10 +91,6 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
 
   const paramsTableUpdate = async (event: Params | TableSortEvent) => {
     if (!isTableSortEvent(event)) {
-      if (event.range) {
-        params.value.intervalle = event.range
-        await load()
-      }
       if (event.page) {
         params.value.page = event.page
         await load()
@@ -108,13 +103,9 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
       <LoadingElement
         data={data.value}
         renderItem={item => {
-          let pagination: TablePaginationProps['pagination'] = {
-            active: false,
-          }
+          let pagination: TablePaginationProps['pagination'] = {}
           if (item.total > item.elements.length) {
             pagination = {
-              active: true,
-              range: params.value.intervalle,
               page: params.value.page,
             }
           }

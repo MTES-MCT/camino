@@ -41,7 +41,7 @@ const getDefaultState = () => {
       { id: 'vueId', type: 'string', values: ['carte', 'table'] },
     ],
     params: {
-      table: { page: 1, intervalle: 200, ordre: 'asc', colonne: 'nom' },
+      table: { page: 1, intervalle: 10, ordre: 'asc', colonne: 'nom' },
       carte: { perimetre: [0, 0, 0, 0], zoom: null, centre: [] },
       filtres: {
         typesIds: [],

@@ -1,8 +1,5 @@
-import { Range } from './number'
-
 export interface JournauxQueryParams {
   page: number
-  intervalle: Range
   recherche: string | null
   titreId: string | null
 }
@@ -24,6 +21,5 @@ export interface Journal {
 export interface Journaux {
   elements: Journal[]
   page: number
-  intervalle: Range
   total: number
 }
