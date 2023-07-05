@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { Params, TablePagination as UITablePagination } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
@@ -6,6 +6,7 @@ import { titresColonnes, titresLignesBuild } from './table-utils'
 import { TableSortEvent } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
+import { useRoute } from 'vue-router'
 
 interface Props {
   titres: TitreEntreprise[]
@@ -16,8 +17,13 @@ const isTableSortEvent = (params: Params | TableSortEvent): params is TableSortE
   return 'column' in params && 'order' in params
 }
 
-export const TablePagination = caminoDefineComponent<Props>(['titres', 'total'], props => {
+export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'total'], props => {
   const store = useStore()
+  const route = useRoute()
+
+  watch(route, newRoute => {
+    preferencesUpdate({ page: Number(newRoute.query.page) })
+  })
 
   const preferencesUpdate = (params: Params | TableSortEvent) => {
     // TODO 2023-03-01 better type this when we remove the store
@@ -64,14 +70,11 @@ export const TablePagination = caminoDefineComponent<Props>(['titres', 'total'],
 
   return () => (
     <UITablePagination
+      route={route}
       data={{
         columns: colonnes.value,
         rows: lignes.value,
         total: props.total,
-      }}
-      pagination={{
-        page: preferences.value.page,
-        range: preferences.value.intervalle,
       }}
       caption="Tableau des titres"
       column={preferences.value.colonne}

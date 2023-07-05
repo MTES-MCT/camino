@@ -1,7 +1,8 @@
-import { computed, FunctionalComponent, HTMLAttributes } from 'vue'
+import { computed, defineComponent, FunctionalComponent, HTMLAttributes } from 'vue'
 import { Column, Table, TableRow, TableSortEvent } from './table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Range, ranges, isRange } from 'camino-common/src/number'
+import { Range } from 'camino-common/src/number'
+import { RouteLocationNormalizedLoaded, RouterLink, RouterLinkProps, useLink, UseLinkOptions } from 'vue-router'
 
 export interface Params {
   page?: number
@@ -13,19 +14,14 @@ export interface Props {
     rows: TableRow[]
     total: number
   }
-  pagination: {
-    active?: boolean
-    range?: Range
-    page?: number
-  }
-
+  route: RouteLocationNormalizedLoaded
   caption: string
   column?: string
   order?: 'asc' | 'desc'
   paramsUpdate: (params: Params | TableSortEvent) => void
 }
 
-export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'pagination', 'paramsUpdate', 'caption'], props => {
+export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'route', 'paramsUpdate', 'caption'], props => {
   const update = (params: Params | TableSortEvent) => {
     if (!Object.keys(params).includes('page') && pagination.value) {
       Object.assign(params, { page: 1 })
@@ -38,8 +34,8 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
     update({ page })
   }
 
-  const pageNumber = computed(() => {
-    return props.pagination.page ?? 1
+  const pageNumber = computed<number>(() => {
+    return Number(props.route.query.page) ?? 1
   })
 
   const column = computed(() => {
@@ -55,13 +51,14 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
   })
 
   const totalNumberOfPages = computed<number>(() => {
-    return Math.ceil(props.data.total / (props.pagination.range ?? 10))
+    return Math.ceil(props.data.total / (Number(props.route.query.intervalle) ?? 10))
   })
+
   return () => (
     <div class="dsfr">
       <Table column={column.value} caption={props.caption} columns={props.data.columns} order={order.value} rows={props.data.rows} update={update} />
 
-      {pagination.value ? <Pagination pageNumber={pageNumber.value} totalNumberOfPages={totalNumberOfPages.value} pageChange={pageUpdate} /> : null}
+      {pagination.value ? <Pagination route={props.route} pageNumber={pageNumber.value} totalNumberOfPages={totalNumberOfPages.value} pageChange={pageUpdate} /> : null}
     </div>
   )
 })
@@ -70,6 +67,7 @@ interface PaginationProps {
   totalNumberOfPages: number
   pageNumber: number
   pageChange: (page: number) => void
+  route: RouteLocationNormalizedLoaded
 }
 
 const Pagination: FunctionalComponent<PaginationProps> = props => {
@@ -90,7 +88,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
             Page précédente
           </a>
         </li>
-        <Page pageNumber={1} currentActivePage={props.pageNumber} />
+        <Page route={props.route} pageNumber={1} currentActivePage={props.pageNumber} />
         {start > 2 ? (
           <li>
             <a class="fr-pagination__link fr-displayed-lg"> … </a>
@@ -101,7 +99,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
           .map((_, index) => start + index)
           .filter(pageNumber => pageNumber !== props.totalNumberOfPages && pageNumber !== 1)
           .map(pageNumber => (
-            <Page pageNumber={pageNumber} currentActivePage={props.pageNumber} />
+            <Page route={props.route} pageNumber={pageNumber} currentActivePage={props.pageNumber} />
           ))}
         {start < props.totalNumberOfPages - visibles ? (
           <li>
@@ -109,7 +107,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
           </li>
         ) : null}
 
-        <Page pageNumber={props.totalNumberOfPages} currentActivePage={props.pageNumber} />
+        <Page route={props.route} pageNumber={props.totalNumberOfPages} currentActivePage={props.pageNumber} />
         <li>
           <a class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" aria-disabled={props.pageNumber === props.totalNumberOfPages} href="#">
             Page suivante
@@ -128,6 +126,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
 interface PageProps {
   pageNumber: number
   currentActivePage: number
+  route: RouteLocationNormalizedLoaded
 }
 const Page: FunctionalComponent<PageProps> = (props: PageProps) => {
   const ariaProps: Pick<HTMLAttributes, 'aria-current'> = {}
@@ -137,9 +136,22 @@ const Page: FunctionalComponent<PageProps> = (props: PageProps) => {
 
   return (
     <li>
-      <a class="fr-pagination__link" {...ariaProps} href="#" title={`Page ${props.pageNumber}`}>
+      <AppLink class="fr-pagination__link" {...ariaProps} to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.pageNumber } }} title={`Page ${props.pageNumber}`}>
         {props.pageNumber}
-      </a>
+      </AppLink>
     </li>
   )
 }
+
+const AppLink = defineComponent(
+  (props: UseLinkOptions, ctx) => {
+    const newProps = useLink(props)
+
+    return () => (
+      <a {...newProps} href={newProps.href.value} onClick={newProps.navigate}>
+        {ctx.slots.default()}
+      </a>
+    )
+  },
+  { props: { ...RouterLink.props } }
+)

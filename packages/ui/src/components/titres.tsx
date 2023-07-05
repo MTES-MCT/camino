@@ -7,7 +7,7 @@ import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
-import { TablePagination } from './titres/table-pagination'
+import { TitresTablePagination } from './titres/table-pagination'
 import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs } from './_ui/tabs'
 
@@ -67,7 +67,7 @@ export const Titres = defineComponent({
 
     const vues = [
       { id: newTabId('carte'), icon: 'fr-icon-earth-fill', title: 'Carte', renderContent: () => <CaminoTitresMap titres={titres.value} /> },
-      { id: newTabId('table'), icon: 'fr-icon-list-unordered', title: 'Tableau', renderContent: () => <TablePagination titres={titres.value} total={total.value} /> },
+      { id: newTabId('table'), icon: 'fr-icon-list-unordered', title: 'Tableau', renderContent: () => <TitresTablePagination titres={titres.value} total={total.value} /> },
     ] as const satisfies readonly Tab[]
 
     type VueId = (typeof vues)[number]['id']
