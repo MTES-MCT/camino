@@ -61,7 +61,8 @@
           "varsIgnorePattern": "^_",
           "argsIgnorePattern": "^_"
         }
-      ]
+      ],
+      "@typescript-eslint/no-empty-function": 0
     }
   },
   "dependencies": {

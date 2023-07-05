@@ -31,6 +31,7 @@ import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statis
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
+import { Expect, isFalse, isTrue } from './typescript-tools.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -155,6 +156,12 @@ export const DOWNLOAD_FORMATS = {
 export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
 
 type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodType } : {} // eslint-disable-line @typescript-eslint/ban-types
+
+isTrue<Expect<ZodParseUrlParams<'/titre'>, {}>>
+isFalse<Expect<ZodParseUrlParams<'/titre'>, { id: ZodType }>>
+isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
+isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
+isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
 type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
 

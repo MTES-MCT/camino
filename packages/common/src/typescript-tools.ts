@@ -30,11 +30,7 @@ export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
 }
 
+export const isTrue = <T extends true>(_t: T) => {}
+export const isFalse = <T extends false>(_t: T) => {}
 
-declare global {
-  interface NonEmptyArray<T> {
-    map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): NonEmptyArray<U>;
-
-  }
-}
-
+export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
