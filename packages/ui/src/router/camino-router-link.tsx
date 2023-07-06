@@ -6,14 +6,16 @@ export const routerQueryToNumber = (value: LocationQueryValue | LocationQueryVal
   return Number(value) ?? defaultValue
 }
 
+export const routerQueryToString = (value: LocationQueryValue | LocationQueryValue[], defaultValue: string): string => {
+  return String(value) ?? defaultValue
+}
+
 export type Props = {
   title: string
   class?: LinkHTMLAttributes['class']
-  isDisabled?: boolean
-} & UseLinkOptions
-export const CaminoRouterLink = caminoDefineComponent<Props>(['to', 'title', 'class', 'replace', 'isDisabled'], (props, ctx) => {
+} & ({ isDisabled: true; to: '' } | ({ isDisabled?: false } & Omit<UseLinkOptions, 'replace'>))
+export const CaminoRouterLink = caminoDefineComponent<Props>(['to', 'title', 'class', 'isDisabled'], (props, ctx) => {
   const { href, navigate } = useLink(props)
-
   const formatedProps = computed<LinkHTMLAttributes>(() => {
     if (props.isDisabled ?? false) {
       return { 'aria-disabled': true, role: 'link' }

@@ -1,5 +1,5 @@
 import { computed, FunctionalComponent, HTMLAttributes, watch } from 'vue'
-import { Column, Table, TableRow, TableSortEvent } from './table'
+import { Column, Table, TableRow } from './table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Range } from 'camino-common/src/number'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
@@ -17,18 +17,9 @@ export interface Props {
   }
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   caption: string
-  column?: string
-  order?: 'asc' | 'desc'
 }
 
-export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'route', 'caption'], props => {
-  const update = (params: Params | TableSortEvent) => {
-    console.log('A SUPPRIMER')
-    if (!Object.keys(params).includes('page') && pagination.value) {
-      Object.assign(params, { page: 1 })
-    }
-  }
-
+export const TablePagination = caminoDefineComponent<Props>(['data', 'route', 'caption'], props => {
   watch(
     () => props.data,
     () => {
@@ -44,14 +35,6 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
     return routerQueryToNumber(props.route.query.page, 1)
   })
 
-  const column = computed(() => {
-    return props.column ?? ''
-  })
-
-  const order = computed<'asc' | 'desc'>(() => {
-    return props.order ?? 'asc'
-  })
-
   const pagination = computed<boolean>(() => {
     return props.data.total > props.data.rows.length
   })
@@ -62,7 +45,7 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
 
   return () => (
     <div class="dsfr">
-      <Table column={column.value} caption={props.caption} columns={props.data.columns} order={order.value} rows={props.data.rows} update={update} />
+      <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} />
 
       {pagination.value ? <Pagination route={props.route} pageNumber={pageNumber.value} totalNumberOfPages={totalNumberOfPages.value} /> : null}
     </div>

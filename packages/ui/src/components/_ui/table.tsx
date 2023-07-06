@@ -1,8 +1,9 @@
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Button } from './button'
-import { DsfrButton, DsfrButtonIcon } from './dsfr-button'
+import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
+import { RouteLocationNormalizedLoaded } from 'vue-router'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -53,39 +54,24 @@ export const isComponentColumnData = (columnRow: ComponentColumnData | TextColum
 }
 
 interface Props {
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   columns: readonly Column[]
   rows: TableRow[]
-  update: (event: TableSortEvent) => void
-  column: Props['columns'][number]['id']
-  order: 'asc' | 'desc'
   caption: string
 }
 
-export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'update', 'column', 'order', 'caption'], props => {
-  const sort = (colId: Props['column']) => {
-    if (!props.columns.find(c => c.id === colId)?.noSort) {
-      if (props.column === colId) {
-        const order = props.order === 'asc' ? 'desc' : 'asc'
-        props.update({ column: props.column, order })
-      } else {
-        props.update({ column: colId, order: props.order })
-      }
-    }
-  }
+export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', 'caption'], props => {
+  const column = computed(() => {
+    return routerQueryToString(props.route.query.colonne, props.columns[0].id)
+  })
 
-  const columnInit = () => {
-    if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
-      sort(props.columns[0].id)
+  const order = computed<'asc' | 'desc'>(() => {
+    const value = routerQueryToString(props.route.query.ordre, 'asc')
+    if (value !== 'asc' && value !== 'desc') {
+      return 'asc'
     }
-  }
-
-  watch(
-    () => props.columns,
-    _columns => {
-      columnInit()
-    },
-    { immediate: true }
-  )
+    return value
+  })
 
   return () => (
     <div class="dsfr">
@@ -97,17 +83,25 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'update', 
               {props.columns.map(col => (
                 <th key={col.id} scope="col" class={`${(col.class ?? []).join(' ')}`}>
                   {col.noSort ? (
-                    col.name
-                  ) : props.column === col.id ? (
-                    <DsfrButtonIcon
-                      onClick={() => sort(col.id)}
-                      title={props.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                      label={col.name}
-                      buttonType="tertiary-no-outline"
-                      icon={props.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill'}
-                    />
+                    <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
+                      {col.name === '' ? '-' : col.name}
+                    </CaminoRouterLink>
+                  ) : column.value === col.id ? (
+                    <CaminoRouterLink
+                      class={['fr-link', 'fr-link--icon-right', order.value === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, ordre: order.value === 'asc' ? 'desc' : 'asc' } }}
+                      title={order.value === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                    >
+                      {col.name}
+                    </CaminoRouterLink>
                   ) : (
-                    <DsfrButton onClick={() => sort(col.id)} buttonType="tertiary-no-outline" title={`Trier par la colonne ${col.name}`} label={col.name === '' ? '-' : col.name} />
+                    <CaminoRouterLink
+                      class={['fr-link']}
+                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, colonne: col.id, ordre: 'asc' } }}
+                      title={`Trier par la colonne ${col.name}`}
+                    >
+                      {col.name === '' ? '-' : col.name}
+                    </CaminoRouterLink>
                   )}
                 </th>
               ))}
@@ -136,11 +130,18 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'update', 
   )
 })
 
+interface OldProps {
+  update: (event: TableSortEvent) => void
+  column: Props['columns'][number]['id']
+  order: 'asc' | 'desc'
+  columns: readonly Column[]
+  rows: TableRow[]
+}
 /**
  * @deprecated utiliser Table qui utilise le DSFR
  */
-export const OldTable = caminoDefineComponent<Omit<Props, 'caption'>>(['columns', 'rows', 'update', 'column', 'order'], props => {
-  const sort = (colId: Props['column']) => {
+export const OldTable = caminoDefineComponent<OldProps>(['columns', 'rows', 'update', 'column', 'order'], props => {
+  const sort = (colId: OldProps['column']) => {
     if (!props.columns.find(c => c.id === colId)?.noSort) {
       if (props.column === colId) {
         const order = props.order === 'asc' ? 'desc' : 'asc'
