@@ -1,4 +1,4 @@
-import { computed, FunctionalComponent, HTMLAttributes } from 'vue'
+import { computed, FunctionalComponent, HTMLAttributes, watch } from 'vue'
 import { Column, Table, TableRow, TableSortEvent } from './table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Range } from 'camino-common/src/number'
@@ -28,6 +28,17 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'column', '
       Object.assign(params, { page: 1 })
     }
   }
+
+  watch(
+    () => props.data,
+    () => {
+      // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
+      const main = document.querySelector<HTMLElement>('main')
+      if (main) {
+        main.scrollIntoView(true)
+      }
+    }
+  )
 
   const pageNumber = computed<number>(() => {
     return routerQueryToNumber(props.route.query.page, 1)
