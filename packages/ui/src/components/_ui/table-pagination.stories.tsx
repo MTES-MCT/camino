@@ -7,10 +7,14 @@ import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { Column, TableRow } from './table'
 import { action } from '@storybook/addon-actions'
+import { vueRouter } from 'storybook-vue3-router'
+
+const customRoutes = [...Array(11)].map((_, row) => ({ name: `elementlink${row}`, params: { id: `elementslug${row}` }, value: `elementslug${row}` }))
 
 const meta: Meta = {
   title: 'Components/UI/Table',
   component: TablePagination,
+  decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
 }
 export default meta
 
@@ -40,7 +44,7 @@ const columns: Column[] = [
   },
 ]
 
-const rows: TableRow[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(row => {
+const rows: TableRow[] = [...Array(11)].map((_, row) => {
   return {
     id: `elementId${row}`,
     link: {
@@ -85,7 +89,6 @@ const rows: TableRow[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(row => {
   }
 })
 
-const paramsUpdate = action('paramsUpdate')
 export const PaginationSimple: StoryFn = () => (
   <TablePagination
     data={{
@@ -93,10 +96,7 @@ export const PaginationSimple: StoryFn = () => (
       columns,
       total: 200,
     }}
-    paramsUpdate={paramsUpdate}
-    pagination={{
-      active: true,
-      range: 10,
-    }}
+    caption="Test de pagination"
+    route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
   />
 )

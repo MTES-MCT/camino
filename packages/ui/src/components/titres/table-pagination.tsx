@@ -1,6 +1,6 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import { Params, TablePagination as UITablePagination } from '../_ui/table-pagination'
+import { Params, TablePagination } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { titresColonnes, titresLignesBuild } from './table-utils'
 import { TableSortEvent } from '../_ui/table'
@@ -69,7 +69,7 @@ export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'to
   })
 
   return () => (
-    <UITablePagination
+    <TablePagination
       route={route}
       data={{
         columns: colonnes.value,

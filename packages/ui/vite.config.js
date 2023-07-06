@@ -25,7 +25,10 @@ module.exports = defineConfig({
       web: [/\.[jt]sx$/],
     },
     // async cjs module issue from https://github.com/vitest-dev/vitest/issues/2742
-    alias: [{ find: /^jsondiffpatch-rc$/, replacement: 'jsondiffpatch-rc/dist/jsondiffpatch.esm.js' }],
+    alias: [
+      { find: /^jsondiffpatch-rc$/, replacement: 'jsondiffpatch-rc/dist/jsondiffpatch.esm.js' },
+      { find: /^storybook-vue3-router$/, replacement: 'storybook-vue3-router/dist/index.mjs' },
+    ],
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118

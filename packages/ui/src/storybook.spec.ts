@@ -13,6 +13,7 @@ console.error = vi.fn()
 
 vi.mock('vue-router', () => ({
   useRoute: vi.fn(),
+  useLink: () => ({ href: { value: '/mocked-href' } }),
   useRouter: vi.fn(() => ({
     push: () => {},
   })),
