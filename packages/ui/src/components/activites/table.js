@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { Statut } from '../_common/statut'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'

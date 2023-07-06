@@ -81,7 +81,7 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', '
           <thead>
             <tr>
               {props.columns.map(col => (
-                <th key={col.id} scope="col" class={`${(col.class ?? []).join(' ')}`}>
+                <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                   {col.noSort ? (
                     <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                       {col.name === '' ? '-' : col.name}
@@ -111,7 +111,7 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', '
             {props.rows.map(row => (
               <tr key={row.id}>
                 {props.columns.map((col, index) => (
-                  <td key={col.id} class={`${(col.class ?? []).join(' ')}`}>
+                  <td key={col.id} class={[...(col.class ?? [])]}>
                     {index === 0 ? (
                       <router-link class="fr-link" to={row.link}>
                         <DisplayColumn data={row.columns[col.id]} />

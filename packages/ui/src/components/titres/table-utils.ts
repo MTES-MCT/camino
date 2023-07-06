@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import { TagList } from '../_ui/tag-list'
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
 import { TitreNom } from '../_common/titre-nom'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
@@ -44,7 +44,6 @@ const isTitreStatut = (entry: string | number | string[] | undefined): entry is 
 export const nomColumn: Column<'nom'> = {
   id: 'nom',
   name: 'Nom',
-  class: ['min-width-8'],
 }
 export const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
@@ -53,13 +52,11 @@ export const domaineColumn: Column<'domaine'> = {
 export const typeColumn: Column<'type'> = {
   id: 'type',
   name: 'Type',
-  class: ['min-width-8'],
 }
 
 export const activiteColumn: Column<'activites'> = {
   id: 'activites',
   name: 'Activités',
-  class: ['min-width-5'],
   sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.activites.value
     const row2Statut = statut2.columns.activites.value
@@ -73,7 +70,6 @@ export const activiteColumn: Column<'activites'> = {
 export const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
-  class: ['nowrap', 'min-width-5'],
   sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.statut.value
     const row2Statut = statut2.columns.statut.value
@@ -86,13 +82,11 @@ export const statutColumn: Column<'statut'> = {
 export const referencesColumn: Column<'references'> = {
   id: 'references',
   name: 'Références',
-  class: ['min-width-8'],
   noSort: true,
 }
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
-  class: ['min-width-10'],
 }
 export const titresColonnes: Column[] = [
   nomColumn,
@@ -103,7 +97,6 @@ export const titresColonnes: Column[] = [
   {
     id: 'substances',
     name: 'Substances',
-    class: ['min-width-6'],
     noSort: true,
   },
   {
@@ -114,13 +107,11 @@ export const titresColonnes: Column[] = [
   {
     id: 'regions',
     name: 'Régions',
-    class: ['min-width-8'],
     noSort: true,
   },
   {
     id: 'departements',
     name: 'Départements',
-    class: ['min-width-8'],
     noSort: true,
   },
   referencesColumn,
@@ -206,11 +197,10 @@ export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boole
       type: typeCell(titre.typeId),
       statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {
-        component: markRaw(TagList),
+        component: markRaw(List),
         props: {
           elements: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) ?? [],
         },
-        class: 'mb--xs',
         value: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom).join(', '),
       },
       titulaires: titulairesCell(titre),
@@ -220,7 +210,6 @@ export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boole
           elements: regionNoms,
           mini: true,
         },
-        class: 'mb--xs',
         value: regionNoms,
       },
       departements: {
@@ -229,7 +218,6 @@ export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boole
           elements: departementNoms,
           mini: true,
         },
-        class: 'mb--xs',
         value: departementNoms,
       },
       references: referencesCell(titre),

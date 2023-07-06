@@ -11,9 +11,13 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: StoryFn = () => <Domaine />
+export const Default: StoryFn = () => (
+  <div class="dsfr">
+    <Domaine />
+  </div>
+)
 export const AllDomaines: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white">
+  <div style="height:100%;width:100%;background:white" class="dsfr">
     <table>
       <tr>
         <th>Domaine</th>

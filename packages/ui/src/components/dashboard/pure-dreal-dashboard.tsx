@@ -1,6 +1,6 @@
 import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { PureDGTMStats } from './pure-dgtm-stats'
 import {
   nomColumn,
