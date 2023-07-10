@@ -1,6 +1,9 @@
 import { domainesIds } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { FunctionalComponent } from 'vue'
+import { Domaine } from '../_common/domaine'
+import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { TitreStatut } from '../_common/titre-statut'
 
 const domainesIdsDefault = [...domainesIds, ''] as const
 const defs: Record<TitreTypeTypeId, { d: string; width: number; rotation: number }> = {
@@ -19,6 +22,11 @@ const defs: Record<TitreTypeTypeId, { d: string; width: number; rotation: number
 } as const
 export const MapPattern: FunctionalComponent = () => {
   return (
+    <>
+    <div style={{display: 'none'}} aria-hidden={true}>
+      {domainesIds.map((id) => <div key={id} id={`domaine_${id}`}><Domaine domaineId={id} /></div>)}
+      {sortedTitresStatuts.map(({id}) => <div key={id} id={`titre_statut_${id}`}><TitreStatut titreStatutId={id} /></div>)}
+    </div>
     <svg class="absolute z--100">
       <defs>
         {Object.values(TitresTypesTypes).map(ttt => {
@@ -45,5 +53,6 @@ export const MapPattern: FunctionalComponent = () => {
         })}
       </defs>
     </svg>
+    </>
   )
 }

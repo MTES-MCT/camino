@@ -47,7 +47,7 @@ export const PureDownloads = defineComponent(
             icon="fr-icon-file-download-line"
             buttonType="secondary"
             disabled={downloadFormat.value === null}
-            title={downloadFormat.value !== null ? `Télécharger au format ${downloadFormat.value}` : ''}
+            title={downloadFormat.value !== null ? `Télécharger au format ${downloadFormat.value}` : 'Télécharger (choisissez le format)'}
             onClick={() => download(downloadFormat.value, props.route.query, props)}
           />
         </div>

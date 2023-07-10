@@ -1,5 +1,5 @@
-import { FunctionalComponent } from 'vue'
-import { Statut } from '../_common/statut'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
+import { Badge } from '../_ui/badge'
 
 interface Props {
   activitesAbsentes?: number
@@ -8,18 +8,17 @@ interface Props {
 
 export const ActivitesPills: FunctionalComponent<Props> = props => {
   return (
-    <div class="mb--s">
-      {props.activitesAbsentes ? (
-        <span class="mr-xs inline-block">
-          <Statut color="error" nom={props.activitesAbsentes.toString(10)} />
-        </span>
-      ) : null}
+    <span>{props.activitesAbsentes || props.activitesEnConstruction ? <div class='dsfr'>
+    <ul class='fr-badges-group'>
+    {props.activitesAbsentes ? (
+      <li><Badge ariaLabel={`${props.activitesAbsentes} activités absentes`} label={props.activitesAbsentes} systemLevel='error' /></li>
+    ) : null}
 
-      {props.activitesEnConstruction ? (
-        <span class="mr-xs inline-block">
-          <Statut color="warning" nom={props.activitesEnConstruction.toString(10)} />
-        </span>
-      ) : null}
-    </div>
+    {props.activitesEnConstruction ? (
+      <li><Badge ariaLabel={`${props.activitesEnConstruction} activités en construction`} label={props.activitesEnConstruction} systemLevel='warning' /></li>
+    ) : null}
+    </ul>
+  </div> : null }</span>
+    
   )
 }

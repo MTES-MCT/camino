@@ -90,7 +90,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitresStatuts,
-    component: 'FiltresStatuts',
+    component: 'FiltresTitresStatuts',
   },
 ]
 

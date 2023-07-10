@@ -19,6 +19,7 @@ import { getDepartementsBySecteurs } from 'camino-common/src/static/facades'
 import { Column } from '../_ui/table-auto'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
+import { TitreStatut } from '../_common/titre-statut'
 
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,
@@ -125,10 +126,9 @@ export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
 export const statutCell = (titre: { titre_statut_id: TitreStatutId }): ComponentColumnData => {
   const statut = TitresStatuts[titre.titre_statut_id]
   return {
-    component: markRaw(Statut),
+    component: markRaw(TitreStatut),
     props: {
-      color: statut.couleur,
-      nom: statut.nom,
+      titreStatutId: titre.titre_statut_id,
     },
     value: statut.nom,
   }

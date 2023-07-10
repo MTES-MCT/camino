@@ -1,4 +1,4 @@
-import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletIconBuild } from '../_map/leaflet'
+import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletIconBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
@@ -6,6 +6,8 @@ import { DivIconOptions, GeoJSON, GeoJSONOptions, LeafletEventHandlerFnMap, Map,
 import { Router } from 'vue-router'
 import { CommonTitre } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
+import { Domaine, couleurParDomaine } from '../_common/domaine'
+import { createApp } from 'vue'
 
 const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
   const coordinates = geojson.geometry.coordinates
@@ -80,9 +82,9 @@ const domainesColors: Record<DomaineId, string> = {
 } as const
 
 const iconUrlFind = (domaineId: DomaineId) => {
-  const iconSvg = `<svg width="32" height="40" xmlns="http://www.w3.org/2000/svg"><style>text {font-family:'Lucida Sans Typewriter', monaco, 'Lucida Console', monospace; font-weight:700;}</style><polygon points="16,40 24,30 8,30" fill="white" /><ellipse ry="16" rx="16" cy="16" cx="16" stroke-width="1" stroke="white" fill="${
-    domainesColors[domaineId]
-  }"/><text xml:space="preserve" text-anchor="middle" font-size="13" y="21" x="16" fill="white">${domaineId.toUpperCase()}</text></svg>`
+  const iconSvg = `<svg width="32" height="40" xmlns="http://www.w3.org/2000/svg"><style>text {font-family:'Lucida Sans Typewriter', monaco, 'Lucida Console', monospace; font-weight:700;}</style><polygon points="16,40 24,30 8,30" fill="white" /><ellipse ry="16" rx="16" cy="16" cx="16" stroke-width="1" stroke="white" fill="var(--${
+    couleurParDomaine[domaineId]
+  })"/><text xml:space="preserve" text-anchor="middle" font-size="13" y="21" x="16" fill="white">${domaineId.toUpperCase()}</text></svg>`
 
   return 'data:image/svg+xml;base64,' + btoa(iconSvg)
 }
@@ -103,49 +105,63 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
 
       const titreId = titre.id || index
       const domaineId = getDomaineId(titre.typeId)
-      const icon = leafletIconBuild({
-        iconUrl: iconUrlFind(domaineId),
-        iconSize: [32, 40],
-        iconAnchor: [16, 40],
-      })
 
-      const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
+      const baseElement = document.getElementById(`domaine_${domaineId}`)
+      const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
+      const element = baseElement?.cloneNode(true) as unknown as (HTMLElement | undefined)
+      const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as (HTMLElement | undefined)
+      if (element && titreStatutBaseElement) {
 
-      const marker = leafletMarkerBuild(latLng, icon)
+        element.removeAttribute('id')
+        const icon = leafletDivIconBuild({
+          className: ``,
+          html: element,
+          iconSize:  [32, 40],
+          iconAnchor: [16, 40],
+        })
 
-      const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
+        const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
 
-      const statut = titre.titreStatutId ? TitresStatuts[titre.titreStatutId] : { couleur: 'error', nom: 'Inconnu' }
-      const popupHtml = `<h4 class="mb-s">${titre.nom ? titre.nom : ''}</h4><div class="mb-m"><span class="rnd py-xxs px-s cap-first mb-0 bold color-bg h6 bg-${statut.couleur}">${
-        statut.nom
-      }</span></div><ul class="list-prefix h6">${popupHtmlTitulaires}</ul>`
+        const marker = leafletMarkerBuild(latLng, icon)
+        const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
 
-      const popupOptions: PopupOptions = {
-        closeButton: false,
-        offset: [0, -24],
-        autoPan: false,
-      }
+        const statut = titre.titreStatutId ? TitresStatuts[titre.titreStatutId] : { couleur: 'error', nom: 'Inconnu' }
 
-      const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
-
-      marker.bindPopup(popupHtml, popupOptions)
-
-      const methods: LeafletEventHandlerFnMap = {
-        click() {
-          if (titreRoute) {
-            router.push(titreRoute)
-          }
-        },
-        mouseover(_e) {
-          marker.openPopup()
-        },
-        mouseout(_e) {
-          marker.closePopup()
-        },
-      }
-      marker.on(methods)
-
-      const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
+        const div = document.createElement('div')
+        const h4 = document.createElement('h4')
+        const divTitulaires = document.createElement('div')
+        
+        // h4.className='mb-s'
+        h4.textContent = titre.nom ? titre.nom : ''
+        div.appendChild(h4)
+        div.appendChild(titreStatutElement)
+        div.appendChild(divTitulaires)
+        divTitulaires.innerHTML = popupHtmlTitulaires
+  
+        const popupOptions: PopupOptions = {
+          closeButton: false,
+          offset: [0, -24],
+          autoPan: false,
+        }
+  
+        const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
+  
+        marker.bindPopup(div, popupOptions)
+        const methods: LeafletEventHandlerFnMap = {
+          click() {
+            if (titreRoute) {
+              router.push(titreRoute)
+            }
+          },
+          mouseover(_e) {
+            marker.openPopup()
+          },
+          mouseout(_e) {
+            marker.closePopup()
+          },
+        }
+        marker.on(methods)
+        const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
       const geojsonOptions: GeoJSONOptions = {
         style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
         onEachFeature: (_feature, layer) => {
@@ -159,8 +175,19 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
       if (marker) {
         markers.push({ marker, id: titreId, domaineId })
       }
-
       geojsons[titreId] = geojson
+
+      }
+
+  
+
+
+
+
+      
+
+      
+
 
       return { geojsons, markers }
     },
