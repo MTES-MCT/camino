@@ -62,10 +62,6 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
           return markers
         }
 
-              // Based on pattern.tsx
-        const baseElement = document.getElementById(`domaine_${domaineId}`)
-        const element = baseElement?.cloneNode(true) as unknown as (HTMLElement | undefined)
-
         const icon = leafletDivIconBuild({
           className: `small mono border-bg color-text py-xs px-s inline-block leaflet-marker-camino cap pill bg-bg`,
           html: point.nom,

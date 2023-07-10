@@ -25,32 +25,7 @@ export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIco
 
 export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?: GeoJSONOptions<any> | undefined) => L.geoJSON(geojson, options)
 
-export const leafletMarkerClusterGroupBuild = (divIconOptions: DivIconOptions) =>
-  L.markerClusterGroup({
-    iconCreateFunction(cluster) {
-      const childCount = cluster.getChildCount()
-
-      let size
-      if (childCount < 5) size = 'xs'
-      else if (childCount < 15) size = 's'
-      else if (childCount < 40) size = 'm'
-      else size = 'l'
-
-      divIconOptions.className += ` leaflet-marker-cluster-${size}`
-
-      return new L.DivIcon(divIconOptions)
-    },
-    disableClusteringAtZoom: 10,
-    animate: true,
-    spiderfyOnMaxZoom: false,
-    showCoverageOnHover: false,
-    maxClusterRadius(x) {
-      return 2048 / Math.pow(x, 2)
-    },
-  })
-
 export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined) => L.geoJSON(geojson).getBounds().getCenter()
 
 export const leafletDivIconBuild = (divIconOptions: DivIconOptions) => L.divIcon(divIconOptions)
-export const leafletIconBuild = (iconOptions: IconOptions) => L.icon(iconOptions)
 export const leafletGeojsonBoundsGet = (zone: GeoJsonObject | undefined) => L.geoJSON(zone).getBounds()
