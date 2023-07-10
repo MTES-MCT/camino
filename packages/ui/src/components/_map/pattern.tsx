@@ -21,6 +21,7 @@ const defs: Record<TitreTypeTypeId, { d: string; width: number; rotation: number
   },
 } as const
 export const MapPattern: FunctionalComponent = () => {
+  // leaflet/mapUtil uses this
   return (
     <>
     <div style={{display: 'none'}} aria-hidden={true}>

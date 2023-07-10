@@ -1,13 +1,10 @@
-import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletIconBuild, leafletDivIconBuild } from '../_map/leaflet'
-import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import { DivIconOptions, GeoJSON, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
-import { Domaine, couleurParDomaine } from '../_common/domaine'
-import { createApp } from 'vue'
 
 const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
   const coordinates = geojson.geometry.coordinates
@@ -70,24 +67,6 @@ export const clustersBuild = () =>
     return clusters
   }, {})
 
-const domainesColors: Record<DomaineId, string> = {
-  c: '#b88847',
-  f: '#4a515d',
-  g: '#c94f17',
-  h: '#c2266a',
-  m: '#376faa',
-  r: '#a0aa31',
-  s: '#7657b5',
-  w: '#1ea88c',
-} as const
-
-const iconUrlFind = (domaineId: DomaineId) => {
-  const iconSvg = `<svg width="32" height="40" xmlns="http://www.w3.org/2000/svg"><style>text {font-family:'Lucida Sans Typewriter', monaco, 'Lucida Console', monospace; font-weight:700;}</style><polygon points="16,40 24,30 8,30" fill="white" /><ellipse ry="16" rx="16" cy="16" cx="16" stroke-width="1" stroke="white" fill="var(--${
-    couleurParDomaine[domaineId]
-  })"/><text xml:space="preserve" text-anchor="middle" font-size="13" y="21" x="16" fill="white">${domaineId.toUpperCase()}</text></svg>`
-
-  return 'data:image/svg+xml;base64,' + btoa(iconSvg)
-}
 
 export interface TitreWithPoint extends CommonTitre {
   geojsonMultiPolygon?: GeoJsonObject
@@ -106,11 +85,12 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
       const titreId = titre.id || index
       const domaineId = getDomaineId(titre.typeId)
 
+      // Based on pattern.tsx
       const baseElement = document.getElementById(`domaine_${domaineId}`)
       const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
       const element = baseElement?.cloneNode(true) as unknown as (HTMLElement | undefined)
       const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as (HTMLElement | undefined)
-      if (element && titreStatutBaseElement) {
+      if (element && titreStatutElement) {
 
         element.removeAttribute('id')
         const icon = leafletDivIconBuild({
@@ -125,18 +105,16 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
         const marker = leafletMarkerBuild(latLng, icon)
         const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
 
-        const statut = titre.titreStatutId ? TitresStatuts[titre.titreStatutId] : { couleur: 'error', nom: 'Inconnu' }
-
         const div = document.createElement('div')
-        const h4 = document.createElement('h4')
-        const divTitulaires = document.createElement('div')
+        const titleName = document.createElement('div')
+        const listeTitulaires = document.createElement('ul')
         
-        // h4.className='mb-s'
-        h4.textContent = titre.nom ? titre.nom : ''
-        div.appendChild(h4)
+        titleName.className='fr-text--lead'
+        titleName.textContent = titre.nom ? titre.nom : ''
+        div.appendChild(titleName)
         div.appendChild(titreStatutElement)
-        div.appendChild(divTitulaires)
-        divTitulaires.innerHTML = popupHtmlTitulaires
+        div.appendChild(listeTitulaires)
+        listeTitulaires.innerHTML = popupHtmlTitulaires
   
         const popupOptions: PopupOptions = {
           closeButton: false,
@@ -165,7 +143,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
       const geojsonOptions: GeoJSONOptions = {
         style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
         onEachFeature: (_feature, layer) => {
-          layer.bindPopup(popupHtml, popupOptions)
+          layer.bindPopup(div, popupOptions)
           layer.on(methods)
         },
       }
