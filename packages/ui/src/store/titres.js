@@ -230,7 +230,7 @@ const actions = {
 
     const definitions = [...state.definitions, ...state.urlDefinitions]
 
-    await dispatch('urlQueryUpdate', { params, definitions }, { root: true })
+    // await dispatch('urlQueryUpdate', { params, definitions }, { root: true })
   },
 }
 

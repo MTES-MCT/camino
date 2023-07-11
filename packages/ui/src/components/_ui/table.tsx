@@ -3,7 +3,7 @@ import { Icon } from '@/components/_ui/icon'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Button } from './button'
 import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
-import { RouteLocationNormalizedLoaded } from 'vue-router'
+import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -58,19 +58,31 @@ interface Props {
   columns: readonly Column[]
   rows: TableRow[]
   caption: string
+  updateParams: (column: string, order: 'asc' | 'desc') => void
 }
 
-export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', 'caption'], props => {
-  const column = computed(() => {
-    return routerQueryToString(props.route.query.colonne, props.columns[0].id)
+export const getSortColumnFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column[]): string => routerQueryToString(route.query.colonne, columns[0].id)
+export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>): 'asc' | 'desc' => {
+  const value = routerQueryToString(route.query.ordre, 'asc')
+  if (value !== 'asc' && value !== 'desc') {
+    return 'asc'
+  }
+  return value
+}
+
+export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', 'caption', 'updateParams'], props => {
+  const sortParams = computed<{ order: 'asc' | 'desc'; column: string }>(() => {
+    return { order: getSortOrderFromRoute(props.route), column: getSortColumnFromRoute(props.route, props.columns) }
   })
 
-  const order = computed<'asc' | 'desc'>(() => {
-    const value = routerQueryToString(props.route.query.ordre, 'asc')
-    if (value !== 'asc' && value !== 'desc') {
-      return 'asc'
+  onBeforeRouteLeave(() => {
+    stop()
+  })
+
+  const stop = watch(sortParams, (newSortParams, old) => {
+    if (newSortParams.column !== old.column || newSortParams.order !== old.order) {
+      return props.updateParams(newSortParams.column, newSortParams.order)
     }
-    return value
   })
 
   return () => (
@@ -86,18 +98,18 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', '
                     <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                       {col.name === '' ? '-' : col.name}
                     </CaminoRouterLink>
-                  ) : column.value === col.id ? (
+                  ) : sortParams.value.column === col.id ? (
                     <CaminoRouterLink
-                      class={['fr-link', 'fr-link--icon-right', order.value === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, ordre: order.value === 'asc' ? 'desc' : 'asc' } }}
-                      title={order.value === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' } }}
+                      title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
                     >
                       {col.name}
                     </CaminoRouterLink>
                   ) : (
                     <CaminoRouterLink
                       class={['fr-link']}
-                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, colonne: col.id, ordre: 'asc' } }}
+                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' } }}
                       title={`Trier par la colonne ${col.name}`}
                     >
                       {col.name === '' ? '-' : col.name}

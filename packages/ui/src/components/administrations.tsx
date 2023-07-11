@@ -1,9 +1,10 @@
 import { defineComponent, computed, ref, markRaw } from 'vue'
-import Liste from './_common/liste.vue'
+import { Liste } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { Tag } from '@/components/_ui/tag'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { useRoute } from 'vue-router'
 
 const colonnes = [
   {
@@ -58,11 +59,10 @@ const administrations = Object.values(Adms)
 export const Administrations = defineComponent({
   setup() {
     const params = ref<{
-      table: { page: 0; colonne: ColonneId; ordre: 'asc' | 'desc' }
+      table: ParamsTable['params']
       filtres: unknown
     }>({
       table: {
-        page: 0,
         colonne: 'abreviation',
         ordre: 'asc',
       },
@@ -73,6 +73,8 @@ export const Administrations = defineComponent({
       noms: '',
       typesIds: [],
     })
+
+    const route = useRoute()
 
     const lignes = computed<TableRow[]>(() => {
       return [...administrations]
@@ -148,7 +150,8 @@ export const Administrations = defineComponent({
         metas={metas}
         total={administrations.length}
         initialized={true}
-        onParamsUpdate={paramsUpdate}
+        route={route}
+        paramsUpdate={paramsUpdate}
       />
     )
   },

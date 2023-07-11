@@ -3,11 +3,11 @@ import { computed, LinkHTMLAttributes } from 'vue'
 import { LocationQueryValue, useLink, UseLinkOptions } from 'vue-router'
 
 export const routerQueryToNumber = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number): number => {
-  return Number(value) ?? defaultValue
+  return value !== undefined ? Number(value) : defaultValue
 }
 
 export const routerQueryToString = (value: LocationQueryValue | LocationQueryValue[], defaultValue: string): string => {
-  return String(value) ?? defaultValue
+  return value !== undefined ? String(value) : defaultValue
 }
 
 export type Props = {

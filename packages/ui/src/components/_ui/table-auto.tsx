@@ -1,6 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { reactive, watch } from 'vue'
-import { InitialSort, TableRow, TableSortEvent, OldTable } from './table'
+import { InitialSort, TableRow, TableSortEvent, Table } from './table'
+import { useRoute } from 'vue-router'
 
 export interface Column<T = string> {
   id: T
@@ -21,6 +22,8 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     column: props?.initialSort?.column ?? props.columns[0].id,
     order: props?.initialSort?.order ?? 'asc',
   })
+
+  const route = useRoute()
   const myRows = reactive<TableRow[]>([...props.rows])
   handleChange(sort)
   watch(
@@ -66,5 +69,5 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     sort.order = event.order
   }
 
-  return () => <OldTable columns={props.columns} rows={myRows} column={sort.column} order={sort.order} update={handleChange} />
+  return () => <Table columns={props.columns} rows={myRows} route={route} caption={'Administrations'} />
 })

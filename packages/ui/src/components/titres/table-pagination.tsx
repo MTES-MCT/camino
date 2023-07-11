@@ -6,7 +6,6 @@ import { titresColonnes, titresLignesBuild } from './table-utils'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
 import { useRoute } from 'vue-router'
-import { routerQueryToNumber, routerQueryToString } from '@/router/camino-router-link'
 
 interface Props {
   titres: TitreEntreprise[]
@@ -17,20 +16,12 @@ export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'to
   const store = useStore()
   const route = useRoute()
 
-  const routeName = route.name
-
-  watch(route, newRoute => {
-    if (newRoute.name === routeName) {
-      store.dispatch('titres/paramsSet', {
-        section: 'table',
-        params: {
-          page: routerQueryToNumber(newRoute.query.page, 1),
-          colonne: routerQueryToString(newRoute.query.colonne, colonnes.value[0].id),
-          ordre: routerQueryToString(newRoute.query.ordre, 'asc'),
-        },
-      })
-    }
-  })
+  const updateParams = (params: { page: number; colonne: string; ordre: 'asc' | 'desc' }) => {
+    store.dispatch('titres/paramsSet', {
+      section: 'table',
+      params,
+    })
+  }
 
   const activitesCol = computed(() => {
     const user = store.state.user.element
@@ -54,6 +45,7 @@ export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'to
         rows: lignes.value,
         total: props.total,
       }}
+      updateParams={updateParams}
       caption="Tableau des titres"
     />
   )

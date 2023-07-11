@@ -33,6 +33,7 @@
 </template>
 
 <script>
+// À passer en TS
 import { TablePagination } from '../_ui/table-pagination'
 import Filtres from './filtres.vue'
 
