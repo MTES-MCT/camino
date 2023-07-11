@@ -59,7 +59,6 @@ export const clustersBuild = () =>
   sortedDomaines.reduce<{ [key in DomaineId]?: MarkerClusterGroup }>((clusters, { id }) => {
     clusters[id] = L.markerClusterGroup({
       iconCreateFunction(cluster) {
-        console.log('plop')
         // Based on pattern.tsx
 
         const baseElement = document.getElementById(`domaine_${id}`)

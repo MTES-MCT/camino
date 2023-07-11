@@ -5,7 +5,6 @@
 
 <script>
 import Filters from '../_ui/filters.vue'
-import { valuesClean } from './filtres'
 
 export default {
   components: { Filters },
@@ -75,7 +74,7 @@ export default {
         let value
 
         if (filtre.type === 'custom' || filtre.type === 'select' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
-          value = valuesClean(filtre.value)
+          value = (filtre.value ?? []).filter(v => v !== '')
         } else {
           value = filtre.value
         }

@@ -1,17 +1,17 @@
-import { defineComponent, computed, onMounted, inject } from 'vue'
+import { defineComponent, computed, onMounted, inject, FunctionalComponent } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
-import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
 import { TitresTablePagination } from './titres/table-pagination'
 import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs } from './_ui/tabs'
+import { PageContentHeader } from './_common/page-header-content'
 
-function DemandeTitreButton(user: User) {
+const DemandeTitreButton: FunctionalComponent<{user: User}> = ({user}) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
       <Navigation
@@ -74,20 +74,16 @@ export const Titres = defineComponent({
 
     return () => (
       <div>
-        <div class="desktop-blobs">
-          <div class="desktop-blob-1-2">
-            <h1 class="mb-m">Titres miniers et autorisations</h1>
-          </div>
-
-          <div class="desktop-blob-1-2 dsfr" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" class="" params={{}} /> : null}
-            {DemandeTitreButton(user.value)}
-          </div>
+        <div class='dsfr'>
+        <PageContentHeader
+        nom='Titres miniers et autorisations'
+        download={ titres.value.length > 0 ? {formats:['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: "/titres", params: {}} : null}
+        renderButton={() => <DemandeTitreButton user={user.value} />}
+        />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+
           <Filtres initialized={initialized.value} subtitle={resultat.value} />
-        </div>
 
         <div class="dsfr dsfr-container">
           {initialized.value && vueId.value ? (

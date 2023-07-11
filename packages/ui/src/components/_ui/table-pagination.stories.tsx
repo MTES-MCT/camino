@@ -13,6 +13,7 @@ const customRoutes = [...Array(11)].map((_, row) => ({ name: `elementlink${row}`
 
 const meta: Meta = {
   title: 'Components/UI/Table',
+  // @ts-ignore
   component: TablePagination,
   decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
 }
@@ -98,5 +99,6 @@ export const PaginationSimple: StoryFn = () => (
     }}
     caption="Test de pagination"
     route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
   />
 )

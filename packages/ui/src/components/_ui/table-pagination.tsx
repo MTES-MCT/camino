@@ -1,28 +1,22 @@
-import { computed, FunctionalComponent, HTMLAttributes, ref, watch } from 'vue'
+import { computed, defineComponent, FunctionalComponent, HTMLAttributes, Ref, ref, watch } from 'vue'
 import { Column, getSortColumnFromRoute, getSortOrderFromRoute, Table, TableRow } from './table'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Range } from 'camino-common/src/number'
-import { onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router'
+import { onBeforeRouteLeave, RouteLocationNormalizedLoaded } from 'vue-router'
 import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-link'
 
-export interface Params {
-  page?: number
-  range?: Range
-}
-export interface Props {
+export interface Props<ColumnId> {
   data: {
-    columns: readonly Column[]
+    columns: readonly Column<ColumnId>[]
     rows: TableRow[]
     total: number
   }
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   caption: string
-  updateParams: (params: { page: number; colonne: string; ordre: 'asc' | 'desc' }) => void
+  updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
 }
 
 const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
+export const TablePagination = defineComponent(<ColumnId extends string, >(props: Props<ColumnId>) => {
 
-export const TablePagination = caminoDefineComponent<Props>(['data', 'route', 'caption', 'updateParams'], props => {
   watch(
     () => props.data,
     () => {
@@ -34,11 +28,11 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'route', 'c
     }
   )
 
-  const colonne = ref<string>(getSortColumnFromRoute(props.route, props.data.columns))
+  const colonne = ref<ColumnId>(getSortColumnFromRoute(props.route, props.data.columns)) as Ref<ColumnId>
   const ordre = ref<'asc' | 'desc'>(getSortOrderFromRoute(props.route))
   const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
 
-  const updateSort = (newColonne: string, newOrdre: 'asc' | 'desc') => {
+  const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
     ordre.value = newOrdre
     colonne.value = newColonne
     props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
@@ -67,7 +61,7 @@ export const TablePagination = caminoDefineComponent<Props>(['data', 'route', 'c
       {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
     </div>
   )
-})
+}, {props: ['data', 'route', 'caption', 'updateParams']})
 
 interface PaginationProps {
   totalNumberOfPages: number

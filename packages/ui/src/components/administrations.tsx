@@ -2,9 +2,9 @@ import { defineComponent, computed, ref, markRaw } from 'vue'
 import { Liste } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
-import { Tag } from '@/components/_ui/tag'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute } from 'vue-router'
+import { DsfrTag } from './_ui/tag'
 
 const colonnes = [
   {
@@ -36,7 +36,7 @@ const filtres = [
     elements: [],
     elementsFormat,
   },
-]
+] as const
 type ColonneId = (typeof colonnes)[number]['id']
 
 type ParamsFiltre = {
@@ -60,13 +60,13 @@ export const Administrations = defineComponent({
   setup() {
     const params = ref<{
       table: ParamsTable['params']
-      filtres: unknown
+      filtres: Record<string, unknown>
     }>({
       table: {
         colonne: 'abreviation',
         ordre: 'asc',
       },
-      filtres,
+      filtres: {},
     })
 
     const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
@@ -114,12 +114,11 @@ export const Administrations = defineComponent({
 
           const columns: Record<string, ComponentColumnData | TextColumnData> = {
             abreviation: { value: administration.abreviation },
-            nom: { value: administration.nom, class: ['h6'] },
+            nom: { value: administration.nom },
             type: {
-              component: markRaw(Tag),
-              props: { mini: true, text: type.nom },
-              class: 'mb--xs',
-              value: 'unused',
+              component: markRaw(DsfrTag),
+              props: { ariaLabel: type.nom },
+              value: type.nom,
             },
           }
 
@@ -148,9 +147,10 @@ export const Administrations = defineComponent({
         elements={lignes.value}
         params={params.value}
         metas={metas}
-        total={administrations.length}
+        total={lignes.value.length}
         initialized={true}
         route={route}
+        download={null}
         paramsUpdate={paramsUpdate}
       />
     )

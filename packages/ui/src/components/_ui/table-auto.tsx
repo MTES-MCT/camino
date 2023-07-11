@@ -69,5 +69,5 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     sort.order = event.order
   }
 
-  return () => <Table columns={props.columns} rows={myRows} route={route} caption={'Administrations'} />
+  return () => <Table columns={props.columns} rows={myRows} route={route} caption={'Administrations'}  updateParams={handleChange}/>
 })

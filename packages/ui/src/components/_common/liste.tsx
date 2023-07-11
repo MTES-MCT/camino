@@ -1,45 +1,66 @@
-import { FunctionalComponent } from 'vue'
 import { TablePagination } from '../_ui/table-pagination'
-import Filtres from './filtres.vue'
+import { Filtres, Props as FiltresProps } from './filtres'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
+import { PageContentHeader, type Props as PageContentHeaderProps} from './page-header-content'
 
 type ParamsFiltre = {
   section: 'filtres'
-  // params: { noms: string; typesIds: AdministrationTypeId[] }
-  params: unknown
+  // TODO 2023-07-11 type this correctly when refactoring filters
+  params: any
 }
-type ParamsTable = {
+type ParamsTable<ColumnId> = {
   section: 'table'
-  params: { colonne: string; ordre: 'asc' | 'desc' }
+  params: { colonne: ColumnId; ordre: 'asc' | 'desc'; page: number }
 }
 
-type Props = {
-  nom: string
-  filtres?: unknown[]
-  colonnes: readonly Column[]
-  lignes: TableRow[]
-  elements: unknown[]
-  initialized?: boolean
+type Params<ColumnId, ListeFiltre> =  keyof ListeFiltre extends never ? ParamsTable<ColumnId> : ParamsTable<ColumnId> | ParamsFiltre
+
+type ListeFiltreProps = {
+  filtres: FiltresProps['filtres']
   metas?: unknown
-  params: { filtres: unknown }
+  filtresParam: Record<string, unknown>
+  initialized: boolean
+ }
+type Props<ColumnId, ListeFiltre extends ListeFiltreProps | null, Toto  =  Params<ColumnId, ListeFiltre>
+> = {
+  listeFiltre: ListeFiltre
+  colonnes: readonly Column<ColumnId>[]
+  lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  renderButton?: () => JSX.Element
-  renderDownloads?: () => JSX.Element
-  paramsUpdate: (params: ParamsFiltre | ParamsTable) => void
-}
+  paramsUpdate: (params: Toto) => void
+} & PageContentHeaderProps
 
-export const Liste: FunctionalComponent<Props> = props => {
-  const paramsTableUpdate = (newParams: { page: number; colonne: string; ordre: 'asc' | 'desc' }) => {
+// const isNotNullListe = <ColumnId, ListeFiltre extends ListeFiltreProps | null>(props: Props<ColumnId, ListeFiltre, Toto> ): props is (Omit<Props<ColumnId, ListeFiltre, Toto>, 'listeFiltre'> & {listeFiltre: NonNullable<Props<ColumnId, ListeFiltre, Toto>['listeFiltre']>})=> props.listeFiltre !== null
+
+
+type tutu  = Params<'toto', null>
+type tata  = Params<'toto', {filtres: {}}>
+
+export const Liste = <ColumnId, ListeFiltre extends ListeFiltreProps | null>(props: Props<ColumnId, ListeFiltre>): JSX.Element => {
+  const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
     props.paramsUpdate({ section: 'table', params: newParams })
   }
 
-  const paramsFiltresUpdate = params => {
-    props.paramsUpdate({
-      section: 'filtres',
-      params,
-    })
+  const paramsFiltresUpdate = (params: any) => {
+    // console.log(props.listeFiltre.initialized)
+    const paramsUpdate = props.paramsUpdate
+    if(props.listeFiltre){
+      console.log(props.listeFiltre.initialized)
+      paramsUpdate({
+        section: 'filtres',
+        params,
+      })
+    }
+    // if (isNotNullListe(props)) {
+
+    //   console.log(props.listeFiltre)
+    //   props.paramsUpdate({
+    //     section: 'filtres',
+    //     params,
+    //   })
+    // }
   }
 
   const data = {
@@ -48,32 +69,20 @@ export const Liste: FunctionalComponent<Props> = props => {
     total: props.total,
   }
 
-  const res = props.total > props.elements.length ? `${props.elements.length} / ${props.total}` : props.elements.length
-  const resultat = `${res} résultat${props.elements.length > 1 ? 's' : ''}`
+  const res = props.total > props.lignes.length ? `${props.lignes.length} / ${props.total}` : props.lignes.length
+  const resultat = `(${res} résultat${props.lignes.length > 1 ? 's' : ''})`
 
   return (
-    <div>
-      <div class="desktop-blobs">
-        <div class="desktop-blob-2-3">
-          <h1 class="mt-xs mb-m cap-first">{props.nom}</h1>
-        </div>
+    <div class="fr-container">
+        <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton}/>
 
-        <div class="desktop-blob-1-3">{props.renderButton ? props.renderButton() : null}</div>
-      </div>
 
-      {props.filtres?.length ? <Filtres filtres={props.filtres} initialized={props.initialized} metas={props.metas} params={props.params.filtres} onParamsUpdate={paramsFiltresUpdate} /> : null}
+      {props.listeFiltre ? <Filtres filtres={props.listeFiltre.filtres ?? []} subtitle={resultat} initialized={props.listeFiltre.initialized} metas={props.listeFiltre.metas} params={props.listeFiltre.filtresParam} paramsUpdate={paramsFiltresUpdate} /> : null}
 
-      <div class="tablet-blobs tablet-flex-direction-reverse">
-        <div class="tablet-blob-1-3 flex mb-s">{props.renderDownloads ? props.renderDownloads() : null}</div>
-
-        <div class="tablet-blob-2-3 flex">
-          <div class="py-m h5 bold mb-xs">{resultat}</div>
-        </div>
-      </div>
-
-      <div class="line-neutral width-full" />
 
       <TablePagination data={data} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} />
     </div>
   )
 }
+
+

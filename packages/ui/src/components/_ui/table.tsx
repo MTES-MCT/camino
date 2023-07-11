@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed, defineComponent, watch } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { Button } from './button'
@@ -53,15 +53,27 @@ export const isComponentColumnData = (columnRow: ComponentColumnData | TextColum
   return 'component' in columnRow
 }
 
-interface Props {
+interface Props<ColumnId> {
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  columns: readonly Column[]
+  columns: readonly Column<ColumnId>[]
   rows: TableRow[]
   caption: string
-  updateParams: (column: string, order: 'asc' | 'desc') => void
+  updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
 
-export const getSortColumnFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column[]): string => routerQueryToString(route.query.colonne, columns[0].id)
+
+export const isColumnId = <ColumnId extends string, >(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
+  return columns.some(({id}) => value === id)
+}
+
+export const getSortColumnFromRoute = <ColumnId extends string, >(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]): ColumnId => {
+  const value = routerQueryToString(route.query.colonne, columns[0].id)
+  if (isColumnId(columns, value)) {
+    return value
+  } else {
+    return columns[0].id
+  }
+}
 export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>): 'asc' | 'desc' => {
   const value = routerQueryToString(route.query.ordre, 'asc')
   if (value !== 'asc' && value !== 'desc') {
@@ -69,9 +81,8 @@ export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded,
   }
   return value
 }
-
-export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', 'caption', 'updateParams'], props => {
-  const sortParams = computed<{ order: 'asc' | 'desc'; column: string }>(() => {
+export const Table = defineComponent(<ColumnId extends string, >(props: Props<ColumnId>) => {
+  const sortParams = computed<{ order: 'asc' | 'desc'; column: ColumnId }>(() => {
     return { order: getSortOrderFromRoute(props.route), column: getSortColumnFromRoute(props.route, props.columns) }
   })
 
@@ -140,11 +151,11 @@ export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'route', '
       </div>
     </div>
   )
-})
+}, {props: ['columns', 'rows', 'route', 'caption', 'updateParams'] })
 
 interface OldProps {
   update: (event: TableSortEvent) => void
-  column: Props['columns'][number]['id']
+  column: Props<string>['columns'][number]['id']
   order: 'asc' | 'desc'
   columns: readonly Column[]
   rows: TableRow[]

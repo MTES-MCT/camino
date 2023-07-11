@@ -6,10 +6,15 @@ import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { action } from '@storybook/addon-actions'
+import { vueRouter } from 'storybook-vue3-router'
 
+const customRoutes = [...Array(4)].map((_, row) => ({ name: `elementlink${row}`, params: { id: `elementslug${row}` }, value: `elementslug${row}` }))
 const meta: Meta = {
   title: 'Components/UI/Table',
+  //@ts-ignore
   component: Table,
+  decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
+
 }
 export default meta
 
@@ -85,5 +90,6 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
 })
 
 const update = action('update')
-export const Simple: StoryFn = () => <Table rows={rows} columns={columns} caption="Caption cachée" column="nom" order="asc" update={update} />
+export const Simple: StoryFn = () => <Table route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
+ rows={rows} columns={columns} caption="Caption cachée" updateParams={update} />
 export const OldSimple: StoryFn = () => <OldTable rows={rows} columns={columns} column="nom" order="asc" update={update} />

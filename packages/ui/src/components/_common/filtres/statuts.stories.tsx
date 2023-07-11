@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { FiltresStatuts } from './statuts'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 const meta: Meta<typeof FiltresStatuts> = {
   title: 'Components/Common/Filtres/Statuts',
@@ -15,14 +15,14 @@ export const AllStatuts: StoryFn = () => (
         <th>Statuts</th>
         <th>Rendu</th>
       </tr>
-      {Object.values(TitresStatutIds).map(statut => (
+      {Object.values(EtapesStatuts).map(statut => (
         <tr>
           <td>{statut}</td>
           <td>
             <FiltresStatuts
               element={{
-                couleur: TitresStatuts[statut].couleur,
-                nom: TitresStatuts[statut].nom,
+                couleur: statut.couleur,
+                nom: statut.nom,
               }}
             />
           </td>

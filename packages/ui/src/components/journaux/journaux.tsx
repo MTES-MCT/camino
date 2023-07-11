@@ -6,8 +6,9 @@ import { Differences } from './differences'
 import { AsyncData } from '@/api/client-rest'
 import { JournauxApiClient } from './journaux-api-client'
 import { LoadingElement } from '../_ui/functional-loader'
-import { Params, TablePagination, Props as TablePaginationProps } from '../_ui/table-pagination'
 import { TableRow, TableSortEvent } from '../_ui/table'
+import { useRoute } from 'vue-router'
+import { Liste } from '../_common/liste'
 
 interface Props {
   titreId: TitreId | null
@@ -56,14 +57,17 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     page: 1,
     recherche: null,
     titreId: props.titreId,
+    intervalle: 10
   })
+
+  const route = useRoute()
   const colonnes = () => {
     const data = [
-      { id: 'date', name: 'Date' },
-      { id: 'titre', name: 'Titre' },
-      { id: 'utilisateur', name: 'Utilisateur' },
-      { id: 'operation', name: 'Action' },
-      { id: 'differences', name: 'Modifications' },
+      { id: 'date', name: 'Date', noSort: true },
+      { id: 'titre', name: 'Titre', noSort: true  },
+      { id: 'utilisateur', name: 'Utilisateur', noSort: true  },
+      { id: 'operation', name: 'Action', noSort: true  },
+      { id: 'differences', name: 'Modifications', noSort: true  },
     ] as const
 
     if (!props.titreId) {
@@ -89,51 +93,18 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     await load()
   })
 
-  const paramsTableUpdate = async (event: Params | TableSortEvent) => {
-    if (!isTableSortEvent(event)) {
-      if (event.page) {
-        params.value.page = event.page
-        await load()
-      }
+  const paramsTableUpdate = async (event: Params) => {
+    if (event.page) {
+      params.value.page = event.page
+      await load()
     }
-  }
+}
 
   return () => (
     <>
       <LoadingElement
         data={data.value}
-        renderItem={item => {
-          let pagination: TablePaginationProps['pagination'] = {}
-          if (item.total > item.elements.length) {
-            pagination = {
-              page: params.value.page,
-            }
-          }
-
-          const res = item.total > item.elements.length ? `${item.elements.length} / ${item.total}` : item.elements.length
-          const resultat = `${res} résultat${item.elements.length > 1 ? 's' : ''}`
-
-          return (
-            <>
-              <div class="tablet-blobs tablet-flex-direction-reverse">
-                <div class="tablet-blob-2-3 flex">
-                  <div class="py-m h5 bold mb-xs">{resultat}</div>
-                </div>
-              </div>
-
-              <div class="line-neutral width-full" />
-              <TablePagination
-                data={{
-                  columns: colonnes(),
-                  rows: lignes(item),
-                  total: item.total,
-                }}
-                pagination={pagination}
-                paramsUpdate={paramsTableUpdate}
-              />
-            </>
-          )
-        }}
+        renderItem={item => <Liste colonnes={colonnes()} route={route} lignes={lignes(item)} nom='Journaux' paramsUpdate={paramsTableUpdate} total={item.total}/>}
       />
     </>
   )

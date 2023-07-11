@@ -1,5 +1,6 @@
 export interface JournauxQueryParams {
   page: number
+  intervalle: 10
   recherche: string | null
   titreId: string | null
 }
