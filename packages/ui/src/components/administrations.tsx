@@ -28,7 +28,7 @@ const filtres = {
     value: '',
     name: 'Nom',
     placeholder: `Nom de l'administration`,
-    validator: z.string().optional(),
+    validator: z.string(),
   },
   typesIds: {
     id: 'typesIds',
@@ -57,14 +57,9 @@ export const Administrations = defineComponent({
       page: 1,
       // FIXME INITIAL VALUE ?
       filtres: {
-        noms: undefined,
+        noms: '',
         typesIds: [],
       },
-    })
-
-    const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
-      noms: '',
-      typesIds: [],
     })
 
     const route = useRoute()
@@ -72,14 +67,18 @@ export const Administrations = defineComponent({
     const lignes = computed<TableRow[]>(() => {
       return [...administrations]
         .filter(a => {
-          if (listState.value.noms.length) {
-            if (!a.id.toLowerCase().includes(listState.value.noms) && !a.nom.toLowerCase().includes(listState.value.noms) && !a.abreviation.toLowerCase().includes(listState.value.noms)) {
+          if (params.value.filtres.noms.length) {
+            if (
+              !a.id.toLowerCase().includes(params.value.filtres.noms) &&
+              !a.nom.toLowerCase().includes(params.value.filtres.noms) &&
+              !a.abreviation.toLowerCase().includes(params.value.filtres.noms)
+            ) {
               return false
             }
           }
 
-          if (listState.value.typesIds.length) {
-            if (!listState.value.typesIds.includes(a.typeId)) {
+          if (params.value.filtres.typesIds.length) {
+            if (!params.value.filtres.typesIds.includes(a.typeId)) {
               return false
             }
           }
@@ -134,8 +133,8 @@ export const Administrations = defineComponent({
         download={null}
         renderButton={null}
         paramsUpdate={options => {
-          listState.value.typesIds = options.filtres.typesIds
-          listState.value.noms = options.filtres.noms?.toLowerCase() ?? ''
+          params.value.filtres.typesIds = options.filtres.typesIds
+          params.value.filtres.noms = options.filtres.noms?.toLowerCase() ?? ''
           params.value.ordre = options.ordre
           params.value.colonne = options.colonne
         }}
