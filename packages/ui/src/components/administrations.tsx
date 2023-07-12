@@ -1,6 +1,6 @@
 import { defineComponent, computed, ref, markRaw } from 'vue'
-import { Liste } from './_common/liste'
-import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
+import { Liste, Params } from './_common/liste'
+import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes, isAdministrationTypeId } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute } from 'vue-router'
@@ -38,17 +38,7 @@ const filtres = [
   },
 ] as const
 type ColonneId = (typeof colonnes)[number]['id']
-
-type ParamsFiltre = {
-  section: 'filtres'
-  params: { noms: string; typesIds: AdministrationTypeId[] }
-}
-type ParamsTable = {
-  section: 'table'
-  params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
-}
-
-const isParamsFiltre = (options: ParamsFiltre | ParamsTable): options is ParamsFiltre => options.section === 'filtres'
+type FiltreId = (typeof filtres)[number]['id']
 
 const metas = {
   types: sortedAdministrationTypes,
@@ -58,15 +48,15 @@ const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
   setup() {
-    const params = ref<{
-      table: ParamsTable['params']
-      filtres: Record<string, unknown>
-    }>({
-      table: {
-        colonne: 'abreviation',
-        ordre: 'asc',
+    const params = ref<Params<ColonneId, FiltreId>>({
+      colonne: 'abreviation',
+      ordre: 'asc',
+      page: 1,
+      // FIXME INITIAL VALUE ?
+      filtres: {
+        noms: undefined,
+        typesIds: [],
       },
-      filtres: {},
     })
 
     const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
@@ -96,15 +86,15 @@ export const Administrations = defineComponent({
         .sort((a, b) => {
           let first: string
           let second: string
-          if (params.value.table.colonne === 'type') {
+          if (params.value.colonne === 'type') {
             first = ADMINISTRATION_TYPES[a.typeId].nom
             second = ADMINISTRATION_TYPES[b.typeId].nom
           } else {
-            first = a[params.value.table.colonne]
-            second = b[params.value.table.colonne]
+            first = a[params.value.colonne]
+            second = b[params.value.colonne]
           }
 
-          if (params.value.table.ordre === 'asc') {
+          if (params.value.ordre === 'asc') {
             return first.localeCompare(second)
           }
           return second.localeCompare(first)
@@ -129,28 +119,28 @@ export const Administrations = defineComponent({
           }
         })
     })
-    const paramsUpdate = (options: ParamsFiltre | ParamsTable) => {
-      if (isParamsFiltre(options)) {
-        listState.value.noms = options.params.noms.toLowerCase()
-        listState.value.typesIds = options.params.typesIds
-      } else {
-        params.value.table.ordre = options.params.ordre
-        params.value.table.colonne = options.params.colonne
+    const paramsUpdate = (options: Params<ColonneId, FiltreId>) => {
+      const typesIds = options.filtres.typesIds
+      const noms = options.filtres.noms
+      if (Array.isArray(typesIds)) {
+        listState.value.typesIds = typesIds.filter(isAdministrationTypeId)
       }
+      if (typeof noms === 'string') {
+        listState.value.noms = noms.toLowerCase()
+      }
+      params.value.ordre = options.ordre
+      params.value.colonne = options.colonne
     }
     return () => (
       <Liste
         nom="administrations"
-        filtres={filtres}
+        listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres }}
         colonnes={colonnes}
         lignes={lignes.value}
-        elements={lignes.value}
-        params={params.value}
-        metas={metas}
         total={lignes.value.length}
-        initialized={true}
         route={route}
         download={null}
+        renderButton={null}
         paramsUpdate={paramsUpdate}
       />
     )

@@ -6,14 +6,24 @@ import { Differences } from './differences'
 import { AsyncData } from '@/api/client-rest'
 import { JournauxApiClient } from './journaux-api-client'
 import { LoadingElement } from '../_ui/functional-loader'
-import { TableRow, TableSortEvent } from '../_ui/table'
+import { TableRow } from '../_ui/table'
 import { useRoute } from 'vue-router'
-import { Liste } from '../_common/liste'
+import { Liste, Params } from '../_common/liste'
 
 interface Props {
   titreId: TitreId | null
   apiClient: Pick<JournauxApiClient, 'getJournaux'>
 }
+
+const colonnesData = [
+  { id: 'date', name: 'Date', noSort: true },
+  { id: 'titre', name: 'Titre', noSort: true },
+  { id: 'utilisateur', name: 'Utilisateur', noSort: true },
+  { id: 'operation', name: 'Action', noSort: true },
+  { id: 'differences', name: 'Modifications', noSort: true },
+] as const
+
+type ColonneId = (typeof colonnesData)[number]['id']
 
 const lignes = (journaux: JournauxData): TableRow[] => {
   return journaux.elements.map(journal => {
@@ -48,32 +58,21 @@ const lignes = (journaux: JournauxData): TableRow[] => {
   })
 }
 
-export const isTableSortEvent = (event: Params | TableSortEvent): event is TableSortEvent => {
-  return 'column' in event && 'order' in event
-}
 export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], props => {
   const data = ref<AsyncData<JournauxData>>({ status: 'LOADING' })
   const params = ref<JournauxQueryParams>({
     page: 1,
     recherche: null,
     titreId: props.titreId,
-    intervalle: 10
+    intervalle: 10,
   })
 
   const route = useRoute()
   const colonnes = () => {
-    const data = [
-      { id: 'date', name: 'Date', noSort: true },
-      { id: 'titre', name: 'Titre', noSort: true  },
-      { id: 'utilisateur', name: 'Utilisateur', noSort: true  },
-      { id: 'operation', name: 'Action', noSort: true  },
-      { id: 'differences', name: 'Modifications', noSort: true  },
-    ] as const
-
     if (!props.titreId) {
-      return data
+      return colonnesData
     }
-    return data.filter(({ id }) => id !== 'titre')
+    return colonnesData.filter(({ id }) => id !== 'titre')
   }
 
   const load = async () => {
@@ -93,18 +92,20 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     await load()
   })
 
-  const paramsTableUpdate = async (event: Params) => {
+  const paramsTableUpdate = async (event: Params<ColonneId, never>) => {
     if (event.page) {
       params.value.page = event.page
       await load()
     }
-}
+  }
 
   return () => (
     <>
       <LoadingElement
         data={data.value}
-        renderItem={item => <Liste colonnes={colonnes()} route={route} lignes={lignes(item)} nom='Journaux' paramsUpdate={paramsTableUpdate} total={item.total}/>}
+        renderItem={item => (
+          <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={route} lignes={lignes(item)} nom="Journaux" paramsUpdate={paramsTableUpdate} total={item.total} />
+        )}
       />
     </>
   )

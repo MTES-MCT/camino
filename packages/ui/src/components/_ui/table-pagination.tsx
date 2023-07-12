@@ -14,54 +14,69 @@ export interface Props<ColumnId> {
   updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
 }
 
-const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
-export const TablePagination = defineComponent(<ColumnId extends string, >(props: Props<ColumnId>) => {
-
-  watch(
-    () => props.data,
-    () => {
-      // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
-      const main = document.querySelector<HTMLElement>('main')
-      if (main) {
-        main.scrollIntoView(true)
-      }
-    }
-  )
-
-  const colonne = ref<ColumnId>(getSortColumnFromRoute(props.route, props.data.columns)) as Ref<ColumnId>
-  const ordre = ref<'asc' | 'desc'>(getSortOrderFromRoute(props.route))
-  const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
-
-  const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
-    ordre.value = newOrdre
-    colonne.value = newColonne
-    props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
+export const getInitialParams = <ColumnId extends string>(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]) => {
+  return {
+    colonne: getSortColumnFromRoute(route, columns),
+    page: getPageNumberFromRoute(route),
+    ordre: getSortOrderFromRoute(route),
   }
+}
 
-  onBeforeRouteLeave(() => {
-    stop()
-  })
+const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
+export const TablePagination = defineComponent(
+  <ColumnId extends string>(props: Props<ColumnId>) => {
+    watch(
+      () => props.data,
+      () => {
+        // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
+        const main = document.querySelector<HTMLElement>('main')
+        if (main) {
+          main.scrollIntoView(true)
+        }
+      }
+    )
 
-  const stop = watch(pageNumber, newPageNumber => {
-    props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
-  })
+    const initParams = getInitialParams(props.route, props.data.columns)
 
-  const pagination = computed<boolean>(() => {
-    return props.data.total > props.data.rows.length
-  })
+    const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>
+    const ordre = ref<'asc' | 'desc'>(initParams.ordre)
+    const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
 
-  const totalNumberOfPages = computed<number>(() => {
-    return Math.ceil(props.data.total / routerQueryToNumber(props.route.query.intervalle, 10))
-  })
+    const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
+      ordre.value = newOrdre
+      colonne.value = newColonne
+      props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
+    }
 
-  return () => (
-    <div class="dsfr">
-      <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} updateParams={updateSort} />
+    onBeforeRouteLeave(() => {
+      stop()
+    })
 
-      {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
-    </div>
-  )
-}, {props: ['data', 'route', 'caption', 'updateParams']})
+    const stop = watch(pageNumber, newPageNumber => {
+      props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
+    })
+
+    const pagination = computed<boolean>(() => {
+      return props.data.total > props.data.rows.length
+    })
+
+    const totalNumberOfPages = computed<number>(() => {
+      return Math.ceil(props.data.total / routerQueryToNumber(props.route.query.intervalle, 10))
+    })
+
+    return () => (
+      <div class="dsfr">
+        <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} updateParams={updateSort} />
+
+        {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
+      </div>
+    )
+  },
+  { props: ['data', 'route', 'caption', 'updateParams'] }
+)
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TablePagination.props = ['data', 'route', 'caption', 'updateParams']
 
 interface PaginationProps {
   totalNumberOfPages: number

@@ -5,8 +5,6 @@ import { z } from 'zod'
 
 export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 
-export type AdministrationTypeId = (typeof ADMINISTRATION_TYPE_IDS_ARRAY)[number]
-
 export const ADMINISTRATION_TYPE_IDS = {
   AUTORITE: 'aut',
   DEAL: 'dea',
@@ -15,6 +13,12 @@ export const ADMINISTRATION_TYPE_IDS = {
   OPERATEUR: 'ope',
   PREFECTURE: 'pre',
 } as const satisfies Record<string, AdministrationTypeId>
+
+export const administrationTypeIdValidator = z.enum(ADMINISTRATION_TYPE_IDS_ARRAY)
+
+export type AdministrationTypeId = z.infer<typeof administrationTypeIdValidator>
+
+export const isAdministrationTypeId = (value: string): value is AdministrationTypeId => administrationTypeIdValidator.safeParse(value).success
 
 export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, 'description'>
 export const ADMINISTRATION_TYPES: {

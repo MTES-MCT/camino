@@ -48,36 +48,6 @@ const etapesLabelFormat = f =>
         .join(', '),
     }))
 
-// supprime les clés dont les valeurs sont vides
-// et les objets vides
-const etapesClean = value => {
-  if (!value) return []
-
-  const etapes = value.reduce((etapes, etape) => {
-    // si le type d'étape n'est pas renseigné
-    // alors on ignore l'étape en entier
-    if (!etape.typeId) return etapes
-
-    etape = Object.keys(etape)
-      .sort()
-      .reduce((o, k) => {
-        if (etape[k] !== '') {
-          o[k] = etape[k]
-        }
-
-        return o
-      }, {})
-
-    if (Object.keys(etape).length) {
-      etapes.push(etape)
-    }
-
-    return etapes
-  }, [])
-
-  return etapes.length ? etapes : []
-}
-
 const filtres = [
   {
     id: 'titresIds',
@@ -162,7 +132,6 @@ const filtres = [
     value: [],
     elements: [],
     component: markRaw(FiltresEtapes),
-    clean: etapesClean,
     elementsFormat: etapesElementsFormat,
     labelFormat: etapesLabelFormat,
   },
@@ -173,7 +142,6 @@ const filtres = [
     value: [],
     elements: [],
     component: markRaw(FiltresEtapes),
-    clean: etapesClean,
     elementsFormat: etapesElementsFormat,
     labelFormat: etapesLabelFormat,
   },

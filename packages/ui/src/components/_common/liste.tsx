@@ -1,88 +1,78 @@
-import { TablePagination } from '../_ui/table-pagination'
-import { Filtres, Props as FiltresProps } from './filtres'
+import { TablePagination, getInitialParams } from '../_ui/table-pagination'
+import { Filtres, Props as FiltresProps, Filtre } from './filtres'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
-import { PageContentHeader, type Props as PageContentHeaderProps} from './page-header-content'
+import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
+import { computed, defineComponent, ref, Ref } from 'vue'
 
-type ParamsFiltre = {
-  section: 'filtres'
-  // TODO 2023-07-11 type this correctly when refactoring filters
-  params: any
-}
-type ParamsTable<ColumnId> = {
-  section: 'table'
-  params: { colonne: ColumnId; ordre: 'asc' | 'desc'; page: number }
+export type Params<ColumnId extends string, FiltreId extends string> = {
+  colonne: ColumnId
+  ordre: 'asc' | 'desc'
+  page: number
+  filtres: Record<FiltreId, string | string[] | undefined>
 }
 
-type Params<ColumnId, ListeFiltre> =  keyof ListeFiltre extends never ? ParamsTable<ColumnId> : ParamsTable<ColumnId> | ParamsFiltre
-
-type ListeFiltreProps = {
-  filtres: FiltresProps['filtres']
+type ListeFiltreProps<FiltreId extends string> = {
+  filtres: readonly Filtre<FiltreId>[]
   metas?: unknown
-  filtresParam: Record<string, unknown>
+  filtresParam: Record<FiltreId, string | string[] | undefined>
   initialized: boolean
- }
-type Props<ColumnId, ListeFiltre extends ListeFiltreProps | null, Toto  =  Params<ColumnId, ListeFiltre>
-> = {
-  listeFiltre: ListeFiltre
+}
+type Props<ColumnId extends string, FiltreId extends string> = {
+  listeFiltre: ListeFiltreProps<FiltreId> | null
   colonnes: readonly Column<ColumnId>[]
   lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  paramsUpdate: (params: Toto) => void
+  paramsUpdate: (params: Params<ColumnId, FiltreId>) => void
 } & PageContentHeaderProps
 
-// const isNotNullListe = <ColumnId, ListeFiltre extends ListeFiltreProps | null>(props: Props<ColumnId, ListeFiltre, Toto> ): props is (Omit<Props<ColumnId, ListeFiltre, Toto>, 'listeFiltre'> & {listeFiltre: NonNullable<Props<ColumnId, ListeFiltre, Toto>['listeFiltre']>})=> props.listeFiltre !== null
+export const Liste = defineComponent(<ColumnId extends string, FiltreId extends string>(props: Props<ColumnId, FiltreId>) => {
+  const initialParams = getInitialParams(props.route, props.colonnes)
 
+  // FIXME getInitialFiltres qui va lire le routeur
+  const params = ref<Params<ColumnId, FiltreId>>({ ...initialParams, filtres: {} as Record<FiltreId, string | string[] | undefined> }) as Ref<Params<ColumnId, FiltreId>>
 
-type tutu  = Params<'toto', null>
-type tata  = Params<'toto', {filtres: {}}>
-
-export const Liste = <ColumnId, ListeFiltre extends ListeFiltreProps | null>(props: Props<ColumnId, ListeFiltre>): JSX.Element => {
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
-    props.paramsUpdate({ section: 'table', params: newParams })
+    params.value.page = newParams.page
+    params.value.colonne = newParams.colonne
+    params.value.ordre = newParams.ordre
+    props.paramsUpdate(params.value)
   }
 
-  const paramsFiltresUpdate = (params: any) => {
-    // console.log(props.listeFiltre.initialized)
-    const paramsUpdate = props.paramsUpdate
-    if(props.listeFiltre){
-      console.log(props.listeFiltre.initialized)
-      paramsUpdate({
-        section: 'filtres',
-        params,
-      })
-    }
-    // if (isNotNullListe(props)) {
-
-    //   console.log(props.listeFiltre)
-    //   props.paramsUpdate({
-    //     section: 'filtres',
-    //     params,
-    //   })
-    // }
+  const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId>['filtres']) => {
+    params.value.filtres = filtres
+    props.paramsUpdate(params.value)
   }
 
-  const data = {
+  const data = computed(() => ({
     columns: props.colonnes,
     rows: props.lignes,
     total: props.total,
-  }
+  }))
 
   const res = props.total > props.lignes.length ? `${props.lignes.length} / ${props.total}` : props.lignes.length
   const resultat = `(${res} résultat${props.lignes.length > 1 ? 's' : ''})`
 
-  return (
+  return () => (
     <div class="fr-container">
-        <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton}/>
+      <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
 
+      {props.listeFiltre ? (
+        <Filtres
+          filtres={props.listeFiltre.filtres ?? []}
+          subtitle={resultat}
+          initialized={props.listeFiltre.initialized}
+          metas={props.listeFiltre.metas}
+          params={props.listeFiltre.filtresParam}
+          paramsUpdate={paramsFiltresUpdate}
+        />
+      ) : null}
 
-      {props.listeFiltre ? <Filtres filtres={props.listeFiltre.filtres ?? []} subtitle={resultat} initialized={props.listeFiltre.initialized} metas={props.listeFiltre.metas} params={props.listeFiltre.filtresParam} paramsUpdate={paramsFiltresUpdate} /> : null}
-
-
-      <TablePagination data={data} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} />
+      <TablePagination data={data.value} caption={props.nom} route={props.route} updateParams={paramsTableUpdate} />
     </div>
   )
-}
+})
 
-
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Liste.props = ['colonnes', 'download', 'lignes', 'listeFiltre', 'nom', 'paramsUpdate', 'renderButton', 'route', 'total']

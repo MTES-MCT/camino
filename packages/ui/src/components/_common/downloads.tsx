@@ -7,14 +7,14 @@ import { getDownloadRestRoute } from '@/api/client-rest'
 import { saveAs } from 'file-saver'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
-export const Downloads = defineComponent(
-  <T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'> & { class?: HTMLAttributes['class'] }) => {
-    const route = useRoute()
-    const matomo = inject('matomo', undefined)
-    return () => <PureDownloads {...props} route={route} matomo={matomo} />
-  },
-  { props: ['downloadRoute', 'formats', 'params', 'class'] }
-)
+export const Downloads = defineComponent(<T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'> & { class?: HTMLAttributes['class'] }) => {
+  const route = useRoute()
+  const matomo = inject('matomo', undefined)
+  return () => <PureDownloads {...props} route={route} matomo={matomo} />
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Downloads.props = ['downloadRoute', 'formats', 'params', 'class']
 
 export interface Props<T extends DownloadRestRoutes> {
   formats: NonEmptyArray<DownloadFormat>
@@ -58,6 +58,9 @@ export const PureDownloads = defineComponent(
   },
   { props: ['formats', 'downloadRoute', 'params', 'route', 'matomo'] }
 )
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'matomo']
 
 export async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
   if (selectedFormat !== null) {
