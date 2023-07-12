@@ -1,10 +1,18 @@
 import { defineComponent, computed, ref, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes, isAdministrationTypeId } from 'camino-common/src/static/administrations'
+import {
+  ADMINISTRATION_TYPES,
+  Administrations as Adms,
+  AdministrationTypeId,
+  sortedAdministrationTypes,
+  isAdministrationTypeId,
+  administrationTypeIdValidator,
+} from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
+import { z, ZodType } from 'zod'
 
 const colonnes = [
   {
@@ -48,7 +56,7 @@ const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
   setup() {
-    const params = ref<Params<ColonneId, FiltreId>>({
+    const params = ref<Params<ColonneId, FiltreId, { noms: ZodType; typesIds: ZodType }>>({
       colonne: 'abreviation',
       ordre: 'asc',
       page: 1,
@@ -119,29 +127,23 @@ export const Administrations = defineComponent({
           }
         })
     })
-    const paramsUpdate = (options: Params<ColonneId, FiltreId>) => {
-      const typesIds = options.filtres.typesIds
-      const noms = options.filtres.noms
-      if (Array.isArray(typesIds)) {
-        listState.value.typesIds = typesIds.filter(isAdministrationTypeId)
-      }
-      if (typeof noms === 'string') {
-        listState.value.noms = noms.toLowerCase()
-      }
-      params.value.ordre = options.ordre
-      params.value.colonne = options.colonne
-    }
+
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres }}
+        listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres, validators: { noms: z.string().optional(), typesIds: z.array(administrationTypeIdValidator) } }}
         colonnes={colonnes}
         lignes={lignes.value}
         total={lignes.value.length}
         route={route}
         download={null}
         renderButton={null}
-        paramsUpdate={paramsUpdate}
+        paramsUpdate={options => {
+          listState.value.typesIds = options.filtres.typesIds
+          listState.value.noms = options.filtres.noms?.toLowerCase() ?? ''
+          params.value.ordre = options.ordre
+          params.value.colonne = options.colonne
+        }}
       />
     )
   },

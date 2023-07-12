@@ -92,7 +92,7 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     await load()
   })
 
-  const paramsTableUpdate = async (event: Params<ColonneId, never>) => {
+  const paramsTableUpdate = async (event: Params<ColonneId, never, never>) => {
     if (event.page) {
       params.value.page = event.page
       await load()

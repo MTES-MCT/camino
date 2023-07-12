@@ -4,34 +4,36 @@ import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
 import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
 import { computed, defineComponent, ref, Ref } from 'vue'
+import { ZodType, z } from 'zod'
 
-export type Params<ColumnId extends string, FiltreId extends string> = {
+export type Params<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
   colonne: ColumnId
   ordre: 'asc' | 'desc'
   page: number
-  filtres: Record<FiltreId, string | string[] | undefined>
+  filtres: { [key in FiltreId]: z.infer<Validators[key]> }
 }
 
-type ListeFiltreProps<FiltreId extends string> = {
+type ListeFiltreProps<FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
   filtres: readonly Filtre<FiltreId>[]
   metas?: unknown
-  filtresParam: Record<FiltreId, string | string[] | undefined>
+  validators: Validators
+  filtresParam: { [key in FiltreId]: z.infer<Validators[key]> }
   initialized: boolean
 }
-type Props<ColumnId extends string, FiltreId extends string> = {
-  listeFiltre: ListeFiltreProps<FiltreId> | null
+type Props<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
+  listeFiltre: ListeFiltreProps<FiltreId, Validators> | null
   colonnes: readonly Column<ColumnId>[]
   lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  paramsUpdate: (params: Params<ColumnId, FiltreId>) => void
+  paramsUpdate: (params: Params<ColumnId, FiltreId, Validators>) => void
 } & PageContentHeaderProps
 
-export const Liste = defineComponent(<ColumnId extends string, FiltreId extends string>(props: Props<ColumnId, FiltreId>) => {
+export const Liste = defineComponent(<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>>(props: Props<ColumnId, FiltreId, Validators>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
 
   // FIXME getInitialFiltres qui va lire le routeur
-  const params = ref<Params<ColumnId, FiltreId>>({ ...initialParams, filtres: {} as Record<FiltreId, string | string[] | undefined> }) as Ref<Params<ColumnId, FiltreId>>
+  const params = ref<Params<ColumnId, FiltreId, Validators>>({ ...initialParams, filtres: {} as Record<FiltreId, z.infer<Validators[FiltreId]>> }) as Ref<Params<ColumnId, FiltreId, Validators>>
 
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
     params.value.page = newParams.page
@@ -40,7 +42,7 @@ export const Liste = defineComponent(<ColumnId extends string, FiltreId extends 
     props.paramsUpdate(params.value)
   }
 
-  const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId>['filtres']) => {
+  const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId, Validators>['filtres']) => {
     params.value.filtres = filtres
     props.paramsUpdate(params.value)
   }
@@ -65,6 +67,7 @@ export const Liste = defineComponent(<ColumnId extends string, FiltreId extends 
           initialized={props.listeFiltre.initialized}
           metas={props.listeFiltre.metas}
           params={props.listeFiltre.filtresParam}
+          validators={props.listeFiltre.validators}
           paramsUpdate={paramsFiltresUpdate}
         />
       ) : null}
