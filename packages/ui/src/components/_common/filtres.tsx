@@ -2,32 +2,33 @@ import { defineComponent, ref, watch, Ref } from 'vue'
 import { z, ZodType } from 'zod'
 import Filters from '../_ui/filters.vue'
 import { administrationTypeIdValidator } from 'camino-common/src/static/administrations'
+import { getKeys } from 'camino-common/src/typescript-tools'
 type MultipleType = 'custom' | 'select' | 'checkboxes' | 'autocomplete'
 export type Filtre<FiltreId> = {
   id: FiltreId
+  validator: ZodType
   type: MultipleType | 'input'
   elementsFormat?: (id: FiltreId, metas: unknown) => unknown
 }
 
-type Filter<FiltreId> = Omit<Filtre<FiltreId>, 'type'> & {
+type FilterType<FiltreId> = Omit<Filtre<FiltreId>, 'type'> & {
   elements?: unknown
 } & ({ type: MultipleType; value?: string[] } | { type: 'input'; value?: string })
 
-export interface Props<FiltreId extends string, Validators extends Record<FiltreId, ZodType>> {
-  filtres: readonly Filtre<FiltreId>[]
-  params: { [key in FiltreId]: z.infer<Validators[key]> }
+export interface Props<FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }> {
+  filtres: Filtres
+  params: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }
   metas: unknown
-  validators: Validators
   initialized: boolean
   subtitle?: string
   toggle?: (open: boolean) => void
-  paramsUpdate: (value: { [key in FiltreId]: z.infer<Validators[key]> }) => void
+  paramsUpdate: (value: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }) => void
 }
 
 const isFiltreId = <FiltreId extends string>(id: string): id is FiltreId => true
-export const Filtres = defineComponent(<FiltreId extends string, Validators extends Record<FiltreId, ZodType>>(props: Props<FiltreId, Validators>) => {
+export const Filtres = defineComponent(<FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }>(props: Props<FiltreId, Filtres>) => {
   const opened = ref<boolean>(false)
-  const filters = ref<Filter<FiltreId>[]>([]) as Ref<Filter<FiltreId>[]>
+  const filters = ref<FilterType<FiltreId>[]>([]) as Ref<FilterType<FiltreId>[]>
 
   const toggle = () => {
     opened.value = !opened.value
@@ -50,7 +51,7 @@ export const Filtres = defineComponent(<FiltreId extends string, Validators exte
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     // formate les valeurs des filtres
-    const params = filters.value.reduce<Record<FiltreId, z.infer<Validators[FiltreId]>>>((acc, filtre) => {
+    const params = filters.value.reduce<Record<FiltreId, z.infer<Filtres[FiltreId]['validator']>>>((acc, filtre) => {
       let value: string | string[] | undefined
 
       if (filtre.type === 'custom' || filtre.type === 'select' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
@@ -59,24 +60,26 @@ export const Filtres = defineComponent(<FiltreId extends string, Validators exte
         value = filtre.value
       }
 
-      acc[filtre.id] = props.validators[filtre.id].parse(filtre.value)
+      acc[filtre.id] = filtre.validator.parse(filtre.value)
 
       return acc
-    }, {} as Record<FiltreId, z.infer<Validators[FiltreId]>>)
+    }, {} as Record<FiltreId, z.infer<Filtres[FiltreId]['validator']>>)
 
     props.paramsUpdate(params)
   }
 
   const init = () => {
-    filters.value = props.filtres.map(filtre => {
-      const newFilter: Filter<FiltreId> = { ...filtre }
-      if (filtre.elementsFormat) {
-        newFilter.elements = filtre.elementsFormat(filtre.id, props.metas)
-      }
+    // @ts-ignore on arrive pas à garder le lien avec FiltreId
+    filters.value = getKeys(props.filtres, isFiltreId)
+      .map(id => props.filtres[id])
+      .map(filtre => {
+        const newFilter: FilterType<string> = { ...filtre }
+        if (filtre.elementsFormat) {
+          newFilter.elements = filtre.elementsFormat(filtre.id, props.metas)
+        }
 
-      return newFilter
-    })
-    console.log(filters.value)
+        return newFilter
+      })
 
     Object.keys(props.params)
       .filter(isFiltreId<FiltreId>)
@@ -123,30 +126,26 @@ export const Filtres = defineComponent(<FiltreId extends string, Validators exte
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filtres.props = ['filtres', 'params', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate', 'validators']
+Filtres.props = ['filtres', 'params', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate']
 
-// const toto = () => {
+const toto = () => {
+  const filtres = { noms: { id: 'noms', type: 'input', validator: z.string() }, typesIds: { id: 'typesIds', type: 'input', validator: z.array(administrationTypeIdValidator) } } as const
+  const filtresParam = {
+    noms: '',
+    typesIds: [],
+  }
 
-//   const filtres = [{id: 'noms', type: 'input'}, {id: 'typesIds', type: 'input'}] as const
-//   const filtresParam = {
-//     noms: '',
-//     typesIds: []
-//   }
-
-//   const validators = {noms: z.string(), typesIds: z.array(administrationTypeIdValidator)}
-
-//   return <Filtres
-//   filtres={filtres}
-//   subtitle={'zizi'}
-//   initialized={true}
-//   metas={{}}
-//   params={filtresParam}
-//   validators={validators}
-//   paramsUpdate={(pa) => {
-//     console.log(pa)
-//     console.log(pa.noms)
-
-//   }}
-
-//   />
-// }
+  return (
+    <Filtres
+      filtres={filtres}
+      subtitle={'zizi'}
+      initialized={true}
+      metas={{}}
+      params={filtresParam}
+      paramsUpdate={pa => {
+        console.log(pa)
+        console.log(pa.noms)
+      }}
+    />
+  )
+}

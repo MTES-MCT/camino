@@ -1,18 +1,11 @@
 import { defineComponent, computed, ref, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
-import {
-  ADMINISTRATION_TYPES,
-  Administrations as Adms,
-  AdministrationTypeId,
-  sortedAdministrationTypes,
-  isAdministrationTypeId,
-  administrationTypeIdValidator,
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
-import { z, ZodType } from 'zod'
+import { z } from 'zod'
 
 const colonnes = [
   {
@@ -28,25 +21,27 @@ const colonnes = [
     name: 'Type',
   },
 ] as const
-const filtres = [
-  {
+const filtres = {
+  noms: {
     id: 'noms',
     type: 'input',
     value: '',
     name: 'Nom',
     placeholder: `Nom de l'administration`,
+    validator: z.string().optional(),
   },
-  {
+  typesIds: {
     id: 'typesIds',
     name: 'Types',
     type: 'checkboxes',
     value: [],
     elements: [],
     elementsFormat,
+    validator: z.array(administrationTypeIdValidator),
   },
-] as const
+} as const
 type ColonneId = (typeof colonnes)[number]['id']
-type FiltreId = (typeof filtres)[number]['id']
+type FiltreId = keyof typeof filtres
 
 const metas = {
   types: sortedAdministrationTypes,
@@ -56,7 +51,7 @@ const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
   setup() {
-    const params = ref<Params<ColonneId, FiltreId, { noms: ZodType; typesIds: ZodType }>>({
+    const params = ref<Params<ColonneId, FiltreId, typeof filtres>>({
       colonne: 'abreviation',
       ordre: 'asc',
       page: 1,
@@ -131,7 +126,7 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres, validators: { noms: z.string().optional(), typesIds: z.array(administrationTypeIdValidator) } }}
+        listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres }}
         colonnes={colonnes}
         lignes={lignes.value}
         total={lignes.value.length}

@@ -6,34 +6,33 @@ import { PageContentHeader, type Props as PageContentHeaderProps } from './page-
 import { computed, defineComponent, ref, Ref } from 'vue'
 import { ZodType, z } from 'zod'
 
-export type Params<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
+export type Params<ColumnId extends string, FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }> = {
   colonne: ColumnId
   ordre: 'asc' | 'desc'
   page: number
-  filtres: { [key in FiltreId]: z.infer<Validators[key]> }
+  filtres: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }
 }
 
-type ListeFiltreProps<FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
-  filtres: readonly Filtre<FiltreId>[]
-  metas?: unknown
-  validators: Validators
-  filtresParam: { [key in FiltreId]: z.infer<Validators[key]> }
+type ListeFiltreProps<FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }> = {
+  filtres: FiltresProps<FiltreId, Filtres>['filtres']
+  metas?: FiltresProps<FiltreId, Filtres>['metas']
+  filtresParam: FiltresProps<FiltreId, Filtres>['params']
   initialized: boolean
 }
-type Props<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>> = {
-  listeFiltre: ListeFiltreProps<FiltreId, Validators> | null
+type Props<ColumnId extends string, FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }> = {
+  listeFiltre: ListeFiltreProps<FiltreId, Filtres> | null
   colonnes: readonly Column<ColumnId>[]
   lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  paramsUpdate: (params: Params<ColumnId, FiltreId, Validators>) => void
+  paramsUpdate: (params: Params<ColumnId, FiltreId, Filtres>) => void
 } & PageContentHeaderProps
 
-export const Liste = defineComponent(<ColumnId extends string, FiltreId extends string, Validators extends Record<FiltreId, ZodType>>(props: Props<ColumnId, FiltreId, Validators>) => {
+export const Liste = defineComponent(<ColumnId extends string, FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }>(props: Props<ColumnId, FiltreId, Filtres>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
 
   // FIXME getInitialFiltres qui va lire le routeur
-  const params = ref<Params<ColumnId, FiltreId, Validators>>({ ...initialParams, filtres: {} as Record<FiltreId, z.infer<Validators[FiltreId]>> }) as Ref<Params<ColumnId, FiltreId, Validators>>
+  const params = ref<Params<ColumnId, FiltreId, Filtres>>({ ...initialParams, filtres: {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> } }) as Ref<Params<ColumnId, FiltreId, Filtres>>
 
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
     params.value.page = newParams.page
@@ -42,7 +41,7 @@ export const Liste = defineComponent(<ColumnId extends string, FiltreId extends 
     props.paramsUpdate(params.value)
   }
 
-  const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId, Validators>['filtres']) => {
+  const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId, Filtres>['filtres']) => {
     params.value.filtres = filtres
     props.paramsUpdate(params.value)
   }
@@ -62,12 +61,11 @@ export const Liste = defineComponent(<ColumnId extends string, FiltreId extends 
 
       {props.listeFiltre ? (
         <Filtres
-          filtres={props.listeFiltre.filtres ?? []}
+          filtres={props.listeFiltre.filtres}
           subtitle={resultat}
           initialized={props.listeFiltre.initialized}
           metas={props.listeFiltre.metas}
           params={props.listeFiltre.filtresParam}
-          validators={props.listeFiltre.validators}
           paramsUpdate={paramsFiltresUpdate}
         />
       ) : null}
