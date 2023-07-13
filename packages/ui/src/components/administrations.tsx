@@ -6,6 +6,7 @@ import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { z } from 'zod'
+import { FiltersDeclaration } from './_ui/all-filters'
 
 const colonnes = [
   {
@@ -21,7 +22,11 @@ const colonnes = [
     name: 'Type',
   },
 ] as const
-const filtres = {
+
+const filtreIds = ['noms', 'typesIds'] as const
+type FiltreId = typeof filtreIds[number]
+
+const filtres: {[key in FiltreId]: FiltersDeclaration<key, never, never, never>} = {
   noms: {
     id: 'noms',
     type: 'input',
@@ -35,13 +40,12 @@ const filtres = {
     name: 'Types',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    elementsFormat,
+    elements: Object.values(ADMINISTRATION_TYPES),
+    component: 'FiltresLabel',
     validator: z.array(administrationTypeIdValidator),
   },
-} as const
+}
 type ColonneId = (typeof colonnes)[number]['id']
-type FiltreId = keyof typeof filtres
 
 const metas = {
   types: sortedAdministrationTypes,

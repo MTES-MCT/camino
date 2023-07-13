@@ -1,7 +1,6 @@
 import { markRaw } from 'vue'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
-import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -11,42 +10,7 @@ import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatut
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
-const etapesLabelFormat = f =>
-  f.value
-    .filter(value => value.typeId)
-    .map(value => ({
-      id: f.id,
-      name: f.name,
-      value,
-      valueName: Object.keys(value)
-        .map(k => {
-          let key
-          let val = value[k]
-          let order
 
-          if (k === 'typeId') {
-            const element = f.elements.find(e => e.id === value.typeId)
-            key = 'type'
-            val = element.nom
-            order = 1
-          } else if (k === 'statutId') {
-            key = 'statut'
-            val = EtapesStatuts[value.statutId].nom
-            order = 2
-          } else if (k === 'dateDebut') {
-            key = 'après le'
-            order = 3
-          } else if (k === 'dateFin') {
-            key = 'avant le'
-            order = 4
-          }
-
-          return { label: `${key} : ${val}`, order }
-        })
-        .sort((a, b) => a.order - b.order)
-        .map(value => value.label)
-        .join(', '),
-    }))
 
 const filtres = [
   {
@@ -133,7 +97,6 @@ const filtres = [
     elements: [],
     component: markRaw(FiltresEtapes),
     elementsFormat: etapesElementsFormat,
-    labelFormat: etapesLabelFormat,
   },
   {
     id: 'etapesExclues',
@@ -143,7 +106,6 @@ const filtres = [
     elements: [],
     component: markRaw(FiltresEtapes),
     elementsFormat: etapesElementsFormat,
-    labelFormat: etapesLabelFormat,
   },
 ]
 

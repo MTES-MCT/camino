@@ -34,3 +34,8 @@ export const isTrue = <T extends true>(_t: T) => {}
 export const isFalse = <T extends false>(_t: T) => {}
 
 export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
+
+// from https://stackoverflow.com/questions/72789915/typescript-omit-seems-to-transform-an-union-into-an-intersection/72790170#72790170
+export type OmitDistributive<T, K extends string> = T extends unknown
+  ? Omit<T, K>
+  : never;

@@ -218,7 +218,6 @@ const PermissionEdit = caminoDefineComponent<PermissionEditProps>(['user', 'util
                     <div class="mb tablet-blob-3-4">
                       <TypeAheadSmartMultiple
                         filter={{
-                          id: 'entreprises',
                           name: 'Entreprises',
                           value: updatingUtilisateur.value.entreprises,
                           elements: item,

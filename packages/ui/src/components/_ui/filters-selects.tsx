@@ -1,19 +1,14 @@
+import { HTMLAttributes } from 'vue'
+import { FilterComponentProp, FilterSelect } from './all-filters'
 import { Button } from './button'
 import { ButtonIcon } from './button-icon'
 import { Icon } from './icon'
 
-type Props = {
-  filter: {
-    name: string
-    placeholder: string
-    value: any[]
-    buttonAdd: boolean
-    elementName: string
-    elements: Record<string, any>[]
-  }
-}
+type Props<T extends {id: Id}, Id extends string> = {
+  filter: FilterComponentProp<FilterSelect<T, Id>, T, Id>
+}& Pick<HTMLAttributes, 'class'>
 
-export function FiltersSelects(props: Props) {
+export function FiltersSelects<Id extends string, T extends {id: Id}>(props: Props<T, Id>) {
   return (
     <div class="mb">
       <h5>{props.filter.name}</h5>

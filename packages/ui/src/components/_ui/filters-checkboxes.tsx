@@ -1,41 +1,41 @@
-import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { Props as FiltresStatutsProps, FiltresStatuts } from '../_common/filtres/statuts'
-import { Props as FiltresTypesProps, FiltresTypes } from '../_common/filtres/types'
+import { FiltresStatuts } from '../_common/filtres/statuts'
+import { FiltresTypes } from '../_common/filtres/types'
 import { TitreStatut as TitreStatutComp } from '../_common/titre-statut'
-import { Definition } from 'camino-common/src/definition'
 import { Domaine as DomaineComp } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
-import { Domaine } from 'camino-common/src/static/domaines'
+import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
+import { FilterCheckbox, FilterComponentProp } from './all-filters'
+import { HTMLAttributes } from 'vue'
+
 
 type Props = {
-  filter: {
-    name: string
-    component?: 'FiltreDomaine' | 'FiltresTypes' | 'FiltresStatuts' | 'FiltresTitresStatuts'
-    isNumber: boolean
-    value: any[]
-    elements: ({ id: string; nom: string } & (Domaine | FiltresStatutsProps['element'] | FiltresTypesProps['element']))[]
-  }
-}
+  filter: FilterComponentProp<FilterCheckbox>
+} & Pick<HTMLAttributes, 'class'>
 
-function DrawComponent(component: Props['filter']['component'], element: Domaine | FiltresStatutsProps['element'] | FiltresTypesProps['element'] | Definition<TitreStatutId> | Domaine): JSX.Element | null {
-  if (!component) return <span class="cap-first h6 bold">{element.nom}</span>
+function DrawComponent(filter: FilterComponentProp<FilterCheckbox>, index: number): JSX.Element | null {
+  const component = filter.component
   switch (component) {
     case 'FiltreDomaine':
       return <div class="dsfr" style={{display: 'flex', alignItems: 'baseline'}}>
-      <DomaineComp domaineId={(element as Domaine).id}/>
-      <div class="h6 bold fr-pl-1w">{capitalize(element.nom)}</div>
+      <DomaineComp domaineId={filter.elements[index].id}/>
+      <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
     </div>
     case 'FiltresTypes':
-      return FiltresTypes({ element: element as FiltresTypesProps['element'] }, { attrs: {}, emit: () => {}, slots: {} })
+      return FiltresTypes({ element: filter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
     case 'FiltresStatuts':
       return FiltresStatuts(
         {
-          element: element as FiltresStatutsProps['element'],
+          element: filter.elements[index],
         },
         { attrs: {}, emit: () => {}, slots: {} }
       )
     case 'FiltresTitresStatuts':
-      return <div class='dsfr'><TitreStatutComp titreStatutId={(element as Definition<TitreStatutId>).id} /></div>
+      return <div class='dsfr'><TitreStatutComp titreStatutId={filter.elements[index].id} /></div>
+    case 'FiltresLabel':
+      return <span class="cap-first h6 bold">{filter.elements[index].nom}</span>
+    default:
+      exhaustiveCheck(component)
+      return null
   }
 }
 
@@ -58,9 +58,7 @@ export function FiltersCheckboxes(props: Props) {
 
   const checkboxToggle = (e: Event) => {
     if (isEventWithTarget(e) && e.target.value !== null) {
-      const target = props.filter?.isNumber === true ? Number(e.target.value) : e.target.value
-
-      props.filter.value = idsSet(target, props.filter.value)
+      props.filter.value = idsSet(e.target.value, props.filter.value)
     }
   }
 
@@ -80,11 +78,11 @@ export function FiltersCheckboxes(props: Props) {
       <hr class="mb-s" />
 
       <ul class="list-sans">
-        {props.filter.elements.map(element => (
+        {props.filter.elements.map((element, index) => (
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
               <input value={element.id} checked={props.filter.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
-              {DrawComponent(props.filter.component, element)}
+              {(DrawComponent(props.filter, index))}
             </label>
           </li>
         ))}

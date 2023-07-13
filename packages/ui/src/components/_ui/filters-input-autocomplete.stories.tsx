@@ -1,9 +1,9 @@
 import { InputAutocomplete } from './filters-input-autocomplete'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Ui/InputAutocomplete',
+  // @ts-ignore
   component: InputAutocomplete,
   argTypes: {
     rows: { name: 'array', value: 'string', required: true },
@@ -13,11 +13,9 @@ const meta: Meta = {
 }
 export default meta
 
-const onSelectItems = action('onSelectItems')
 export const Default: StoryFn = () => (
   <InputAutocomplete
     filter={{
-      id: 'id',
       name: 'Items',
       value: [],
       elements: [
@@ -27,6 +25,5 @@ export const Default: StoryFn = () => (
       ],
       lazy: false,
     }}
-    onSelectItems={onSelectItems}
   />
 )

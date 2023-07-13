@@ -1,21 +1,9 @@
 import { defineComponent, ref, watch, Ref } from 'vue'
 import { z, ZodType } from 'zod'
-import Filters from '../_ui/filters.vue'
-import { administrationTypeIdValidator } from 'camino-common/src/static/administrations'
+import { Filters } from '../_ui/filters'
 import { getKeys } from 'camino-common/src/typescript-tools'
-type MultipleType = 'custom' | 'select' | 'checkboxes' | 'autocomplete'
-export type Filtre<FiltreId> = {
-  id: FiltreId
-  validator: ZodType
-  type: MultipleType | 'input'
-  elementsFormat?: (id: FiltreId, metas: unknown) => unknown
-}
-
-type FilterType<FiltreId> = Omit<Filtre<FiltreId>, 'type'> & {
-  elements?: unknown
-} & ({ type: MultipleType; value?: string[] } | { type: 'input'; value?: string })
-
-export interface Props<FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }> {
+import { FiltersDeclaration } from '../_ui/all-filters'
+export interface Props<FiltreId extends string, SelectElement extends {id: SelectElementId}, SelectElementId extends string, AutocompleteElementId extends string, Filtres extends { [key in FiltreId]: FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId> }> {
   filtres: Filtres
   params: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }
   metas: unknown
@@ -26,9 +14,9 @@ export interface Props<FiltreId extends string, Filtres extends { [key in Filtre
 }
 
 const isFiltreId = <FiltreId extends string>(id: string): id is FiltreId => true
-export const Filtres = defineComponent(<FiltreId extends string, Filtres extends { [key in FiltreId]: Filtre<key> }>(props: Props<FiltreId, Filtres>) => {
+export const Filtres = defineComponent(<FiltreId extends string, SelectElement extends {id: SelectElementId}, SelectElementId extends string, AutocompleteElementId extends string, Filtres extends { [key in FiltreId]: FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId> }>(props: Props<FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>) => {
   const opened = ref<boolean>(false)
-  const filters = ref<FilterType<FiltreId>[]>([]) as Ref<FilterType<FiltreId>[]>
+  const filters = ref<FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId>[]>([]) as Ref<FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId>[]>
 
   const toggle = () => {
     opened.value = !opened.value
@@ -54,7 +42,7 @@ export const Filtres = defineComponent(<FiltreId extends string, Filtres extends
     const params = filters.value.reduce<Record<FiltreId, z.infer<Filtres[FiltreId]['validator']>>>((acc, filtre) => {
       let value: string | string[] | undefined
 
-      if (filtre.type === 'custom' || filtre.type === 'select' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
+      if (filtre.type === 'etape' || filtre.type === 'select' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
         value = (filtre.value ?? []).filter(v => v !== '')
       } else {
         value = filtre.value
@@ -69,12 +57,12 @@ export const Filtres = defineComponent(<FiltreId extends string, Filtres extends
   }
 
   const init = () => {
-    // @ts-ignore on arrive pas à garder le lien avec FiltreId
     filters.value = getKeys(props.filtres, isFiltreId)
       .map(id => props.filtres[id])
       .map(filtre => {
-        const newFilter: FilterType<string> = { ...filtre }
-        if (filtre.elementsFormat) {
+        const newFilter: FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId> = { ...filtre }
+        if (filtre.type === 'autocomplete' && !filtre.lazy && filtre.elementsFormat) {
+          // @ts-ignore TODO 2023-07-13 supprimer elementsFormat et tout ce qui s'en suit
           newFilter.elements = filtre.elementsFormat(filtre.id, props.metas)
         }
 
@@ -115,7 +103,8 @@ export const Filtres = defineComponent(<FiltreId extends string, Filtres extends
   return () => (
     <>
       {props.initialized ? (
-        <Filters v-model:filters={filters.value} class="flex-grow" button="Valider" opened={opened.value} title="Filtres" subtitle={props.subtitle} onValidate={validate} onToggle={toggle} />
+        // @ts-ignore TODO 2023-07-13 il faut supprimer le v-model et passer par le validate/routeur
+        <Filters v-model:filters={filters.value} class="flex-grow" opened={opened.value} subtitle={props.subtitle} validate={validate} toggle={toggle} />
       ) : (
         <div v-else class="py-s px-m mb-s border rnd-s">
           …
@@ -127,25 +116,3 @@ export const Filtres = defineComponent(<FiltreId extends string, Filtres extends
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 Filtres.props = ['filtres', 'params', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate']
-
-const toto = () => {
-  const filtres = { noms: { id: 'noms', type: 'input', validator: z.string() }, typesIds: { id: 'typesIds', type: 'input', validator: z.array(administrationTypeIdValidator) } } as const
-  const filtresParam = {
-    noms: '',
-    typesIds: [],
-  }
-
-  return (
-    <Filtres
-      filtres={filtres}
-      subtitle={'zizi'}
-      initialized={true}
-      metas={{}}
-      params={filtresParam}
-      paramsUpdate={pa => {
-        console.log(pa)
-        console.log(pa.noms)
-      }}
-    />
-  )
-}

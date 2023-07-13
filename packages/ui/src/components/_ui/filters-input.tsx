@@ -1,9 +1,7 @@
+import { FilterComponentProp, FilterInput } from "./all-filters"
+
 type Props = {
-  filter: {
-    name: string
-    placeholder: string
-    value: string
-  }
+  filter: FilterComponentProp<FilterInput>
 }
 
 export function FiltersInput(props: Props) {

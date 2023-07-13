@@ -17,7 +17,6 @@ type LocalFilter = {
 }
 
 type Filter<T extends string> = {
-  id: string
   value: T[]
   elements: Element<T>[]
   name: string
