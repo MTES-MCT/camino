@@ -14,7 +14,7 @@ export default {
     params: { type: Object, required: true },
     metas: { type: Object, default: () => ({}) },
     initialized: { type: Boolean, required: true },
-    subtitle: { type: String, default: '' }
+    subtitle: { type: String, default: '' },
   },
 
   emits: ['toggle', 'params-update'],

@@ -1,12 +1,11 @@
-import { FiltresStatuts } from '../_common/filtres/statuts'
-import { FiltresTypes } from '../_common/filtres/types'
-import { TitreStatut as TitreStatutComp } from '../_common/titre-statut'
-import { Domaine as DomaineComp } from '../_common/domaine'
+import { FiltresStatuts } from '../../_common/filtres/statuts'
+import { FiltresTypes } from '../../_common/filtres/types'
+import { TitreStatut as TitreStatutComp } from '../../_common/titre-statut'
+import { Domaine as DomaineComp } from '../../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
 import { FilterCheckbox, FilterComponentProp } from './all-filters'
 import { HTMLAttributes } from 'vue'
-
 
 type Props = {
   filter: FilterComponentProp<FilterCheckbox>
@@ -16,10 +15,12 @@ function DrawComponent(filter: FilterComponentProp<FilterCheckbox>, index: numbe
   const component = filter.component
   switch (component) {
     case 'FiltreDomaine':
-      return <div class="dsfr" style={{display: 'flex', alignItems: 'baseline'}}>
-      <DomaineComp domaineId={filter.elements[index].id}/>
-      <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
-    </div>
+      return (
+        <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
+          <DomaineComp domaineId={filter.elements[index].id} />
+          <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
+        </div>
+      )
     case 'FiltresTypes':
       return FiltresTypes({ element: filter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
     case 'FiltresStatuts':
@@ -30,7 +31,11 @@ function DrawComponent(filter: FilterComponentProp<FilterCheckbox>, index: numbe
         { attrs: {}, emit: () => {}, slots: {} }
       )
     case 'FiltresTitresStatuts':
-      return <div class='dsfr'><TitreStatutComp titreStatutId={filter.elements[index].id} /></div>
+      return (
+        <div class="dsfr">
+          <TitreStatutComp titreStatutId={filter.elements[index].id} />
+        </div>
+      )
     case 'FiltresLabel':
       return <span class="cap-first h6 bold">{filter.elements[index].nom}</span>
     default:
@@ -82,7 +87,7 @@ export function FiltersCheckboxes(props: Props) {
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
               <input value={element.id} checked={props.filter.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
-              {(DrawComponent(props.filter, index))}
+              {DrawComponent(props.filter, index)}
             </label>
           </li>
         ))}

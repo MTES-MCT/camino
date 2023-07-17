@@ -9,11 +9,11 @@ const meta: Meta = {
 }
 export default meta
 
-
 const onSelectAction = action('selectItem')
-const items = [{id: 'id1', label: 'premier label'},
-{id: 'id2', label: 'second label'}] as const
+const items = [
+  { id: 'id1', label: 'premier label' },
+  { id: 'id2', label: 'second label' },
+] as const
 
-export const Default: StoryFn = () => <Dropdown id="select" label='label de cadix' items={items} selectedItemId={null} selectItem={onSelectAction} />
-export const AlreadySelectedItem: StoryFn = () => <Dropdown id="select" label='label de cadix' items={items} selectedItemId={'id1'} selectItem={onSelectAction} />
-
+export const Default: StoryFn = () => <Dropdown id="select" label="label de cadix" items={items} selectedItemId={null} selectItem={onSelectAction} />
+export const AlreadySelectedItem: StoryFn = () => <Dropdown id="select" label="label de cadix" items={items} selectedItemId={'id1'} selectItem={onSelectAction} />

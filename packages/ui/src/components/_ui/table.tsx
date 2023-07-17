@@ -61,12 +61,11 @@ interface Props<ColumnId> {
   updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
 
-
-export const isColumnId = <ColumnId extends string, >(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
-  return columns.some(({id}) => value === id)
+export const isColumnId = <ColumnId extends string>(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
+  return columns.some(({ id }) => value === id)
 }
 
-export const getSortColumnFromRoute = <ColumnId extends string, >(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]): ColumnId => {
+export const getSortColumnFromRoute = <ColumnId extends string>(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]): ColumnId => {
   const value = routerQueryToString(route.query.colonne, columns[0].id)
   if (isColumnId(columns, value)) {
     return value
@@ -81,77 +80,80 @@ export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded,
   }
   return value
 }
-export const Table = defineComponent(<ColumnId extends string, >(props: Props<ColumnId>) => {
-  const sortParams = computed<{ order: 'asc' | 'desc'; column: ColumnId }>(() => {
-    return { order: getSortOrderFromRoute(props.route), column: getSortColumnFromRoute(props.route, props.columns) }
-  })
+export const Table = defineComponent(
+  <ColumnId extends string>(props: Props<ColumnId>) => {
+    const sortParams = computed<{ order: 'asc' | 'desc'; column: ColumnId }>(() => {
+      return { order: getSortOrderFromRoute(props.route), column: getSortColumnFromRoute(props.route, props.columns) }
+    })
 
-  onBeforeRouteLeave(() => {
-    stop()
-  })
+    onBeforeRouteLeave(() => {
+      stop()
+    })
 
-  const stop = watch(sortParams, (newSortParams, old) => {
-    if (newSortParams.column !== old.column || newSortParams.order !== old.order) {
-      return props.updateParams(newSortParams.column, newSortParams.order)
-    }
-  })
+    const stop = watch(sortParams, (newSortParams, old) => {
+      if (newSortParams.column !== old.column || newSortParams.order !== old.order) {
+        return props.updateParams(newSortParams.column, newSortParams.order)
+      }
+    })
 
-  return () => (
-    <div class="dsfr">
-      <div class="fr-table fr-table--no-caption">
-        <table style={{ display: 'table' }}>
-          <caption>{props.caption}</caption>
-          <thead>
-            <tr>
-              {props.columns.map(col => (
-                <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
-                  {col.noSort ? (
-                    <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
-                      {col.name === '' ? '-' : col.name}
-                    </CaminoRouterLink>
-                  ) : sortParams.value.column === col.id ? (
-                    <CaminoRouterLink
-                      class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' } }}
-                      title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                    >
-                      {col.name}
-                    </CaminoRouterLink>
-                  ) : (
-                    <CaminoRouterLink
-                      class={['fr-link']}
-                      to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' } }}
-                      title={`Trier par la colonne ${col.name}`}
-                    >
-                      {col.name === '' ? '-' : col.name}
-                    </CaminoRouterLink>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {props.rows.map(row => (
-              <tr key={row.id}>
-                {props.columns.map((col, index) => (
-                  <td key={col.id} class={[...(col.class ?? [])]}>
-                    {index === 0 ? (
-                      <router-link class="fr-link" to={row.link}>
-                        <DisplayColumn data={row.columns[col.id]} />
-                      </router-link>
+    return () => (
+      <div class="dsfr">
+        <div class="fr-table fr-table--no-caption">
+          <table style={{ display: 'table' }}>
+            <caption>{props.caption}</caption>
+            <thead>
+              <tr>
+                {props.columns.map(col => (
+                  <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                    {col.noSort ? (
+                      <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
+                        {col.name === '' ? '-' : col.name}
+                      </CaminoRouterLink>
+                    ) : sortParams.value.column === col.id ? (
+                      <CaminoRouterLink
+                        class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ordre: sortParams.value.order === 'asc' ? 'desc' : 'asc' } }}
+                        title={sortParams.value.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      >
+                        {col.name}
+                      </CaminoRouterLink>
                     ) : (
-                      <DisplayColumn data={row.columns[col.id]} />
+                      <CaminoRouterLink
+                        class={['fr-link']}
+                        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, colonne: col.id, ordre: 'asc' } }}
+                        title={`Trier par la colonne ${col.name}`}
+                      >
+                        {col.name === '' ? '-' : col.name}
+                      </CaminoRouterLink>
                     )}
-                  </td>
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {props.rows.map(row => (
+                <tr key={row.id}>
+                  {props.columns.map((col, index) => (
+                    <td key={col.id} class={[...(col.class ?? [])]}>
+                      {index === 0 ? (
+                        <router-link class="fr-link" to={row.link}>
+                          <DisplayColumn data={row.columns[col.id]} />
+                        </router-link>
+                      ) : (
+                        <DisplayColumn data={row.columns[col.id]} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  )
-}, {props: ['columns', 'rows', 'route', 'caption', 'updateParams'] })
+    )
+  },
+  { props: ['columns', 'rows', 'route', 'caption', 'updateParams'] }
+)
 
 interface OldProps {
   update: (event: TableSortEvent) => void

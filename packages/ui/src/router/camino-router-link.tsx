@@ -10,6 +10,14 @@ export const routerQueryToString = (value: LocationQueryValue | LocationQueryVal
   return value !== undefined ? String(value) : defaultValue
 }
 
+
+export const routerQueryToStringArray = (value: LocationQueryValue | LocationQueryValue[]): string[] => {
+  if (value === undefined) {
+    return []
+  }
+  return Array.isArray(value) ? value.map(value => String(value)) : [String(value)]
+}
+
 export type Props = {
   title: string
   class?: LinkHTMLAttributes['class']

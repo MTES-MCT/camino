@@ -12,7 +12,7 @@ export default {
 
   props: {
     initialized: { type: Boolean, required: true },
-    subtitle: { type: String, required: true }
+    subtitle: { type: String, required: true },
   },
 
   data() {

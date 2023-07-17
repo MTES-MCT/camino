@@ -11,7 +11,6 @@ import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 
-
 const filtres = [
   {
     id: 'titresIds',

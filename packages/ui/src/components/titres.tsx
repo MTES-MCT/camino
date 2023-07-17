@@ -11,7 +11,7 @@ import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
 
-const DemandeTitreButton: FunctionalComponent<{user: User}> = ({user}) => {
+const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
       <Navigation
@@ -74,16 +74,15 @@ export const Titres = defineComponent({
 
     return () => (
       <div>
-        <div class='dsfr'>
-        <PageContentHeader
-        nom='Titres miniers et autorisations'
-        download={ titres.value.length > 0 ? {formats:['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: "/titres", params: {}} : null}
-        renderButton={() => <DemandeTitreButton user={user.value} />}
-        />
+        <div class="dsfr">
+          <PageContentHeader
+            nom="Titres miniers et autorisations"
+            download={titres.value.length > 0 ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} } : null}
+            renderButton={() => <DemandeTitreButton user={user.value} />}
+          />
         </div>
 
-
-          <Filtres initialized={initialized.value} subtitle={resultat.value} />
+        <Filtres initialized={initialized.value} subtitle={resultat.value} />
 
         <div class="dsfr dsfr-container">
           {initialized.value && vueId.value ? (

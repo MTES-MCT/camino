@@ -5,68 +5,45 @@ import { Column, TableRow } from '../_ui/table'
 import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
 import { computed, defineComponent, ref, Ref } from 'vue'
 import { z } from 'zod'
-import { FiltersDeclaration } from '../_ui/all-filters'
+import { FiltersDeclaration } from '../_ui/filters/all-filters'
+import { getInitialFiltres } from '../_ui/filters/filters'
+import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
 
-export type Params<
-  ColumnId extends string,
-  FiltreId extends string,
-  SelectElement extends { id: SelectElementId },
-  SelectElementId extends string,
-  AutocompleteElementId extends string,
-  Filtres extends { [key in FiltreId]: FiltersDeclaration<FiltreId, SelectElement, SelectElementId, AutocompleteElementId> }
-> = {
+export type Params<ColumnId extends string,> = {
   colonne: ColumnId
   ordre: 'asc' | 'desc'
   page: number
-  filtres: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }
+  filtres?: { [key in CaminoFiltres]: z.infer<typeof caminoFiltres[key]['validator']> }
 }
 
-type ListeFiltreProps<
-  FiltreId extends string,
-  SelectElement extends { id: SelectElementId },
-  SelectElementId extends string,
-  AutocompleteElementId extends string,
-  Filtres extends { [key in FiltreId]: FiltersDeclaration<key, SelectElement, SelectElementId, AutocompleteElementId> }
-> = {
-  filtres: Filtres
-  metas?: FiltresProps<FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>['metas']
-  filtresParam: FiltresProps<FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>['params']
+type ListeFiltreProps = {
+  filtres: readonly CaminoFiltres[]
+  metas?: unknown
   initialized: boolean
 }
-type Props<
-  ColumnId extends string,
-  FiltreId extends string,
-  SelectElement extends { id: SelectElementId },
-  SelectElementId extends string,
-  AutocompleteElementId extends string,
-  Filtres extends { [key in FiltreId]: FiltersDeclaration<key, SelectElement, SelectElementId, AutocompleteElementId> }
-> = {
-  listeFiltre: ListeFiltreProps<FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres> | null
+type Props<ColumnId extends string> = {
+  listeFiltre: ListeFiltreProps | null
   colonnes: readonly Column<ColumnId>[]
   lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  paramsUpdate: (params: Params<ColumnId, FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>) => void
+  paramsUpdate: (params: Params<ColumnId>) => void
 } & PageContentHeaderProps
 
 export const Liste = defineComponent(
-  <
-    ColumnId extends string,
-    FiltreId extends string,
-    SelectElement extends { id: SelectElementId },
-    SelectElementId extends string,
-    AutocompleteElementId extends string,
-    Filtres extends { [key in FiltreId]: FiltersDeclaration<key, SelectElement, SelectElementId, AutocompleteElementId> }
-  >(
-    props: Props<ColumnId, FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>
+  <ColumnId extends string>(
+    props: Props<ColumnId>
   ) => {
     const initialParams = getInitialParams(props.route, props.colonnes)
+    let initialFiltres = null
+    if (props.listeFiltre) {
+      initialFiltres = getInitialFiltres(props.route, props.listeFiltre?.filtres)
+    }
 
-    // FIXME getInitialFiltres qui va lire le routeur
-    const params = ref<Params<ColumnId, FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>>({
+    const params = ref<Params<ColumnId>>({
       ...initialParams,
-      filtres: {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> },
-    }) as Ref<Params<ColumnId, FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>>
+      ...initialFiltres,
+    }) as Ref<Params<ColumnId>>
 
     const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
       params.value.page = newParams.page
@@ -75,7 +52,7 @@ export const Liste = defineComponent(
       props.paramsUpdate(params.value)
     }
 
-    const paramsFiltresUpdate = (filtres: Params<ColumnId, FiltreId, SelectElement, SelectElementId, AutocompleteElementId, Filtres>['filtres']) => {
+    const paramsFiltresUpdate = (filtres: Params<ColumnId>['filtres']) => {
       params.value.filtres = filtres
       props.paramsUpdate(params.value)
     }
@@ -95,12 +72,11 @@ export const Liste = defineComponent(
 
         {props.listeFiltre ? (
           <Filtres
-            // @ts-ignore TODO 2023-07-13 pourquoi ?
-            filtres={props.listeFiltre.filtres}
+            route={props.route}
+            filters={props.listeFiltre.filtres}
             subtitle={resultat}
             initialized={props.listeFiltre.initialized}
             metas={props.listeFiltre.metas}
-            params={props.listeFiltre.filtresParam}
             paramsUpdate={paramsFiltresUpdate}
           />
         ) : null}

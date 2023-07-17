@@ -24,36 +24,44 @@ export const MapPattern: FunctionalComponent = () => {
   // leaflet/mapUtil uses this
   return (
     <>
-    <div style={{display: 'none'}} aria-hidden={true}>
-      {domainesIds.map((id) => <div key={id} id={`domaine_${id}`}><Domaine domaineId={id} /></div>)}
-      {sortedTitresStatuts.map(({id}) => <div key={id} id={`titre_statut_${id}`}><TitreStatut titreStatutId={id} /></div>)}
-    </div>
-    <svg class="absolute z--100">
-      <defs>
-        {Object.values(TitresTypesTypes).map(ttt => {
-          return (
-            <g key={ttt.id}>
-              <g>
-                {domainesIdsDefault.map(domaineId => {
-                  return (
-                    <pattern
-                      id={domaineId ? `pattern-${ttt.id}-${domaineId}` : `pattern-${ttt.id}`}
-                      key={domaineId}
-                      patternUnits="userSpaceOnUse"
-                      width="8"
-                      height="8"
-                      patternTransform={`rotate(${defs[ttt.id].rotation})`}
-                    >
-                      <path d={defs[ttt.id].d} class={domaineId ? `svg-stroke-domaine-${domaineId}` : `svg-stroke`} stroke-width={defs[ttt.id].width} stroke-linecap="round" fill="none" />
-                    </pattern>
-                  )
-                })}
+      <div style={{ display: 'none' }} aria-hidden={true}>
+        {domainesIds.map(id => (
+          <div key={id} id={`domaine_${id}`}>
+            <Domaine domaineId={id} />
+          </div>
+        ))}
+        {sortedTitresStatuts.map(({ id }) => (
+          <div key={id} id={`titre_statut_${id}`}>
+            <TitreStatut titreStatutId={id} />
+          </div>
+        ))}
+      </div>
+      <svg class="absolute z--100">
+        <defs>
+          {Object.values(TitresTypesTypes).map(ttt => {
+            return (
+              <g key={ttt.id}>
+                <g>
+                  {domainesIdsDefault.map(domaineId => {
+                    return (
+                      <pattern
+                        id={domaineId ? `pattern-${ttt.id}-${domaineId}` : `pattern-${ttt.id}`}
+                        key={domaineId}
+                        patternUnits="userSpaceOnUse"
+                        width="8"
+                        height="8"
+                        patternTransform={`rotate(${defs[ttt.id].rotation})`}
+                      >
+                        <path d={defs[ttt.id].d} class={domaineId ? `svg-stroke-domaine-${domaineId}` : `svg-stroke`} stroke-width={defs[ttt.id].width} stroke-linecap="round" fill="none" />
+                      </pattern>
+                    )
+                  })}
+                </g>
               </g>
-            </g>
-          )
-        })}
-      </defs>
-    </svg>
+            )
+          })}
+        </defs>
+      </svg>
     </>
   )
 }

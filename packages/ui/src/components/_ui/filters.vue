@@ -2,8 +2,8 @@
   <Accordion ref="accordion" :opened="opened" :slotSub="!!labels.length" :slotDefault="true" class="mb-s" @toggle="toggle">
     <template #title>
       <div style="display: flex; align-items: center">
-        <div>{{title}}</div>
-        <div v-if="subtitle" class="pl-s small">{{subtitle}}</div>
+        <div>{{ title }}</div>
+        <div v-if="subtitle" class="pl-s small">{{ subtitle }}</div>
       </div>
     </template>
 
@@ -50,10 +50,10 @@
 
 <script>
 import Accordion from './accordion.vue'
-import { FiltersInput } from './filters-input'
-import { FiltersCheckboxes } from './filters-checkboxes'
-import { FiltersSelects } from './filters-selects'
-import { InputAutocomplete } from './filters-input-autocomplete'
+import { FiltersInput } from './filters/filters-input'
+import { FiltersCheckboxes } from './filters/filters-checkboxes'
+import { FiltersSelects } from './filters/filters-selects'
+import { InputAutocomplete } from './filters/filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 

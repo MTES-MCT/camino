@@ -10,7 +10,7 @@ export type Props = {
 /**
  * @deprecated use DsfrTag
  */
-export const Tag: FunctionalComponent<Props> = (props) => {
+export const Tag: FunctionalComponent<Props> = props => {
   let css: string = props.color ?? 'bg-neutral'
 
   if (props.mini ?? false) {
@@ -32,9 +32,10 @@ type DsfrTagProps = {
   tagSize?: 'sm' | 'md'
 } & HTMLAttributes
 // TODO 2023-07-10 Faire un DsfrClickableTag ou faire évoluer ce composant ?
-export const DsfrTag: FunctionalComponent<DsfrTagProps> = (props) => {
-
-  return <p class={['fr-tag', `fr-tag--${props.tagSize ?? 'md'}` ]} title={props.ariaLabel} aria-label={props.ariaLabel} >
-  {props.label ?? props.ariaLabel }
-</p>
+export const DsfrTag: FunctionalComponent<DsfrTagProps> = props => {
+  return (
+    <p class={['fr-tag', `fr-tag--${props.tagSize ?? 'md'}`]} title={props.ariaLabel} aria-label={props.ariaLabel}>
+      {props.label ?? props.ariaLabel}
+    </p>
+  )
 }

@@ -17,7 +17,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
   const display = (item: LinkableTitre) => {
     return (
       <div class="flex flex-center dsfr">
-        <TitreStatut titreStatutId={item.titreStatutId}/>
+        <TitreStatut titreStatutId={item.titreStatutId} />
         <span class="cap-first bold ml-m">{item.nom}</span>
         <span class="ml-m" style="margin-left: auto">
           {getDateDebutEtDateFin(item)}

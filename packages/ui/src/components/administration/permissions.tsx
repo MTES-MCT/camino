@@ -78,8 +78,8 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                   <td>
                     <span class="small bold cap-first">{TitresTypesTypes[TT[ttts.titreTypeId].typeId].nom}</span>
                   </td>
-                  <td class='dsfr'>
-                    <TitreStatut titreStatutId={ttts.titreStatutId}/>
+                  <td class="dsfr">
+                    <TitreStatut titreStatutId={ttts.titreStatutId} />
                   </td>
                   <td>
                     <Icon

@@ -23,6 +23,11 @@ export const Domaine: FunctionalComponent<Props> = props => {
     domaine = DOMAINES_IDS.METAUX
   }
   return (
-    <DsfrTag class="mono" ariaLabel={`Domaine ${Domaines[domaine].nom}`}  style={{minWidth: '2rem', backgroundColor: `var(--${couleurParDomaine[domaine]})`, color: 'black' }} label={domaine.toUpperCase()} />
+    <DsfrTag
+      class="mono"
+      ariaLabel={`Domaine ${Domaines[domaine].nom}`}
+      style={{ minWidth: '2rem', backgroundColor: `var(--${couleurParDomaine[domaine]})`, color: 'black' }}
+      label={domaine.toUpperCase()}
+    />
   )
 }
