@@ -1,8 +1,9 @@
 import { defineComponent, ref, watch, Ref } from 'vue'
-import { z, ZodType } from 'zod'
+import { z } from 'zod'
 import { Filters } from '../_ui/filters'
 import { getKeys } from 'camino-common/src/typescript-tools'
 import { FiltersDeclaration } from '../_ui/all-filters'
+import { RouteLocationNormalizedLoaded } from 'vue-router'
 export interface Props<
   FiltreId extends string,
   SelectElement extends { id: SelectElementId },
@@ -11,6 +12,7 @@ export interface Props<
   Filtres extends { [key in FiltreId]: FiltersDeclaration<key, SelectElement, SelectElementId, AutocompleteElementId> }
 > {
   filtres: Filtres
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   params: { [key in FiltreId]: z.infer<Filtres[key]['validator']> }
   metas: unknown
   initialized: boolean
@@ -64,7 +66,7 @@ export const Filtres = defineComponent(
         }
 
         // TODO 2023-07-17 pourquoi ce as est nécessaire ?
-        acc[filtre.id as FiltreId] = filtre.validator.parse(filtre.value)
+        acc[filtre.id as FiltreId] = filtre.validator.parse(value)
 
         return acc
       }, {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> })
@@ -132,4 +134,4 @@ export const Filtres = defineComponent(
 )
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filtres.props = ['filtres', 'params', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate']
+Filtres.props = ['filtres', 'params', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate', 'route']
