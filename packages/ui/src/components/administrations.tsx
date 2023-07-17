@@ -24,9 +24,9 @@ const colonnes = [
 ] as const
 
 const filtreIds = ['noms', 'typesIds'] as const
-type FiltreId = typeof filtreIds[number]
+type FiltreId = (typeof filtreIds)[number]
 
-const filtres: {[key in FiltreId]: FiltersDeclaration<key, never, never, never>} = {
+const filtres: { [key in FiltreId]: FiltersDeclaration<key, never, never, never> } = {
   noms: {
     id: 'noms',
     type: 'input',
@@ -55,7 +55,7 @@ const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
   setup() {
-    const params = ref<Params<ColonneId, FiltreId, typeof filtres>>({
+    const params = ref<Params<ColonneId, FiltreId, never, never, never, typeof filtres>>({
       colonne: 'abreviation',
       ordre: 'asc',
       page: 1,
@@ -129,6 +129,7 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
+        // @ts-ignore pourquoi filtres ne match pas ici ?
         listeFiltre={{ filtres, metas, initialized: true, filtresParam: params.value.filtres }}
         colonnes={colonnes}
         lignes={lignes.value}
