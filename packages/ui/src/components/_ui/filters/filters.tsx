@@ -1,4 +1,4 @@
-import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Accordion from '../accordion.vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
@@ -6,21 +6,34 @@ import { InputAutocomplete } from './filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 import { FiltresEtapes } from '../../demarches/filtres-etapes'
-import {  FilterEtapeValue } from './all-filters'
+import { FilterEtapeValue } from './all-filters'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { RouteLocationNormalizedLoaded } from 'vue-router'
-import { AutocompleteCaminoFiltres, CaminoFiltres, InputCaminoFiltres, allCaminoFiltres, caminoAutocompleteFiltres, caminoFiltres, caminoInputFiltres, isAutocompleteCaminoFiltre, isInputCaminoFiltre } from './camino-filtres'
-import { routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
+import { RouteLocationNormalizedLoaded, Router, onBeforeRouteLeave } from 'vue-router'
+import {
+  AutocompleteCaminoFiltres,
+  CaminoFiltres,
+  CheckboxesCaminoFiltres,
+  InputCaminoFiltres,
+  allCaminoFiltres,
+  caminoAutocompleteFiltres,
+  caminoFiltres,
+  caminoInputFiltres,
+  isAutocompleteCaminoFiltre,
+  isCheckboxeCaminoFiltre,
+  isInputCaminoFiltre,
+} from './camino-filtres'
+import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
 
 type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[]; valueName?: string | string[] }
 
 type Props = {
   filters: readonly CaminoFiltres[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string
   opened?: boolean
-  validate: (param: {[key in Props['filters'][number]]: typeof caminoFiltres[key]['validator']['_output']}) => void
+  validate: (param: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
   toggle: () => void
 } & Pick<HTMLAttributes, 'class'>
 
@@ -46,32 +59,47 @@ const etapesLabelFormat = <FiltreId extends string>(f: { id: FiltreId; name: str
       }
     })
 
-    export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltres[]) => {
-      const allValues = {
-        administrationTypesIds: caminoFiltres['administrationTypesIds'].validator.parse(routerQueryToStringArray(route.query.administrationTypesIds)),
-        nomsAdministration: routerQueryToString(route.query.nomsAdministration, ''),
-        nomsUtilisateurs: routerQueryToString(route.query.nomsUtilisateurs, ''),
-        substancesIds: caminoFiltres['substancesIds'].validator.parse(routerQueryToStringArray(route.query.substancesIds)),
-      }
-      allCaminoFiltres.filter(filter => !filters.includes(filter)).forEach(filter => Reflect.deleteProperty(allValues, filter))
-      return allValues
-    }
+export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltres[]) => {
+  const allValues = {
+    administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(route.query.administrationTypesIds)),
+    nomsAdministration: routerQueryToString(route.query.nomsAdministration, ''),
+    nomsUtilisateurs: routerQueryToString(route.query.nomsUtilisateurs, ''),
+    substancesIds: caminoFiltres.substancesIds.validator.parse(routerQueryToStringArray(route.query.substancesIds)),
+  }
+  allCaminoFiltres.filter(filter => !filters.includes(filter)).forEach(filter => Reflect.deleteProperty(allValues, filter))
+  return allValues
+}
 
 export const Filters = defineComponent((props: Props) => {
-
   const opened = computed<boolean>(() => {
     return props.opened ?? false
   })
-  const values = ref<{[key in CaminoFiltres]: typeof caminoFiltres[key]['validator']['_output']}>({
-      administrationTypesIds: caminoFiltres['administrationTypesIds'].validator.parse(routerQueryToStringArray(props.route.query.administrationTypesIds)),
-      nomsAdministration: routerQueryToString(props.route.query.nomsAdministration, ''),
-      nomsUtilisateurs: routerQueryToString(props.route.query.nomsUtilisateurs, ''),
-      substancesIds: caminoFiltres['substancesIds'].validator.parse(routerQueryToStringArray(props.route.query.substancesIds)),
-    }
-  )
+
+  const urlQuery = computed(() => {
+    return { name: props.route.name ?? undefined, query: { ...props.route.query, ...nonValidatedValues.value } }
+  })
+
+  onBeforeRouteLeave(() => {
+    stop()
+  })
+
+  const validatedValues = computed(() => {
+    return getInitialFiltres(props.route, props.filters)
+  })
+
+  const stop = watch(validatedValues, _ => {
+    props.validate(validatedValues.value)
+  })
+
+  const nonValidatedValues = ref<{ [key in CaminoFiltres]: (typeof caminoFiltres)[key]['validator']['_output'] }>({
+    administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(props.route.query.administrationTypesIds)),
+    nomsAdministration: routerQueryToString(props.route.query.nomsAdministration, ''),
+    nomsUtilisateurs: routerQueryToString(props.route.query.nomsUtilisateurs, ''),
+    substancesIds: caminoFiltres.substancesIds.validator.parse(routerQueryToStringArray(props.route.query.substancesIds)),
+  })
   const keyup = (e: KeyboardEvent) => {
-    if ((e.which || e.keyCode) === 13 && (props.opened ?? false)) {
-      props.validate(values.value)
+    if ((e.which || e.keyCode) === 13 && opened.value) {
+      props.updateUrlQuery.push(urlQuery.value)
     }
   }
   onMounted(() => {
@@ -82,23 +110,25 @@ export const Filters = defineComponent((props: Props) => {
   })
 
   const inputsErase = () => {
-    caminoInputFiltres.map(filtre => {
-      values.value[filtre.id] = ''
+    caminoInputFiltres.forEach(filtre => {
+      nonValidatedValues.value[filtre.id] = ''
     })
-    caminoAutocompleteFiltres.map(filtre => {
-      values.value[filtre.id] = []
+    caminoAutocompleteFiltres.forEach(filtre => {
+      nonValidatedValues.value[filtre.id] = []
     })
   }
 
   const labelRemove = (label: FormatedLabel) => {
     if (!opened.value) {
-      if (isInputCaminoFiltre(label.id)) {
-        values.value[label.id] = ''
-      } else if (isAutocompleteCaminoFiltre(label.id)) {
-        const data = caminoFiltres[label.id].validator.parse([label.value])
-        const index = values.value[label.id].indexOf(data[0])
+      const labelId = label.id
+      if (isInputCaminoFiltre(labelId)) {
+        nonValidatedValues.value[labelId] = ''
+      } else if (isAutocompleteCaminoFiltre(labelId) || isCheckboxeCaminoFiltre(labelId)) {
+        const data = caminoFiltres[labelId].validator.parse([label.value])
+        // @ts-ignore ici typescript est perdu
+        const index = nonValidatedValues.value[labelId].indexOf(data[0])
         if (index !== -1) {
-          values.value[label.id].splice(index, 1)
+          nonValidatedValues.value[labelId].splice(index, 1)
         }
       }
       // if (Array.isArray(filter.value)) {
@@ -108,24 +138,23 @@ export const Filters = defineComponent((props: Props) => {
       //       filter.value.splice(index, 1)
       //     }
       //   }
-      // } 
-      
+      // }
 
-      props.validate(values.value)
+      props.updateUrlQuery.push(urlQuery.value)
     }
   }
 
   const labelsReset = () => {
     props.filters.forEach(filter => {
       if (isInputCaminoFiltre(filter)) {
-        values.value[filter] = ''
-      } else if (Array.isArray(values.value[filter])) {
-        values.value[filter] = []
-       } 
+        nonValidatedValues.value[filter] = ''
+      } else if (Array.isArray(nonValidatedValues.value[filter])) {
+        nonValidatedValues.value[filter] = []
+      }
     })
 
-    if (!(props.opened ?? false)) {
-      props.validate(values.value)
+    if (!opened.value) {
+      props.updateUrlQuery.push(urlQuery.value)
     }
   }
 
@@ -136,9 +165,9 @@ export const Filters = defineComponent((props: Props) => {
     return props.filters.filter(isAutocompleteCaminoFiltre)
   })
 
-  // const checkboxes = computed<(CommonFilter<FiltreId, ElementType> & FilterCheckbox)[]>(() => {
-  //   return props.filters.filter((filter): filter is CommonFilter<FiltreId, ElementType> & FilterCheckbox => filter.type === 'checkboxes')
-  // })
+  const checkboxes = computed<CheckboxesCaminoFiltres[]>(() => {
+    return props.filters.filter(isCheckboxeCaminoFiltre)
+  })
 
   // const etapes = computed<(CommonFilter<FiltreId, ElementType> & FilterEtape)[]>(() => {
   //   return props.filters.filter((filter): filter is CommonFilter<FiltreId, ElementType> & FilterEtape => filter.type === 'etape')
@@ -147,37 +176,23 @@ export const Filters = defineComponent((props: Props) => {
   const labels = computed<FormatedLabel[]>(() => {
     return props.filters.flatMap(filter => {
       const filterType = caminoFiltres[filter]
-      if (filterType.type === 'input' && values.value[filter]) {
-        return [{ id: filterType.id, name: filterType.name, value: values.value[filter] }]
+      if (filterType.type === 'input' && nonValidatedValues.value[filter]) {
+        return [{ id: filterType.id, name: filterType.name, value: nonValidatedValues.value[filter] }]
       }
-      if (filterType.type === 'autocomplete' && values.value[filter]) {
-        return values.value[filterType.id].map<FormatedLabel>(v => {
-              // TODO 2023-07-13 trouver comment mieux typer ça sans le 'as'
-              const elements = filterType.elements
-              const element = elements?.find(e => e.id === v)
-    
-              return {
-                id: filterType.id,
-                name: filterType.name,
-                value: v,
-                valueName: element && element.nom,
-              }
-            })
-      }
-      // } else if ((filter.type === 'checkboxes' || filter.type === 'autocomplete') && filter.value?.length) {
-      //   return filter.value.map(v => {
-      //     // TODO 2023-07-13 trouver comment mieux typer ça sans le 'as'
-      //     const elements = filter.elements as { id: string; nom: string }[]
-      //     const element = elements?.find(e => e.id === v)
+      if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && nonValidatedValues.value[filter]) {
+        return nonValidatedValues.value[filterType.id].map<FormatedLabel>(v => {
+          // TODO 2023-07-13 trouver comment mieux typer ça sans le 'as'
+          const elements = filterType.elements as { id: string; nom: string }[]
+          const element = elements?.find(e => e.id === v)
 
-      //     return {
-      //       id: filter.id,
-      //       name: filter.name,
-      //       value: v,
-      //       valueName: element && element.nom,
-      //     }
-      //   })
-      // } 
+          return {
+            id: filterType.id,
+            name: filterType.name,
+            value: v,
+            valueName: element && element.nom,
+          }
+        })
+      }
       // else if (filter.type === 'etape' && filter.value && filter.value.length) {
       //   return etapesLabelFormat(filter)
       // }
@@ -186,7 +201,7 @@ export const Filters = defineComponent((props: Props) => {
   })
 
   return () => (
-    <Accordion ref="accordion" opened={props.opened ?? false} slotSub={!!labels.value.length} slotDefault={true} class="mb-s" onToggle={props.toggle}>
+    <Accordion ref="accordion" opened={opened.value} slotSub={!!labels.value.length} slotDefault={true} class="mb-s" onToggle={props.toggle}>
       {{
         title: () => (
           <div style="display: flex; align-items: center">
@@ -197,16 +212,16 @@ export const Filters = defineComponent((props: Props) => {
         sub: () => (
           <>
             {labels.value.length ? (
-              <div class={['flex', props.opened ?? false ? 'border-b-s' : null]}>
+              <div class={['flex', opened.value ? 'border-b-s' : null]}>
                 <div class="px-m pt-m pb-s">
                   {labels.value.map(label => (
                     <span
                       key={`${label.id}-${label.valueName}`}
-                      class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', props.opened ?? false ? 'pr-s' : 'pr-xs']}
+                      class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
                       onClick={() => labelRemove(label)}
                     >
                       {label.name} : {label.valueName || label.value}{' '}
-                      {!(props.opened ?? false) ? (
+                      {!opened.value ? (
                         <span class="inline-block align-y-top ml-xs">
                           {' '}
                           <Icon size="S" name="x" color="white" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
@@ -227,12 +242,24 @@ export const Filters = defineComponent((props: Props) => {
                 <div class="tablet-blob-1-2 large-blob-1-3">
                   {inputs.value.map(input => (
                     <div key={input}>
-                      <FiltersInput filter={input} initialValue={values.value[input]} onFilterInput={(value) => values.value[input] = value} />
+                      <FiltersInput
+                        filter={input}
+                        initialValue={nonValidatedValues.value[input]}
+                        onFilterInput={value => {
+                          nonValidatedValues.value[input] = value
+                        }}
+                      />
                     </div>
                   ))}
                   {autocompletes.value.map(input => (
                     <div key={input}>
-                      <InputAutocomplete filter={input} initialValue={values.value[input]} onFilterAutocomplete={(items) => values.value[input] = items}/>
+                      <InputAutocomplete
+                        filter={input}
+                        initialValue={nonValidatedValues.value[input]}
+                        onFilterAutocomplete={items => {
+                          nonValidatedValues.value[input] = items
+                        }}
+                      />
                     </div>
                   ))}
                   <button class="btn-border small px-s p-xs rnd-xs mb" onClick={inputsErase}>
@@ -241,17 +268,28 @@ export const Filters = defineComponent((props: Props) => {
                 </div>
               ) : null}
 
-              {/* {checkboxes.value.map(filter => (
-                <FiltersCheckboxes key={filter.id} filter={filter} class="tablet-blob-1-2 large-blob-1-3" />
+              {checkboxes.value.map(filter => (
+                <FiltersCheckboxes
+                  key={filter}
+                  filter={filter}
+                  initialValues={nonValidatedValues.value[filter]}
+                  valuesSelected={values => {
+                    nonValidatedValues.value[filter] = values
+                  }}
+                  class="tablet-blob-1-2 large-blob-1-3"
+                />
               ))}
+              {/* 
               {etapes.value.map(filter => (
                 <FiltresEtapes key={filter.id} filter={filter} class="tablet-blob-1-2 large-blob-1-3" />
               ))} */}
             </div>
 
-            <button ref="button" class="btn-flash p-s rnd-xs full-x mb" onClick={() => props.validate(values.value)}>
-              Valider
-            </button>
+            <div class="dsfr">
+              <CaminoRouterLink class="fr-link" to={urlQuery.value} title="Valider les filtres">
+                Valider
+              </CaminoRouterLink>
+            </div>
           </div>
         ),
       }}
@@ -260,4 +298,4 @@ export const Filters = defineComponent((props: Props) => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route']
+Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery']

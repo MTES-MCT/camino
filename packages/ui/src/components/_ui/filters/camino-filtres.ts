@@ -12,8 +12,6 @@ import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes
 import { TitreId } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
 
-
-
 export const caminoFiltres = {
   nomsAdministration: {
     id: 'nomsAdministration',
@@ -91,7 +89,7 @@ export const caminoFiltres = {
     elements: SubstancesLegales.sort((a, b) => a.nom.localeCompare(b.nom)),
     name: 'Substances',
     lazy: false,
-    validator: z.array(substanceLegaleIdValidator)
+    validator: z.array(substanceLegaleIdValidator),
   },
   // references: {
   //   id: 'references',
@@ -235,24 +233,33 @@ export const caminoFiltres = {
   //   value: [],
   // },
   // FIXME add correct satisfies
-} as const satisfies {[key in string]: {id: key, type: 'etape' | 'select' | 'checkboxes' | 'input' | 'autocomplete', name: string, placeholder?: string, validator: ZodType, elements ?: unknown[], component?: 'FiltresLabel', lazy?:boolean}}
+} as const satisfies {
+  [key in string]: {
+    id: key
+    type: 'etape' | 'select' | 'checkboxes' | 'input' | 'autocomplete'
+    name: string
+    placeholder?: string
+    validator: ZodType
+    elements?: unknown[]
+    component?: 'FiltresLabel'
+    lazy?: boolean
+  }
+}
 
 const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs'] as const
 const caminoAutocompleteFiltresArrayIds = ['substancesIds'] as const
-export const caminoInputFiltres = [caminoFiltres.nomsAdministration, caminoFiltres.nomsUtilisateurs] as const satisfies readonly {type: 'input'}[]
-export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds] as const satisfies readonly {type: 'autocomplete'}[]
-const caminoCheckboxesFiltresArray = [caminoFiltres.administrationTypesIds] as const satisfies readonly {type: 'checkboxes'}[]
-export type InputCaminoFiltres = typeof caminoInputFiltres[number]['id']
-export type AutocompleteCaminoFiltres = typeof caminoAutocompleteFiltres[number]['id']
-export type CheckboxesCaminoFiltres = typeof caminoCheckboxesFiltresArray[number]['id']
+const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds'] as const
+export const caminoInputFiltres = [caminoFiltres.nomsAdministration, caminoFiltres.nomsUtilisateurs] as const satisfies readonly { type: 'input' }[]
+export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds] as const satisfies readonly { type: 'autocomplete' }[]
+export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds] as const satisfies readonly { type: 'checkboxes' }[]
+export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
+export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
+export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']
 
 export type CaminoFiltres = InputCaminoFiltres | CheckboxesCaminoFiltres | AutocompleteCaminoFiltres
 
-
 export const isInputCaminoFiltre = (value: CaminoFiltres): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)
 export const isAutocompleteCaminoFiltre = (value: CaminoFiltres): value is AutocompleteCaminoFiltres => caminoAutocompleteFiltresArrayIds.includes(value)
+export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)
 
-
-
-
-export const allCaminoFiltres = [...caminoInputFiltresArrayIds, ...caminoAutocompleteFiltresArrayIds] as const
+export const allCaminoFiltres = [...caminoInputFiltresArrayIds, ...caminoAutocompleteFiltresArrayIds, ...caminoCheckboxesFiltresArrayIds] as const

@@ -5,48 +5,56 @@ import { Domaine as DomaineComp } from '../../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
 import { FilterCheckbox, FilterComponentProp } from './all-filters'
-import { HTMLAttributes } from 'vue'
+import { HTMLAttributes, defineComponent, ref } from 'vue'
+import { CheckboxesCaminoFiltres, caminoFiltres } from './camino-filtres'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 type Props = {
-  filter: FilterComponentProp<FilterCheckbox>
+  filter: CheckboxesCaminoFiltres
+  valuesSelected: (values: (typeof caminoFiltres)[CheckboxesCaminoFiltres]['validator']['_output']) => void
+  initialValues: (typeof caminoFiltres)[CheckboxesCaminoFiltres]['validator']['_output']
 } & Pick<HTMLAttributes, 'class'>
 
-function DrawComponent(filter: FilterComponentProp<FilterCheckbox>, index: number): JSX.Element | null {
-  const component = filter.component
+function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Element | null {
+  const fullFilter = caminoFiltres[filter]
+
+  const component = fullFilter.component
   switch (component) {
-    case 'FiltreDomaine':
-      return (
-        <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
-          <DomaineComp domaineId={filter.elements[index].id} />
-          <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
-        </div>
-      )
-    case 'FiltresTypes':
-      return FiltresTypes({ element: filter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
-    case 'FiltresStatuts':
-      return FiltresStatuts(
-        {
-          element: filter.elements[index],
-        },
-        { attrs: {}, emit: () => {}, slots: {} }
-      )
-    case 'FiltresTitresStatuts':
-      return (
-        <div class="dsfr">
-          <TitreStatutComp titreStatutId={filter.elements[index].id} />
-        </div>
-      )
+    // case 'FiltreDomaine':
+    //   return (
+    //     <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
+    //       <DomaineComp domaineId={filter.elements[index].id} />
+    //       <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
+    //     </div>
+    //   )
+    // case 'FiltresTypes':
+    //   return FiltresTypes({ element: filter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
+    // case 'FiltresStatuts':
+    //   return FiltresStatuts(
+    //     {
+    //       element: filter.elements[index],
+    //     },
+    //     { attrs: {}, emit: () => {}, slots: {} }
+    //   )
+    // case 'FiltresTitresStatuts':
+    //   return (
+    //     <div class="dsfr">
+    //       <TitreStatutComp titreStatutId={filter.elements[index].id} />
+    //     </div>
+    //   )
     case 'FiltresLabel':
-      return <span class="cap-first h6 bold">{filter.elements[index].nom}</span>
+      return <span class="cap-first h6 bold">{fullFilter.elements[index].nom}</span>
     default:
       exhaustiveCheck(component)
       return null
   }
 }
 
-export function FiltersCheckboxes(props: Props) {
-  const isEventWithTarget = (event: any): event is Event & { target: HTMLInputElement } => event.target
+// FIXME TESTS
+export const FiltersCheckboxes = defineComponent((props: Props) => {
+  const fullFilter = caminoFiltres[props.filter]
 
+  const selectedValues = ref(props.initialValues)
   const idsSet = (v: any, values: any[]) => {
     const index = values.indexOf(v)
 
@@ -63,30 +71,33 @@ export function FiltersCheckboxes(props: Props) {
 
   const checkboxToggle = (e: Event) => {
     if (isEventWithTarget(e) && e.target.value !== null) {
-      props.filter.value = idsSet(e.target.value, props.filter.value)
+      selectedValues.value = idsSet(e.target.value, selectedValues.value)
+      props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
     }
   }
 
   const checkboxesSelect = (action: 'none' | 'all') => {
     if (action === 'none') {
-      props.filter.value = []
+      selectedValues.value = []
+      props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
     }
 
     if (action === 'all') {
-      props.filter.value = props.filter.elements.map(({ id }) => id)
+      selectedValues.value = fullFilter.elements.map(({ id }) => id)
+      props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
     }
   }
 
-  return (
+  return () => (
     <div class="mb">
-      <h5>{props.filter.name}</h5>
+      <h5>{fullFilter.name}</h5>
       <hr class="mb-s" />
 
       <ul class="list-sans">
-        {props.filter.elements.map((element, index) => (
+        {fullFilter.elements.map((element, index) => (
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
-              <input value={element.id} checked={props.filter.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
+              <input value={element.id} checked={selectedValues.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
               {DrawComponent(props.filter, index)}
             </label>
           </li>
@@ -100,4 +111,7 @@ export function FiltersCheckboxes(props: Props) {
       </button>
     </div>
   )
-}
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+FiltersCheckboxes.props = ['filter', 'valuesSelected', 'initialValues']

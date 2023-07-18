@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions'
 import { InputAutocomplete } from './filters-input-autocomplete'
 import { Meta, StoryFn } from '@storybook/vue3'
 
@@ -13,17 +14,4 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: StoryFn = () => (
-  <InputAutocomplete
-    filter={{
-      name: 'Items',
-      value: [],
-      elements: [
-        { id: 'id1', nom: 'name1' },
-        { id: 'id2', nom: 'name2' },
-        { id: 'id3', nom: 'name3' },
-      ],
-      lazy: false,
-    }}
-  />
-)
+export const Default: StoryFn = () => <InputAutocomplete filter="substancesIds" initialValue={['aloh']} onFilterAutocomplete={action('onFilterAutocomplete')} />

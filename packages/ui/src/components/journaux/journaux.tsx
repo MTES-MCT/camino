@@ -7,7 +7,7 @@ import { AsyncData } from '@/api/client-rest'
 import { JournauxApiClient } from './journaux-api-client'
 import { LoadingElement } from '../_ui/functional-loader'
 import { TableRow } from '../_ui/table'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { Liste, Params } from '../_common/liste'
 
 interface Props {
@@ -67,7 +67,7 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     intervalle: 10,
   })
 
-  const route = useRoute()
+  const router = useRouter()
   const colonnes = () => {
     if (!props.titreId) {
       return colonnesData
@@ -92,7 +92,7 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     await load()
   })
 
-  const paramsTableUpdate = async (event: Params<ColonneId, never, never, never, never, never>) => {
+  const paramsTableUpdate = async (event: Params<ColonneId>) => {
     if (event.page) {
       params.value.page = event.page
       await load()
@@ -104,7 +104,18 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
       <LoadingElement
         data={data.value}
         renderItem={item => (
-          <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={route} lignes={lignes(item)} nom="Journaux" paramsUpdate={paramsTableUpdate} total={item.total} />
+          <Liste
+            listeFiltre={null}
+            renderButton={null}
+            download={null}
+            colonnes={colonnes()}
+            updateUrlQuery={router}
+            route={router.currentRoute.value}
+            lignes={lignes(item)}
+            nom="Journaux"
+            paramsUpdate={paramsTableUpdate}
+            total={item.total}
+          />
         )}
       />
     </>

@@ -3,7 +3,7 @@ import { Liste, Params } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { z } from 'zod'
 import { FiltersDeclaration } from './_ui/filters/all-filters'
@@ -40,6 +40,7 @@ const administrations = Object.values(Adms)
 export const Administrations = defineComponent({
   setup() {
     const route = useRoute()
+    const router = useRouter()
 
     const params = ref<Params<ColonneId>>({
       colonne: 'abreviation',
@@ -48,7 +49,6 @@ export const Administrations = defineComponent({
       // FIXME INITIAL VALUE ?
       filtres: getInitialFiltres(route, filtres),
     }) as Ref<Params<ColonneId>>
-
 
     const lignes = computed<TableRow[]>(() => {
       return [...administrations]
@@ -116,6 +116,7 @@ export const Administrations = defineComponent({
         lignes={lignes.value}
         total={lignes.value.length}
         route={route}
+        updateUrlQuery={router}
         download={null}
         renderButton={null}
         paramsUpdate={options => {

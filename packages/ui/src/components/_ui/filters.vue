@@ -52,7 +52,7 @@
 import Accordion from './accordion.vue'
 import { FiltersInput } from './filters/filters-input'
 import { FiltersCheckboxes } from './filters/filters-checkboxes'
-import { FiltersSelects } from './filters/filters-selects'
+// import { FiltersSelects } from './filters/filters-selects'
 import { InputAutocomplete } from './filters/filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
@@ -64,7 +64,7 @@ export default {
     Accordion,
     FiltersInput,
     FiltersCheckboxes,
-    FiltersSelects,
+    //  FiltersSelects,
     InputAutocomplete,
   },
 
