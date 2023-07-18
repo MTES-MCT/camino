@@ -109,7 +109,6 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
             renderButton={null}
             download={null}
             colonnes={colonnes()}
-            updateUrlQuery={router}
             route={router.currentRoute.value}
             lignes={lignes(item)}
             nom="Journaux"

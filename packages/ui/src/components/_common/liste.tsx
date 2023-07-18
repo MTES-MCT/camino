@@ -18,6 +18,7 @@ export type Params<ColumnId extends string> = {
 
 type ListeFiltreProps = {
   filtres: readonly CaminoFiltres[]
+  updateUrlQuery: Pick<Router, 'push'>
   metas?: unknown
   initialized: boolean
 }
@@ -27,21 +28,18 @@ type Props<ColumnId extends string> = {
   lignes: TableRow[]
   total: number
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  updateUrlQuery: Pick<Router, 'push'>
   paramsUpdate: (params: Params<ColumnId>) => void
 } & PageContentHeaderProps
 
 export const Liste = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
-  let initialFiltres = null
-  if (props.listeFiltre) {
-    initialFiltres = getInitialFiltres(props.route, props.listeFiltre?.filtres)
-  }
-
   const params = ref<Params<ColumnId>>({
     ...initialParams,
-    ...initialFiltres,
   }) as Ref<Params<ColumnId>>
+
+  if (props.listeFiltre) {
+    params.value.filtres = getInitialFiltres(props.route, props.listeFiltre?.filtres)
+  }
 
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
     params.value.page = newParams.page
@@ -72,7 +70,7 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
 
       {props.listeFiltre ? (
         <Filtres
-          updateUrlQuery={props.updateUrlQuery}
+          updateUrlQuery={props.listeFiltre.updateUrlQuery}
           route={props.route}
           filters={props.listeFiltre.filtres}
           subtitle={resultat.value}

@@ -5,7 +5,7 @@ import { Domaine as DomaineComp } from '../../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
 import { FilterCheckbox, FilterComponentProp } from './all-filters'
-import { HTMLAttributes, defineComponent, ref } from 'vue'
+import { HTMLAttributes, defineComponent, ref, Ref, watch } from 'vue'
 import { CheckboxesCaminoFiltres, caminoFiltres } from './camino-filtres'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
@@ -54,7 +54,13 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
 export const FiltersCheckboxes = defineComponent((props: Props) => {
   const fullFilter = caminoFiltres[props.filter]
 
-  const selectedValues = ref(props.initialValues)
+  watch(
+    () => props.initialValues,
+    () => {
+      selectedValues.value = props.initialValues
+    }
+  )
+  const selectedValues = ref(props.initialValues) as Ref<(typeof caminoFiltres)[CheckboxesCaminoFiltres]['validator']['_output']>
   const idsSet = (v: any, values: any[]) => {
     const index = values.indexOf(v)
 
@@ -83,8 +89,8 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
     }
 
     if (action === 'all') {
-      selectedValues.value = fullFilter.elements.map(({ id }) => id)
-      props.valuesSelected(fullFilter.validator.parse(selectedValues.value))
+      selectedValues.value = fullFilter.validator.parse(fullFilter.elements.map(({ id }) => id))
+      props.valuesSelected(selectedValues.value)
     }
   }
 
@@ -97,7 +103,14 @@ export const FiltersCheckboxes = defineComponent((props: Props) => {
         {fullFilter.elements.map((element, index) => (
           <li key={element.id}>
             <label style={{ display: 'flex', flexDirection: 'row' }}>
-              <input value={element.id} checked={selectedValues.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
+              <input
+                value={element.id}
+                // @ts-ignore typescript est perdu ici, probablement un distributive union à supprimer
+                checked={selectedValues.value.includes(element.id)}
+                type="checkbox"
+                class="mr-s"
+                onChange={event => checkboxToggle(event)}
+              />
               {DrawComponent(props.filter, index)}
             </label>
           </li>

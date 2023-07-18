@@ -1,9 +1,11 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { Entreprise, Utilisateur } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseId, Utilisateur } from 'camino-common/src/entreprise'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
+import { Role } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 
 export interface UtilisateurApiClient {
   getUtilisateur: (userId: string) => Promise<Utilisateur>
@@ -13,9 +15,49 @@ export interface UtilisateurApiClient {
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
   getEntreprises: () => Promise<Entreprise[]>
   getQGISToken: () => Promise<QGISToken>
+  getUtilisateurs: (params: UtilisateursParams) => Promise<{ elements: Utilisateur[]; total: number }>
 }
 
+export type UtilisateursParams = {
+  page?: number
+  colonne?: string
+  ordre?: 'asc' | 'desc'
+  noms?: string
+  emails?: string
+  roles?: Role[]
+  administrationIds?: AdministrationId[]
+  entrepriseIds?: EntrepriseId[]
+}
 export const utilisateurApiClient: UtilisateurApiClient = {
+  getUtilisateurs: async (params: UtilisateursParams) => {
+    const data = await apiGraphQLFetch(gql`
+      query Utilisateurs($page: Int, $colonne: String, $ordre: String, $entrepriseIds: [ID], $administrationIds: [ID], $roles: [ID], $noms: String, $emails: String) {
+        utilisateurs(intervalle: 10, page: $page, colonne: $colonne, ordre: $ordre, entrepriseIds: $entrepriseIds, administrationIds: $administrationIds, roles: $roles, noms: $noms, emails: $emails) {
+          elements {
+            id
+            nom
+            prenom
+            email
+            telephoneMobile
+            telephoneFixe
+            entreprises {
+              id
+              nom
+              paysId
+              legalSiren
+              legalEtranger
+            }
+            administrationId
+            role
+          }
+          total
+        }
+      }
+    `)({
+      ...params,
+    })
+    return data
+  },
   getUtilisateur: async (userId: string) => {
     const data = await apiGraphQLFetch(gql`
       query Utilisateur($id: ID!) {

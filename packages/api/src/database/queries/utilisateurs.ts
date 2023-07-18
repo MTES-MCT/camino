@@ -63,23 +63,23 @@ const utilisateursFiltersQueryModify = (
   },
   q: QueryBuilder<Utilisateurs, Utilisateurs[]>
 ) => {
-  if (ids) {
+  if (ids && ids.length > 0) {
     q.whereIn('id', ids)
   }
 
-  if (roles) {
+  if (roles && roles.length > 0) {
     q.whereIn('role', roles as string[])
   }
 
-  if (administrationIds) {
+  if (administrationIds && administrationIds.length > 0) {
     q.whereIn('administrationId', administrationIds)
   }
 
-  if (entrepriseIds) {
+  if (entrepriseIds && entrepriseIds.length > 0) {
     q.whereIn('entreprises.id', entrepriseIds).leftJoinRelated('entreprises')
   }
 
-  if (noms) {
+  if (noms && noms !== '') {
     const nomsArray = stringSplit(noms)
     const fields = ['nom', 'prenom']
 
@@ -92,7 +92,7 @@ const utilisateursFiltersQueryModify = (
     })
   }
 
-  if (emails) {
+  if (emails && emails !== '') {
     q.where(b => {
       b.whereRaw(`LOWER(??) LIKE LOWER(?)`, ['utilisateurs.email', `%${emails}%`])
     })

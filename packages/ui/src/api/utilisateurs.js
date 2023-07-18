@@ -50,8 +50,23 @@ export const utilisateurs = apiGraphQLFetch(
         total
       }
     }
-
-    ${fragmentUtilisateur}
+    fragment utilisateur on Utilisateur {
+      id
+      nom
+      prenom
+      email
+      telephoneMobile
+      telephoneFixe
+      entreprises {
+        id
+        nom
+        paysId
+        legalSiren
+        legalEtranger
+      }
+      administrationId
+      role
+    }
   `
 )
 

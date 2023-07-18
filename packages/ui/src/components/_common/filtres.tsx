@@ -16,7 +16,6 @@ export interface Props {
   paramsUpdate: (params: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
 }
 
-const isFiltreId = <FiltreId extends string>(id: string): id is FiltreId => true
 export const Filtres = defineComponent((props: Props) => {
   const opened = ref<boolean>(false)
   const filtresValues = ref(getInitialFiltres(props.route, props.filters))
@@ -33,32 +32,34 @@ export const Filtres = defineComponent((props: Props) => {
   }
 
   const validate = (params: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => {
-    // les champs textes sont mis à jour onBlur
-    // pour les prendre en compte lorsqu'on valide en appuyant sur "entrée"
-    // met le focus sur le bouton de validation (dans la méthode close())
-    filtresValues.value = params
-    close()
+    if (JSON.stringify(filtresValues.value) !== JSON.stringify(params)) {
+      // les champs textes sont mis à jour onBlur
+      // pour les prendre en compte lorsqu'on valide en appuyant sur "entrée"
+      // met le focus sur le bouton de validation (dans la méthode close())
+      close()
 
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    // FIXME plus utile ?
-    // // formate les valeurs des filtres
-    // const params = filters.value.reduce<{ [key in FiltreId]: z.infer<Filtres[key]['validator']> }>((acc, filtre) => {
-    //   let value: string | string[] | undefined
+      // FIXME plus utile ?
+      // // formate les valeurs des filtres
+      // const params = filters.value.reduce<{ [key in FiltreId]: z.infer<Filtres[key]['validator']> }>((acc, filtre) => {
+      //   let value: string | string[] | undefined
 
-    //   if (filtre.type === 'etape' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
-    //     value = (filtre.value ?? []).filter(v => v !== '')
-    //   } else {
-    //     value = filtre.value
-    //   }
+      //   if (filtre.type === 'etape' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
+      //     value = (filtre.value ?? []).filter(v => v !== '')
+      //   } else {
+      //     value = filtre.value
+      //   }
 
-    //   // TODO 2023-07-17 pourquoi ce as est nécessaire ?
-    //   acc[filtre.id as FiltreId] = filtre.validator.parse(value)
+      //   // TODO 2023-07-17 pourquoi ce as est nécessaire ?
+      //   acc[filtre.id as FiltreId] = filtre.validator.parse(value)
 
-    //   return acc
-    // }, {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> })
+      //   return acc
+      // }, {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> })
 
-    props.paramsUpdate(params)
+      filtresValues.value = params
+      props.paramsUpdate(params)
+    }
   }
 
   const init = () => {
@@ -109,6 +110,7 @@ export const Filtres = defineComponent((props: Props) => {
         <Filters
           updateUrlQuery={props.updateUrlQuery}
           route={props.route}
+          metas={props.metas}
           filters={props.filters}
           class="flex-grow"
           opened={opened.value}

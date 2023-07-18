@@ -1,6 +1,6 @@
 import { elementsFormat } from '../../../utils/index'
-import { ROLES } from 'camino-common/src/roles'
-import { ADMINISTRATION_TYPES, administrationTypeIdValidator, sortedAdministrations } from 'camino-common/src/static/administrations'
+import { ROLES, roleValidator } from 'camino-common/src/roles'
+import { ADMINISTRATION_TYPES, administrationIdValidator, administrationTypeIdValidator, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { departements } from 'camino-common/src/static/departement'
 import { regions } from 'camino-common/src/static/region'
 import { FACADES } from 'camino-common/src/static/facades'
@@ -11,6 +11,7 @@ import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { TitreId } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 export const caminoFiltres = {
   nomsAdministration: {
@@ -35,36 +36,37 @@ export const caminoFiltres = {
     placeholder: '...',
     validator: z.string(),
   },
-  // emails: {
-  //   id: 'emails',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Emails',
-  //   placeholder: 'prenom.nom@domaine.fr, ...',
-  // },
-  // roles: {
-  //   id: 'roles',
-  //   name: 'Rôles',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: ROLES.map(r => ({ id: r, nom: r })),
-  // },
-  // administrationIds: {
-  //   id: 'administrationIds',
-  //   name: 'Administrations',
-  //   type: 'select',
-  //   value: [],
-  //   elements: sortedAdministrations,
-  //   buttonAdd: 'Ajouter une administration',
-  //   elementName: 'abreviation',
-  // },
-  // entrepriseIds: {
-  //   id: 'entrepriseIds',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   name: 'Entreprises',
-  //   elementsFormat,
-  // },
+  emails: {
+    id: 'emails',
+    type: 'input',
+    validator: z.string(),
+    name: 'Emails',
+    placeholder: 'prenom.nom@domaine.fr, ...',
+  },
+  roles: {
+    id: 'roles',
+    name: 'Rôles',
+    type: 'checkboxes',
+    component: 'FiltresLabel',
+    elements: ROLES.map(r => ({ id: r, nom: r })),
+    validator: z.array(roleValidator),
+  },
+  administrationIds: {
+    id: 'administrationIds',
+    name: 'Administrations',
+    type: 'autocomplete',
+    elements: sortedAdministrations,
+    lazy: false,
+    validator: z.array(administrationIdValidator),
+  },
+  entrepriseIds: {
+    id: 'entrepriseIds',
+    type: 'autocomplete',
+    name: 'Entreprises',
+    elementsFormat,
+    lazy: false,
+    validator: z.array(entrepriseIdValidator),
+  },
   // titresIds: {
   //   id: 'titresIds',
   //   type: 'autocomplete',
@@ -243,15 +245,21 @@ export const caminoFiltres = {
     elements?: unknown[]
     component?: 'FiltresLabel'
     lazy?: boolean
+    /*
+   / @deprecated c'est encore des trucs liées au store
+   / ça devrait être remplaçait par l'appel api directement dans la structure
+   / c'est appelé deux fois, une fois par le composant filters pour afficher les labels, et une fois par le composant autocomplete pour pouvoir sélectionner
+  */
+    elementsFormat?: (value: any, metas: unknown) => unknown
   }
 }
 
-const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs'] as const
-const caminoAutocompleteFiltresArrayIds = ['substancesIds'] as const
-const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds'] as const
-export const caminoInputFiltres = [caminoFiltres.nomsAdministration, caminoFiltres.nomsUtilisateurs] as const satisfies readonly { type: 'input' }[]
-export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds] as const satisfies readonly { type: 'autocomplete' }[]
-export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds] as const satisfies readonly { type: 'checkboxes' }[]
+const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails'] as const
+const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entrepriseIds'] as const
+const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles'] as const
+export const caminoInputFiltres = [caminoFiltres.nomsAdministration, caminoFiltres.nomsUtilisateurs, caminoFiltres.emails] as const satisfies readonly { type: 'input' }[]
+export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds, caminoFiltres.administrationIds, caminoFiltres.entrepriseIds] as const satisfies readonly { type: 'autocomplete' }[]
+export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds, caminoFiltres.roles] as const satisfies readonly { type: 'checkboxes' }[]
 export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']

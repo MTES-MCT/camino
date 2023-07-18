@@ -1,12 +1,9 @@
 import { defineComponent, computed, ref, markRaw, Ref } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes, administrationTypeIdValidator } from 'camino-common/src/static/administrations'
-import { elementsFormat } from '@/utils'
+import { ADMINISTRATION_TYPES, Administrations as Adms, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
-import { z } from 'zod'
-import { FiltersDeclaration } from './_ui/filters/all-filters'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
 import { getInitialFiltres } from './_ui/filters/filters'
 
@@ -24,9 +21,6 @@ const colonnes = [
     name: 'Type',
   },
 ] as const
-
-const filtreIds = ['noms', 'typesIds'] as const
-type FiltreId = (typeof filtreIds)[number]
 
 const filtres: readonly CaminoFiltres[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']
@@ -111,12 +105,11 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, metas, initialized: true }}
+        listeFiltre={{ filtres, metas, initialized: true, updateUrlQuery: router }}
         colonnes={colonnes}
         lignes={lignes.value}
         total={lignes.value.length}
         route={route}
-        updateUrlQuery={router}
         download={null}
         renderButton={null}
         paramsUpdate={options => {

@@ -3,7 +3,9 @@ import { entrepriseIdValidator } from './entreprise.js'
 import { z } from 'zod'
 
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
-export type Role = (typeof ROLES)[number]
+
+export const roleValidator = z.enum(ROLES)
+export type Role = z.infer<typeof roleValidator>
 type UserEntreprise = { role: 'entreprise' } & EntrepriseUserNotNull
 type UserBureaudEtudes = { role: 'bureau d’études' } & EntrepriseUserNotNull
 type UserAdmin = { role: 'admin' } & AdminUserNotNull

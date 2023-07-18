@@ -161,25 +161,26 @@ interface IUtilisateursQueryInput {
   format?: DownloadFormat
   colonne?: IUtilisateursColonneId | null
   ordre?: 'asc' | 'desc' | null
-  entrepriseIds?: string
+  entrepriseIds?: string | string[]
   administrationIds?: string
   //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
   roles?: string
   noms?: string | null
+  nomsUtilisateurs?: string | null
   emails?: string | null
 }
 
 export const utilisateurs =
   (_pool: Pool) =>
-  async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
+  async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails, nomsUtilisateurs } }: { query: IUtilisateursQueryInput }, user: User) => {
     const utilisateurs = await utilisateursGet(
       {
         colonne,
         ordre,
-        entrepriseIds: entrepriseIds?.split(','),
-        administrationIds: administrationIds?.split(','),
-        roles: roles?.split(',').filter(isRole),
-        noms,
+        entrepriseIds: entrepriseIds ? (Array.isArray(entrepriseIds) ? entrepriseIds : entrepriseIds.split(',')) : undefined,
+        administrationIds: administrationIds ? (Array.isArray(administrationIds) ? administrationIds : administrationIds.split(',')) : undefined,
+        roles: roles ? (Array.isArray(roles) ? roles.filter(isRole) : roles.split(',').filter(isRole)) : undefined,
+        noms: noms ?? nomsUtilisateurs,
         emails,
       },
       {},

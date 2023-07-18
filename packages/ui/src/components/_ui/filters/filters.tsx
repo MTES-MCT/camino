@@ -29,6 +29,7 @@ type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[]
 
 type Props = {
   filters: readonly CaminoFiltres[]
+  metas?: unknown
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string
@@ -65,8 +66,16 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     nomsAdministration: routerQueryToString(route.query.nomsAdministration, ''),
     nomsUtilisateurs: routerQueryToString(route.query.nomsUtilisateurs, ''),
     substancesIds: caminoFiltres.substancesIds.validator.parse(routerQueryToStringArray(route.query.substancesIds)),
+    emails: routerQueryToString(route.query.emails, ''),
+    roles: caminoFiltres.roles.validator.parse(routerQueryToStringArray(route.query.roles)),
+    administrationIds: caminoFiltres.administrationIds.validator.parse(routerQueryToStringArray(route.query.administrationIds)),
+    entrepriseIds: caminoFiltres.entrepriseIds.validator.parse(routerQueryToStringArray(route.query.entrepriseIds)),
   }
-  allCaminoFiltres.filter(filter => !filters.includes(filter)).forEach(filter => Reflect.deleteProperty(allValues, filter))
+  allCaminoFiltres.forEach(filter => {
+    if (!filters.includes(filter)) {
+      Reflect.deleteProperty(allValues, filter)
+    }
+  })
   return allValues
 }
 
@@ -91,12 +100,7 @@ export const Filters = defineComponent((props: Props) => {
     props.validate(validatedValues.value)
   })
 
-  const nonValidatedValues = ref<{ [key in CaminoFiltres]: (typeof caminoFiltres)[key]['validator']['_output'] }>({
-    administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(props.route.query.administrationTypesIds)),
-    nomsAdministration: routerQueryToString(props.route.query.nomsAdministration, ''),
-    nomsUtilisateurs: routerQueryToString(props.route.query.nomsUtilisateurs, ''),
-    substancesIds: caminoFiltres.substancesIds.validator.parse(routerQueryToStringArray(props.route.query.substancesIds)),
-  })
+  const nonValidatedValues = ref<{ [key in CaminoFiltres]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
   const keyup = (e: KeyboardEvent) => {
     if ((e.which || e.keyCode) === 13 && opened.value) {
       props.updateUrlQuery.push(urlQuery.value)
@@ -182,7 +186,12 @@ export const Filters = defineComponent((props: Props) => {
       if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && nonValidatedValues.value[filter]) {
         return nonValidatedValues.value[filterType.id].map<FormatedLabel>(v => {
           // TODO 2023-07-13 trouver comment mieux typer ça sans le 'as'
-          const elements = filterType.elements as { id: string; nom: string }[]
+          let elements: { id: string; nom: string }[] = []
+          if ('elementsFormat' in filterType) {
+            elements = filterType.elementsFormat(filterType.id, props.metas)
+          } else {
+            elements = filterType.elements as { id: string; nom: string }[]
+          }
           const element = elements?.find(e => e.id === v)
 
           return {
@@ -255,8 +264,10 @@ export const Filters = defineComponent((props: Props) => {
                     <div key={input}>
                       <InputAutocomplete
                         filter={input}
+                        metas={props.metas}
                         initialValue={nonValidatedValues.value[input]}
                         onFilterAutocomplete={items => {
+                          // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
                           nonValidatedValues.value[input] = items
                         }}
                       />
@@ -274,6 +285,7 @@ export const Filters = defineComponent((props: Props) => {
                   filter={filter}
                   initialValues={nonValidatedValues.value[filter]}
                   valuesSelected={values => {
+                    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
                     nonValidatedValues.value[filter] = values
                   }}
                   class="tablet-blob-1-2 large-blob-1-3"
@@ -298,4 +310,4 @@ export const Filters = defineComponent((props: Props) => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery']
+Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'metas']
