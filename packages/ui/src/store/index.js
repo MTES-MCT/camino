@@ -12,7 +12,6 @@ import titreEtapeEdition from './titre-etape-edition'
 import document from './document'
 import titres from './titres'
 import titresDemarches from './titres-demarches'
-import utilisateurs from './utilisateurs'
 import entreprises from './entreprises'
 import metas from './metas'
 import meta from './meta'
@@ -29,7 +28,6 @@ const modules = {
   document,
   titres,
   titresDemarches,
-  utilisateurs,
   entreprises,
   meta,
   metas,
