@@ -3,15 +3,6 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client.js'
 import { vi, describe, expect, beforeEach, afterEach, test } from 'vitest'
 
-vi.mock('./fragments/utilisateur', () => ({
-  fragmentUtilisateur: gql`
-    fragment utilisateur on Utilisateur {
-      id
-      email
-    }
-  `,
-}))
-
 console.info = vi.fn()
 console.error = vi.fn()
 

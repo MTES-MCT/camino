@@ -11,6 +11,7 @@ export interface UtilisateurApiClient {
   getUtilisateur: (userId: string) => Promise<Utilisateur>
   getUtilisateurNewsletter: (userId: string) => Promise<boolean>
   updateUtilisateurNewsletter: (userId: string, subscribe: boolean) => Promise<void>
+  newsletterInscrire: (email: string) => Promise<void>
   removeUtilisateur: (userId: string) => Promise<void>
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
   getEntreprises: () => Promise<Entreprise[]>
@@ -89,6 +90,13 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   },
   updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
     await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
+  },
+  newsletterInscrire: async (email: string) => {
+    await apiGraphQLFetch(gql`
+      mutation NewsletterInscrire($email: String!) {
+        newsletterInscrire(email: $email)
+      }
+    `)({ email })
   },
   removeUtilisateur: async (userId: string) => {
     return await deleteWithJson('/rest/utilisateurs/:id', { id: userId })

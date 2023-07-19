@@ -1,6 +1,6 @@
 import { defineComponent, FunctionalComponent, ref } from 'vue'
-import { newsletterInscrire } from '@/api/utilisateurs'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
 
 type SubscribeState = 'NOT_SUBSCRIBED' | 'SUBSCRIBED' | 'SUBSCRIBING' | 'ERROR'
 
@@ -83,9 +83,7 @@ export const NewsletterForm = defineComponent({
       if (email.value) {
         try {
           subscribed.value = 'SUBSCRIBING'
-          await newsletterInscrire({
-            email: email.value,
-          })
+          await utilisateurApiClient.newsletterInscrire(email.value)
           email.value = ''
           subscribed.value = 'SUBSCRIBED'
         } catch (e: any) {
