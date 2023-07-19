@@ -42,7 +42,7 @@ export const utilisateurs = async (
     page,
     colonne,
     ordre,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
@@ -52,7 +52,7 @@ export const utilisateurs = async (
     page?: number | null
     colonne?: IUtilisateursColonneId | null
     ordre?: 'asc' | 'desc' | null
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -74,7 +74,7 @@ export const utilisateurs = async (
           page,
           colonne,
           ordre,
-          entrepriseIds,
+          entreprisesIds,
           administrationIds,
           roles,
           noms,
@@ -85,7 +85,7 @@ export const utilisateurs = async (
       ),
       utilisateursCount(
         {
-          entrepriseIds,
+          entreprisesIds,
           administrationIds,
           roles,
           noms,

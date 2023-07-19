@@ -8,8 +8,8 @@ import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { SubstancesLegales, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { TitreId } from 'camino-common/src/titres'
+import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from 'camino-common/src/static/titresTypesTypes'
+import { TitreId, titreIdValidator } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
@@ -59,24 +59,29 @@ export const caminoFiltres = {
     lazy: false,
     validator: z.array(administrationIdValidator),
   },
-  entrepriseIds: {
-    id: 'entrepriseIds',
+  entreprisesIds: {
+    id: 'entreprisesIds',
     type: 'autocomplete',
     name: 'Entreprises',
     elementsFormat,
     lazy: false,
     validator: z.array(entrepriseIdValidator),
   },
-  // titresIds: {
-  //   id: 'titresIds',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   elements: [],
-  //   name: 'Noms',
-  //   lazy: true,
-  //   search: (value: string) => titresRechercherByNom({ noms: value, intervalle: 100 }),
-  //   load: (value: TitreId[]) => titresFiltres({ titresIds: value }),
-  // },
+  titresIds: {
+    id: 'titresIds',
+    type: 'autocomplete',
+    elements: [] as unknown[],
+    name: 'Noms',
+    lazy: true,
+    search: (value: string) => titresRechercherByNom({ noms: value, intervalle: 100 }),
+    load: (value: TitreId[]) => {
+      return titresFiltres({ titresIds: value })
+    },
+    loadedElements: elements => {
+      caminoFiltres.titresIds.elements.splice(0, caminoFiltres.titresIds.elements.length, ...elements)
+    },
+    validator: z.array(titreIdValidator),
+  },
   // // TODO 2023-07-17 merger avec entrepriseIds ?
   // entreprisesIds: {
   //   id: 'entreprisesIds',
@@ -93,25 +98,25 @@ export const caminoFiltres = {
     lazy: false,
     validator: z.array(substanceLegaleIdValidator),
   },
-  // references: {
-  //   id: 'references',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Références',
-  //   placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
-  // },
-  // communes: {
-  //   id: 'communes',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Communes',
-  //   placeholder: 'Communes',
-  // },
+  references: {
+    id: 'references',
+    type: 'input',
+    name: 'Références',
+    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
+    validator: z.string(),
+  },
+  communes: {
+    id: 'communes',
+    type: 'input',
+    name: 'Communes',
+    placeholder: 'Communes',
+    validator: z.string(),
+  },
+  // FIXME IL FAUT CONTINUER ICI
   // departements: {
   //   id: 'departements',
   //   name: 'Départements',
   //   type: 'autocomplete',
-  //   value: [],
   //   elements: departements.sort((a, b) => a.id.localeCompare(b.id)).map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
   // },
   // regions: {
@@ -136,14 +141,14 @@ export const caminoFiltres = {
   //   elements: sortedDomaines,
   //   component: 'FiltreDomaine',
   // },
-  // typesIds: {
-  //   id: 'typesIds',
-  //   name: 'Types',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedTitreTypesTypes,
-  //   component: 'FiltresTypes',
-  // },
+  typesIds: {
+    id: 'typesIds',
+    name: 'Types de titre',
+    type: 'checkboxes',
+    elements: sortedTitreTypesTypes,
+    component: 'FiltresTypes',
+    validator: z.array(titreTypeTypeIdValidator),
+  },
   // statutsIds: {
   //   id: 'statutsIds',
   //   name: 'Statuts',
@@ -188,6 +193,7 @@ export const caminoFiltres = {
   //   elements: sortedDomaines,
   //   component: 'FiltreDomaine',
   // },
+  // TODO 2023-07-19 même chose que typesIds ?
   // titresTypesIds: {
   //   id: 'titresTypesIds',
   //   name: 'Types de titre',
@@ -243,8 +249,11 @@ export const caminoFiltres = {
     placeholder?: string
     validator: ZodType
     elements?: unknown[]
-    component?: 'FiltresLabel'
+    component?: 'FiltresLabel' | 'FiltresTypes'
     lazy?: boolean
+    search?: (value: string) => Promise<unknown>
+    load?: (values: TitreId[]) => Promise<unknown[]>
+    loadedElements?: (values: { id: TitreId; nom: string }[]) => void
     /*
    / @deprecated c'est encore des trucs liées au store
    / ça devrait être remplaçait par l'appel api directement dans la structure
@@ -254,12 +263,20 @@ export const caminoFiltres = {
   }
 }
 
-const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails'] as const
-const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entrepriseIds'] as const
-const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles'] as const
-export const caminoInputFiltres = [caminoFiltres.nomsAdministration, caminoFiltres.nomsUtilisateurs, caminoFiltres.emails] as const satisfies readonly { type: 'input' }[]
-export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds, caminoFiltres.administrationIds, caminoFiltres.entrepriseIds] as const satisfies readonly { type: 'autocomplete' }[]
-export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds, caminoFiltres.roles] as const satisfies readonly { type: 'checkboxes' }[]
+const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes'] as const
+const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entreprisesIds', 'titresIds'] as const
+const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds'] as const
+export const caminoInputFiltres = [
+  caminoFiltres.nomsAdministration,
+  caminoFiltres.nomsUtilisateurs,
+  caminoFiltres.emails,
+  caminoFiltres.references,
+  caminoFiltres.communes,
+] as const satisfies readonly { type: 'input' }[]
+export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds, caminoFiltres.administrationIds, caminoFiltres.entreprisesIds, caminoFiltres.titresIds] as const satisfies readonly {
+  type: 'autocomplete'
+}[]
+export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds, caminoFiltres.roles, caminoFiltres.typesIds] as const satisfies readonly { type: 'checkboxes' }[]
 export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']

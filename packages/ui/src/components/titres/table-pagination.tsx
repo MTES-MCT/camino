@@ -1,32 +1,26 @@
-import { computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { TablePagination } from '../_ui/table-pagination'
+import { computed } from 'vue'
+import { TablePagination, getInitialParams } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { titresColonnes, titresLignesBuild } from './table-utils'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
-import { useRoute } from 'vue-router'
+import { RouteLocationNormalizedLoaded } from 'vue-router'
+import { User } from 'camino-common/src/roles'
 
-interface Props {
+export type Params = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
+export interface Props {
   titres: TitreEntreprise[]
   total: number
+  user: User
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  updateParams: (params: Params) => void
 }
-
-export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'total'], props => {
-  const store = useStore()
-  const route = useRoute()
-
-  const updateParams = (params: { page: number; colonne: string; ordre: 'asc' | 'desc' }) => {
-    store.dispatch('titres/paramsSet', {
-      section: 'table',
-      params,
-    })
-  }
-
+export const getInitialTitresTablePaginationParams = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>) => {
+  return getInitialParams(route, titresColonnes)
+}
+export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'total', 'updateParams', 'user', 'route'], props => {
   const activitesCol = computed(() => {
-    const user = store.state.user.element
-
-    return canReadActivites(user)
+    return canReadActivites(props.user)
   })
 
   const colonnes = computed(() => {
@@ -39,13 +33,13 @@ export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'to
 
   return () => (
     <TablePagination
-      route={route}
+      route={props.route}
       data={{
         columns: colonnes.value,
         rows: lignes.value,
         total: props.total,
       }}
-      updateParams={updateParams}
+      updateParams={props.updateParams}
       caption="Tableau des titres"
     />
   )

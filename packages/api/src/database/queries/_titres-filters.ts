@@ -60,7 +60,7 @@ export const titresFiltersQueryModify = (
   name: ITitreTableName = 'titres',
   root: ITitreRootName = 'titres'
 ) => {
-  if (ids) {
+  if (ids && ids.length > 0) {
     q.whereIn(`${name}.id`, ids)
   }
 
@@ -78,7 +78,7 @@ export const titresFiltersQueryModify = (
     q.whereRaw(`SUBSTRING( ${name}.type_id, 3, 1 ) in (${domainesIds.map(() => '?').join(',')})`, domainesIds)
   }
 
-  if (typesIds) {
+  if (typesIds?.length) {
     q.whereRaw(`SUBSTRING( ${name}.type_id, 1, 2 ) in (${typesIds.map(() => '?').join(',')})`, typesIds)
   }
 

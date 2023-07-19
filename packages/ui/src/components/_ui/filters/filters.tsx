@@ -2,7 +2,7 @@ import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, 
 import Accordion from '../accordion.vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
-import { InputAutocomplete } from './filters-input-autocomplete'
+import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 import { FiltresEtapes } from '../../demarches/filtres-etapes'
@@ -69,7 +69,11 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     emails: routerQueryToString(route.query.emails, ''),
     roles: caminoFiltres.roles.validator.parse(routerQueryToStringArray(route.query.roles)),
     administrationIds: caminoFiltres.administrationIds.validator.parse(routerQueryToStringArray(route.query.administrationIds)),
-    entrepriseIds: caminoFiltres.entrepriseIds.validator.parse(routerQueryToStringArray(route.query.entrepriseIds)),
+    entreprisesIds: caminoFiltres.entreprisesIds.validator.parse(routerQueryToStringArray(route.query.entreprisesIds)),
+    titresIds: caminoFiltres.titresIds.validator.parse(routerQueryToStringArray(route.query.titresIds)),
+    typesIds: caminoFiltres.typesIds.validator.parse(routerQueryToStringArray(route.query.typesIds)),
+    references: routerQueryToString(route.query.references, ''),
+    communes: routerQueryToString(route.query.communes, ''),
   }
   allCaminoFiltres.forEach(filter => {
     if (!filters.includes(filter)) {
@@ -88,8 +92,21 @@ export const Filters = defineComponent((props: Props) => {
     return { name: props.route.name ?? undefined, query: { ...props.route.query, ...nonValidatedValues.value } }
   })
 
+  // TODO 2023-07-19 ugly hack pour que vue voit que les élements dans titresIds sont bien mis à jour
+  // Il faut repenser tout ça, ce n'est pas un bon moyen de récupérer les éléments, mais on en a besoin pour calculer les labels...
+  // C'est le seul composant qui à un load asynchrone et un search asynchrone
+  const titresIds = ref([...caminoFiltres.titresIds.elements])
+  const interval = setInterval(() => {
+    if (JSON.stringify(titresIds.value) !== JSON.stringify(caminoFiltres.titresIds.elements)) {
+      refreshLabels.value += 1
+      titresIds.value = caminoFiltres.titresIds.elements
+    }
+  }, 1000)
+  const refreshLabels = ref<number>(0)
+
   onBeforeRouteLeave(() => {
     stop()
+    clearInterval(interval)
   })
 
   const validatedValues = computed(() => {
@@ -148,6 +165,11 @@ export const Filters = defineComponent((props: Props) => {
     }
   }
 
+  const onFilterAutocomplete = (input: AutocompleteCaminoFiltres) => (items: InputAutocompleteValues) => {
+    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer en rendant InputAutocompleteValues generique)
+    nonValidatedValues.value[input] = items
+  }
+
   const labelsReset = () => {
     props.filters.forEach(filter => {
       if (isInputCaminoFiltre(filter)) {
@@ -178,6 +200,9 @@ export const Filters = defineComponent((props: Props) => {
   // })
 
   const labels = computed<FormatedLabel[]>(() => {
+    // TODO 2023-07-19 obligatoire pour que les labels se recalculent quand les trucs asynchrones (les titres) sont chargés...
+    // eslint-disable-next-line no-unused-expressions
+    refreshLabels.value
     return props.filters.flatMap(filter => {
       const filterType = caminoFiltres[filter]
       if (filterType.type === 'input' && nonValidatedValues.value[filter]) {
@@ -262,15 +287,7 @@ export const Filters = defineComponent((props: Props) => {
                   ))}
                   {autocompletes.value.map(input => (
                     <div key={input}>
-                      <InputAutocomplete
-                        filter={input}
-                        metas={props.metas}
-                        initialValue={nonValidatedValues.value[input]}
-                        onFilterAutocomplete={items => {
-                          // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
-                          nonValidatedValues.value[input] = items
-                        }}
-                      />
+                      <InputAutocomplete filter={input} metas={props.metas} initialValue={nonValidatedValues.value[input]} onFilterAutocomplete={onFilterAutocomplete(input)} />
                     </div>
                   ))}
                   <button class="btn-border small px-s p-xs rnd-xs mb" onClick={inputsErase}>

@@ -27,13 +27,23 @@ export type UtilisateursParams = {
   emails?: string
   roles?: Role[]
   administrationIds?: AdministrationId[]
-  entrepriseIds?: EntrepriseId[]
+  entreprisesIds?: EntrepriseId[]
 }
 export const utilisateurApiClient: UtilisateurApiClient = {
   getUtilisateurs: async (params: UtilisateursParams) => {
     const data = await apiGraphQLFetch(gql`
-      query Utilisateurs($page: Int, $colonne: String, $ordre: String, $entrepriseIds: [ID], $administrationIds: [ID], $roles: [ID], $noms: String, $emails: String) {
-        utilisateurs(intervalle: 10, page: $page, colonne: $colonne, ordre: $ordre, entrepriseIds: $entrepriseIds, administrationIds: $administrationIds, roles: $roles, noms: $noms, emails: $emails) {
+      query Utilisateurs($page: Int, $colonne: String, $ordre: String, $entreprisesIds: [ID], $administrationIds: [ID], $roles: [ID], $noms: String, $emails: String) {
+        utilisateurs(
+          intervalle: 10
+          page: $page
+          colonne: $colonne
+          ordre: $ordre
+          entreprisesIds: $entreprisesIds
+          administrationIds: $administrationIds
+          roles: $roles
+          noms: $noms
+          emails: $emails
+        ) {
           elements {
             id
             nom

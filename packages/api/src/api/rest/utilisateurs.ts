@@ -177,7 +177,7 @@ export const utilisateurs =
       {
         colonne,
         ordre,
-        entrepriseIds: entrepriseIds ? (Array.isArray(entrepriseIds) ? entrepriseIds : entrepriseIds.split(',')) : undefined,
+        entreprisesIds: entrepriseIds ? (Array.isArray(entrepriseIds) ? entrepriseIds : entrepriseIds.split(',')) : undefined,
         administrationIds: administrationIds ? (Array.isArray(administrationIds) ? administrationIds : administrationIds.split(',')) : undefined,
         roles: roles ? (Array.isArray(roles) ? roles.filter(isRole) : roles.split(',').filter(isRole)) : undefined,
         noms: noms ?? nomsUtilisateurs,

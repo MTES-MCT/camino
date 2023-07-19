@@ -98,7 +98,20 @@ export const PaginationSimple: StoryFn = () => (
       total: 200,
     }}
     caption="Test de pagination"
-    route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
+    route={{ query: { page: '3', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
+  />
+)
+
+export const NeCassePasSiPasPaginationFausse: StoryFn = () => (
+  <TablePagination
+    data={{
+      rows: [rows[0]],
+      columns,
+      total: 1,
+    }}
+    caption="Test de pagination"
+    route={{ query: { page: '5', intervalle: '10' }, name: '/plop' }}
     updateParams={action('updateParams')}
   />
 )

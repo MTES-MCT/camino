@@ -416,7 +416,7 @@ export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, e
     {
       colonne,
       ordre,
-      entrepriseIds: entrepriseIds?.split(','),
+      entreprisesIds: entrepriseIds?.split(','),
       administrationIds: administrationIds?.split(','),
       roles: roles?.split(',').filter(isRole) ?? [],
       noms,

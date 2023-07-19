@@ -48,14 +48,14 @@ const utilisateursQueryBuild = ({ fields }: { fields?: IFields }, user: User) =>
 const utilisateursFiltersQueryModify = (
   {
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
     emails,
   }: {
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -75,8 +75,8 @@ const utilisateursFiltersQueryModify = (
     q.whereIn('administrationId', administrationIds)
   }
 
-  if (entrepriseIds && entrepriseIds.length > 0) {
-    q.whereIn('entreprises.id', entrepriseIds).leftJoinRelated('entreprises')
+  if (entreprisesIds && entreprisesIds.length > 0) {
+    q.whereIn('entreprises.id', entreprisesIds).leftJoinRelated('entreprises')
   }
 
   if (noms && noms !== '') {
@@ -144,7 +144,7 @@ const utilisateursGet = async (
     colonne,
     ordre,
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
@@ -155,7 +155,7 @@ const utilisateursGet = async (
     colonne?: IUtilisateursColonneId | null
     ordre?: 'asc' | 'desc' | null
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -169,7 +169,7 @@ const utilisateursGet = async (
   utilisateursFiltersQueryModify(
     {
       ids,
-      entrepriseIds,
+      entreprisesIds,
       administrationIds,
       roles,
       noms,
@@ -198,14 +198,14 @@ const utilisateursGet = async (
 const utilisateursCount = async (
   {
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
     emails,
   }: {
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -216,7 +216,7 @@ const utilisateursCount = async (
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
-  utilisateursFiltersQueryModify({ ids, entrepriseIds, administrationIds, roles, noms, emails }, q)
+  utilisateursFiltersQueryModify({ ids, entreprisesIds, administrationIds, roles, noms, emails }, q)
 
   return q.resultSize()
 }

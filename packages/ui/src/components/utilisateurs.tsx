@@ -11,9 +11,8 @@ import { Utilisateur } from 'camino-common/src/entreprise'
 import { UtilisateursParams, utilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { getInitialFiltres } from './_ui/filters/filters'
 
-const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entrepriseIds'] as const
+const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const
 // FIXME si non connecté, mettre un message disant qu'il faut se connecter, sinon afficher erreur si l'utilisateur ne peut pas voir les utilisateurs
-// FIXME il faudrait que liste intègre la notion de loading pour éviter le content scroll
 export const Utilisateurs = defineComponent(() => {
   const store = useStore()
   const router = useRouter()
@@ -51,13 +50,13 @@ export const Utilisateurs = defineComponent(() => {
       emails: params.filtres?.emails,
       roles: params.filtres?.roles,
       administrationIds: params.filtres?.administrationIds,
-      entrepriseIds: params.filtres?.entrepriseIds,
+      entreprisesIds: params.filtres?.entreprisesIds,
     })
   }
   onMounted(async () => {
     try {
       const entreprises = await utilisateurApiClient.getEntreprises()
-      meta.value = { status: 'LOADED', value: { entreprise: entreprises } }
+      meta.value = { status: 'LOADED', value: { entreprises } }
     } catch (e: any) {
       console.error('error', e)
       data.value = {

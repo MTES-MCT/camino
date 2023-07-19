@@ -27,8 +27,8 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
     //       <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
     //     </div>
     //   )
-    // case 'FiltresTypes':
-    //   return FiltresTypes({ element: filter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
+    case 'FiltresTypes':
+      return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
     // case 'FiltresStatuts':
     //   return FiltresStatuts(
     //     {

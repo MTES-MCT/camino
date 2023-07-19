@@ -42,10 +42,12 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
   }
 
   const paramsTableUpdate = (newParams: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => {
-    params.value.page = newParams.page
-    params.value.colonne = newParams.colonne
-    params.value.ordre = newParams.ordre
-    props.paramsUpdate(params.value)
+    if (newParams.page !== params.value.page || newParams.colonne !== params.value.colonne || newParams.ordre !== params.value.ordre) {
+      params.value.page = newParams.page
+      params.value.colonne = newParams.colonne
+      params.value.ordre = newParams.ordre
+      props.paramsUpdate(params.value)
+    }
   }
 
   const paramsFiltresUpdate = (filtres: Params<ColumnId>['filtres']) => {

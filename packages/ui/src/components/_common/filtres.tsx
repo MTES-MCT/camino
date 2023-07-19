@@ -5,6 +5,8 @@ import { getKeys } from 'camino-common/src/typescript-tools'
 import { FiltersDeclaration } from '../_ui/filters/all-filters'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+
+export type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 export interface Props {
   filters: readonly CaminoFiltres[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
@@ -13,7 +15,7 @@ export interface Props {
   initialized: boolean
   subtitle?: string
   toggle?: (open: boolean) => void
-  paramsUpdate: (params: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
+  paramsUpdate: (params: Params) => void
 }
 
 export const Filtres = defineComponent((props: Props) => {
@@ -31,7 +33,7 @@ export const Filtres = defineComponent((props: Props) => {
     opened.value = false
   }
 
-  const validate = (params: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => {
+  const validate = (params: Params) => {
     if (JSON.stringify(filtresValues.value) !== JSON.stringify(params)) {
       // les champs textes sont mis à jour onBlur
       // pour les prendre en compte lorsqu'on valide en appuyant sur "entrée"
@@ -119,9 +121,7 @@ export const Filtres = defineComponent((props: Props) => {
           toggle={toggle}
         />
       ) : (
-        <div v-else class="py-s px-m mb-s border rnd-s">
-          …
-        </div>
+        <div class="py-s px-m mb-s border rnd-s">…</div>
       )}
     </>
   )

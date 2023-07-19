@@ -89,7 +89,7 @@ export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
 }
-export const titresColonnes: Column[] = [
+export const titresColonnes = [
   nomColumn,
   domaineColumn,
   typeColumn,
@@ -116,7 +116,7 @@ export const titresColonnes: Column[] = [
     noSort: true,
   },
   referencesColumn,
-]
+] as const satisfies readonly Column[]
 
 export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
   component: markRaw(TitreNom),

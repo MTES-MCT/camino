@@ -23,57 +23,54 @@ export const getInitialParams = <ColumnId extends string>(route: Pick<RouteLocat
 }
 
 const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
-export const TablePagination = defineComponent(
-  <ColumnId extends string>(props: Props<ColumnId>) => {
-    watch(
-      () => props.data,
-      () => {
-        // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
-        const main = document.querySelector<HTMLElement>('main')
-        if (main) {
-          main.scrollIntoView(true)
-        }
+export const TablePagination = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
+  watch(
+    () => props.data,
+    () => {
+      // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
+      const main = document.querySelector<HTMLElement>('main')
+      if (main) {
+        main.scrollIntoView(true)
       }
-    )
-
-    const initParams = getInitialParams(props.route, props.data.columns)
-
-    const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>
-    const ordre = ref<'asc' | 'desc'>(initParams.ordre)
-    const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
-
-    const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
-      ordre.value = newOrdre
-      colonne.value = newColonne
-      props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
     }
+  )
 
-    onBeforeRouteLeave(() => {
-      stop()
-    })
+  const initParams = getInitialParams(props.route, props.data.columns)
 
-    const stop = watch(pageNumber, newPageNumber => {
-      props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
-    })
+  const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>
+  const ordre = ref<'asc' | 'desc'>(initParams.ordre)
+  const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
 
-    const pagination = computed<boolean>(() => {
-      return props.data.total > props.data.rows.length
-    })
+  const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
+    ordre.value = newOrdre
+    colonne.value = newColonne
+    props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
+  }
 
-    const totalNumberOfPages = computed<number>(() => {
-      return Math.ceil(props.data.total / routerQueryToNumber(props.route.query.intervalle, 10))
-    })
+  onBeforeRouteLeave(() => {
+    stop()
+  })
 
-    return () => (
-      <div class="dsfr">
-        <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} updateParams={updateSort} />
+  const stop = watch(pageNumber, newPageNumber => {
+    props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
+  })
 
-        {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
-      </div>
-    )
-  },
-  { props: ['data', 'route', 'caption', 'updateParams'] }
-)
+  const pagination = computed<boolean>(() => {
+    return props.data.total > props.data.rows.length
+  })
+
+  const totalNumberOfPages = computed<number>(() => {
+    return Math.ceil(props.data.total / routerQueryToNumber(props.route.query.intervalle, 10))
+  })
+
+  return () => (
+    <div class="dsfr">
+      <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} updateParams={updateSort} />
+
+      {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
+    </div>
+  )
+})
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 TablePagination.props = ['data', 'route', 'caption', 'updateParams']
