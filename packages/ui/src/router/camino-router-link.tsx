@@ -5,11 +5,16 @@ import { LocationQueryValue, useLink, UseLinkOptions } from 'vue-router'
 export const routerQueryToNumber = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number): number => {
   return value !== undefined ? Number(value) : defaultValue
 }
+export const routerQueryToNumberArray = (value: LocationQueryValue | LocationQueryValue[], defaultValue: number[]): number[] => {
+  if (value === undefined) {
+    return defaultValue
+  }
+  return Array.isArray(value) ? value.map(value => Number(value)) : [Number(value)]
+}
 
 export const routerQueryToString = (value: LocationQueryValue | LocationQueryValue[], defaultValue: string): string => {
   return value !== undefined ? String(value) : defaultValue
 }
-
 
 export const routerQueryToStringArray = (value: LocationQueryValue | LocationQueryValue[]): string[] => {
   if (value === undefined) {

@@ -4,32 +4,67 @@ import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
 import { isDomaineId } from 'camino-common/src/static/domaines'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, MarkerClusterGroup } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
+import { routerQueryToNumber, routerQueryToNumberArray, routerQueryToString } from '@/router/camino-router-link'
+export type TitreCarteParams = {
+  zoom: number
+  centre: [number, number]
+  perimetre: [number, number, number, number]
+} | null
 interface Props {
   titres: TitreWithPoint[]
+  updateCarte: (params: TitreCarteParams) => void
+  router: Router
 }
 
-type ZoneId = (typeof zones)[number]['id']
-export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props => {
+type ZoneId = keyof typeof zones
+// TODO 2023-07-20 je pense qu'on peut mettre pas mal de choses en cache ici, notamment les titres qu'on a chargés, avec et sans périmètres.
+// Ça permettrait de rendre le front beaucoup plus fluide quand on joue avec la carte
+// En plus, on a déjà des ids, ceux des titres, donc facile pour la mise en cache.
+// à voir si on met en cache dans le composant ou ailleurs, pour garder les données le temps de la navigation, si l'utilisateur va sur les tableaux et revient par exemple
+export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router'], props => {
   const store = useStore()
-  const router = useRouter()
+  const zoneId = ref<ZoneId>('fr')
+  const savedParams = computed<TitreCarteParams>(() => {
+    const route = props.router.currentRoute.value
+
+    const zoom = routerQueryToNumber(route.query.zoom, Number.NaN)
+    const centre = routerQueryToNumberArray(route.query.centre, [Number.NaN, Number.NaN]) as [number, number]
+    const perimetre = routerQueryToNumberArray(route.query.perimetre, [Number.NaN, Number.NaN, Number.NaN, Number.NaN]) as [number, number, number, number]
+    return { zoom, centre, perimetre }
+  })
+
+  onBeforeRouteLeave(() => {
+    stop()
+  })
+
+  const stop = watch(
+    savedParams,
+    (newSavedParams, old) => {
+      if (!Number.isNaN(newSavedParams?.zoom)) {
+        if (JSON.stringify(newSavedParams) !== JSON.stringify(old)) {
+          return props.updateCarte(newSavedParams)
+        }
+      }
+    },
+    { immediate: true }
+  )
+
   const matomo = inject('matomo', null)
   const map = ref<typeof CaminoMap | null>(null)
 
-  const zoneId = ref<ZoneId>('fr')
   const geojsons = ref<Record<string, Layer>>({})
   const clusters = ref<MarkerClusterGroup[]>([]) as Ref<MarkerClusterGroup[]>
   const markers = ref<CaminoMarker[]>([]) as Ref<CaminoMarker[]>
 
   const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
 
-  const markerLayersId = computed(() => {
-    return store.state.user.preferences.carte.markerLayersId
-  })
+  // TODO 2023-07-20 on veut mettre ça dans l'URL ?
+  const markerLayersId = ref('clusters')
 
   const markerLayers = computed<Layer[]>(() => {
     if (markerLayersId.value === 'clusters') {
@@ -42,19 +77,15 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
   })
 
   const zone = computed(() => {
-    return zones.find(z => z.id === zoneId.value)
+    return zones[zoneId.value]
   })
 
   const bounds = computed(() => {
     return leafletGeojsonBoundsGet(zone.value)
   })
 
-  const preferences = computed(() => {
-    return store.state.titres.params.carte
-  })
-
   const init = () => {
-    if (preferences.value.zoom && preferences.value.centre) {
+    if (!Number.isNaN(savedParams.value?.zoom)) {
       positionSet()
     } else {
       boundsFit()
@@ -62,7 +93,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
   }
 
   const titresInit = (titres: TitreWithPoint[]) => {
-    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, router)
+    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router)
     const clustersBuilt = clustersBuild()
     geojsons.value = geojsonLayer
     markers.value = markersLayer
@@ -82,26 +113,37 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     geojsonLayersDisplay()
   }
 
-  const titresPreferencesUpdate = (params: { center?: number[]; zoom?: number; bbox?: number[] }) => {
-    if (params.center || params.zoom || params.bbox) {
-      const myParams: {
-        zoom?: number
-        centre?: number[]
-        perimetre?: number[]
-      } = { zoom: params.zoom }
+  const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
+    let ourParam = { ...savedParams.value }
+    if (ourParam === null) {
+      if (!params.center || !params.zoom || !params.bbox) {
+        console.error('Les paramètres ne sont pas initialisés et ne sont pas tous là')
+      } else {
+        ourParam = { centre: params.center, zoom: params.zoom, perimetre: params.bbox }
+      }
+    } else {
+      if (params.zoom) {
+        ourParam.zoom = params.zoom
+      }
       if (params.center) {
-        myParams.centre = params.center
+        ourParam.centre = params.center
       }
 
       if (params.bbox) {
-        myParams.perimetre = params.bbox
+        ourParam.perimetre = params.bbox
       }
-
-      store.dispatch('titres/paramsSet', {
-        section: 'carte',
-        params: myParams,
-      })
     }
+
+    const currentRoute = props.router.currentRoute.value
+    await props.router.push({
+      name: currentRoute.name ?? undefined,
+      query: {
+        ...currentRoute.query,
+        ...ourParam,
+        // TODO 2023-07-20 ugly hack pour corriger la race condition au niveau de la gestions des tabs dsfr...
+        vueId: 'carte',
+      },
+    })
   }
 
   const mapCenter = (newZoneId: ZoneId) => {
@@ -113,12 +155,8 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
   }
 
   const mapFrame = async () => {
-    const params = { perimetre: [-180, -90, 180, 90] }
-
-    await store.dispatch('titres/paramsSet', {
-      section: 'carte',
-      params,
-    })
+    const currentRoute = props.router.currentRoute.value
+    await props.router.push({ name: currentRoute.name ?? undefined, query: { ...currentRoute.query, perimetre: [-180, -90, 180, 90] } })
 
     if (map.value) {
       // le traitement au dessus peut-être très long et l’utilisateur a pu changer de page
@@ -131,13 +169,11 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
   }
 
   const positionSet = () => {
-    const zoom = preferences.value.zoom
-    const center = preferences.value.centre
-    map.value?.positionSet({ zoom, center })
-  }
-
-  const popState = () => {
-    positionSet()
+    if (savedParams.value !== null) {
+      const zoom = savedParams.value.zoom
+      const center = savedParams.value.centre
+      map.value?.positionSet({ zoom, center })
+    }
   }
 
   const geojsonLayersDisplay = () => {
@@ -151,26 +187,24 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     })
   }
 
-  const markerLayersIdSet = (markerLayersId: 'clusters' | 'markers' | 'none') => {
-    const params = { markerLayersId }
+  const markerLayersIdSet = (layerId: 'clusters' | 'markers' | 'none') => {
     if (matomo) {
       // @ts-ignore
       matomo.trackEvent('titres-vue', 'titre-id-fond-carte')
     }
-    store.dispatch('user/preferencesSet', {
-      section: 'carte',
-      params,
-    })
+    markerLayersId.value = layerId
     geojsonLayersDisplay()
   }
 
   onMounted(() => {
     init()
-    window.addEventListener('popstate', popState)
+    // FIXME je pense que ça ne sert plus maintenant
+    // window.addEventListener('popstate', popState)
   })
-  onBeforeUnmount(() => {
-    window.removeEventListener('popstate', popState)
-  })
+  // FIXME je pense que ça ne sert plus maintenant
+  // onBeforeUnmount(() => {
+  //   window.removeEventListener('popstate', popState)
+  // })
 
   watch(
     () => props.titres,
@@ -188,7 +222,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
           <li>
             <DsfrButton onClick={() => mapFrame()} title="Tout afficher" buttonType="tertiary" />
           </li>
-          {zones.map(z => (
+          {Object.values(zones).map(z => (
             <li key={z.id}>
               <DsfrButton buttonType="tertiary" onClick={() => mapCenter(z.id)} title={z.name} />
             </li>

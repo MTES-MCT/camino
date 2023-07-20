@@ -7,7 +7,7 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 export interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
-  mapUpdate?: (data: { center?: number[]; zoom?: number; bbox?: number[] }) => void
+  mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void
   additionalOverlayLayers?: Record<string, LayerGroup>
 }
 
@@ -41,7 +41,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     { immediate: true }
   )
 
-  const boundsGet = () => {
+  const boundsGet = (): [number, number, number, number] | [] => {
     if (leafletComponent.value !== null) {
       const bounds = leafletComponent.value.getBounds()
 
@@ -176,19 +176,23 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
         if (updateBboxOnly.value) {
           updateBboxOnly.value = false
           const bbox = boundsGet()
-
-          props.mapUpdate?.({ bbox })
+          if (bbox.length === 4) {
+            props.mapUpdate({ bbox })
+          }
         } else {
-          const center = [leafletComponentOnMounted.getCenter().lat, leafletComponentOnMounted.getCenter().lng]
+          const { lat, lng } = leafletComponentOnMounted.getCenter()
+          const center: [number, number] = [lat, lng]
           const leafletZoom = leafletComponentOnMounted.getZoom()
           zoom.value = leafletZoom
 
           if (updateCenterAndZoomOnly.value) {
             updateCenterAndZoomOnly.value = false
-            props.mapUpdate?.({ center, zoom: zoom.value })
+            props.mapUpdate({ center, zoom: zoom.value })
           } else {
             const bbox = boundsGet()
-            props.mapUpdate?.({ center, zoom: zoom.value, bbox })
+            if (bbox.length === 4) {
+              props.mapUpdate({ center, zoom: zoom.value, bbox })
+            }
           }
         }
       })

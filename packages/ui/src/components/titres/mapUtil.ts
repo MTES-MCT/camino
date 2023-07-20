@@ -14,8 +14,8 @@ const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, num
     lat: coordinates[1],
   }
 }
-export const zones = [
-  {
+export const zones = {
+  fr: {
     id: 'fr',
     name: 'Métropole',
     type: 'LineString',
@@ -24,7 +24,7 @@ export const zones = [
       [10, 51],
     ],
   },
-  {
+  gf: {
     id: 'gf',
     name: 'Guyane',
     type: 'LineString',
@@ -33,7 +33,7 @@ export const zones = [
       [-51, 2],
     ],
   },
-  {
+  oi: {
     id: 'oi',
     name: 'Océan Indien',
     type: 'LineString',
@@ -42,7 +42,7 @@ export const zones = [
       [58, -13],
     ],
   },
-  {
+  an: {
     id: 'an',
     name: 'Antilles',
     type: 'LineString',
@@ -51,7 +51,7 @@ export const zones = [
       [-59, 16],
     ],
   },
-] as const
+} as const
 
 const L = window.L
 

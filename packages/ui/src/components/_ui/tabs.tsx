@@ -6,7 +6,7 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 export type Tab = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
 
-type TabId = string & { __camino: 'TabId' }
+export type TabId = string & { __camino: 'TabId' }
 export const newTabId = (tabId: string): TabId => tabId as TabId
 type Props = {
   tabsTitle: string
