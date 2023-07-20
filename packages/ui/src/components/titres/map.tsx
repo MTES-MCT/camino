@@ -1,15 +1,14 @@
-import { nextTick, ref, Ref, computed, onMounted, onBeforeUnmount, inject, watch } from 'vue'
+import { nextTick, ref, Ref, computed, onMounted, inject, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
 import { isDomaineId } from 'camino-common/src/static/domaines'
-import { useStore } from 'vuex'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, MarkerClusterGroup } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
-import { routerQueryToNumber, routerQueryToNumberArray, routerQueryToString } from '@/router/camino-router-link'
+import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]
@@ -27,7 +26,6 @@ type ZoneId = keyof typeof zones
 // En plus, on a déjà des ids, ceux des titres, donc facile pour la mise en cache.
 // à voir si on met en cache dans le composant ou ailleurs, pour garder les données le temps de la navigation, si l'utilisateur va sur les tableaux et revient par exemple
 export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router'], props => {
-  const store = useStore()
   const zoneId = ref<ZoneId>('fr')
   const savedParams = computed<TitreCarteParams>(() => {
     const route = props.router.currentRoute.value
@@ -159,6 +157,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     await props.router.push({ name: currentRoute.name ?? undefined, query: { ...currentRoute.query, perimetre: [-180, -90, 180, 90] } })
 
     if (map.value) {
+      // TODO 2023-07-20 plus d'actualité ? On ne fait plus de allFit après chargement des données quand on veut tout afficher ?
       // le traitement au dessus peut-être très long et l’utilisateur a pu changer de page
       map.value.allFit()
     }

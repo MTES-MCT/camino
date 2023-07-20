@@ -15,7 +15,6 @@ import { AsyncData } from '@/api/client-rest'
 import { LocationQuery, useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
 import { LoadingElement } from './_ui/functional-loader'
-import { Params } from './_common/filtres'
 import { titresColonnes } from './titres/table-utils'
 import { TitreWithPoint } from './titres/mapUtil'
 
@@ -110,7 +109,6 @@ export const Titres = defineComponent({
         }
       }
       await reloadTitres(routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as VueId)
-      // store.dispatch('titres/init')
     })
 
     const user = computed<User>(() => store.state.user.element)

@@ -14,13 +14,17 @@ export function FiltersInput(props: Props) {
       <h5>{filter.name}</h5>
       <hr class="mb-s" />
 
-      <input value={props.initialValue} type="text" placeholder={filter.placeholder} onChange={(e) => {
-        if (isEventWithTarget(e)) {
-
-          props.onFilterInput(e.target.value)
-        }
-      } } />
-
+      <input
+        class="p-xs"
+        value={props.initialValue}
+        type="text"
+        placeholder={filter.placeholder}
+        onChange={e => {
+          if (isEventWithTarget(e)) {
+            props.onFilterInput(e.target.value)
+          }
+        }}
+      />
     </div>
   )
 }

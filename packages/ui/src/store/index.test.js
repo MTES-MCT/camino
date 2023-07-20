@@ -7,7 +7,6 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('file-saver', () => ({ saveAs: vi.fn() }))
 vi.mock('./titre', () => ({ default: { titre: vi.fn() } }))
-vi.mock('./titres', () => ({ default: { titres: vi.fn() } }))
 vi.mock('./titre-creation', () => ({ default: { titreCreation: vi.fn() } }))
 vi.mock('./titre-etape', () => ({ default: { titreEtape: vi.fn() } }))
 vi.mock('./titre-etape-edition', () => ({ default: { titreEtape: vi.fn() } }))
