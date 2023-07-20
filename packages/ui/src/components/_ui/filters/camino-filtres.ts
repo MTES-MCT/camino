@@ -1,13 +1,13 @@
 import { elementsFormat } from '../../../utils/index'
 import { ROLES, roleValidator } from 'camino-common/src/roles'
 import { ADMINISTRATION_TYPES, administrationIdValidator, administrationTypeIdValidator, sortedAdministrations } from 'camino-common/src/static/administrations'
-import { departements } from 'camino-common/src/static/departement'
-import { regions } from 'camino-common/src/static/region'
-import { FACADES } from 'camino-common/src/static/facades'
+import { departementIdValidator, departements } from 'camino-common/src/static/departement'
+import { regionIdValidator, regions } from 'camino-common/src/static/region'
+import { FACADES, facadeMaritimeIdValidator } from 'camino-common/src/static/facades'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { SubstancesLegales, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
-import { sortedDomaines } from 'camino-common/src/static/domaines'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { domaineIdValidator, sortedDomaines } from 'camino-common/src/static/domaines'
+import { sortedTitresStatuts, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts'
 import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from 'camino-common/src/static/titresTypesTypes'
 import { TitreId, titreIdValidator } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
@@ -112,35 +112,38 @@ export const caminoFiltres = {
     placeholder: 'Communes',
     validator: z.string(),
   },
-  // FIXME IL FAUT CONTINUER ICI
-  // departements: {
-  //   id: 'departements',
-  //   name: 'Départements',
-  //   type: 'autocomplete',
-  //   elements: departements.sort((a, b) => a.id.localeCompare(b.id)).map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
-  // },
-  // regions: {
-  //   id: 'regions',
-  //   name: 'Régions',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   elements: regions.sort((a, b) => a.nom.localeCompare(b.nom)),
-  // },
-  // facadesMaritimes: {
-  //   id: 'facadesMaritimes',
-  //   name: 'Façades Maritimes',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   elements: FACADES.sort((a, b) => a.localeCompare(b)).map(facade => ({ id: facade, nom: facade })),
-  // },
-  // domainesIds: {
-  //   id: 'domainesIds',
-  //   name: 'Domaines',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedDomaines,
-  //   component: 'FiltreDomaine',
-  // },
+  departements: {
+    id: 'departements',
+    name: 'Départements',
+    type: 'autocomplete',
+    elements: departements.sort((a, b) => a.id.localeCompare(b.id)).map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
+    lazy: false,
+    validator: z.array(departementIdValidator),
+  },
+  regions: {
+    id: 'regions',
+    name: 'Régions',
+    type: 'autocomplete',
+    elements: regions.sort((a, b) => a.nom.localeCompare(b.nom)),
+    lazy: false,
+    validator: z.array(regionIdValidator),
+  },
+  facadesMaritimes: {
+    id: 'facadesMaritimes',
+    name: 'Façades Maritimes',
+    type: 'autocomplete',
+    elements: FACADES.sort((a, b) => a.localeCompare(b)).map(facade => ({ id: facade, nom: facade })),
+    lazy: false,
+    validator: z.array(facadeMaritimeIdValidator),
+  },
+  domainesIds: {
+    id: 'domainesIds',
+    name: 'Domaines',
+    type: 'checkboxes',
+    elements: sortedDomaines,
+    component: 'FiltreDomaine',
+    validator: z.array(domaineIdValidator),
+  },
   typesIds: {
     id: 'typesIds',
     name: 'Types de titre',
@@ -149,14 +152,14 @@ export const caminoFiltres = {
     component: 'FiltresTypes',
     validator: z.array(titreTypeTypeIdValidator),
   },
-  // statutsIds: {
-  //   id: 'statutsIds',
-  //   name: 'Statuts',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedTitresStatuts,
-  //   component: 'FiltresTitresStatuts',
-  // },
+  statutsIds: {
+    id: 'statutsIds',
+    name: 'Statuts',
+    type: 'checkboxes',
+    elements: sortedTitresStatuts,
+    component: 'FiltresTitresStatuts',
+    validator: z.array(titreStatutIdValidator),
+  },
   // titresEntreprisesIds: {
   //   id: 'titresEntreprisesIds',
   //   type: 'autocomplete',
@@ -240,7 +243,7 @@ export const caminoFiltres = {
   //   type: 'etape',
   //   value: [],
   // },
-  // FIXME add correct satisfies
+  // TODO 2023-07-20 add correct satisfies
 } as const satisfies {
   [key in string]: {
     id: key
@@ -249,7 +252,7 @@ export const caminoFiltres = {
     placeholder?: string
     validator: ZodType
     elements?: unknown[]
-    component?: 'FiltresLabel' | 'FiltresTypes'
+    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts'
     lazy?: boolean
     search?: (value: string) => Promise<unknown>
     load?: (values: TitreId[]) => Promise<unknown[]>
@@ -264,8 +267,6 @@ export const caminoFiltres = {
 }
 
 const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes'] as const
-const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entreprisesIds', 'titresIds'] as const
-const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds'] as const
 export const caminoInputFiltres = [
   caminoFiltres.nomsAdministration,
   caminoFiltres.nomsUtilisateurs,
@@ -273,18 +274,35 @@ export const caminoInputFiltres = [
   caminoFiltres.references,
   caminoFiltres.communes,
 ] as const satisfies readonly { type: 'input' }[]
-export const caminoAutocompleteFiltres = [caminoFiltres.substancesIds, caminoFiltres.administrationIds, caminoFiltres.entreprisesIds, caminoFiltres.titresIds] as const satisfies readonly {
+export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
+export const isInputCaminoFiltre = (value: CaminoFiltres): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)
+
+const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entreprisesIds', 'titresIds', 'departements', 'regions', 'facadesMaritimes'] as const
+export const caminoAutocompleteFiltres = [
+  caminoFiltres.substancesIds,
+  caminoFiltres.administrationIds,
+  caminoFiltres.entreprisesIds,
+  caminoFiltres.titresIds,
+  caminoFiltres.departements,
+  caminoFiltres.regions,
+  caminoFiltres.facadesMaritimes,
+] as const satisfies readonly {
   type: 'autocomplete'
 }[]
-export const caminoCheckboxesFiltres = [caminoFiltres.administrationTypesIds, caminoFiltres.roles, caminoFiltres.typesIds] as const satisfies readonly { type: 'checkboxes' }[]
-export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
+export const isAutocompleteCaminoFiltre = (value: CaminoFiltres): value is AutocompleteCaminoFiltres => caminoAutocompleteFiltresArrayIds.includes(value)
+
+const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds', 'domainesIds', 'statutsIds'] as const
+export const caminoCheckboxesFiltres = [
+  caminoFiltres.administrationTypesIds,
+  caminoFiltres.roles,
+  caminoFiltres.typesIds,
+  caminoFiltres.domainesIds,
+  caminoFiltres.statutsIds,
+] as const satisfies readonly { type: 'checkboxes' }[]
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']
+export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)
 
 export type CaminoFiltres = InputCaminoFiltres | CheckboxesCaminoFiltres | AutocompleteCaminoFiltres
-
-export const isInputCaminoFiltre = (value: CaminoFiltres): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)
-export const isAutocompleteCaminoFiltre = (value: CaminoFiltres): value is AutocompleteCaminoFiltres => caminoAutocompleteFiltresArrayIds.includes(value)
-export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)
 
 export const allCaminoFiltres = [...caminoInputFiltresArrayIds, ...caminoAutocompleteFiltresArrayIds, ...caminoCheckboxesFiltresArrayIds] as const

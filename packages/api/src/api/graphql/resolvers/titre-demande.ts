@@ -49,7 +49,7 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
       throw new Error('Le champ titreFromIds est obligatoire pour ce type de titre')
     }
 
-    if (titreDemande.titreFromIds !== undefined) {
+    if (titreDemande.titreFromIds !== undefined && titreDemande.titreFromIds.length > 0) {
       const titresFrom = await titresGet({ ids: titreDemande.titreFromIds }, { fields: { id: {} } }, user)
 
       checkTitreLinks(titreDemande, titreDemande.titreFromIds, titresFrom, [])

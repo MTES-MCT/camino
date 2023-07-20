@@ -20,6 +20,7 @@ import { Column } from '../_ui/table-auto'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
 import { TitreStatut } from '../_common/titre-statut'
+import { TitreForTable } from '../titre/titre-api-client'
 
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,
@@ -177,7 +178,7 @@ export const activitesCell = (titre: { activitesAbsentes: number | null; activit
   },
   value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0),
 })
-export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boolean, ordre = 'asc'): TableRow[] =>
+export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean): TableRow[] =>
   titres.map(titre => {
     const departements: Departement[] = [...(titre.communes?.map(({ id }) => toDepartementId(id)) ?? []), ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])]
       .filter(onlyUnique)

@@ -1,5 +1,11 @@
 import { DepartementId, DEPARTEMENT_IDS } from './departement.js'
 import { getEntries, getKeys, onlyUnique } from '../typescript-tools.js'
+import { z } from 'zod'
+
+const IDS = ['Manche Est - Mer du Nord', 'Nord Atlantique - Manche Ouest', 'Sud Atlantique', 'Méditerranée'] as const
+
+export const facadeMaritimeIdValidator = z.enum(IDS)
+export type FacadesMaritimes = z.infer<typeof facadeMaritimeIdValidator>
 
 const facades = {
   'Manche Est - Mer du Nord': {
@@ -72,11 +78,10 @@ const facades = {
     'Bouches de Bonifacio Est - Porto-Vecchio': { ids: [57], secteurId: '29', departementIds: [] },
     'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] },
   },
-}
+} as const satisfies Record<FacadesMaritimes, unknown>
 export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
 
-export type FacadesMaritimes = keyof typeof facades
 export type SecteursMaritimes = { [Key in FacadesMaritimes]: keyof (typeof facades)[Key] }[FacadesMaritimes]
 type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
 export type SecteursMaritimesIds = sect['ids'][number]
@@ -102,7 +107,7 @@ export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): Departement
 }
 
 export const getSecteurMaritime = (id: SecteursMaritimesIds): SecteursMaritimes => {
-  const result: [SecteursMaritimes, any] | undefined = Object.values<Record<string, { ids: number[] }>>(facades)
+  const result: [SecteursMaritimes, any] | undefined = Object.values<Record<string, { ids: readonly number[] }>>(facades)
     .flatMap(f => getEntries(f, isSecteurMaritime))
     .find(([_secteur, value]) => value?.ids?.includes(id))
   if (result === undefined) {

@@ -5,12 +5,42 @@ import { Commune } from 'camino-common/src/static/communes'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
-import { fragmentTitres } from '@/api/fragments/titre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { CodePostal, DepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
+import { FacadesMaritimes, SecteursMaritimes } from 'camino-common/src/static/facades'
+import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 
+export type TitreForTable = {
+  id: TitreId
+  slug: string
+  nom: string
+  typeId: TitreTypeId
+  coordonnees?: {
+    x: number
+    y: number
+  }
+  titreStatutId: TitreStatutId
+  substances: SubstanceLegaleId[]
+  activitesEnConstruction: number
+  activitesAbsentes: number
+  activitesDeposees: number
+  titulaires: {
+    id: EntrepriseId
+    nom: string
+  }[]
+  amodiataires: {
+    id: EntrepriseId
+    nom: string
+  }[]
+  communes: { id: CodePostal }[]
+  secteursMaritime: SecteursMaritimes[]
+  references: { referenceTypeId: ReferenceTypeId; nom: string }[]
+}
 export interface TitreApiClient {
   loadTitreSections: (titreId: TitreId) => Promise<Section[]>
   removeTitre: (titreId: TitreId) => Promise<void>
@@ -25,18 +55,18 @@ export interface TitreApiClient {
     colonne?: string
     ordre?: 'asc' | 'desc'
     titresIds: TitreId[]
-    typesIds: TitreTypeId[]
+    typesIds: TitreTypeTypeId[]
     domainesIds: DomaineId[]
     statutsIds: TitreStatutId[]
     substancesIds: SubstanceLegaleId[]
     // noms
     entreprisesIds: EntrepriseId[]
-    // references
+    references: string
     communes: string
-    // departements
-    // regions
-    // facadesMaritimes
-  }) => Promise<{ elements: any[]; total: number }>
+    departements: DepartementId[]
+    regions: RegionId[]
+    facadesMaritimes: FacadesMaritimes[]
+  }) => Promise<{ elements: TitreForTable[]; total: number }>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -88,7 +118,6 @@ export const titreApiClient: TitreApiClient = {
           $domainesIds: [ID!]
           $statutsIds: [ID!]
           $substancesIds: [ID!]
-          $noms: String
           $entreprisesIds: [ID!]
           $references: String
           $communes: String
@@ -106,7 +135,6 @@ export const titreApiClient: TitreApiClient = {
             domainesIds: $domainesIds
             statutsIds: $statutsIds
             substancesIds: $substancesIds
-            noms: $noms
             entreprisesIds: $entreprisesIds
             references: $references
             communes: $communes
@@ -115,13 +143,39 @@ export const titreApiClient: TitreApiClient = {
             facadesMaritimes: $facadesMaritimes
           ) {
             elements {
-              ...titres
+              id
+              slug
+              nom
+              typeId
+              coordonnees {
+                x
+                y
+              }
+              titreStatutId
+              substances
+              activitesEnConstruction
+              activitesAbsentes
+              activitesDeposees
+              titulaires {
+                id
+                nom
+              }
+              amodiataires {
+                id
+                nom
+              }
+              communes {
+                id
+              }
+              secteursMaritime
+              references {
+                referenceTypeId
+                nom
+              }
             }
             total
           }
         }
-
-        ${fragmentTitres}
       `
     )(params)
     return { elements, total }

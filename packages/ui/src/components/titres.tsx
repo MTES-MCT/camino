@@ -10,7 +10,7 @@ import { TitresTablePagination, Params as TitresTablePaginationParams, getInitia
 import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
-import { titreApiClient } from './titre/titre-api-client'
+import { TitreForTable, titreApiClient } from './titre/titre-api-client'
 import { AsyncData } from '@/api/client-rest'
 import { useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
@@ -46,7 +46,7 @@ export const Titres = defineComponent({
     const titresMetas = ref<AsyncData<Awaited<ReturnType<typeof titreApiClient.getTitresMetas>>>>({ status: 'LOADING' })
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
-    const titresForTable = ref<any[]>([])
+    const titresForTable = ref<TitreForTable[]>([])
     const total = ref<number>(0)
 
     const paramsForTable = ref<TitresTablePaginationParams>(getInitialTitresTablePaginationParams(router.currentRoute.value))

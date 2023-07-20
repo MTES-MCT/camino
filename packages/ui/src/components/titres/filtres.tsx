@@ -13,7 +13,19 @@ interface Props {
   metas: unknown
   paramsUpdate: (params: TitreFiltresParams) => void
 }
-const filtres = ['titresIds', 'entreprisesIds', 'substancesIds', 'references', 'communes', 'typesIds'] as const satisfies readonly CaminoFiltres[]
+const filtres = [
+  'titresIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'communes',
+  'departements',
+  'regions',
+  'facadesMaritimes',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+] as const satisfies readonly CaminoFiltres[]
 
 export const getInitialTitresFiltresParams = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>): TitreFiltresParams => {
   return getInitialFiltres(route, filtres)

@@ -6,10 +6,11 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TitreEntreprise } from 'camino-common/src/entreprise'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { User } from 'camino-common/src/roles'
+import { TitreForTable } from '../titre/titre-api-client'
 
 export type Params = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export interface Props {
-  titres: TitreEntreprise[]
+  titres: TitreForTable[]
   total: number
   user: User
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>

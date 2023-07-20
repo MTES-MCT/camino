@@ -20,13 +20,13 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
 
   const component = fullFilter.component
   switch (component) {
-    // case 'FiltreDomaine':
-    //   return (
-    //     <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
-    //       <DomaineComp domaineId={filter.elements[index].id} />
-    //       <div class="h6 bold fr-pl-1w">{capitalize(filter.elements[index].nom)}</div>
-    //     </div>
-    //   )
+    case 'FiltreDomaine':
+      return (
+        <div class="dsfr" style={{ display: 'flex', alignItems: 'baseline' }}>
+          <DomaineComp domaineId={fullFilter.elements[index].id} />
+          <div class="h6 bold fr-pl-1w">{capitalize(fullFilter.elements[index].nom)}</div>
+        </div>
+      )
     case 'FiltresTypes':
       return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
     // case 'FiltresStatuts':
@@ -36,12 +36,12 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
     //     },
     //     { attrs: {}, emit: () => {}, slots: {} }
     //   )
-    // case 'FiltresTitresStatuts':
-    //   return (
-    //     <div class="dsfr">
-    //       <TitreStatutComp titreStatutId={filter.elements[index].id} />
-    //     </div>
-    //   )
+    case 'FiltresTitresStatuts':
+      return (
+        <div class="dsfr">
+          <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
+        </div>
+      )
     case 'FiltresLabel':
       return <span class="cap-first h6 bold">{fullFilter.elements[index].nom}</span>
     default:
