@@ -1,7 +1,7 @@
 import { EditableTitre, Section, TitreGet, TitreId } from 'camino-common/src/titres'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
-import { Commune } from 'camino-common/src/static/communes'
+import { Commune, CommuneId } from 'camino-common/src/static/communes'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
@@ -10,7 +10,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { CodePostal, DepartementId } from 'camino-common/src/static/departement'
+import { DepartementId } from 'camino-common/src/static/departement'
 import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
@@ -27,20 +27,15 @@ export type TitreForTable = {
   }
   titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
-  activitesEnConstruction: number
-  activitesAbsentes: number
-  activitesDeposees: number
+  activitesEnConstruction: number | null
+  activitesAbsentes: number | null
   titulaires: {
     id: EntrepriseId
     nom: string
   }[]
-  amodiataires: {
-    id: EntrepriseId
-    nom: string
-  }[]
-  communes: { id: CodePostal }[]
-  secteursMaritime: SecteursMaritimes[]
-  references: { referenceTypeId: ReferenceTypeId; nom: string }[]
+  communes?: { id: CommuneId }[]
+  secteursMaritime?: SecteursMaritimes[]
+  references?: { referenceTypeId: ReferenceTypeId; nom: string }[]
 }
 export interface TitreApiClient {
   loadTitreSections: (titreId: TitreId) => Promise<Section[]>
@@ -174,12 +169,7 @@ export const titreApiClient: TitreApiClient = {
               substances
               activitesEnConstruction
               activitesAbsentes
-              activitesDeposees
               titulaires {
-                id
-                nom
-              }
-              amodiataires {
                 id
                 nom
               }

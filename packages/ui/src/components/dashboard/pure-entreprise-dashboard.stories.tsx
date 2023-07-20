@@ -1,9 +1,10 @@
 import { PureEntrepriseDashboard, Props } from './pure-entreprise-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
-import { TitreEntreprise, newEntrepriseId } from 'camino-common/src/entreprise'
+import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/Entreprise',
@@ -17,7 +18,7 @@ export default meta
 
 const titres: TitreEntreprise[] = [
   {
-    id: 'jp25TIfyQiXM987fAGc2DX4N',
+    id: titreIdValidator.parse('jp25TIfyQiXM987fAGc2DX4N'),
     slug: 'm-cx-aachen-1810',
     nom: 'Aachen',
     typeId: 'cxm',
@@ -31,7 +32,7 @@ const titres: TitreEntreprise[] = [
     activitesAbsentes: 3,
     titulaires: [
       {
-        id: 'fr-793025370',
+        id: entrepriseIdValidator.parse('fr-793025370'),
         nom: 'NINOR',
       },
     ],
@@ -44,7 +45,7 @@ const titres: TitreEntreprise[] = [
     ],
   },
   {
-    id: 'mlWyShEGu8v7eYmsUhfiAMbs',
+    id: titreIdValidator.parse('mlWyShEGu8v7eYmsUhfiAMbs'),
     slug: 'm-ax-amadis-5-2022',
     nom: 'Amadis 5',
     typeId: 'axm',
@@ -54,7 +55,7 @@ const titres: TitreEntreprise[] = [
     activitesAbsentes: null,
     titulaires: [
       {
-        id: 'fr-838049344',
+        id: entrepriseIdValidator.parse('fr-838049344'),
         nom: "CHAMB'OR",
       },
     ],
@@ -110,7 +111,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
       getEntreprisesTitres: () =>
         Promise.resolve([
           {
-            id: 'mlWyShEGu8v7eYmsUhfiAMbs',
+            id: titreIdValidator.parse('mlWyShEGu8v7eYmsUhfiAMbs'),
             slug: 'm-ax-amadis-5-2022',
             nom: 'Amadis 5',
             typeId: 'apw',
@@ -120,7 +121,7 @@ export const OkWithoutFiscalite: StoryFn = () => (
             activitesAbsentes: null,
             titulaires: [
               {
-                id: 'fr-838049344',
+                id: entrepriseIdValidator.parse('fr-838049344'),
                 nom: "CHAMB'OR",
               },
             ],

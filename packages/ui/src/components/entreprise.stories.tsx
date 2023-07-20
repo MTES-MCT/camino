@@ -2,11 +2,12 @@ import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { Entreprise, EntrepriseDocument, EntrepriseType, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseDocument, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { toUtilisateurId } from 'camino-common/src/roles'
+import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -162,7 +163,7 @@ const completeEntreprise: EntrepriseType = {
   ],
   titulaireTitres: [
     {
-      id: 'idTitre1',
+      id: titreIdValidator.parse('idTitre1'),
       slug: 'slugTitre1',
       nom: 'titre 1 nom',
       typeId: 'arm',
@@ -176,7 +177,7 @@ const completeEntreprise: EntrepriseType = {
       activitesAbsentes: null,
       titulaires: [
         {
-          id: '',
+          id: entrepriseIdValidator.parse(''),
           nom: 'Nom entreprise',
         },
       ],
@@ -187,7 +188,7 @@ const completeEntreprise: EntrepriseType = {
       ],
     },
     {
-      id: 'idTitre2',
+      id: titreIdValidator.parse('idTitre2'),
       slug: 'slugtitre',
       nom: 'NomTitre',
       typeId: 'axm',
@@ -201,7 +202,7 @@ const completeEntreprise: EntrepriseType = {
       activitesAbsentes: 0,
       titulaires: [
         {
-          id: 'entrepriseId',
+          id: entrepriseIdValidator.parse('entrepriseId'),
           nom: 'Nom entreprise',
         },
       ],
@@ -218,7 +219,7 @@ const completeEntreprise: EntrepriseType = {
       ],
     },
     {
-      id: 'idTitre3',
+      id: titreIdValidator.parse('idTitre3'),
       slug: 'slug3',
       nom: 'Nom titre 3',
       typeId: 'arm',
@@ -232,7 +233,7 @@ const completeEntreprise: EntrepriseType = {
       activitesAbsentes: null,
       titulaires: [
         {
-          id: 'idEntreprise',
+          id: entrepriseIdValidator.parse('idEntreprise'),
           nom: 'Nom entreprise',
         },
       ],
@@ -245,7 +246,7 @@ const completeEntreprise: EntrepriseType = {
   ],
   amodiataireTitres: [
     {
-      id: 'idTitre3',
+      id: titreIdValidator.parse('idTitre3'),
       slug: 'slug3',
       nom: 'Nom titre 3',
       typeId: 'arm',
@@ -259,7 +260,7 @@ const completeEntreprise: EntrepriseType = {
       activitesAbsentes: null,
       titulaires: [
         {
-          id: 'idEntreprise',
+          id: entrepriseIdValidator.parse('idEntreprise'),
           nom: 'Nom entreprise',
         },
       ],
