@@ -135,7 +135,7 @@ type Query {
   utilisateur(id: ID!): Utilisateur
 
   "Liste d'utilisateurs en fonction d'arguments (optionnels)"
-  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entrepriseIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
+  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entreprisesIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
 
   "Liste des substances"
   substances: [Substance]

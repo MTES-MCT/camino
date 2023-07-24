@@ -13,7 +13,6 @@ vi.mock('./titre-etape-edition', () => ({ default: { titreEtape: vi.fn() } }))
 vi.mock('./document', () => ({ default: { document: vi.fn() } }))
 vi.mock('./titres-demarches', () => ({ default: { titresDemarches: vi.fn() } }))
 vi.mock('./utilisateur', () => ({ default: { utilisateur: vi.fn() } }))
-vi.mock('./entreprises', () => ({ default: { entreprises: vi.fn() } }))
 vi.mock('./administration', () => ({ default: { administration: vi.fn() } }))
 vi.mock('./user', () => ({ default: { user: vi.fn() } }))
 vi.mock('./titre-activite', () => ({ default: { titreActivite: vi.fn() } }))
@@ -22,7 +21,6 @@ vi.mock('./titre-activite-edition', () => ({
     titreActiviteEdition: vi.fn(),
   },
 }))
-vi.mock('./titres-activites', () => ({ default: { titresActivites: vi.fn() } }))
 vi.mock('./statistiques', () => ({ default: { statistiques: vi.fn() } }))
 vi.mock('./definitions', () => ({ default: { definitions: vi.fn() } }))
 vi.mock('./metas', () => ({ default: { metas: vi.fn() } }))

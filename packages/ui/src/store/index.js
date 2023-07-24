@@ -16,7 +16,6 @@ import meta from './meta'
 import user from './user'
 import titreActivite from './titre-activite'
 import titreActiviteEdition from './titre-activite-edition'
-import titresActivites from './titres-activites'
 
 const modules = {
   titre,
@@ -30,7 +29,6 @@ const modules = {
   user,
   titreActivite,
   titreActiviteEdition,
-  titresActivites,
 }
 
 const state = {

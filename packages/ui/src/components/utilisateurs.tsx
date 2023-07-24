@@ -1,8 +1,7 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { User } from 'camino-common/src/roles'
+import { User, isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
-import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
@@ -10,9 +9,82 @@ import { useRouter } from 'vue-router'
 import { Utilisateur } from 'camino-common/src/entreprise'
 import { UtilisateursParams, utilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { getInitialFiltres } from './_ui/filters/filters'
+import { CaminoAccessError } from './error'
+import { getInitialParams } from './_ui/table-pagination'
+import { Column, ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { List } from './_ui/list'
+import { Administrations } from './administrations'
+
+const utilisateursColonnes: Column[] = [
+  {
+    id: 'nom',
+    name: 'Nom',
+    class: ['min-width-6'],
+  },
+  {
+    id: 'prenom',
+    name: 'Prénom',
+    class: ['min-width-6'],
+  },
+  {
+    id: 'email',
+    name: 'Email',
+  },
+  {
+    id: 'role',
+    name: 'Rôle',
+    class: ['min-width-6'],
+  },
+  {
+    id: 'lien',
+    name: 'Lien',
+    noSort: true,
+    class: ['min-width-6'],
+  },
+]
+
+const utilisateursLignesBuild = (utilisateurs: Utilisateur[]): TableRow[] =>
+  utilisateurs.map(utilisateur => {
+    let elements
+
+    if (isAdministration(utilisateur)) {
+      elements = [Administrations[utilisateur.administrationId].abreviation]
+    } else if (isEntreprise(utilisateur) || isBureauDEtudes(utilisateur)) {
+      elements = utilisateur.entreprises?.map(({ nom }) => nom)
+    }
+
+    const lien: ComponentColumnData | TextColumnData =
+      elements && elements.length
+        ? {
+            component: markRaw(List),
+            props: {
+              elements,
+              mini: true,
+            },
+            class: 'mb--xs',
+            value: elements.join(', '),
+          }
+        : { value: '' }
+
+    const columns: TableRow['columns'] = {
+      prenom: { value: utilisateur.prenom || '–' },
+      nom: { value: utilisateur.nom || '–' },
+      email: { value: utilisateur.email || '–', class: ['h6'] },
+      role: {
+        value: utilisateur.role,
+        class: ['bg-neutral', 'color-bg', 'pill', 'py-xs', 'px-s', 'small', 'bold'],
+      },
+      lien,
+    }
+
+    return {
+      id: utilisateur.id,
+      link: { name: 'utilisateur', params: { id: utilisateur.id } },
+      columns,
+    }
+  })
 
 const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const
-// FIXME si non connecté, mettre un message disant qu'il faut se connecter, sinon afficher erreur si l'utilisateur ne peut pas voir les utilisateurs
 export const Utilisateurs = defineComponent(() => {
   const store = useStore()
   const router = useRouter()
@@ -64,7 +136,7 @@ export const Utilisateurs = defineComponent(() => {
         message: e.message ?? "Une erreur s'est produite",
       }
     }
-    await load(getInitialFiltres(router.currentRoute.value, filtres))
+    await load({ ...getInitialParams(router.currentRoute.value, utilisateursColonnes), ...getInitialFiltres(router.currentRoute.value, filtres) })
   })
 
   return () => (
@@ -76,6 +148,7 @@ export const Utilisateurs = defineComponent(() => {
             <>
               <LoadingElement data={data.value} renderItem={data => null} />
 
+              {/* FIXME Mettre en place des listes asynchrones qui prennent un AsyncData en entrée et gèrent le cycle de vie de la nouvelle donnée */}
               <Liste
                 nom="utilisateurs"
                 listeFiltre={{ filtres, updateUrlQuery: router, metas, initialized: true }}
@@ -91,7 +164,7 @@ export const Utilisateurs = defineComponent(() => {
           )}
         />
       ) : (
-        <div>Page inaccessible</div>
+        <CaminoAccessError user={user.value} />
       )}
     </>
   )

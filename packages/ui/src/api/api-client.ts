@@ -7,8 +7,9 @@ import { entrepriseApiClient } from '@/components/entreprise/entreprise-api-clie
 import { EtapeApiClient, etapeApiClient } from '@/components/etape/etape-api-client'
 import { DashboardApiClient, dashboardApiClient } from '@/components/dashboard/dashboard-api-client'
 import { JournauxApiClient, journauxApiClient } from '@/components/journaux/journaux-api-client'
+import { ActiviteApiClient, activiteApiClient } from '@/components/activite/activite-api-client'
 
-export interface ApiClient extends AdministrationApiClient, TitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient, EtapeApiClient, DashboardApiClient, JournauxApiClient {}
+export interface ApiClient extends AdministrationApiClient, TitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient, EtapeApiClient, DashboardApiClient, JournauxApiClient, ActiviteApiClient {}
 
 export const apiClient: ApiClient = {
   ...administrationApiClient,
@@ -20,4 +21,5 @@ export const apiClient: ApiClient = {
   ...utilisateurApiClient,
   ...dashboardApiClient,
   ...journauxApiClient,
+  ...activiteApiClient,
 }
