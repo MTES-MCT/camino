@@ -224,13 +224,13 @@ export const caminoFiltres = {
   //   isNumber: true,
   //   elementsFormat,
   // },
-  // nomsEntreprise: {
-  //   id: 'nomsEntreprise',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Nom / Siren / Siret',
-  //   placeholder: `Nom d'entreprise ou d'établissement, Siren, ou Siret`,
-  // },
+  nomsEntreprise: {
+    id: 'nomsEntreprise',
+    type: 'input',
+    name: 'Nom / Siren / Siret',
+    placeholder: `Nom d'entreprise ou d'établissement, Siren, ou Siret`,
+    validator: z.string(),
+  },
   // etapesInclues: {
   //   id: 'etapesInclues',
   //   name: "Types d'étapes incluses",
@@ -266,13 +266,14 @@ export const caminoFiltres = {
   }
 }
 
-const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes'] as const
+const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise'] as const
 export const caminoInputFiltres = [
   caminoFiltres.nomsAdministration,
   caminoFiltres.nomsUtilisateurs,
   caminoFiltres.emails,
   caminoFiltres.references,
   caminoFiltres.communes,
+  caminoFiltres.nomsEntreprise,
 ] as const satisfies readonly { type: 'input' }[]
 export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export const isInputCaminoFiltre = (value: CaminoFiltres): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)

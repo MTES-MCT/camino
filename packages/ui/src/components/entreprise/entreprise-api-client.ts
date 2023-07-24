@@ -1,3 +1,4 @@
+import { apiGraphQLFetch } from '@/api/_client'
 import { uploadCall } from '@/api/_upload'
 import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
@@ -13,13 +14,23 @@ import {
 } from 'camino-common/src/entreprise'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/fiscalite'
+import gql from 'graphql-tag'
 import { z } from 'zod'
 
+export type GetEntreprisesParams = {
+  page: number
+  colonne: string
+  ordre: 'asc' | 'desc'
+  nomsEntreprise: string
+}
+
+export type GetEntreprisesEntreprise = Pick<EntrepriseType, 'id' | 'nom' | 'legalSiren'> & { legalEtranger?: string }
 export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
+  getEntreprises: (params: GetEntreprisesParams) => Promise<{ total: number; elements: GetEntreprisesEntreprise[] }>
   getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
   creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput) => Promise<EntrepriseDocumentId>
@@ -48,6 +59,22 @@ export const entrepriseApiClient: EntrepriseApiClient = {
     return getWithJson('/rest/entreprises/:entrepriseId', {
       entrepriseId,
     })
+  },
+  getEntreprises: async params => {
+    const values = await apiGraphQLFetch(gql`
+      query Entreprises($page: Int, $colonne: String, $ordre: String, $nomsEntreprise: String) {
+        entreprises(intervalle: 10, page: $page, colonne: $colonne, ordre: $ordre, noms: $nomsEntreprise) {
+          elements {
+            id
+            nom
+            legalSiren
+            legalEtranger
+          }
+          total
+        }
+      }
+    `)(params)
+    return values
   },
   getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
     return getWithJson('/rest/entreprises/:entrepriseId/documents', {

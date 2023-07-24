@@ -31,7 +31,10 @@ const Entreprise = async () => {
   const { Entreprise } = await import('../components/entreprise')
   return Entreprise
 }
-const Entreprises = () => import('../components/entreprises.vue')
+const Entreprises = async () => {
+  const { Entreprises } = await import('../components/entreprises')
+  return Entreprises
+}
 const Administration = async () => {
   const { Administration } = await import('../components/administration')
   return Administration

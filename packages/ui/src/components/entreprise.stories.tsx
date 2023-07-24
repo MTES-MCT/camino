@@ -64,7 +64,17 @@ const entreprise: EntrepriseType = {
   etablissements: [],
 }
 
-const apiClient: EntrepriseApiClient = {
+const apiClient: Pick<
+  EntrepriseApiClient,
+  | 'getEtapeEntrepriseDocuments'
+  | 'getEntreprise'
+  | 'deleteEntrepriseDocument'
+  | 'getEntrepriseDocuments'
+  | 'getFiscaliteEntreprise'
+  | 'modifierEntreprise'
+  | 'creerEntreprise'
+  | 'creerEntrepriseDocument'
+> = {
   getEtapeEntrepriseDocuments: etapeId => {
     getEtapeEntrepriseDocumentsAction(etapeId)
     return Promise.resolve(entrepriseDocuments)

@@ -84,7 +84,17 @@ export const Entreprise = defineComponent({
 
 interface Props {
   entrepriseId: EntrepriseId
-  apiClient: EntrepriseApiClient
+  apiClient: Pick<
+    EntrepriseApiClient,
+    | 'getEtapeEntrepriseDocuments'
+    | 'getEntreprise'
+    | 'deleteEntrepriseDocument'
+    | 'getEntrepriseDocuments'
+    | 'getFiscaliteEntreprise'
+    | 'modifierEntreprise'
+    | 'creerEntreprise'
+    | 'creerEntrepriseDocument'
+  >
   user: User
   currentYear: CaminoAnnee
 }

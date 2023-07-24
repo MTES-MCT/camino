@@ -79,6 +79,7 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     facadesMaritimes: caminoFiltres.facadesMaritimes.validator.parse(routerQueryToStringArray(route.query.facadesMaritimes)),
     domainesIds: caminoFiltres.domainesIds.validator.parse(routerQueryToStringArray(route.query.domainesIds)),
     statutsIds: caminoFiltres.statutsIds.validator.parse(routerQueryToStringArray(route.query.statutsIds)),
+    nomsEntreprise: routerQueryToString(route.query.nomsEntreprise, ''),
   }
   allCaminoFiltres.forEach(filter => {
     if (!filters.includes(filter)) {

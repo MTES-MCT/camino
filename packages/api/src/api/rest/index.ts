@@ -448,14 +448,15 @@ export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, e
 interface IEntreprisesQueryInput {
   format?: DownloadFormat
   noms?: string | null
+  nomsEntreprise?: string | null
 }
 
 export const entreprises =
   (_pool: Pool) =>
-  async ({ query: { format = 'json', noms } }: { query: IEntreprisesQueryInput }, user: User) => {
+  async ({ query: { format = 'json', noms, nomsEntreprise } }: { query: IEntreprisesQueryInput }, user: User) => {
     formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
 
-    const entreprises = await entreprisesGet({ noms }, {}, user)
+    const entreprises = await entreprisesGet({ noms: noms || nomsEntreprise }, {}, user)
 
     const entreprisesFormatted = entreprises.map(entrepriseFormat)
 

@@ -40,7 +40,6 @@ export const Administrations = defineComponent({
       colonne: 'abreviation',
       ordre: 'asc',
       page: 1,
-      // FIXME INITIAL VALUE ?
       filtres: getInitialFiltres(route, filtres),
     }) as Ref<Params<ColonneId>>
 

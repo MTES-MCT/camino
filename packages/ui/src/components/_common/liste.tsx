@@ -68,8 +68,9 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
 
   return () => (
     <div class="fr-container">
-      <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
-
+      <div class="dsfr">
+        <PageContentHeader nom={props.nom} download={props.download} renderButton={props.renderButton} />
+      </div>
       {props.listeFiltre ? (
         <Filtres
           updateUrlQuery={props.listeFiltre.updateUrlQuery}
