@@ -7,6 +7,7 @@ import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { capitalize } from 'camino-common/src/strings.js'
+import { caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(
@@ -123,12 +124,8 @@ const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites
 
 export const statistiquesGranulatsMarins = async (): Promise<StatistiquesGranulatsMarins> => {
   try {
-    const anneeCurrent = new Date().getFullYear()
     // un tableau avec les années depuis 2006
-    const annees = Array.from(Array(anneeCurrent - 2006 + 1).keys())
-      .map(e => anneeCurrent - e)
-      .reverse()
-
+    const annees = intervalleAnnees(toCaminoAnnee('2006'), getCurrentAnnee())
     const titres = await titresGet(
       {
         domainesIds: ['w'],
@@ -157,7 +154,7 @@ export const statistiquesGranulatsMarins = async (): Promise<StatistiquesGranula
     )
 
     return {
-      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)),
+      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, caminoAnneeToNumber(annee))),
       ...statistiquesGranulatsMarinsInstantBuild(titres),
     }
   } catch (e) {

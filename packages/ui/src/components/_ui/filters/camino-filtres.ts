@@ -12,6 +12,9 @@ import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from 'camino-common/s
 import { TitreId, titreIdValidator } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { activiteTypeIdValidator, sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { activiteStatutIdValidator, activitesStatuts } from 'camino-common/src/static/activitesStatuts'
+import { caminoAnneeValidator, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
 
 export const caminoFiltres = {
   nomsAdministration: {
@@ -82,14 +85,6 @@ export const caminoFiltres = {
     },
     validator: z.array(titreIdValidator),
   },
-  // // TODO 2023-07-17 merger avec entrepriseIds ?
-  // entreprisesIds: {
-  //   id: 'entreprisesIds',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   name: 'Entreprises',
-  //   elementsFormat,
-  // },
   substancesIds: {
     id: 'substancesIds',
     type: 'autocomplete',
@@ -152,13 +147,37 @@ export const caminoFiltres = {
     component: 'FiltresTypes',
     validator: z.array(titreTypeTypeIdValidator),
   },
+  activiteTypesIds: {
+    id: 'activiteTypesIds',
+    name: "Types d'activités",
+    type: 'checkboxes',
+    elements: sortedActivitesTypes,
+    component: 'FiltresLabel',
+    validator: z.array(activiteTypeIdValidator),
+  },
   statutsIds: {
     id: 'statutsIds',
-    name: 'Statuts',
+    name: 'Statuts de titre',
     type: 'checkboxes',
     elements: sortedTitresStatuts,
     component: 'FiltresTitresStatuts',
     validator: z.array(titreStatutIdValidator),
+  },
+  activiteStatutsIds: {
+    id: 'activiteStatutsIds',
+    name: 'Statuts',
+    type: 'checkboxes',
+    elements: activitesStatuts,
+    component: 'FiltresStatuts',
+    validator: z.array(activiteStatutIdValidator),
+  },
+  annees: {
+    id: 'annees',
+    name: 'Années',
+    type: 'autocomplete',
+    elements: intervalleAnnees(toCaminoAnnee('1997'), getCurrentAnnee()).map(annee => ({ id: annee, nom: annee })),
+    lazy: false,
+    validator: z.array(caminoAnneeValidator),
   },
   // titresEntreprisesIds: {
   //   id: 'titresEntreprisesIds',
@@ -181,13 +200,13 @@ export const caminoFiltres = {
   //   name: 'Références',
   //   placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
   // },
-  // titresTerritoires: {
-  //   id: 'titresTerritoires',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Territoires',
-  //   placeholder: 'Commune, département, région, …',
-  // },
+  titresTerritoires: {
+    id: 'titresTerritoires',
+    type: 'input',
+    name: 'Territoires',
+    placeholder: 'Commune, département, région, …',
+    validator: z.string(),
+  },
   // titresDomainesIds: {
   //   id: 'titresDomainesIds',
   //   name: 'Domaines',
@@ -212,17 +231,6 @@ export const caminoFiltres = {
   //   value: [],
   //   elements: sortedTitresStatuts,
   //   component: 'FiltresStatuts',
-  // },
-  // annees: {
-  //   id: 'annees',
-  //   name: 'Années',
-  //   type: 'select',
-  //   value: [],
-  //   elements: [],
-  //   elementName: 'nom',
-  //   buttonAdd: 'Ajouter une année',
-  //   isNumber: true,
-  //   elementsFormat,
   // },
   nomsEntreprise: {
     id: 'nomsEntreprise',
@@ -252,7 +260,7 @@ export const caminoFiltres = {
     placeholder?: string
     validator: ZodType
     elements?: unknown[]
-    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts'
+    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresStatuts'
     lazy?: boolean
     search?: (value: string) => Promise<unknown>
     load?: (values: TitreId[]) => Promise<unknown[]>
@@ -266,7 +274,7 @@ export const caminoFiltres = {
   }
 }
 
-const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise'] as const
+const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise', 'titresTerritoires'] as const
 export const caminoInputFiltres = [
   caminoFiltres.nomsAdministration,
   caminoFiltres.nomsUtilisateurs,
@@ -274,11 +282,12 @@ export const caminoInputFiltres = [
   caminoFiltres.references,
   caminoFiltres.communes,
   caminoFiltres.nomsEntreprise,
+  caminoFiltres.titresTerritoires,
 ] as const satisfies readonly { type: 'input' }[]
 export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export const isInputCaminoFiltre = (value: CaminoFiltres): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)
 
-const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entreprisesIds', 'titresIds', 'departements', 'regions', 'facadesMaritimes'] as const
+const caminoAutocompleteFiltresArrayIds = ['substancesIds', 'administrationIds', 'entreprisesIds', 'titresIds', 'departements', 'regions', 'facadesMaritimes', 'annees'] as const
 export const caminoAutocompleteFiltres = [
   caminoFiltres.substancesIds,
   caminoFiltres.administrationIds,
@@ -287,19 +296,22 @@ export const caminoAutocompleteFiltres = [
   caminoFiltres.departements,
   caminoFiltres.regions,
   caminoFiltres.facadesMaritimes,
+  caminoFiltres.annees,
 ] as const satisfies readonly {
   type: 'autocomplete'
 }[]
 export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
 export const isAutocompleteCaminoFiltre = (value: CaminoFiltres): value is AutocompleteCaminoFiltres => caminoAutocompleteFiltresArrayIds.includes(value)
 
-const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds', 'domainesIds', 'statutsIds'] as const
+const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds', 'domainesIds', 'statutsIds', 'activiteTypesIds', 'activiteStatutsIds'] as const
 export const caminoCheckboxesFiltres = [
   caminoFiltres.administrationTypesIds,
   caminoFiltres.roles,
   caminoFiltres.typesIds,
   caminoFiltres.domainesIds,
   caminoFiltres.statutsIds,
+  caminoFiltres.activiteTypesIds,
+  caminoFiltres.activiteStatutsIds,
 ] as const satisfies readonly { type: 'checkboxes' }[]
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']
 export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)

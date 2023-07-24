@@ -81,11 +81,12 @@ interface PaginationProps {
 }
 
 const Pagination: FunctionalComponent<PaginationProps> = props => {
-  const visibles = 5
+  const maxVisibles = 5
+  const visibles = Math.min(maxVisibles, props.totalNumberOfPages)
 
   const currentActivePageNumber = getPageNumberFromRoute(props.route)
 
-  const start: number = Math.min(Math.max(1, currentActivePageNumber - 2), props.totalNumberOfPages - visibles)
+  const start: number = Math.max(1, currentActivePageNumber - 2)
 
   return (
     <nav role="navigation" class="fr-pagination" aria-label="Pagination">
@@ -119,7 +120,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
 
         {[...Array(visibles)]
           .map((_, index) => start + index)
-          .filter(pageNumber => pageNumber !== props.totalNumberOfPages && pageNumber !== 1)
+          .filter(pageNumber => pageNumber < props.totalNumberOfPages && pageNumber !== 1)
           .map(currentPageNumber => (
             <Page route={props.route} pageNumber={currentPageNumber} currentActivePage={currentActivePageNumber} />
           ))}

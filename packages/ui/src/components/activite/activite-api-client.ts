@@ -34,37 +34,36 @@ export const activiteApiClient: ActiviteApiClient = {
   getActivites: async (params: GetActivitesParams) => {
     const data = await apiGraphQLFetch(gql`
       query Activites(
-        $intervalle: Int
         $page: Int
         $colonne: String
         $ordre: String
+        $activiteTypesIds: [ID]
+        $activiteStatutsIds: [ID]
+        $annees: [String]
         $typesIds: [ID]
+        $domainesIds: [ID]
         $statutsIds: [ID]
-        $annees: [Int]
-        $titresTypesIds: [ID]
-        $titresDomainesIds: [ID]
-        $titresStatutsIds: [ID]
         $titresIds: [String]
-        $titresEntreprisesIds: [String]
-        $titresSubstancesIds: [String]
-        $titresReferences: String
+        $entreprisesIds: [String]
+        $substancesIds: [String]
+        $references: String
         $titresTerritoires: String
       ) {
         activites(
-          intervalle: $intervalle
+          intervalle: 10
           page: $page
           colonne: $colonne
           ordre: $ordre
-          typesIds: $typesIds
-          statutsIds: $statutsIds
+          typesIds: $activiteTypesIds
+          statutsIds: $activiteStatutsIds
           annees: $annees
-          titresTypesIds: $titresTypesIds
-          titresDomainesIds: $titresDomainesIds
-          titresStatutsIds: $titresStatutsIds
+          titresTypesIds: $typesIds
+          titresDomainesIds: $domainesIds
+          titresStatutsIds: $statutsIds
           titresIds: $titresIds
-          titresEntreprisesIds: $titresEntreprisesIds
-          titresSubstancesIds: $titresSubstancesIds
-          titresReferences: $titresReferences
+          titresEntreprisesIds: $entreprisesIds
+          titresSubstancesIds: $substancesIds
+          titresReferences: $references
           titresTerritoires: $titresTerritoires
         ) {
           elements {

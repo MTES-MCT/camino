@@ -101,7 +101,7 @@ const activites = async (
     colonne?: ITitreActiviteColonneId | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    annees?: number[] | null
+    annees?: string[] | null
     titresIds?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null

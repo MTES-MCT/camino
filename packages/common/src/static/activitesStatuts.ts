@@ -1,13 +1,17 @@
+import { z } from 'zod'
 import { Couleur } from './couleurs'
 
+const IDS = ['abs', 'enc', 'dep', 'fer'] as const
+
+export const activiteStatutIdValidator = z.enum(IDS)
+export type ActivitesStatutId = z.infer<typeof activiteStatutIdValidator>
 export const ACTIVITES_STATUTS_IDS = {
   ABSENT: 'abs',
   EN_CONSTRUCTION: 'enc',
   DEPOSE: 'dep',
   CLOTURE: 'fer',
-} as const
+} as const satisfies Record<string, ActivitesStatutId>
 
-export type ActivitesStatutId = (typeof ACTIVITES_STATUTS_IDS)[keyof typeof ACTIVITES_STATUTS_IDS]
 export type ActivitesStatut<T = ActivitesStatutId> = {
   id: T
   nom: string

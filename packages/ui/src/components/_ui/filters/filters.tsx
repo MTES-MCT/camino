@@ -79,7 +79,11 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     facadesMaritimes: caminoFiltres.facadesMaritimes.validator.parse(routerQueryToStringArray(route.query.facadesMaritimes)),
     domainesIds: caminoFiltres.domainesIds.validator.parse(routerQueryToStringArray(route.query.domainesIds)),
     statutsIds: caminoFiltres.statutsIds.validator.parse(routerQueryToStringArray(route.query.statutsIds)),
+    activiteTypesIds: caminoFiltres.activiteTypesIds.validator.parse(routerQueryToStringArray(route.query.activiteTypesIds)),
+    activiteStatutsIds: caminoFiltres.activiteStatutsIds.validator.parse(routerQueryToStringArray(route.query.activiteStatutsIds)),
+    annees: caminoFiltres.annees.validator.parse(routerQueryToStringArray(route.query.annees)),
     nomsEntreprise: routerQueryToString(route.query.nomsEntreprise, ''),
+    titresTerritoires: routerQueryToString(route.query.titresTerritoires, ''),
   }
   allCaminoFiltres.forEach(filter => {
     if (!filters.includes(filter)) {
@@ -95,7 +99,7 @@ export const Filters = defineComponent((props: Props) => {
   })
 
   const urlQuery = computed(() => {
-    return { name: props.route.name ?? undefined, query: { ...props.route.query, ...nonValidatedValues.value } }
+    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...nonValidatedValues.value } }
   })
 
   // TODO 2023-07-19 ugly hack pour que vue voit que les élements dans titresIds sont bien mis à jour

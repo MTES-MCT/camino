@@ -29,13 +29,13 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       )
     case 'FiltresTypes':
       return FiltresTypes({ element: fullFilter.elements[index] }, { attrs: {}, emit: () => {}, slots: {} })
-    // case 'FiltresStatuts':
-    //   return FiltresStatuts(
-    //     {
-    //       element: filter.elements[index],
-    //     },
-    //     { attrs: {}, emit: () => {}, slots: {} }
-    //   )
+    case 'FiltresStatuts':
+      return FiltresStatuts(
+        {
+          element: fullFilter.elements[index],
+        },
+        { attrs: {}, emit: () => {}, slots: {} }
+      )
     case 'FiltresTitresStatuts':
       return (
         <div class="dsfr">

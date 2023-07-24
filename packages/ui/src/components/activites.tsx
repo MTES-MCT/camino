@@ -4,7 +4,7 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Statut } from './_common/statut'
 import { List } from './_ui/list'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
@@ -17,6 +17,7 @@ import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { TableRow } from './_ui/table'
 import { getInitialParams } from './_ui/table-pagination'
 import { getInitialFiltres } from './_ui/filters/filters'
+import { CaminoFiltres } from './_ui/filters/camino-filtres'
 
 const activitesColonnes = [
   {
@@ -76,12 +77,24 @@ const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
     }
   })
 
-const filtres = [] as const
+const filtres: readonly CaminoFiltres[] = [
+  'titresIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'titresTerritoires',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+  'activiteTypesIds',
+  'activiteStatutsIds',
+  'annees',
+] as const
 
 // FIXME add tests
 export const Activites = defineComponent(() => {
   const store = useStore()
-  const route = useRoute()
+  const router = useRouter()
   const user = computed<User>(() => store.state.user.element)
   const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
 
@@ -117,7 +130,7 @@ export const Activites = defineComponent(() => {
         message: e.message ?? "Une erreur s'est produite",
       }
     }
-    await load({ ...getInitialParams(route, activitesColonnes), ...getInitialFiltres(route, filtres) })
+    await load({ ...getInitialParams(router.currentRoute.value, activitesColonnes), ...getInitialFiltres(router.currentRoute.value, filtres) })
   })
 
   return () => (
@@ -127,7 +140,7 @@ export const Activites = defineComponent(() => {
           data={meta.value}
           renderItem={metas => (
             <>
-              <LoadingElement data={data.value} renderItem={data => null} />
+              <LoadingElement data={data.value} renderItem={_data => null} />
 
               {/* FIXME Mettre en place des listes asynchrones qui prennent un AsyncData en entrée et gèrent le cycle de vie de la nouvelle donnée */}
               <Liste
@@ -140,10 +153,17 @@ export const Activites = defineComponent(() => {
                   formats: ['csv', 'xlsx', 'ods'],
                   params: {},
                 }}
-                listeFiltre={null}
+                listeFiltre={{
+                  filtres,
+                  initialized: true,
+                  metas,
+                  updateUrlQuery: router,
+                }}
                 renderButton={null}
-                paramsUpdate={params => console.log(params)}
-                route={route}
+                paramsUpdate={params => {
+                  load({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
+                }}
+                route={router.currentRoute.value}
               />
             </>
           )}

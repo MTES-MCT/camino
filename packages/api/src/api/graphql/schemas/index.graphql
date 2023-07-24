@@ -101,7 +101,7 @@ type Query {
     colonne: String
     ordre: String
     typesIds: [ID]
-    annees: [Int]
+    annees: [String]
     statutsIds: [ID]
     titresTypesIds: [ID]
     titresDomainesIds: [ID]

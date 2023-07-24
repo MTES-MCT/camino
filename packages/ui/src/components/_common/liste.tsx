@@ -1,11 +1,10 @@
 import { TablePagination, getInitialParams } from '../_ui/table-pagination'
-import { Filtres, Props as FiltresProps } from './filtres'
+import { Filtres } from './filtres'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { Column, TableRow } from '../_ui/table'
 import { PageContentHeader, type Props as PageContentHeaderProps } from './page-header-content'
 import { computed, defineComponent, ref, Ref } from 'vue'
 import { z } from 'zod'
-import { FiltersDeclaration } from '../_ui/filters/all-filters'
 import { getInitialFiltres } from '../_ui/filters/filters'
 import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
 
@@ -31,6 +30,7 @@ type Props<ColumnId extends string> = {
   paramsUpdate: (params: Params<ColumnId>) => void
 } & PageContentHeaderProps
 
+// FIXME tests
 export const Liste = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
   const params = ref<Params<ColumnId>>({
@@ -51,8 +51,11 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
   }
 
   const paramsFiltresUpdate = (filtres: Params<ColumnId>['filtres']) => {
-    params.value.filtres = filtres
-    props.paramsUpdate(params.value)
+    if (JSON.stringify(params.value.filtres) !== JSON.stringify(filtres)) {
+      params.value.filtres = filtres
+      params.value.page = 1
+      props.paramsUpdate(params.value)
+    }
   }
 
   const data = computed(() => ({

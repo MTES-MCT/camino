@@ -90,7 +90,7 @@ const rows: TableRow[] = [...Array(11)].map((_, row) => {
   }
 })
 
-export const PaginationSimple: StoryFn = () => (
+export const Pagination: StoryFn = () => (
   <TablePagination
     data={{
       rows,
@@ -99,6 +99,45 @@ export const PaginationSimple: StoryFn = () => (
     }}
     caption="Test de pagination"
     route={{ query: { page: '3', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
+  />
+)
+
+export const PaginationAuDebut: StoryFn = () => (
+  <TablePagination
+    data={{
+      rows,
+      columns,
+      total: 200,
+    }}
+    caption="Test de pagination"
+    route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
+  />
+)
+
+export const PaginationALaFin: StoryFn = () => (
+  <TablePagination
+    data={{
+      rows,
+      columns,
+      total: 200,
+    }}
+    caption="Test de pagination"
+    route={{ query: { page: '20', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
+  />
+)
+
+export const PaginationAuMilieu: StoryFn = () => (
+  <TablePagination
+    data={{
+      rows,
+      columns,
+      total: 200,
+    }}
+    caption="Test de pagination"
+    route={{ query: { page: '8', intervalle: '10' }, name: '/plop' }}
     updateParams={action('updateParams')}
   />
 )
@@ -112,6 +151,19 @@ export const NeCassePasSiPasPaginationFausse: StoryFn = () => (
     }}
     caption="Test de pagination"
     route={{ query: { page: '5', intervalle: '10' }, name: '/plop' }}
+    updateParams={action('updateParams')}
+  />
+)
+
+export const PetitePagination: StoryFn = () => (
+  <TablePagination
+    data={{
+      rows: rows.slice(0, 10),
+      columns,
+      total: 16,
+    }}
+    caption="Test de pagination"
+    route={{ query: { page: '1', intervalle: '10' }, name: '/plop' }}
     updateParams={action('updateParams')}
   />
 )

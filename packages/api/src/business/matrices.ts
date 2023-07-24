@@ -15,6 +15,7 @@ import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries.js'
 import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { Commune } from 'camino-common/src/static/communes.js'
+import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear } from 'camino-common/src/date.js'
 
 const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
 
@@ -390,8 +391,9 @@ export const buildMatrices = (
   return { matrice1121, matrice1122, matrice1403, matrice1404, rawLines }
 }
 
-export const matrices = async (annee: number, pool: Pool) => {
-  const anneePrecedente = annee - 1
+export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
+  const anneeNumber = caminoAnneeToNumber(annee)
+  const anneePrecedente = previousYear(annee)
 
   const titres = await titresGet(
     {
@@ -453,13 +455,13 @@ export const matrices = async (annee: number, pool: Pool) => {
     .filter(isNotNullNorUndefined)
   const communes = isNonEmptyArray(communesIds) ? await getCommunes(pool, { ids: communesIds }) : []
 
-  const body = bodyBuilder(activites, activitesTrimestrielles, titres, annee, entreprises)
+  const body = bodyBuilder(activites, activitesTrimestrielles, titres, anneeNumber, entreprises)
   if (Object.keys(body.articles).length > 0) {
     const result = await apiOpenfiscaCalculate(body)
 
-    const openfiscaConstants = await apiOpenfiscaConstantsFetch(annee)
+    const openfiscaConstants = await apiOpenfiscaConstantsFetch(anneeNumber)
 
-    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, annee, openfiscaConstants, communes)
+    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes)
 
     const worksheet1121 = xlsx.utils.json_to_sheet(matrice1121)
     const csv1121 = xlsx.utils.sheet_to_csv(worksheet1121)

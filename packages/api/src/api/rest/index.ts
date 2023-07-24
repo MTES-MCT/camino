@@ -357,7 +357,7 @@ export const activites =
         colonne,
         typesIds: typesIds?.split(','),
         statutsIds: statutsIds?.split(','),
-        annees: annees?.split(',').map(a => Number(a)),
+        annees: annees?.split(','),
         titresIds: titresIds?.split(','),
         titresEntreprisesIds: titresEntreprisesIds?.split(','),
         titresSubstancesIds: titresSubstancesIds?.split(','),
