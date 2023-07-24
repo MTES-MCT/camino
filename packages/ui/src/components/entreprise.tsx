@@ -34,46 +34,57 @@ export const Entreprise = defineComponent({
       () => vueRoute.params.id,
       newRoute => {
         if (vueRoute.name === 'entreprise' && newRoute) {
-          entrepriseId.value = newEntrepriseId(vueRoute.params.id.toString())
+          const newEid = newEntrepriseId(vueRoute.params.id.toString())
+          if (entrepriseId.value !== newEid) {
+            entrepriseId.value = newEid
+          }
         }
       }
     )
     const anneeCourante = getCurrentAnnee()
 
+    const apiClient = ref<
+      Pick<
+        EntrepriseApiClient,
+        | 'getEtapeEntrepriseDocuments'
+        | 'getEntreprise'
+        | 'deleteEntrepriseDocument'
+        | 'getEntrepriseDocuments'
+        | 'getFiscaliteEntreprise'
+        | 'modifierEntreprise'
+        | 'creerEntreprise'
+        | 'creerEntrepriseDocument'
+      >
+    >({
+      ...entrepriseApiClient,
+      modifierEntreprise: async entreprise => {
+        try {
+          await entrepriseApiClient.modifierEntreprise(entreprise)
+          store.dispatch(
+            'messageAdd',
+            {
+              value: `l'entreprise a été modifiée`,
+              type: 'success',
+            },
+            { root: true }
+          )
+        } catch (e) {
+          console.error(e)
+          store.dispatch(
+            'messageAdd',
+            {
+              value: `Erreur lors de la modification de l'entreprise`,
+              type: 'error',
+            },
+            { root: true }
+          )
+        }
+      },
+    })
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise
-            currentYear={anneeCourante}
-            entrepriseId={entrepriseId.value}
-            apiClient={{
-              ...entrepriseApiClient,
-              modifierEntreprise: async entreprise => {
-                try {
-                  await entrepriseApiClient.modifierEntreprise(entreprise)
-                  store.dispatch(
-                    'messageAdd',
-                    {
-                      value: `l'entreprise a été modifiée`,
-                      type: 'success',
-                    },
-                    { root: true }
-                  )
-                } catch (e) {
-                  console.error(e)
-                  store.dispatch(
-                    'messageAdd',
-                    {
-                      value: `Erreur lors de la modification de l'entreprise`,
-                      type: 'error',
-                    },
-                    { root: true }
-                  )
-                }
-              },
-            }}
-            user={user.value}
-          />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient.value} user={user.value} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}
