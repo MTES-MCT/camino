@@ -40,13 +40,18 @@ describe('Storybook Tests', async () => {
     )('$name', async value => {
       // @ts-ignore
       window.dsfr = null
-      const mounted = render(value.story, {
-        global: {
-          components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
-        },
-      })
-      await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-      expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+      if (typeof value.story === 'function') {
+        const mounted = render(value.story(), {
+          global: {
+            components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
+          },
+        })
+
+        await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
+        expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+      } else {
+        throw new Error(`expected a function in storybook, found something else: ${JSON.stringify(value)}`)
+      }
     })
   })
 })
