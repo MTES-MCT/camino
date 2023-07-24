@@ -19,7 +19,7 @@ vi.mock('vue-router', () => ({
 
 vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
-const compose = (entry: StoryFile): ReturnType<typeof composeStories> => {
+const compose = (entry: StoryFile): ReturnType<typeof composeStories<StoryFile>> => {
   try {
     return composeStories(entry)
   } catch (e) {
@@ -34,24 +34,20 @@ describe('Storybook Tests', async () => {
     })
   )('$name', ({ name, storyFile, filePath }) => {
     test.skipIf(name?.includes('NoStoryshots')).each(
-      Object.entries<ReturnType<typeof composeStories>>(compose(storyFile))
+      Object.entries(compose(storyFile))
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async value => {
       // @ts-ignore
       window.dsfr = null
-      if (typeof value.story === 'function') {
-        const mounted = render(value.story(), {
-          global: {
-            components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
-          },
-        })
+      const mounted = render(value.story(), {
+        global: {
+          components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
+        },
+      })
 
-        await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-        expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
-      } else {
-        throw new Error(`expected a function in storybook, found something else: ${JSON.stringify(value)}`)
-      }
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
+      expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
     })
   })
 })
