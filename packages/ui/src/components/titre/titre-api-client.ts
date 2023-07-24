@@ -81,6 +81,24 @@ export interface TitreApiClient {
     facadesMaritimes: FacadesMaritimes[]
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPoint[]; total: number }>
+  getTitresWithPerimetreForCarte: (params: {
+    page?: number
+    colonne?: string
+    ordre?: 'asc' | 'desc'
+    titresIds: TitreId[]
+    typesIds: TitreTypeTypeId[]
+    domainesIds: DomaineId[]
+    statutsIds: TitreStatutId[]
+    substancesIds: SubstanceLegaleId[]
+    // noms
+    entreprisesIds: EntrepriseId[]
+    references: string
+    communes: string
+    departements: DepartementId[]
+    regions: RegionId[]
+    facadesMaritimes: FacadesMaritimes[]
+    perimetre?: [number, number, number, number]
+  }) => Promise<{ elements: TitreWithPoint[]; total: number }>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -239,6 +257,73 @@ export const titreApiClient: TitreApiClient = {
 
               geojsonCentre {
                 geometry {
+                  coordinates
+                }
+              }
+            }
+            total
+          }
+        }
+      `
+    )(params)
+    return result
+  },
+  getTitresWithPerimetreForCarte: async params => {
+    const result = await apiGraphQLFetch(
+      gql`
+        query Titres(
+          $titresIds: [ID!]
+          $typesIds: [ID!]
+          $domainesIds: [ID!]
+          $statutsIds: [ID!]
+          $substancesIds: [ID!]
+          $entreprisesIds: [ID!]
+          $references: String
+          $communes: String
+          $departements: [String]
+          $regions: [String]
+          $facadesMaritimes: [String]
+          $perimetre: [Float!]
+        ) {
+          titres(
+            ids: $titresIds
+            typesIds: $typesIds
+            domainesIds: $domainesIds
+            statutsIds: $statutsIds
+            substancesIds: $substancesIds
+            entreprisesIds: $entreprisesIds
+            references: $references
+            communes: $communes
+            departements: $departements
+            regions: $regions
+            facadesMaritimes: $facadesMaritimes
+            perimetre: $perimetre
+            demandeEnCours: true
+          ) {
+            elements {
+              id
+              slug
+              nom
+              typeId
+              titreStatutId
+              titulaires {
+                id
+                nom
+              }
+              amodiataires {
+                id
+                nom
+              }
+
+              geojsonCentre {
+                geometry {
+                  coordinates
+                }
+              }
+              geojsonMultiPolygon {
+                type
+                geometry {
+                  type
                   coordinates
                 }
               }

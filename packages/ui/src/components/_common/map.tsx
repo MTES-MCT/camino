@@ -6,11 +6,11 @@ import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/s
 import { GeoJsonObject } from 'geojson'
 import { LatLngTuple, LayerGroup, layerGroup, Marker } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { titresGeoPolygon } from '@/api/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
 import { useRouter } from 'vue-router'
 import { ButtonIcon } from '../_ui/button-icon'
+import { titreApiClient } from '../titre/titre-api-client'
 
 export interface Props {
   geojson: GeoJsonObject
@@ -95,10 +95,20 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     centrer()
   })
 
-  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: number[] }) => {
-    const res: { elements: TitreWithPoint[] } = await titresGeoPolygon({
+  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
+    const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
       statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
       perimetre: data.bbox,
+      communes: '',
+      departements: [],
+      domainesIds: [],
+      entreprisesIds: [],
+      facadesMaritimes: [],
+      references: '',
+      regions: [],
+      substancesIds: [],
+      titresIds: [],
+      typesIds: [],
     })
     titresValidesGeojson.value.splice(0)
     titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))

@@ -109,49 +109,6 @@ const fragmentTitres = gql`
   ${fragmentTitresEntreprises}
 `
 
-const fragmentTitreGeo = gql`
-  fragment titreGeo on Titre {
-    id
-    slug
-    nom
-    typeId
-    titreStatutId
-    titulaires {
-      ...titresEntreprises
-    }
-    amodiataires {
-      ...titresEntreprises
-    }
-
-    geojsonCentre {
-      geometry {
-        coordinates
-      }
-    }
-  }
-  ${fragmentTitresEntreprises}
-`
-
-const fragmentTitresGeo = gql`
-  fragment titresGeo on Titre {
-    ...titreGeo
-  }
-
-  ${fragmentTitreGeo}
-`
-
-const fragmentTitresGeoPolygon = gql`
-  fragment titresGeoPolygon on Titre {
-    ...titreGeo
-    geojsonMultiPolygon {
-      ...geojsonMultiPolygon
-    }
-  }
-
-  ${fragmentTitreGeo}
-  ${fragmentGeojsonMultiPolygon}
-`
-
 const fragmentDemarchesTitre = gql`
   fragment demarchesTitre on Titre {
     id
@@ -166,4 +123,4 @@ const fragmentDemarchesTitre = gql`
   }
 `
 
-export { fragmentTitre, fragmentTitres, fragmentTitresGeo, fragmentTitresGeoPolygon, fragmentDemarchesTitre }
+export { fragmentTitre, fragmentTitres, fragmentDemarchesTitre }

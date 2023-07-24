@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentTitre, fragmentTitres, fragmentTitresGeo, fragmentTitresGeoPolygon } from './fragments/titre'
+import { fragmentTitre, fragmentTitres } from './fragments/titre'
 
 const titresMetas = apiGraphQLFetch(
   gql`
@@ -25,90 +25,6 @@ const titre = apiGraphQLFetch(
     }
 
     ${fragmentTitre}
-  `
-)
-
-const titresGeoPolygon = apiGraphQLFetch(
-  gql`
-    query Titres(
-      $titresIds: [ID!]
-      $typesIds: [ID!]
-      $domainesIds: [ID!]
-      $statutsIds: [ID!]
-      $substancesIds: [ID!]
-      $entreprisesIds: [ID!]
-      $references: String
-      $communes: String
-      $departements: [String]
-      $regions: [String]
-      $facadesMaritimes: [String]
-      $perimetre: [Float!]
-    ) {
-      titres(
-        ids: $titresIds
-        typesIds: $typesIds
-        domainesIds: $domainesIds
-        statutsIds: $statutsIds
-        substancesIds: $substancesIds
-        entreprisesIds: $entreprisesIds
-        references: $references
-        communes: $communes
-        departements: $departements
-        regions: $regions
-        facadesMaritimes: $facadesMaritimes
-        perimetre: $perimetre
-        demandeEnCours: true
-      ) {
-        elements {
-          ...titresGeoPolygon
-        }
-        total
-      }
-    }
-
-    ${fragmentTitresGeoPolygon}
-  `
-)
-
-const titresGeo = apiGraphQLFetch(
-  gql`
-    query Titres(
-      $titresIds: [ID!]
-      $typesIds: [ID!]
-      $domainesIds: [ID!]
-      $statutsIds: [ID!]
-      $substancesIds: [ID!]
-      $entreprisesIds: [ID!]
-      $references: String
-      $communes: String
-      $departements: [String]
-      $regions: [String]
-      $facadesMaritimes: [String]
-      $perimetre: [Float!]
-    ) {
-      titres(
-        ids: $titresIds
-        typesIds: $typesIds
-        domainesIds: $domainesIds
-        statutsIds: $statutsIds
-        substancesIds: $substancesIds
-        entreprisesIds: $entreprisesIds
-        references: $references
-        communes: $communes
-        departements: $departements
-        regions: $regions
-        facadesMaritimes: $facadesMaritimes
-        perimetre: $perimetre
-        demandeEnCours: true
-      ) {
-        elements {
-          ...titresGeo
-        }
-        total
-      }
-    }
-
-    ${fragmentTitresGeo}
   `
 )
 
@@ -213,4 +129,4 @@ const titreCreer = apiGraphQLFetch(gql`
   }
 `)
 
-export { titresMetas, titre, titres, titresGeo, titresGeoPolygon, titreCreer, titresRechercherByNom, titresFiltres }
+export { titresMetas, titre, titres, titreCreer, titresRechercherByNom, titresFiltres }

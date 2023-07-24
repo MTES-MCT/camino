@@ -84,9 +84,15 @@ export const Titres = defineComponent({
       data.value = { status: 'LOADING' }
       titresForCarte.value = []
       try {
-        const titres = await titreApiClient.getTitresForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
-        titresForCarte.value = titres.elements
-        total.value = titres.total
+        if ((paramsForCarte.value?.zoom ?? 0) > 7) {
+          const titres = await titreApiClient.getTitresWithPerimetreForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
+          titresForCarte.value = titres.elements
+          total.value = titres.total
+        } else {
+          const titres = await titreApiClient.getTitresForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
+          titresForCarte.value = titres.elements
+          total.value = titres.total
+        }
         data.value = { status: 'LOADED', value: true }
       } catch (e: any) {
         console.error('error', e)
