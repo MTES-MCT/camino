@@ -14,6 +14,7 @@ import {
   AutocompleteCaminoFiltres,
   CaminoFiltres,
   CheckboxesCaminoFiltres,
+  EtapeCaminoFiltres,
   InputCaminoFiltres,
   allCaminoFiltres,
   caminoAutocompleteFiltres,
@@ -21,11 +22,12 @@ import {
   caminoInputFiltres,
   isAutocompleteCaminoFiltre,
   isCheckboxeCaminoFiltre,
+  isEtapeCaminoFiltre,
   isInputCaminoFiltre,
 } from './camino-filtres'
 import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
 
-type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[]; valueName?: string | string[] }
+type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
 type Props = {
   filters: readonly CaminoFiltres[]
@@ -38,8 +40,9 @@ type Props = {
   toggle: () => void
 } & Pick<HTMLAttributes, 'class'>
 
-const etapesLabelFormat = <FiltreId extends string>(f: { id: FiltreId; name: string; value: FilterEtapeValue[] }): { id: FiltreId; name: string; value: FilterEtapeValue; valueName: string }[] =>
-  f.value
+const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[]): FormatedLabel[] => {
+  const fullFilter = caminoFiltres[filter]
+  return values
     .filter(value => value.typeId)
     .map(value => {
       let message = `type: ${EtapesTypes[value.typeId as EtapeTypeId].nom}`
@@ -53,12 +56,13 @@ const etapesLabelFormat = <FiltreId extends string>(f: { id: FiltreId; name: str
         message += `, avant le ${value.dateFin}`
       }
       return {
-        id: f.id,
-        name: f.name,
+        id: fullFilter.id,
+        name: fullFilter.name,
         value,
         valueName: message,
       }
     })
+}
 
 export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltres[]) => {
   const allValues = {
@@ -83,6 +87,8 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     activiteStatutsIds: caminoFiltres.activiteStatutsIds.validator.parse(routerQueryToStringArray(route.query.activiteStatutsIds)),
     demarchesTypesIds: caminoFiltres.demarchesTypesIds.validator.parse(routerQueryToStringArray(route.query.demarchesTypesIds)),
     demarchesStatutsIds: caminoFiltres.demarchesStatutsIds.validator.parse(routerQueryToStringArray(route.query.demarchesStatutsIds)),
+    etapesInclues: caminoFiltres.etapesInclues.validator.parse(JSON.parse(routerQueryToString(route.query.etapesInclues, '[]'))),
+    etapesExclues: caminoFiltres.etapesExclues.validator.parse(JSON.parse(routerQueryToString(route.query.etapesExclues, '[]'))),
     annees: caminoFiltres.annees.validator.parse(routerQueryToStringArray(route.query.annees)),
     nomsEntreprise: routerQueryToString(route.query.nomsEntreprise, ''),
     titresTerritoires: routerQueryToString(route.query.titresTerritoires, ''),
@@ -102,10 +108,17 @@ export const Filters = defineComponent((props: Props) => {
   })
 
   const urlQuery = computed(() => {
-    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...nonValidatedValues.value } }
+    const filtres = { ...nonValidatedValues.value }
+    if ('etapesInclues' in nonValidatedValues.value) {
+      filtres.etapesInclues = JSON.stringify(nonValidatedValues.value.etapesInclues)
+    }
+    if ('etapesExclues' in nonValidatedValues.value) {
+      filtres.etapesExclues = JSON.stringify(nonValidatedValues.value.etapesExclues)
+    }
+    return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres } }
   })
 
-  // TODO 2023-07-19 ugly hack pour que vue voit que les élements dans titresIds sont bien mis à jour
+  // TODO 2023-07-19 ugly hack pour que vue voie que les élements dans titresIds sont bien mis à jour
   // Il faut repenser tout ça, ce n'est pas un bon moyen de récupérer les éléments, mais on en a besoin pour calculer les labels...
   // C'est le seul composant qui à un load asynchrone et un search asynchrone
   const titresIds = ref([...caminoFiltres.titresIds.elements])
@@ -157,7 +170,7 @@ export const Filters = defineComponent((props: Props) => {
       const labelId = label.id
       if (isInputCaminoFiltre(labelId)) {
         nonValidatedValues.value[labelId] = ''
-      } else if (isAutocompleteCaminoFiltre(labelId) || isCheckboxeCaminoFiltre(labelId)) {
+      } else if (isAutocompleteCaminoFiltre(labelId) || isCheckboxeCaminoFiltre(labelId) || isEtapeCaminoFiltre(labelId)) {
         const data = caminoFiltres[labelId].validator.parse([label.value])
         // @ts-ignore ici typescript est perdu
         const index = nonValidatedValues.value[labelId].indexOf(data[0])
@@ -165,15 +178,6 @@ export const Filters = defineComponent((props: Props) => {
           nonValidatedValues.value[labelId].splice(index, 1)
         }
       }
-      // if (Array.isArray(filter.value)) {
-      //   if (filter.type === 'checkboxes' || filter.type === 'etape' || filter.type === 'autocomplete') {
-      //     const index = filter.value.indexOf(label.value)
-      //     if (index > -1) {
-      //       filter.value.splice(index, 1)
-      //     }
-      //   }
-      // }
-
       props.updateUrlQuery.push(urlQuery.value)
     }
   }
@@ -188,6 +192,12 @@ export const Filters = defineComponent((props: Props) => {
       if (isInputCaminoFiltre(filter)) {
         nonValidatedValues.value[filter] = ''
       } else if (Array.isArray(nonValidatedValues.value[filter])) {
+        if (filter === 'etapesExclues' || filter === 'etapesInclues') {
+          console.log('trililiyoupi', nonValidatedValues.value[filter])
+        }
+        nonValidatedValues.value[filter] = []
+      } else if (filter === 'etapesExclues' || filter === 'etapesInclues') {
+        console.log('trilili', nonValidatedValues.value[filter])
         nonValidatedValues.value[filter] = []
       }
     })
@@ -208,15 +218,15 @@ export const Filters = defineComponent((props: Props) => {
     return props.filters.filter(isCheckboxeCaminoFiltre)
   })
 
-  // const etapes = computed<(CommonFilter<FiltreId, ElementType> & FilterEtape)[]>(() => {
-  //   return props.filters.filter((filter): filter is CommonFilter<FiltreId, ElementType> & FilterEtape => filter.type === 'etape')
-  // })
+  const etapes = computed<EtapeCaminoFiltres[]>(() => {
+    return props.filters.filter(isEtapeCaminoFiltre)
+  })
 
   const labels = computed<FormatedLabel[]>(() => {
     // TODO 2023-07-19 obligatoire pour que les labels se recalculent quand les trucs asynchrones (les titres) sont chargés...
     // eslint-disable-next-line no-unused-expressions
     refreshLabels.value
-    return props.filters.flatMap(filter => {
+    return props.filters.flatMap<FormatedLabel>(filter => {
       const filterType = caminoFiltres[filter]
       if (filterType.type === 'input' && nonValidatedValues.value[filter]) {
         return [{ id: filterType.id, name: filterType.name, value: nonValidatedValues.value[filter] }]
@@ -239,10 +249,9 @@ export const Filters = defineComponent((props: Props) => {
             valueName: element && element.nom,
           }
         })
+      } else if (filterType.type === 'etape' && nonValidatedValues.value[filter]) {
+        return etapesLabelFormat(filterType.id, nonValidatedValues.value[filter])
       }
-      // else if (filter.type === 'etape' && filter.value && filter.value.length) {
-      //   return etapesLabelFormat(filter)
-      // }
       return []
     })
   })
@@ -321,10 +330,20 @@ export const Filters = defineComponent((props: Props) => {
                   class="tablet-blob-1-2 large-blob-1-3"
                 />
               ))}
-              {/* 
+
               {etapes.value.map(filter => (
-                <FiltresEtapes key={filter.id} filter={filter} class="tablet-blob-1-2 large-blob-1-3" />
-              ))} */}
+                <FiltresEtapes
+                  key={filter}
+                  filter={filter}
+                  initialValues={nonValidatedValues.value[filter]}
+                  valuesSelected={values => {
+                    console.log('plop', JSON.stringify(values))
+                    // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
+                    nonValidatedValues.value[filter] = values
+                  }}
+                  class="tablet-blob-1-2 large-blob-1-3"
+                />
+              ))}
             </div>
 
             <div class="dsfr">

@@ -212,18 +212,18 @@ export const caminoFiltres = {
     placeholder: `Nom d'entreprise ou d'établissement, Siren, ou Siret`,
     validator: z.string(),
   },
-  // etapesInclues: {
-  //   id: 'etapesInclues',
-  //   name: "Types d'étapes incluses",
-  //   type: 'etape',
-  //   value: [],
-  // },
-  // etapesExclues: {
-  //   id: 'etapesExclues',
-  //   name: "Types d'étapes exclues",
-  //   type: 'etape',
-  //   value: [],
-  // },
+  etapesInclues: {
+    id: 'etapesInclues',
+    name: "Types d'étapes incluses",
+    type: 'etape',
+    validator: z.any(),
+  },
+  etapesExclues: {
+    id: 'etapesExclues',
+    name: "Types d'étapes exclues",
+    type: 'etape',
+    validator: z.any(),
+  },
   // TODO 2023-07-20 add correct satisfies
 } as const satisfies {
   [key in string]: {
@@ -246,6 +246,10 @@ export const caminoFiltres = {
     elementsFormat?: (value: any, metas: unknown) => unknown
   }
 }
+const caminoEtapesFiltresArrayIds = ['etapesInclues', 'etapesExclues'] as const
+export const caminoEtapesFiltres = [caminoFiltres.etapesInclues, caminoFiltres.etapesExclues] as const satisfies readonly { type: 'etape' }[]
+export type EtapeCaminoFiltres = (typeof caminoEtapesFiltres)[number]['id']
+export const isEtapeCaminoFiltre = (value: CaminoFiltres): value is EtapeCaminoFiltres => caminoEtapesFiltresArrayIds.includes(value)
 
 const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise', 'titresTerritoires'] as const
 export const caminoInputFiltres = [
@@ -301,6 +305,6 @@ export const caminoCheckboxesFiltres = [
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']
 export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)
 
-export type CaminoFiltres = InputCaminoFiltres | CheckboxesCaminoFiltres | AutocompleteCaminoFiltres
+export type CaminoFiltres = InputCaminoFiltres | CheckboxesCaminoFiltres | AutocompleteCaminoFiltres | EtapeCaminoFiltres
 
-export const allCaminoFiltres = [...caminoInputFiltresArrayIds, ...caminoAutocompleteFiltresArrayIds, ...caminoCheckboxesFiltresArrayIds] as const
+export const allCaminoFiltres = [...caminoInputFiltresArrayIds, ...caminoAutocompleteFiltresArrayIds, ...caminoCheckboxesFiltresArrayIds, ...caminoEtapesFiltresArrayIds] as const

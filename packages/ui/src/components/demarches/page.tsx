@@ -43,6 +43,8 @@ const filtres = [
   'titresTerritoires',
   'demarchesTypesIds',
   'demarchesStatutsIds',
+  'etapesInclues',
+  'etapesExclues',
 ] as const satisfies readonly CaminoFiltres[]
 interface Props {
   travaux: boolean
@@ -131,6 +133,7 @@ export const Page = defineComponent<Props>(props => {
 
   const demarchesRef = ref<{ elements: GetDemarchesDemarche[]; total: number }>({ elements: [], total: 0 })
   const onParamsUpdate = (params: Params<string>) => {
+    console.log('filtres', JSON.stringify(params.filtres))
     load({
       travaux: props.travaux,
       page: params.page,

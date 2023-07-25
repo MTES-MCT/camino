@@ -1,53 +1,84 @@
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { FilterComponentProp, FilterEtape } from '../_ui/filters/all-filters'
 import { InputDate } from '../_ui/input-date'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
-import { HTMLAttributes } from 'vue'
+import { HTMLAttributes, computed, defineComponent, ref, watch } from 'vue'
+import { EtapeCaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+import { EtapeStatutId, isEtapeStatutKey, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+
+export type FilterEtapeValue = {
+  typeId: EtapeTypeId | ''
+  statutId?: EtapeStatutId
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+}
 
 type Props = {
-  filter: FilterComponentProp<FilterEtape>
+  filter: EtapeCaminoFiltres
+  initialValues: FilterEtapeValue[]
+  valuesSelected: (values: FilterEtapeValue[]) => void
 } & Pick<HTMLAttributes, 'class'>
 
-export const FiltresEtapes = (props: Props) => {
+export const FiltresEtapes = defineComponent<Props>(props => {
+  watch(
+    () => props.initialValues,
+    newValues => {
+      clonedValues.value = newValues.map(value => ({ ...value }))
+    },
+    { deep: true }
+  )
+  const clonedValues = ref<FilterEtapeValue[]>(props.initialValues.map(value => ({ ...value })))
+  const fullFilter = computed(() => caminoFiltres[props.filter])
   const dateDebutChanged = (n: number, date: CaminoDate | null) => {
-    props.filter.value[n].dateDebut = date
+    if (date !== clonedValues.value[n].dateDebut) {
+      clonedValues.value[n].dateDebut = date
+      props.valuesSelected(clonedValues.value)
+    }
   }
   const dateFinChanged = (n: number, date: CaminoDate | null) => {
-    props.filter.value[n].dateFin = date
-  }
-  const statutsFind = (typeId: EtapeTypeId) => {
-    return getEtapesStatuts(typeId)
+    if (date !== clonedValues.value[n].dateFin) {
+      clonedValues.value[n].dateFin = date
+      props.valuesSelected(clonedValues.value)
+    }
   }
 
   const valueAdd = () => {
-    props.filter.value.push({ typeId: '', dateDebut: null, dateFin: null })
+    clonedValues.value.push({ typeId: '', dateDebut: null, dateFin: null })
+    props.valuesSelected(clonedValues.value)
   }
 
   const valueRemove = (n: number) => {
-    return () => props.filter.value.splice(n, 1)
+    clonedValues.value.splice(n, 1)
+    props.valuesSelected(clonedValues.value)
   }
 
   const valueReset = (n: number) => {
-    delete props.filter.value[n].statutId
+    delete clonedValues.value[n].statutId
+    props.valuesSelected(clonedValues.value)
   }
 
-  const statutValueReset = (n: number) => {
-    // si l'utilisateur déselectionne le statut (chaine vide)
-    if (!props.filter.value[n].statutId) {
-      delete props.filter.value[n].statutId
+  const statutValueSelected = (n: number, event: Event) => {
+    if (isEventWithTarget(event)) {
+      console.log('event.target.value', event.target.value)
+      if (event.target.value === '') {
+        delete clonedValues.value[n].statutId
+      } else if (isStatut(event.target.value)) {
+        clonedValues.value[n].statutId = event.target.value
+      }
+      props.valuesSelected(clonedValues.value)
     }
   }
 
   // TODO 2023-07-13 mettre un composant typeahead pour les types d'étapes plutôt qu'un select de l'enfer
-  return (
-    <div class="mb">
-      <h5>{props.filter.name}</h5>
+  return () => (
+    <div class={`mb ${props.class}`}>
+      <h5>{fullFilter.value.name}</h5>
       <hr class="mb-s" />
 
-      {props.filter.value.map((value, n) => (
+      {clonedValues.value.map((value, n) => (
         <div key={n}>
           <div class="flex mb-s">
             <select v-model={value.typeId} class="p-s mr-s" onChange={() => valueReset(n)}>
@@ -69,10 +100,10 @@ export const FiltresEtapes = (props: Props) => {
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
                 <div class="blob-3-4">
-                  <select v-model={value.statutId} class="p-s mr-s cap-first" onChange={() => statutValueReset(n)}>
+                  <select class="p-s mr-s cap-first" onChange={event => statutValueSelected(n, event)}>
                     <option value="">–</option>
-                    {statutsFind(value.typeId).map(statut => (
-                      <option key={statut.id} value={statut.id}>
+                    {getEtapesStatuts(value.typeId).map(statut => (
+                      <option key={statut.id} value={statut.id} selected={value.statutId === statut.id}>
                         {statut.nom}
                       </option>
                     ))}
@@ -85,7 +116,7 @@ export const FiltresEtapes = (props: Props) => {
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
                 <div class="blob-3-4">
-                  <InputDate initialValue={props.filter.value[n].dateDebut} dateChanged={date => dateDebutChanged(n, date)} />
+                  <InputDate initialValue={value.dateDebut} dateChanged={date => dateDebutChanged(n, date)} />
                 </div>
               </div>
               <div class="blobs mb-s">
@@ -94,7 +125,7 @@ export const FiltresEtapes = (props: Props) => {
                   <p class="h6 italic mb-0">Optionnel</p>
                 </div>
                 <div class="blob-3-4">
-                  <InputDate initialValue={props.filter.value[n].dateFin} dateChanged={date => dateFinChanged(n, date)} />
+                  <InputDate initialValue={value.dateFin} dateChanged={date => dateFinChanged(n, date)} />
                 </div>
               </div>
             </div>
@@ -104,16 +135,15 @@ export const FiltresEtapes = (props: Props) => {
         </div>
       ))}
 
-      <button
-        v-if="!filter.value || !filter.value.some(v => v.typeId === '')"
-        class="btn rnd-xs py-s px-m full-x flex mb-s h6"
-        title="Ajouter un type d’étape"
-        aria-label="Ajouter un type d’étape"
-        onClick={valueAdd}
-      >
-        <span class="mt-xxs">Ajouter un type d'étape</span>
-        <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
-      </button>
+      {clonedValues.value.some(v => v.typeId === '') ? null : (
+        <button class="btn rnd-xs py-s px-m full-x flex mb-s h6" title="Ajouter un type d’étape" aria-label="Ajouter un type d’étape" onClick={valueAdd}>
+          <span class="mt-xxs">Ajouter un type d'étape</span>
+          <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
+        </button>
+      )}
     </div>
   )
-}
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+FiltresEtapes.props = ['filter', 'initialValues', 'valuesSelected', 'class']
