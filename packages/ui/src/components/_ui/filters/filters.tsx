@@ -192,12 +192,8 @@ export const Filters = defineComponent((props: Props) => {
       if (isInputCaminoFiltre(filter)) {
         nonValidatedValues.value[filter] = ''
       } else if (Array.isArray(nonValidatedValues.value[filter])) {
-        if (filter === 'etapesExclues' || filter === 'etapesInclues') {
-          console.log('trililiyoupi', nonValidatedValues.value[filter])
-        }
         nonValidatedValues.value[filter] = []
       } else if (filter === 'etapesExclues' || filter === 'etapesInclues') {
-        console.log('trilili', nonValidatedValues.value[filter])
         nonValidatedValues.value[filter] = []
       }
     })
@@ -337,7 +333,6 @@ export const Filters = defineComponent((props: Props) => {
                   filter={filter}
                   initialValues={nonValidatedValues.value[filter]}
                   valuesSelected={values => {
-                    console.log('plop', JSON.stringify(values))
                     // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
                     nonValidatedValues.value[filter] = values
                   }}

@@ -17,7 +17,7 @@ export const AllStatuts: StoryFn = () => (
       </tr>
       {Object.values(EtapesStatuts).map(statut => (
         <tr>
-          <td>{statut}</td>
+          <td>{statut.nom}</td>
           <td>
             <FiltresStatuts
               element={{

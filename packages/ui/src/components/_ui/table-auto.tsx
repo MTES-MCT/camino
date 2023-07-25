@@ -16,7 +16,7 @@ interface Props {
   columns: readonly Column[]
   initialSort?: InitialSort
 }
-
+// FIXME les table-auto ne doivent pas faire bouger la route (par exemple trier les titres miniers sur http://localhost:4180/entreprises/fr-899600233)
 export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initialSort'], props => {
   const sort = reactive<TableSortEvent>({
     column: props?.initialSort?.column ?? props.columns[0].id,
@@ -69,5 +69,5 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     sort.order = event.order
   }
 
-  return () => <Table columns={props.columns} rows={myRows} route={route} caption={'Administrations'} updateParams={handleChange} />
+  return () => <Table columns={props.columns} rows={myRows} route={{ value: 'anything', query: {} }} caption={'Administrations'} updateParams={handleChange} />
 })

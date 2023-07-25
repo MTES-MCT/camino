@@ -8,10 +8,17 @@ import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { toUtilisateurId } from 'camino-common/src/roles'
 import { titreIdValidator } from 'camino-common/src/titres'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
   component: PureEntreprise,
+  decorators: [
+    vueRouter([
+      { name: 'utilisateur', params: { id: 'anotherId' } },
+      { name: 'titre', params: { id: 'slugTitre1' } },
+    ]),
+  ],
 }
 export default meta
 

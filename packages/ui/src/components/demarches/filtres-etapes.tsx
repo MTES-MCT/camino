@@ -62,7 +62,6 @@ export const FiltresEtapes = defineComponent<Props>(props => {
 
   const statutValueSelected = (n: number, event: Event) => {
     if (isEventWithTarget(event)) {
-      console.log('event.target.value', event.target.value)
       if (event.target.value === '') {
         delete clonedValues.value[n].statutId
       } else if (isStatut(event.target.value)) {

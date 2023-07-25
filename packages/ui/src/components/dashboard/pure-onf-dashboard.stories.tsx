@@ -1,13 +1,17 @@
 import { PureONFDashboard } from './pure-onf-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreONF, titreIdValidator } from 'camino-common/src/titres'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Dashboard/ONF',
   component: PureONFDashboard,
-  argTypes: {
-    getOnfTitres: { name: 'function', required: true },
-  },
+  decorators: [
+    vueRouter([
+      { name: 'titre', params: { id: 'fourth-slug' } },
+      { name: 'Stats DGTM', params: {} },
+    ]),
+  ],
 }
 export default meta
 

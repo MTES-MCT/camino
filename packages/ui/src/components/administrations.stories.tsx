@@ -1,10 +1,11 @@
+import { vueRouter } from 'storybook-vue3-router'
 import { Administrations } from './administrations'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
   title: 'Components/Administrations',
   component: Administrations,
-  argTypes: {},
+  decorators: [vueRouter()],
 }
 export default meta
 

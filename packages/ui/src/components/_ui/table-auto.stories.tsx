@@ -6,10 +6,14 @@ import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { TableRow } from './table'
+import { vueRouter } from 'storybook-vue3-router'
+
+const customRoutes = [...Array(11)].map((_, row) => ({ name: `elementlink${row}`, params: { id: `elementslug${row}` }, value: `elementslug${row}` }))
 
 const meta: Meta = {
   title: 'Components/UI/Table',
   component: TableAuto,
+  decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
 }
 export default meta
 
