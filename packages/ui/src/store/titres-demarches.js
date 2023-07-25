@@ -1,4 +1,3 @@
-import { demarchesMetas, demarches } from '../api/titres-demarches'
 import { listeActionsBuild, listeMutations } from './_liste-build'
 
 const state = {
@@ -66,7 +65,7 @@ const state = {
   initialized: false,
 }
 
-const actions = listeActionsBuild('titresDemarches', 'démarches', demarches, demarchesMetas)
+const actions = listeActionsBuild('titresDemarches', 'démarches')
 
 const mutations = Object.assign({}, listeMutations, {
   reset(state) {

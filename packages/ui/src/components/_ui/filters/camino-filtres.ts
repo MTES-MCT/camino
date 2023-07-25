@@ -15,6 +15,8 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { activiteTypeIdValidator, sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { activiteStatutIdValidator, activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { caminoAnneeValidator, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
+import { demarcheTypeIdValidator, sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { demarcheStatutIdValidator, sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 export const caminoFiltres = {
   nomsAdministration: {
@@ -179,27 +181,7 @@ export const caminoFiltres = {
     lazy: false,
     validator: z.array(caminoAnneeValidator),
   },
-  // titresEntreprisesIds: {
-  //   id: 'titresEntreprisesIds',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   name: 'Entreprises',
-  //   elementsFormat,
-  // },
-  // titresSubstancesIds: {
-  //   id: 'titresSubstancesIds',
-  //   type: 'autocomplete',
-  //   value: [],
-  //   name: 'Substances',
-  //   elements: SubstancesLegales,
-  // },
-  // titresReferences: {
-  //   id: 'titresReferences',
-  //   type: 'input',
-  //   value: '',
-  //   name: 'Références',
-  //   placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
-  // },
+
   titresTerritoires: {
     id: 'titresTerritoires',
     type: 'input',
@@ -207,31 +189,22 @@ export const caminoFiltres = {
     placeholder: 'Commune, département, région, …',
     validator: z.string(),
   },
-  // titresDomainesIds: {
-  //   id: 'titresDomainesIds',
-  //   name: 'Domaines',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedDomaines,
-  //   component: 'FiltreDomaine',
-  // },
-  // TODO 2023-07-19 même chose que typesIds ?
-  // titresTypesIds: {
-  //   id: 'titresTypesIds',
-  //   name: 'Types de titre',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedTitreTypesTypes,
-  //   component: 'FiltresTypes',
-  // },
-  // titresStatutsIds: {
-  //   id: 'titresStatutsIds',
-  //   name: 'Statuts de titre',
-  //   type: 'checkboxes',
-  //   value: [],
-  //   elements: sortedTitresStatuts,
-  //   component: 'FiltresStatuts',
-  // },
+  demarchesTypesIds: {
+    id: 'demarchesTypesIds',
+    name: 'Types',
+    type: 'checkboxes',
+    elements: sortedDemarchesTypes,
+    component: 'FiltresLabel',
+    validator: z.array(demarcheTypeIdValidator),
+  },
+  demarchesStatutsIds: {
+    id: 'demarchesStatutsIds',
+    name: 'Types',
+    type: 'checkboxes',
+    elements: sortedDemarchesStatuts,
+    component: 'FiltresStatuts',
+    validator: z.array(demarcheStatutIdValidator),
+  },
   nomsEntreprise: {
     id: 'nomsEntreprise',
     type: 'input',
@@ -303,7 +276,17 @@ export const caminoAutocompleteFiltres = [
 export type AutocompleteCaminoFiltres = (typeof caminoAutocompleteFiltres)[number]['id']
 export const isAutocompleteCaminoFiltre = (value: CaminoFiltres): value is AutocompleteCaminoFiltres => caminoAutocompleteFiltresArrayIds.includes(value)
 
-const caminoCheckboxesFiltresArrayIds = ['administrationTypesIds', 'roles', 'typesIds', 'domainesIds', 'statutsIds', 'activiteTypesIds', 'activiteStatutsIds'] as const
+const caminoCheckboxesFiltresArrayIds = [
+  'administrationTypesIds',
+  'roles',
+  'typesIds',
+  'domainesIds',
+  'statutsIds',
+  'activiteTypesIds',
+  'activiteStatutsIds',
+  'demarchesTypesIds',
+  'demarchesStatutsIds',
+] as const
 export const caminoCheckboxesFiltres = [
   caminoFiltres.administrationTypesIds,
   caminoFiltres.roles,
@@ -312,6 +295,8 @@ export const caminoCheckboxesFiltres = [
   caminoFiltres.statutsIds,
   caminoFiltres.activiteTypesIds,
   caminoFiltres.activiteStatutsIds,
+  caminoFiltres.demarchesTypesIds,
+  caminoFiltres.demarchesStatutsIds,
 ] as const satisfies readonly { type: 'checkboxes' }[]
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']
 export const isCheckboxeCaminoFiltre = (value: CaminoFiltres): value is CheckboxesCaminoFiltres => caminoCheckboxesFiltresArrayIds.includes(value)

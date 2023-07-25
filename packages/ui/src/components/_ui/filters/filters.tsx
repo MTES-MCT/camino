@@ -81,6 +81,8 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     statutsIds: caminoFiltres.statutsIds.validator.parse(routerQueryToStringArray(route.query.statutsIds)),
     activiteTypesIds: caminoFiltres.activiteTypesIds.validator.parse(routerQueryToStringArray(route.query.activiteTypesIds)),
     activiteStatutsIds: caminoFiltres.activiteStatutsIds.validator.parse(routerQueryToStringArray(route.query.activiteStatutsIds)),
+    demarchesTypesIds: caminoFiltres.demarchesTypesIds.validator.parse(routerQueryToStringArray(route.query.demarchesTypesIds)),
+    demarchesStatutsIds: caminoFiltres.demarchesStatutsIds.validator.parse(routerQueryToStringArray(route.query.demarchesStatutsIds)),
     annees: caminoFiltres.annees.validator.parse(routerQueryToStringArray(route.query.annees)),
     nomsEntreprise: routerQueryToString(route.query.nomsEntreprise, ''),
     titresTerritoires: routerQueryToString(route.query.titresTerritoires, ''),
@@ -93,6 +95,7 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
   return allValues
 }
 
+// FIXME quand on ajoute/supprime des filtres et qu'on valide, ça change l'url. Si on fait retour navigateur, les données sont bien rechargées avec les bons filtres, mais les filtres n'apparaissent pas
 export const Filters = defineComponent((props: Props) => {
   const opened = computed<boolean>(() => {
     return props.opened ?? false

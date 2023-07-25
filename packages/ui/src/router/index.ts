@@ -1,18 +1,27 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from '../store'
+import type { MenuSection } from '@/utils/matomo'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
-import Demarches from '../components/demarches.vue'
 import Activite from '../components/activite.vue'
-import { Activites } from '../components/activites'
 import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
-import Travaux from '../components/travaux.vue'
-import { MenuSection } from '@/utils/matomo'
+const Activites = async () => {
+  const { Activites } = await import('../components/activites')
+  return Activites
+}
+const Demarches = async () => {
+  const { Demarches } = await import('../components/demarches')
+  return Demarches
+}
+const Travaux = async () => {
+  const { Travaux } = await import('../components/travaux')
+  return Travaux
+}
 
 const Etape = async () => {
   const { Etape } = await import('../components/etape')

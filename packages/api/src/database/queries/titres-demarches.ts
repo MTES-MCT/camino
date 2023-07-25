@@ -85,11 +85,11 @@ const titresDemarchesFiltersQueryModify = (
     q.whereIn('titresDemarches.id', titresDemarchesIds)
   }
 
-  if (typesIds) {
+  if (typesIds?.length) {
     q.whereIn('titresDemarches.typeId', typesIds)
   }
 
-  if (statutsIds) {
+  if (statutsIds?.length) {
     q.whereIn('titresDemarches.statutId', statutsIds)
   }
 

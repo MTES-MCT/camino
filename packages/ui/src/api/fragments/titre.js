@@ -123,4 +123,4 @@ const fragmentDemarchesTitre = gql`
   }
 `
 
-export { fragmentTitre, fragmentTitres, fragmentDemarchesTitre }
+export { fragmentTitre, fragmentTitres }

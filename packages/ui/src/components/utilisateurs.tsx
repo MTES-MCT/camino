@@ -1,6 +1,6 @@
-import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { User, isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { User } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { AsyncData } from '@/api/client-rest'
@@ -11,9 +11,6 @@ import { UtilisateursParams, utilisateurApiClient } from './utilisateur/utilisat
 import { getInitialFiltres } from './_ui/filters/filters'
 import { CaminoAccessError } from './error'
 import { getInitialParams } from './_ui/table-pagination'
-import { Column, ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
-import { List } from './_ui/list'
-import { Administrations } from './administrations'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 
 const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const
