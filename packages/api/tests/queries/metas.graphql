@@ -51,7 +51,6 @@ fragment domaine on Domaine {
 fragment statut on TitreStatut {
   id
   nom
-  couleur
 }
 
 fragment devise on Devise {
