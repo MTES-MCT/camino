@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import metasIndex from '@/store/metas-definitions'
+import { metasIndex } from '@/store/metas-definitions'
 import Loader from '@/components/_ui/loader.vue'
 
 export default defineComponent({

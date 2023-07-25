@@ -48,7 +48,10 @@ const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
-const Metas = () => import('../components/metas.vue')
+const Metas = async () => {
+  const { Metas } = await import('../components/metas')
+  return Metas
+}
 const CaminoError = async () => {
   const { CaminoError } = await import('../components/error')
   return CaminoError

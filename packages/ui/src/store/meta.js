@@ -1,4 +1,4 @@
-import metasIndex from './metas-definitions'
+import { metasIndex } from './metas-definitions'
 import { nextTick } from 'vue'
 
 const state = {

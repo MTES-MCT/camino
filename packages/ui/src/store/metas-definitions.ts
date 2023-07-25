@@ -1,4 +1,4 @@
-import { etapesTypes, documentsTypes, titresTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
+import { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
 import { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays } from '@/api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
@@ -15,13 +15,14 @@ import { etapesTypesEntrepriseDocumentsTypesMetas, TDEEntrepriseDocumentsTypesMe
 import { TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { etapesTypesEtapesStatutsMetas } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { TitresTypes } from 'camino-common/src/static/titresTypes'
 
-const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
+const labelGet = (entity?: { id: string; nom: string }) => (entity ? `${entity.id} - ${entity.nom}` : '')
 
-const metasIndex = {
+export const metasIndex = {
   'titres-types': {
-    get: titresTypes,
-    labelGet: titreType => `${titreType.id} - ${titreType.type.nom}- ${titreType.domaine.nom} `,
+    get: () => Object.values(TitresTypes),
+    labelGet,
     nom: 'Domaines | Types des titres',
     colonnes: [
       { id: 'id', nom: 'Id' },
@@ -30,14 +31,12 @@ const metasIndex = {
         nom: 'Domaine',
         type: 'static',
         elements: Object.values(Domaines),
-        display: domaineId => `${domaineId} - ${Domaines[domaineId].nom}`,
       },
       {
         id: 'typeId',
         nom: 'Type',
         type: 'static',
         elements: Object.values(TitresTypesTypes),
-        display: titreTypeTypeId => `${titreTypeTypeId} - ${TitresTypesTypes[titreTypeTypeId].nom}`,
       },
     ],
   },
@@ -464,6 +463,4 @@ const metasIndex = {
     nom: 'Activité',
     linkName: 'meta-activite',
   },
-}
-
-export default metasIndex
+} as const

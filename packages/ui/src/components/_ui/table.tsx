@@ -33,7 +33,7 @@ export interface TableRow<T extends string = string> {
   id: string
   link: {
     name: string
-    params: {
+    params?: {
       id: string
     }
   }

@@ -1,4 +1,4 @@
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
