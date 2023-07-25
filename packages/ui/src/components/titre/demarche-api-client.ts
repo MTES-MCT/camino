@@ -40,7 +40,6 @@ export interface GetDemarchesParams {
   demarchesStatutsIds?: DemarcheStatutId[]
 }
 
-// FIXME reduce the graphql call with only this
 export interface GetDemarchesDemarche {
   id: DemarcheId | string
   typeId: DemarcheTypeId
@@ -139,24 +138,18 @@ export const demarcheApiClient: DemarcheApiClient = {
         ) {
           elements {
             id
-            slug
-            ordre
+            typeId
+            statutId
             titre {
-              id
               slug
-              nom
-              typeId
               titreStatutId
+              typeId
+              nom
               references {
                 referenceTypeId
                 nom
               }
             }
-            typeId
-            statutId
-
-            modification
-            suppression
           }
           total
         }

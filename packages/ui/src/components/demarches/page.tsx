@@ -1,9 +1,7 @@
-import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
+import { defineComponent, markRaw, onMounted, ref } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { useRouter } from 'vue-router'
-import { User } from 'camino-common/src/roles'
-import { useStore } from 'vuex'
 import { AsyncData } from '@/api/client-rest'
 import { GetDemarchesDemarche, GetDemarchesParams, demarcheApiClient } from '../titre/demarche-api-client'
 import { utilisateurApiClient } from '../utilisateur/utilisateur-api-client'
@@ -107,10 +105,6 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
 // FIXME tests
 export const Page = defineComponent<Props>(props => {
   const router = useRouter()
-  const store = useStore()
-  const user = computed<User>(() => {
-    return store.state.user.element
-  })
 
   const data = ref<AsyncData<true>>({ status: 'LOADING' })
   const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
