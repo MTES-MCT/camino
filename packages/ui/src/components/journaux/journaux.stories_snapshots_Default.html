@@ -1,40 +1,44 @@
-<div class="tablet-blobs tablet-flex-direction-reverse">
-  <div class="tablet-blob-2-3 flex">
-    <div class="py-m h5 bold mb-xs">1 résultat</div>
-  </div>
-</div>
-<div class="line-neutral width-full"></div>
-<div>
-  <div class="width-full-p">
-    <div class="overflow-scroll-x mb">
-      <div class="table">
-        <div class="tr">
-          <div class="th nowrap "><button title="Trier par la colonne Date" aria-label="Trier par la colonne Date" class="btn-menu full-x p-0">Date
-              <!---->
-            </button></div>
-          <div class="th nowrap "><button title="Trier par la colonne Titre" aria-label="Trier par la colonne Titre" class="btn-menu full-x p-0">Titre
-              <!---->
-            </button></div>
-          <div class="th nowrap "><button title="Trier par la colonne Utilisateur" aria-label="Trier par la colonne Utilisateur" class="btn-menu full-x p-0">Utilisateur
-              <!---->
-            </button></div>
-          <div class="th nowrap "><button title="Trier par la colonne Action" aria-label="Trier par la colonne Action" class="btn-menu full-x p-0">Action
-              <!---->
-            </button></div>
-          <div class="th nowrap "><button title="Trier par la colonne Modifications" aria-label="Trier par la colonne Modifications" class="btn-menu full-x p-0">Modifications
-              <!---->
-            </button></div>
-        </div><a to="{name:etape,params:{id:unIdDelement}}" class="tr tr-link text-decoration-none" type="primary">
-          <div class="td "><span class="">07/09/2022 11:32:35</span></div>
-          <div class="td "><span class="">Le nom du titre concerné</span></div>
-          <div class="td "><span class="">Nom de famille Le beau prénom</span></div>
-          <div class="td "><span class="">create</span></div>
-          <div class="td ">
-            <div>unIdDelement</div>
-          </div>
-        </a>
+<div class="fr-container">
+  <div class="dsfr">
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-md-6">
+        <h1>Journaux</h1>
+      </div>
+      <div class="fr-col-12 fr-col-md-6" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-end;">
+        <!---->
+        <!---->
       </div>
     </div>
   </div>
   <!---->
+  <div class="dsfr">
+    <div class="dsfr">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table;">
+          <caption>Journaux</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Date" class="fr-link" aria-label="Date">Date</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Titre" class="fr-link" aria-label="Titre">Titre</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Utilisateur" class="fr-link" aria-label="Utilisateur">Utilisateur</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Action" class="fr-link" aria-label="Action">Action</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Modifications" class="fr-link" aria-label="Modifications">Modifications</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class=""><a class="fr-link" to="{name:etape,params:{id:unIdDelement}}" type="primary"><span class="">07/09/2022 11:32:35</span></a></td>
+              <td class=""><span class="">Le nom du titre concerné</span></td>
+              <td class=""><span class="">Nom de famille Le beau prénom</span></td>
+              <td class=""><span class="">create</span></td>
+              <td class="">
+                <div>unIdDelement</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!---->
+  </div>
 </div>

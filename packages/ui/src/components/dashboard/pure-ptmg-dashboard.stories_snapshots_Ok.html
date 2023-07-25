@@ -6,104 +6,72 @@
   </div>
   <div class="line-neutral width-full mb-l"></div>
   <h3>ARM en attente</h3>
-  <div class="mb-xxl">
-    <div class="overflow-scroll-x mb">
-      <div class="table">
-        <div class="tr">
-          <div class="th nowrap min-width-8"><button title="Trier par la colonne Nom" aria-label="Trier par la colonne Nom" class="btn-menu full-x p-0">Nom
-              <!---->
-            </button></div>
-          <div class="th nowrap nowrap min-width-5"><button title="Trier par la colonne Statut par ordre descendant" aria-label="Trier par la colonne Statut par ordre descendant" class="btn-menu full-x p-0">Statut<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="right">
-                <use href="#icon-chevron-bas"></use>
-              </svg></button></div>
-          <div class="th nowrap min-width-8"><button title="Trier par la colonne Références" aria-label="Trier par la colonne Références" class="btn-menu full-x p-0 disabled">Références
-              <!---->
-            </button></div>
-          <div class="th nowrap min-width-10"><button title="Trier par la colonne Titulaires" aria-label="Trier par la colonne Titulaires" class="btn-menu full-x p-0">Titulaires
-              <!---->
-            </button></div>
-        </div><a to="{name:titre,params:{id:first-id-slug}}" class="tr tr-link text-decoration-none" type="primary">
-          <div class="td min-width-8"><span class="bold">first-name</span></div>
-          <div class="td nowrap min-width-5">
-            <div class="bg-warning inline-block small bold color-bg pill py-xs px-s">Demande initiale</div>
-          </div>
-          <div class="td min-width-8">
-            <ul class="list-prefix mb--xs"></ul>
-          </div>
-          <div class="td min-width-10">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">Titulaire1</li>
-            </ul>
-          </div>
-        </a><a to="{name:titre,params:{id:second-slug}}" class="tr tr-link text-decoration-none" type="primary">
-          <div class="td min-width-8"><span class="bold">Second Nom de titre</span></div>
-          <div class="td nowrap min-width-5">
-            <div class="bg-warning inline-block small bold color-bg pill py-xs px-s">Demande initiale</div>
-          </div>
-          <div class="td min-width-8">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">PTMG : 2010-001</li>
-              <li class="h6">PTMG : 2010-000</li>
-            </ul>
-          </div>
-          <div class="td min-width-10">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">Titulaire3</li>
-            </ul>
-          </div>
-        </a><a to="{name:titre,params:{id:fourth-slug}}" class="tr tr-link text-decoration-none" type="primary">
-          <div class="td min-width-8"><span class="bold">Quatrième Nom de titre</span></div>
-          <div class="td nowrap min-width-5">
-            <div class="bg-warning inline-block small bold color-bg pill py-xs px-s">Demande initiale</div>
-          </div>
-          <div class="td min-width-8">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">PTMG : 2010-001</li>
-              <li class="h6">PTMG : 2010-000</li>
-            </ul>
-          </div>
-          <div class="td min-width-10">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">Titulaire 8</li>
-            </ul>
-          </div>
-        </a>
-      </div>
+  <div class="dsfr mb-xxl">
+    <div class="fr-table fr-table--no-caption">
+      <table style="display: table;">
+        <caption>Administrations</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Statut" class="fr-link" aria-label="Trier par la colonne Statut">Statut</a></th>
+            <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Références" class="fr-link" aria-label="Références">Références</a></th>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Titulaires" class="fr-link" aria-label="Trier par la colonne Titulaires">Titulaires</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class=""><a class="fr-link" to="{name:titre,params:{id:first-id-slug}}" type="primary"><span class="bold">first-name</span></a></td>
+            <td class="">
+              <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+            </td>
+            <td class=""><span class="dsfr mb--xs"><ul></ul></span></td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Titulaire1</li></ul></span></td>
+          </tr>
+          <tr>
+            <td class=""><a class="fr-link" to="{name:titre,params:{id:second-slug}}" type="primary"><span class="bold">Second Nom de titre</span></a></td>
+            <td class="">
+              <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+            </td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">PTMG : 2010-001</li><li class="fr-text--xs">PTMG : 2010-000</li></ul></span></td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Titulaire3</li></ul></span></td>
+          </tr>
+          <tr>
+            <td class=""><a class="fr-link" to="{name:titre,params:{id:fourth-slug}}" type="primary"><span class="bold">Quatrième Nom de titre</span></a></td>
+            <td class="">
+              <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+            </td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">PTMG : 2010-001</li><li class="fr-text--xs">PTMG : 2010-000</li></ul></span></td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Titulaire 8</li></ul></span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="line-neutral width-full mb-l"></div>
   <h3>ARM en cours d’instruction</h3>
-  <div class="width-full-p">
-    <div class="overflow-scroll-x mb">
-      <div class="table">
-        <div class="tr">
-          <div class="th nowrap min-width-8"><button title="Trier par la colonne Nom" aria-label="Trier par la colonne Nom" class="btn-menu full-x p-0">Nom
-              <!---->
-            </button></div>
-          <div class="th nowrap nowrap min-width-5"><button title="Trier par la colonne Statut par ordre descendant" aria-label="Trier par la colonne Statut par ordre descendant" class="btn-menu full-x p-0">Statut<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="right">
-                <use href="#icon-chevron-bas"></use>
-              </svg></button></div>
-          <div class="th nowrap min-width-8"><button title="Trier par la colonne Références" aria-label="Trier par la colonne Références" class="btn-menu full-x p-0 disabled">Références
-              <!---->
-            </button></div>
-          <div class="th nowrap min-width-10"><button title="Trier par la colonne Titulaires" aria-label="Trier par la colonne Titulaires" class="btn-menu full-x p-0">Titulaires
-              <!---->
-            </button></div>
-        </div><a to="{name:titre,params:{id:third-id-slug}}" class="tr tr-link text-decoration-none" type="primary">
-          <div class="td min-width-8"><span class="bold">third-name</span></div>
-          <div class="td nowrap min-width-5">
-            <div class="bg-warning inline-block small bold color-bg pill py-xs px-s">Demande initiale</div>
-          </div>
-          <div class="td min-width-8">
-            <ul class="list-prefix mb--xs"></ul>
-          </div>
-          <div class="td min-width-10">
-            <ul class="list-prefix mb--xs">
-              <li class="h6">Titulaire1</li>
-            </ul>
-          </div>
-        </a>
-      </div>
+  <div class="dsfr width-full-p">
+    <div class="fr-table fr-table--no-caption">
+      <table style="display: table;">
+        <caption>Administrations</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Statut" class="fr-link" aria-label="Trier par la colonne Statut">Statut</a></th>
+            <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Références" class="fr-link" aria-label="Références">Références</a></th>
+            <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Titulaires" class="fr-link" aria-label="Trier par la colonne Titulaires">Titulaires</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class=""><a class="fr-link" to="{name:titre,params:{id:third-id-slug}}" type="primary"><span class="bold">third-name</span></a></td>
+            <td class="">
+              <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+            </td>
+            <td class=""><span class="dsfr mb--xs"><ul></ul></span></td>
+            <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Titulaire1</li></ul></span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

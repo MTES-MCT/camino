@@ -86,7 +86,7 @@
       </div>
       <div class="dsfr">
         <div class="fr-container">
-          <div class=" fr-table">
+          <div class="fr-table">
             <table style="display: table;">
               <caption>Documents de l'entreprise</caption>
               <thead>
@@ -145,47 +145,36 @@
     <div class="line-neutral width-full mb-xxl"></div>
     <h3>Utilisateurs</h3>
     <div class="line width-full"></div>
-    <div class="width-full-p">
-      <div class="overflow-scroll-x mb">
-        <div class="table">
-          <div class="tr">
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Nom par ordre descendant" aria-label="Trier par la colonne Nom par ordre descendant" class="btn-menu full-x p-0">Nom<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="right">
-                  <use href="#icon-chevron-bas"></use>
-                </svg></button></div>
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Prénom" aria-label="Trier par la colonne Prénom" class="btn-menu full-x p-0">Prénom
-                <!---->
-              </button></div>
-            <div class="th nowrap "><button title="Trier par la colonne Email" aria-label="Trier par la colonne Email" class="btn-menu full-x p-0">Email
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Rôle" aria-label="Trier par la colonne Rôle" class="btn-menu full-x p-0">Rôle
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Lien" aria-label="Trier par la colonne Lien" class="btn-menu full-x p-0 disabled">Lien
-                <!---->
-              </button></div>
-          </div><a to="{name:utilisateur,params:{id:anId}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-6"><span class="">Nom user</span></div>
-            <div class="td min-width-6"><span class="">Prénon</span></div>
-            <div class="td "><span class="h6">email@plop.wu</span></div>
-            <div class="td min-width-6"><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></div>
-            <div class="td min-width-6">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-          </a><a to="{name:utilisateur,params:{id:anotherId}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-6"><span class="">Other user</span></div>
-            <div class="td min-width-6"><span class="">Other prenom</span></div>
-            <div class="td "><span class="h6">anotheremail@nothing.wu</span></div>
-            <div class="td min-width-6"><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></div>
-            <div class="td min-width-6">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-          </a>
-        </div>
+    <div class="dsfr width-full-p">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table;">
+          <caption>Administrations</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="min-width-6 nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th scope="col" class="min-width-6 nowrap"><a href="/mocked-href" title="Trier par la colonne Prénom" class="fr-link" aria-label="Trier par la colonne Prénom">Prénom</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Email" class="fr-link" aria-label="Trier par la colonne Email">Email</a></th>
+              <th scope="col" class="min-width-6 nowrap"><a href="/mocked-href" title="Trier par la colonne Rôle" class="fr-link" aria-label="Trier par la colonne Rôle">Rôle</a></th>
+              <th scope="col" class="min-width-6 nowrap"><a aria-disabled="true" role="link" title="Lien" class="fr-link" aria-label="Lien">Lien</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="min-width-6"><a class="fr-link" to="{name:utilisateur,params:{id:anId}}" type="primary"><span class="">Nom user</span></a></td>
+              <td class="min-width-6"><span class="">Prénon</span></td>
+              <td class=""><span class="h6">email@plop.wu</span></td>
+              <td class="min-width-6"><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></td>
+              <td class="min-width-6"><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+            </tr>
+            <tr>
+              <td class="min-width-6"><a class="fr-link" to="{name:utilisateur,params:{id:anotherId}}" type="primary"><span class="">Other user</span></a></td>
+              <td class="min-width-6"><span class="">Other prenom</span></td>
+              <td class=""><span class="h6">anotheremail@nothing.wu</span></td>
+              <td class="min-width-6"><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></td>
+              <td class="min-width-6"><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -193,176 +182,91 @@
     <div class="line-neutral width-full mb-xxl"></div>
     <h3>Titres miniers et autorisations</h3>
     <div class="line width-full"></div>
-    <div class="width-full-p">
-      <div class="overflow-scroll-x mb">
-        <div class="table">
-          <div class="tr">
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Nom par ordre descendant" aria-label="Trier par la colonne Nom par ordre descendant" class="btn-menu full-x p-0">Nom<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="right">
-                  <use href="#icon-chevron-bas"></use>
-                </svg></button></div>
-            <div class="th nowrap "><button title="Trier par la colonne " aria-label="Trier par la colonne " class="btn-menu full-x p-0">–
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Type" aria-label="Trier par la colonne Type" class="btn-menu full-x p-0">Type
-                <!---->
-              </button></div>
-            <div class="th nowrap nowrap min-width-5"><button title="Trier par la colonne Statut" aria-label="Trier par la colonne Statut" class="btn-menu full-x p-0">Statut
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-5"><button title="Trier par la colonne Activités" aria-label="Trier par la colonne Activités" class="btn-menu full-x p-0">Activités
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Substances" aria-label="Trier par la colonne Substances" class="btn-menu full-x p-0 disabled">Substances
-                <!---->
-              </button></div>
-            <div class="th nowrap "><button title="Trier par la colonne Carte" aria-label="Trier par la colonne Carte" class="btn-menu full-x p-0">Carte
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-10"><button title="Trier par la colonne Titulaires" aria-label="Trier par la colonne Titulaires" class="btn-menu full-x p-0">Titulaires
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Régions" aria-label="Trier par la colonne Régions" class="btn-menu full-x p-0 disabled">Régions
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Départements" aria-label="Trier par la colonne Départements" class="btn-menu full-x p-0 disabled">Départements
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Références" aria-label="Trier par la colonne Références" class="btn-menu full-x p-0 disabled">Références
-                <!---->
-              </button></div>
-          </div><a to="{name:titre,params:{id:slug3}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-8"><span class="bold">Nom titre 3</span></div>
-            <div class="td ">
-              <div class="bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono">M</div>
-            </div>
-            <div class="td min-width-8"><span class="small bold">Autorisation de recherches</span></div>
-            <div class="td nowrap min-width-5">
-              <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Échu</div>
-            </div>
-            <div class="td min-width-5">
-              <div class="mb--s">
-                <!---->
-                <!---->
-              </div>
-            </div>
-            <div class="td min-width-6">
-              <ul class="list-inline mb--xs">
-                <li class="mr-xs mb-xs"><span class="bold cap-first small lh-2"><span class="bg-neutral py-xs px-s rnd-xs color-bg box">or</span></span></li>
-              </ul>
-            </div>
-            <div class="td ">
-              <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
-                  <use href="#icon-globe"></use>
-                </svg></div>
-            </div>
-            <div class="td min-width-10">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs"></ul>
-            </div>
-          </a><a to="{name:titre,params:{id:slugtitre}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-8"><span class="bold">NomTitre</span></div>
-            <div class="td ">
-              <div class="bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono">M</div>
-            </div>
-            <div class="td min-width-8"><span class="small bold">Autorisation d'exploitation</span></div>
-            <div class="td nowrap min-width-5">
-              <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Échu</div>
-            </div>
-            <div class="td min-width-5">
-              <div class="mb--s">
-                <!---->
-                <!---->
-              </div>
-            </div>
-            <div class="td min-width-6">
-              <ul class="list-inline mb--xs">
-                <li class="mr-xs mb-xs"><span class="bold cap-first small lh-2"><span class="bg-neutral py-xs px-s rnd-xs color-bg box">or</span></span></li>
-              </ul>
-            </div>
-            <div class="td ">
-              <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
-                  <use href="#icon-globe"></use>
-                </svg></div>
-            </div>
-            <div class="td min-width-10">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">DEAL : plop/toto</li>
-              </ul>
-            </div>
-          </a><a to="{name:titre,params:{id:slugTitre1}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-8"><span class="bold">titre 1 nom</span></div>
-            <div class="td ">
-              <div class="bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono">M</div>
-            </div>
-            <div class="td min-width-8"><span class="small bold">Autorisation de recherches</span></div>
-            <div class="td nowrap min-width-5">
-              <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Échu</div>
-            </div>
-            <div class="td min-width-5">
-              <div class="mb--s">
-                <!---->
-                <!---->
-              </div>
-            </div>
-            <div class="td min-width-6">
-              <ul class="list-inline mb--xs">
-                <li class="mr-xs mb-xs"><span class="bold cap-first small lh-2"><span class="bg-neutral py-xs px-s rnd-xs color-bg box">or</span></span></li>
-              </ul>
-            </div>
-            <div class="td ">
-              <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
-                  <use href="#icon-globe"></use>
-                </svg></div>
-            </div>
-            <div class="td min-width-10">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs"></ul>
-            </div>
-          </a>
-        </div>
+    <div class="dsfr width-full-p">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table;">
+          <caption>Administrations</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne " class="fr-link" aria-label="Trier par la colonne ">-</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Type" class="fr-link" aria-label="Trier par la colonne Type">Type</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Statut" class="fr-link" aria-label="Trier par la colonne Statut">Statut</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Activités" class="fr-link" aria-label="Trier par la colonne Activités">Activités</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Substances" class="fr-link" aria-label="Substances">Substances</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Carte" class="fr-link" aria-label="Trier par la colonne Carte">Carte</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Titulaires" class="fr-link" aria-label="Trier par la colonne Titulaires">Titulaires</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Régions" class="fr-link" aria-label="Régions">Régions</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Départements" class="fr-link" aria-label="Départements">Départements</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Références" class="fr-link" aria-label="Références">Références</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class=""><a class="fr-link" to="{name:titre,params:{id:slug3}}" type="primary"><span class="bold">Nom titre 3</span></a></td>
+              <td class="">
+                <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+              </td>
+              <td class=""><span class="small bold">Autorisation de recherches</span></td>
+              <td class="">
+                <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+              </td>
+              <td class=""><span class=""><!----></span></td>
+              <td class=""><span class="dsfr"><ul><li class="">or</li></ul></span></td>
+              <td class="">
+                <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
+                    <use href="#icon-globe"></use>
+                  </svg></div>
+              </td>
+              <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr mb--xs"><ul><!----></ul></span></td>
+            </tr>
+            <tr>
+              <td class=""><a class="fr-link" to="{name:titre,params:{id:slugtitre}}" type="primary"><span class="bold">NomTitre</span></a></td>
+              <td class="">
+                <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+              </td>
+              <td class=""><span class="small bold">Autorisation d'exploitation</span></td>
+              <td class="">
+                <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+              </td>
+              <td class=""><span class=""><!----></span></td>
+              <td class=""><span class="dsfr"><ul><li class="">or</li></ul></span></td>
+              <td class="">
+                <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
+                    <use href="#icon-globe"></use>
+                  </svg></div>
+              </td>
+              <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">DEAL : plop/toto</li></ul></span></td>
+            </tr>
+            <tr>
+              <td class=""><a class="fr-link" to="{name:titre,params:{id:slugTitre1}}" type="primary"><span class="bold">titre 1 nom</span></a></td>
+              <td class="">
+                <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+              </td>
+              <td class=""><span class="small bold">Autorisation de recherches</span></td>
+              <td class="">
+                <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+              </td>
+              <td class=""><span class=""><!----></span></td>
+              <td class=""><span class="dsfr"><ul><li class="">or</li></ul></span></td>
+              <td class="">
+                <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
+                    <use href="#icon-globe"></use>
+                  </svg></div>
+              </td>
+              <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr mb--xs"><ul><!----></ul></span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -370,88 +274,49 @@
     <div class="line width-full my-xxl"></div>
     <h3>Titres miniers et autorisations (amodiataire)</h3>
     <div class="line width-full"></div>
-    <div class="width-full-p">
-      <div class="overflow-scroll-x mb">
-        <div class="table">
-          <div class="tr">
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Nom par ordre descendant" aria-label="Trier par la colonne Nom par ordre descendant" class="btn-menu full-x p-0">Nom<svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666" class="right">
-                  <use href="#icon-chevron-bas"></use>
-                </svg></button></div>
-            <div class="th nowrap "><button title="Trier par la colonne " aria-label="Trier par la colonne " class="btn-menu full-x p-0">–
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Type" aria-label="Trier par la colonne Type" class="btn-menu full-x p-0">Type
-                <!---->
-              </button></div>
-            <div class="th nowrap nowrap min-width-5"><button title="Trier par la colonne Statut" aria-label="Trier par la colonne Statut" class="btn-menu full-x p-0">Statut
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-5"><button title="Trier par la colonne Activités" aria-label="Trier par la colonne Activités" class="btn-menu full-x p-0">Activités
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-6"><button title="Trier par la colonne Substances" aria-label="Trier par la colonne Substances" class="btn-menu full-x p-0 disabled">Substances
-                <!---->
-              </button></div>
-            <div class="th nowrap "><button title="Trier par la colonne Carte" aria-label="Trier par la colonne Carte" class="btn-menu full-x p-0">Carte
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-10"><button title="Trier par la colonne Titulaires" aria-label="Trier par la colonne Titulaires" class="btn-menu full-x p-0">Titulaires
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Régions" aria-label="Trier par la colonne Régions" class="btn-menu full-x p-0 disabled">Régions
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Départements" aria-label="Trier par la colonne Départements" class="btn-menu full-x p-0 disabled">Départements
-                <!---->
-              </button></div>
-            <div class="th nowrap min-width-8"><button title="Trier par la colonne Références" aria-label="Trier par la colonne Références" class="btn-menu full-x p-0 disabled">Références
-                <!---->
-              </button></div>
-          </div><a to="{name:titre,params:{id:slug3}}" class="tr tr-link text-decoration-none" type="primary">
-            <div class="td min-width-8"><span class="bold">Nom titre 3</span></div>
-            <div class="td ">
-              <div class="bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono">M</div>
-            </div>
-            <div class="td min-width-8"><span class="small bold">Autorisation de recherches</span></div>
-            <div class="td nowrap min-width-5">
-              <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s">Échu</div>
-            </div>
-            <div class="td min-width-5">
-              <div class="mb--s">
-                <!---->
-                <!---->
-              </div>
-            </div>
-            <div class="td min-width-6">
-              <ul class="list-inline mb--xs">
-                <li class="mr-xs mb-xs"><span class="bold cap-first small lh-2"><span class="bg-neutral py-xs px-s rnd-xs color-bg box">or</span></span></li>
-              </ul>
-            </div>
-            <div class="td ">
-              <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
-                  <use href="#icon-globe"></use>
-                </svg></div>
-            </div>
-            <div class="td min-width-10">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Nom entreprise</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs">
-                <li class="h6">Guyane</li>
-              </ul>
-            </div>
-            <div class="td min-width-8">
-              <ul class="list-prefix mb--xs"></ul>
-            </div>
-          </a>
-        </div>
+    <div class="dsfr width-full-p">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table;">
+          <caption>Administrations</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne " class="fr-link" aria-label="Trier par la colonne ">-</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Type" class="fr-link" aria-label="Trier par la colonne Type">Type</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Statut" class="fr-link" aria-label="Trier par la colonne Statut">Statut</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Activités" class="fr-link" aria-label="Trier par la colonne Activités">Activités</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Substances" class="fr-link" aria-label="Substances">Substances</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Carte" class="fr-link" aria-label="Trier par la colonne Carte">Carte</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Titulaires" class="fr-link" aria-label="Trier par la colonne Titulaires">Titulaires</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Régions" class="fr-link" aria-label="Régions">Régions</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Départements" class="fr-link" aria-label="Départements">Départements</a></th>
+              <th scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Références" class="fr-link" aria-label="Références">Références</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class=""><a class="fr-link" to="{name:titre,params:{id:slug3}}" type="primary"><span class="bold">Nom titre 3</span></a></td>
+              <td class="">
+                <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+              </td>
+              <td class=""><span class="small bold">Autorisation de recherches</span></td>
+              <td class="">
+                <p style="z-index: unset; margin-bottom: 0px;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+              </td>
+              <td class=""><span class=""><!----></span></td>
+              <td class=""><span class="dsfr"><ul><li class="">or</li></ul></span></td>
+              <td class="">
+                <div class="p-xs"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="#666">
+                    <use href="#icon-globe"></use>
+                  </svg></div>
+              </td>
+              <td class=""><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Nom entreprise</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr"><ul><li class="fr-text--xs">Guyane</li></ul></span></td>
+              <td class=""><span class="dsfr mb--xs"><ul><!----></ul></span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

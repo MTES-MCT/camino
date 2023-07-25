@@ -12,10 +12,15 @@ type StoryFile = {
 console.error = vi.fn()
 
 vi.mock('vue-router', () => ({
-  useRoute: vi.fn(),
+  useRoute: vi.fn(() => ({
+    name: 'mocked-current-route',
+    query: {},
+  })),
+  onBeforeRouteLeave: vi.fn(),
   useLink: () => ({ href: { value: '/mocked-href' } }),
   useRouter: vi.fn(() => ({
-    push: () => {},
+    push: vi.fn(),
+    currentRoute: { value: { name: 'mocked-current-route', query: {} } },
   })),
 }))
 

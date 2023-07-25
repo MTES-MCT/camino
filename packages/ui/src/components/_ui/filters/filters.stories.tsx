@@ -14,13 +14,14 @@ const meta: Meta = {
 export default meta
 
 const pushAction = action('push')
-export const push = (params: RouteLocationRaw) => {
+const push = (params: RouteLocationRaw) => {
   pushAction(params)
   return Promise.resolve()
 }
 
+const metas = { entreprises: [] }
 export const ClosedWithoutValue: StoryFn = () => (
-  <Filters filters={['nomsAdministration']} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} />
+  <Filters filters={['nomsAdministration']} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} metas={metas} />
 )
 
 export const AllFiltersClosedWithValues: StoryFn = () => (
@@ -31,6 +32,7 @@ export const AllFiltersClosedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={false}
+    metas={metas}
   />
 )
 
@@ -42,6 +44,7 @@ export const AllFiltersOpenedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
+    metas={metas}
   />
 )
 
@@ -53,9 +56,10 @@ export const CustomOpenedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
+    metas={metas}
   />
 )
 
 export const Opened: StoryFn = () => (
-  <Filters filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} opened={true} />
+  <Filters filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} opened={true} metas={metas} />
 )

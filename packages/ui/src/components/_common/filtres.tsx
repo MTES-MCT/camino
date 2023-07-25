@@ -1,8 +1,5 @@
-import { defineComponent, ref, watch, Ref } from 'vue'
-import { z } from 'zod'
+import { defineComponent, ref, watch } from 'vue'
 import { Filters, getInitialFiltres } from '../_ui/filters/filters'
-import { getKeys } from 'camino-common/src/typescript-tools'
-import { FiltersDeclaration } from '../_ui/filters/all-filters'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
 
@@ -25,7 +22,6 @@ export const Filtres = defineComponent((props: Props) => {
   const toggle = () => {
     opened.value = !opened.value
 
-    init()
     props.toggle?.(opened.value)
   }
 
@@ -42,49 +38,9 @@ export const Filtres = defineComponent((props: Props) => {
 
       window.scrollTo({ top: 0, behavior: 'smooth' })
 
-      // FIXME plus utile ?
-      // // formate les valeurs des filtres
-      // const params = filters.value.reduce<{ [key in FiltreId]: z.infer<Filtres[key]['validator']> }>((acc, filtre) => {
-      //   let value: string | string[] | undefined
-
-      //   if (filtre.type === 'etape' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
-      //     value = (filtre.value ?? []).filter(v => v !== '')
-      //   } else {
-      //     value = filtre.value
-      //   }
-
-      //   // TODO 2023-07-17 pourquoi ce as est nécessaire ?
-      //   acc[filtre.id as FiltreId] = filtre.validator.parse(value)
-
-      //   return acc
-      // }, {} as { [key in FiltreId]: z.infer<Filtres[key]['validator']> })
-
       filtresValues.value = params
       props.paramsUpdate(params)
     }
-  }
-
-  const init = () => {
-    // FIXME tester avec les entreprises et bouger ce code dans le composant filters ?
-    // filters.value = getKeys(props.filtres, isFiltreId)
-    //   .map(id => props.filtres[id])
-    //   .map(filtre => {
-    //     const newFilter: typeof filtre = { ...filtre }
-    //     if (filtre.type === 'autocomplete' && !filtre.lazy && filtre.elementsFormat) {
-    //       // @ts-ignore TODO 2023-07-13 supprimer elementsFormat et tout ce qui s'en suit
-    //       newFilter.elements = filtre.elementsFormat(filtre.id, props.metas)
-    //     }
-    //     return newFilter
-    //   })
-    // FIXME plus utile ?
-    // Object.keys(props.params)
-    //   .filter(isFiltreId<FiltreId>)
-    //   .forEach(id => {
-    //     const preference = props.params[id]
-    //     const filtre = filters.value.find(filtre => filtre.id === id)
-    //     if (!filtre) return
-    //     filtre.value = preference
-    //   })
   }
 
   watch(
@@ -95,15 +51,6 @@ export const Filtres = defineComponent((props: Props) => {
       }
     },
     { deep: true }
-  )
-
-  watch(
-    () => props.initialized,
-    (_new, old) => {
-      if (!old) {
-        init()
-      }
-    }
   )
 
   return () => (
