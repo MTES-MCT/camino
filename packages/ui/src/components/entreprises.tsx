@@ -87,7 +87,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
     <Liste
       nom="entreprises"
       colonnes={entreprisesColonnes}
-      download={{ downloadRoute: '/entreprises', formats: ['csv', 'xlsx', 'ods'], params: {} }}
+      download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: ['csv', 'xlsx', 'ods'], params: {} }}
       lignes={entreprises.value}
       listeFiltre={{
         filtres,

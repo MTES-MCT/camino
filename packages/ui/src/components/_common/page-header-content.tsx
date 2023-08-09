@@ -6,7 +6,7 @@ import { DownloadRestRoutes } from 'camino-common/src/rest'
 export type Props = {
   nom: string
   renderButton: (() => JSX.Element) | null
-  download: Pick<DownloadProps<DownloadRestRoutes>, 'formats' | 'params' | 'downloadRoute'> | null
+  download: Pick<DownloadProps<DownloadRestRoutes>, 'formats' | 'params' | 'downloadRoute' | 'id'> | null
 }
 
 export const PageContentHeader: FunctionalComponent<Props> = props => {
