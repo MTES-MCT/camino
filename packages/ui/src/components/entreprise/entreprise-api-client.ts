@@ -24,7 +24,7 @@ export type GetEntreprisesParams = {
   nomsEntreprise: string
 }
 
-export type GetEntreprisesEntreprise = Pick<EntrepriseType, 'id' | 'nom' | 'legalSiren'> & { legalEtranger?: string }
+export type GetEntreprisesEntreprise = Pick<EntrepriseType, 'id' | 'nom' | 'legalSiren'> & { legalEtranger: string | null }
 export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>

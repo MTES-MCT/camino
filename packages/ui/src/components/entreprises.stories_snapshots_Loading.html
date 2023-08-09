@@ -1,0 +1,63 @@
+<div class="fr-container">
+  <div class="dsfr">
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-md-6">
+        <h1>Entreprises</h1>
+      </div>
+      <div class="fr-col-12 fr-col-md-6" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-end;">
+        <div class="dsfr" style="display: flex;"><span class="dsfr fr-mr-1v"><div class="fr-select-group"><!----><select class="fr-select" id="select_186" aria-label="Téléchargements" name="select_186"><option value="csv">csv</option><option value="xlsx">xlsx</option><option value="ods">ods</option><option disabled="" hidden="" value="">Choississez un format d'export</option></select></div></span><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-file-download-line" disabled="" title="Télécharger (choisissez le format)" aria-label="Télécharger (choisissez le format)">
+            <!---->
+          </button></div><span></span>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-direction-column rnd-s border bg-bg mb-s"><button class="rnd-s accordion-header flex btn-alt py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
+      <div>
+        <div style="display: flex; align-items: center;">
+          <div>Filtres</div>
+          <div class="pl-s small">(0 résultat)</div>
+        </div>
+      </div>
+      <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+          <use href="#icon-chevron-bas"></use>
+        </svg></div>
+    </button>
+    <!--v-if-->
+    <div class="overflow-hidden">
+      <transition-stub name="slide" appear="false" persisted="true" css="true">
+        <div style="display: none;">
+          <div class="px-m">
+            <div class="tablet-blobs mt">
+              <div class="tablet-blob-1-2 large-blob-1-3">
+                <div>
+                  <div class="mb">
+                    <h5>Nom / Siren / Siret</h5>
+                    <hr class="mb-s"><input class="p-xs" type="text" placeholder="Nom d'entreprise ou d'établissement, Siren, ou Siret">
+                  </div>
+                </div><button class="btn-border small px-s p-xs rnd-xs mb">Tout effacer</button>
+              </div>
+            </div>
+            <div class="dsfr"><a href="/mocked-href" title="Valider les filtres" class="fr-link" aria-label="Valider les filtres">Valider</a></div>
+          </div>
+        </div>
+      </transition-stub>
+    </div>
+  </div>
+  <div class="dsfr">
+    <div class="dsfr">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table;">
+          <caption>entreprises</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Siren" class="fr-link" aria-label="Trier par la colonne Siren">Siren</a></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <!---->
+  </div>
+</div>

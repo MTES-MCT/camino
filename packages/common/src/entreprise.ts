@@ -88,7 +88,7 @@ export const entrepriseTypeValidator = z.object({
   nom: z.string(),
   telephone: z.string(),
   email: z.string(),
-  legalSiren: z.string(),
+  legalSiren: z.string().nullable(),
   legalForme: z.string(),
   adresse: z.string(),
   codePostal: z.string(),
