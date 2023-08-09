@@ -4,20 +4,20 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Statut } from './_common/statut'
 import { List } from './_ui/list'
-import { useRouter } from 'vue-router'
+import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
-import { utilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
-import { Activite, GetActivitesParams, activiteApiClient } from './activite/activite-api-client'
+import { Activite, GetActivitesParams } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { TableRow } from './_ui/table'
 import { getInitialParams } from './_ui/table-pagination'
 import { getInitialFiltres } from './_ui/filters/filters'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
+import { ApiClient, apiClient } from '@/api/api-client'
 
 const activitesColonnes = [
   {
@@ -91,13 +91,15 @@ const filtres: readonly CaminoFiltres[] = [
   'annees',
 ] as const
 
-// FIXME add tests
-export const Activites = defineComponent(() => {
-  const store = useStore()
-  const router = useRouter()
-  const user = computed<User>(() => store.state.user.element)
-  const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
+interface Props {
+  user: User
+  currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  updateUrlQuery: Pick<Router, 'push'>
+  apiClient: Pick<ApiClient, 'getActivites' | 'getEntreprises'>
+}
 
+export const PureActivites = defineComponent<Props>(props => {
+  const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
   const data = ref<AsyncData<true>>({ status: 'LOADING' })
 
   const activitesRef = ref<{ elements: Activite[]; total: number }>({ elements: [], total: 0 })
@@ -106,7 +108,7 @@ export const Activites = defineComponent(() => {
     data.value = { status: 'LOADING' }
 
     try {
-      const activites = await activiteApiClient.getActivites(params)
+      const activites = await props.apiClient.getActivites(params)
       activitesRef.value.elements.splice(0, activitesRef.value.elements.length, ...activites.elements)
       activitesRef.value.total = activites.total
       data.value = { status: 'LOADED', value: true }
@@ -121,7 +123,7 @@ export const Activites = defineComponent(() => {
   onMounted(async () => {
     meta.value = { status: 'LOADING' }
     try {
-      const entreprises = await utilisateurApiClient.getEntreprises()
+      const entreprises = await props.apiClient.getEntreprises()
       meta.value = { status: 'LOADED', value: { entreprises } }
     } catch (e: any) {
       console.error('error', e)
@@ -130,12 +132,12 @@ export const Activites = defineComponent(() => {
         message: e.message ?? "Une erreur s'est produite",
       }
     }
-    await load({ ...getInitialParams(router.currentRoute.value, activitesColonnes), ...getInitialFiltres(router.currentRoute.value, filtres) })
+    await load({ ...getInitialParams(props.currentRoute, activitesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
   })
 
   return () => (
     <>
-      {canReadActivites(user.value) ? (
+      {canReadActivites(props.user) ? (
         <LoadingElement
           data={meta.value}
           renderItem={metas => (
@@ -149,6 +151,7 @@ export const Activites = defineComponent(() => {
                 lignes={activitesLignesBuild(activitesRef.value.elements)}
                 total={activitesRef.value.total}
                 download={{
+                  id: 'downloadActivites',
                   downloadRoute: '/activites',
                   formats: ['csv', 'xlsx', 'ods'],
                   params: {},
@@ -157,20 +160,31 @@ export const Activites = defineComponent(() => {
                   filtres,
                   initialized: true,
                   metas,
-                  updateUrlQuery: router,
+                  updateUrlQuery: props.updateUrlQuery,
                 }}
                 renderButton={null}
                 paramsUpdate={params => {
                   load({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
                 }}
-                route={router.currentRoute.value}
+                route={props.currentRoute}
               />
             </>
           )}
         />
       ) : (
-        <CaminoAccessError user={user.value} />
+        <CaminoAccessError user={props.user} />
       )}
     </>
   )
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
+
+export const Activites = defineComponent(() => {
+  const store = useStore()
+  const router = useRouter()
+  const user = computed<User>(() => store.state.user.element)
+
+  return () => <PureActivites user={user.value} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
