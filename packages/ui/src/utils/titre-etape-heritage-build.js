@@ -20,7 +20,8 @@ export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTy
     const justificatifs = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etapeTypeId)
     if (justificatifs.length > 0) {
       const justificatifsTypesIds = justificatifs.map(({ id }) => id)
-      newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
+      // TODO 2023-08-09 : Encore utilisé dans etape/edit.vue ?
+      newEtape.justificatifs = stateEtape.justificatifs?.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId)) ?? []
     }
   }
 
