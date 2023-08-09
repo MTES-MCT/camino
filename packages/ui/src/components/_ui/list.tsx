@@ -4,7 +4,6 @@ interface Props {
   elements?: string[]
   mini?: boolean
 }
-// FIXME storybook
 export const List: FunctionalComponent<Props> = props => {
   return (
     <span class="dsfr">
