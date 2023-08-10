@@ -50,7 +50,6 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
   }
 }
 
-// FIXME TESTS
 export const FiltersCheckboxes = defineComponent((props: Props) => {
   const fullFilter = caminoFiltres[props.filter]
 

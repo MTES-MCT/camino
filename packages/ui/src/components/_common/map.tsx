@@ -43,7 +43,6 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     const domaineId = getDomaineId(props.titreTypeId)
     const titreTypeTypeId = getTitreTypeType(props.titreTypeId)
 
-    // FIXME
     const className = patternVisible.value ? `svg-fill-pattern-${titreTypeTypeId}-${domaineId}` : `svg-fill-domaine-${domaineId}`
 
     const options = {
