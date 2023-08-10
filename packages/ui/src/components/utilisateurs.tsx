@@ -17,7 +17,7 @@ const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'en
 
 interface Props {
   user: User
-  apiClient: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getEntreprises'>
+  apiClient: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises'>
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
 }
@@ -56,7 +56,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
   }
   onMounted(async () => {
     try {
-      const entreprises = await props.apiClient.getEntreprises()
+      const entreprises = await props.apiClient.getUtilisateurEntreprises()
       meta.value = { status: 'LOADED', value: { entreprises } }
     } catch (e: any) {
       console.error('error', e)

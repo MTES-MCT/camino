@@ -95,7 +95,7 @@ interface Props {
   user: User
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getActivites' | 'getEntreprises'>
+  apiClient: Pick<ApiClient, 'getActivites' | 'getUtilisateurEntreprises'>
 }
 
 export const PureActivites = defineComponent<Props>(props => {
@@ -123,7 +123,7 @@ export const PureActivites = defineComponent<Props>(props => {
   onMounted(async () => {
     meta.value = { status: 'LOADING' }
     try {
-      const entreprises = await props.apiClient.getEntreprises()
+      const entreprises = await props.apiClient.getUtilisateurEntreprises()
       meta.value = { status: 'LOADED', value: { entreprises } }
     } catch (e: any) {
       console.error('error', e)

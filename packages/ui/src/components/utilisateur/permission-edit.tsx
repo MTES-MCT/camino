@@ -16,7 +16,7 @@ import { ButtonIcon } from '../_ui/button-icon'
 interface Props {
   user: User
   utilisateur: AsyncData<UserNotNull>
-  apiClient: Pick<UtilisateurApiClient, 'getEntreprises' | 'updateUtilisateur'>
+  apiClient: Pick<UtilisateurApiClient, 'getUtilisateurEntreprises' | 'updateUtilisateur'>
 }
 
 export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisateur', 'apiClient'], props => {
@@ -31,7 +31,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
 
   onMounted(async () => {
     try {
-      const entreprisesApi = await props.apiClient.getEntreprises()
+      const entreprisesApi = await props.apiClient.getUtilisateurEntreprises()
       entreprises.value = { status: 'LOADED', value: entreprisesApi }
     } catch (e: any) {
       console.error('error', e)

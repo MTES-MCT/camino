@@ -24,7 +24,7 @@ const pushRouteAction = action('pushRoute')
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
 const enterprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-const apiClientMock: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getEntreprises'> = {
+const apiClientMock: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises'> = {
   getUtilisateurs: () => {
     getUtilisateursAction()
     return Promise.resolve({
@@ -56,7 +56,7 @@ const apiClientMock: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getEntrepri
       ],
     })
   },
-  getEntreprises: () => {
+  getUtilisateurEntreprises: () => {
     getEntreprisesAction()
     return Promise.resolve([enterprise])
   },
@@ -84,7 +84,7 @@ export const WithError: StoryFn = () => (
   <PureUtilisateurs
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={{
-      getEntreprises: () => Promise.reject(new Error('Cassé')),
+      getUtilisateurEntreprises: () => Promise.reject(new Error('Cassé')),
       getUtilisateurs: () => Promise.reject(new Error('Cassé')),
     }}
     currentRoute={{ name: 'utilisateurs', query: {} }}

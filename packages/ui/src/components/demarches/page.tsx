@@ -1,10 +1,9 @@
 import { defineComponent, markRaw, onMounted, ref } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
-import { useRouter } from 'vue-router'
+import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { AsyncData } from '@/api/client-rest'
-import { GetDemarchesDemarche, GetDemarchesParams, demarcheApiClient } from '../titre/demarche-api-client'
-import { utilisateurApiClient } from '../utilisateur/utilisateur-api-client'
+import { GetDemarchesDemarche, GetDemarchesParams } from '../titre/demarche-api-client'
 import { getInitialParams } from '../_ui/table-pagination'
 import { getInitialFiltres } from '../_ui/filters/filters'
 import { CaminoFiltres } from '../_ui/filters/camino-filtres'
@@ -19,6 +18,7 @@ import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatut } from '../_common/titre-statut'
 import { List } from '../_ui/list'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import { ApiClient, apiClient } from '@/api/api-client'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -44,8 +44,13 @@ const filtres = [
   'etapesInclues',
   'etapesExclues',
 ] as const satisfies readonly CaminoFiltres[]
-interface Props {
+type Props = Pick<PureProps, 'travaux'>
+
+interface PureProps {
   travaux: boolean
+  currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  updateUrlQuery: Pick<Router, 'push'>
+  apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises'>
 }
 
 const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
@@ -102,17 +107,14 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
     }
   })
 
-// FIXME tests
-export const Page = defineComponent<Props>(props => {
-  const router = useRouter()
-
+export const PurePage = defineComponent<PureProps>(props => {
   const data = ref<AsyncData<true>>({ status: 'LOADING' })
   const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
   const load = async (params: GetDemarchesParams) => {
     data.value = { status: 'LOADING' }
 
     try {
-      const demarches = await demarcheApiClient.getDemarches(params)
+      const demarches = await props.apiClient.getDemarches(params)
       demarchesRef.value.elements.splice(0, demarchesRef.value.elements.length, ...demarches.elements)
       demarchesRef.value.total = demarches.total
       data.value = { status: 'LOADED', value: true }
@@ -137,7 +139,7 @@ export const Page = defineComponent<Props>(props => {
   }
   onMounted(async () => {
     try {
-      const entreprises = await utilisateurApiClient.getEntreprises()
+      const entreprises = await props.apiClient.getUtilisateurEntreprises()
       meta.value = { status: 'LOADED', value: { entreprises } }
     } catch (e: any) {
       console.error('error', e)
@@ -145,8 +147,12 @@ export const Page = defineComponent<Props>(props => {
         status: 'ERROR',
         message: e.message ?? "Une erreur s'est produite",
       }
+      meta.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      }
     }
-    await load({ travaux: props.travaux, ...getInitialParams(router.currentRoute.value, demarchesColonnes), ...getInitialFiltres(router.currentRoute.value, filtres) })
+    await load({ travaux: props.travaux, ...getInitialParams(props.currentRoute, demarchesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
   })
 
   return () => (
@@ -157,6 +163,7 @@ export const Page = defineComponent<Props>(props => {
           nom={props.travaux ? 'Travaux' : 'Démarches'}
           colonnes={demarchesColonnes}
           download={{
+            id: `download${props.travaux ? 'Travaux' : 'Démarches'}`,
             downloadRoute: '/demarches',
             formats: ['csv', 'xlsx', 'ods'],
             params: {},
@@ -166,9 +173,9 @@ export const Page = defineComponent<Props>(props => {
             filtres,
             initialized: true,
             metas,
-            updateUrlQuery: router,
+            updateUrlQuery: props.updateUrlQuery,
           }}
-          route={router.currentRoute.value}
+          route={props.currentRoute}
           paramsUpdate={onParamsUpdate}
           total={demarchesRef.value.total}
           lignes={demarchesLignesBuild(demarchesRef.value.elements)}
@@ -176,6 +183,14 @@ export const Page = defineComponent<Props>(props => {
       )}
     />
   )
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux']
+
+export const Page = defineComponent<Props>(props => {
+  const router = useRouter()
+  return () => <PurePage travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

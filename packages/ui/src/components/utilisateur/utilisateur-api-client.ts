@@ -14,7 +14,7 @@ export interface UtilisateurApiClient {
   newsletterInscrire: (email: string) => Promise<void>
   removeUtilisateur: (userId: string) => Promise<void>
   updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
-  getEntreprises: () => Promise<Entreprise[]>
+  getUtilisateurEntreprises: () => Promise<Entreprise[]>
   getQGISToken: () => Promise<QGISToken>
   getUtilisateurs: (params: UtilisateursParams) => Promise<{ elements: Utilisateur[]; total: number }>
 }
@@ -114,7 +114,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => {
     return await postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur)
   },
-  getEntreprises: async () => {
+  getUtilisateurEntreprises: async () => {
     const { elements } = await apiGraphQLFetch(
       gql`
         query UtilisateurMetas {

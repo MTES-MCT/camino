@@ -22,8 +22,8 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getEntreprises' | 'getActivites'> = {
-  getEntreprises: () => {
+const apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'getActivites'> = {
+  getUtilisateurEntreprises: () => {
     getEntreprisesAction()
     return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])
   },
@@ -57,7 +57,7 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'getActivites'> = {
 export const Loading: StoryFn = () => (
   <PureActivites
     user={{ ...testBlankUser, role: 'super' }}
-    apiClient={{ ...apiClient, getEntreprises: () => new Promise(() => ({})) }}
+    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
     currentRoute={{ name: 'activites', query: {} }}
     updateUrlQuery={updateUrlQuery}
   />

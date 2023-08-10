@@ -94,7 +94,10 @@ export const Utilisateur = defineComponent({
 export interface Props {
   user: User
   utilisateurId: string
-  apiClient: Pick<UtilisateurApiClient, 'getEntreprises' | 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'>
+  apiClient: Pick<
+    UtilisateurApiClient,
+    'getUtilisateurEntreprises' | 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'
+  >
   passwordUpdate: () => void
 }
 

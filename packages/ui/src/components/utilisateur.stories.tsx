@@ -41,7 +41,7 @@ const apiClientMock: Props['apiClient'] = {
     editNewsletter(values)
     return Promise.resolve()
   },
-  getEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
+  getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
