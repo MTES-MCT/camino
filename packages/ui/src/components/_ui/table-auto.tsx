@@ -1,7 +1,6 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { reactive, watch } from 'vue'
-import { InitialSort, TableRow, TableSortEvent, Table } from './table'
-import { useRoute } from 'vue-router'
+import { InitialSort, TableRow, TableSortEvent, DisplayColumn } from './table'
 
 export interface Column<T = string> {
   id: T
@@ -12,18 +11,17 @@ export interface Column<T = string> {
 }
 
 interface Props {
+  caption: string
   rows: TableRow[]
   columns: readonly Column[]
   initialSort?: InitialSort
 }
-// FIXME les table-auto ne doivent pas faire bouger la route (par exemple trier les titres miniers sur http://localhost:4180/entreprises/fr-899600233)
-export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initialSort'], props => {
+export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'columns', 'initialSort'], props => {
   const sort = reactive<TableSortEvent>({
     column: props?.initialSort?.column ?? props.columns[0].id,
     order: props?.initialSort?.order ?? 'asc',
   })
 
-  const route = useRoute()
   const myRows = reactive<TableRow[]>([...props.rows])
   handleChange(sort)
   watch(
@@ -69,5 +67,66 @@ export const TableAuto = caminoDefineComponent<Props>(['rows', 'columns', 'initi
     sort.order = event.order
   }
 
-  return () => <Table columns={props.columns} rows={myRows} route={{ value: 'anything', query: {} }} caption={'Administrations'} updateParams={handleChange} />
+  return () => (
+    <div class="dsfr">
+      <div class="fr-table fr-table--no-caption">
+        <table style={{ display: 'table' }}>
+          <caption>{props.caption}</caption>
+          <thead>
+            <tr>
+              {props.columns.map(col => (
+                <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                  {col.noSort ? (
+                    <a class={['fr-link']} title={col.name} aria-label={col.name}>
+                      {col.name === '' ? '-' : col.name}
+                    </a>
+                  ) : sort.column === col.id ? (
+                    <a
+                      class={['fr-link', 'fr-link--icon-right', sort.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                      onClick={() => handleChange({ column: sort.column, order: sort.order === 'asc' ? 'desc' : 'asc' })}
+                      title={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      aria-label={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      href="#!"
+                    >
+                      {col.name}
+                    </a>
+                  ) : (
+                    <a
+                      class={['fr-link']}
+                      onClick={event => {
+                        event.stopPropagation()
+                        handleChange({ column: col.id, order: sort.order })
+                      }}
+                      title={`Trier par la colonne ${col.name}`}
+                      aria-label={`Trier par la colonne ${col.name}`}
+                      href="#!"
+                    >
+                      {col.name === '' ? '-' : col.name}
+                    </a>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {myRows.map(row => (
+              <tr key={row.id}>
+                {props.columns.map((col, index) => (
+                  <td key={col.id} class={[...(col.class ?? [])]}>
+                    {index === 0 ? (
+                      <router-link class="fr-link" to={row.link}>
+                        <DisplayColumn data={row.columns[col.id]} />
+                      </router-link>
+                    ) : (
+                      <DisplayColumn data={row.columns[col.id]} />
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
 })

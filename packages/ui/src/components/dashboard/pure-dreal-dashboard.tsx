@@ -133,7 +133,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'is
             return (
               <>
                 <h4>Titres en attente de la DREAL</h4>
-                <TableAuto class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
+                <TableAuto caption="Titres en attente de la DREAL" class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
               </>
             )
           }
@@ -141,7 +141,12 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'is
         }}
       />
       <h4>Titres en cours d’instruction</h4>
-      <LoadingElement data={data.value} renderItem={item => <TableAuto columns={columns} rows={item.drealTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />} />
+      <LoadingElement
+        data={data.value}
+        renderItem={item => (
+          <TableAuto caption="Titres en cours d’instruction" columns={columns} rows={item.drealTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+        )}
+      />
     </div>
   )
 })

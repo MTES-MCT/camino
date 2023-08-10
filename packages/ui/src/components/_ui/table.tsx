@@ -1,7 +1,4 @@
 import { computed, defineComponent, watch } from 'vue'
-import { Icon } from '@/components/_ui/icon'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Button } from './button'
 import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
 import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
 
@@ -155,7 +152,7 @@ export const Table = defineComponent(
   { props: ['columns', 'rows', 'route', 'caption', 'updateParams'] }
 )
 
-const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
+export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
     const myComp = props.data.component
 

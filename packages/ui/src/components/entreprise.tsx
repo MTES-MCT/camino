@@ -312,7 +312,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
               <div class="line-neutral width-full mb-xxl" />
               <h3>Utilisateurs</h3>
               <div class="line width-full" />
-              <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} />
+              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} />
             </div>
           ) : null}
 
