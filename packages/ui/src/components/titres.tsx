@@ -82,7 +82,6 @@ export const Titres = defineComponent({
 
     const loadTitresForCarte = async () => {
       data.value = { status: 'LOADING' }
-      titresForCarte.value = []
       try {
         if ((paramsForCarte.value?.zoom ?? 0) > 7) {
           const titres = await titreApiClient.getTitresWithPerimetreForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })

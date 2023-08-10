@@ -35,6 +35,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
   watch(
     () => props.markerLayers,
     (layers: Layer[]) => {
+      console.log('youhou on clear tous les layers', layers.length)
       markerLayer.clearLayers()
       layers.forEach(l => l.addTo(markerLayer))
     },

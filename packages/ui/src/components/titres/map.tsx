@@ -9,6 +9,7 @@ import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-too
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
+import { TitreId } from 'camino-common/src/titres'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]
@@ -90,23 +91,46 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     }
   }
 
+  const titresIdsDisplayed = ref<Record<number, TitreId>>({})
+
   const titresInit = (titres: TitreWithPoint[]) => {
     const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router)
-    const clustersBuilt = clustersBuild()
+
+    if (clusters.value.length !== 0) {
+      const titreIdsToDisplay = titres.map(({ id }) => id)
+      const titreIdsAlreadyDisplayed = clusters.value.flatMap<TitreId>(cluster => {
+        return cluster.getLayers().map(layer => titresIdsDisplayed.value[cluster.getLayerId(layer)])
+      })
+      console.log('voyons', titreIdsToDisplay, titreIdsAlreadyDisplayed)
+      // const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres.filter((({id}) => !titreIdsAlreadyDisplayed.includes(id))), props.router)
+
+      clusters.value.forEach(cluster => {
+        markersLayer.forEach(marker => {
+          if (!titreIdsAlreadyDisplayed.includes(marker.id)) {
+            if (marker.domaineId === cluster.caminoDomaineId) {
+              cluster.addLayer(marker.marker)
+              titresIdsDisplayed.value[cluster.getLayerId(marker.marker)] = marker.id
+            }
+          }
+        })
+      })
+    } else {
+      const clustersBuilt = clustersBuild()
+      markers.value.forEach(marker => {
+        if (marker.domaineId) {
+          const domaineCluster = clustersBuilt[marker.domaineId]
+          if (domaineCluster) {
+            domaineCluster.addLayer(marker.marker)
+          }
+        }
+      })
+
+      clusters.value = getKeys(clustersBuilt, isDomaineId)
+        .map(domaineId => clustersBuilt[domaineId])
+        .filter(isNotNullNorUndefined)
+    }
     geojsons.value = geojsonLayer
     markers.value = markersLayer
-    markers.value.forEach(marker => {
-      if (marker.domaineId) {
-        const domaineCluster = clustersBuilt[marker.domaineId]
-        if (domaineCluster) {
-          domaineCluster.addLayer(marker.marker)
-        }
-      }
-    })
-
-    clusters.value = getKeys(clustersBuilt, isDomaineId)
-      .map(domaineId => clustersBuilt[domaineId])
-      .filter(isNotNullNorUndefined)
 
     geojsonLayersDisplay()
   }

@@ -3,7 +3,7 @@ import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresT
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import { DivIconOptions, GeoJSON, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
-import { CommonTitre } from 'camino-common/src/titres'
+import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
 
 const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
@@ -91,6 +91,7 @@ export const clustersBuild = () =>
         return 2048 / Math.pow(x, 2)
       },
     })
+    clusters[id].caminoDomaineId = id
 
     return clusters
   }, {})
@@ -101,15 +102,15 @@ export interface TitreWithPoint extends CommonTitre {
 }
 export type CaminoMarker = {
   marker: Marker
-  id?: string | number
-  domaineId?: DomaineId
+  id: TitreId
+  domaineId: DomaineId
 }
 export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
   titres.reduce<{ geojsons: Record<string, GeoJSON>; markers: CaminoMarker[] }>(
-    ({ geojsons, markers }, titre, index) => {
+    ({ geojsons, markers }, titre) => {
       if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
 
-      const titreId = titre.id || index
+      const titreId = titre.id
       const domaineId = getDomaineId(titre.typeId)
 
       // Based on pattern.tsx
