@@ -2,7 +2,6 @@ import { onMounted, ref, watch, Ref, defineComponent } from 'vue'
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { levenshtein } from 'camino-common/src/strings'
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export type Element<T extends string> = { id: T; nom: string }
 

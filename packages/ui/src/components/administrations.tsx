@@ -25,10 +25,6 @@ const colonnes = [
 const filtres: readonly CaminoFiltres[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']
 
-const metas = {
-  types: sortedAdministrationTypes,
-}
-
 const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
@@ -104,7 +100,7 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, metas, initialized: true, updateUrlQuery: router }}
+        listeFiltre={{ filtres, initialized: true, updateUrlQuery: router }}
         colonnes={colonnes}
         lignes={lignes.value}
         total={lignes.value.length}
