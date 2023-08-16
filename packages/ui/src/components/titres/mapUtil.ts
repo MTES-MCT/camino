@@ -55,8 +55,9 @@ export const zones = {
 
 const L = window.L
 
+export type CaminoMarkerClusterGroup = MarkerClusterGroup & {caminoDomaineId?: DomaineId}
 export const clustersBuild = () =>
-  sortedDomaines.reduce<{ [key in DomaineId]?: MarkerClusterGroup }>((clusters, { id }) => {
+  sortedDomaines.reduce<{ [key in DomaineId]?: CaminoMarkerClusterGroup }>((clusters, { id }) => {
     clusters[id] = L.markerClusterGroup({
       iconCreateFunction(cluster) {
         // Based on pattern.tsx
@@ -91,7 +92,10 @@ export const clustersBuild = () =>
         return 2048 / Math.pow(x, 2)
       },
     })
-    clusters[id].caminoDomaineId = id
+    const cluster = clusters[id]
+    if (cluster) {
+      cluster.caminoDomaineId = id
+    }
 
     return clusters
   }, {})
@@ -105,11 +109,14 @@ export type CaminoMarker = {
   id: TitreId
   domaineId: DomaineId
 }
-export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
+export const layersBuild = (titres: TitreWithPoint[], router: Router, skipTitres: TitreId[] = []) =>
   titres.reduce<{ geojsons: Record<string, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre) => {
       if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
 
+      if (!titre.geojsonMultiPolygon && skipTitres.includes(titre.id)) {
+        return {geojsons, markers}
+      }
       const titreId = titre.id
       const domaineId = getDomaineId(titre.typeId)
 
@@ -130,7 +137,6 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
 
         const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
 
-        const marker = leafletMarkerBuild(latLng, icon)
         const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
 
         const div = document.createElement('div')
@@ -151,6 +157,8 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
         }
 
         const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
+        if (!skipTitres.includes(titre.id)) {
+        const marker = leafletMarkerBuild(latLng, icon)
 
         marker.bindPopup(div, popupOptions)
         const methods: LeafletEventHandlerFnMap = {
@@ -167,20 +175,33 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
           },
         }
         marker.on(methods)
+        markers.push({ marker, id: titreId, domaineId })
+      }
+
         const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
         const geojsonOptions: GeoJSONOptions = {
           style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
           onEachFeature: (_feature, layer) => {
             layer.bindPopup(div, popupOptions)
-            layer.on(methods)
+            
+            layer.on({
+              click() {
+                if (titreRoute) {
+                  router.push(titreRoute)
+                }
+              },
+              mouseover(_e) {
+                layer.openPopup()
+              },
+              mouseout(_e) {
+                layer.closePopup()
+              }})
           },
         }
 
         const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
 
-        if (marker) {
-          markers.push({ marker, id: titreId, domaineId })
-        }
+        
         geojsons[titreId] = geojson
       }
 

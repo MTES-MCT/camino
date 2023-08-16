@@ -1,10 +1,10 @@
 import { nextTick, ref, Ref, computed, onMounted, inject, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
+import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint, CaminoMarkerClusterGroup } from './mapUtil'
 import { isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
-import { Layer, MarkerClusterGroup } from 'leaflet'
+import { Layer } from 'leaflet'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
@@ -57,7 +57,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   const map = ref<typeof CaminoMap | null>(null)
 
   const geojsons = ref<Record<string, Layer>>({})
-  const clusters = ref<MarkerClusterGroup[]>([]) as Ref<MarkerClusterGroup[]>
+  const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
   const markers = ref<CaminoMarker[]>([]) as Ref<CaminoMarker[]>
 
   const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
@@ -69,7 +69,9 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     if (markerLayersId.value === 'clusters') {
       return clusters.value
     } else if (markerLayersId.value === 'markers') {
-      return markers.value.map(marker => marker.marker)
+      debugger;
+      clusters.value.forEach(layer => layer.options.disableClusteringAtZoom = 1)
+      return clusters.value
     }
 
     return []
@@ -91,16 +93,14 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     }
   }
 
-  const titresIdsDisplayed = ref<Record<number, TitreId>>({})
+  const layerIdToTitreIdDisplayed = ref<Record<number, TitreId>>({})
 
   const titresInit = (titres: TitreWithPoint[]) => {
-    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router)
+    const titreIdsAlreadyDisplayed = Object.values(layerIdToTitreIdDisplayed.value)
+    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, titreIdsAlreadyDisplayed)
 
     if (clusters.value.length !== 0) {
       const titreIdsToDisplay = titres.map(({ id }) => id)
-      const titreIdsAlreadyDisplayed = clusters.value.flatMap<TitreId>(cluster => {
-        return cluster.getLayers().map(layer => titresIdsDisplayed.value[cluster.getLayerId(layer)])
-      })
       console.log('voyons', titreIdsToDisplay, titreIdsAlreadyDisplayed)
       // const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres.filter((({id}) => !titreIdsAlreadyDisplayed.includes(id))), props.router)
 
@@ -109,7 +109,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
           if (!titreIdsAlreadyDisplayed.includes(marker.id)) {
             if (marker.domaineId === cluster.caminoDomaineId) {
               cluster.addLayer(marker.marker)
-              titresIdsDisplayed.value[cluster.getLayerId(marker.marker)] = marker.id
+              layerIdToTitreIdDisplayed.value[cluster.getLayerId(marker.marker)] = marker.id
             }
           }
         })
@@ -201,12 +201,16 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
 
   const geojsonLayersDisplay = () => {
     nextTick(() => {
+
+      console.log("rilili", Object.values(geojsons.value).length)
       geojsonLayers.value = []
-      markers.value.forEach(marker => {
-        if ((markerLayersId.value !== 'clusters' || map.value) && marker.id) {
-          geojsonLayers.value.push(geojsons.value[marker.id])
-        }
-      })
+      geojsonLayers.value.push(...Object.values(geojsons.value))
+      // FIXME je ne comprends pas ce code, remplacé par le code du dessus
+      // markers.value.forEach(marker => {
+      //   if ((markerLayersId.value !== 'clusters' || map.value) && marker.id) {
+      //     geojsonLayers.value.push(geojsons.value[marker.id])
+      //   }
+      // })
     })
   }
 
@@ -221,14 +225,8 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
 
   onMounted(() => {
     init()
-    // FIXME je pense que ça ne sert plus maintenant
-    // window.addEventListener('popstate', popState)
   })
-  // FIXME je pense que ça ne sert plus maintenant
-  // onBeforeUnmount(() => {
-  //   window.removeEventListener('popstate', popState)
-  // })
-
+  
   watch(
     () => props.titres,
     titres => {

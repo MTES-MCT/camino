@@ -27,6 +27,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
   watch(
     () => props.geojsonLayers,
     (layers: Layer[]) => {
+      console.log("update geojson layers")
       geojsonLayer.clearLayers()
       layers.forEach(l => l.addTo(geojsonLayer))
     },
