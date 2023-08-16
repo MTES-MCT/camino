@@ -109,6 +109,7 @@ export const Filters = defineComponent((props: Props) => {
 
   const urlQuery = computed(() => {
     const filtres = { ...nonValidatedValues.value }
+    // FIXME regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
     if ('etapesInclues' in nonValidatedValues.value) {
       filtres.etapesInclues = JSON.stringify(nonValidatedValues.value.etapesInclues)
     }
@@ -120,7 +121,7 @@ export const Filters = defineComponent((props: Props) => {
 
   // TODO 2023-07-19 ugly hack pour que vue voie que les élements dans titresIds sont bien mis à jour
   // Il faut repenser tout ça, ce n'est pas un bon moyen de récupérer les éléments, mais on en a besoin pour calculer les labels...
-  // C'est le seul composant qui à un load asynchrone et un search asynchrone
+  // C'est le seul composant qui a un load asynchrone et un search asynchrone
   const titresIds = ref([...caminoFiltres.titresIds.elements])
   const interval = setInterval(() => {
     if (JSON.stringify(titresIds.value) !== JSON.stringify(caminoFiltres.titresIds.elements)) {
@@ -172,8 +173,7 @@ export const Filters = defineComponent((props: Props) => {
         nonValidatedValues.value[labelId] = ''
       } else if (isAutocompleteCaminoFiltre(labelId) || isCheckboxeCaminoFiltre(labelId) || isEtapeCaminoFiltre(labelId)) {
         const data = caminoFiltres[labelId].validator.parse([label.value])
-        // @ts-ignore ici typescript est perdu
-        const index = nonValidatedValues.value[labelId].indexOf(data[0])
+        const index: number = nonValidatedValues.value[labelId].indexOf(data[0])
         if (index !== -1) {
           nonValidatedValues.value[labelId].splice(index, 1)
         }
@@ -194,6 +194,7 @@ export const Filters = defineComponent((props: Props) => {
       } else if (Array.isArray(nonValidatedValues.value[filter])) {
         nonValidatedValues.value[filter] = []
       } else if (filter === 'etapesExclues' || filter === 'etapesInclues') {
+        // FIXME on passe par là des fois ou tout le temps dans la condition au dessus ?
         nonValidatedValues.value[filter] = []
       }
     })

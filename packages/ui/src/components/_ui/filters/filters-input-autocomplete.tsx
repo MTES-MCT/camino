@@ -1,4 +1,4 @@
-import { FunctionalComponent, computed, defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { TypeAheadSmartMultiple, Filter } from '../typeahead-smart-multiple'
 import { AutocompleteCaminoFiltres, caminoAutocompleteFiltres, caminoFiltres } from './camino-filtres'
 
