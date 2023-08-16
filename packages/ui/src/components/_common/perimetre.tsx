@@ -19,6 +19,7 @@ export interface Props {
   isMain?: boolean
   tabId?: TabId
   tabUpdate: (tabId: TabId) => void
+  loading: boolean
 }
 
 const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
@@ -81,6 +82,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
           points={props.points}
           titreTypeId={props.titreTypeId}
           isMain={props.isMain}
+          loading={props.loading}
         />
       ) : null}
 

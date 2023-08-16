@@ -18,9 +18,10 @@ export interface Props {
   titreTypeId: TitreTypeId
   isMain?: boolean
   titreId?: string
+  loading: boolean
 }
 
-export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId'], props => {
+export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId', 'loading'], props => {
   const map = ref<typeof CaminoMap | null>(null)
   const markersVisible = ref<boolean>(true)
   const patternVisible = ref<boolean>(true)
@@ -93,8 +94,11 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
   onMounted(() => {
     centrer()
   })
+  const loading = ref(false)
 
   const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
+    loading.value = true
+
     const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
       statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
       perimetre: data.bbox,
@@ -111,6 +115,7 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     })
     titresValidesGeojson.value.splice(0)
     titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
+    loading.value = false
   }
 
   const titresValidesGeojson = ref<TitreWithPoint[]>([])
@@ -131,6 +136,7 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     <div class="bg-alt">
       <CaminoMap
         ref={map}
+        loading={loading.value}
         mapUpdate={mapUpdate}
         geojsonLayers={geojsonLayers.value}
         markerLayers={markerLayers.value}
