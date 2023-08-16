@@ -140,6 +140,7 @@ export const Titres = defineComponent({
         renderContent: () => (
           <CaminoTitresMap
             titres={titresForCarte.value}
+            loading={data.value.status === 'LOADING'}
             router={router}
             updateCarte={async params => {
               paramsForCarte.value = params
@@ -177,7 +178,6 @@ export const Titres = defineComponent({
             download={titresForCarte.value.length > 0 || titresForTable.value.length > 0 ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} } : null}
             renderButton={() => <DemandeTitreButton user={user.value} />}
           />
-          <LoadingElement data={data.value} renderItem={() => null} />
         </div>
 
         <TitresFiltres

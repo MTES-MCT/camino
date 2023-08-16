@@ -1,4 +1,4 @@
-import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent } from 'leaflet'
+import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent, Control } from 'leaflet'
 
 import { ref, onMounted, markRaw, watch } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
@@ -9,11 +9,12 @@ export interface Props {
   geojsonLayers: Layer[]
   mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void
   additionalOverlayLayers?: Record<string, LayerGroup>
+  loading: boolean
 }
 
 export const displayPerimeterZoomMaxLevel = 7
 
-export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers'], (props, { expose }) => {
+export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
   const updateBboxOnly = ref<boolean>(false)
@@ -25,7 +26,21 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
 
   const geojsonLayer = layerGroup([])
   const markerLayer = layerGroup([])
+  const loadingLeaflet = ref<Control | null>(null)
 
+  watch(
+    () => props.loading,
+    isLoading => {
+      if (loadingLeaflet.value) {
+        if (isLoading) {
+          leafletComponent.value?.addControl(loadingLeaflet.value)
+        } else {
+          leafletComponent.value?.removeControl(loadingLeaflet.value)
+        }
+      }
+    },
+    { immediate: true }
+  )
   watch(
     () => props.geojsonLayers,
     (layers: Layer[]) => {
@@ -227,20 +242,19 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       zoom.value = leafletComponentOnMounted.getZoom()
 
       L.control.scale({ imperial: false }).addTo(leafletComponentOnMounted)
-      const ZoomViewer = L.Control.extend({
+
+      const LoadingLeaflet = L.Control.extend({
         onAdd() {
           const gauge = L.DomUtil.create('div')
-          gauge.style.width = '70px'
-          gauge.style.background = 'rgba(255,255,255,0.5)'
-          gauge.style.textAlign = 'left'
-          leafletComponentOnMounted.on('zoomstart zoom zoomend zoomlevelschange load viewreset', () => {
-            gauge.innerHTML = `Zoom: ${zoom.value}`
-          })
+          gauge.style.background = 'rgba(255,255,255)'
+          gauge.style.textAlign = 'right'
+          gauge.innerHTML = `Chargement...`
           return gauge
         },
       })
-
-      new ZoomViewer().addTo(leafletComponentOnMounted)
+      const loading = new LoadingLeaflet()
+      loadingLeaflet.value = loading
+      loading.addTo(leafletComponentOnMounted)
       const SdomLegend = L.Control.extend({
         onAdd() {
           const legend = L.DomUtil.create('div')

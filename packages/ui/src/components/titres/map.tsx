@@ -19,6 +19,7 @@ interface Props {
   titres: TitreWithPoint[]
   updateCarte: (params: TitreCarteParams) => void
   router: Router
+  loading: boolean
 }
 
 type ZoneId = keyof typeof zones
@@ -26,7 +27,7 @@ type ZoneId = keyof typeof zones
 // Ça permettrait de rendre le front beaucoup plus fluide quand on joue avec la carte
 // En plus, on a déjà des ids, ceux des titres, donc facile pour la mise en cache.
 // à voir si on met en cache dans le composant ou ailleurs, pour garder les données le temps de la navigation, si l'utilisateur va sur les tableaux et revient par exemple
-export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router'], props => {
+export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router', 'loading'], props => {
   const zoneId = ref<ZoneId>('fr')
   const savedParams = computed<TitreCarteParams>(() => {
     const route = props.router.currentRoute.value
@@ -182,7 +183,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   )
   return () => (
     <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
-      <CaminoMap ref={map} markerLayers={clusters.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
+      <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
       <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
         <li>
