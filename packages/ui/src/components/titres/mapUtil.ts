@@ -55,7 +55,7 @@ export const zones = {
 
 const L = window.L
 
-export type CaminoMarkerClusterGroup = MarkerClusterGroup & {caminoDomaineId?: DomaineId}
+export type CaminoMarkerClusterGroup = MarkerClusterGroup & { caminoDomaineId?: DomaineId }
 export const clustersBuild = () =>
   sortedDomaines.reduce<{ [key in DomaineId]?: CaminoMarkerClusterGroup }>((clusters, { id }) => {
     clusters[id] = L.markerClusterGroup({
@@ -109,25 +109,35 @@ export type CaminoMarker = {
   id: TitreId
   domaineId: DomaineId
 }
-export const layersBuild = (titres: TitreWithPoint[], router: Router, skipTitres: TitreId[] = []) =>
-  titres.reduce<{ geojsons: Record<string, GeoJSON>; markers: CaminoMarker[] }>(
+export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+  const div = document.createElement('div')
+  const titleName = document.createElement('div')
+  const listeTitulaires = document.createElement('ul')
+  titleName.className = 'fr-text--lead'
+
+  return titres.reduce<{ geojsons: Record<TitreId, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre) => {
       if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
 
-      if (!titre.geojsonMultiPolygon && skipTitres.includes(titre.id)) {
-        return {geojsons, markers}
+      const isMarkerAlreadyInMap = markersAlreadyInMap.includes(titre.id)
+      const isPerimeterAlreadyInMap = geojsonAlreadyInMap.includes(titre.id)
+      if (!titre.geojsonMultiPolygon && isMarkerAlreadyInMap) {
+        return { geojsons, markers }
       }
+
+      if (isMarkerAlreadyInMap && isPerimeterAlreadyInMap) {
+        return { geojsons, markers }
+      }
+
       const titreId = titre.id
       const domaineId = getDomaineId(titre.typeId)
 
-      // Based on pattern.tsx
       const baseElement = document.getElementById(`domaine_${domaineId}`)
-      const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
       const element = baseElement?.cloneNode(true) as unknown as HTMLElement | undefined
-      const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as HTMLElement | undefined
-      if (element && titreStatutElement) {
+
+      if (element) {
         element.removeAttribute('id')
-        titreStatutElement.removeAttribute('id')
+
         const icon = leafletDivIconBuild({
           className: ``,
           html: element,
@@ -135,77 +145,82 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, skipTitres
           iconAnchor: [16, 40],
         })
 
-        const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
-
-        const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
-
-        const div = document.createElement('div')
-        const titleName = document.createElement('div')
-        const listeTitulaires = document.createElement('ul')
-
-        titleName.className = 'fr-text--lead'
-        titleName.textContent = titre.nom ? titre.nom : ''
-        div.appendChild(titleName)
-        div.appendChild(titreStatutElement)
-        div.appendChild(listeTitulaires)
-        listeTitulaires.innerHTML = popupHtmlTitulaires
-
         const popupOptions: PopupOptions = {
           closeButton: false,
           offset: [0, -24],
           autoPan: false,
         }
 
+        const populatePopup = () => {
+          // Based on pattern.tsx
+          const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
+          const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as HTMLElement
+          titreStatutElement.removeAttribute('id')
+          const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
+
+          div.innerHTML = ''
+          titleName.textContent = titre.nom ? titre.nom : ''
+          listeTitulaires.innerHTML = popupHtmlTitulaires
+          div.appendChild(titleName)
+          div.appendChild(titreStatutElement)
+          div.appendChild(listeTitulaires)
+        }
         const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
-        if (!skipTitres.includes(titre.id)) {
-        const marker = leafletMarkerBuild(latLng, icon)
+        if (!isMarkerAlreadyInMap) {
+          const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
+          const marker = leafletMarkerBuild(latLng, icon)
 
-        marker.bindPopup(div, popupOptions)
-        const methods: LeafletEventHandlerFnMap = {
-          click() {
-            if (titreRoute) {
-              router.push(titreRoute)
-            }
-          },
-          mouseover(_e) {
-            marker.openPopup()
-          },
-          mouseout(_e) {
-            marker.closePopup()
-          },
-        }
-        marker.on(methods)
-        markers.push({ marker, id: titreId, domaineId })
-      }
-
-        const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
-        const geojsonOptions: GeoJSONOptions = {
-          style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
-          onEachFeature: (_feature, layer) => {
-            layer.bindPopup(div, popupOptions)
-            
-            layer.on({
-              click() {
-                if (titreRoute) {
-                  router.push(titreRoute)
-                }
-              },
-              mouseover(_e) {
-                layer.openPopup()
-              },
-              mouseout(_e) {
-                layer.closePopup()
-              }})
-          },
+          marker.bindPopup(div, popupOptions)
+          const methods: LeafletEventHandlerFnMap = {
+            click() {
+              if (titreRoute) {
+                router.push(titreRoute)
+              }
+            },
+            mouseover(_e) {
+              populatePopup()
+              marker.openPopup()
+            },
+            mouseout(_e) {
+              marker.closePopup()
+            },
+          }
+          marker.on(methods)
+          markers.push({ marker, id: titreId, domaineId })
         }
 
-        const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
+        if (!isPerimeterAlreadyInMap && titre.geojsonMultiPolygon) {
+          const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
+          const geojsonOptions: GeoJSONOptions = {
+            style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
+            onEachFeature: (_feature, layer) => {
+              layer.bindPopup(div, popupOptions)
 
-        
-        geojsons[titreId] = geojson
+              layer.on({
+                click() {
+                  if (titreRoute) {
+                    router.push(titreRoute)
+                  }
+                },
+                mouseover(_e) {
+                  populatePopup()
+                  layer.openPopup()
+                },
+                mouseout(_e) {
+                  layer.closePopup()
+                },
+              })
+            },
+          }
+
+          const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
+
+          geojsons[titreId] = geojson
+        }
       }
 
       return { geojsons, markers }
     },
     { geojsons: {}, markers: [] }
   )
+}

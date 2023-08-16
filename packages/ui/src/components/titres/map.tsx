@@ -1,13 +1,13 @@
-import { nextTick, ref, Ref, computed, onMounted, inject, watch } from 'vue'
+import { ref, Ref, computed, onMounted, watch, nextTick } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint, CaminoMarkerClusterGroup } from './mapUtil'
-import { isDomaineId } from 'camino-common/src/static/domaines'
+import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup, CaminoMarker } from './mapUtil'
+import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
-import { Layer } from 'leaflet'
-import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Layer, Marker } from 'leaflet'
+import { getEntriesHardcore, getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
 import { TitreId } from 'camino-common/src/titres'
 export type TitreCarteParams = {
@@ -53,29 +53,11 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     { immediate: true }
   )
 
-  const matomo = inject('matomo', null)
   const map = ref<typeof CaminoMap | null>(null)
 
-  const geojsons = ref<Record<string, Layer>>({})
+  const geojsons = ref<Record<TitreId, Layer>>({})
   const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
-  const markers = ref<CaminoMarker[]>([]) as Ref<CaminoMarker[]>
-
   const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
-
-  // TODO 2023-07-20 on veut mettre ça dans l'URL ?
-  const markerLayersId = ref('clusters')
-
-  const markerLayers = computed<Layer[]>(() => {
-    if (markerLayersId.value === 'clusters') {
-      return clusters.value
-    } else if (markerLayersId.value === 'markers') {
-      debugger;
-      clusters.value.forEach(layer => layer.options.disableClusteringAtZoom = 1)
-      return clusters.value
-    }
-
-    return []
-  })
 
   const zone = computed(() => {
     return zones[zoneId.value]
@@ -93,46 +75,39 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     }
   }
 
-  const layerIdToTitreIdDisplayed = ref<Record<number, TitreId>>({})
+  const layerIdToTitreIdDisplayed = ref<Record<TitreId, TitreId>>({})
 
   const titresInit = (titres: TitreWithPoint[]) => {
-    const titreIdsAlreadyDisplayed = Object.values(layerIdToTitreIdDisplayed.value)
-    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, titreIdsAlreadyDisplayed)
+    const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
+    const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]
+    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, markersTitreIdsAlreadyInMap, geojsonsTitreIdsAlreadyInMap)
 
-    if (clusters.value.length !== 0) {
-      const titreIdsToDisplay = titres.map(({ id }) => id)
-      console.log('voyons', titreIdsToDisplay, titreIdsAlreadyDisplayed)
-      // const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres.filter((({id}) => !titreIdsAlreadyDisplayed.includes(id))), props.router)
-
-      clusters.value.forEach(cluster => {
-        markersLayer.forEach(marker => {
-          if (!titreIdsAlreadyDisplayed.includes(marker.id)) {
-            if (marker.domaineId === cluster.caminoDomaineId) {
-              cluster.addLayer(marker.marker)
-              layerIdToTitreIdDisplayed.value[cluster.getLayerId(marker.marker)] = marker.id
-            }
-          }
-        })
-      })
-    } else {
+    if (clusters.value.length === 0) {
       const clustersBuilt = clustersBuild()
-      markers.value.forEach(marker => {
-        if (marker.domaineId) {
-          const domaineCluster = clustersBuilt[marker.domaineId]
-          if (domaineCluster) {
-            domaineCluster.addLayer(marker.marker)
-          }
-        }
-      })
-
       clusters.value = getKeys(clustersBuilt, isDomaineId)
         .map(domaineId => clustersBuilt[domaineId])
         .filter(isNotNullNorUndefined)
     }
-    geojsons.value = geojsonLayer
-    markers.value = markersLayer
 
-    geojsonLayersDisplay()
+    const markerLayersByDomaine = markersLayer.reduce<Record<DomaineId, Marker[]>>(
+      (acc, marker) => {
+        acc[marker.domaineId].push(marker.marker)
+        layerIdToTitreIdDisplayed.value[marker.id] = marker.id
+        return acc
+      },
+      { c: [], m: [], f: [], g: [], h: [], r: [], s: [], w: [] }
+    )
+    clusters.value.forEach(cluster => {
+      if (cluster.caminoDomaineId && markerLayersByDomaine[cluster.caminoDomaineId].length > 0) {
+        cluster.addLayers(markerLayersByDomaine[cluster.caminoDomaineId])
+      }
+    })
+
+    geojsonLayers.value = []
+    getEntriesHardcore(geojsonLayer).forEach(([titreId, layer]) => {
+      geojsons.value[titreId] = layer
+    })
+    geojsonLayers.value.push(...Object.values(geojsonLayer))
   }
 
   const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
@@ -176,14 +151,9 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     boundsFit()
   }
 
-  const mapFrame = async () => {
-    const currentRoute = props.router.currentRoute.value
-    await props.router.push({ name: currentRoute.name ?? undefined, query: { ...currentRoute.query, perimetre: [-180, -90, 180, 90] } })
-
+  const mapFrame = () => {
     if (map.value) {
-      // TODO 2023-07-20 plus d'actualité ? On ne fait plus de allFit après chargement des données quand on veut tout afficher ?
-      // le traitement au dessus peut-être très long et l’utilisateur a pu changer de page
-      map.value.allFit()
+      map.value.fitWorld()
     }
   }
 
@@ -199,34 +169,10 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     }
   }
 
-  const geojsonLayersDisplay = () => {
-    nextTick(() => {
-
-      console.log("rilili", Object.values(geojsons.value).length)
-      geojsonLayers.value = []
-      geojsonLayers.value.push(...Object.values(geojsons.value))
-      // FIXME je ne comprends pas ce code, remplacé par le code du dessus
-      // markers.value.forEach(marker => {
-      //   if ((markerLayersId.value !== 'clusters' || map.value) && marker.id) {
-      //     geojsonLayers.value.push(geojsons.value[marker.id])
-      //   }
-      // })
-    })
-  }
-
-  const markerLayersIdSet = (layerId: 'clusters' | 'markers' | 'none') => {
-    if (matomo) {
-      // @ts-ignore
-      matomo.trackEvent('titres-vue', 'titre-id-fond-carte')
-    }
-    markerLayersId.value = layerId
-    geojsonLayersDisplay()
-  }
-
   onMounted(() => {
     init()
   })
-  
+
   watch(
     () => props.titres,
     titres => {
@@ -236,47 +182,18 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   )
   return () => (
     <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
-      <CaminoMap ref={map} markerLayers={markerLayers.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
+      <CaminoMap ref={map} markerLayers={clusters.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
-          <li>
-            <DsfrButton onClick={() => mapFrame()} title="Tout afficher" buttonType="tertiary" />
+      <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+        <li>
+          <DsfrButton onClick={() => mapFrame()} title="Tout afficher" buttonType="tertiary" />
+        </li>
+        {Object.values(zones).map(z => (
+          <li key={z.id}>
+            <DsfrButton buttonType="tertiary" onClick={() => mapCenter(z.id)} title={z.name} />
           </li>
-          {Object.values(zones).map(z => (
-            <li key={z.id}>
-              <DsfrButton buttonType="tertiary" onClick={() => mapCenter(z.id)} title={z.name} />
-            </li>
-          ))}
-        </ul>
-
-        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
-          <li>
-            <DsfrButtonIcon
-              icon="fr-icon-cloud-fill"
-              buttonType={markerLayersId.value === 'clusters' ? 'primary' : 'secondary'}
-              title="Groupe les marqueurs"
-              onClick={() => markerLayersIdSet('clusters')}
-            />
-          </li>
-          <li>
-            <DsfrButtonIcon
-              icon="fr-icon-map-pin-2-fill"
-              buttonType={markerLayersId.value === 'markers' ? 'primary' : 'secondary'}
-              title="Dégroupe les marqueurs"
-              onClick={() => markerLayersIdSet('markers')}
-            />
-          </li>
-          <li>
-            <DsfrButtonIcon
-              icon="fr-icon-map-pin-2-line"
-              buttonType={markerLayersId.value === 'none' ? 'primary' : 'secondary'}
-              title="Masque les marqueurs"
-              onClick={() => markerLayersIdSet('none')}
-            />
-          </li>
-        </ul>
-      </div>
+        ))}
+      </ul>
     </div>
   )
 })

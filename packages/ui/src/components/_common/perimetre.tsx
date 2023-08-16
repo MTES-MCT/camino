@@ -75,7 +75,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
 
       {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
         <CaminoCommonMap
-          class={`${isMain ? 'width-full' : ''}`}
+          class={`${isMain ? 'width-full' : ''} dsfr`}
           geojson={props.geojsonMultiPolygon}
           titreId={props.titreId}
           points={props.points}

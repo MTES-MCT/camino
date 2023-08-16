@@ -17,6 +17,7 @@ import { routerQueryToString } from '@/router/camino-router-link'
 import { LoadingElement } from './_ui/functional-loader'
 import { titresColonnes } from './titres/table-utils'
 import { TitreWithPoint } from './titres/mapUtil'
+import { displayPerimeterZoomMaxLevel } from './_map'
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -83,7 +84,7 @@ export const Titres = defineComponent({
     const loadTitresForCarte = async () => {
       data.value = { status: 'LOADING' }
       try {
-        if ((paramsForCarte.value?.zoom ?? 0) > 7) {
+        if ((paramsForCarte.value?.zoom ?? 0) > displayPerimeterZoomMaxLevel) {
           const titres = await titreApiClient.getTitresWithPerimetreForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
           titresForCarte.value = titres.elements
           total.value = titres.total

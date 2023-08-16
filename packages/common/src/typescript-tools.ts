@@ -18,6 +18,9 @@ export const getKeys = <T extends object>(object: T, filter: (key: string) => ke
 export const getEntries = <T extends string, U>(object: Record<T, U>, filter: (key: string) => key is T): [T, U][] =>
   Object.entries<U>(object).filter((key: [string, U]): key is [T, U] => filter(key[0]))
 
+// @ts-ignore use with caution
+export const getEntriesHardcore = <T extends string, U>(object: Record<T, U>): [T, U][] => Object.entries<U>(object)
+
 export type DeepReadonly<T> = {
   readonly [K in keyof T]: DeepReadonly<T[K]>
 }
@@ -36,6 +39,4 @@ export const isFalse = <T extends false>(_t: T) => {}
 export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 
 // from https://stackoverflow.com/questions/72789915/typescript-omit-seems-to-transform-an-union-into-an-intersection/72790170#72790170
-export type OmitDistributive<T, K extends string> = T extends unknown
-  ? Omit<T, K>
-  : never;
+export type OmitDistributive<T, K extends string> = T extends unknown ? Omit<T, K> : never

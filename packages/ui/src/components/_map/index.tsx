@@ -11,6 +11,8 @@ export interface Props {
   additionalOverlayLayers?: Record<string, LayerGroup>
 }
 
+export const displayPerimeterZoomMaxLevel = 7
+
 export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
@@ -27,21 +29,12 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
   watch(
     () => props.geojsonLayers,
     (layers: Layer[]) => {
-      console.log("update geojson layers")
-      geojsonLayer.clearLayers()
       layers.forEach(l => l.addTo(geojsonLayer))
     },
     { immediate: true }
   )
-  watch(
-    () => props.markerLayers,
-    (layers: Layer[]) => {
-      console.log('youhou on clear tous les layers', layers.length)
-      markerLayer.clearLayers()
-      layers.forEach(l => l.addTo(markerLayer))
-    },
-    { immediate: true }
-  )
+
+  props.markerLayers.forEach(l => l.addTo(markerLayer))
 
   const boundsGet = (): [number, number, number, number] | [] => {
     if (leafletComponent.value !== null) {
@@ -56,6 +49,10 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     leafletComponent.value?.fitBounds(bounds)
   }
 
+  function fitWorld() {
+    leafletComponent.value?.fitWorld()
+  }
+
   const positionSet = (position: { zoom: number; center: LatLngExpression }) => {
     updateBboxOnly.value = true
 
@@ -68,7 +65,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     updateCenterAndZoomOnly.value = true
     boundsFit(featureGroup.getBounds())
   }
-  expose({ boundsFit, positionSet, allFit })
+  expose({ boundsFit, positionSet, allFit, fitWorld })
 
   const sdomLegends = [
     { icon: 'icon-map-legend-sdom-zone-0', label: 'Zone 0' },
@@ -172,8 +169,24 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       )
       leafletComponent.value = leafletComponentOnMounted
 
-      L.control.layers(baseMaps, overlayMaps).addTo(leafletComponentOnMounted)
+      const controlLayers = L.control.layers(baseMaps, overlayMaps)
+      controlLayers.addTo(leafletComponentOnMounted)
 
+      let hasGeojsonLayer = true
+
+      leafletComponentOnMounted.on('zoomend', () => {
+        if (leafletComponentOnMounted.getZoom() <= displayPerimeterZoomMaxLevel) {
+          if (hasGeojsonLayer) {
+            controlLayers.removeLayer(geojsonLayer)
+            leafletComponentOnMounted.removeLayer(geojsonLayer)
+            hasGeojsonLayer = false
+          }
+        } else if (!hasGeojsonLayer) {
+          controlLayers.addOverlay(geojsonLayer, 'Contours')
+          leafletComponentOnMounted.addLayer(geojsonLayer)
+          hasGeojsonLayer = true
+        }
+      })
       leafletComponentOnMounted.on('moveend', () => {
         if (updateBboxOnly.value) {
           updateBboxOnly.value = false
