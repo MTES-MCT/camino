@@ -1,5 +1,5 @@
 import { DomaineId } from './domaines.js'
-import {z} from 'zod'
+import { z } from 'zod'
 // prettier-ignore
 const IDS = ['cfxx','selh','aloh','anti','arge','arse','auru','bery','bism','cadm','ceri','cesi','chro','coba','coox','cuiv','diam','etai','ferx','fluo','gall','geob','geoh','geom','germ','grap','grma','hafn','heli','hydm','hydx','indi','kals','kclx','lith','mang','merc','moly','nacl','nick','niob','oooo','phos','plat','plax','plom','radi','rhen','rubi','rxxx','scan','scoc','sele','skst','souf','soxx','tant','tell','thal','thor','tita','trxx','uran','vana','wolf','zinc','zirc','acti','amph','anda','ande','anhy','ardo','argc','argf','argk','args','asta','bary','basa','bitu','buta','caci','calc','cals','cend','cfan','cfch','cfho','cfli','corn','crai','daci','diab','diat','dior','dole','dolo','dysp','erbi','ethy','euro','falu','feld','gabb','gado','galt','gazn','glac','gnei','grai','grao','gref','gres','grsi','gyps','holm','hyda','hydc','hydg','hydo','hydr','irid','kaol','lant','lept','lute','maer','mais','marb','marn','meba','meco','mepr','mica','mics','migm','mylo','neod','ocre','ophi','osmi','pall','perl','phon','pipe','polo','porp','pouz','pras','prom','prot','prpa','prpy','pyri','quar','quat','rado','rard','rdet','rhod','rhyo','ruth','saco','sama','samg','sasi','scbi','schi','selg','selp','sels','selx','serp','sexs','sgin','sgra','sgrm','sgsc','sgsm','silc','sili','silx','smil','sssc','stex','syen','talc','tech','terb','terv','thul','tmas','tour','trac','tufo','ytri','ytte','hydrog','co2',] as const
 export const SUBSTANCES_LEGALES_IDS = {
@@ -203,8 +203,7 @@ export const SUBSTANCES_LEGALES_IDS = {
   ytterbium: 'ytte',
   hydrogène: 'hydrog',
   co2: 'co2',
-} as const satisfies Record<string, typeof IDS[number]>
-
+} as const satisfies Record<string, (typeof IDS)[number]>
 
 export const substanceLegaleIdValidator = z.enum(IDS)
 export type SubstanceLegaleId = z.infer<typeof substanceLegaleIdValidator>
