@@ -6,19 +6,20 @@ import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import { CaminoTitresMap, TitreCarteParams } from './titres/map'
-import { TitresTablePagination, Params as TitresTablePaginationParams, getInitialTitresTablePaginationParams } from './titres/table-pagination'
 import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs, TabId } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
-import { TitreForTable, titreApiClient } from './titre/titre-api-client'
+import { titreApiClient } from './titre/titre-api-client'
 import { AsyncData } from '@/api/client-rest'
 import { LocationQuery, useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
-import { LoadingElement } from './_ui/functional-loader'
-import { titresColonnes } from './titres/table-utils'
+import { titresColonnes, titresLignesBuild } from './titres/table-utils'
 import { TitreWithPoint } from './titres/mapUtil'
 import { displayPerimeterZoomMaxLevel } from './_map'
 import { apiClient } from '../api/api-client'
+import { TablePagination, getInitialParams } from './_ui/table-pagination'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
+import { TableRow } from './_ui/table'
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -41,6 +42,7 @@ const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
 const carteTabId = newTabId('carte')
 const tableTabId = newTabId('table')
 // FIXME storybook
+type TitresTablePaginationParams = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export const Titres = defineComponent({
   setup() {
     const matomo = inject('matomo', null)
@@ -48,11 +50,11 @@ export const Titres = defineComponent({
     const router = useRouter()
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
-    const titresForTable = ref<TitreForTable[]>([])
+    const titresForTable = ref<AsyncData<{rows: TableRow[], total: number}>>({status: 'LOADING'})
     const titresForCarte = ref<TitreWithPoint[]>([])
     const total = ref<number>(0)
 
-    const paramsForTable = ref<TitresTablePaginationParams>(getInitialTitresTablePaginationParams(router.currentRoute.value))
+    const paramsForTable = ref<TitresTablePaginationParams>(getInitialParams(router.currentRoute.value, titresColonnes))
     const paramsForCarte = ref<TitreCarteParams | null>(null)
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
 
@@ -67,13 +69,15 @@ export const Titres = defineComponent({
     }
     const loadTitresForTable = async () => {
       data.value = { status: 'LOADING' }
+      titresForTable.value = {status: 'LOADING'}
       try {
         const titres = await titreApiClient.getTitresForTable({ ...paramsForTable.value, ...paramsFiltres.value })
-        titresForTable.value.splice(0, titresForTable.value.length, ...titres.elements)
-        total.value = titres.total
+        titresForTable.value = {status: 'LOADED', value: {total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value)}}
         data.value = { status: 'LOADED', value: true }
       } catch (e: any) {
         console.error('error', e)
+        titresForTable.value = { status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",}
         data.value = {
           status: 'ERROR',
           message: e.message ?? "Une erreur s'est produite",
@@ -112,13 +116,24 @@ export const Titres = defineComponent({
     const resultat = computed<string>(() => {
       let totalLoaded = 0
       if (tabId.value === tableTabId) {
-        totalLoaded = titresForTable.value.length
+        if (titresForTable.value.status !== 'LOADED') {
+          return '...'
+        }
+        totalLoaded = titresForTable.value.value.rows.length
       } else {
         totalLoaded = titresForCarte.value.length
       }
       const res = total.value > totalLoaded ? `${totalLoaded} / ${total.value}` : totalLoaded
 
       return `(${res} résultat${totalLoaded > 1 ? 's' : ''})`
+    })
+
+    const activitesCol = computed(() => {
+      return canReadActivites(user.value)
+    })
+
+    const colonnes = computed(() => {
+      return titresColonnes.filter(({ id }) => (activitesCol.value ? true : id !== 'activites'))
     })
 
     const vues = [
@@ -143,15 +158,15 @@ export const Titres = defineComponent({
         icon: 'fr-icon-list-unordered',
         title: 'Tableau',
         renderContent: () => (
-          <TitresTablePagination
+          <TablePagination
             route={router.currentRoute.value}
-            user={user.value}
+            columns={colonnes.value}
+            data={titresForTable.value}
             updateParams={async params => {
               paramsForTable.value = params
               await reloadTitres(tableTabId)
             }}
-            titres={titresForTable.value}
-            total={total.value}
+            caption="Tableau des titres"
           />
         ),
       },
@@ -164,7 +179,7 @@ export const Titres = defineComponent({
         <div class="dsfr">
           <PageContentHeader
             nom="Titres miniers et autorisations"
-            download={titresForCarte.value.length > 0 || titresForTable.value.length > 0 ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} } : null}
+            download={titresForCarte.value.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0) ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} } : null}
             renderButton={() => <DemandeTitreButton user={user.value} />}
           />
         </div>

@@ -8,7 +8,7 @@ import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { User } from 'camino-common/src/roles'
 import { TitreForTable } from '../titre/titre-api-client'
 
-export type Params = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
+export type
 export interface Props {
   titres: TitreForTable[]
   total: number
@@ -35,8 +35,8 @@ export const TitresTablePagination = caminoDefineComponent<Props>(['titres', 'to
   return () => (
     <TablePagination
       route={props.route}
+      columns={colonnes.value,
       data={{
-        columns: colonnes.value,
         rows: lignes.value,
         total: props.total,
       }}

@@ -1,11 +1,10 @@
-import { defineComponent, computed, ref, markRaw, Ref } from 'vue'
+import { defineComponent, markRaw, } from 'vue'
 import { Liste, Params } from './_common/liste'
-import { ADMINISTRATION_TYPES, Administrations as Adms, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
-import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src/static/administrations'
+import { ComponentColumnData, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
-import { getInitialFiltres } from './_ui/filters/filters'
 import { apiClient } from '../api/api-client'
 
 const colonnes = [
@@ -20,6 +19,7 @@ const colonnes = [
   {
     id: 'type',
     name: 'Type',
+    width: '20%'
   },
 ] as const
 
@@ -33,28 +33,22 @@ export const Administrations = defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-    const params = ref<Params<ColonneId>>({
-      colonne: 'abreviation',
-      ordre: 'asc',
-      page: 1,
-      filtres: getInitialFiltres(route, filtres),
-    }) as Ref<Params<ColonneId>>
 
-    const lignes = computed<TableRow[]>(() => {
-      return [...administrations]
+    const getData = (options: Params<ColonneId>) => {
+      const lignes = [...administrations]
         .filter(a => {
-          if (params.value.filtres?.nomsAdministration.length) {
+          if (options.filtres?.nomsAdministration?.length) {
             if (
-              !a.id.toLowerCase().includes(params.value.filtres.nomsAdministration) &&
-              !a.nom.toLowerCase().includes(params.value.filtres.nomsAdministration) &&
-              !a.abreviation.toLowerCase().includes(params.value.filtres.nomsAdministration)
+              !a.id.toLowerCase().includes(options.filtres.nomsAdministration) &&
+              !a.nom.toLowerCase().includes(options.filtres.nomsAdministration) &&
+              !a.abreviation.toLowerCase().includes(options.filtres.nomsAdministration)
             ) {
               return false
             }
           }
 
-          if (params.value.filtres?.administrationTypesIds.length) {
-            if (!params.value.filtres.administrationTypesIds.includes(a.typeId)) {
+          if (options.filtres?.administrationTypesIds.length) {
+            if (!options.filtres.administrationTypesIds.includes(a.typeId)) {
               return false
             }
           }
@@ -64,15 +58,15 @@ export const Administrations = defineComponent({
         .sort((a, b) => {
           let first: string
           let second: string
-          if (params.value.colonne === 'type') {
+          if (options.colonne === 'type') {
             first = ADMINISTRATION_TYPES[a.typeId].nom
             second = ADMINISTRATION_TYPES[b.typeId].nom
           } else {
-            first = a[params.value.colonne]
-            second = b[params.value.colonne]
+            first = a[options.colonne]
+            second = b[options.colonne]
           }
 
-          if (params.value.ordre === 'asc') {
+          if (options.ordre === 'asc') {
             return first.localeCompare(second)
           }
           return second.localeCompare(first)
@@ -96,26 +90,22 @@ export const Administrations = defineComponent({
             columns,
           }
         })
-    })
+
+
+
+      return Promise.resolve({total: lignes.length, values: lignes})
+    }
 
     return () => (
       <Liste
         nom="administrations"
         listeFiltre={{ filtres, apiClient, updateUrlQuery: router }}
         colonnes={colonnes}
-        lignes={lignes.value}
-        total={lignes.value.length}
+        getData={getData}
         route={route}
         download={null}
         renderButton={null}
-        paramsUpdate={options => {
-          if (params.value.filtres && options.filtres) {
-            params.value.filtres.administrationTypesIds = options.filtres.administrationTypesIds
-            params.value.filtres.nomsAdministration = options.filtres.nomsAdministration?.toLowerCase() ?? ''
-          }
-          params.value.ordre = options.ordre
-          params.value.colonne = options.colonne
-        }}
+        paramsUpdate={_options => { }}
       />
     )
   },

@@ -2,13 +2,15 @@ import { computed, defineComponent, FunctionalComponent, HTMLAttributes, Ref, re
 import { Column, getSortColumnFromRoute, getSortOrderFromRoute, Table, TableRow } from './table'
 import { onBeforeRouteLeave, RouteLocationNormalizedLoaded } from 'vue-router'
 import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-link'
+import { AsyncData } from '../../api/client-rest'
+import { LoadingElement } from './functional-loader'
 
 export interface Props<ColumnId> {
-  data: {
-    columns: readonly Column<ColumnId>[]
+  columns: readonly Column<ColumnId>[]
+  data: AsyncData<{
     rows: TableRow[]
     total: number
-  }
+  }>
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   caption: string
   updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
@@ -35,7 +37,7 @@ export const TablePagination = defineComponent(<ColumnId extends string>(props: 
     }
   )
 
-  const initParams = getInitialParams(props.route, props.data.columns)
+  const initParams = getInitialParams(props.route, props.columns)
 
   const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>
   const ordre = ref<'asc' | 'desc'>(initParams.ordre)
@@ -55,25 +57,23 @@ export const TablePagination = defineComponent(<ColumnId extends string>(props: 
     props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
   })
 
-  const pagination = computed<boolean>(() => {
-    return props.data.total > props.data.rows.length
-  })
 
-  const totalNumberOfPages = computed<number>(() => {
-    return Math.ceil(props.data.total / routerQueryToNumber(props.route.query.intervalle, 10))
-  })
+
+  const totalNumberOfPages = (total: number) => {
+    return Math.ceil(total / routerQueryToNumber(props.route.query.intervalle, 10))
+  }
 
   return () => (
     <div class="dsfr">
-      <Table route={props.route} caption={props.caption} columns={props.data.columns} rows={props.data.rows} updateParams={updateSort} />
+      <Table route={props.route} caption={props.caption} columns={props.columns} rows={props.data} updateParams={updateSort} />
 
-      {pagination.value ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages.value} /> : null}
+      <LoadingElement data={props.data} renderItem={item => <>{item.total > item.rows.length ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages(item.total)} /> : null}</>} />
     </div>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TablePagination.props = ['data', 'route', 'caption', 'updateParams']
+TablePagination.props = ['data', 'route', 'caption', 'updateParams', 'columns']
 
 interface PaginationProps {
   totalNumberOfPages: number

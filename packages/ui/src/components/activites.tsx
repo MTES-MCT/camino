@@ -1,5 +1,5 @@
-import { computed, defineComponent, markRaw, onMounted, ref } from 'vue'
-import { Liste } from './_common/liste'
+import { computed, defineComponent, markRaw} from 'vue'
+import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { Statut } from './_common/statut'
@@ -9,15 +9,11 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
-import { AsyncData } from '@/api/client-rest'
-import { LoadingElement } from './_ui/functional-loader'
-import { Activite, GetActivitesParams } from './activite/activite-api-client'
-import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { TableRow } from './_ui/table'
-import { getInitialParams } from './_ui/table-pagination'
-import { getInitialFiltres } from './_ui/filters/filters'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
 import { ApiClient, apiClient } from '@/api/api-client'
+import { Activite } from './activite/activite-api-client'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 
 const activitesColonnes = [
   {
@@ -31,14 +27,17 @@ const activitesColonnes = [
   {
     id: 'annee',
     name: 'Année',
+    width: '10%'
   },
   {
     id: 'periode',
     name: 'Période',
+    width: '15%'
   },
   {
     id: 'statut',
     name: 'Statut',
+    width: '15%'
   },
 ] as const
 
@@ -99,42 +98,19 @@ interface Props {
 }
 
 export const PureActivites = defineComponent<Props>(props => {
-  const data = ref<AsyncData<true>>({ status: 'LOADING' })
 
-  const activitesRef = ref<{ elements: Activite[]; total: number }>({ elements: [], total: 0 })
-
-  const load = async (params: GetActivitesParams) => {
-    data.value = { status: 'LOADING' }
-
-    try {
-      const activites = await props.apiClient.getActivites(params)
-      activitesRef.value.elements.splice(0, activitesRef.value.elements.length, ...activites.elements)
-      activitesRef.value.total = activites.total
-      data.value = { status: 'LOADED', value: true }
-    } catch (e: any) {
-      console.error('error', e)
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
+  const getData = async (params: Params<string>) => {
+    const activites = await props.apiClient.getActivites({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
+    return {total: activites.total, values: activitesLignesBuild(activites.elements)}
   }
-  onMounted(async () => {
-    await load({ ...getInitialParams(props.currentRoute, activitesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
-  })
 
   return () => (
     <>
       {canReadActivites(props.user) ? (
-        <>
-          <LoadingElement data={data.value} renderItem={_data => null} />
-
-          {/* FIXME Mettre en place des listes asynchrones qui prennent un AsyncData en entrée et gèrent le cycle de vie de la nouvelle donnée */}
           <Liste
             nom="activités"
             colonnes={activitesColonnes}
-            lignes={activitesLignesBuild(activitesRef.value.elements)}
-            total={activitesRef.value.total}
+            getData={getData}
             download={{
               id: 'downloadActivites',
               downloadRoute: '/activites',
@@ -147,12 +123,9 @@ export const PureActivites = defineComponent<Props>(props => {
               updateUrlQuery: props.updateUrlQuery,
             }}
             renderButton={null}
-            paramsUpdate={params => {
-              load({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
-            }}
+            paramsUpdate={params => {}}
             route={props.currentRoute}
           />
-        </>
       ) : (
         <CaminoAccessError user={props.user} />
       )}

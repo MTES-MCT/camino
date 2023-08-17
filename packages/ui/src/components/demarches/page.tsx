@@ -1,11 +1,8 @@
-import { defineComponent, markRaw, onMounted, ref } from 'vue'
+import { defineComponent, markRaw,  } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
-import { AsyncData } from '@/api/client-rest'
-import { GetDemarchesDemarche, GetDemarchesParams } from '../titre/demarche-api-client'
-import { getInitialParams } from '../_ui/table-pagination'
-import { getInitialFiltres } from '../_ui/filters/filters'
+import { GetDemarchesDemarche } from '../titre/demarche-api-client'
 import { CaminoFiltres } from '../_ui/filters/camino-filtres'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -21,7 +18,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
-  { id: 'titreDomaine', name: '' },
+  { id: 'titreDomaine', name: '', width: '5%' },
   { id: 'titreType', name: 'Type de titre' },
   { id: 'titreStatut', name: 'Statut de titre' },
   { id: 'type', name: 'Type' },
@@ -107,37 +104,17 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
   })
 
 export const PurePage = defineComponent<PureProps>(props => {
-  const data = ref<AsyncData<true>>({ status: 'LOADING' })
-  const load = async (params: GetDemarchesParams) => {
-    data.value = { status: 'LOADING' }
-
-    try {
-      const demarches = await props.apiClient.getDemarches(params)
-      demarchesRef.value.elements.splice(0, demarchesRef.value.elements.length, ...demarches.elements)
-      demarchesRef.value.total = demarches.total
-      data.value = { status: 'LOADED', value: true }
-    } catch (e: any) {
-      console.error('error', e)
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
+  const getData = async (params: Params<string>) => {
+      const demarches = await props.apiClient.getDemarches({
+        travaux: props.travaux,
+        page: params.page,
+        colonne: params.colonne,
+        ordre: params.ordre,
+        ...params.filtres,
+      })
+      return {total: demarches.total, values: demarchesLignesBuild(demarches.elements)}
   }
 
-  const demarchesRef = ref<{ elements: GetDemarchesDemarche[]; total: number }>({ elements: [], total: 0 })
-  const onParamsUpdate = (params: Params<string>) => {
-    load({
-      travaux: props.travaux,
-      page: params.page,
-      colonne: params.colonne,
-      ordre: params.ordre,
-      ...params.filtres,
-    })
-  }
-  onMounted(async () => {
-    await load({ travaux: props.travaux, ...getInitialParams(props.currentRoute, demarchesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
-  })
 
   return () => (
     <Liste
@@ -156,9 +133,8 @@ export const PurePage = defineComponent<PureProps>(props => {
         updateUrlQuery: props.updateUrlQuery,
       }}
       route={props.currentRoute}
-      paramsUpdate={onParamsUpdate}
-      total={demarchesRef.value.total}
-      lignes={demarchesLignesBuild(demarchesRef.value.elements)}
+      paramsUpdate={() => {}}
+      getData={getData}
     />
   )
 })

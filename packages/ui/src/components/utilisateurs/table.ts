@@ -9,27 +9,28 @@ export const utilisateursColonnes: Column[] = [
   {
     id: 'nom',
     name: 'Nom',
-    class: ['min-width-6'],
+    width: '15%'
   },
   {
     id: 'prenom',
     name: 'Prénom',
-    class: ['min-width-6'],
+    width: '15%'
   },
   {
     id: 'email',
     name: 'Email',
+    width: '30%'
   },
   {
     id: 'role',
     name: 'Rôle',
-    class: ['min-width-6'],
+    width: '10%'
   },
   {
     id: 'lien',
     name: 'Lien',
     noSort: true,
-    class: ['min-width-6'],
+    width: '30%'
   },
 ]
 

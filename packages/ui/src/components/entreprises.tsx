@@ -1,5 +1,5 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
-import { Liste } from './_common/liste'
+import { Liste, Params } from './_common/liste'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 import { User } from 'camino-common/src/roles'
@@ -8,8 +8,6 @@ import { EntrepriseAddPopup } from './entreprise/add-popup'
 import { EntrepriseApiClient, GetEntreprisesEntreprise, GetEntreprisesParams, entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
-import { AsyncData } from '@/api/client-rest'
-import { getInitialFiltres } from './_ui/filters/filters'
 import { getInitialParams } from './_ui/table-pagination'
 import { ApiClient, apiClient } from '../api/api-client'
 
@@ -56,46 +54,23 @@ export const PureEntreprises = defineComponent<Props>(props => {
     popupVisible.value = !popupVisible.value
   }
 
-  const data = ref<AsyncData<true>>({ status: 'LOADING' })
-
-  const params = ref<GetEntreprisesParams>({
-    ...getInitialParams(props.currentRoute, entreprisesColonnes),
-    ...getInitialFiltres(props.currentRoute, filtres),
-  })
-  const entreprises = ref<ReturnType<typeof entreprisesLignesBuild>>([])
-  const total = ref<number>(0)
-  const loadEntreprises = async () => {
-    data.value = { status: 'LOADING' }
-    try {
-      const values = await props.apiClient.getEntreprises(params.value)
-      entreprises.value = entreprisesLignesBuild(values.elements)
-      total.value = values.total
-      data.value = { status: 'LOADED', value: true }
-    } catch (e: any) {
-      console.error('error', e)
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
+  const getData = async (params: Params<string>) => {
+      const values = await props.apiClient.getEntreprises({ ordre: params.ordre, colonne: params.colonne, page: params.page, nomsEntreprise: params.filtres?.nomsEntreprise ?? '' })
+      const entreprises = entreprisesLignesBuild(values.elements)
+      return {total: values.total, values: entreprises}
   }
-
-  onMounted(async () => {
-    await loadEntreprises()
-  })
 
   return () => (
     <Liste
       nom="entreprises"
       colonnes={entreprisesColonnes}
       download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: ['csv', 'xlsx', 'ods'], params: {} }}
-      lignes={entreprises.value}
+      getData={getData}
       listeFiltre={{
         filtres,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
       }}
-      total={total.value}
       route={props.currentRoute}
       renderButton={() => {
         if (canCreateEntreprise(props.user)) {
@@ -109,10 +84,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
           return <span></span>
         }
       }}
-      paramsUpdate={async newParams => {
-        params.value = { ordre: newParams.ordre, colonne: newParams.colonne, page: newParams.page, nomsEntreprise: newParams.filtres?.nomsEntreprise ?? '' }
-        await loadEntreprises()
-      }}
+      paramsUpdate={() => {}}
     />
   )
 })

@@ -1,6 +1,7 @@
 import { computed, defineComponent, watch } from 'vue'
 import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
 import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
+import { AsyncData } from '../../api/client-rest'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -42,8 +43,10 @@ export interface TableRow<T extends string = string> {
 export interface Column<T = string> {
   id: T
   name: string
+  // FIXME deprecated, not used anymore?
   class?: string[]
   noSort?: boolean
+  width?: string
 }
 
 export const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
@@ -53,7 +56,7 @@ export const isComponentColumnData = (columnRow: ComponentColumnData | TextColum
 interface Props<ColumnId> {
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   columns: readonly Column<ColumnId>[]
-  rows: TableRow[]
+  rows: AsyncData<{rows: TableRow[], total: number}>
   caption: string
   updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
@@ -96,12 +99,12 @@ export const Table = defineComponent(
     return () => (
       <div class="dsfr">
         <div class="fr-table fr-table--no-caption">
-          <table style={{ display: 'table' }}>
+          <table style={{ display: 'table', tableLayout: 'fixed', width: '100%' }}>
             <caption>{props.caption}</caption>
             <thead>
               <tr>
                 {props.columns.map(col => (
-                  <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                  <th style={{width: col.width ? col.width : 'auto'}} key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                     {col.noSort ? (
                       <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                         {col.name === '' ? '-' : col.name}
@@ -128,7 +131,7 @@ export const Table = defineComponent(
               </tr>
             </thead>
             <tbody>
-              {props.rows.map(row => (
+              {props.rows.status === 'LOADED' ? <>{props.rows.value.rows.map(row => (
                 <tr key={row.id}>
                   {props.columns.map((col, index) => (
                     <td key={col.id} class={[...(col.class ?? [])]}>
@@ -142,7 +145,13 @@ export const Table = defineComponent(
                     </td>
                   ))}
                 </tr>
-              ))}
+              ))}</> : [...Array(10).keys()].map(index => (<tr key={index}>
+                {props.columns.map((col, index) => (
+                  <td key={col.id}>...</td>
+                ))}
+              </tr>))
+              }
+
             </tbody>
           </table>
         </div>
