@@ -1,17 +1,15 @@
-import { elementsFormat } from '../../../utils/index'
 import { ROLES, roleValidator } from 'camino-common/src/roles'
 import { ADMINISTRATION_TYPES, administrationIdValidator, administrationTypeIdValidator, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { departementIdValidator, departements } from 'camino-common/src/static/departement'
 import { regionIdValidator, regions } from 'camino-common/src/static/region'
 import { FACADES, facadeMaritimeIdValidator } from 'camino-common/src/static/facades'
-import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { SubstancesLegales, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { domaineIdValidator, sortedDomaines } from 'camino-common/src/static/domaines'
 import { sortedTitresStatuts, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts'
 import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from 'camino-common/src/static/titresTypesTypes'
 import { TitreId, titreIdValidator } from 'camino-common/src/titres'
 import { z, ZodType } from 'zod'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { entrepriseIdValidator, Entreprise } from 'camino-common/src/entreprise'
 import { activiteTypeIdValidator, sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { activiteStatutIdValidator, activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { caminoAnneeValidator, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date'
@@ -68,7 +66,7 @@ export const caminoFiltres = {
     id: 'entreprisesIds',
     type: 'autocomplete',
     name: 'Entreprises',
-    elementsFormat,
+    elements: [] as Entreprise[],
     lazy: false,
     validator: z.array(entrepriseIdValidator),
   },
@@ -78,13 +76,6 @@ export const caminoFiltres = {
     elements: [] as unknown[],
     name: 'Noms',
     lazy: true,
-    search: (value: string) => titresRechercherByNom({ noms: value, intervalle: 100 }),
-    load: (value: TitreId[]) => {
-      return titresFiltres({ titresIds: value })
-    },
-    loadedElements: elements => {
-      caminoFiltres.titresIds.elements.splice(0, caminoFiltres.titresIds.elements.length, ...elements)
-    },
     validator: z.array(titreIdValidator),
   },
   substancesIds: {
@@ -235,15 +226,6 @@ export const caminoFiltres = {
     elements?: unknown[]
     component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresStatuts'
     lazy?: boolean
-    search?: (value: string) => Promise<unknown>
-    load?: (values: TitreId[]) => Promise<unknown[]>
-    loadedElements?: (values: { id: TitreId; nom: string }[]) => void
-    /*
-   / @deprecated c'est encore des trucs liées au store
-   / ça devrait être remplaçait par l'appel api directement dans la structure
-   / c'est appelé deux fois, une fois par le composant filters pour afficher les labels, et une fois par le composant autocomplete pour pouvoir sélectionner
-  */
-    elementsFormat?: (value: any, metas: unknown) => unknown
   }
 }
 const caminoEtapesFiltresArrayIds = ['etapesInclues', 'etapesExclues'] as const

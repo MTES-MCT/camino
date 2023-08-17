@@ -4,6 +4,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { vueRouter } from 'storybook-vue3-router'
 import { allCaminoFiltres } from './camino-filtres'
 import { RouteLocationRaw } from 'vue-router'
+import { ApiClient } from '../../../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Ui/Filters/Filters',
@@ -19,9 +20,31 @@ const push = (params: RouteLocationRaw) => {
   return Promise.resolve()
 }
 
-const metas = { entreprises: [] }
+const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getUtilisateurEntreprises: () => {
+    return Promise.resolve([])
+  },
+}
+
+export const Loading: StoryFn = () => (
+  <Filters
+    filters={['entreprisesIds']}
+    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
+    updateUrlQuery={{ push }}
+    route={{ query: { entreprisesIds: ['toto'] }, name: '/plop' }}
+    toggle={action('toggle')}
+    validate={action('validate')}
+  />
+)
+
 export const ClosedWithoutValue: StoryFn = () => (
-  <Filters filters={['nomsAdministration']} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} metas={metas} />
+  <Filters filters={['nomsAdministration']} apiClient={apiClient} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} />
 )
 
 export const AllFiltersClosedWithValues: StoryFn = () => (
@@ -32,7 +55,7 @@ export const AllFiltersClosedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={false}
-    metas={metas}
+    apiClient={apiClient}
   />
 )
 
@@ -44,7 +67,7 @@ export const AllFiltersOpenedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
-    metas={metas}
+    apiClient={apiClient}
   />
 )
 
@@ -56,10 +79,10 @@ export const CustomOpenedWithValues: StoryFn = () => (
     toggle={action('toggle')}
     validate={action('validate')}
     opened={true}
-    metas={metas}
+    apiClient={apiClient}
   />
 )
 
 export const Opened: StoryFn = () => (
-  <Filters filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} opened={true} metas={metas} />
+  <Filters filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} apiClient={apiClient} toggle={action('toggle')} validate={action('validate')} opened={true} />
 )

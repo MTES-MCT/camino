@@ -77,21 +77,6 @@ const titres = apiGraphQLFetch(
   `
 )
 
-const titresRechercherByNom = apiGraphQLFetch(
-  gql`
-    query Titres($intervalle: Int, $noms: String) {
-      titres(intervalle: $intervalle, noms: $noms) {
-        elements {
-          id
-          nom
-          typeId
-        }
-      }
-    }
-  `,
-  'titresRechercherByNom'
-)
-
 export const titresRechercherByReferences = apiGraphQLFetch(
   gql`
     query Titres($intervalle: Int, $references: String) {
@@ -107,20 +92,6 @@ export const titresRechercherByReferences = apiGraphQLFetch(
   'titresRechercherByReferences'
 )
 
-const titresFiltres = apiGraphQLFetch(
-  gql`
-    query Titres($titresIds: [ID!]) {
-      titres(ids: $titresIds) {
-        elements {
-          id
-          nom
-        }
-      }
-    }
-  `,
-  'titresFiltres'
-)
-
 const titreCreer = apiGraphQLFetch(gql`
   mutation TitreCreer($titre: InputTitreCreation!) {
     titreCreer(titre: $titre) {
@@ -129,4 +100,4 @@ const titreCreer = apiGraphQLFetch(gql`
   }
 `)
 
-export { titresMetas, titre, titres, titreCreer, titresRechercherByNom, titresFiltres }
+export { titresMetas, titre, titres, titreCreer }

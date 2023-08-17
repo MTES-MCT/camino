@@ -9,7 +9,6 @@ type RemoteFilter<T extends string> = {
   lazy: true
   search: (input: string) => Promise<{ elements: Element<T>[] }>
   load: (ids: T[]) => Promise<{ elements: Element<T>[] }>
-  loadedElements: (elements: Element<T>[]) => void
 }
 
 type LocalFilter = {
@@ -56,7 +55,6 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
       // C'est étrange, il va falloir corriger tout ça un jour
       const elements = [...Object.values(allKnownItems.value)]
       props.filter.elements.splice(0, props.filter.elements.length, ...elements)
-      props.filter.loadedElements(elements)
     }
     for (const element of props.filter.elements) {
       allKnownItems.value[element.id] = element
@@ -86,7 +84,6 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
       // C'est étrange, il va falloir corriger tout ça un jour
       const elements = [...Object.values(allKnownItems.value)]
       props.filter.elements.splice(0, props.filter.elements.length, ...elements)
-      props.filter.loadedElements(elements)
     } else if (!value.length) {
       items.value = props.filter.elements
     } else {

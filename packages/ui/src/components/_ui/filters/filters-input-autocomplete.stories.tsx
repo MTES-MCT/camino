@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { InputAutocomplete } from './filters-input-autocomplete'
 import { Meta, StoryFn } from '@storybook/vue3'
+import { ApiClient } from '../../../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Ui/InputAutocomplete',
@@ -14,4 +15,16 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: StoryFn = () => <InputAutocomplete filter="substancesIds" initialValue={['aloh']} onFilterAutocomplete={action('onFilterAutocomplete')} />
+const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getUtilisateurEntreprises: () => {
+    return Promise.resolve([])
+  },
+}
+
+export const Default: StoryFn = () => <InputAutocomplete apiClient={apiClient} filter="substancesIds" initialValue={['aloh']} onFilterAutocomplete={action('onFilterAutocomplete')} />

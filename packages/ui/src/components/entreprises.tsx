@@ -11,6 +11,7 @@ import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { AsyncData } from '@/api/client-rest'
 import { getInitialFiltres } from './_ui/filters/filters'
 import { getInitialParams } from './_ui/table-pagination'
+import { ApiClient, apiClient } from '../api/api-client'
 
 const entreprisesColonnes = [
   {
@@ -43,7 +44,7 @@ const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
 interface Props {
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<EntrepriseApiClient, 'creerEntreprise' | 'getEntreprises'>
+  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getEntreprises' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
   user: User
 }
 export const PureEntreprises = defineComponent<Props>(props => {
@@ -91,7 +92,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
       lignes={entreprises.value}
       listeFiltre={{
         filtres,
-        initialized: true,
+        apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
       }}
       total={total.value}
@@ -126,7 +127,7 @@ export const Entreprises = defineComponent(() => {
 
   const customApiClient = () => {
     return {
-      ...entrepriseApiClient,
+      ...apiClient,
       creerEntreprise: async (siren: Siren) => {
         try {
           await entrepriseApiClient.creerEntreprise(siren)

@@ -2,11 +2,11 @@ import { PureEntreprises } from './entreprises'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
 
 import { vueRouter } from 'storybook-vue3-router'
 import { RouteLocationRaw } from 'vue-router'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { ApiClient } from '../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Entreprises',
@@ -22,7 +22,16 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<EntrepriseApiClient, 'getEntreprises' | 'creerEntreprise'> = {
+const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getUtilisateurEntreprises: () => {
+    return Promise.resolve([])
+  },
   getEntreprises: _ => {
     getEntreprisesAction()
     return Promise.resolve({

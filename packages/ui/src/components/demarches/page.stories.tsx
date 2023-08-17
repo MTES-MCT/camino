@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { PurePage } from './page'
 import { action } from '@storybook/addon-actions'
-import { toCaminoDate } from 'camino-common/src/date'
 import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { vueRouter } from 'storybook-vue3-router'
@@ -20,7 +19,13 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises'> = {
+const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
   getDemarches: () => {
     getDemarchesAction()
     return Promise.resolve({

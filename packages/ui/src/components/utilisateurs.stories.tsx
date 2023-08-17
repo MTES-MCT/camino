@@ -3,10 +3,10 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateurs } from './utilisateurs'
-import { UtilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { toUtilisateurId } from 'camino-common/src/roles'
 import { vueRouter } from 'storybook-vue3-router'
 import { RouteLocationRaw } from 'vue-router'
+import { ApiClient } from '../api/api-client'
 
 const meta: Meta = {
   title: 'Components/Utilisateurs',
@@ -24,7 +24,13 @@ const pushRouteAction = action('pushRoute')
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
 const enterprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-const apiClientMock: Pick<UtilisateurApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises'> = {
+const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
   getUtilisateurs: () => {
     getUtilisateursAction()
     return Promise.resolve({
@@ -84,6 +90,7 @@ export const WithError: StoryFn = () => (
   <PureUtilisateurs
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={{
+      ...apiClientMock,
       getUtilisateurEntreprises: () => Promise.reject(new Error('Cassé')),
       getUtilisateurs: () => Promise.reject(new Error('Cassé')),
     }}

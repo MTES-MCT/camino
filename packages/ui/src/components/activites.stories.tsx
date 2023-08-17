@@ -22,7 +22,13 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'getActivites'> = {
+const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+  titresRechercherByNom: () => {
+    return Promise.resolve({ elements: [] })
+  },
+  getTitresByIds: () => {
+    return Promise.resolve({ elements: [] })
+  },
   getUtilisateurEntreprises: () => {
     getEntreprisesAction()
     return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])

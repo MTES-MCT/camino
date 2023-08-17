@@ -95,11 +95,10 @@ interface Props {
   user: User
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getActivites' | 'getUtilisateurEntreprises'>
+  apiClient: Pick<ApiClient, 'getActivites' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 }
 
 export const PureActivites = defineComponent<Props>(props => {
-  const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
   const data = ref<AsyncData<true>>({ status: 'LOADING' })
 
   const activitesRef = ref<{ elements: Activite[]; total: number }>({ elements: [], total: 0 })
@@ -121,56 +120,39 @@ export const PureActivites = defineComponent<Props>(props => {
     }
   }
   onMounted(async () => {
-    meta.value = { status: 'LOADING' }
-    try {
-      const entreprises = await props.apiClient.getUtilisateurEntreprises()
-      meta.value = { status: 'LOADED', value: { entreprises } }
-    } catch (e: any) {
-      console.error('error', e)
-      meta.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
     await load({ ...getInitialParams(props.currentRoute, activitesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
   })
 
   return () => (
     <>
       {canReadActivites(props.user) ? (
-        <LoadingElement
-          data={meta.value}
-          renderItem={metas => (
-            <>
-              <LoadingElement data={data.value} renderItem={_data => null} />
+        <>
+          <LoadingElement data={data.value} renderItem={_data => null} />
 
-              {/* FIXME Mettre en place des listes asynchrones qui prennent un AsyncData en entrée et gèrent le cycle de vie de la nouvelle donnée */}
-              <Liste
-                nom="activités"
-                colonnes={activitesColonnes}
-                lignes={activitesLignesBuild(activitesRef.value.elements)}
-                total={activitesRef.value.total}
-                download={{
-                  id: 'downloadActivites',
-                  downloadRoute: '/activites',
-                  formats: ['csv', 'xlsx', 'ods'],
-                  params: {},
-                }}
-                listeFiltre={{
-                  filtres,
-                  initialized: true,
-                  metas,
-                  updateUrlQuery: props.updateUrlQuery,
-                }}
-                renderButton={null}
-                paramsUpdate={params => {
-                  load({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
-                }}
-                route={props.currentRoute}
-              />
-            </>
-          )}
-        />
+          {/* FIXME Mettre en place des listes asynchrones qui prennent un AsyncData en entrée et gèrent le cycle de vie de la nouvelle donnée */}
+          <Liste
+            nom="activités"
+            colonnes={activitesColonnes}
+            lignes={activitesLignesBuild(activitesRef.value.elements)}
+            total={activitesRef.value.total}
+            download={{
+              id: 'downloadActivites',
+              downloadRoute: '/activites',
+              formats: ['csv', 'xlsx', 'ods'],
+              params: {},
+            }}
+            listeFiltre={{
+              filtres,
+              apiClient: props.apiClient,
+              updateUrlQuery: props.updateUrlQuery,
+            }}
+            renderButton={null}
+            paramsUpdate={params => {
+              load({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
+            }}
+            route={props.currentRoute}
+          />
+        </>
       ) : (
         <CaminoAccessError user={props.user} />
       )}

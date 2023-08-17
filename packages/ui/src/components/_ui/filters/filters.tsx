@@ -1,4 +1,4 @@
-import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { HTMLAttributes, computed, defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Accordion from '../accordion.vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
@@ -26,18 +26,21 @@ import {
   isInputCaminoFiltre,
 } from './camino-filtres'
 import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
+import { ApiClient } from '../../../api/api-client'
+import { AsyncData } from '../../../api/client-rest'
+import { LoadingElement } from '../functional-loader'
 
 type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
 type Props = {
   filters: readonly CaminoFiltres[]
-  metas?: unknown
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string
   opened?: boolean
   validate: (param: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
   toggle: () => void
+  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 } & Pick<HTMLAttributes, 'class'>
 
 const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[]): FormatedLabel[] => {
@@ -101,7 +104,6 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
   return allValues
 }
 
-// FIXME quand on ajoute/supprime des filtres et qu'on valide, ça change l'url. Si on fait retour navigateur, les données sont bien rechargées avec les bons filtres, mais les filtres n'apparaissent pas
 export const Filters = defineComponent((props: Props) => {
   const opened = computed<boolean>(() => {
     return props.opened ?? false
@@ -119,21 +121,8 @@ export const Filters = defineComponent((props: Props) => {
     return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres } }
   })
 
-  // TODO 2023-07-19 ugly hack pour que vue voie que les élements dans titresIds sont bien mis à jour
-  // Il faut repenser tout ça, ce n'est pas un bon moyen de récupérer les éléments, mais on en a besoin pour calculer les labels...
-  // C'est le seul composant qui a un load asynchrone et un search asynchrone
-  const titresIds = ref([...caminoFiltres.titresIds.elements])
-  const interval = setInterval(() => {
-    if (JSON.stringify(titresIds.value) !== JSON.stringify(caminoFiltres.titresIds.elements)) {
-      refreshLabels.value += 1
-      titresIds.value = caminoFiltres.titresIds.elements
-    }
-  }, 1000)
-  const refreshLabels = ref<number>(0)
-
   onBeforeRouteLeave(() => {
     stop()
-    clearInterval(interval)
   })
 
   const validatedValues = computed(() => {
@@ -142,16 +131,21 @@ export const Filters = defineComponent((props: Props) => {
 
   const stop = watch(validatedValues, _ => {
     props.validate(validatedValues.value)
+    nonValidatedValues.value = getInitialFiltres(props.route, props.filters)
   })
 
   const nonValidatedValues = ref<{ [key in CaminoFiltres]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
+
   const keyup = (e: KeyboardEvent) => {
     if ((e.which || e.keyCode) === 13 && opened.value) {
       props.updateUrlQuery.push(urlQuery.value)
     }
   }
-  onMounted(() => {
+  const entreprises = ref<Awaited<ReturnType<typeof props.apiClient.getUtilisateurEntreprises>>>([])
+  const loading = ref<AsyncData<true>>({ status: 'LOADING' })
+  onMounted(async () => {
     document.addEventListener('keyup', keyup)
+    await refreshLabels()
   })
   onBeforeUnmount(() => {
     document.removeEventListener('keyup', keyup)
@@ -193,9 +187,6 @@ export const Filters = defineComponent((props: Props) => {
         nonValidatedValues.value[filter] = ''
       } else if (Array.isArray(nonValidatedValues.value[filter])) {
         nonValidatedValues.value[filter] = []
-      } else if (filter === 'etapesExclues' || filter === 'etapesInclues') {
-        // FIXME on passe par là des fois ou tout le temps dans la condition au dessus ?
-        nonValidatedValues.value[filter] = []
       }
     })
 
@@ -219,23 +210,51 @@ export const Filters = defineComponent((props: Props) => {
     return props.filters.filter(isEtapeCaminoFiltre)
   })
 
-  const labels = computed<FormatedLabel[]>(() => {
-    // TODO 2023-07-19 obligatoire pour que les labels se recalculent quand les trucs asynchrones (les titres) sont chargés...
-    // eslint-disable-next-line no-unused-expressions
-    refreshLabels.value
-    return props.filters.flatMap<FormatedLabel>(filter => {
+  const labels = ref<FormatedLabel[]>([])
+
+  watch(
+    nonValidatedValues,
+    async () => {
+      await refreshLabels()
+    },
+    { deep: true }
+  )
+
+  const refreshLabels = async () => {
+    let titresIds: Awaited<ReturnType<typeof props.apiClient.getTitresByIds>> = { elements: [] }
+
+    try {
+      if (props.filters.includes('entreprisesIds') && entreprises.value.length === 0) {
+        loading.value = { status: 'LOADING' }
+        entreprises.value = await props.apiClient.getUtilisateurEntreprises()
+      }
+
+      if (nonValidatedValues.value.titresIds?.length > 0) {
+        loading.value = { status: 'LOADING' }
+        titresIds = await props.apiClient.getTitresByIds(nonValidatedValues.value.titresIds)
+      }
+      loading.value = { status: 'LOADED', value: true }
+    } catch (e: any) {
+      console.error('error', e)
+      loading.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      }
+    }
+    labels.value = props.filters.flatMap<FormatedLabel>(filter => {
       const filterType = caminoFiltres[filter]
       if (filterType.type === 'input' && nonValidatedValues.value[filter]) {
         return [{ id: filterType.id, name: filterType.name, value: nonValidatedValues.value[filter] }]
       }
       if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && nonValidatedValues.value[filter]) {
         return nonValidatedValues.value[filterType.id].map<FormatedLabel>(v => {
-          // TODO 2023-07-13 trouver comment mieux typer ça sans le 'as'
           let elements: { id: string; nom: string }[] = []
-          if ('elementsFormat' in filterType) {
-            elements = filterType.elementsFormat(filterType.id, props.metas)
+          if (filterType.id === 'titresIds') {
+            elements = titresIds.elements
+          } else if (filterType.id === 'entreprisesIds') {
+            elements = entreprises.value
           } else {
-            elements = filterType.elements as { id: string; nom: string }[]
+            elements = filterType.elements
           }
           const element = elements?.find(e => e.id === v)
 
@@ -251,10 +270,17 @@ export const Filters = defineComponent((props: Props) => {
       }
       return []
     })
-  })
+  }
 
   return () => (
-    <Accordion ref="accordion" opened={opened.value} slotSub={!!labels.value.length} slotDefault={true} class="mb-s" onToggle={props.toggle}>
+    <Accordion
+      ref="accordion"
+      opened={opened.value}
+      slotSub={loading.value.status === 'LOADING' || loading.value.status === 'ERROR' || labels.value?.length > 0}
+      slotDefault={true}
+      class="mb-s"
+      onToggle={props.toggle}
+    >
       {{
         title: () => (
           <div style="display: flex; align-items: center">
@@ -263,30 +289,35 @@ export const Filters = defineComponent((props: Props) => {
           </div>
         ),
         sub: () => (
-          <>
-            {labels.value.length ? (
-              <div class={['flex', opened.value ? 'border-b-s' : null]}>
-                <div class="px-m pt-m pb-s">
-                  {labels.value.map(label => (
-                    <span
-                      key={`${label.id}-${label.valueName}`}
-                      class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
-                      onClick={() => labelRemove(label)}
-                    >
-                      {label.name} : {label.valueName || label.value}{' '}
-                      {!opened.value ? (
-                        <span class="inline-block align-y-top ml-xs">
-                          {' '}
-                          <Icon size="S" name="x" color="white" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
+          <LoadingElement
+            data={loading.value}
+            renderItem={_item => (
+              <>
+                {labels.value.length ? (
+                  <div class={['flex', opened.value ? 'border-b-s' : null]}>
+                    <div class="px-m pt-m pb-s">
+                      {labels.value.map(label => (
+                        <span
+                          key={`${label.id}-${label.valueName}`}
+                          class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
+                          onClick={() => labelRemove(label)}
+                        >
+                          {label.name} : {label.valueName || label.value}{' '}
+                          {!opened.value ? (
+                            <span class="inline-block align-y-top ml-xs">
+                              {' '}
+                              <Icon size="S" name="x" color="white" role="img" aria-label={`Supprimer le filtre ${label.name}`} />{' '}
+                            </span>
+                          ) : null}
                         </span>
-                      ) : null}
-                    </span>
-                  ))}
-                </div>
-                <ButtonIcon class="flex-right btn-alt p-m" onClick={labelsReset} icon="close" title="Réinitialiser les filtres" />
-              </div>
-            ) : null}
-          </>
+                      ))}
+                    </div>
+                    <ButtonIcon class="flex-right btn-alt p-m" onClick={labelsReset} icon="close" title="Réinitialiser les filtres" />
+                  </div>
+                ) : null}
+              </>
+            )}
+          />
         ),
         default: () => (
           <div class="px-m">
@@ -306,7 +337,7 @@ export const Filters = defineComponent((props: Props) => {
                   ))}
                   {autocompletes.value.map(input => (
                     <div key={input}>
-                      <InputAutocomplete filter={input} metas={props.metas} initialValue={nonValidatedValues.value[input]} onFilterAutocomplete={onFilterAutocomplete(input)} />
+                      <InputAutocomplete filter={input} apiClient={props.apiClient} initialValue={nonValidatedValues.value[input]} onFilterAutocomplete={onFilterAutocomplete(input)} />
                     </div>
                   ))}
                   <button class="btn-border small px-s p-xs rnd-xs mb" onClick={inputsErase}>
@@ -355,4 +386,4 @@ export const Filters = defineComponent((props: Props) => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'metas']
+Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'apiClient']

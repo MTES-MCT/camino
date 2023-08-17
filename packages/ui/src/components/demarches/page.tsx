@@ -7,7 +7,6 @@ import { GetDemarchesDemarche, GetDemarchesParams } from '../titre/demarche-api-
 import { getInitialParams } from '../_ui/table-pagination'
 import { getInitialFiltres } from '../_ui/filters/filters'
 import { CaminoFiltres } from '../_ui/filters/camino-filtres'
-import { LoadingElement } from '../_ui/functional-loader'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
@@ -50,7 +49,7 @@ interface PureProps {
   travaux: boolean
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises'>
+  apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 }
 
 const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
@@ -109,7 +108,6 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
 
 export const PurePage = defineComponent<PureProps>(props => {
   const data = ref<AsyncData<true>>({ status: 'LOADING' })
-  const meta = ref<AsyncData<unknown>>({ status: 'LOADING' })
   const load = async (params: GetDemarchesParams) => {
     data.value = { status: 'LOADING' }
 
@@ -138,49 +136,29 @@ export const PurePage = defineComponent<PureProps>(props => {
     })
   }
   onMounted(async () => {
-    try {
-      const entreprises = await props.apiClient.getUtilisateurEntreprises()
-      meta.value = { status: 'LOADED', value: { entreprises } }
-    } catch (e: any) {
-      console.error('error', e)
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-      meta.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
     await load({ travaux: props.travaux, ...getInitialParams(props.currentRoute, demarchesColonnes), ...getInitialFiltres(props.currentRoute, filtres) })
   })
 
   return () => (
-    <LoadingElement
-      data={meta.value}
-      renderItem={metas => (
-        <Liste
-          nom={props.travaux ? 'Travaux' : 'Démarches'}
-          colonnes={demarchesColonnes}
-          download={{
-            id: `download${props.travaux ? 'Travaux' : 'Démarches'}`,
-            downloadRoute: '/demarches',
-            formats: ['csv', 'xlsx', 'ods'],
-            params: {},
-          }}
-          renderButton={null}
-          listeFiltre={{
-            filtres,
-            initialized: true,
-            metas,
-            updateUrlQuery: props.updateUrlQuery,
-          }}
-          route={props.currentRoute}
-          paramsUpdate={onParamsUpdate}
-          total={demarchesRef.value.total}
-          lignes={demarchesLignesBuild(demarchesRef.value.elements)}
-        />
-      )}
+    <Liste
+      nom={props.travaux ? 'Travaux' : 'Démarches'}
+      colonnes={demarchesColonnes}
+      download={{
+        id: `download${props.travaux ? 'Travaux' : 'Démarches'}`,
+        downloadRoute: '/demarches',
+        formats: ['csv', 'xlsx', 'ods'],
+        params: {},
+      }}
+      renderButton={null}
+      listeFiltre={{
+        filtres,
+        apiClient: props.apiClient,
+        updateUrlQuery: props.updateUrlQuery,
+      }}
+      route={props.currentRoute}
+      paramsUpdate={onParamsUpdate}
+      total={demarchesRef.value.total}
+      lignes={demarchesLignesBuild(demarchesRef.value.elements)}
     />
   )
 })

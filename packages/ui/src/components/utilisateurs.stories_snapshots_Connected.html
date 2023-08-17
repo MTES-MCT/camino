@@ -25,61 +25,8 @@
     </button>
     <!--v-if-->
     <div class="overflow-hidden">
-      <transition-stub name="slide" appear="false" persisted="true" css="true">
-        <div style="display: none;">
-          <div class="px-m">
-            <div class="tablet-blobs mt">
-              <div class="tablet-blob-1-2 large-blob-1-3">
-                <div>
-                  <div class="mb">
-                    <h5>Noms, prénoms</h5>
-                    <hr class="mb-s"><input class="p-xs" type="text" placeholder="...">
-                  </div>
-                </div>
-                <div>
-                  <div class="mb">
-                    <h5>Emails</h5>
-                    <hr class="mb-s"><input class="p-xs" type="text" placeholder="prenom.nom@domaine.fr, ...">
-                  </div>
-                </div>
-                <div>
-                  <div class="mb">
-                    <h5>Administrations</h5>
-                    <hr class="mb-s">
-                    <div id="filters_autocomplete_Administrations_wrapper" class="_typeahead_8eddf1">
-                      <div class="flex typeahead-wrapper"><input id="filters_autocomplete_Administrations" type="text" name="filters_autocomplete_Administrations" class="_typeahead-input_8eddf1 fr-input" placeholder="Administrations" autocomplete="off"></div>
-                      <!---->
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div class="mb">
-                    <h5>Entreprises</h5>
-                    <hr class="mb-s">
-                    <div id="filters_autocomplete_Entreprises_wrapper" class="_typeahead_8eddf1">
-                      <div class="flex typeahead-wrapper"><input id="filters_autocomplete_Entreprises" type="text" name="filters_autocomplete_Entreprises" class="_typeahead-input_8eddf1 fr-input" placeholder="Entreprises" autocomplete="off"></div>
-                      <!---->
-                    </div>
-                  </div>
-                </div><button class="btn-border small px-s p-xs rnd-xs mb">Tout effacer</button>
-              </div>
-              <div class="mb tablet-blob-1-2 large-blob-1-3">
-                <h5>Rôles</h5>
-                <hr class="mb-s">
-                <ul class="list-sans">
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="super"><span class="cap-first h6 bold">super</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="admin"><span class="cap-first h6 bold">admin</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="editeur"><span class="cap-first h6 bold">editeur</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="lecteur"><span class="cap-first h6 bold">lecteur</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="entreprise"><span class="cap-first h6 bold">entreprise</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="bureau d’études"><span class="cap-first h6 bold">bureau d’études</span></label></li>
-                  <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="defaut"><span class="cap-first h6 bold">defaut</span></label></li>
-                </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
-              </div>
-            </div>
-            <div class="dsfr"><a href="/mocked-href" title="Valider les filtres" class="fr-link" aria-label="Valider les filtres">Valider</a></div>
-          </div>
-        </div>
+      <transition-stub name="slide" appear="false" persisted="false" css="true">
+        <!--v-if-->
       </transition-stub>
     </div>
   </div>

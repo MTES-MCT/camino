@@ -99,6 +99,8 @@ export interface TitreApiClient {
     facadesMaritimes: FacadesMaritimes[]
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPoint[]; total: number }>
+  titresRechercherByNom: (nom: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom' | 'typeId'>[] }>
+  getTitresByIds: (titreIds: TitreId[]) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -333,6 +335,38 @@ export const titreApiClient: TitreApiClient = {
         }
       `
     )(params)
+    return result
+  },
+  titresRechercherByNom: async noms => {
+    const result = await apiGraphQLFetch(
+      gql`
+        query Titres($noms: String) {
+          titres(intervalle: 20, noms: $noms) {
+            elements {
+              id
+              nom
+              typeId
+            }
+          }
+        }
+      `
+    )({ noms })
+    return result
+  },
+
+  getTitresByIds: async titresIds => {
+    const result = await apiGraphQLFetch(
+      gql`
+        query Titres($titresIds: [ID!]) {
+          titres(ids: $titresIds) {
+            elements {
+              id
+              nom
+            }
+          }
+        }
+      `
+    )({ titresIds })
     return result
   },
 }

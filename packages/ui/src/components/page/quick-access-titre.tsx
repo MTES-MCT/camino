@@ -2,10 +2,11 @@ import { TypeAhead } from '@/components/_ui/typeahead'
 import { Domaine } from '@/components/_common/domaine'
 import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { titresRechercherByNom, titresRechercherByReferences } from '@/api/titres'
+import { titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { titreApiClient } from '../titre/titre-api-client'
 
 export interface Titre {
   id: string
@@ -27,10 +28,7 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
   const search = async (searchTerm: string): Promise<void> => {
     const intervalle = 10
 
-    let searchTitres = await titresRechercherByNom({
-      intervalle,
-      noms: searchTerm,
-    })
+    let searchTitres = await titreApiClient.titresRechercherByNom(searchTerm)
 
     if (searchTitres.elements.length === 0) {
       searchTitres = await titresRechercherByReferences({

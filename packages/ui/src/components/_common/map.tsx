@@ -96,29 +96,35 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
   })
   const loading = ref(false)
 
+  const titresValidesGeojson = ref<TitreWithPoint[]>([])
+
   const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
     loading.value = true
 
-    const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
-      statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
-      perimetre: data.bbox,
-      communes: '',
-      departements: [],
-      domainesIds: [],
-      entreprisesIds: [],
-      facadesMaritimes: [],
-      references: '',
-      regions: [],
-      substancesIds: [],
-      titresIds: [],
-      typesIds: [],
-    })
-    titresValidesGeojson.value.splice(0)
-    titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
+    try {
+      // TODO 2023-08-27 this should be an apiClient props
+      const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
+        statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
+        perimetre: data.bbox,
+        communes: '',
+        departements: [],
+        domainesIds: [],
+        entreprisesIds: [],
+        facadesMaritimes: [],
+        references: '',
+        regions: [],
+        substancesIds: [],
+        titresIds: [],
+        typesIds: [],
+      })
+      titresValidesGeojson.value.splice(0)
+      titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
+    } catch (e) {
+      console.error(e)
+    }
     loading.value = false
   }
 
-  const titresValidesGeojson = ref<TitreWithPoint[]>([])
   const titresValidesLayer = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
   const additionalOverlayLayers = computed<Record<string, LayerGroup>>(() => {
     titresValidesLayer.value.clearLayers()
@@ -136,7 +142,7 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     <div class="bg-alt">
       <CaminoMap
         ref={map}
-        loading={loading.value}
+        loading={loading.value || props.loading}
         mapUpdate={mapUpdate}
         geojsonLayers={geojsonLayers.value}
         markerLayers={markerLayers.value}

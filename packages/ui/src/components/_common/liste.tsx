@@ -7,6 +7,7 @@ import { computed, defineComponent, ref, Ref } from 'vue'
 import { z } from 'zod'
 import { getInitialFiltres } from '../_ui/filters/filters'
 import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+import { ApiClient } from '../../api/api-client'
 
 export type Params<ColumnId extends string> = {
   colonne: ColumnId
@@ -18,8 +19,7 @@ export type Params<ColumnId extends string> = {
 type ListeFiltreProps = {
   filtres: readonly CaminoFiltres[]
   updateUrlQuery: Pick<Router, 'push'>
-  metas?: unknown
-  initialized: boolean
+  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 }
 type Props<ColumnId extends string> = {
   listeFiltre: ListeFiltreProps | null
@@ -80,8 +80,7 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
           route={props.route}
           filters={props.listeFiltre.filtres}
           subtitle={resultat.value}
-          initialized={props.listeFiltre.initialized}
-          metas={props.listeFiltre.metas}
+          apiClient={props.listeFiltre.apiClient}
           paramsUpdate={paramsFiltresUpdate}
         />
       ) : null}

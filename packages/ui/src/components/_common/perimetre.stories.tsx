@@ -113,13 +113,20 @@ const tabUpdate = action('tabUpdate')
 export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
-    <Perimetre titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
+    <Perimetre loading={false} titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
+  </>
+)
+
+export const LoadingNoSnapshot: StoryFn = () => (
+  <>
+    <MapPattern />
+    <Perimetre loading={true} titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
   </>
 )
 
 export const NoMap: StoryFn = () => (
   <>
     <MapPattern />
-    <Perimetre titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
+    <Perimetre loading={false} titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId={titreIdValidator.parse('id')} tabUpdate={tabUpdate} />
   </>
 )

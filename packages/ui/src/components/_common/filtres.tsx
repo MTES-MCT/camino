@@ -2,17 +2,17 @@ import { defineComponent, ref, watch } from 'vue'
 import { Filters, getInitialFiltres } from '../_ui/filters/filters'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+import { ApiClient } from '../../api/api-client'
 
 export type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 export interface Props {
   filters: readonly CaminoFiltres[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  metas: unknown
-  initialized: boolean
   subtitle?: string
   toggle?: (open: boolean) => void
   paramsUpdate: (params: Params) => void
+  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 }
 
 export const Filtres = defineComponent((props: Props) => {
@@ -36,43 +36,27 @@ export const Filtres = defineComponent((props: Props) => {
       // met le focus sur le bouton de validation (dans la méthode close())
       close()
 
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // window.scrollTo({ top: 0, behavior: 'smooth' })
 
       filtresValues.value = params
       props.paramsUpdate(params)
     }
   }
 
-  watch(
-    () => props.metas,
-    () => {
-      if (props.initialized) {
-        validate(filtresValues.value)
-      }
-    },
-    { deep: true }
-  )
-
   return () => (
-    <>
-      {props.initialized ? (
-        <Filters
-          updateUrlQuery={props.updateUrlQuery}
-          route={props.route}
-          metas={props.metas}
-          filters={props.filters}
-          class="flex-grow"
-          opened={opened.value}
-          subtitle={props.subtitle}
-          validate={validate}
-          toggle={toggle}
-        />
-      ) : (
-        <div class="py-s px-m mb-s border rnd-s">…</div>
-      )}
-    </>
+    <Filters
+      updateUrlQuery={props.updateUrlQuery}
+      route={props.route}
+      apiClient={props.apiClient}
+      filters={props.filters}
+      class="flex-grow"
+      opened={opened.value}
+      subtitle={props.subtitle}
+      validate={validate}
+      toggle={toggle}
+    />
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filtres.props = ['filters', 'metas', 'initialized', 'subtitle', 'toggle', 'paramsUpdate', 'route', 'updateUrlQuery']
+Filtres.props = ['filters', 'apiClient', 'subtitle', 'toggle', 'paramsUpdate', 'route', 'updateUrlQuery']

@@ -254,6 +254,9 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       })
       const loading = new LoadingLeaflet()
       loadingLeaflet.value = loading
+      if (props.loading) {
+        leafletComponent.value?.addControl(loadingLeaflet.value)
+      }
       const SdomLegend = L.Control.extend({
         onAdd() {
           const legend = L.DomUtil.create('div')

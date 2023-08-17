@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
 import { getInitialFiltres } from './_ui/filters/filters'
+import { apiClient } from '../api/api-client'
 
 const colonnes = [
   {
@@ -100,7 +101,7 @@ export const Administrations = defineComponent({
     return () => (
       <Liste
         nom="administrations"
-        listeFiltre={{ filtres, initialized: true, updateUrlQuery: router }}
+        listeFiltre={{ filtres, apiClient, updateUrlQuery: router }}
         colonnes={colonnes}
         lignes={lignes.value}
         total={lignes.value.length}

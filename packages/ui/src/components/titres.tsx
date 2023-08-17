@@ -18,6 +18,7 @@ import { LoadingElement } from './_ui/functional-loader'
 import { titresColonnes } from './titres/table-utils'
 import { TitreWithPoint } from './titres/mapUtil'
 import { displayPerimeterZoomMaxLevel } from './_map'
+import { apiClient } from '../api/api-client'
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -39,13 +40,12 @@ const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
 }
 const carteTabId = newTabId('carte')
 const tableTabId = newTabId('table')
+// FIXME storybook
 export const Titres = defineComponent({
   setup() {
     const matomo = inject('matomo', null)
     const store = useStore()
     const router = useRouter()
-
-    const titresMetas = ref<AsyncData<Awaited<ReturnType<typeof titreApiClient.getTitresMetas>>>>({ status: 'LOADING' })
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<TitreForTable[]>([])
@@ -103,17 +103,6 @@ export const Titres = defineComponent({
       }
     }
     onMounted(async () => {
-      titresMetas.value = { status: 'LOADING' }
-      try {
-        const entreprises = await titreApiClient.getTitresMetas()
-        titresMetas.value = { status: 'LOADED', value: entreprises }
-      } catch (e: any) {
-        console.error('error', e)
-        titresMetas.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
-        }
-      }
       await reloadTitres(routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as VueId)
     })
 
@@ -181,9 +170,8 @@ export const Titres = defineComponent({
         </div>
 
         <TitresFiltres
-          initialized={titresMetas.value.status === 'LOADED'}
           subtitle={resultat.value}
-          metas={titresMetas.value.status === 'LOADED' ? { entreprises: titresMetas.value.value } : {}}
+          apiClient={apiClient}
           route={router.currentRoute.value}
           router={router}
           paramsUpdate={async params => {
@@ -194,7 +182,7 @@ export const Titres = defineComponent({
         />
 
         <div class="dsfr dsfr-container">
-          {titresMetas.value.status === 'LOADED' && tabId.value ? (
+          {tabId.value ? (
             <Tabs
               initTab={tabId.value}
               tabs={vues}
