@@ -111,7 +111,7 @@ export const Filters = defineComponent((props: Props) => {
 
   const urlQuery = computed(() => {
     const filtres = { ...nonValidatedValues.value }
-    // FIXME regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
+    // TODO 2023-08-21 regarder du côté des zod redefine si on peut pas faire ça directement dans le validator
     if ('etapesInclues' in nonValidatedValues.value) {
       filtres.etapesInclues = JSON.stringify(nonValidatedValues.value.etapesInclues)
     }

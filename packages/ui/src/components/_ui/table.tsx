@@ -43,8 +43,6 @@ export interface TableRow<T extends string = string> {
 export interface Column<T = string> {
   id: T
   name: string
-  // FIXME deprecated, not used anymore?
-  class?: string[]
   noSort?: boolean
   width?: string
 }
@@ -104,7 +102,7 @@ export const Table = defineComponent(
             <thead>
               <tr>
                 {props.columns.map(col => (
-                  <th style={{ width: col.width ? col.width : 'auto' }} key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                  <th style={{ width: col.width ? col.width : 'auto' }} key={col.id} scope="col" class="nowrap">
                     {col.noSort ? (
                       <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                         {col.name === '' ? '-' : col.name}
@@ -136,7 +134,7 @@ export const Table = defineComponent(
                   {props.rows.value.rows.map(row => (
                     <tr key={row.id}>
                       {props.columns.map((col, index) => (
-                        <td key={col.id} class={[...(col.class ?? [])]}>
+                        <td key={col.id}>
                           {index === 0 ? (
                             <router-link class="fr-link" to={row.link}>
                               <DisplayColumn data={row.columns[col.id]} />

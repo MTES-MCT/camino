@@ -41,7 +41,7 @@ const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
 }
 const carteTabId = newTabId('carte')
 const tableTabId = newTabId('table')
-// FIXME storybook
+
 type TitresTablePaginationParams = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export const Titres = defineComponent({
   setup() {

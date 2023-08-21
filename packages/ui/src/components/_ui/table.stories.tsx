@@ -21,7 +21,6 @@ const columns: Column[] = [
   {
     id: 'nom',
     name: 'Nom',
-    class: ['min-width-8'],
   },
   {
     id: 'domaine',
@@ -30,12 +29,10 @@ const columns: Column[] = [
   {
     id: 'type',
     name: 'Type',
-    class: ['min-width-8'],
   },
   {
     id: 'statut',
     name: 'Statut',
-    class: ['nowrap', 'min-width-5'],
   },
   {
     id: 'test',

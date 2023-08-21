@@ -32,13 +32,11 @@ export interface Props {
 const derniereEtapeColumn: Column<'derniereEtape'> = {
   id: 'derniereEtape',
   name: 'Dernière étape',
-  class: ['min-width-8'],
 }
 
 const prochainesEtapesColumn: Column<'prochainesEtapes'> = {
   id: 'prochainesEtapes',
   name: 'Prochaines étapes',
-  class: ['min-width-8'],
 }
 
 const columns = [nomColumn, typeColumn, statutAutoColumn, activiteAutoColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const

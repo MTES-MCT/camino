@@ -29,7 +29,6 @@ type Props<ColumnId extends string> = {
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
 } & PageContentHeaderProps
 
-// FIXME tests
 export const Liste = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
   const initialParams = getInitialParams(props.route, props.colonnes)
   const params = ref<Params<ColumnId>>({

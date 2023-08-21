@@ -30,7 +30,6 @@ const filtres = [
 export const getInitialTitresFiltresParams = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>): TitreFiltresParams => {
   return getInitialFiltres(route, filtres)
 }
-// FIXME matomo track avec tout le truc bizarre des paramètres de la route
 export const TitresFiltres = defineComponent<Props>(props => {
   return () => <Filtres filters={filtres} subtitle={props.subtitle} route={props.route} updateUrlQuery={props.router} apiClient={props.apiClient} paramsUpdate={props.paramsUpdate} />
 })

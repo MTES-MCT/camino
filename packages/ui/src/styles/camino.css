@@ -1,6 +1,6 @@
 :root {
   /* 
-    FIXME mêmes couleurs que dans domaine.tsx le problème c'est qu'on voit moins bien le périmêtre sur la carte IMHO
+    TODO 2023-08-21 mêmes couleurs que dans domaine.tsx le problème c'est qu'on voit moins bien le périmêtre sur la carte IMHO
   --color-domaine-c: var(--background-contrast-green-archipel);
   --color-domaine-f: var(--background-contrast-yellow-tournesol);
   --color-domaine-g: var(--background-contrast-pink-tuile);
