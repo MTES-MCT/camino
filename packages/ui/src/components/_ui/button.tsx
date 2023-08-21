@@ -6,6 +6,9 @@ type Props = {
   render: () => JSX.Element
   disabled?: boolean
 } & ButtonHTMLAttributes
+/**
+ * @deprecated use DsfrButton
+ */
 export const Button: FunctionalComponent<Props> = (props: Props) => {
   const Children = props.render
   return (

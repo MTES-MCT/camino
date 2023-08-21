@@ -2,7 +2,7 @@ import { DsfrTag } from './tag'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/UI/Tag',
+  title: 'Deprecated/Components/UI/Tag',
   component: DsfrTag,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }

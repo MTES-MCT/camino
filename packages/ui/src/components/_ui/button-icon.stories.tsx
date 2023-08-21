@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/UI/ButtonIcon',
   component: ButtonIcon,
-  argTypes: {},
 }
 export default meta
 

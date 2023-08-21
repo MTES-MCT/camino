@@ -5,7 +5,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 const meta: Meta = {
   title: 'Components/Administrations',
   component: Administrations,
-  decorators: [vueRouter()],
+  decorators: [vueRouter([{ name: 'administration' }])],
 }
 export default meta
 
