@@ -169,6 +169,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlr
         if (!isMarkerAlreadyInMap) {
           const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
           const marker = leafletMarkerBuild(latLng, icon)
+          marker.titreId = titreId
 
           marker.bindPopup(div, popupOptions)
           const methods: LeafletEventHandlerFnMap = {
@@ -215,6 +216,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlr
 
           const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
 
+          geojson.titreId = titreId
           geojsons[titreId] = geojson
         }
       }

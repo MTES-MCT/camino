@@ -1,10 +1,10 @@
-import { ref, Ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, Ref, computed, onMounted, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup, CaminoMarker } from './mapUtil'
+import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
-import { Layer, Marker } from 'leaflet'
+import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
 import { getEntriesHardcore, getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton } from '../_ui/dsfr-button'
@@ -54,7 +54,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
 
   const geojsons = ref<Record<TitreId, Layer>>({})
   const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
-  const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
+  const geojsonLayers = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
 
   const zone = computed(() => {
     return zones[zoneId.value]
@@ -98,13 +98,23 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
       if (cluster.caminoDomaineId && markerLayersByDomaine[cluster.caminoDomaineId].length > 0) {
         cluster.addLayers(markerLayersByDomaine[cluster.caminoDomaineId])
       }
+
+      const layersToRemove = cluster.getLayers().filter(layer => !titres.map(({ id }) => id).includes(layer.titreId))
+      cluster.removeLayers(layersToRemove)
+      layersToRemove.forEach(l => delete layerIdToTitreIdDisplayed.value[l.titreId])
     })
 
-    geojsonLayers.value = []
     getEntriesHardcore(geojsonLayer).forEach(([titreId, layer]) => {
       geojsons.value[titreId] = layer
+      geojsonLayers.value.addLayer(layer)
     })
-    geojsonLayers.value.push(...Object.values(geojsonLayer))
+
+    geojsonLayers.value.getLayers().forEach(layer => {
+      if (!titres.map(({ id }) => id).includes(layer.titreId)) {
+        geojsonLayers.value.removeLayer(layer)
+        delete geojsons.value[layer.titreId]
+      }
+    })
   }
 
   const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
@@ -179,7 +189,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   )
   return () => (
     <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
-      <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
+      <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={[geojsonLayers.value]} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
       <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
         <li>
