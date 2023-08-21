@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Components/UI/ButtonIcon',
+  title: 'Deprecated/Components/UI/ButtonIcon',
   component: ButtonIcon,
 }
 export default meta

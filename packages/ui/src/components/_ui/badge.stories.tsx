@@ -12,7 +12,7 @@ export default meta
 export const Normal: StoryFn = () => <Badge ariaLabel="Badge" />
 export const Mini: StoryFn = () => <Badge ariaLabel="Badge" badgeSize="sm" />
 export const DsfrCouleursIllustratives: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white" class="dsfr">
+  <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
         <th>Couleur</th>
@@ -31,7 +31,7 @@ export const DsfrCouleursIllustratives: StoryFn = () => (
 )
 
 export const Systeme: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white" class="dsfr">
+  <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
         <th>Systeme</th>

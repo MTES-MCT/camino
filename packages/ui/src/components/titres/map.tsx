@@ -23,10 +23,6 @@ interface Props {
 }
 
 type ZoneId = keyof typeof zones
-// TODO 2023-07-20 je pense qu'on peut mettre pas mal de choses en cache ici, notamment les titres qu'on a chargés, avec et sans périmètres.
-// Ça permettrait de rendre le front beaucoup plus fluide quand on joue avec la carte
-// En plus, on a déjà des ids, ceux des titres, donc facile pour la mise en cache.
-// à voir si on met en cache dans le composant ou ailleurs, pour garder les données le temps de la navigation, si l'utilisateur va sur les tableaux et revient par exemple
 export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router', 'loading'], props => {
   const zoneId = ref<ZoneId>('fr')
   const savedParams = computed<TitreCarteParams>(() => {

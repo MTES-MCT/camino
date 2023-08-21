@@ -8,16 +8,13 @@ const meta: Meta = {
   argTypes: {
     domaineId: { name: 'string', required: false },
   },
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
-export const Default: StoryFn = () => (
-  <div class="dsfr">
-    <Domaine />
-  </div>
-)
+export const Default: StoryFn = () => <Domaine />
 export const AllDomaines: StoryFn = () => (
-  <div style="height:100%;width:100%;background:white" class="dsfr">
+  <div style="height:100%;width:100%;background:white">
     <table>
       <tr>
         <th>Domaine</th>
