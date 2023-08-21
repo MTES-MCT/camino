@@ -1,7 +1,7 @@
 import { leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
-import { DivIconOptions, GeoJSON, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
+import { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
@@ -109,6 +109,8 @@ export type CaminoMarker = {
   id: TitreId
   domaineId: DomaineId
 }
+
+export type LayerWithTitreId = Layer & { titreId: TitreId }
 export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
@@ -169,6 +171,8 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlr
         if (!isMarkerAlreadyInMap) {
           const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
           const marker = leafletMarkerBuild(latLng, icon)
+
+          // @ts-ignore infernal à typer
           marker.titreId = titreId
 
           marker.bindPopup(div, popupOptions)
@@ -216,6 +220,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlr
 
           const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
 
+          // @ts-ignore infernal à typer
           geojson.titreId = titreId
           geojsons[titreId] = geojson
         }

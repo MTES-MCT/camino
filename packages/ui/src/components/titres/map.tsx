@@ -1,7 +1,7 @@
 import { ref, Ref, computed, onMounted, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup } from './mapUtil'
+import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
@@ -21,6 +21,8 @@ interface Props {
   router: Router
   loading: boolean
 }
+
+const isLayerWithTitreId = (layer: Layer): layer is LayerWithTitreId => 'titreId' in layer
 
 type ZoneId = keyof typeof zones
 export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router', 'loading'], props => {
@@ -75,6 +77,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   const layerIdToTitreIdDisplayed = ref<Record<TitreId, TitreId>>({})
 
   const titresInit = (titres: TitreWithPoint[]) => {
+    const titreIdsToBeOnMap = titres.map(({ id }) => id)
     const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
     const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]
     const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, markersTitreIdsAlreadyInMap, geojsonsTitreIdsAlreadyInMap)
@@ -99,9 +102,14 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
         cluster.addLayers(markerLayersByDomaine[cluster.caminoDomaineId])
       }
 
-      const layersToRemove = cluster.getLayers().filter(layer => !titres.map(({ id }) => id).includes(layer.titreId))
+      const layersToRemove = cluster.getLayers().filter(layer => {
+        if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
+          delete layerIdToTitreIdDisplayed.value[layer.titreId]
+          return true
+        }
+        return false
+      })
       cluster.removeLayers(layersToRemove)
-      layersToRemove.forEach(l => delete layerIdToTitreIdDisplayed.value[l.titreId])
     })
 
     getEntriesHardcore(geojsonLayer).forEach(([titreId, layer]) => {
@@ -110,7 +118,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     })
 
     geojsonLayers.value.getLayers().forEach(layer => {
-      if (!titres.map(({ id }) => id).includes(layer.titreId)) {
+      if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
         geojsonLayers.value.removeLayer(layer)
         delete geojsons.value[layer.titreId]
       }
