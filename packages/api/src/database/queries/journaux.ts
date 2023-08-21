@@ -34,7 +34,7 @@ export const journauxGet = async (params: JournauxQueryParams, { fields }: { fie
 
   q.orderBy('date', 'desc')
 
-  return q.page(params.page - 1, params.intervalle)
+  return q.page(params.page - 1, 10)
 }
 
 export const createJournalCreate = async (id: string, userId: string, titreId: TitreId) => {
