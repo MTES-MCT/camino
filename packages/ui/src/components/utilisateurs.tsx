@@ -18,19 +18,20 @@ interface Props {
   updateUrlQuery: Pick<Router, 'push'>
 }
 export const PureUtilisateurs = defineComponent<Props>(props => {
-  const load = async (params: Params<string>): Promise<{values: TableRow[], total: number}> => {
-    const getUtilisateursParams =   {page: params.page,
-        colonne: params.colonne,
-        ordre: params.ordre,
-        noms: params.filtres?.nomsUtilisateurs,
-        emails: params.filtres?.emails,
-        roles: params.filtres?.roles,
-        administrationIds: params.filtres?.administrationIds,
-        entreprisesIds: params.filtres?.entreprisesIds}
+  const load = async (params: Params<string>): Promise<{ values: TableRow[]; total: number }> => {
+    const getUtilisateursParams = {
+      page: params.page,
+      colonne: params.colonne,
+      ordre: params.ordre,
+      noms: params.filtres?.nomsUtilisateurs,
+      emails: params.filtres?.emails,
+      roles: params.filtres?.roles,
+      administrationIds: params.filtres?.administrationIds,
+      entreprisesIds: params.filtres?.entreprisesIds,
+    }
     const utilisateurs = await props.apiClient.getUtilisateurs(getUtilisateursParams)
-    return {values: utilisateursLignesBuild(utilisateurs.elements), total: utilisateurs.total}
+    return { values: utilisateursLignesBuild(utilisateurs.elements), total: utilisateurs.total }
   }
-
 
   return () => (
     <>
@@ -43,7 +44,6 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
           getData={load}
           download={{ id: 'utilisateursDownload', downloadRoute: '/utilisateurs', formats: ['csv', 'xlsx', 'ods'], params: {} }}
           renderButton={null}
-          paramsUpdate={() => {}}
         />
       ) : (
         <CaminoAccessError user={props.user} />

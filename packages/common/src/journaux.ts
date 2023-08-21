@@ -3,7 +3,6 @@ import { titreIdValidator } from './titres'
 
 const journauxQueryParamsValidator = z.object({
   page: z.number(),
-  intervalle: z.number().gte(10).lte(10),
   recherche: z.string().nullable(),
   titreId: titreIdValidator.nullable(),
 })

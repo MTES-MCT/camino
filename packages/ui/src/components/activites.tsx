@@ -1,4 +1,4 @@
-import { computed, defineComponent, markRaw} from 'vue'
+import { computed, defineComponent, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -27,17 +27,17 @@ const activitesColonnes = [
   {
     id: 'annee',
     name: 'Année',
-    width: '10%'
+    width: '10%',
   },
   {
     id: 'periode',
     name: 'Période',
-    width: '15%'
+    width: '15%',
   },
   {
     id: 'statut',
     name: 'Statut',
-    width: '15%'
+    width: '15%',
   },
 ] as const
 
@@ -98,34 +98,32 @@ interface Props {
 }
 
 export const PureActivites = defineComponent<Props>(props => {
-
   const getData = async (params: Params<string>) => {
     const activites = await props.apiClient.getActivites({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
-    return {total: activites.total, values: activitesLignesBuild(activites.elements)}
+    return { total: activites.total, values: activitesLignesBuild(activites.elements) }
   }
 
   return () => (
     <>
       {canReadActivites(props.user) ? (
-          <Liste
-            nom="activités"
-            colonnes={activitesColonnes}
-            getData={getData}
-            download={{
-              id: 'downloadActivites',
-              downloadRoute: '/activites',
-              formats: ['csv', 'xlsx', 'ods'],
-              params: {},
-            }}
-            listeFiltre={{
-              filtres,
-              apiClient: props.apiClient,
-              updateUrlQuery: props.updateUrlQuery,
-            }}
-            renderButton={null}
-            paramsUpdate={params => {}}
-            route={props.currentRoute}
-          />
+        <Liste
+          nom="activités"
+          colonnes={activitesColonnes}
+          getData={getData}
+          download={{
+            id: 'downloadActivites',
+            downloadRoute: '/activites',
+            formats: ['csv', 'xlsx', 'ods'],
+            params: {},
+          }}
+          listeFiltre={{
+            filtres,
+            apiClient: props.apiClient,
+            updateUrlQuery: props.updateUrlQuery,
+          }}
+          renderButton={null}
+          route={props.currentRoute}
+        />
       ) : (
         <CaminoAccessError user={props.user} />
       )}

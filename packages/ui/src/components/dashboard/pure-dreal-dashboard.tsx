@@ -6,15 +6,15 @@ import {
   nomColumn,
   nomCell,
   referencesColumn,
-  statutColumn,
   titulairesColumn,
   statutCell,
   referencesCell,
   titulairesCell,
   typeColumn,
   typeCell,
-  activiteColumn,
   activitesCell,
+  activiteAutoColumn,
+  statutAutoColumn,
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -41,9 +41,9 @@ const prochainesEtapesColumn: Column<'prochainesEtapes'> = {
   class: ['min-width-8'],
 }
 
-const columns = [nomColumn, typeColumn, statutColumn, activiteColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
+const columns = [nomColumn, typeColumn, statutAutoColumn, activiteAutoColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
 
-const columnsEnAttente = [nomColumn, typeColumn, statutColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
+const columnsEnAttente = [nomColumn, typeColumn, statutAutoColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
 
 export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'isDGTM'], props => {
   const data = ref<

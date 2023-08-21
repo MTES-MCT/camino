@@ -1,7 +1,7 @@
-import { defineComponent, markRaw, } from 'vue'
+import { defineComponent, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src/static/administrations'
-import { ComponentColumnData, TextColumnData } from './_ui/table'
+import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { CaminoFiltres } from './_ui/filters/camino-filtres'
@@ -19,7 +19,7 @@ const colonnes = [
   {
     id: 'type',
     name: 'Type',
-    width: '20%'
+    width: '20%',
   },
 ] as const
 
@@ -33,8 +33,7 @@ export const Administrations = defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-
-    const getData = (options: Params<ColonneId>) => {
+    const getData = (options: Params<ColonneId>): Promise<{ total: number; values: TableRow<string>[] }> => {
       const lignes = [...administrations]
         .filter(a => {
           if (options.filtres?.nomsAdministration?.length) {
@@ -91,22 +90,9 @@ export const Administrations = defineComponent({
           }
         })
 
-
-
-      return Promise.resolve({total: lignes.length, values: lignes})
+      return Promise.resolve({ total: lignes.length, values: lignes })
     }
 
-    return () => (
-      <Liste
-        nom="administrations"
-        listeFiltre={{ filtres, apiClient, updateUrlQuery: router }}
-        colonnes={colonnes}
-        getData={getData}
-        route={route}
-        download={null}
-        renderButton={null}
-        paramsUpdate={_options => { }}
-      />
-    )
+    return () => <Liste nom="administrations" listeFiltre={{ filtres, apiClient, updateUrlQuery: router }} colonnes={colonnes} getData={getData} route={route} download={null} renderButton={null} />
   },
 })

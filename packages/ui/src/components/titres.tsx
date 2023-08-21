@@ -50,7 +50,7 @@ export const Titres = defineComponent({
     const router = useRouter()
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
-    const titresForTable = ref<AsyncData<{rows: TableRow[], total: number}>>({status: 'LOADING'})
+    const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
     const titresForCarte = ref<TitreWithPoint[]>([])
     const total = ref<number>(0)
 
@@ -69,15 +69,14 @@ export const Titres = defineComponent({
     }
     const loadTitresForTable = async () => {
       data.value = { status: 'LOADING' }
-      titresForTable.value = {status: 'LOADING'}
+      titresForTable.value = { status: 'LOADING' }
       try {
         const titres = await titreApiClient.getTitresForTable({ ...paramsForTable.value, ...paramsFiltres.value })
-        titresForTable.value = {status: 'LOADED', value: {total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value)}}
+        titresForTable.value = { status: 'LOADED', value: { total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value) } }
         data.value = { status: 'LOADED', value: true }
       } catch (e: any) {
         console.error('error', e)
-        titresForTable.value = { status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",}
+        titresForTable.value = { status: 'ERROR', message: e.message ?? "Une erreur s'est produite" }
         data.value = {
           status: 'ERROR',
           message: e.message ?? "Une erreur s'est produite",
@@ -179,7 +178,11 @@ export const Titres = defineComponent({
         <div class="dsfr">
           <PageContentHeader
             nom="Titres miniers et autorisations"
-            download={titresForCarte.value.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0) ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} } : null}
+            download={
+              titresForCarte.value.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
+                ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} }
+                : null
+            }
             renderButton={() => <DemandeTitreButton user={user.value} />}
           />
         </div>

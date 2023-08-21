@@ -1,12 +1,10 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Journaux as JournauxData, JournauxQueryParams } from 'camino-common/src/journaux'
+import { Journaux as JournauxData } from 'camino-common/src/journaux'
 import { TitreId } from 'camino-common/src/titres'
-import { markRaw, onMounted, ref } from 'vue'
+import { markRaw } from 'vue'
 import { Differences } from './differences'
-import { AsyncData } from '@/api/client-rest'
 import { JournauxApiClient } from './journaux-api-client'
-import { LoadingElement } from '../_ui/functional-loader'
-import { TableRow } from '../_ui/table'
+import { Column, TableRow } from '../_ui/table'
 import { useRouter } from 'vue-router'
 import { Liste, Params } from '../_common/liste'
 
@@ -25,7 +23,7 @@ const colonnesData = [
 
 type ColonneId = (typeof colonnesData)[number]['id']
 
-const lignes = (journaux: JournauxData): TableRow[] => {
+const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   return journaux.elements.map(journal => {
     const date = new Date(Number.parseInt(journal.date))
     const columns = {
@@ -59,64 +57,19 @@ const lignes = (journaux: JournauxData): TableRow[] => {
 }
 
 export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], props => {
-  const data = ref<AsyncData<JournauxData>>({ status: 'LOADING' })
-  const params = ref<JournauxQueryParams>({
-    page: 1,
-    recherche: null,
-    titreId: props.titreId,
-    intervalle: 10,
-  })
-
   const router = useRouter()
-  const colonnes = () => {
+  const colonnes = (): Readonly<Column<ColonneId>[]> => {
     if (!props.titreId) {
       return colonnesData
     }
     return colonnesData.filter(({ id }) => id !== 'titre')
   }
 
-  const load = async () => {
-    data.value = { status: 'LOADING' }
-    try {
-      const values = await props.apiClient.getJournaux(params.value)
-      data.value = { status: 'LOADED', value: values }
-    } catch (e: any) {
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
-      }
-    }
+  const getData = async (event: Params<string>) => {
+    const values = await props.apiClient.getJournaux({ page: event.page ?? 1, recherche: null, titreId: props.titreId })
+
+    return { total: values.total, values: lignes(values) }
   }
 
-  onMounted(async () => {
-    await load()
-  })
-
-  const paramsTableUpdate = async (event: Params<ColonneId>) => {
-    if (event.page) {
-      params.value.page = event.page
-      await load()
-    }
-  }
-
-  return () => (
-    <>
-      <LoadingElement
-        data={data.value}
-        renderItem={item => (
-          <Liste
-            listeFiltre={null}
-            renderButton={null}
-            download={null}
-            colonnes={colonnes()}
-            route={router.currentRoute.value}
-            lignes={lignes(item)}
-            nom="Journaux"
-            paramsUpdate={paramsTableUpdate}
-            total={item.total}
-          />
-        )}
-      />
-    </>
-  )
+  return () => <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={router.currentRoute.value} getData={getData} nom="Journaux" />
 })

@@ -25,9 +25,8 @@ type ListeFiltreProps = {
 type Props<ColumnId extends string> = {
   listeFiltre: ListeFiltreProps | null
   colonnes: readonly Column<ColumnId>[]
-  getData: (params: Params<ColumnId>) => Promise<{values: TableRow[], total: number}>
+  getData: (params: Params<ColumnId>) => Promise<{ values: TableRow<ColumnId>[]; total: number }>
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
-  paramsUpdate: (params: Params<ColumnId>) => void
 } & PageContentHeaderProps
 
 // FIXME tests
@@ -47,18 +46,16 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
       params.value.colonne = newParams.colonne
       params.value.ordre = newParams.ordre
       getData(params.value)
-      props.paramsUpdate(params.value)
     }
   }
 
-  const tableData = ref<AsyncData<{rows: TableRow[], total: number}>>({status: 'LOADING'})
+  const tableData = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
 
   const getData = async (params: Params<ColumnId>) => {
-    tableData.value = {status: 'LOADING'}
+    tableData.value = { status: 'LOADING' }
     try {
-
       const loaded = await props.getData(params)
-      tableData.value = {status: 'LOADED', value: {rows: loaded.values, total: loaded.total}}
+      tableData.value = { status: 'LOADED', value: { rows: loaded.values, total: loaded.total } }
     } catch (e: any) {
       console.error('error', e)
       tableData.value = {
@@ -76,7 +73,6 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
       params.value.filtres = filtres
       params.value.page = 1
       getData(params.value)
-      props.paramsUpdate(params.value)
     }
   }
 
@@ -84,7 +80,6 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
     if (tableData.value.status !== 'LOADED') {
       return '...'
     } else {
-
       const res = tableData.value.value.total > tableData.value.value.rows.length ? `${tableData.value.value.rows.length} / ${tableData.value.value.total}` : tableData.value.value.rows.length
       return `(${res} résultat${tableData.value.value.rows.length > 1 ? 's' : ''})`
     }
@@ -112,4 +107,4 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Liste.props = ['colonnes', 'download', 'listeFiltre', 'nom', 'paramsUpdate', 'renderButton', 'route', 'updateUrlQuery', 'getData']
+Liste.props = ['colonnes', 'download', 'listeFiltre', 'nom', 'renderButton', 'route', 'updateUrlQuery', 'getData']

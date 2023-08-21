@@ -1,4 +1,4 @@
-import { defineComponent, markRaw,  } from 'vue'
+import { defineComponent, markRaw } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
@@ -105,16 +105,15 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
 
 export const PurePage = defineComponent<PureProps>(props => {
   const getData = async (params: Params<string>) => {
-      const demarches = await props.apiClient.getDemarches({
-        travaux: props.travaux,
-        page: params.page,
-        colonne: params.colonne,
-        ordre: params.ordre,
-        ...params.filtres,
-      })
-      return {total: demarches.total, values: demarchesLignesBuild(demarches.elements)}
+    const demarches = await props.apiClient.getDemarches({
+      travaux: props.travaux,
+      page: params.page,
+      colonne: params.colonne,
+      ordre: params.ordre,
+      ...params.filtres,
+    })
+    return { total: demarches.total, values: demarchesLignesBuild(demarches.elements) }
   }
-
 
   return () => (
     <Liste
@@ -133,7 +132,6 @@ export const PurePage = defineComponent<PureProps>(props => {
         updateUrlQuery: props.updateUrlQuery,
       }}
       route={props.currentRoute}
-      paramsUpdate={() => {}}
       getData={getData}
     />
   )

@@ -57,8 +57,6 @@ export const TablePagination = defineComponent(<ColumnId extends string>(props: 
     props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
   })
 
-
-
   const totalNumberOfPages = (total: number) => {
     return Math.ceil(total / routerQueryToNumber(props.route.query.intervalle, 10))
   }

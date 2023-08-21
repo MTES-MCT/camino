@@ -1,7 +1,7 @@
 import { onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 
-import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
+import { nomColumn, nomCell, referencesColumn, statutAutoColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
@@ -12,7 +12,7 @@ import { DashboardApiClient } from './dashboard-api-client'
 export interface Props {
   apiClient: Pick<DashboardApiClient, 'getPtmgTitres'>
 }
-const columns = [nomColumn, statutColumn, referencesColumn, titulairesColumn] as const
+const columns = [nomColumn, statutAutoColumn, referencesColumn, titulairesColumn] as const
 type Columns = (typeof columns)[number]['id']
 
 const titresLignesBuild = (titres: CommonTitrePTMG[]): TableRow<Columns>[] => {

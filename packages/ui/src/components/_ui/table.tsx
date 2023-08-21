@@ -56,7 +56,7 @@ export const isComponentColumnData = (columnRow: ComponentColumnData | TextColum
 interface Props<ColumnId> {
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   columns: readonly Column<ColumnId>[]
-  rows: AsyncData<{rows: TableRow[], total: number}>
+  rows: AsyncData<{ rows: TableRow[]; total: number }>
   caption: string
   updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
@@ -104,7 +104,7 @@ export const Table = defineComponent(
             <thead>
               <tr>
                 {props.columns.map(col => (
-                  <th style={{width: col.width ? col.width : 'auto'}} key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                  <th style={{ width: col.width ? col.width : 'auto' }} key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                     {col.noSort ? (
                       <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                         {col.name === '' ? '-' : col.name}
@@ -131,27 +131,33 @@ export const Table = defineComponent(
               </tr>
             </thead>
             <tbody>
-              {props.rows.status === 'LOADED' ? <>{props.rows.value.rows.map(row => (
-                <tr key={row.id}>
-                  {props.columns.map((col, index) => (
-                    <td key={col.id} class={[...(col.class ?? [])]}>
-                      {index === 0 ? (
-                        <router-link class="fr-link" to={row.link}>
-                          <DisplayColumn data={row.columns[col.id]} />
-                        </router-link>
-                      ) : (
-                        <DisplayColumn data={row.columns[col.id]} />
-                      )}
-                    </td>
+              {props.rows.status === 'LOADED' ? (
+                <>
+                  {props.rows.value.rows.map(row => (
+                    <tr key={row.id}>
+                      {props.columns.map((col, index) => (
+                        <td key={col.id} class={[...(col.class ?? [])]}>
+                          {index === 0 ? (
+                            <router-link class="fr-link" to={row.link}>
+                              <DisplayColumn data={row.columns[col.id]} />
+                            </router-link>
+                          ) : (
+                            <DisplayColumn data={row.columns[col.id]} />
+                          )}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}</> : [...Array(10).keys()].map(index => (<tr key={index}>
-                {props.columns.map((col, index) => (
-                  <td key={col.id}>...</td>
-                ))}
-              </tr>))
-              }
-
+                </>
+              ) : (
+                [...Array(10).keys()].map(index => (
+                  <tr key={index}>
+                    {props.columns.map((col, index) => (
+                      <td key={col.id}>...</td>
+                    ))}
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

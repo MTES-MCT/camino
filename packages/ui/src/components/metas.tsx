@@ -20,8 +20,8 @@ interface Meta {
   linkName?: string
   id: string
 }
-const metasLignesBuild = (): TableRow[] =>
-  Object.entries(metasIndex).map(([id, element]) => {
+const metasLignesBuild = (): Promise<{ values: TableRow[]; total: number }> => {
+  const data = Object.entries(metasIndex).map(([id, element]) => {
     const columns = {
       nom: { value: element.nom },
     }
@@ -34,6 +34,8 @@ const metasLignesBuild = (): TableRow[] =>
       columns,
     }
   })
+  return Promise.resolve({ values: data, total: data.length })
+}
 
 interface Props {
   user: User
@@ -41,9 +43,7 @@ interface Props {
 }
 export const PureMetas: FunctionalComponent<Props> = props => {
   if (canReadMetas(props.user)) {
-    return (
-      <Liste colonnes={metasColonnes} download={null} listeFiltre={null} renderButton={null} nom="métas" route={props.currentRoute} paramsUpdate={() => {}} total={0} lignes={metasLignesBuild()} />
-    )
+    return <Liste colonnes={metasColonnes} download={null} listeFiltre={null} renderButton={null} nom="métas" route={props.currentRoute} getData={metasLignesBuild} />
   } else {
     return <CaminoAccessError user={props.user} />
   }

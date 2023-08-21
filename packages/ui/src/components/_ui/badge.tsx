@@ -26,7 +26,12 @@ export const Badge: FunctionalComponent<Props> = props => {
   }
 
   return (
-    <p style={{ zIndex: 'unset', marginBottom: 0 }} class={['fr-badge', `fr-badge--${props.badgeSize ?? 'md'}`, ...classes]} title={props.ariaLabel} aria-label={props.ariaLabel}>
+    <p
+      style={{ zIndex: 'unset', marginBottom: 0, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
+      class={['fr-badge', `fr-badge--${props.badgeSize ?? 'md'}`, ...classes]}
+      title={props.ariaLabel}
+      aria-label={props.ariaLabel}
+    >
       {props.label ?? props.ariaLabel}
     </p>
   )

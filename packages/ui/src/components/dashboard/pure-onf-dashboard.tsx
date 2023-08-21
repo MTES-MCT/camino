@@ -2,7 +2,7 @@ import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { DateComponent } from '../_ui/date'
 
-import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
+import { nomColumn, nomCell, referencesColumn, statutAutoColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 
 import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
@@ -16,7 +16,7 @@ export interface Props {
 
 const columns = [
   nomColumn,
-  statutColumn,
+  statutAutoColumn,
   referencesColumn,
   titulairesColumn,
   {

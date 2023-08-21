@@ -1,12 +1,10 @@
 import { markRaw } from 'vue'
-import { TagList } from '../_ui/tag-list'
 import { List } from '../_ui/list'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
 import { TitreNom } from '../_common/titre-nom'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { CoordonneesIcone } from '../_common/coordonnees-icone'
 import { ActivitesPills } from '../activites/activites-pills'
-import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { Departement, Departements, toDepartementId } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
@@ -17,7 +15,7 @@ import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/refer
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getDepartementsBySecteurs } from 'camino-common/src/static/facades'
 import { ComponentColumnData, TableRow, TextColumnData, Column } from '../_ui/table'
-import { TitreEntreprise } from 'camino-common/src/entreprise'
+import { Column as AutoColumn } from '../_ui/table-auto'
 import { TitreStatut } from '../_common/titre-statut'
 import { TitreForTable } from '../titre/titre-api-client'
 
@@ -49,6 +47,7 @@ export const nomColumn: Column<'nom'> = {
 export const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
   name: '',
+  width: '50px',
 }
 export const typeColumn: Column<'type'> = {
   id: 'type',
@@ -58,6 +57,10 @@ export const typeColumn: Column<'type'> = {
 export const activiteColumn: Column<'activites'> = {
   id: 'activites',
   name: 'Activités',
+}
+
+export const activiteAutoColumn: AutoColumn<'activites'> = {
+  ...activiteColumn,
   sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.activites.value
     const row2Statut = statut2.columns.activites.value
@@ -71,6 +74,9 @@ export const activiteColumn: Column<'activites'> = {
 export const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
+}
+export const statutAutoColumn: AutoColumn<'statut'> = {
+  ...statutColumn,
   sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.statut.value
     const row2Statut = statut2.columns.statut.value
@@ -99,10 +105,6 @@ export const titresColonnes = [
     id: 'substances',
     name: 'Substances',
     noSort: true,
-  },
-  {
-    id: 'coordonnees',
-    name: 'Carte',
   },
   titulairesColumn,
   {
