@@ -36,8 +36,6 @@ export const Filtres = defineComponent((props: Props) => {
       // met le focus sur le bouton de validation (dans la méthode close())
       close()
 
-      // window.scrollTo({ top: 0, behavior: 'smooth' })
-
       filtresValues.value = params
       props.paramsUpdate(params)
     }
