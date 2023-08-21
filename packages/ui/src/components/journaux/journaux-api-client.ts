@@ -11,7 +11,7 @@ export const journauxApiClient: JournauxApiClient = {
   getJournaux: async (params: JournauxQueryParams): Promise<Journaux> => {
     return await apiGraphQLFetch(gql`
       query Journaux($page: Int!, $recherche: String, $titreId: String) {
-        journaux(intervalle: 10, page: $page, recherche: $recherche, titreId: $titreId) {
+        journaux(page: $page, recherche: $recherche, titreId: $titreId) {
           elements {
             id
             date
