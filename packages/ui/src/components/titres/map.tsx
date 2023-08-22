@@ -16,7 +16,7 @@ export type TitreCarteParams = {
   perimetre: [number, number, number, number]
 } | null
 interface Props {
-  titres: TitreWithPoint[]
+  titres: { hash: string; titres: TitreWithPoint[] }
   updateCarte: (params: TitreCarteParams) => void
   router: Router
   loading: boolean
@@ -76,7 +76,8 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
 
   const layerIdToTitreIdDisplayed = ref<Record<TitreId, TitreId>>({})
 
-  const titresInit = (titres: TitreWithPoint[]) => {
+  const previoushash = ref<string | null>(null)
+  const titresInit = ({ hash, titres }: { hash: string; titres: TitreWithPoint[] }) => {
     const titreIdsToBeOnMap = titres.map(({ id }) => id)
     const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
     const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]
@@ -102,14 +103,17 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
         cluster.addLayers(markerLayersByDomaine[cluster.caminoDomaineId])
       }
 
-      const layersToRemove = cluster.getLayers().filter(layer => {
-        if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
-          delete layerIdToTitreIdDisplayed.value[layer.titreId]
-          return true
-        }
-        return false
-      })
-      cluster.removeLayers(layersToRemove)
+      if (hash !== previoushash.value) {
+        console.log('recompute')
+        const layersToRemove = cluster.getLayers().filter(layer => {
+          if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
+            delete layerIdToTitreIdDisplayed.value[layer.titreId]
+            return true
+          }
+          return false
+        })
+        cluster.removeLayers(layersToRemove)
+      }
     })
 
     getEntriesHardcore(geojsonLayer).forEach(([titreId, layer]) => {
@@ -117,12 +121,15 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
       geojsonLayers.value.addLayer(layer)
     })
 
-    geojsonLayers.value.getLayers().forEach(layer => {
-      if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
-        geojsonLayers.value.removeLayer(layer)
-        delete geojsons.value[layer.titreId]
-      }
-    })
+    if (hash !== previoushash.value) {
+      geojsonLayers.value.getLayers().forEach(layer => {
+        if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
+          geojsonLayers.value.removeLayer(layer)
+          delete geojsons.value[layer.titreId]
+        }
+      })
+    }
+    previoushash.value = hash
   }
 
   const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
@@ -191,6 +198,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   watch(
     () => props.titres,
     titres => {
+      console.log('titres', titres)
       titresInit(titres)
     },
     { immediate: true }

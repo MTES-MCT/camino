@@ -58,6 +58,9 @@ export const Titres = defineComponent({
     const paramsForCarte = ref<TitreCarteParams | null>(null)
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
 
+    const filtresHash = computed(() => {
+      return JSON.stringify(paramsFiltres.value)
+    })
     const reloadTitres = async (vueId: TabId) => {
       if (vueId === tableTabId) {
         await loadTitresForTable()
@@ -142,7 +145,7 @@ export const Titres = defineComponent({
         title: 'Carte',
         renderContent: () => (
           <CaminoTitresMap
-            titres={titresForCarte.value}
+            titres={{ hash: filtresHash.value, titres: titresForCarte.value }}
             loading={data.value.status === 'LOADING'}
             router={router}
             updateCarte={async params => {
