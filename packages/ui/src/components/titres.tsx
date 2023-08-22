@@ -51,16 +51,13 @@ export const Titres = defineComponent({
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
-    const titresForCarte = ref<TitreWithPoint[]>([])
+    const titresForCarte = ref<{ hash: string; titres: TitreWithPoint[] }>({ hash: '', titres: [] })
     const total = ref<number>(0)
 
     const paramsForTable = ref<TitresTablePaginationParams>(getInitialParams(router.currentRoute.value, titresColonnes))
     const paramsForCarte = ref<TitreCarteParams | null>(null)
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
 
-    const filtresHash = computed(() => {
-      return JSON.stringify(paramsFiltres.value)
-    })
     const reloadTitres = async (vueId: TabId) => {
       if (vueId === tableTabId) {
         await loadTitresForTable()
@@ -92,11 +89,11 @@ export const Titres = defineComponent({
       try {
         if ((paramsForCarte.value?.zoom ?? 0) > displayPerimeterZoomMaxLevel) {
           const titres = await titreApiClient.getTitresWithPerimetreForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
-          titresForCarte.value = titres.elements
+          titresForCarte.value = { hash: JSON.stringify(paramsFiltres.value), titres: titres.elements }
           total.value = titres.total
         } else {
           const titres = await titreApiClient.getTitresForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
-          titresForCarte.value = titres.elements
+          titresForCarte.value = { hash: JSON.stringify(paramsFiltres.value), titres: titres.elements }
           total.value = titres.total
         }
         data.value = { status: 'LOADED', value: true }
@@ -123,7 +120,7 @@ export const Titres = defineComponent({
         }
         totalLoaded = titresForTable.value.value.rows.length
       } else {
-        totalLoaded = titresForCarte.value.length
+        totalLoaded = titresForCarte.value.titres.length
       }
       const res = total.value > totalLoaded ? `${totalLoaded} / ${total.value}` : totalLoaded
 
@@ -145,7 +142,7 @@ export const Titres = defineComponent({
         title: 'Carte',
         renderContent: () => (
           <CaminoTitresMap
-            titres={{ hash: filtresHash.value, titres: titresForCarte.value }}
+            titres={titresForCarte.value}
             loading={data.value.status === 'LOADING'}
             router={router}
             updateCarte={async params => {
@@ -182,7 +179,7 @@ export const Titres = defineComponent({
           <PageContentHeader
             nom="Titres miniers et autorisations"
             download={
-              titresForCarte.value.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
+              titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
                 ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} }
                 : null
             }
@@ -210,7 +207,7 @@ export const Titres = defineComponent({
               tabsTitle={'Affichage des titres en vue carte ou tableau'}
               tabClicked={async newTabId => {
                 if (tabId.value !== newTabId) {
-                  titresForCarte.value = []
+                  titresForCarte.value = { hash: '', titres: [] }
                   const query: LocationQuery = { ...router.currentRoute.value.query, vueId: newTabId }
                   if (newTabId === tableTabId) {
                     delete query.zoom

@@ -104,7 +104,6 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
       }
 
       if (hash !== previoushash.value) {
-        console.log('recompute')
         const layersToRemove = cluster.getLayers().filter(layer => {
           if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
             delete layerIdToTitreIdDisplayed.value[layer.titreId]
@@ -198,7 +197,6 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   watch(
     () => props.titres,
     titres => {
-      console.log('titres', titres)
       titresInit(titres)
     },
     { immediate: true }
