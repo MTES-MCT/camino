@@ -82,7 +82,7 @@ export const caminoFiltres = {
   substancesIds: {
     id: 'substancesIds',
     type: 'autocomplete',
-    elements: SubstancesLegales.sort((a, b) => a.nom.localeCompare(b.nom)),
+    elements: [...SubstancesLegales].sort((a, b) => a.nom.localeCompare(b.nom)),
     name: 'Substances',
     lazy: false,
     validator: z.array(substanceLegaleIdValidator),

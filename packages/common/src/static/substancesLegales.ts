@@ -911,7 +911,7 @@ export const SubstancesLegale: {
   co2: { id: 'co2', nom: 'dioxyde de carbone (CO₂)', domaineIds: ['s'] },
 }
 
-export const SubstancesLegales = Object.values(SubstancesLegale)
+export const SubstancesLegales: Readonly<SubstanceLegale[]> = Object.values(SubstancesLegale)
 
 const SUBSTANCES_LEGALES_IDS_ARRAY = Object.values(SUBSTANCES_LEGALES_IDS)
 
