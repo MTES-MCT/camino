@@ -84,7 +84,7 @@ const commonValidator = <T extends Readonly<NonEmptyArray<string>>>(colonnes: T,
 const generateValidator = <T extends readonly CaminoFiltre[], U extends Readonly<NonEmptyArray<string>>>(filtresNames: T, colonnes: U, formats: Readonly<['json', ...DownloadFormat[]]>) => {
   return generateFilterValidator(filtresNames).merge(commonValidator(colonnes, formats))
 }
-type GenericQueryInput<T extends ZodType> = { [key in keyof z.infer<T>]: null | string }
+type GenericQueryInput<T extends ZodType> = { [key in keyof z.infer<T>]?: null | string }
 
 interface ITitreInput {
   query: { format?: DownloadFormat }
