@@ -5,6 +5,7 @@ import type { Pool } from 'pg'
 
 import express from 'express'
 import { join } from 'path'
+import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
@@ -226,7 +227,7 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
       res.send(contenu)
     }
   } catch (e) {
-    console.error(e)
+    console.error(inspect(e, { depth: null }))
 
     next(e)
   }

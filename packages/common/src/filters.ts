@@ -247,4 +247,19 @@ export const demarchesFiltresNames = [
   'etapesExclues',
 ] as const satisfies readonly CaminoFiltre[]
 
-export const demarchesDownloadFormats = ['csv', 'xlsx', 'ods', 'json'] as const satisfies readonly DownloadFormat[]
+export const titresFiltresNames = [
+  'titresIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'communes',
+  'departements',
+  'regions',
+  'facadesMaritimes',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+] as const satisfies readonly CaminoFiltre[]
+
+export const demarchesDownloadFormats = ['json', 'csv', 'xlsx', 'ods'] as const satisfies readonly DownloadFormat[]
+export const titresDownloadFormats = ['json', 'csv', 'xlsx', 'ods', 'geojson'] as const satisfies readonly DownloadFormat[]

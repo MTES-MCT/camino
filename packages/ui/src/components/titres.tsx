@@ -20,6 +20,7 @@ import { apiClient } from '../api/api-client'
 import { TablePagination, getInitialParams } from './_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
+import { titresDownloadFormats } from 'camino-common/src/filters'
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -180,7 +181,7 @@ export const Titres = defineComponent({
             nom="Titres miniers et autorisations"
             download={
               titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
-                ? { formats: ['geojson', 'csv', 'xlsx', 'ods'], downloadRoute: '/titres', params: {} }
+                ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
                 : null
             }
             renderButton={() => <DemandeTitreButton user={user.value} />}
