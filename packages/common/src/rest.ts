@@ -143,6 +143,7 @@ export const CaminoRestRoutes = {
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 
+const DOWNLOAD_FORMATS_IDS = ['xlsx', 'csv', 'ods', 'geojson', 'json', 'pdf', 'zip'] as const
 export const DOWNLOAD_FORMATS = {
   Excel: 'xlsx',
   Csv: 'csv',
@@ -151,9 +152,11 @@ export const DOWNLOAD_FORMATS = {
   JSON: 'json',
   PDF: 'pdf',
   Zip: 'zip',
-} as const
+} as const satisfies Record<string, (typeof DOWNLOAD_FORMATS_IDS)[number]>
 
-export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
+export const downloadFormatValidator = z.enum(DOWNLOAD_FORMATS_IDS)
+
+export type DownloadFormat = z.infer<typeof downloadFormatValidator>
 
 type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodType } : {} // eslint-disable-line @typescript-eslint/ban-types
 

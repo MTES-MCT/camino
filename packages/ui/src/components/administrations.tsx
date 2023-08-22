@@ -4,7 +4,7 @@ import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
-import { CaminoFiltres } from './_ui/filters/camino-filtres'
+import { CaminoFiltre } from 'camino-common/src/filters'
 import { apiClient } from '../api/api-client'
 
 const colonnes = [
@@ -23,7 +23,7 @@ const colonnes = [
   },
 ] as const
 
-const filtres: readonly CaminoFiltres[] = ['nomsAdministration', 'administrationTypesIds'] as const
+const filtres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']
 
 const administrations = Object.values(Adms)

@@ -11,28 +11,28 @@ import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { RouteLocationNormalizedLoaded, Router, onBeforeRouteLeave } from 'vue-router'
 import {
   AutocompleteCaminoFiltres,
-  CaminoFiltres,
   CheckboxesCaminoFiltres,
   EtapeCaminoFiltres,
   InputCaminoFiltres,
   allCaminoFiltres,
   caminoAutocompleteFiltres,
-  caminoFiltres,
   caminoInputFiltres,
   isAutocompleteCaminoFiltre,
   isCheckboxeCaminoFiltre,
   isEtapeCaminoFiltre,
   isInputCaminoFiltre,
 } from './camino-filtres'
+
+import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from '@/router/camino-router-link'
 import { ApiClient } from '../../../api/api-client'
 import { AsyncData } from '../../../api/client-rest'
 import { LoadingElement } from '../functional-loader'
 
-type FormatedLabel = { id: CaminoFiltres; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
+type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
 type Props = {
-  filters: readonly CaminoFiltres[]
+  filters: readonly CaminoFiltre[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string
@@ -66,7 +66,7 @@ const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[
     })
 }
 
-export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltres[]) => {
+export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>, filters: readonly CaminoFiltre[]) => {
   const allValues = {
     administrationTypesIds: caminoFiltres.administrationTypesIds.validator.parse(routerQueryToStringArray(route.query.administrationTypesIds)),
     nomsAdministration: routerQueryToString(route.query.nomsAdministration, ''),
@@ -133,7 +133,7 @@ export const Filters = defineComponent((props: Props) => {
     nonValidatedValues.value = getInitialFiltres(props.route, props.filters)
   })
 
-  const nonValidatedValues = ref<{ [key in CaminoFiltres]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
+  const nonValidatedValues = ref<{ [key in CaminoFiltre]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
 
   const keyup = (e: KeyboardEvent) => {
     if ((e.which || e.keyCode) === 13 && opened.value) {

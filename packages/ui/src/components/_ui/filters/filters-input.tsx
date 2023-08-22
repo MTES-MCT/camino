@@ -1,5 +1,6 @@
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-import { InputCaminoFiltres, caminoFiltres } from './camino-filtres'
+import { InputCaminoFiltres } from './camino-filtres'
+import { caminoFiltres } from 'camino-common/src/filters'
 
 type Props = {
   filter: InputCaminoFiltres

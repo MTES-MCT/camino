@@ -1,12 +1,12 @@
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { Filters, getInitialFiltres } from '../_ui/filters/filters'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
-import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 
 export type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 export interface Props {
-  filters: readonly CaminoFiltres[]
+  filters: readonly CaminoFiltre[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
   subtitle?: string

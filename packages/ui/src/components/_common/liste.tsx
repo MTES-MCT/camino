@@ -6,7 +6,7 @@ import { PageContentHeader, type Props as PageContentHeaderProps } from './page-
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue'
 import { z } from 'zod'
 import { getInitialFiltres } from '../_ui/filters/filters'
-import { CaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
+import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 import { AsyncData } from '../../api/client-rest'
 
@@ -14,11 +14,11 @@ export type Params<ColumnId extends string> = {
   colonne: ColumnId
   ordre: 'asc' | 'desc'
   page: number
-  filtres?: { [key in CaminoFiltres]: z.infer<(typeof caminoFiltres)[key]['validator']> }
+  filtres?: { [key in CaminoFiltre]: z.infer<(typeof caminoFiltres)[key]['validator']> }
 }
 
 type ListeFiltreProps = {
-  filtres: readonly CaminoFiltres[]
+  filtres: readonly CaminoFiltre[]
   updateUrlQuery: Pick<Router, 'push'>
   apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
 }

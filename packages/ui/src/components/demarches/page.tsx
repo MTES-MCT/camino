@@ -3,7 +3,7 @@ import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { GetDemarchesDemarche } from '../titre/demarche-api-client'
-import { CaminoFiltres } from '../_ui/filters/camino-filtres'
+import { CaminoFiltre, demarchesDownloadFormats } from 'camino-common/src/filters'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
@@ -39,7 +39,7 @@ const filtres = [
   'demarchesStatutsIds',
   'etapesInclues',
   'etapesExclues',
-] as const satisfies readonly CaminoFiltres[]
+] as const satisfies readonly CaminoFiltre[]
 type Props = Pick<PureProps, 'travaux'>
 
 interface PureProps {
@@ -122,7 +122,7 @@ export const PurePage = defineComponent<PureProps>(props => {
       download={{
         id: `download${props.travaux ? 'Travaux' : 'Démarches'}`,
         downloadRoute: '/demarches',
-        formats: ['csv', 'xlsx', 'ods'],
+        formats: demarchesDownloadFormats,
         params: {},
       }}
       renderButton={null}

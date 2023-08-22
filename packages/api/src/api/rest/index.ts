@@ -26,8 +26,10 @@ import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { isDepartementId } from 'camino-common/src/static/departement.js'
 import { isRegionId } from 'camino-common/src/static/region.js'
 import { isFacade } from 'camino-common/src/static/facades.js'
+import { CaminoFiltre, caminoFiltres, demarchesDownloadFormats, demarchesFiltresNames } from 'camino-common/src/filters.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
+import { z, ZodOptional } from 'zod'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -205,69 +207,57 @@ export const titres =
       : null
   }
 
-interface ITitresDemarchesQueryInput {
-  format?: DownloadFormat
-  ordre?: 'asc' | 'desc' | null
+type ITitresDemarchesQueryInput = {
+  format?: string
+  ordre?: string | null
   colonne?: ITitreDemarcheColonneId | null
-  typesIds?: string | null
-  statutsIds?: string | null
-  etapesInclues?: string | null
-  etapesExclues?: string | null
-  titresTypesIds?: string | null
-  titresDomainesIds?: string | null
-  titresStatutsIds?: string | null
-  titresIds?: string | null
-  titresEntreprisesIds?: string | null
-  titresSubstancesIds?: string | null
-  titresReferences?: string | null
-  titresTerritoires?: string | null
   travaux?: string | null
-}
+} & { [key in (typeof demarchesFiltresNames)[number]]?: string | null }
 
+type GenericFiltreValidator<T extends Readonly<CaminoFiltre[]>> = { [key in T[number]]: ZodOptional<(typeof caminoFiltres)[key]['validator']> }
+
+const generateFilterValidator = <T extends readonly CaminoFiltre[]>(filtresNames: T) =>
+  z.object<GenericFiltreValidator<T>>(
+    filtresNames.reduce(
+      (acc, filtre) => ({
+        ...acc,
+        [filtre]: caminoFiltres[filtre].validator.optional(),
+      }),
+      {} as GenericFiltreValidator<T>
+    )
+  )
+
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const demarchesColonnes = ['titreNom', 'titreDomaine', 'titreType', 'titreStatut', 'type', 'statut'] as const
+const commonValidator = z.object({
+  format: z.enum(demarchesDownloadFormats).default('json'),
+  travaux: z.coerce.boolean().default(false),
+  ordre: z.enum(['asc', 'desc']).default('asc'),
+  colonne: z.enum(demarchesColonnes).optional(),
+})
+const demarchesValidator = generateFilterValidator(demarchesFiltresNames).merge(commonValidator)
 export const demarches =
   (pool: Pool) =>
-  async (
-    {
-      query: {
-        format = 'json',
-        ordre,
-        colonne,
-        typesIds,
-        statutsIds,
-        etapesInclues,
-        etapesExclues,
-        titresTypesIds,
-        titresDomainesIds,
-        titresStatutsIds,
-        titresIds,
-        titresEntreprisesIds,
-        titresSubstancesIds,
-        titresReferences,
-        titresTerritoires,
-        travaux,
-      },
-    }: { query: ITitresDemarchesQueryInput },
-    user: User
-  ) => {
-    formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+  async ({ query }: { query: ITitresDemarchesQueryInput }, user: User) => {
+    const params = demarchesValidator.parse(query)
 
     const titresDemarches = await titresDemarchesGet(
       {
-        ordre,
-        colonne,
-        typesIds: typesIds?.split(','),
-        statutsIds: statutsIds?.split(','),
-        etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
-        etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
-        titresTypesIds: titresTypesIds?.split(','),
-        titresDomainesIds: titresDomainesIds?.split(','),
-        titresStatutsIds: titresStatutsIds?.split(','),
-        titresIds: titresIds?.split(','),
-        titresEntreprisesIds: titresEntreprisesIds?.split(','),
-        titresSubstancesIds: titresSubstancesIds?.split(','),
-        titresReferences,
-        titresTerritoires,
-        travaux: travaux ? travaux === 'true' : false,
+        ordre: params.ordre,
+        colonne: params.colonne,
+        typesIds: params.demarchesTypesIds,
+        statutsIds: params.demarchesStatutsIds,
+        etapesInclues: params.etapesInclues ? JSON.parse(params.etapesInclues) : null,
+        etapesExclues: params.etapesExclues ? JSON.parse(params.etapesExclues) : null,
+        titresTypesIds: params.typesIds,
+        titresDomainesIds: params.domainesIds,
+        titresStatutsIds: params.statutsIds,
+        titresIds: params.titresIds,
+        titresEntreprisesIds: params.entreprisesIds,
+        titresSubstancesIds: params.substancesIds,
+        titresReferences: params.references,
+        titresTerritoires: params.titresTerritoires,
+        travaux: params.travaux,
       },
       {
         fields: {
@@ -292,18 +282,18 @@ export const demarches =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(format)) {
+    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
       const elements = await titresDemarchesFormatTable(pool, demarchesFormatted)
 
-      contenu = tableConvert('demarches', elements, format)
+      contenu = tableConvert('demarches', elements, params.format)
     } else {
       contenu = JSON.stringify(demarchesFormatted, null, 2)
     }
 
     return contenu
       ? {
-          nom: fileNameCreate(`${travaux === 'true' ? 'travaux' : 'demarches'}-${titresDemarches.length}`, format),
-          format,
+          nom: fileNameCreate(`${params.travaux ? 'travaux' : 'demarches'}-${titresDemarches.length}`, params.format),
+          format: params.format,
           contenu,
         }
       : null

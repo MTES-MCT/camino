@@ -10,7 +10,7 @@ import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { TableRow } from './_ui/table'
-import { CaminoFiltres } from './_ui/filters/camino-filtres'
+import { CaminoFiltre } from 'camino-common/src/filters'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { Activite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
@@ -76,7 +76,7 @@ const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
     }
   })
 
-const filtres: readonly CaminoFiltres[] = [
+const filtres: readonly CaminoFiltre[] = [
   'titresIds',
   'entreprisesIds',
   'substancesIds',

@@ -5,8 +5,9 @@ import { ButtonIcon } from '@/components/_ui/button-icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 import { HTMLAttributes, computed, defineComponent, ref, watch } from 'vue'
-import { EtapeCaminoFiltres, caminoFiltres } from '../_ui/filters/camino-filtres'
-import { EtapeStatutId, isEtapeStatutKey, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { EtapeCaminoFiltres } from '../_ui/filters/camino-filtres'
+import { caminoFiltres } from 'camino-common/src/filters'
+import { EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export type FilterEtapeValue = {

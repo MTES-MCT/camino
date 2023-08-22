@@ -1,11 +1,12 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { TypeAheadSmartMultiple, Filter } from '../typeahead-smart-multiple'
-import { AutocompleteCaminoFiltres, caminoAutocompleteFiltres, caminoFiltres } from './camino-filtres'
+import { AutocompleteCaminoFiltres, caminoAutocompleteFiltres } from './camino-filtres'
 import { AsyncData } from '../../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { LoadingElement } from '../functional-loader'
 import { ApiClient } from '../../../api/api-client'
 import { TitreId } from 'camino-common/src/titres'
+import { caminoFiltres } from 'camino-common/src/filters'
 
 export type InputAutocompleteValues = (typeof caminoFiltres)[AutocompleteCaminoFiltres]['validator']['_output']
 type Props = {

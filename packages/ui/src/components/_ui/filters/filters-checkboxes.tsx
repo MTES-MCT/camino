@@ -5,7 +5,8 @@ import { Domaine as DomaineComp } from '../../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { exhaustiveCheck } from 'camino-common/src/typescript-tools'
 import { HTMLAttributes, defineComponent, ref, Ref, watch } from 'vue'
-import { CheckboxesCaminoFiltres, caminoFiltres } from './camino-filtres'
+import { CheckboxesCaminoFiltres } from './camino-filtres'
+import { caminoFiltres } from 'camino-common/src/filters'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 type Props = {

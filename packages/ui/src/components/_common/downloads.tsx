@@ -18,7 +18,7 @@ Downloads.props = ['downloadRoute', 'formats', 'params', 'class']
 
 export interface Props<T extends DownloadRestRoutes> {
   id?: string
-  formats: NonEmptyArray<DownloadFormat>
+  formats: Readonly<NonEmptyArray<DownloadFormat>>
   downloadRoute: T
   params: CaminoRestParams<T>
   route: RouteLocationNormalized
@@ -64,6 +64,8 @@ PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'matomo', 
 export async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
   if (selectedFormat !== null) {
     const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...query })
+
+    console.log(url)
 
     saveAs(url)
 
