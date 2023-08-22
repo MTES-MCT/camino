@@ -10,7 +10,7 @@ import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { TableRow } from './_ui/table'
-import { CaminoFiltre } from 'camino-common/src/filters'
+import { activitesDownloadFormats, activitesFiltresNames } from 'camino-common/src/filters'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { Activite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
@@ -76,20 +76,6 @@ const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
     }
   })
 
-const filtres: readonly CaminoFiltre[] = [
-  'titresIds',
-  'entreprisesIds',
-  'substancesIds',
-  'references',
-  'titresTerritoires',
-  'domainesIds',
-  'typesIds',
-  'statutsIds',
-  'activiteTypesIds',
-  'activiteStatutsIds',
-  'annees',
-] as const
-
 interface Props {
   user: User
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
@@ -113,11 +99,11 @@ export const PureActivites = defineComponent<Props>(props => {
           download={{
             id: 'downloadActivites',
             downloadRoute: '/activites',
-            formats: ['csv', 'xlsx', 'ods'],
+            formats: activitesDownloadFormats,
             params: {},
           }}
           listeFiltre={{
-            filtres,
+            filtres: activitesFiltresNames,
             apiClient: props.apiClient,
             updateUrlQuery: props.updateUrlQuery,
           }}

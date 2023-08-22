@@ -97,7 +97,7 @@ type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | '
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
-type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
+type ITitreActiviteColonneId = 'titre' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'titulaires' | 'annee' | 'periode' | 'statut'
 
 type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'

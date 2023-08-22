@@ -261,5 +261,27 @@ export const titresFiltresNames = [
   'statutsIds',
 ] as const satisfies readonly CaminoFiltre[]
 
-export const demarchesDownloadFormats = ['json', 'csv', 'xlsx', 'ods'] as const satisfies readonly DownloadFormat[]
-export const titresDownloadFormats = ['json', 'csv', 'xlsx', 'ods', 'geojson'] as const satisfies readonly DownloadFormat[]
+export const activitesFiltresNames = [
+  'titresIds',
+  'entreprisesIds',
+  'substancesIds',
+  'references',
+  'titresTerritoires',
+  'domainesIds',
+  'typesIds',
+  'statutsIds',
+  'activiteTypesIds',
+  'activiteStatutsIds',
+  'annees',
+] as const satisfies readonly CaminoFiltre[]
+
+export const entreprisesFiltresNames = ['nomsEntreprise'] as const satisfies readonly CaminoFiltre[]
+
+export const utilisateursFiltresNames = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const satisfies readonly CaminoFiltre[]
+
+const baseDownloadFormats = ['json', 'csv', 'xlsx', 'ods'] as const satisfies readonly DownloadFormat[]
+export const demarchesDownloadFormats = baseDownloadFormats
+export const titresDownloadFormats = [...baseDownloadFormats, 'geojson'] as const satisfies readonly DownloadFormat[]
+export const activitesDownloadFormats = baseDownloadFormats
+export const utilisateursDownloadFormats = baseDownloadFormats
+export const entreprisesDownloadFormats = baseDownloadFormats

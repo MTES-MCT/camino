@@ -5,11 +5,11 @@ import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 import { User } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
 import { EntrepriseAddPopup } from './entreprise/add-popup'
-import { EntrepriseApiClient, GetEntreprisesEntreprise, GetEntreprisesParams, entrepriseApiClient } from './entreprise/entreprise-api-client'
+import { GetEntreprisesEntreprise, entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
-import { getInitialParams } from './_ui/table-pagination'
 import { ApiClient, apiClient } from '../api/api-client'
+import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
 
 const entreprisesColonnes = [
   {
@@ -22,7 +22,6 @@ const entreprisesColonnes = [
   },
 ] as const
 
-const filtres = ['nomsEntreprise'] as const
 const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
   entreprises.map(entreprise => {
     const columns = {
@@ -64,10 +63,10 @@ export const PureEntreprises = defineComponent<Props>(props => {
     <Liste
       nom="entreprises"
       colonnes={entreprisesColonnes}
-      download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: ['csv', 'xlsx', 'ods'], params: {} }}
+      download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: entreprisesDownloadFormats, params: {} }}
       getData={getData}
       listeFiltre={{
-        filtres,
+        filtres: entreprisesFiltresNames,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
       }}

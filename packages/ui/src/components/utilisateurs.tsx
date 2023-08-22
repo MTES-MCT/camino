@@ -8,8 +8,7 @@ import { CaminoAccessError } from './error'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ApiClient, apiClient } from '../api/api-client'
 import { TableRow } from './_ui/table'
-
-const filtres = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const
+import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
 
 interface Props {
   user: User
@@ -38,11 +37,11 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       {canReadUtilisateurs(props.user) ? (
         <Liste
           nom="utilisateurs"
-          listeFiltre={{ filtres, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient }}
+          listeFiltre={{ filtres: utilisateursFiltresNames, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient }}
           route={props.currentRoute}
           colonnes={utilisateursColonnes}
           getData={load}
-          download={{ id: 'utilisateursDownload', downloadRoute: '/utilisateurs', formats: ['csv', 'xlsx', 'ods'], params: {} }}
+          download={{ id: 'utilisateursDownload', downloadRoute: '/utilisateurs', formats: utilisateursDownloadFormats, params: {} }}
           renderButton={null}
         />
       ) : (
