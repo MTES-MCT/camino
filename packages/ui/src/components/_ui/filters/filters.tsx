@@ -130,7 +130,13 @@ export const Filters = defineComponent((props: Props) => {
 
   const stop = watch(validatedValues, _ => {
     props.validate(validatedValues.value)
-    nonValidatedValues.value = getInitialFiltres(props.route, props.filters)
+
+    // Dans le cas où une personne fait 'précédent' avec des filtres déjà présents dans l'url, on détecte uniquement le changement d'url, donc de validatedValue.
+    // Il faut alors mettre à jour les nonValidatedValues pour que l'interface reste cohérente.
+    // Mais, lors du premier affichage de la carte, la carte change l'url (met les coordonnées) et ça trigger un validatedValue, donc il faut vérifier et ne pas écraser nonValidatedValues sinon on se retrouve avec deux requêtes pour récupérer les entreprises en parallèle, et c'est ça les aborted qu'on voit
+    if (JSON.stringify(nonValidatedValues.value) !== JSON.stringify(validatedValues.value)) {
+      nonValidatedValues.value = validatedValues.value
+    }
   })
 
   const nonValidatedValues = ref<{ [key in CaminoFiltre]: (typeof caminoFiltres)[key]['validator']['_output'] }>(getInitialFiltres(props.route, props.filters))
