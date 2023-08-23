@@ -9,6 +9,7 @@ interface Props {
   user: User
   currentMenuSection: MenuSection | null
   trackEvent: TrackEventFunction
+  routePath: string
 }
 
 type Link = { label: string; path: MenuSection }
@@ -40,8 +41,8 @@ const linksByRole: Record<Role, (Link | LinkList)[]> = {
   defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
 }
 
-const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = props => {
-  const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
+const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'>> = props => {
+  const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
   const logoutUrl = '/apiUrl/deconnecter'
 
   const logout = () => {
@@ -78,7 +79,7 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = pro
   )
 }
 
-export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'trackEvent'], props => {
+export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'trackEvent', 'routePath'], props => {
   const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.currentMenuSection) ? { 'aria-current': true } : {})
 
   const getAriaPage = (link: Link): { 'aria-current'?: 'page' } => {
@@ -163,7 +164,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               </div>
               <div class="fr-header__tools">
                 <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
+                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
                 </div>
                 <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
@@ -187,7 +188,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
           <div class="fr-container">
             <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={navigationModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
             <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
+              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
             </div>
             <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
