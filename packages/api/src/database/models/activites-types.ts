@@ -1,6 +1,5 @@
 import { Model, Modifiers } from 'objection'
 import { IActiviteType } from '../../types.js'
-import TitresTypes from './titres-types.js'
 import Administrations from './administrations.js'
 import DocumentsTypes from './documents-types.js'
 import ActivitesTypesPays from './activites-types--pays.js'
@@ -26,19 +25,6 @@ class ActivitesTypes extends Model {
   }
 
   static relationMappings = () => ({
-    titresTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresTypes,
-      join: {
-        from: 'activitesTypes.id',
-        through: {
-          from: 'activitesTypes__titresTypes.activiteTypeId',
-          to: 'activitesTypes__titresTypes.titreTypeId',
-        },
-        to: 'titresTypes.id',
-      },
-    },
-
     administrations: {
       relation: Model.ManyToManyRelation,
       modelClass: Administrations,

@@ -166,7 +166,6 @@ interface IActiviteType {
   frequenceId: FrequenceId
   dateDebut: string
   delaiMois: number
-  titresTypes: ITitreType[]
   documentsTypes: DocumentType[]
   activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
@@ -312,13 +311,6 @@ interface IGeoJsonCentre {
 interface IGeometry {
   type: string
   coordinates: number[] | number[][] | number[][][] | number[][][][]
-}
-
-interface IActiviteTypeTitreType {
-  titreTypeId: string
-  titreType?: ITitreType | null
-  activiteTypeId: string
-  activiteType?: IActiviteType | null
 }
 
 interface IAdministrationActiviteType {
@@ -672,7 +664,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  IActiviteTypeTitreType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitre,

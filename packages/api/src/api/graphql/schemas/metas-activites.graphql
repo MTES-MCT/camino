@@ -22,11 +22,6 @@ type ActiviteType {
   modificationInterdit: Boolean
 }
 
-type ActiviteTypeTitreType {
-  activiteTypeId: ID!
-  titreTypeId: ID!
-}
-
 type ActiviteTypeDocumentType {
   activiteTypeId: ID!
   documentTypeId: ID!

@@ -1,6 +1,8 @@
-import { IActiviteTypePays, ICommune, ITitreType } from '../../types.js'
+import { IActiviteTypePays, ICommune } from '../../types.js'
 import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
+import { activitesTypesTitresTypes } from 'camino-common/src/static/activitesTypes_titresTypes.js'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 
 /**
  * Vérifie que le titre peut recevoir un type d'activité
@@ -9,7 +11,7 @@ import { Regions } from 'camino-common/src/static/region.js'
  */
 
 export interface ActiviteTypeReduced {
-  titresTypes: Pick<ITitreType, 'id'>[]
+  id: ActivitesTypesId
   activitesTypesPays?: Pick<IActiviteTypePays, 'paysId'>[] | undefined | null
 }
 
@@ -28,7 +30,7 @@ export const titreActiviteTypeCheck = (activiteType: ActiviteTypeReduced, titre:
     throw new Error('les communes du titre ne sont pas chargées')
   }
 
-  if (activiteType.titresTypes.some(titreType => titreType.id === titre.typeId)) {
+  if (activitesTypesTitresTypes[activiteType.id].some(titreTypeId => titreTypeId === titre.typeId)) {
     const titrePaysIds = titre.communes
       ?.map(({ id }) => toDepartementId(id))
       .map(departementId => Departements[departementId].regionId)

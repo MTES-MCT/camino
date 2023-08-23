@@ -160,7 +160,6 @@ type Query {
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
 
-  activitesTypesTitresTypes: [ActiviteTypeTitreType]
   activitesTypesDocumentsTypes: [ActiviteTypeDocumentType]
   activitesTypesPays: [ActiviteTypePays]
 

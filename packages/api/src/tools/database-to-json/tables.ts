@@ -7,10 +7,6 @@ export const tables = [
   },
   { name: 'activites_types__pays', orderBy: ['pays_id', 'activite_type_id'] },
   {
-    name: 'activites_types__titres_types',
-    orderBy: ['titre_type_id', 'activite_type_id'],
-  },
-  {
     name: 'administrations__activites_types',
     orderBy: ['activite_type_id', 'administration_id'],
   },

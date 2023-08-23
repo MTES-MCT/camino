@@ -75,7 +75,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
   } else if (document.titreActiviteId) {
     // si l'activité est récupérée depuis la base
     // alors on a le droit de la visualiser, donc de l'éditer
-    const activite = await titreActiviteGet(document.titreActiviteId, { fields: { type: { titresTypes: { id: {} } }, titre: { id: {} } } }, user)
+    const activite = await titreActiviteGet(document.titreActiviteId, { fields: { type: { id: {} }, titre: { id: {} } } }, user)
 
     if (!activite) throw new Error("l'activité n'existe pas")
 

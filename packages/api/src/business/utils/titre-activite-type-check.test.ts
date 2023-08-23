@@ -1,9 +1,10 @@
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes.js'
 import { ActiviteTypeReduced, titreActiviteTypeCheck } from './titre-activite-type-check.js'
 import { describe, test, expect } from 'vitest'
 
 const activiteTypeMAxmPxmGuyane: ActiviteTypeReduced = {
-  titresTypes: [{ id: 'axm' }, { id: 'pxm' }],
+  id: ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"],
   activitesTypesPays: [{ paysId: 'GF' }],
 }
 
@@ -34,7 +35,7 @@ describe("vérifie si un titre a des activités d'un certain type", () => {
     expect(
       titreActiviteTypeCheck(
         {
-          titresTypes: [{ id: 'prm' }],
+          id: ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'],
           activitesTypesPays: [{ paysId: 'FR' }],
         },
         {
@@ -54,15 +55,15 @@ describe("vérifie si un titre a des activités d'un certain type", () => {
     ).toEqual(false)
   })
 
-  test("retourne un type d'activité de titre  qui n'a pas de pays et qui est liée à un type de titer", () => {
+  test("retourne un type d'activité de titre  qui n'a pas de pays et qui est liée à un type de titre", () => {
     expect(
       titreActiviteTypeCheck(
         {
-          titresTypes: [{ id: 'prw' }],
+          id: ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"],
           activitesTypesPays: [],
         },
         {
-          typeId: 'prw',
+          typeId: 'pxw',
           communes: [],
         }
       )
