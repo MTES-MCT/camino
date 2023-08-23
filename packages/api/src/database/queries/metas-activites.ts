@@ -6,7 +6,6 @@ import { fieldsFormat } from './graph/fields-format.js'
 
 import ActivitesTypes from '../models/activites-types.js'
 import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types.js'
-import ActivitesTypesPays from '../models/activites-types--pays.js'
 
 export const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
   const graph = fields ? graphBuild(fields, 'activitesTypes', fieldsFormat) : options.activitesTypes.graph
@@ -15,5 +14,3 @@ export const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
 }
 
 export const activitesTypesDocumentsTypesGet = async () => ActivitesTypesDocumentsTypes.query()
-
-export const activitesTypesPaysGet = async () => ActivitesTypesPays.query()

@@ -2,7 +2,6 @@ import { Model, Modifiers } from 'objection'
 import { IActiviteType } from '../../types.js'
 import Administrations from './administrations.js'
 import DocumentsTypes from './documents-types.js'
-import ActivitesTypesPays from './activites-types--pays.js'
 
 interface ActivitesTypes extends IActiviteType {}
 
@@ -36,14 +35,6 @@ class ActivitesTypes extends Model {
           extra: ['modificationInterdit', 'lectureInterdit'],
         },
         to: 'administrations.id',
-      },
-    },
-    activitesTypesPays: {
-      relation: Model.HasManyRelation,
-      modelClass: ActivitesTypesPays,
-      join: {
-        from: 'activitesTypes.id',
-        to: 'activitesTypes__pays.activiteTypeId',
       },
     },
     administrationsEmails: {

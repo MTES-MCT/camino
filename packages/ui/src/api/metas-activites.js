@@ -27,16 +27,4 @@ const activitesTypesDocumentsTypes = apiGraphQLFetch(
   `
 )
 
-const activitesTypesPays = apiGraphQLFetch(
-  gql`
-    query ActivitesTypesPays {
-      activitesTypesPays {
-        ...activiteTypePays
-      }
-    }
-
-    ${fragmentActiviteTypePays}
-  `
-)
-
-export { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays }
+export { activitesTypes, activitesTypesDocumentsTypes }

@@ -167,7 +167,6 @@ interface IActiviteType {
   dateDebut: string
   delaiMois: number
   documentsTypes: DocumentType[]
-  activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
   modification?: boolean | null

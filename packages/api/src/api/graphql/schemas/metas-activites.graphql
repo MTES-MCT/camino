@@ -27,8 +27,3 @@ type ActiviteTypeDocumentType {
   documentTypeId: ID!
   optionnel: Boolean
 }
-
-type ActiviteTypePays {
-  activiteTypeId: ID!
-  paysId: ID!
-}

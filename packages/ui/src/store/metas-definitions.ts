@@ -1,6 +1,6 @@
 import { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
-import { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays } from '@/api/metas-activites'
+import { activitesTypes, activitesTypesDocumentsTypes } from '@/api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
@@ -422,26 +422,6 @@ export const metasIndex = {
       { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
     ],
     ids: ['activiteTypeId', 'documentTypeId'],
-  },
-
-  'activites-types--pays': {
-    get: activitesTypesPays,
-    nom: 'Types des activités | Pays',
-    colonnes: [
-      {
-        id: 'activiteTypeId',
-        nom: "Type d'activité",
-        type: 'entities',
-        entities: 'activites-types',
-      },
-      {
-        id: 'paysId',
-        nom: 'Pays',
-        type: Array,
-        elements: Object.keys(PaysList),
-      },
-    ],
-    ids: ['activiteTypeId', 'paysId'],
   },
 
   titre: {
