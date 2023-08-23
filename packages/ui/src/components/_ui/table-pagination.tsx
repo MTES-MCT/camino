@@ -1,201 +1,180 @@
-import { computed, FunctionalComponent, ref } from 'vue'
-import { Column, Table, TableRow, TableSortEvent } from './table'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
-import Accordion from './accordion.vue'
-import { Range, ranges, isRange } from 'camino-common/src/number'
+import { computed, defineComponent, FunctionalComponent, HTMLAttributes, Ref, ref, watch } from 'vue'
+import { Column, getSortColumnFromRoute, getSortOrderFromRoute, Table, TableRow } from './table'
+import { onBeforeRouteLeave, RouteLocationNormalizedLoaded } from 'vue-router'
+import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-link'
+import { AsyncData } from '../../api/client-rest'
+import { LoadingElement } from './functional-loader'
 
-export interface Params {
-  page?: number
-  range?: Range
-}
-export interface Props {
-  data: {
-    columns: readonly Column[]
+export interface Props<ColumnId> {
+  columns: readonly Column<ColumnId>[]
+  data: AsyncData<{
     rows: TableRow[]
     total: number
-  }
-  pagination: {
-    active?: boolean
-    range?: Range
-    page?: number
-  }
-  column?: string
-  order?: 'asc' | 'desc'
-  paramsUpdate: (params: Params | TableSortEvent) => void
+  }>
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+  caption: string
+  updateParams: (params: { page: number; colonne: ColumnId; ordre: 'asc' | 'desc' }) => void
 }
 
-export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'pagination', 'paramsUpdate'], props => {
-  const update = (params: Params | TableSortEvent) => {
-    if (!Object.keys(params).includes('page') && pagination.value) {
-      Object.assign(params, { page: 1 })
+export const getInitialParams = <ColumnId extends string>(route: Pick<RouteLocationNormalizedLoaded, 'query'>, columns: readonly Column<ColumnId>[]) => {
+  return {
+    colonne: getSortColumnFromRoute(route, columns),
+    page: getPageNumberFromRoute(route),
+    ordre: getSortOrderFromRoute(route),
+  }
+}
+
+const getPageNumberFromRoute = (route: Pick<RouteLocationNormalizedLoaded, 'query'>) => routerQueryToNumber(route.query.page, 1)
+export const TablePagination = defineComponent(<ColumnId extends string>(props: Props<ColumnId>) => {
+  watch(
+    () => props.data,
+    () => {
+      // TODO 2023-07-06 si on met un ref sur la div, le scrollIntoView pète le layout des onglets... à retester plus tard
+      const main = document.querySelector<HTMLElement>('main')
+      if (main) {
+        main.scrollIntoView(true)
+      }
     }
+  )
 
-    props.paramsUpdate(params)
+  const initParams = getInitialParams(props.route, props.columns)
+
+  const colonne = ref<ColumnId>(initParams.colonne) as Ref<ColumnId>
+  const ordre = ref<'asc' | 'desc'>(initParams.ordre)
+  const pageNumber = computed<number>(() => getPageNumberFromRoute(props.route))
+
+  const updateSort = (newColonne: ColumnId, newOrdre: 'asc' | 'desc') => {
+    ordre.value = newOrdre
+    colonne.value = newColonne
+    props.updateParams({ page: pageNumber.value, colonne: colonne.value, ordre: ordre.value })
   }
 
-  const rangeUpdate = (range: Range) => {
-    update({ range })
+  onBeforeRouteLeave(() => {
+    stop()
+  })
+
+  const stop = watch(pageNumber, newPageNumber => {
+    props.updateParams({ page: newPageNumber, colonne: colonne.value, ordre: ordre.value })
+  })
+
+  const totalNumberOfPages = (total: number) => {
+    return Math.ceil(total / routerQueryToNumber(props.route.query.intervalle, 10))
   }
-  const pageUpdate = (page: number) => {
-    update({ page })
-  }
-  const range = computed(() => {
-    return props.pagination.range ?? 200
-  })
-  const page = computed(() => {
-    return props.pagination.page ?? 1
-  })
 
-  const column = computed(() => {
-    return props.column ?? ''
-  })
-
-  const order = computed(() => {
-    return props.order ?? 'asc'
-  })
-
-  const pagination = computed(() => {
-    return props.pagination.active ?? true
-  })
-  const pages = computed(() => {
-    return Math.ceil(props.data.total / range.value)
-  })
   return () => (
-    <div>
-      <Table column={column.value} columns={props.data.columns} order={order.value} rows={props.data.rows} class="width-full-p" update={update} />
+    <div class="dsfr">
+      <Table route={props.route} caption={props.caption} columns={props.columns} rows={props.data} updateParams={updateSort} />
 
-      {pagination.value ? (
-        <div class="desktop-blobs">
-          <div class="desktop-blob-3-4">
-            <Pagination active={page.value} total={pages.value} visibles={5} pageChange={pageUpdate} />
-          </div>
-          <div class="desktop-blob-1-4">{props.data.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
-        </div>
-      ) : null}
+      <LoadingElement data={props.data} renderItem={item => <>{item.total > item.rows.length ? <Pagination route={props.route} totalNumberOfPages={totalNumberOfPages(item.total)} /> : null}</>} />
     </div>
   )
 })
 
-interface RangeProps {
-  range: Range
-  rangeUpdate: (range: Range) => void
-}
-
-const Ranges = caminoDefineComponent<RangeProps>(['range', 'rangeUpdate'], props => {
-  const opened = ref(false)
-
-  const toggle = () => {
-    opened.value = !opened.value
-  }
-
-  return () => (
-    <Accordion class="mb" opened={opened.value} slotDefault={true} onToggle={toggle}>
-      {{
-        title: () => <span> Éléments </span>,
-        default: () => (
-          <ul class="list-sans mt-m px-m">
-            {ranges.map(r => (
-              <li key={r}>
-                <label>
-                  <input
-                    checked={r === props.range}
-                    value={r}
-                    type="radio"
-                    class="mr-s"
-                    onChange={e => {
-                      if (isEventWithTarget(e)) {
-                        const value = Number(e.target.value)
-                        if (isRange(value)) {
-                          props.rangeUpdate(value)
-                        }
-                      }
-                    }}
-                  />
-                  {r}
-                </label>
-              </li>
-            ))}
-          </ul>
-        ),
-      }}
-    </Accordion>
-  )
-})
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TablePagination.props = ['data', 'route', 'caption', 'updateParams', 'columns']
 
 interface PaginationProps {
-  total: number
-  active: number
-  visibles: number
-  pageChange: (page: number) => void
+  totalNumberOfPages: number
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
 }
 
 const Pagination: FunctionalComponent<PaginationProps> = props => {
-  const total = props.total ?? 2
-  const active = props.active ?? 1
-  const visibles = props.visibles ?? 1
+  const maxVisibles = 5
+  const visibles = Math.min(maxVisibles, props.totalNumberOfPages)
 
-  const delta = () => {
-    return Math.round((visibles - 1) / 2)
-  }
-  const pages = () => {
-    let filter
-    if (active <= delta()) {
-      filter = (n: number) => n <= delta() * 2 + 1
-    } else if (active >= total - delta()) {
-      filter = (n: number) => n >= total - delta() * 2
-    } else {
-      filter = (n: number) => n >= active - delta() && n <= active + delta()
-    }
-    return Array.from(Array(total).keys())
-      .map(n => n + 1)
-      .filter(filter)
-  }
+  const currentActivePageNumber = getPageNumberFromRoute(props.route)
 
-  if (total <= 1) {
-    return null
-  }
+  const start: number = Math.max(1, currentActivePageNumber - 2)
+
   return (
-    <ul class="list-inline">
-      <li class="mr-xs">
-        <button disabled={active === 1} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(1)}>
-          «
-        </button>
-      </li>
-      <li class="mr-xs">
-        <button disabled={active === 1} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(active - 1)}>
-          ‹
-        </button>
-      </li>
-      {active > delta() + 1 ? (
-        <li class="mr-xs">
-          <div class="px-m py-s">…</div>
+    <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+      <ul class="fr-pagination__list">
+        <li>
+          <CaminoRouterLink
+            isDisabled={currentActivePageNumber === 1}
+            class="fr-pagination__link fr-pagination__link--first"
+            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: 1 } }}
+            title="Première page"
+          >
+            Première page
+          </CaminoRouterLink>
         </li>
-      ) : null}
-
-      {pages().map(page => (
-        <li key={page} class={`mr-xs ${active === page ? 'active' : ''}`}>
-          <button class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(page)}>
-            {page}
-          </button>
+        <li>
+          <CaminoRouterLink
+            isDisabled={currentActivePageNumber === 1}
+            class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber - 1 } }}
+            title="Page précédente"
+          >
+            Page précédente
+          </CaminoRouterLink>
         </li>
-      ))}
+        <Page route={props.route} pageNumber={1} currentActivePage={currentActivePageNumber} />
+        {start > 2 ? (
+          <li>
+            <a class="fr-pagination__link fr-displayed-lg"> … </a>
+          </li>
+        ) : null}
 
-      {active < total - delta() ? (
-        <li class="mr-xs">
-          <div class="px-m py-s">…</div>
+        {[...Array(visibles)]
+          .map((_, index) => start + index)
+          .filter(pageNumber => pageNumber < props.totalNumberOfPages && pageNumber !== 1)
+          .map(currentPageNumber => (
+            <Page route={props.route} pageNumber={currentPageNumber} currentActivePage={currentActivePageNumber} />
+          ))}
+        {start < props.totalNumberOfPages - visibles ? (
+          <li>
+            <a class="fr-pagination__link fr-displayed-lg"> … </a>
+          </li>
+        ) : null}
+
+        <Page route={props.route} pageNumber={props.totalNumberOfPages} currentActivePage={currentActivePageNumber} />
+        <li>
+          <CaminoRouterLink
+            isDisabled={currentActivePageNumber === props.totalNumberOfPages}
+            class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: currentActivePageNumber + 1 } }}
+            title="Page suivante"
+          >
+            Page suivante
+          </CaminoRouterLink>
         </li>
-      ) : null}
+        <li>
+          <CaminoRouterLink
+            isDisabled={currentActivePageNumber === props.totalNumberOfPages}
+            class="fr-pagination__link fr-pagination__link--last"
+            to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.totalNumberOfPages } }}
+            title="Dernière page"
+          >
+            Dernière page
+          </CaminoRouterLink>
+        </li>
+      </ul>
+    </nav>
+  )
+}
 
-      <li class="mr-xs">
-        <button disabled={active === total} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(active + 1)}>
-          ›
-        </button>
-      </li>
-      <li class="mr-xs">
-        <button disabled={active === total} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(total)}>
-          »
-        </button>
-      </li>
-    </ul>
+interface PageProps {
+  pageNumber: number
+  currentActivePage: number
+  route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
+}
+const Page: FunctionalComponent<PageProps> = (props: PageProps) => {
+  const ariaProps: Pick<HTMLAttributes, 'aria-current'> = {}
+  if (props.pageNumber === props.currentActivePage) {
+    ariaProps['aria-current'] = 'page'
+  }
+
+  return (
+    <li>
+      <CaminoRouterLink
+        class="fr-pagination__link"
+        {...ariaProps}
+        to={{ name: props.route.name ?? undefined, query: { ...props.route.query, page: props.pageNumber } }}
+        title={`Page ${props.pageNumber}`}
+      >
+        {props.pageNumber}
+      </CaminoRouterLink>
+    </li>
   )
 }

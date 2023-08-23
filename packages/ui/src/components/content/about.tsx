@@ -16,8 +16,7 @@ export const About: FunctionalComponent = () => {
         <h4 class="mb-s color-neutral">Ce qu'il faut changer</h4>
         <h2>
           L'accès aux informations sur les projets miniers
-          <br class="hide desktop-static" />
-          est trop complexe
+          <br class="hide desktop-static" /> est trop complexe
         </h2>
         <span class="separator" />
         <p class="lead">Pour les entreprises minières, gérer un projet d’exploration ou d’exploitation est un parcours du combattant, de la conception du projet jusqu'à la gestion de l'après-mine.</p>

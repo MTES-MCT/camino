@@ -14,7 +14,6 @@ const fragmentTitreStatut = gql`
     id
     nom
     description
-    couleur
     ordre
   }
 `

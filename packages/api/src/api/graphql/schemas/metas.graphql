@@ -49,9 +49,6 @@ type TitreStatut {
   "Nom du statut en français"
   nom: String!
 
-  "Couleur associé au statut"
-  couleur: Couleur!
-
   description: String
 
   ordre: Int

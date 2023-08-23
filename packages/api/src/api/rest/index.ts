@@ -1,5 +1,3 @@
-import { ITitreColonneId, ITitreDemarcheColonneId, IUtilisateursColonneId, ITitreActiviteColonneId } from '../../types.js'
-
 import { titreGet, titresGet } from '../../database/queries/titres.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
@@ -20,14 +18,26 @@ import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
 
 import { matomo } from '../../tools/matomo.js'
-import { stringSplit } from '../../database/queries/_utils.js'
-import { isRole, User } from 'camino-common/src/roles.js'
+import { User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
-import { isDepartementId } from 'camino-common/src/static/departement.js'
-import { isRegionId } from 'camino-common/src/static/region.js'
-import { isFacade } from 'camino-common/src/static/facades.js'
+import {
+  CaminoFiltre,
+  caminoFiltres,
+  demarchesDownloadFormats,
+  demarchesFiltresNames,
+  titresFiltresNames,
+  titresDownloadFormats,
+  activitesFiltresNames,
+  activitesDownloadFormats,
+  utilisateursFiltresNames,
+  utilisateursDownloadFormats,
+  entreprisesFiltresNames,
+  entreprisesDownloadFormats,
+} from 'camino-common/src/filters.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
+import { z, ZodOptional, ZodType } from 'zod'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -51,6 +61,30 @@ const titreFields = {
     },
   },
 }
+
+type GenericFiltreValidator<T extends Readonly<CaminoFiltre[]>> = { [key in T[number]]: ZodOptional<(typeof caminoFiltres)[key]['validator']> }
+
+const generateFilterValidator = <T extends readonly CaminoFiltre[]>(filtresNames: T) =>
+  z.object<GenericFiltreValidator<T>>(
+    filtresNames.reduce(
+      (acc, filtre) => ({
+        ...acc,
+        [filtre]: caminoFiltres[filtre].validator.optional(),
+      }),
+      {} as GenericFiltreValidator<T>
+    )
+  )
+const commonValidator = <T extends Readonly<NonEmptyArray<string>>>(colonnes: T, formats: Readonly<['json', ...DownloadFormat[]]>) =>
+  z.object({
+    format: z.enum(formats).default('json'),
+    ordre: z.enum(['asc', 'desc']).default('asc'),
+    colonne: z.enum(colonnes).optional(),
+  })
+
+const generateValidator = <T extends readonly CaminoFiltre[], U extends Readonly<NonEmptyArray<string>>>(filtresNames: T, colonnes: U, formats: Readonly<['json', ...DownloadFormat[]]>) => {
+  return generateFilterValidator(filtresNames).merge(commonValidator(colonnes, formats))
+}
+type GenericQueryInput<T extends ZodType> = { [key in keyof z.infer<T>]?: null | string }
 
 interface ITitreInput {
   query: { format?: DownloadFormat }
@@ -86,69 +120,37 @@ export const titre =
     }
   }
 
-interface ITitresQueryInput {
-  format?: DownloadFormat
-  ordre?: 'asc' | 'desc' | null
-  colonne?: ITitreColonneId | null
-  domainesIds?: string | null
-  typesIds?: string | null
-  statutsIds?: string | null
-  substancesIds?: string | null
-  titresIds?: string | null
-  entreprisesIds?: string | null
-  references?: string | null
-  territoires?: string | null
-  communes?: string | null
-  departements?: string | null
-  regions?: string | null
-  facadesMaritimes?: string | null
-  perimetre?: number[] | null
-}
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const titresColonnes = ['nom', 'domaine', 'coordonnees', 'type', 'statut', 'activites', 'titulaires'] as const
+const titresValidator = generateValidator(titresFiltresNames, titresColonnes, titresDownloadFormats).extend({
+  // legacy pour le plugin qgis camino
+  territoires: z.string().optional(),
+  // pour gérer les téléchargement quand on est sur la carte
+  perimetre: z.array(z.coerce.number()).optional(),
+})
 
 export const titres =
   (pool: Pool) =>
-  async (
-    {
-      query: {
-        format = 'json',
-        ordre,
-        colonne,
-        typesIds,
-        domainesIds,
-        statutsIds,
-        substancesIds,
-        titresIds,
-        entreprisesIds,
-        references,
-        territoires,
-        communes,
-        departements,
-        regions,
-        facadesMaritimes,
-        perimetre,
-      },
-    }: { query: ITitresQueryInput },
-    user: User
-  ) => {
-    formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
+  async ({ query }: { query: GenericQueryInput<typeof titresValidator> }, user: User) => {
+    const params = titresValidator.parse(query)
 
     const titres = await titresGet(
       {
-        ordre,
-        colonne,
-        typesIds: typesIds?.split(','),
-        domainesIds: domainesIds?.split(','),
-        statutsIds: statutsIds?.split(','),
-        ids: titresIds ? stringSplit(titresIds) : null,
-        entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
-        substancesIds: substancesIds ? stringSplit(substancesIds) : null,
-        references,
-        territoires,
-        communes,
-        departements: departements?.split(',').filter(isDepartementId),
-        regions: regions?.split(',').filter(isRegionId),
-        facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
-        perimetre,
+        ordre: params.ordre,
+        colonne: params.colonne,
+        typesIds: params.typesIds,
+        domainesIds: params.domainesIds,
+        statutsIds: params.statutsIds,
+        ids: params.titresIds,
+        entreprisesIds: params.entreprisesIds,
+        substancesIds: params.substancesIds,
+        references: params.references,
+        territoires: params.territoires,
+        communes: params.communes,
+        departements: params.departements,
+        regions: params.regions,
+        facadesMaritimes: params.facadesMaritimes,
+        perimetre: params.perimetre,
         demandeEnCours: true,
       },
       { fields: titreFields },
@@ -159,31 +161,31 @@ export const titres =
 
     let contenu
 
-    if (format === 'geojson') {
+    if (params.format === 'geojson') {
       const elements = await titresGeojsonFormat(pool, titresFormatted)
 
       contenu = JSON.stringify(elements, null, 2)
-    } else if (['csv', 'xlsx', 'ods'].includes(format)) {
+    } else if (['csv', 'xlsx', 'ods'].includes(params.format)) {
       const elements = await titresTableFormat(pool, titresFormatted)
 
-      contenu = tableConvert('titres', elements, format)
+      contenu = tableConvert('titres', elements, params.format)
     } else {
       contenu = JSON.stringify(titresFormatted, null, 2)
     }
 
     if (matomo) {
       const url = Object.entries({
-        format,
-        ordre,
-        colonne,
-        typesIds,
-        domainesIds,
-        statutsIds,
-        substancesIds,
-        titresIds,
-        entreprisesIds,
-        references,
-        territoires,
+        format: params.format,
+        ordre: params.ordre,
+        colonne: params.colonne,
+        typesIds: params.typesIds,
+        domainesIds: params.domainesIds,
+        statutsIds: params.statutsIds,
+        substancesIds: params.substancesIds,
+        titresIds: params.titresIds,
+        entreprisesIds: params.entreprisesIds,
+        references: params.references,
+        territoires: params.territoires,
       })
         .filter(param => param[1] !== undefined)
         .map(param => param.join('='))
@@ -192,82 +194,45 @@ export const titres =
       matomo.track({
         url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
         e_c: 'camino-api',
-        e_a: `titres-flux-${format}`,
+        e_a: `titres-flux-${params.format}`,
       })
     }
 
     return contenu
       ? {
-          nom: fileNameCreate(`titres-${titres.length}`, format),
-          format,
+          nom: fileNameCreate(`titres-${titres.length}`, params.format),
+          format: params.format,
           contenu,
         }
       : null
   }
 
-interface ITitresDemarchesQueryInput {
-  format?: DownloadFormat
-  ordre?: 'asc' | 'desc' | null
-  colonne?: ITitreDemarcheColonneId | null
-  typesIds?: string | null
-  statutsIds?: string | null
-  etapesInclues?: string | null
-  etapesExclues?: string | null
-  titresTypesIds?: string | null
-  titresDomainesIds?: string | null
-  titresStatutsIds?: string | null
-  titresIds?: string | null
-  titresEntreprisesIds?: string | null
-  titresSubstancesIds?: string | null
-  titresReferences?: string | null
-  titresTerritoires?: string | null
-  travaux?: string | null
-}
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const demarchesColonnes = ['titreNom', 'titreDomaine', 'titreType', 'titreStatut', 'type', 'statut'] as const
+const demarchesValidator = generateValidator(demarchesFiltresNames, demarchesColonnes, demarchesDownloadFormats).extend({ travaux: z.coerce.boolean().default(false) })
 
 export const demarches =
   (pool: Pool) =>
-  async (
-    {
-      query: {
-        format = 'json',
-        ordre,
-        colonne,
-        typesIds,
-        statutsIds,
-        etapesInclues,
-        etapesExclues,
-        titresTypesIds,
-        titresDomainesIds,
-        titresStatutsIds,
-        titresIds,
-        titresEntreprisesIds,
-        titresSubstancesIds,
-        titresReferences,
-        titresTerritoires,
-        travaux,
-      },
-    }: { query: ITitresDemarchesQueryInput },
-    user: User
-  ) => {
-    formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User) => {
+    const params = demarchesValidator.parse(query)
 
     const titresDemarches = await titresDemarchesGet(
       {
-        ordre,
-        colonne,
-        typesIds: typesIds?.split(','),
-        statutsIds: statutsIds?.split(','),
-        etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
-        etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
-        titresTypesIds: titresTypesIds?.split(','),
-        titresDomainesIds: titresDomainesIds?.split(','),
-        titresStatutsIds: titresStatutsIds?.split(','),
-        titresIds: titresIds?.split(','),
-        titresEntreprisesIds: titresEntreprisesIds?.split(','),
-        titresSubstancesIds: titresSubstancesIds?.split(','),
-        titresReferences,
-        titresTerritoires,
-        travaux: travaux ? travaux === 'true' : false,
+        ordre: params.ordre,
+        colonne: params.colonne,
+        typesIds: params.demarchesTypesIds,
+        statutsIds: params.demarchesStatutsIds,
+        etapesInclues: params.etapesInclues ? JSON.parse(params.etapesInclues) : null,
+        etapesExclues: params.etapesExclues ? JSON.parse(params.etapesExclues) : null,
+        titresTypesIds: params.typesIds,
+        titresDomainesIds: params.domainesIds,
+        titresStatutsIds: params.statutsIds,
+        titresIds: params.titresIds,
+        titresEntreprisesIds: params.entreprisesIds,
+        titresSubstancesIds: params.substancesIds,
+        titresReferences: params.references,
+        titresTerritoires: params.titresTerritoires,
+        travaux: params.travaux,
       },
       {
         fields: {
@@ -292,80 +257,47 @@ export const demarches =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(format)) {
+    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
       const elements = await titresDemarchesFormatTable(pool, demarchesFormatted)
 
-      contenu = tableConvert('demarches', elements, format)
+      contenu = tableConvert('demarches', elements, params.format)
     } else {
       contenu = JSON.stringify(demarchesFormatted, null, 2)
     }
 
     return contenu
       ? {
-          nom: fileNameCreate(`${travaux === 'true' ? 'travaux' : 'demarches'}-${titresDemarches.length}`, format),
-          format,
+          nom: fileNameCreate(`${params.travaux ? 'travaux' : 'demarches'}-${titresDemarches.length}`, params.format),
+          format: params.format,
           contenu,
         }
       : null
   }
 
-interface ITitresActivitesQueryInput {
-  format?: DownloadFormat
-  ordre?: 'asc' | 'desc' | null
-  colonne?: ITitreActiviteColonneId | null
-  typesIds?: string | null
-  statutsIds?: string | null
-  annees?: string | null
-  titresIds?: string | null
-  titresEntreprisesIds?: string | null
-  titresSubstancesIds?: string | null
-  titresReferences?: string | null
-  titresTerritoires?: string | null
-  titresTypesIds?: string | null
-  titresDomainesIds?: string | null
-  titresStatutsIds?: string | null
-}
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const activitesColonnes = ['titre', 'titreDomaine', 'titreType', 'titreStatut', 'titulaires', 'annee', 'periode', 'statut'] as const
+const activitesValidator = generateValidator(activitesFiltresNames, activitesColonnes, activitesDownloadFormats)
 
 export const activites =
   (pool: Pool) =>
-  async (
-    {
-      query: {
-        format = 'json',
-        ordre,
-        colonne,
-        typesIds,
-        statutsIds,
-        annees,
-        titresIds,
-        titresEntreprisesIds,
-        titresSubstancesIds,
-        titresReferences,
-        titresTerritoires,
-        titresTypesIds,
-        titresDomainesIds,
-        titresStatutsIds,
-      },
-    }: { query: ITitresActivitesQueryInput },
-    user: User
-  ) => {
-    formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
+  async ({ query }: { query: GenericQueryInput<typeof activitesValidator> }, user: User) => {
+    const params = activitesValidator.parse(query)
 
     const titresActivites = await titresActivitesGet(
       {
-        ordre,
-        colonne,
-        typesIds: typesIds?.split(','),
-        statutsIds: statutsIds?.split(','),
-        annees: annees?.split(',').map(a => Number(a)),
-        titresIds: titresIds?.split(','),
-        titresEntreprisesIds: titresEntreprisesIds?.split(','),
-        titresSubstancesIds: titresSubstancesIds?.split(','),
-        titresReferences,
-        titresTerritoires,
-        titresTypesIds: titresTypesIds?.split(','),
-        titresDomainesIds: titresDomainesIds?.split(','),
-        titresStatutsIds: titresStatutsIds?.split(','),
+        ordre: params.ordre,
+        colonne: params.colonne,
+        typesIds: params.activiteTypesIds,
+        statutsIds: params.activiteStatutsIds,
+        annees: params.annees,
+        titresIds: params.titresIds,
+        titresEntreprisesIds: params.entreprisesIds,
+        titresSubstancesIds: params.substancesIds,
+        titresReferences: params.references,
+        titresTerritoires: params.titresTerritoires,
+        titresTypesIds: params.typesIds,
+        titresDomainesIds: params.domainesIds,
+        titresStatutsIds: params.statutsIds,
       },
       {
         fields: {
@@ -380,47 +312,39 @@ export const activites =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(format)) {
+    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
       const elements = await titresActivitesFormatTable(pool, titresActivitesFormatted)
 
-      contenu = tableConvert('activites', elements, format)
+      contenu = tableConvert('activites', elements, params.format)
     } else {
       contenu = JSON.stringify(titresActivitesFormatted, null, 2)
     }
 
     return contenu
       ? {
-          nom: fileNameCreate(`activites-${titresActivites.length}`, format),
-          format,
+          nom: fileNameCreate(`activites-${titresActivites.length}`, params.format),
+          format: params.format,
           contenu,
         }
       : null
   }
 
-interface IUtilisateursQueryInput {
-  format?: DownloadFormat
-  colonne?: IUtilisateursColonneId | null
-  ordre?: 'asc' | 'desc' | null
-  entrepriseIds?: string
-  administrationIds?: string
-  //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
-  roles?: string
-  noms?: string | null
-  emails?: string | null
-}
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const utilisateursColonnes = ['nom', 'prenom', 'email', 'role'] as const
+const utilisateursValidator = generateValidator(utilisateursFiltresNames, utilisateursColonnes, utilisateursDownloadFormats)
 
-export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
-  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+export const utilisateurs = async ({ query }: { query: GenericQueryInput<typeof utilisateursValidator> }, user: User) => {
+  const params = utilisateursValidator.parse(query)
 
   const utilisateurs = await utilisateursGet(
     {
-      colonne,
-      ordre,
-      entrepriseIds: entrepriseIds?.split(','),
-      administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole) ?? [],
-      noms,
-      emails,
+      colonne: params.colonne,
+      ordre: params.ordre,
+      entreprisesIds: params.entreprisesIds,
+      administrationIds: params.administrationIds,
+      roles: params.roles,
+      noms: params.nomsUtilisateurs,
+      emails: params.emails,
     },
     {},
     user
@@ -428,51 +352,50 @@ export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, e
 
   let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
+  if (['csv', 'xlsx', 'ods'].includes(params.format)) {
     const elements = utilisateursFormatTable(utilisateurs)
 
-    contenu = tableConvert('utilisateurs', elements, format)
+    contenu = tableConvert('utilisateurs', elements, params.format)
   } else {
     contenu = JSON.stringify(utilisateurs, null, 2)
   }
 
   return contenu
     ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-        format,
+        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, params.format),
+        format: params.format,
         contenu,
       }
     : null
 }
 
-interface IEntreprisesQueryInput {
-  format?: DownloadFormat
-  noms?: string | null
-}
+// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
+const entreprisesColonnes = ['siren'] as const
+const entreprisesValidator = generateValidator(entreprisesFiltresNames, entreprisesColonnes, entreprisesDownloadFormats)
 
 export const entreprises =
   (_pool: Pool) =>
-  async ({ query: { format = 'json', noms } }: { query: IEntreprisesQueryInput }, user: User) => {
-    formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
+  async ({ query }: { query: GenericQueryInput<typeof entreprisesValidator> }, user: User) => {
+    const params = entreprisesValidator.parse(query)
 
-    const entreprises = await entreprisesGet({ noms }, {}, user)
+    const entreprises = await entreprisesGet({ noms: params.nomsEntreprise }, {}, user)
 
     const entreprisesFormatted = entreprises.map(entrepriseFormat)
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(format)) {
+    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
       const elements = entreprisesFormatTable(entreprisesFormatted)
 
-      contenu = tableConvert('entreprises', elements, format)
+      contenu = tableConvert('entreprises', elements, params.format)
     } else {
       contenu = JSON.stringify(entreprisesFormatted, null, 2)
     }
 
     return contenu
       ? {
-          nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
-          format,
+          nom: fileNameCreate(`entreprises-${entreprises.length}`, params.format),
+          format: params.format,
           contenu,
         }
       : null

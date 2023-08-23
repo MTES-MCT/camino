@@ -1,7 +1,7 @@
 import { onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 
-import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
+import { nomColumn, nomCell, referencesColumn, statutAutoColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
@@ -12,7 +12,7 @@ import { DashboardApiClient } from './dashboard-api-client'
 export interface Props {
   apiClient: Pick<DashboardApiClient, 'getPtmgTitres'>
 }
-const columns = [nomColumn, statutColumn, referencesColumn, titulairesColumn] as const
+const columns = [nomColumn, statutAutoColumn, referencesColumn, titulairesColumn] as const
 type Columns = (typeof columns)[number]['id']
 
 const titresLignesBuild = (titres: CommonTitrePTMG[]): TableRow<Columns>[] => {
@@ -75,12 +75,12 @@ export const PurePTMGDashboard = caminoDefineComponent<Props>(['apiClient'], pro
               <>
                 <div class="line-neutral width-full mb-l"></div>
                 <h3>ARM en attente</h3>
-                <TableAuto class="mb-xxl" columns={columns.slice(0, 5)} rows={item.ptmgTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
+                <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={item.ptmgTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
               </>
             ) : null}
             <div class="line-neutral width-full mb-l"></div>
             <h3>ARM en cours d’instruction</h3>
-            <TableAuto columns={columns} rows={item.ptmgTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+            <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={item.ptmgTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
           </>
         )}
       />

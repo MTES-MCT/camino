@@ -1,108 +1,167 @@
-import { nextTick, ref, Ref, computed, onMounted, onBeforeUnmount, inject, watch } from 'vue'
+import { ref, Ref, computed, onMounted, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
-import { Icon } from '@/components/_ui/icon'
-import { isDomaineId } from 'camino-common/src/static/domaines'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import { Layer, MarkerClusterGroup } from 'leaflet'
-import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
+import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
+import { Router, onBeforeRouteLeave } from 'vue-router'
+import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
+import { getEntriesHardcore, getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { ButtonIcon } from '../_ui/button-icon'
+import { DsfrButton } from '../_ui/dsfr-button'
+import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
+import { TitreId } from 'camino-common/src/titres'
+export type TitreCarteParams = {
+  zoom: number
+  centre: [number, number]
+  perimetre: [number, number, number, number]
+} | null
 interface Props {
-  titres: TitreWithPoint[]
+  titres: { hash: string; titres: TitreWithPoint[] }
+  updateCarte: (params: TitreCarteParams) => void
+  router: Router
+  loading: boolean
 }
 
-type ZoneId = (typeof zones)[number]['id']
-export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props => {
-  const store = useStore()
-  const router = useRouter()
-  const matomo = inject('matomo', null)
+const isLayerWithTitreId = (layer: Layer): layer is LayerWithTitreId => 'titreId' in layer
+
+type ZoneId = keyof typeof zones
+export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCarte', 'router', 'loading'], props => {
+  const zoneId = ref<ZoneId>('fr')
+  const savedParams = computed<TitreCarteParams>(() => {
+    const route = props.router.currentRoute.value
+
+    const zoom = routerQueryToNumber(route.query.zoom, Number.NaN)
+    const centre = routerQueryToNumberArray(route.query.centre, [Number.NaN, Number.NaN]) as [number, number]
+    const perimetre = routerQueryToNumberArray(route.query.perimetre, [Number.NaN, Number.NaN, Number.NaN, Number.NaN]) as [number, number, number, number]
+    return { zoom, centre, perimetre }
+  })
+
+  onBeforeRouteLeave(() => {
+    stop()
+  })
+
+  const stop = watch(
+    savedParams,
+    (newSavedParams, old) => {
+      if (!Number.isNaN(newSavedParams?.zoom)) {
+        if (JSON.stringify(newSavedParams) !== JSON.stringify(old)) {
+          return props.updateCarte(newSavedParams)
+        }
+      }
+    },
+    { immediate: true }
+  )
+
   const map = ref<typeof CaminoMap | null>(null)
 
-  const zoneId = ref<ZoneId>('fr')
-  const geojsons = ref<Record<string, Layer>>({})
-  const clusters = ref<MarkerClusterGroup[]>([]) as Ref<MarkerClusterGroup[]>
-  const markers = ref<CaminoMarker[]>([]) as Ref<CaminoMarker[]>
-
-  const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
-
-  const markerLayersId = computed(() => {
-    return store.state.user.preferences.carte.markerLayersId
-  })
-
-  const markerLayers = computed<Layer[]>(() => {
-    if (markerLayersId.value === 'clusters') {
-      return clusters.value
-    } else if (markerLayersId.value === 'markers') {
-      return markers.value.map(marker => marker.marker)
-    }
-
-    return []
-  })
+  const geojsons = ref<Record<TitreId, Layer>>({})
+  const clusters = ref<CaminoMarkerClusterGroup[]>([]) as Ref<CaminoMarkerClusterGroup[]>
+  const geojsonLayers = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
 
   const zone = computed(() => {
-    return zones.find(z => z.id === zoneId.value)
+    return zones[zoneId.value]
   })
 
   const bounds = computed(() => {
     return leafletGeojsonBoundsGet(zone.value)
   })
 
-  const preferences = computed(() => {
-    return store.state.titres.params.carte
-  })
-
   const init = () => {
-    if (preferences.value.zoom && preferences.value.centre) {
+    if (!Number.isNaN(savedParams.value?.zoom)) {
       positionSet()
     } else {
       boundsFit()
     }
   }
 
-  const titresInit = (titres: TitreWithPoint[]) => {
-    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, router)
-    const clustersBuilt = clustersBuild()
-    geojsons.value = geojsonLayer
-    markers.value = markersLayer
-    markers.value.forEach(marker => {
-      if (marker.domaineId) {
-        const domaineCluster = clustersBuilt[marker.domaineId]
-        if (domaineCluster) {
-          domaineCluster.addLayer(marker.marker)
-        }
+  const layerIdToTitreIdDisplayed = ref<Record<TitreId, TitreId>>({})
+
+  const previoushash = ref<string | null>(null)
+  const titresInit = ({ hash, titres }: { hash: string; titres: TitreWithPoint[] }) => {
+    const titreIdsToBeOnMap = titres.map(({ id }) => id)
+    const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
+    const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]
+    const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, props.router, markersTitreIdsAlreadyInMap, geojsonsTitreIdsAlreadyInMap)
+
+    if (clusters.value.length === 0) {
+      const clustersBuilt = clustersBuild()
+      clusters.value = getKeys(clustersBuilt, isDomaineId)
+        .map(domaineId => clustersBuilt[domaineId])
+        .filter(isNotNullNorUndefined)
+    }
+
+    const markerLayersByDomaine = markersLayer.reduce<Record<DomaineId, Marker[]>>(
+      (acc, marker) => {
+        acc[marker.domaineId].push(marker.marker)
+        layerIdToTitreIdDisplayed.value[marker.id] = marker.id
+        return acc
+      },
+      { c: [], m: [], f: [], g: [], h: [], r: [], s: [], w: [] }
+    )
+    clusters.value.forEach(cluster => {
+      if (cluster.caminoDomaineId && markerLayersByDomaine[cluster.caminoDomaineId].length > 0) {
+        cluster.addLayers(markerLayersByDomaine[cluster.caminoDomaineId])
+      }
+
+      if (hash !== previoushash.value) {
+        const layersToRemove = cluster.getLayers().filter(layer => {
+          if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
+            delete layerIdToTitreIdDisplayed.value[layer.titreId]
+            return true
+          }
+          return false
+        })
+        cluster.removeLayers(layersToRemove)
       }
     })
 
-    clusters.value = getKeys(clustersBuilt, isDomaineId)
-      .map(domaineId => clustersBuilt[domaineId])
-      .filter(isNotNullNorUndefined)
+    getEntriesHardcore(geojsonLayer).forEach(([titreId, layer]) => {
+      geojsons.value[titreId] = layer
+      geojsonLayers.value.addLayer(layer)
+    })
 
-    geojsonLayersDisplay()
+    if (hash !== previoushash.value) {
+      geojsonLayers.value.getLayers().forEach(layer => {
+        if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
+          geojsonLayers.value.removeLayer(layer)
+          delete geojsons.value[layer.titreId]
+        }
+      })
+    }
+    previoushash.value = hash
   }
 
-  const titresPreferencesUpdate = (params: { center?: number[]; zoom?: number; bbox?: number[] }) => {
-    if (params.center || params.zoom || params.bbox) {
-      const myParams: {
-        zoom?: number
-        centre?: number[]
-        perimetre?: number[]
-      } = { zoom: params.zoom }
+  const titresPreferencesUpdate = async (params: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => {
+    let ourParam = { ...savedParams.value }
+    if (ourParam === null) {
+      if (!params.center || !params.zoom || !params.bbox) {
+        console.error('Les paramètres ne sont pas initialisés et ne sont pas tous là')
+      } else {
+        ourParam = { centre: params.center, zoom: params.zoom, perimetre: params.bbox }
+      }
+    } else {
+      if (params.zoom) {
+        ourParam.zoom = params.zoom
+      }
       if (params.center) {
-        myParams.centre = params.center
+        ourParam.centre = params.center
       }
 
       if (params.bbox) {
-        myParams.perimetre = params.bbox
+        ourParam.perimetre = params.bbox
       }
-
-      store.dispatch('titres/paramsSet', {
-        section: 'carte',
-        params: myParams,
-      })
     }
+
+    const currentRoute = props.router.currentRoute.value
+    await props.router.push({
+      name: currentRoute.name ?? undefined,
+      query: {
+        ...currentRoute.query,
+        ...ourParam,
+        // TODO 2023-07-20 ugly hack pour corriger la race condition au niveau de la gestions des tabs dsfr...
+        vueId: 'carte',
+      },
+    })
   }
 
   const mapCenter = (newZoneId: ZoneId) => {
@@ -113,17 +172,9 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     boundsFit()
   }
 
-  const mapFrame = async () => {
-    const params = { perimetre: [-180, -90, 180, 90] }
-
-    await store.dispatch('titres/paramsSet', {
-      section: 'carte',
-      params,
-    })
-
+  const mapFrame = () => {
     if (map.value) {
-      // le traitement au dessus peut-être très long et l’utilisateur a pu changer de page
-      map.value.allFit()
+      map.value.fitWorld()
     }
   }
 
@@ -132,45 +183,15 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
   }
 
   const positionSet = () => {
-    const zoom = preferences.value.zoom
-    const center = preferences.value.centre
-    map.value?.positionSet({ zoom, center })
-  }
-
-  const popState = () => {
-    positionSet()
-  }
-
-  const geojsonLayersDisplay = () => {
-    nextTick(() => {
-      geojsonLayers.value = []
-      markers.value.forEach(marker => {
-        if ((markerLayersId.value !== 'clusters' || map.value) && marker.id) {
-          geojsonLayers.value.push(geojsons.value[marker.id])
-        }
-      })
-    })
-  }
-
-  const markerLayersIdSet = (markerLayersId: 'clusters' | 'markers' | 'none') => {
-    const params = { markerLayersId }
-    if (matomo) {
-      // @ts-ignore
-      matomo.trackEvent('titres-vue', 'titre-id-fond-carte')
+    if (savedParams.value !== null) {
+      const zoom = savedParams.value.zoom
+      const center = savedParams.value.centre
+      map.value?.positionSet({ zoom, center })
     }
-    store.dispatch('user/preferencesSet', {
-      section: 'carte',
-      params,
-    })
-    geojsonLayersDisplay()
   }
 
   onMounted(() => {
     init()
-    window.addEventListener('popstate', popState)
-  })
-  onBeforeUnmount(() => {
-    window.removeEventListener('popstate', popState)
   })
 
   watch(
@@ -181,60 +202,19 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres'], props =>
     { immediate: true }
   )
   return () => (
-    <div class="width-full bg-alt">
-      <CaminoMap ref={map} markerLayers={markerLayers.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
+    <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
+      <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={[geojsonLayers.value]} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
-      <div class="container overflow-auto">
-        <div class="desktop-blobs">
-          <div class="desktop-blob-1-2 desktop-flex">
-            <div class="mb-s">
-              <span class="mr-s">
-                <button class="btn-border small rnd-m px-s py-xs" onClick={() => mapFrame()}>
-                  Tout afficher
-                </button>
-              </span>
-            </div>
-            <ul class="list-inline pill-list mb-s">
-              {zones.map(z => (
-                <li key={z.id} class="mr-px mb-px">
-                  <button class="btn-border small pill-item px-s py-xs" onClick={() => mapCenter(z.id)}>
-                    {z.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div class="desktop-blob-1-2 desktop-flex">
-            <div class="flex mb-s">
-              <div class={`${markerLayersId.value === 'clusters' ? 'active' : ''}`}>
-                <ButtonIcon
-                  class="btn-border p-s rnd-l-s"
-                  title={`${markerLayersId.value === 'clusters' ? 'Dégroupe' : 'Regroupe'} les marqueurs`}
-                  onClick={() => markerLayersIdSet('clusters')}
-                  icon="marker-cluster"
-                />
-              </div>
-              <div class={`${markerLayersId.value === 'markers' ? 'active' : ''}`}>
-                <ButtonIcon
-                  class="btn-border p-s"
-                  title={`${markerLayersId.value === 'markers' ? 'Masque' : 'Affiche'} les marqueurs`}
-                  onClick={() => markerLayersIdSet('markers')}
-                  icon="marker-ungrouped"
-                />
-              </div>
-              <div class={`${markerLayersId.value === 'none' ? 'active' : ''} mr-s`}>
-                <ButtonIcon
-                  class="btn-border p-s rnd-r-s"
-                  title={`${markerLayersId.value === 'none' ? 'Masque' : 'Affiche'} les contours uniquement`}
-                  onClick={() => markerLayersIdSet('none')}
-                  icon="marker-none"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+        <li>
+          <DsfrButton onClick={() => mapFrame()} title="Tout afficher" buttonType="tertiary" />
+        </li>
+        {Object.values(zones).map(z => (
+          <li key={z.id}>
+            <DsfrButton buttonType="tertiary" onClick={() => mapCenter(z.id)} title={z.name} />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 })

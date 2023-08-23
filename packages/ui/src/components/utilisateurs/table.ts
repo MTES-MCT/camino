@@ -1,4 +1,4 @@
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
@@ -9,27 +9,28 @@ export const utilisateursColonnes: Column[] = [
   {
     id: 'nom',
     name: 'Nom',
-    class: ['min-width-6'],
+    width: '15%',
   },
   {
     id: 'prenom',
     name: 'Prénom',
-    class: ['min-width-6'],
+    width: '15%',
   },
   {
     id: 'email',
     name: 'Email',
+    width: '30%',
   },
   {
     id: 'role',
     name: 'Rôle',
-    class: ['min-width-6'],
+    width: '10%',
   },
   {
     id: 'lien',
     name: 'Lien',
     noSort: true,
-    class: ['min-width-6'],
+    width: '30%',
   },
 ]
 

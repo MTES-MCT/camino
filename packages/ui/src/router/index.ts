@@ -1,18 +1,27 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from '../store'
+import type { MenuSection } from '@/utils/matomo'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
-import Demarches from '../components/demarches.vue'
 import Activite from '../components/activite.vue'
-import Activites from '../components/activites.vue'
 import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
-import Travaux from '../components/travaux.vue'
-import { MenuSection } from '@/utils/matomo'
+const Activites = async () => {
+  const { Activites } = await import('../components/activites')
+  return Activites
+}
+const Demarches = async () => {
+  const { Demarches } = await import('../components/demarches')
+  return Demarches
+}
+const Travaux = async () => {
+  const { Travaux } = await import('../components/travaux')
+  return Travaux
+}
 
 const Etape = async () => {
   const { Etape } = await import('../components/etape')
@@ -23,12 +32,18 @@ const Utilisateur = async () => {
   const { Utilisateur } = await import('../components/utilisateur')
   return Utilisateur
 }
-const Utilisateurs = () => import('../components/utilisateurs.vue')
+const Utilisateurs = async () => {
+  const { Utilisateurs } = await import('../components/utilisateurs')
+  return Utilisateurs
+}
 const Entreprise = async () => {
   const { Entreprise } = await import('../components/entreprise')
   return Entreprise
 }
-const Entreprises = () => import('../components/entreprises.vue')
+const Entreprises = async () => {
+  const { Entreprises } = await import('../components/entreprises')
+  return Entreprises
+}
 const Administration = async () => {
   const { Administration } = await import('../components/administration')
   return Administration
@@ -42,7 +57,10 @@ const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
-const Metas = () => import('../components/metas.vue')
+const Metas = async () => {
+  const { Metas } = await import('../components/metas')
+  return Metas
+}
 const CaminoError = async () => {
   const { CaminoError } = await import('../components/error')
   return CaminoError
@@ -81,7 +99,7 @@ declare module 'vue-router' {
   }
 }
 
-const routes: RouteRecordRaw[] = [
+const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -396,12 +414,15 @@ const routes: RouteRecordRaw[] = [
       message: 'Page introuvable',
     },
   },
-]
+] as const satisfies Readonly<(Omit<RouteRecordRaw, 'children'> & { children?: Readonly<RouteRecordRaw['children']> })[]>
+
+// TODO 2023-06-29 make children
+export type CaminoRoutePaths = (typeof routes)[number]['path']
 
 const history = createWebHistory()
 
 const router = createRouter({
-  routes,
+  routes: routes as Readonly<RouteRecordRaw[]>,
   history,
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',

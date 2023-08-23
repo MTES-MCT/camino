@@ -1,12 +1,11 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { computed, onMounted, ref } from 'vue'
-import { Statut } from '@/components/_common/statut'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { TitreLink } from 'camino-common/src/titres'
-import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
+import { TitreStatut } from '../_common/titre-statut'
 
 interface Props {
   config: TitresLinkConfig
@@ -17,8 +16,8 @@ interface Props {
 export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitre', 'onSelectTitres'], props => {
   const display = (item: LinkableTitre) => {
     return (
-      <div class="flex flex-center">
-        <Statut color={titreStatut(item.titreStatutId).couleur} nom={titreStatut(item.titreStatutId).nom} />
+      <div class="flex flex-center dsfr">
+        <TitreStatut titreStatutId={item.titreStatutId} />
         <span class="cap-first bold ml-m">{item.nom}</span>
         <span class="ml-m" style="margin-left: auto">
           {getDateDebutEtDateFin(item)}
@@ -88,7 +87,6 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
 
     return `${dateDebut} - ${dateFin}`
   }
-  const titreStatut = (titreStatutId: TitreStatutId) => TitresStatuts[titreStatutId]
 
   return () => (
     <LoadingElement

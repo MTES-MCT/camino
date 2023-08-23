@@ -101,7 +101,7 @@ type Query {
     colonne: String
     ordre: String
     typesIds: [ID]
-    annees: [Int]
+    annees: [String]
     statutsIds: [ID]
     titresTypesIds: [ID]
     titresDomainesIds: [ID]
@@ -135,7 +135,7 @@ type Query {
   utilisateur(id: ID!): Utilisateur
 
   "Liste d'utilisateurs en fonction d'arguments (optionnels)"
-  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entrepriseIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
+  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entreprisesIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
 
   "Liste des substances"
   substances: [Substance]
@@ -195,7 +195,7 @@ type Query {
   "Calcule les informations relatives au périmètre d’une étape existante"
   titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
-  journaux(intervalle: Int!, page: Int!, recherche: String, titreId: String): Journaux
+  journaux(page: Int!, recherche: String, titreId: String): Journaux
 }
 
 """

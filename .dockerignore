@@ -14,3 +14,4 @@ packages/api/api-cache
 packages/api/coverage
 packages/api/docs
 packages/ui/coverage
+packages/ui/stats.html

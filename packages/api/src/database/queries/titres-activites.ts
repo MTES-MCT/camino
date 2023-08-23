@@ -46,7 +46,7 @@ const titresActivitesFiltersQueryModify = (
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    annees?: number[] | null
+    annees?: string[] | null
     titresIds?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
@@ -59,19 +59,19 @@ const titresActivitesFiltersQueryModify = (
   },
   q: QueryBuilder<TitresActivites, TitresActivites[]>
 ) => {
-  if (typesIds) {
+  if (typesIds?.length) {
     q.whereIn('titresActivites.typeId', typesIds)
   }
 
-  if (annees) {
+  if (annees?.length) {
     q.whereIn('titresActivites.annee', annees)
   }
 
-  if (statutsIds) {
+  if (statutsIds?.length) {
     q.whereIn('titresActivites.activiteStatutId', statutsIds)
   }
 
-  if (titresIds) {
+  if (titresIds?.length) {
     q.whereIn('titresActivites.titreId', titresIds)
   }
 
@@ -218,7 +218,7 @@ const titresActivitesGet = async (
     colonne?: ITitreActiviteColonneId | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    annees?: number[] | null
+    annees?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
@@ -315,7 +315,7 @@ const titresActivitesCount = async (
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    annees?: number[] | null
+    annees?: string[] | null
     titresIds?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null

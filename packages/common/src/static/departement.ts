@@ -111,7 +111,7 @@ export const DEPARTEMENT_IDS = {
   Mayotte: '976',
 } as const satisfies Record<string, (typeof IDS)[number]>
 
-const departementIdValidator = z.enum(IDS)
+export const departementIdValidator = z.enum(IDS)
 export type DepartementId = z.infer<typeof departementIdValidator>
 export interface Departement<T = DepartementId> {
   id: T

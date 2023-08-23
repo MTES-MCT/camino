@@ -6,10 +6,14 @@ import { Domaine } from '../_common/domaine'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
 import { Statut } from '../_common/statut'
 import { TableRow } from './table'
+import { vueRouter } from 'storybook-vue3-router'
+
+const customRoutes = [...Array(11)].map((_, row) => ({ name: `elementlink${row}`, params: { id: `elementslug${row}` }, value: `elementslug${row}` }))
 
 const meta: Meta = {
   title: 'Components/UI/Table',
   component: TableAuto,
+  decorators: [vueRouter([...customRoutes, { name: '/plop' }])],
 }
 export default meta
 
@@ -84,5 +88,5 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
   }
 })
 
-export const TableAutoSimple: StoryFn = () => <TableAuto rows={rows} columns={columns} />
-export const TableAutoSortedByStatusAsc: StoryFn = () => <TableAuto rows={rows} columns={columns} initialSort={{ column: 'statut', order: 'desc' }} />
+export const TableAutoSimple: StoryFn = () => <TableAuto caption="simple" rows={rows} columns={columns} />
+export const TableAutoSortedByStatusAsc: StoryFn = () => <TableAuto caption="sorted by status asc" rows={rows} columns={columns} initialSort={{ column: 'statut', order: 'desc' }} />

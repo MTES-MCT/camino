@@ -5,10 +5,12 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Titre/Infos',
   component: Infos,
+  decorators: [vueRouter([{ name: 'titre' }])],
 }
 export default meta
 

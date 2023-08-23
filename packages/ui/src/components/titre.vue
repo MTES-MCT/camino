@@ -38,9 +38,9 @@
     <div v-if="tabs.length > 1">
       <div class="flex">
         <div v-for="tab in tabs" :key="tab.id" class="mr-xs" :class="{ active: tabId === tab.id }">
-          <button :id="`cmn-titre-tab-${tab.id}`" class="p-m btn-tab rnd-t-s" @click="tabUpdate(tab.id)">
+          <button :id="`cmn-titre-tab-${tab.id}`" class="p-m btn-tab rnd-t-s" style="display: flex" @click="tabUpdate(tab.id)">
             {{ tab.nom }}
-            <ActivitesPills v-if="tab.id === 'activites'" class="inline-block ml-s" :activitesAbsentes="titre.activitesAbsentes" :activitesEnConstruction="titre.activitesEnConstruction" />
+            <ActivitesPills v-if="tab.id === 'activites'" style="margin-left: 5px" :activitesAbsentes="titre.activitesAbsentes" :activitesEnConstruction="titre.activitesEnConstruction" />
           </button>
         </div>
       </div>

@@ -6,11 +6,11 @@ import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/s
 import { GeoJsonObject } from 'geojson'
 import { LatLngTuple, LayerGroup, layerGroup, Marker } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { titresGeoPolygon } from '@/api/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
 import { useRouter } from 'vue-router'
 import { ButtonIcon } from '../_ui/button-icon'
+import { titreApiClient } from '../titre/titre-api-client'
 
 export interface Props {
   geojson: GeoJsonObject
@@ -18,9 +18,10 @@ export interface Props {
   titreTypeId: TitreTypeId
   isMain?: boolean
   titreId?: string
+  loading: boolean
 }
 
-export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId'], props => {
+export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId', 'loading'], props => {
   const map = ref<typeof CaminoMap | null>(null)
   const markersVisible = ref<boolean>(true)
   const patternVisible = ref<boolean>(true)
@@ -93,17 +94,37 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
   onMounted(() => {
     centrer()
   })
-
-  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: number[] }) => {
-    const res: { elements: TitreWithPoint[] } = await titresGeoPolygon({
-      statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
-      perimetre: data.bbox,
-    })
-    titresValidesGeojson.value.splice(0)
-    titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
-  }
+  const loading = ref(false)
 
   const titresValidesGeojson = ref<TitreWithPoint[]>([])
+
+  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
+    loading.value = true
+
+    try {
+      // TODO 2023-08-27 this should be an apiClient props
+      const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
+        statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
+        perimetre: data.bbox,
+        communes: '',
+        departements: [],
+        domainesIds: [],
+        entreprisesIds: [],
+        facadesMaritimes: [],
+        references: '',
+        regions: [],
+        substancesIds: [],
+        titresIds: [],
+        typesIds: [],
+      })
+      titresValidesGeojson.value.splice(0)
+      titresValidesGeojson.value.push(...res.elements.filter(({ id }) => id !== props.titreId))
+    } catch (e) {
+      console.error(e)
+    }
+    loading.value = false
+  }
+
   const titresValidesLayer = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
   const additionalOverlayLayers = computed<Record<string, LayerGroup>>(() => {
     titresValidesLayer.value.clearLayers()
@@ -121,6 +142,7 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     <div class="bg-alt">
       <CaminoMap
         ref={map}
+        loading={loading.value || props.loading}
         mapUpdate={mapUpdate}
         geojsonLayers={geojsonLayers.value}
         markerLayers={markerLayers.value}

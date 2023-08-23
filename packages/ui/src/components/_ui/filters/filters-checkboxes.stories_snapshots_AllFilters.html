@@ -1,0 +1,578 @@
+<div style="display: none;" aria-hidden="true">
+  <div id="domaine_m">
+    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+  </div>
+  <div id="domaine_c">
+    <p class="fr-tag fr-tag--md mono" title="Domaine carrières" aria-label="Domaine carrières" style="min-width: 2rem; color: black;">C</p>
+  </div>
+  <div id="domaine_f">
+    <p class="fr-tag fr-tag--md mono" title="Domaine combustibles fossiles" aria-label="Domaine combustibles fossiles" style="min-width: 2rem; color: black;">F</p>
+  </div>
+  <div id="domaine_g">
+    <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
+  </div>
+  <div id="domaine_h">
+    <p class="fr-tag fr-tag--md mono" title="Domaine hydrocarbures liquides ou gazeux" aria-label="Domaine hydrocarbures liquides ou gazeux" style="min-width: 2rem; color: black;">H</p>
+  </div>
+  <div id="domaine_r">
+    <p class="fr-tag fr-tag--md mono" title="Domaine éléments radioactifs" aria-label="Domaine éléments radioactifs" style="min-width: 2rem; color: black;">R</p>
+  </div>
+  <div id="domaine_s">
+    <p class="fr-tag fr-tag--md mono" title="Domaine stockages souterrains" aria-label="Domaine stockages souterrains" style="min-width: 2rem; color: black;">S</p>
+  </div>
+  <div id="domaine_w">
+    <p class="fr-tag fr-tag--md mono" title="Domaine granulats marins" aria-label="Domaine granulats marins" style="min-width: 2rem; color: black;">W</p>
+  </div>
+  <div id="titre_statut_dmi">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+  </div>
+  <div id="titre_statut_dmc">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
+  </div>
+  <div id="titre_statut_val">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
+  </div>
+  <div id="titre_statut_mod">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="modification en instance" aria-label="modification en instance">modification en instance</p>
+  </div>
+  <div id="titre_statut_ech">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+  </div>
+  <div id="titre_statut_ind">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--purple-glycine" title="indéterminé" aria-label="indéterminé">indéterminé</p>
+  </div>
+</div>
+<svg class="absolute z--100">
+  <defs>
+    <g>
+      <g>
+        <pattern id="pattern-ap-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-m" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-c" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-f" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-g" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-h" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-r" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-s" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-w" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-ar-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-m" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-c" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-f" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-g" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-h" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-r" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-s" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-w" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-ax-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-cx-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-in-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-m" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-c" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-f" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-g" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-h" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-r" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-s" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-w" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-pc-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-pr-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-px-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+  </defs>
+</svg>
+<table>
+  <thead>
+    <th>Filtre</th>
+    <th>Rendu</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>administrationTypesIds</td>
+      <td>
+        <div class="mb">
+          <h5>Types</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="aut"><span class="cap-first h6 bold">Autorité</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dea"><span class="cap-first h6 bold">Déal</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dre"><span class="cap-first h6 bold">Dréal</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="min"><span class="cap-first h6 bold">Ministère</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ope"><span class="cap-first h6 bold">Opérateur</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pre"><span class="cap-first h6 bold">Préfecture</span></label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>roles</td>
+      <td>
+        <div class="mb">
+          <h5>Rôles</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="super"><span class="cap-first h6 bold">super</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="admin"><span class="cap-first h6 bold">admin</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="editeur"><span class="cap-first h6 bold">editeur</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="lecteur"><span class="cap-first h6 bold">lecteur</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="entreprise"><span class="cap-first h6 bold">entreprise</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="bureau d’études"><span class="cap-first h6 bold">bureau d’études</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="defaut"><span class="cap-first h6 bold">defaut</span></label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>typesIds</td>
+      <td>
+        <div class="mb">
+          <h5>Types de titre</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ap"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ap"></rect></svg><span class="cap-first h6 bold">autorisation de prospections préalables</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ar"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ar"></rect></svg><span class="cap-first h6 bold">autorisation de recherches</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pr"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pr"></rect></svg><span class="cap-first h6 bold">permis exclusif de recherches</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ax"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-ax"></rect></svg><span class="cap-first h6 bold">autorisation d'exploitation</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pc"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-pc"></rect></svg><span class="cap-first h6 bold">permis exclusif de carrières</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="px"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-px"></rect></svg><span class="cap-first h6 bold">permis d'exploitation</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="cx"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-cx"></rect></svg><span class="cap-first h6 bold">concession</span></span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="in"><span><svg width="24" height="24" class="mr-s mb--xs"><rect width="24" height="24" class="svg-fill-pattern-in"></rect></svg><span class="cap-first h6 bold">indéterminé</span></span></label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>domainesIds</td>
+      <td>
+        <div class="mb">
+          <h5>Domaines</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="m">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+                  <div class="h6 bold fr-pl-1w">Minéraux et métaux</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="w">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine granulats marins" aria-label="Domaine granulats marins" style="min-width: 2rem; color: black;">W</p>
+                  <div class="h6 bold fr-pl-1w">Granulats marins</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="c">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine carrières" aria-label="Domaine carrières" style="min-width: 2rem; color: black;">C</p>
+                  <div class="h6 bold fr-pl-1w">Carrières</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="h">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine hydrocarbures liquides ou gazeux" aria-label="Domaine hydrocarbures liquides ou gazeux" style="min-width: 2rem; color: black;">H</p>
+                  <div class="h6 bold fr-pl-1w">Hydrocarbures liquides ou gazeux</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="f">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine combustibles fossiles" aria-label="Domaine combustibles fossiles" style="min-width: 2rem; color: black;">F</p>
+                  <div class="h6 bold fr-pl-1w">Combustibles fossiles</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="r">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine éléments radioactifs" aria-label="Domaine éléments radioactifs" style="min-width: 2rem; color: black;">R</p>
+                  <div class="h6 bold fr-pl-1w">Éléments radioactifs</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="g">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
+                  <div class="h6 bold fr-pl-1w">Géothermie</div>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="s">
+                <div class="dsfr" style="display: flex; align-items: baseline;">
+                  <p class="fr-tag fr-tag--md mono" title="Domaine stockages souterrains" aria-label="Domaine stockages souterrains" style="min-width: 2rem; color: black;">S</p>
+                  <div class="h6 bold fr-pl-1w">Stockages souterrains</div>
+                </div>
+              </label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>statutsIds</td>
+      <td>
+        <div class="mb">
+          <h5>Statuts de titre</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dmi">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dmc">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="val">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="mod">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="modification en instance" aria-label="modification en instance">modification en instance</p>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ech">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+                </div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ind">
+                <div class="dsfr">
+                  <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--purple-glycine" title="indéterminé" aria-label="indéterminé">indéterminé</p>
+                </div>
+              </label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>activiteTypesIds</td>
+      <td>
+        <div class="mb">
+          <h5>Types d'activités</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="grp"><span class="cap-first h6 bold">rapport trimestriel d'exploitation d'or en Guyane</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="gra"><span class="cap-first h6 bold">rapport d'exploitation (permis et concessions M)</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="grx"><span class="cap-first h6 bold">rapport d'exploitation (autorisations M)</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pmb"><span class="cap-first h6 bold">rapport financier d'exploration</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pma"><span class="cap-first h6 bold">rapport d’intensité d’exploration</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pmc"><span class="cap-first h6 bold">rapport environnemental d'exploration</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pmd"><span class="cap-first h6 bold">rapport social et économique d'exploration</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="wrp"><span class="cap-first h6 bold">rapport d'exploitation (permis et concessions W)</span></label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>activiteStatutsIds</td>
+      <td>
+        <div class="mb">
+          <h5>Statuts</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="abs">
+                <div class="bg-error inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Absent</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dep">
+                <div class="bg-success inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Déposé</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="enc">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">En construction</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="fer">
+                <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Cloturé</div>
+              </label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>demarchesTypesIds</td>
+      <td>
+        <div class="mb">
+          <h5>Types</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="oct"><span class="cap-first h6 bold">octroi</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pro"><span class="cap-first h6 bold">prolongation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pr1"><span class="cap-first h6 bold">prolongation 1</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pr2"><span class="cap-first h6 bold">prolongation 2</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="pre"><span class="cap-first h6 bold">prolongation exceptionnelle</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="exp"><span class="cap-first h6 bold">extension de périmètre</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dep"><span class="cap-first h6 bold">déplacement de périmètre</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="fus"><span class="cap-first h6 bold">fusion</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="exs"><span class="cap-first h6 bold">extension de substance</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="con"><span class="cap-first h6 bold">conversion</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="amo"><span class="cap-first h6 bold">amodiation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="res"><span class="cap-first h6 bold">résiliation anticipée d'amodiation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="mut"><span class="cap-first h6 bold">mutation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="vut"><span class="cap-first h6 bold">mutation partielle</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ces"><span class="cap-first h6 bold">cession</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="prr"><span class="cap-first h6 bold">prorogation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="vct"><span class="cap-first h6 bold">demande de titre d'exploitation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ren"><span class="cap-first h6 bold">renonciation</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ret"><span class="cap-first h6 bold">retrait</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dec"><span class="cap-first h6 bold">déchéance</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="aom"><span class="cap-first h6 bold">Autorisation d'ouverture de travaux</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dot"><span class="cap-first h6 bold">Déclaration d'ouverture de travaux</span></label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dam"><span class="cap-first h6 bold">Déclaration d'arrêt définitif des travaux</span></label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>demarchesStatutsIds</td>
+      <td>
+        <div class="mb">
+          <h5>Types</h5>
+          <hr class="mb-s">
+          <ul class="list-sans">
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="eco">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">En construction</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="dep">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Déposé</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ini">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Initié</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ins">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">En instruction</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="cls">
+                <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Classé sans suite</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="acc">
+                <div class="bg-success inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Accepté</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="rej">
+                <div class="bg-error inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Rejeté</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="des">
+                <div class="bg-neutral inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Désisté</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ter">
+                <div class="bg-success inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Terminé</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="ind">
+                <div class="bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Indéterminé</div>
+              </label></li>
+            <li><label style="display: flex; flex-direction: row;"><input type="checkbox" class="mr-s" value="fpm">
+                <div class="bg-success inline-block small bold color-bg pill py-xs px-s inline-block mb-s">Fin de la police des mines</div>
+              </label></li>
+          </ul><button class="btn-border small px-s p-xs rnd-xs mr-xs">Aucun</button><button class="btn-border small px-s p-xs rnd-xs mr-xs">Tous</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

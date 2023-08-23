@@ -10,16 +10,11 @@ import titreCreation from './titre-creation'
 import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
 import document from './document'
-import titres from './titres'
 import titresDemarches from './titres-demarches'
-import utilisateurs from './utilisateurs'
-import entreprises from './entreprises'
-import metas from './metas'
 import meta from './meta'
 import user from './user'
 import titreActivite from './titre-activite'
 import titreActiviteEdition from './titre-activite-edition'
-import titresActivites from './titres-activites'
 
 const modules = {
   titre,
@@ -27,16 +22,11 @@ const modules = {
   titreEtape,
   titreEtapeEdition,
   document,
-  titres,
   titresDemarches,
-  utilisateurs,
-  entreprises,
   meta,
-  metas,
   user,
   titreActivite,
   titreActiviteEdition,
-  titresActivites,
 }
 
 const state = {

@@ -31,6 +31,7 @@ import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statis
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
+import { Expect, isFalse, isTrue } from './typescript-tools.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -142,6 +143,7 @@ export const CaminoRestRoutes = {
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 
+const DOWNLOAD_FORMATS_IDS = ['xlsx', 'csv', 'ods', 'geojson', 'json', 'pdf', 'zip'] as const
 export const DOWNLOAD_FORMATS = {
   Excel: 'xlsx',
   Csv: 'csv',
@@ -150,11 +152,19 @@ export const DOWNLOAD_FORMATS = {
   JSON: 'json',
   PDF: 'pdf',
   Zip: 'zip',
-} as const
+} as const satisfies Record<string, (typeof DOWNLOAD_FORMATS_IDS)[number]>
 
-export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[keyof typeof DOWNLOAD_FORMATS]
+export const downloadFormatValidator = z.enum(DOWNLOAD_FORMATS_IDS)
+
+export type DownloadFormat = z.infer<typeof downloadFormatValidator>
 
 type ZodParseUrlParams<url> = url extends `${infer start}/${infer rest}` ? ZodParseUrlParams<start> & ZodParseUrlParams<rest> : url extends `:${infer param}` ? { [k in param]: ZodType } : {} // eslint-disable-line @typescript-eslint/ban-types
+
+isTrue<Expect<ZodParseUrlParams<'/titre'>, {}>>
+isFalse<Expect<ZodParseUrlParams<'/titre'>, { id: ZodType }>>
+isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
+isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
+isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
 type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
 

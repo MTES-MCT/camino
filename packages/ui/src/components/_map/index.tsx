@@ -1,4 +1,4 @@
-import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent } from 'leaflet'
+import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent, Control } from 'leaflet'
 
 import { ref, onMounted, markRaw, watch } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
@@ -7,11 +7,14 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 export interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
-  mapUpdate?: (data: { center?: number[]; zoom?: number; bbox?: number[] }) => void
+  mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void
   additionalOverlayLayers?: Record<string, LayerGroup>
+  loading: boolean
 }
 
-export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers'], (props, { expose }) => {
+export const displayPerimeterZoomMaxLevel = 7
+
+export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
   const updateBboxOnly = ref<boolean>(false)
@@ -23,25 +26,32 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
 
   const geojsonLayer = layerGroup([])
   const markerLayer = layerGroup([])
+  const loadingLeaflet = ref<Control | null>(null)
 
+  watch(
+    () => props.loading,
+    isLoading => {
+      if (loadingLeaflet.value) {
+        if (isLoading) {
+          leafletComponent.value?.addControl(loadingLeaflet.value)
+        } else {
+          leafletComponent.value?.removeControl(loadingLeaflet.value)
+        }
+      }
+    },
+    { immediate: true }
+  )
   watch(
     () => props.geojsonLayers,
     (layers: Layer[]) => {
-      geojsonLayer.clearLayers()
       layers.forEach(l => l.addTo(geojsonLayer))
     },
     { immediate: true }
   )
-  watch(
-    () => props.markerLayers,
-    (layers: Layer[]) => {
-      markerLayer.clearLayers()
-      layers.forEach(l => l.addTo(markerLayer))
-    },
-    { immediate: true }
-  )
 
-  const boundsGet = () => {
+  props.markerLayers.forEach(l => l.addTo(markerLayer))
+
+  const boundsGet = (): [number, number, number, number] | [] => {
     if (leafletComponent.value !== null) {
       const bounds = leafletComponent.value.getBounds()
 
@@ -52,6 +62,10 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
 
   function boundsFit(bounds: LatLngBoundsExpression) {
     leafletComponent.value?.fitBounds(bounds)
+  }
+
+  function fitWorld() {
+    leafletComponent.value?.fitWorld()
   }
 
   const positionSet = (position: { zoom: number; center: LatLngExpression }) => {
@@ -66,7 +80,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     updateCenterAndZoomOnly.value = true
     boundsFit(featureGroup.getBounds())
   }
-  expose({ boundsFit, positionSet, allFit })
+  expose({ boundsFit, positionSet, allFit, fitWorld })
 
   const sdomLegends = [
     { icon: 'icon-map-legend-sdom-zone-0', label: 'Zone 0' },
@@ -170,25 +184,45 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       )
       leafletComponent.value = leafletComponentOnMounted
 
-      L.control.layers(baseMaps, overlayMaps).addTo(leafletComponentOnMounted)
+      const controlLayers = L.control.layers(baseMaps, overlayMaps)
+      controlLayers.addTo(leafletComponentOnMounted)
 
+      let hasGeojsonLayer = true
+
+      leafletComponentOnMounted.on('zoomend', () => {
+        if (leafletComponentOnMounted.getZoom() <= displayPerimeterZoomMaxLevel) {
+          if (hasGeojsonLayer) {
+            controlLayers.removeLayer(geojsonLayer)
+            leafletComponentOnMounted.removeLayer(geojsonLayer)
+            hasGeojsonLayer = false
+          }
+        } else if (!hasGeojsonLayer) {
+          controlLayers.addOverlay(geojsonLayer, 'Contours')
+          leafletComponentOnMounted.addLayer(geojsonLayer)
+          hasGeojsonLayer = true
+        }
+      })
       leafletComponentOnMounted.on('moveend', () => {
         if (updateBboxOnly.value) {
           updateBboxOnly.value = false
           const bbox = boundsGet()
-
-          props.mapUpdate?.({ bbox })
+          if (bbox.length === 4) {
+            props.mapUpdate({ bbox })
+          }
         } else {
-          const center = [leafletComponentOnMounted.getCenter().lat, leafletComponentOnMounted.getCenter().lng]
+          const { lat, lng } = leafletComponentOnMounted.getCenter()
+          const center: [number, number] = [lat, lng]
           const leafletZoom = leafletComponentOnMounted.getZoom()
           zoom.value = leafletZoom
 
           if (updateCenterAndZoomOnly.value) {
             updateCenterAndZoomOnly.value = false
-            props.mapUpdate?.({ center, zoom: zoom.value })
+            props.mapUpdate({ center, zoom: zoom.value })
           } else {
             const bbox = boundsGet()
-            props.mapUpdate?.({ center, zoom: zoom.value, bbox })
+            if (bbox.length === 4) {
+              props.mapUpdate({ center, zoom: zoom.value, bbox })
+            }
           }
         }
       })
@@ -208,20 +242,21 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
       zoom.value = leafletComponentOnMounted.getZoom()
 
       L.control.scale({ imperial: false }).addTo(leafletComponentOnMounted)
-      const ZoomViewer = L.Control.extend({
+
+      const LoadingLeaflet = L.Control.extend({
         onAdd() {
           const gauge = L.DomUtil.create('div')
-          gauge.style.width = '70px'
-          gauge.style.background = 'rgba(255,255,255,0.5)'
-          gauge.style.textAlign = 'left'
-          leafletComponentOnMounted.on('zoomstart zoom zoomend zoomlevelschange load viewreset', () => {
-            gauge.innerHTML = `Zoom: ${zoom.value}`
-          })
+          gauge.style.background = 'rgba(255,255,255)'
+          gauge.style.textAlign = 'right'
+          gauge.innerHTML = `Chargement...`
           return gauge
         },
       })
-
-      new ZoomViewer().addTo(leafletComponentOnMounted)
+      const loading = new LoadingLeaflet()
+      loadingLeaflet.value = loading
+      if (props.loading) {
+        leafletComponent.value?.addControl(loadingLeaflet.value)
+      }
       const SdomLegend = L.Control.extend({
         onAdd() {
           const legend = L.DomUtil.create('div')

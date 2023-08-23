@@ -55,7 +55,7 @@
 
     <div v-if="slotDefault" :class="{ 'overflow-hidden': isOverflowHidden }">
       <Transition name="slide">
-        <div v-show="opened">
+        <div v-if="opened">
           <slot />
         </div>
       </Transition>

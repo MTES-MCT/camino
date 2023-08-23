@@ -367,7 +367,7 @@ export const postTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res
   const titreId = titreIdValidator.safeParse(req.params.id)
   const titreFromIds = z.array(titreIdValidator).safeParse(req.body)
 
-  if (!titreFromIds.success) {
+  if (!titreFromIds.success || titreFromIds.data.length === 0) {
     throw new Error(`un tableau est attendu en corps de message : '${titreFromIds}'`)
   }
 
@@ -450,9 +450,13 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
   const titresTitres = await TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId)
   const titreIds = titresTitres.map(r => r[link])
 
-  const titres = await titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
+  if (titreIds.length > 0) {
+    const titres = await titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
 
-  return titres.map(({ id, nom }) => ({ id, nom }))
+    return titres.map(({ id, nom }) => ({ id, nom }))
+  } else {
+    return []
+  }
 }
 
 export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {

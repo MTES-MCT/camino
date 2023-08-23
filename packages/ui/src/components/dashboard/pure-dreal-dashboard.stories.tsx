@@ -2,13 +2,16 @@ import { PureDrealDashboard } from './pure-dreal-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { statistiquesDGTMFake, titresDreal } from './testData'
+import { vueRouter } from 'storybook-vue3-router'
 const meta: Meta = {
   title: 'Components/Dashboard/DREAL',
   component: PureDrealDashboard,
-  argTypes: {
-    getEntreprisesTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' },
-  },
+  decorators: [
+    vueRouter([
+      { name: 'titre', params: { id: 'fourth-slug' } },
+      { name: 'Stats DGTM', params: {} },
+    ]),
+  ],
 }
 export default meta
 

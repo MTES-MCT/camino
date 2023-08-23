@@ -1,15 +1,5 @@
 import gql from 'graphql-tag'
 
-export const fragmentEntreprises = gql`
-  fragment entreprises on Entreprise {
-    id
-    nom
-    paysId
-    legalSiren
-    legalEtranger
-  }
-`
-
 export const fragmentTitreEntreprises = gql`
   fragment titreEntreprises on Entreprise {
     id

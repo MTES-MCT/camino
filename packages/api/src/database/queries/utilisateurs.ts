@@ -48,14 +48,14 @@ const utilisateursQueryBuild = ({ fields }: { fields?: IFields }, user: User) =>
 const utilisateursFiltersQueryModify = (
   {
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
     emails,
   }: {
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -63,23 +63,23 @@ const utilisateursFiltersQueryModify = (
   },
   q: QueryBuilder<Utilisateurs, Utilisateurs[]>
 ) => {
-  if (ids) {
+  if (ids && ids.length > 0) {
     q.whereIn('id', ids)
   }
 
-  if (roles) {
+  if (roles && roles.length > 0) {
     q.whereIn('role', roles as string[])
   }
 
-  if (administrationIds) {
+  if (administrationIds && administrationIds.length > 0) {
     q.whereIn('administrationId', administrationIds)
   }
 
-  if (entrepriseIds) {
-    q.whereIn('entreprises.id', entrepriseIds).leftJoinRelated('entreprises')
+  if (entreprisesIds && entreprisesIds.length > 0) {
+    q.whereIn('entreprises.id', entreprisesIds).leftJoinRelated('entreprises')
   }
 
-  if (noms) {
+  if (noms && noms !== '') {
     const nomsArray = stringSplit(noms)
     const fields = ['nom', 'prenom']
 
@@ -92,7 +92,7 @@ const utilisateursFiltersQueryModify = (
     })
   }
 
-  if (emails) {
+  if (emails && emails !== '') {
     q.where(b => {
       b.whereRaw(`LOWER(??) LIKE LOWER(?)`, ['utilisateurs.email', `%${emails}%`])
     })
@@ -144,7 +144,7 @@ const utilisateursGet = async (
     colonne,
     ordre,
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
@@ -155,7 +155,7 @@ const utilisateursGet = async (
     colonne?: IUtilisateursColonneId | null
     ordre?: 'asc' | 'desc' | null
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -169,7 +169,7 @@ const utilisateursGet = async (
   utilisateursFiltersQueryModify(
     {
       ids,
-      entrepriseIds,
+      entreprisesIds,
       administrationIds,
       roles,
       noms,
@@ -198,14 +198,14 @@ const utilisateursGet = async (
 const utilisateursCount = async (
   {
     ids,
-    entrepriseIds,
+    entreprisesIds,
     administrationIds,
     roles,
     noms,
     emails,
   }: {
     ids?: string[]
-    entrepriseIds?: string[]
+    entreprisesIds?: string[]
     administrationIds?: string[]
     roles?: Role[]
     noms?: string | null
@@ -216,7 +216,7 @@ const utilisateursCount = async (
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
-  utilisateursFiltersQueryModify({ ids, entrepriseIds, administrationIds, roles, noms, emails }, q)
+  utilisateursFiltersQueryModify({ ids, entreprisesIds, administrationIds, roles, noms, emails }, q)
 
   return q.resultSize()
 }

@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentTitre, fragmentTitres, fragmentTitresGeo, fragmentTitresGeoPolygon } from './fragments/titre'
+import { fragmentTitre, fragmentTitres } from './fragments/titre'
 
 const titresMetas = apiGraphQLFetch(
   gql`
@@ -25,90 +25,6 @@ const titre = apiGraphQLFetch(
     }
 
     ${fragmentTitre}
-  `
-)
-
-const titresGeoPolygon = apiGraphQLFetch(
-  gql`
-    query Titres(
-      $titresIds: [ID!]
-      $typesIds: [ID!]
-      $domainesIds: [ID!]
-      $statutsIds: [ID!]
-      $substancesIds: [ID!]
-      $entreprisesIds: [ID!]
-      $references: String
-      $communes: String
-      $departements: [String]
-      $regions: [String]
-      $facadesMaritimes: [String]
-      $perimetre: [Float!]
-    ) {
-      titres(
-        ids: $titresIds
-        typesIds: $typesIds
-        domainesIds: $domainesIds
-        statutsIds: $statutsIds
-        substancesIds: $substancesIds
-        entreprisesIds: $entreprisesIds
-        references: $references
-        communes: $communes
-        departements: $departements
-        regions: $regions
-        facadesMaritimes: $facadesMaritimes
-        perimetre: $perimetre
-        demandeEnCours: true
-      ) {
-        elements {
-          ...titresGeoPolygon
-        }
-        total
-      }
-    }
-
-    ${fragmentTitresGeoPolygon}
-  `
-)
-
-const titresGeo = apiGraphQLFetch(
-  gql`
-    query Titres(
-      $titresIds: [ID!]
-      $typesIds: [ID!]
-      $domainesIds: [ID!]
-      $statutsIds: [ID!]
-      $substancesIds: [ID!]
-      $entreprisesIds: [ID!]
-      $references: String
-      $communes: String
-      $departements: [String]
-      $regions: [String]
-      $facadesMaritimes: [String]
-      $perimetre: [Float!]
-    ) {
-      titres(
-        ids: $titresIds
-        typesIds: $typesIds
-        domainesIds: $domainesIds
-        statutsIds: $statutsIds
-        substancesIds: $substancesIds
-        entreprisesIds: $entreprisesIds
-        references: $references
-        communes: $communes
-        departements: $departements
-        regions: $regions
-        facadesMaritimes: $facadesMaritimes
-        perimetre: $perimetre
-        demandeEnCours: true
-      ) {
-        elements {
-          ...titresGeo
-        }
-        total
-      }
-    }
-
-    ${fragmentTitresGeo}
   `
 )
 
@@ -161,21 +77,6 @@ const titres = apiGraphQLFetch(
   `
 )
 
-const titresRechercherByNom = apiGraphQLFetch(
-  gql`
-    query Titres($intervalle: Int, $noms: String) {
-      titres(intervalle: $intervalle, noms: $noms) {
-        elements {
-          id
-          nom
-          typeId
-        }
-      }
-    }
-  `,
-  'titresRechercherByNom'
-)
-
 export const titresRechercherByReferences = apiGraphQLFetch(
   gql`
     query Titres($intervalle: Int, $references: String) {
@@ -191,20 +92,6 @@ export const titresRechercherByReferences = apiGraphQLFetch(
   'titresRechercherByReferences'
 )
 
-const titresFiltres = apiGraphQLFetch(
-  gql`
-    query Titres($titresIds: [ID!]) {
-      titres(ids: $titresIds) {
-        elements {
-          id
-          nom
-        }
-      }
-    }
-  `,
-  'titresFiltres'
-)
-
 const titreCreer = apiGraphQLFetch(gql`
   mutation TitreCreer($titre: InputTitreCreation!) {
     titreCreer(titre: $titre) {
@@ -213,4 +100,4 @@ const titreCreer = apiGraphQLFetch(gql`
   }
 `)
 
-export { titresMetas, titre, titres, titresGeo, titresGeoPolygon, titreCreer, titresRechercherByNom, titresFiltres }
+export { titresMetas, titre, titres, titreCreer }

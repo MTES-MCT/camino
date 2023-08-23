@@ -1,0 +1,18 @@
+<div class="flex flex-direction-column rnd-s border bg-bg mb-s"><button class="rnd-s accordion-header flex btn-alt py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
+    <div>
+      <div style="display: flex; align-items: center;">
+        <div>Filtres</div>
+        <!---->
+      </div>
+    </div>
+    <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+        <use href="#icon-chevron-bas"></use>
+      </svg></div>
+  </button>
+  <!--v-if-->
+  <div class="overflow-hidden">
+    <transition-stub name="slide" appear="false" persisted="false" css="true">
+      <!--v-if-->
+    </transition-stub>
+  </div>
+</div>

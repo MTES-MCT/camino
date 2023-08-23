@@ -1,20 +1,29 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Journaux as JournauxData, JournauxQueryParams } from 'camino-common/src/journaux'
+import { Journaux as JournauxData } from 'camino-common/src/journaux'
 import { TitreId } from 'camino-common/src/titres'
-import { markRaw, onMounted, ref } from 'vue'
+import { markRaw } from 'vue'
 import { Differences } from './differences'
-import { AsyncData } from '@/api/client-rest'
 import { JournauxApiClient } from './journaux-api-client'
-import { LoadingElement } from '../_ui/functional-loader'
-import { Params, TablePagination, Props as TablePaginationProps } from '../_ui/table-pagination'
-import { TableRow, TableSortEvent } from '../_ui/table'
+import { Column, TableRow } from '../_ui/table'
+import { useRouter } from 'vue-router'
+import { Liste, Params } from '../_common/liste'
 
 interface Props {
   titreId: TitreId | null
   apiClient: Pick<JournauxApiClient, 'getJournaux'>
 }
 
-const lignes = (journaux: JournauxData): TableRow[] => {
+const colonnesData = [
+  { id: 'date', name: 'Date', noSort: true },
+  { id: 'titre', name: 'Titre', noSort: true },
+  { id: 'utilisateur', name: 'Utilisateur', noSort: true },
+  { id: 'operation', name: 'Action', noSort: true },
+  { id: 'differences', name: 'Modifications', noSort: true },
+] as const
+
+type ColonneId = (typeof colonnesData)[number]['id']
+
+const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   return journaux.elements.map(journal => {
     const date = new Date(Number.parseInt(journal.date))
     const columns = {
@@ -47,103 +56,20 @@ const lignes = (journaux: JournauxData): TableRow[] => {
   })
 }
 
-export const isTableSortEvent = (event: Params | TableSortEvent): event is TableSortEvent => {
-  return 'column' in event && 'order' in event
-}
 export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], props => {
-  const data = ref<AsyncData<JournauxData>>({ status: 'LOADING' })
-  const params = ref<JournauxQueryParams>({
-    intervalle: 10,
-    page: 1,
-    recherche: null,
-    titreId: props.titreId,
-  })
-  const colonnes = () => {
-    const data = [
-      { id: 'date', name: 'Date' },
-      { id: 'titre', name: 'Titre' },
-      { id: 'utilisateur', name: 'Utilisateur' },
-      { id: 'operation', name: 'Action' },
-      { id: 'differences', name: 'Modifications' },
-    ] as const
-
+  const router = useRouter()
+  const colonnes = (): Readonly<Column<ColonneId>[]> => {
     if (!props.titreId) {
-      return data
+      return colonnesData
     }
-    return data.filter(({ id }) => id !== 'titre')
+    return colonnesData.filter(({ id }) => id !== 'titre')
   }
 
-  const load = async () => {
-    data.value = { status: 'LOADING' }
-    try {
-      const values = await props.apiClient.getJournaux(params.value)
-      data.value = { status: 'LOADED', value: values }
-    } catch (e: any) {
-      data.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened',
-      }
-    }
+  const getData = async (event: Params<string>) => {
+    const values = await props.apiClient.getJournaux({ page: event.page ?? 1, recherche: null, titreId: props.titreId })
+
+    return { total: values.total, values: lignes(values) }
   }
 
-  onMounted(async () => {
-    await load()
-  })
-
-  const paramsTableUpdate = async (event: Params | TableSortEvent) => {
-    if (!isTableSortEvent(event)) {
-      if (event.range) {
-        params.value.intervalle = event.range
-        await load()
-      }
-      if (event.page) {
-        params.value.page = event.page
-        await load()
-      }
-    }
-  }
-
-  return () => (
-    <>
-      <LoadingElement
-        data={data.value}
-        renderItem={item => {
-          let pagination: TablePaginationProps['pagination'] = {
-            active: false,
-          }
-          if (item.total > item.elements.length) {
-            pagination = {
-              active: true,
-              range: params.value.intervalle,
-              page: params.value.page,
-            }
-          }
-
-          const res = item.total > item.elements.length ? `${item.elements.length} / ${item.total}` : item.elements.length
-          const resultat = `${res} résultat${item.elements.length > 1 ? 's' : ''}`
-
-          return (
-            <>
-              <div class="tablet-blobs tablet-flex-direction-reverse">
-                <div class="tablet-blob-2-3 flex">
-                  <div class="py-m h5 bold mb-xs">{resultat}</div>
-                </div>
-              </div>
-
-              <div class="line-neutral width-full" />
-              <TablePagination
-                data={{
-                  columns: colonnes(),
-                  rows: lignes(item),
-                  total: item.total,
-                }}
-                pagination={pagination}
-                paramsUpdate={paramsTableUpdate}
-              />
-            </>
-          )
-        }}
-      />
-    </>
-  )
+  return () => <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={router.currentRoute.value} getData={getData} nom="Journaux" />
 })

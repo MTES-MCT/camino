@@ -1,5 +1,7 @@
 import { Definition } from '../definition.js'
+import { z } from 'zod'
 
+const IDS = ['ap', 'ar', 'ax', 'cx', 'in', 'pc', 'pr', 'px'] as const
 export const TITRES_TYPES_TYPES_IDS = {
   AUTORISATION_DE_PROSPECTION: 'ap',
   AUTORISATION_DE_RECHERCHE: 'ar',
@@ -9,8 +11,10 @@ export const TITRES_TYPES_TYPES_IDS = {
   PERMIS_EXCLUSIF_DE_CARRIERES: 'pc',
   PERMIS_EXCLUSIF_DE_RECHERCHES: 'pr',
   PERMIS_D_EXPLOITATION: 'px',
-} as const
-export type TitreTypeTypeId = (typeof TITRES_TYPES_TYPES_IDS)[keyof typeof TITRES_TYPES_TYPES_IDS]
+} as const satisfies Record<string, (typeof IDS)[number]>
+export const titreTypeTypeIdValidator = z.enum(IDS)
+
+export type TitreTypeTypeId = z.infer<typeof titreTypeTypeIdValidator>
 export type TitreTypeType = Definition<TitreTypeTypeId>
 export const TitresTypesTypes: {
   [key in TitreTypeTypeId]: Definition<key>

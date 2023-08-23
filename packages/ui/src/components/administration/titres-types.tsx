@@ -60,7 +60,7 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
 
           {titresTypes(props.administrationId).map(titreType => (
             <tr key={titreType.titreTypeId}>
-              <td>
+              <td class="dsfr">
                 <CaminoDomaine domaineId={titreType.domaineId} class="mt-s" />
               </td>
               <td>

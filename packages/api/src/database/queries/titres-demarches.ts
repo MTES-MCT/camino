@@ -23,7 +23,7 @@ const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarc
 
       const condition = mode === 'etapesInclues' ? '> 0' : '= 0'
 
-      return `count(*) filter (where etapes.type_id = ? ${statutCond} ${dateDebutCond} ${dateFinCond}) ${condition}`
+      return `count(*) filter (where etapes.archive is not true and etapes.type_id = ? ${statutCond} ${dateDebutCond} ${dateFinCond}) ${condition}`
     })
     .join(') and (')
 
@@ -85,11 +85,11 @@ const titresDemarchesFiltersQueryModify = (
     q.whereIn('titresDemarches.id', titresDemarchesIds)
   }
 
-  if (typesIds) {
+  if (typesIds?.length) {
     q.whereIn('titresDemarches.typeId', typesIds)
   }
 
-  if (statutsIds) {
+  if (statutsIds?.length) {
     q.whereIn('titresDemarches.statutId', statutsIds)
   }
 

@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { PureUtilisateur } from './utilisateur'
+import { PureUtilisateur, Props } from './utilisateur'
 import { UtilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { toUtilisateurId } from 'camino-common/src/roles'
 
@@ -19,7 +19,7 @@ const passwordUpdate = action('passwordUpdate')
 
 const editNewsletter = action('editNewsletter')
 
-const apiClientMock: UtilisateurApiClient = {
+const apiClientMock: Props['apiClient'] = {
   getUtilisateur: () =>
     Promise.resolve({
       id: toUtilisateurId('id'),
@@ -41,7 +41,7 @@ const apiClientMock: UtilisateurApiClient = {
     editNewsletter(values)
     return Promise.resolve()
   },
-  getEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
+  getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 

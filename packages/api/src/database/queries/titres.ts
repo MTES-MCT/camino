@@ -46,7 +46,7 @@ const titresQueryBuild = ({ fields }: { fields?: IFields }, user: User, demandeE
  * @returns un titre
  *
  */
-const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User): Promise<DBTitre | undefined> => {
+export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -82,7 +82,7 @@ const titresColonnes = {
  * @returns une liste de titres
  *
  */
-const titresGet = async (
+export const titresGet = async (
   {
     intervalle,
     page,
@@ -213,7 +213,7 @@ const titresGet = async (
  * @returns le nombre de titres
  *
  */
-const titresCount = async (
+export const titresCount = async (
   {
     ids,
     domainesIds,
@@ -284,13 +284,13 @@ const titresCount = async (
  * @returns le nouveau titre
  *
  */
-const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: IFields }): Promise<DBTitre> => {
+export const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: IFields }): Promise<DBTitre> => {
   const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   return Titres.query().withGraphFetched(graph).insertGraph(titre, options.titres.update)
 }
 
-const titreUpdate = async (id: TitreId, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
+export const titreUpdate = async (id: TitreId, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
 
 export const titreArchive = async (id: TitreId) => {
   // archive le titre
@@ -306,5 +306,3 @@ export const titreArchive = async (id: TitreId) => {
 export const titreUpsert = async (titre: EditableTitre) => {
   return Titres.query().upsertGraph(titre, options.titres.update)
 }
-
-export { titreGet, titresGet, titresCount, titreUpdate, titreCreate }

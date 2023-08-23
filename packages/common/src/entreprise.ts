@@ -8,6 +8,7 @@ import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { TitreReference } from './titres-references.js'
 import { CommuneId } from './static/communes.js'
+import { TitreId } from './titres.js'
 
 export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof entrepriseIdValidator>
@@ -53,11 +54,11 @@ export interface Entreprise {
 }
 
 interface Titulaire {
-  id: string
+  id: EntrepriseId
   nom: string
 }
 export interface TitreEntreprise {
-  id: string
+  id: TitreId
   slug: string
   nom: string
   communes?: { id: CommuneId }[]
@@ -87,7 +88,7 @@ export const entrepriseTypeValidator = z.object({
   nom: z.string(),
   telephone: z.string(),
   email: z.string(),
-  legalSiren: z.string(),
+  legalSiren: z.string().nullable(),
   legalForme: z.string(),
   adresse: z.string(),
   codePostal: z.string(),

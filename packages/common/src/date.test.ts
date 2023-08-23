@@ -15,6 +15,7 @@ import {
   getMois,
   getDay,
   isBefore,
+  intervalleAnnees,
 } from './date.js'
 import { test, expect } from 'vitest'
 
@@ -81,6 +82,9 @@ test('anneeSuivante', () => {
 })
 test('anneePrecedente', () => {
   expect(anneePrecedente(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2021'))
+})
+test('intervalleAnnees', () => {
+  expect(intervalleAnnees(toCaminoAnnee('1997'), toCaminoAnnee('1999'))).toStrictEqual([toCaminoAnnee('1997'), toCaminoAnnee('1998'), toCaminoAnnee('1999')])
 })
 test("retourne une erreur si aucune date n'est fournie", () => {
   let tested = dateValidate(null)

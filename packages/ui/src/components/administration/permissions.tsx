@@ -1,7 +1,5 @@
 import { Domaine as CaminoDomaine } from '../_common/domaine'
-import { Statut } from '../_common/statut'
 import { Icon } from '../_ui/icon'
-import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitresTypes } from './titres-types'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
@@ -16,6 +14,7 @@ import { AdministrationMetas } from './administration-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { getAdministrationTitresTypesTitresStatuts } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts'
 import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes'
+import { TitreStatut } from '../_common/titre-statut'
 interface Props {
   administrationId: AdministrationId
   apiClient: Pick<ApiClient, 'administrationMetas'>
@@ -24,8 +23,6 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
   const administrationMetas = ref<AsyncData<AdministrationMetas>>({
     status: 'LOADING',
   })
-
-  const getTitreStatut = (titreStatutId: TitreStatutId) => TitresStatuts[titreStatutId]
 
   const titresTypesTitresStatuts = getAdministrationTitresTypesTitresStatuts(props.administrationId)
   const titresTypesEtapesTypes = getAdministrationTitresTypesEtapesTypes(props.administrationId)
@@ -75,14 +72,14 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
 
               {titresTypesTitresStatuts.map(ttts => (
                 <tr key={`${ttts.titreTypeId}-${ttts.titreStatutId}`}>
-                  <td>
+                  <td class="dsfr">
                     <CaminoDomaine domaineId={TT[ttts.titreTypeId].domaineId} />
                   </td>
                   <td>
                     <span class="small bold cap-first">{TitresTypesTypes[TT[ttts.titreTypeId].typeId].nom}</span>
                   </td>
-                  <td>
-                    <Statut color={getTitreStatut(ttts.titreStatutId).couleur} nom={getTitreStatut(ttts.titreStatutId).nom} />
+                  <td class="dsfr">
+                    <TitreStatut titreStatutId={ttts.titreStatutId} />
                   </td>
                   <td>
                     <Icon
@@ -138,7 +135,7 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
 
               {titresTypesEtapesTypes.map(ttet => (
                 <tr key={`${ttet.titreTypeId}-${ttet.etapeTypeId}`}>
-                  <td>
+                  <td class="dsfr">
                     <CaminoDomaine domaineId={TT[ttet.titreTypeId].domaineId} />
                   </td>
                   <td>

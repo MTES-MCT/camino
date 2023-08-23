@@ -24,8 +24,6 @@ export const Dashboard = defineComponent({
     const entreprises = store.getters['user/user']?.entreprises ?? []
 
     if (!hasEntreprises && !isONF && !isPTMG && !isDREAL && !isDGTM) {
-      store.commit('titres/reset')
-      store.dispatch('titres/init')
       router.replace({ name: 'titres' })
     } else {
       let dashboard = <div>Loading</div>

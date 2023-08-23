@@ -191,6 +191,10 @@ dsfr/generate:
 	sed -i 's/.dsfr body/body/g' packages/ui/src/styles/dsfr/dsfr.css
 	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
+	$(MAKE) icons/generate
+
+icons/generate:
+	npm run generate-icon-types -w packages/ui
 
 matrices:
 	npm run matrices -w packages/api

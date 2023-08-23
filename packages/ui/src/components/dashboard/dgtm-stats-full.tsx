@@ -32,7 +32,7 @@ export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], prop
         data.value = { status: 'LOADED', value: stats }
       }
     } catch (e: any) {
-      console.log('error', e)
+      console.error('error', e)
       data.value = {
         status: 'ERROR',
         message: e.message ?? 'something wrong happened',

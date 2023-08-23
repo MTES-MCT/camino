@@ -101,7 +101,7 @@ const activites = async (
     colonne?: ITitreActiviteColonneId | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    annees?: number[] | null
+    annees?: string[] | null
     titresIds?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
@@ -232,13 +232,13 @@ const activiteDeposer = async ({ id }: { id: string }, { user }: Context, info: 
     const userEntreprisesId = isEntreprise(user) || isBureauDEtudes(user) ? user.entreprises.map(e => e.id) : []
     const isAmodiataire = titre.amodiataires?.some(t => userEntreprisesId.some(id => id === t.id))
 
-    const entrepriseIds = isAmodiataire ? titre.amodiataires?.map(t => t.id) : titre.titulaires?.map(t => t.id)
+    const entreprisesIds = isAmodiataire ? titre.amodiataires?.map(t => t.id) : titre.titulaires?.map(t => t.id)
 
     let utilisateurs: IUtilisateur[] = []
-    if (entrepriseIds?.length) {
+    if (entreprisesIds?.length) {
       utilisateurs = await utilisateursGet(
         {
-          entrepriseIds,
+          entreprisesIds,
         },
         { fields: {} },
         userSuper

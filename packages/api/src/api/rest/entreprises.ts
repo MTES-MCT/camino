@@ -540,7 +540,7 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
             typesIds: ['grx', 'gra', 'wrp'],
             // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
             statutsIds: ['dep'],
-            annees: [caminoAnneeToNumber(anneeMoins1)],
+            annees: [anneeMoins1],
             titresIds: titres.map(({ id }) => id),
           },
           { fields: { id: {} } },
@@ -550,7 +550,7 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
           {
             typesIds: ['grp'],
             statutsIds: ['dep'],
-            annees: [caminoAnneeToNumber(anneeMoins1)],
+            annees: [anneeMoins1],
             titresIds: titres.map(({ id }) => id),
           },
           { fields: { id: {} } },

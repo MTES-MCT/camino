@@ -1,3 +1,4 @@
+import { toCaminoAnnee } from 'camino-common/src/date.js'
 import { matrices } from '../business/matrices.js'
 import pg from 'pg'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
@@ -8,7 +9,7 @@ const pool = new pg.Pool({
   database: process.env.PGDATABASE,
 })
 
-matrices(process.env.ANNEE ? Number.parseInt(process.env.ANNEE, 10) : 2021, pool)
+matrices(process.env.ANNEE ? toCaminoAnnee(process.env.ANNEE) : toCaminoAnnee(2021), pool)
   .then(() => {
     process.exit()
   })

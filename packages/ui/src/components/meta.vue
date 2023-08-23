@@ -34,7 +34,7 @@
 
 <script>
 import Loader from './_ui/loader.vue'
-import metasIndex from '../store/metas-definitions'
+import { metasIndex } from '../store/metas-definitions'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
 
 export default {

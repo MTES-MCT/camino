@@ -107,6 +107,20 @@ export const dateValidate = (str: CaminoDate | string | undefined | null): { val
   return { valid: true, date: str }
 }
 
+export const intervalleAnnees = (anneeDepart: CaminoAnnee, anneeArrivee: CaminoAnnee): CaminoAnnee[] => {
+  if (caminoAnneeToNumber(anneeDepart) > caminoAnneeToNumber(anneeArrivee)) {
+    throw new Error(`L'année de départ ${anneeDepart} doit être inférieure à l'année d'arrivée ${anneeArrivee}`)
+  }
+  const annees = [anneeDepart]
+  let currentAnnee = anneeDepart
+  while (currentAnnee !== anneeArrivee) {
+    currentAnnee = anneeSuivante(currentAnnee)
+    annees.push(currentAnnee)
+  }
+
+  return annees
+}
+
 export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
   const [y, m, d] = date.split('-')
 

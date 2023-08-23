@@ -34,46 +34,57 @@ export const Entreprise = defineComponent({
       () => vueRoute.params.id,
       newRoute => {
         if (vueRoute.name === 'entreprise' && newRoute) {
-          entrepriseId.value = newEntrepriseId(vueRoute.params.id.toString())
+          const newEid = newEntrepriseId(vueRoute.params.id.toString())
+          if (entrepriseId.value !== newEid) {
+            entrepriseId.value = newEid
+          }
         }
       }
     )
     const anneeCourante = getCurrentAnnee()
 
+    const apiClient = ref<
+      Pick<
+        EntrepriseApiClient,
+        | 'getEtapeEntrepriseDocuments'
+        | 'getEntreprise'
+        | 'deleteEntrepriseDocument'
+        | 'getEntrepriseDocuments'
+        | 'getFiscaliteEntreprise'
+        | 'modifierEntreprise'
+        | 'creerEntreprise'
+        | 'creerEntrepriseDocument'
+      >
+    >({
+      ...entrepriseApiClient,
+      modifierEntreprise: async entreprise => {
+        try {
+          await entrepriseApiClient.modifierEntreprise(entreprise)
+          store.dispatch(
+            'messageAdd',
+            {
+              value: `l'entreprise a été modifiée`,
+              type: 'success',
+            },
+            { root: true }
+          )
+        } catch (e) {
+          console.error(e)
+          store.dispatch(
+            'messageAdd',
+            {
+              value: `Erreur lors de la modification de l'entreprise`,
+              type: 'error',
+            },
+            { root: true }
+          )
+        }
+      },
+    })
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise
-            currentYear={anneeCourante}
-            entrepriseId={entrepriseId.value}
-            apiClient={{
-              ...entrepriseApiClient,
-              modifierEntreprise: async entreprise => {
-                try {
-                  await entrepriseApiClient.modifierEntreprise(entreprise)
-                  store.dispatch(
-                    'messageAdd',
-                    {
-                      value: `l'entreprise a été modifiée`,
-                      type: 'success',
-                    },
-                    { root: true }
-                  )
-                } catch (e) {
-                  console.error(e)
-                  store.dispatch(
-                    'messageAdd',
-                    {
-                      value: `Erreur lors de la modification de l'entreprise`,
-                      type: 'error',
-                    },
-                    { root: true }
-                  )
-                }
-              },
-            }}
-            user={user.value}
-          />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient.value} user={user.value} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}
@@ -84,7 +95,17 @@ export const Entreprise = defineComponent({
 
 interface Props {
   entrepriseId: EntrepriseId
-  apiClient: EntrepriseApiClient
+  apiClient: Pick<
+    EntrepriseApiClient,
+    | 'getEtapeEntrepriseDocuments'
+    | 'getEntreprise'
+    | 'deleteEntrepriseDocument'
+    | 'getEntrepriseDocuments'
+    | 'getFiscaliteEntreprise'
+    | 'modifierEntreprise'
+    | 'creerEntreprise'
+    | 'creerEntrepriseDocument'
+  >
   user: User
   currentYear: CaminoAnnee
 }
@@ -291,7 +312,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
               <div class="line-neutral width-full mb-xxl" />
               <h3>Utilisateurs</h3>
               <div class="line width-full" />
-              <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} />
+              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} />
             </div>
           ) : null}
 

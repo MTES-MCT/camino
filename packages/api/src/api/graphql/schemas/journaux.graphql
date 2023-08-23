@@ -37,6 +37,5 @@ type Journal {
 type Journaux {
   elements: [Journal]
   page: Int
-  intervalle: Int
   total: Int
 }

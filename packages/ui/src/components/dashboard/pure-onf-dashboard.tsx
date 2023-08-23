@@ -2,7 +2,7 @@ import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { DateComponent } from '../_ui/date'
 
-import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
+import { nomColumn, nomCell, referencesColumn, statutAutoColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 
 import { CaminoError } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
@@ -16,7 +16,7 @@ export interface Props {
 
 const columns = [
   nomColumn,
-  statutColumn,
+  statutAutoColumn,
   referencesColumn,
   titulairesColumn,
   {
@@ -123,12 +123,12 @@ export const PureONFDashboard = caminoDefineComponent<Props>(['apiClient'], prop
             <>
               <div class="line-neutral width-full mb-l"></div>
               <h3>ARM en attente</h3>
-              <TableAuto class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ column: initialColumnId, order: 'asc' }} />
+              <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ column: initialColumnId, order: 'asc' }} />
             </>
           ) : null}
           <div class="line-neutral width-full mb-l"></div>
           <h3>ARM en cours d’instruction</h3>
-          <TableAuto columns={columns} rows={onfTitres.value} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+          <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={onfTitres.value} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
         </div>
       ) : null}
 

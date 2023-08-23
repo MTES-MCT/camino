@@ -1,4 +1,9 @@
 import { Definition } from '../definition.js'
+import { z } from 'zod'
+
+const IDS = ['m', 'c', 'f', 'g', 'h', 'r', 's', 'w'] as const
+export const domaineIdValidator = z.enum(IDS)
+export type DomaineId = z.infer<typeof domaineIdValidator>
 
 export const DOMAINES_IDS = {
   METAUX: 'm',
@@ -9,9 +14,8 @@ export const DOMAINES_IDS = {
   RADIOACTIF: 'r',
   SOUTERRAIN: 's',
   GRANULATS_MARINS: 'w',
-} as const
+} as const satisfies Record<string, DomaineId>
 
-export type DomaineId = (typeof DOMAINES_IDS)[keyof typeof DOMAINES_IDS]
 export type Domaine<T = DomaineId> = Definition<T>
 export const Domaines: { [key in DomaineId]: Domaine<key> } = {
   c: {

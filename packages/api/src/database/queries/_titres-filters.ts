@@ -60,7 +60,7 @@ export const titresFiltersQueryModify = (
   name: ITitreTableName = 'titres',
   root: ITitreRootName = 'titres'
 ) => {
-  if (ids) {
+  if (ids && ids.length > 0) {
     q.whereIn(`${name}.id`, ids)
   }
 
@@ -70,7 +70,7 @@ export const titresFiltersQueryModify = (
     q.groupBy('titres.id')
   }
 
-  if (domainesIds) {
+  if (domainesIds?.length) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -78,11 +78,11 @@ export const titresFiltersQueryModify = (
     q.whereRaw(`SUBSTRING( ${name}.type_id, 3, 1 ) in (${domainesIds.map(() => '?').join(',')})`, domainesIds)
   }
 
-  if (typesIds) {
+  if (typesIds?.length) {
     q.whereRaw(`SUBSTRING( ${name}.type_id, 1, 2 ) in (${typesIds.map(() => '?').join(',')})`, typesIds)
   }
 
-  if (statutsIds) {
+  if (statutsIds?.length) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -228,7 +228,7 @@ export const titresFiltersQueryModify = (
     departementIds.push(...departements)
   }
 
-  if (regions) {
+  if (regions?.length) {
     departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
   }
 

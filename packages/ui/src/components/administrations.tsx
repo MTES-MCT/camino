@@ -1,9 +1,11 @@
-import { defineComponent, computed, ref, markRaw } from 'vue'
-import Liste from './_common/liste.vue'
-import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
-import { elementsFormat } from '@/utils'
-import { Tag } from '@/components/_ui/tag'
+import { defineComponent, markRaw } from 'vue'
+import { Liste, Params } from './_common/liste'
+import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src/static/administrations'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { useRoute, useRouter } from 'vue-router'
+import { DsfrTag } from './_ui/tag'
+import { CaminoFiltre } from 'camino-common/src/filters'
+import { apiClient } from '../api/api-client'
 
 const colonnes = [
   {
@@ -17,74 +19,35 @@ const colonnes = [
   {
     id: 'type',
     name: 'Type',
+    width: '20%',
   },
 ] as const
-const filtres = [
-  {
-    id: 'noms',
-    type: 'input',
-    value: '',
-    name: 'Nom',
-    placeholder: `Nom de l'administration`,
-  },
-  {
-    id: 'typesIds',
-    name: 'Types',
-    type: 'checkboxes',
-    value: [],
-    elements: [],
-    elementsFormat,
-  },
-]
+
+const filtres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']
-
-type ParamsFiltre = {
-  section: 'filtres'
-  params: { noms: string; typesIds: AdministrationTypeId[] }
-}
-type ParamsTable = {
-  section: 'table'
-  params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
-}
-
-const isParamsFiltre = (options: ParamsFiltre | ParamsTable): options is ParamsFiltre => options.section === 'filtres'
-
-const metas = {
-  types: sortedAdministrationTypes,
-}
 
 const administrations = Object.values(Adms)
 
 export const Administrations = defineComponent({
   setup() {
-    const params = ref<{
-      table: { page: 0; colonne: ColonneId; ordre: 'asc' | 'desc' }
-      filtres: unknown
-    }>({
-      table: {
-        page: 0,
-        colonne: 'abreviation',
-        ordre: 'asc',
-      },
-      filtres,
-    })
+    const route = useRoute()
+    const router = useRouter()
 
-    const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
-      noms: '',
-      typesIds: [],
-    })
-
-    const lignes = computed<TableRow[]>(() => {
-      return [...administrations]
+    const getData = (options: Params<ColonneId>): Promise<{ total: number; values: TableRow<string>[] }> => {
+      const lignes = [...administrations]
         .filter(a => {
-          if (listState.value.noms.length) {
-            if (!a.id.toLowerCase().includes(listState.value.noms) && !a.nom.toLowerCase().includes(listState.value.noms) && !a.abreviation.toLowerCase().includes(listState.value.noms)) {
+          if (options.filtres?.nomsAdministration?.length) {
+            if (
+              !a.id.toLowerCase().includes(options.filtres.nomsAdministration) &&
+              !a.nom.toLowerCase().includes(options.filtres.nomsAdministration) &&
+              !a.abreviation.toLowerCase().includes(options.filtres.nomsAdministration)
+            ) {
               return false
             }
           }
 
-          if (listState.value.typesIds.length) {
-            if (!listState.value.typesIds.includes(a.typeId)) {
+          if (options.filtres?.administrationTypesIds.length) {
+            if (!options.filtres.administrationTypesIds.includes(a.typeId)) {
               return false
             }
           }
@@ -94,15 +57,15 @@ export const Administrations = defineComponent({
         .sort((a, b) => {
           let first: string
           let second: string
-          if (params.value.table.colonne === 'type') {
+          if (options.colonne === 'type') {
             first = ADMINISTRATION_TYPES[a.typeId].nom
             second = ADMINISTRATION_TYPES[b.typeId].nom
           } else {
-            first = a[params.value.table.colonne]
-            second = b[params.value.table.colonne]
+            first = a[options.colonne]
+            second = b[options.colonne]
           }
 
-          if (params.value.table.ordre === 'asc') {
+          if (options.ordre === 'asc') {
             return first.localeCompare(second)
           }
           return second.localeCompare(first)
@@ -112,12 +75,11 @@ export const Administrations = defineComponent({
 
           const columns: Record<string, ComponentColumnData | TextColumnData> = {
             abreviation: { value: administration.abreviation },
-            nom: { value: administration.nom, class: ['h6'] },
+            nom: { value: administration.nom },
             type: {
-              component: markRaw(Tag),
-              props: { mini: true, text: type.nom },
-              class: 'mb--xs',
-              value: 'unused',
+              component: markRaw(DsfrTag),
+              props: { ariaLabel: type.nom },
+              value: type.nom,
             },
           }
 
@@ -127,29 +89,10 @@ export const Administrations = defineComponent({
             columns,
           }
         })
-    })
-    const paramsUpdate = (options: ParamsFiltre | ParamsTable) => {
-      if (isParamsFiltre(options)) {
-        listState.value.noms = options.params.noms.toLowerCase()
-        listState.value.typesIds = options.params.typesIds
-      } else {
-        params.value.table.ordre = options.params.ordre
-        params.value.table.colonne = options.params.colonne
-      }
+
+      return Promise.resolve({ total: lignes.length, values: lignes })
     }
-    return () => (
-      <Liste
-        nom="administrations"
-        filtres={filtres}
-        colonnes={colonnes}
-        lignes={lignes.value}
-        elements={lignes.value}
-        params={params.value}
-        metas={metas}
-        total={administrations.length}
-        initialized={true}
-        onParamsUpdate={paramsUpdate}
-      />
-    )
+
+    return () => <Liste nom="administrations" listeFiltre={{ filtres, apiClient, updateUrlQuery: router }} colonnes={colonnes} getData={getData} route={route} download={null} renderButton={null} />
   },
 })

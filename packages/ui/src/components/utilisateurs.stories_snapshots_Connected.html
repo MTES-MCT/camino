@@ -1,0 +1,90 @@
+<div class="fr-container">
+  <div class="dsfr">
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-md-6">
+        <h1>Utilisateurs</h1>
+      </div>
+      <div class="fr-col-12 fr-col-md-6" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-end;">
+        <div class="dsfr" style="display: flex;"><span class="dsfr fr-mr-1v"><div class="fr-select-group"><!----><select class="fr-select" id="utilisateursDownload" aria-label="Téléchargements" name="utilisateursDownload"><option value="json">json</option><option value="csv">csv</option><option value="xlsx">xlsx</option><option value="ods">ods</option><option disabled="" hidden="" value="">Choississez un format d'export</option></select></div></span><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-file-download-line" disabled="" title="Télécharger (choisissez le format)" aria-label="Télécharger (choisissez le format)">
+            <!---->
+          </button></div>
+        <!---->
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-direction-column rnd-s border bg-bg mb-s"><button class="rnd-s accordion-header flex btn-alt py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
+      <div>
+        <div style="display: flex; align-items: center;">
+          <div>Filtres</div>
+          <div class="pl-s small">(3 / 125 résultats)</div>
+        </div>
+      </div>
+      <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+          <use href="#icon-chevron-bas"></use>
+        </svg></div>
+    </button>
+    <!--v-if-->
+    <div class="overflow-hidden">
+      <transition-stub name="slide" appear="false" persisted="false" css="true">
+        <!--v-if-->
+      </transition-stub>
+    </div>
+  </div>
+  <div class="dsfr">
+    <div class="dsfr">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table; table-layout: fixed; width: 100%;">
+          <caption>utilisateurs</caption>
+          <thead>
+            <tr>
+              <th style="width: 15%;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th style="width: 15%;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Prénom" class="fr-link" aria-label="Trier par la colonne Prénom">Prénom</a></th>
+              <th style="width: 30%;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Email" class="fr-link" aria-label="Trier par la colonne Email">Email</a></th>
+              <th style="width: 10%;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Rôle" class="fr-link" aria-label="Trier par la colonne Rôle">Rôle</a></th>
+              <th style="width: 30%;" scope="col" class="nowrap"><a aria-disabled="true" role="link" title="Lien" class="fr-link" aria-label="Lien">Lien</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a class="fr-link" to="{name:utilisateur,params:{id:id}}" type="primary"><span class="">nom1</span></a></td>
+              <td><span class="">prenom1</span></td>
+              <td><span class="h6">unknown1@emailunkown.com</span></td>
+              <td><span class="bg-neutral color-bg pill py-xs px-s small bold">super</span></td>
+              <td><span class=""></span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:utilisateur,params:{id:id2}}" type="primary"><span class="">nom2</span></a></td>
+              <td><span class="">prenom2</span></td>
+              <td><span class="h6">unknown2@emailunkown.com</span></td>
+              <td><span class="bg-neutral color-bg pill py-xs px-s small bold">entreprise</span></td>
+              <td><span class="dsfr mb--xs"><ul><li class="fr-text--xs">Entreprise1</li></ul></span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:utilisateur,params:{id:id3}}" type="primary"><span class="">nom3</span></a></td>
+              <td><span class="">prenom3</span></td>
+              <td><span class="h6">unknown3@emailunkown.com</span></td>
+              <td><span class="bg-neutral color-bg pill py-xs px-s small bold">admin</span></td>
+              <td><span class="dsfr mb--xs"><ul><li class="fr-text--xs">MRAE Guyane</li></ul></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+      <ul class="fr-pagination__list">
+        <li><a aria-disabled="true" role="link" title="Première page" class="fr-pagination__link fr-pagination__link--first" aria-label="Première page">Première page</a></li>
+        <li><a aria-disabled="true" role="link" title="Page précédente" class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" aria-label="Page précédente">Page précédente</a></li>
+        <li><a href="/mocked-href" title="Page 1" class="fr-pagination__link" aria-label="Page 1" aria-current="page">1</a></li>
+        <!---->
+        <li><a href="/mocked-href" title="Page 2" class="fr-pagination__link" aria-label="Page 2">2</a></li>
+        <li><a href="/mocked-href" title="Page 3" class="fr-pagination__link" aria-label="Page 3">3</a></li>
+        <li><a href="/mocked-href" title="Page 4" class="fr-pagination__link" aria-label="Page 4">4</a></li>
+        <li><a href="/mocked-href" title="Page 5" class="fr-pagination__link" aria-label="Page 5">5</a></li>
+        <li><a class="fr-pagination__link fr-displayed-lg"> … </a></li>
+        <li><a href="/mocked-href" title="Page 13" class="fr-pagination__link" aria-label="Page 13">13</a></li>
+        <li><a href="/mocked-href" title="Page suivante" class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" aria-label="Page suivante">Page suivante</a></li>
+        <li><a href="/mocked-href" title="Dernière page" class="fr-pagination__link fr-pagination__link--last" aria-label="Dernière page">Dernière page</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>

@@ -1,10 +1,17 @@
 import { PurePTMGDashboard } from './pure-ptmg-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { CommonTitrePTMG, titreIdValidator } from 'camino-common/src/titres'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Dashboard/PTMG',
   component: PurePTMGDashboard,
+  decorators: [
+    vueRouter([
+      { name: 'titre', params: { id: 'fourth-slug' } },
+      { name: 'Stats DGTM', params: {} },
+    ]),
+  ],
 }
 export default meta
 

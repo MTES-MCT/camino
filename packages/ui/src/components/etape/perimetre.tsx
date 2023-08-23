@@ -33,6 +33,7 @@ export const Perimetre = caminoDefineComponent<Props>(['titreTypeId', 'incertitu
             points={props.etape.points}
             geojsonMultiPolygon={props.geojsonMultiPolygon}
             tabId={tabId.value}
+            loading={false}
             tabUpdate={newTabId => {
               tabId.value = newTabId
             }}

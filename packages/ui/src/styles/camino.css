@@ -1,4 +1,15 @@
 :root {
+  /* 
+    TODO 2023-08-21 mêmes couleurs que dans domaine.tsx le problème c'est qu'on voit moins bien le périmêtre sur la carte IMHO
+  --color-domaine-c: var(--background-contrast-green-archipel);
+  --color-domaine-f: var(--background-contrast-yellow-tournesol);
+  --color-domaine-g: var(--background-contrast-pink-tuile);
+  --color-domaine-h: var(--background-contrast-green-bourgeon);
+  --color-domaine-m: var(--background-contrast-blue-ecume);
+  --color-domaine-r: var(--background-contrast-orange-terre-battue);
+  --color-domaine-s: var(--background-contrast-purple-glycine);
+  --color-domaine-w: var(--background-contrast-blue-cumulus); 
+  */
   --color-domaine-c: #b88847;
   --color-domaine-f: #4a515d;
   --color-domaine-g: #c94f17;

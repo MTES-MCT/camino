@@ -871,32 +871,26 @@ exports[`statuts > peut voir tous les statuts 1`] = `
   ],
   "statuts": [
     {
-      "couleur": "warning",
       "id": "dmi",
       "nom": "demande initiale",
     },
     {
-      "couleur": "neutral",
       "id": "dmc",
       "nom": "demande classée",
     },
     {
-      "couleur": "success",
       "id": "val",
       "nom": "valide",
     },
     {
-      "couleur": "warning",
       "id": "mod",
       "nom": "modification en instance",
     },
     {
-      "couleur": "neutral",
       "id": "ech",
       "nom": "échu",
     },
     {
-      "couleur": "warning",
       "id": "ind",
       "nom": "indéterminé",
     },

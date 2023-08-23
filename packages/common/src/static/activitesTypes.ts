@@ -2,6 +2,13 @@ import { CaminoDate, toCaminoDate } from '../date.js'
 import { FrequenceId } from './frequence.js'
 import { Section, SectionsElement } from './titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from '../typescript-tools.js'
+import { z } from 'zod'
+
+export const ActivitesTypesIds = ['gra', 'grp', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp'] as const
+
+export const activiteTypeIdValidator = z.enum(ActivitesTypesIds)
+
+export type ActivitesTypesId = z.infer<typeof activiteTypeIdValidator>
 
 export const ACTIVITES_TYPES_IDS = {
   "rapport d'exploitation (permis et concessions M)": 'gra',
@@ -12,11 +19,7 @@ export const ACTIVITES_TYPES_IDS = {
   "rapport environnemental d'exploration": 'pmc',
   "rapport social et économique d'exploration": 'pmd',
   "rapport d'exploitation (permis et concessions W)": 'wrp',
-} as const
-
-export const ActivitesTypesIds = Object.values(ACTIVITES_TYPES_IDS)
-
-export type ActivitesTypesId = (typeof ACTIVITES_TYPES_IDS)[keyof typeof ACTIVITES_TYPES_IDS]
+} as const satisfies Record<string, ActivitesTypesId>
 
 export type ActiviteType<T = ActivitesTypesId> = {
   id: T

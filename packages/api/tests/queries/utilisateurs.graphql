@@ -1,5 +1,5 @@
 query Utilisateurs($administrationIds: [ID!], $entrepriseIds: [ID!], $noms: String!) {
-  utilisateurs(administrationIds: $administrationIds, entrepriseIds: $entrepriseIds, noms: $noms) {
+  utilisateurs(administrationIds: $administrationIds, entreprisesIds: $entrepriseIds, noms: $noms) {
     elements {
       ...utilisateur
     }

@@ -1,23 +1,33 @@
-import { defineComponent, computed, onMounted, inject } from 'vue'
+import { defineComponent, computed, onMounted, inject, FunctionalComponent, ref } from 'vue'
 import { Icon } from '@/components/_ui/icon'
-import { Router, useRouter } from 'vue-router'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
-import Filtres from './titres/filtres.vue'
-import { Downloads } from './_common/downloads'
-import { CaminoTitresMap } from './titres/map'
-import { TablePagination } from './titres/table-pagination'
-import { ButtonIcon } from './_ui/button-icon'
-import { Button } from './_ui/button'
+import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
+import { CaminoTitresMap, TitreCarteParams } from './titres/map'
+import { Navigation } from './_ui/navigation'
+import { Tab, newTabId, Tabs, TabId } from './_ui/tabs'
+import { PageContentHeader } from './_common/page-header-content'
+import { titreApiClient } from './titre/titre-api-client'
+import { AsyncData } from '@/api/client-rest'
+import { LocationQuery, useRouter } from 'vue-router'
+import { routerQueryToString } from '@/router/camino-router-link'
+import { titresColonnes, titresLignesBuild } from './titres/table-utils'
+import { TitreWithPoint } from './titres/mapUtil'
+import { displayPerimeterZoomMaxLevel } from './_map'
+import { apiClient } from '../api/api-client'
+import { TablePagination, getInitialParams } from './_ui/table-pagination'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
+import { TableRow } from './_ui/table'
+import { titresDownloadFormats } from 'camino-common/src/filters'
 
-function DemandeTitreButton(user: User, router: Router) {
+const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
-      <Button
-        class="btn btn-primary small flex"
-        onClick={() => router.push({ name: 'titre-creation' })}
+      <Navigation
+        class="fr-btn fr-ml-1w"
+        to="/titres/creation"
         title="Demander un nouveau titre"
         render={() => (
           <>
@@ -30,98 +40,195 @@ function DemandeTitreButton(user: User, router: Router) {
   }
   return null
 }
+const carteTabId = newTabId('carte')
+const tableTabId = newTabId('table')
 
-const vues = [
-  { id: 'carte', icon: 'globe' },
-  { id: 'table', icon: 'list' },
-] as const
-
-type VueId = (typeof vues)[number]['id']
-
-function AfficheData(initialized: boolean, vueId: VueId, titres: any, total: number): JSX.Element {
-  if (initialized) {
-    switch (vueId) {
-      case 'carte':
-        return <CaminoTitresMap titres={titres} />
-      case 'table':
-        return <TablePagination titres={titres} total={total} />
-    }
-  } else {
-    return <div class="table-view mb-xxl mt">…</div>
-  }
-}
-
+type TitresTablePaginationParams = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export const Titres = defineComponent({
   setup() {
-    const router = useRouter()
     const matomo = inject('matomo', null)
     const store = useStore()
-    onMounted(() => {
-      store.dispatch('titres/init')
+    const router = useRouter()
+
+    const data = ref<AsyncData<true>>({ status: 'LOADING' })
+    const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
+    const titresForCarte = ref<{ hash: string; titres: TitreWithPoint[] }>({ hash: '', titres: [] })
+    const total = ref<number>(0)
+
+    const paramsForTable = ref<TitresTablePaginationParams>(getInitialParams(router.currentRoute.value, titresColonnes))
+    const paramsForCarte = ref<TitreCarteParams | null>(null)
+    const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
+
+    const reloadTitres = async (vueId: TabId) => {
+      if (vueId === tableTabId) {
+        await loadTitresForTable()
+      } else {
+        if (paramsForCarte.value !== null) {
+          await loadTitresForCarte()
+        }
+      }
+    }
+    const loadTitresForTable = async () => {
+      data.value = { status: 'LOADING' }
+      titresForTable.value = { status: 'LOADING' }
+      try {
+        const titres = await titreApiClient.getTitresForTable({ ...paramsForTable.value, ...paramsFiltres.value })
+        titresForTable.value = { status: 'LOADED', value: { total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value) } }
+        data.value = { status: 'LOADED', value: true }
+      } catch (e: any) {
+        console.error('error', e)
+        titresForTable.value = { status: 'ERROR', message: e.message ?? "Une erreur s'est produite" }
+        data.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
+      }
+    }
+
+    const loadTitresForCarte = async () => {
+      data.value = { status: 'LOADING' }
+      try {
+        if ((paramsForCarte.value?.zoom ?? 0) > displayPerimeterZoomMaxLevel) {
+          const titres = await titreApiClient.getTitresWithPerimetreForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
+          titresForCarte.value = { hash: JSON.stringify(paramsFiltres.value), titres: titres.elements }
+          total.value = titres.total
+        } else {
+          const titres = await titreApiClient.getTitresForCarte({ ...paramsFiltres.value, ...paramsForCarte.value })
+          titresForCarte.value = { hash: JSON.stringify(paramsFiltres.value), titres: titres.elements }
+          total.value = titres.total
+        }
+        data.value = { status: 'LOADED', value: true }
+      } catch (e: any) {
+        console.error('error', e)
+        data.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
+      }
+    }
+    onMounted(async () => {
+      await reloadTitres(routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as VueId)
     })
 
     const user = computed<User>(() => store.state.user.element)
-    const initialized = computed<boolean>(() => store.state.titres.initialized)
-    const loading = computed<boolean>(() => store.state.loading.includes('titres'))
-    const titres = computed<any[]>(() => store.state.titres.elements)
-    const total = computed<number>(() => store.state.titres.total)
 
-    const vueId = computed<VueId>(() => store.state.titres.vueId)
+    const tabId = computed<TabId>(() => routerQueryToString(router.currentRoute.value.query.vueId, carteTabId) as TabId)
     const resultat = computed<string>(() => {
-      const res = total.value > titres.value.length ? `${titres.value.length} / ${total.value}` : titres.value.length
+      let totalLoaded = 0
+      if (tabId.value === tableTabId) {
+        if (titresForTable.value.status !== 'LOADED') {
+          return '...'
+        }
+        totalLoaded = titresForTable.value.value.rows.length
+      } else {
+        totalLoaded = titresForCarte.value.titres.length
+      }
+      const res = total.value > totalLoaded ? `${totalLoaded} / ${total.value}` : totalLoaded
 
-      return `${res} résultat${titres.value.length > 1 ? 's' : ''}`
+      return `(${res} résultat${totalLoaded > 1 ? 's' : ''})`
     })
 
-    const vueSet = async (vueId: VueId) => {
-      await store.dispatch('titres/vueSet', vueId)
+    const activitesCol = computed(() => {
+      return canReadActivites(user.value)
+    })
 
-      if (matomo) {
-        // @ts-ignore
-        matomo.trackEvent('titres-vue', 'titres-vueId', vueId)
-      }
-    }
-    const vueClick = async (vueId: VueId) => {
-      if (!loading.value) {
-        await vueSet(vueId)
-      }
-    }
+    const colonnes = computed(() => {
+      return titresColonnes.filter(({ id }) => (activitesCol.value ? true : id !== 'activites'))
+    })
+
+    const vues = [
+      {
+        id: carteTabId,
+        icon: 'fr-icon-earth-fill',
+        title: 'Carte',
+        renderContent: () => (
+          <CaminoTitresMap
+            titres={titresForCarte.value}
+            loading={data.value.status === 'LOADING'}
+            router={router}
+            updateCarte={async params => {
+              paramsForCarte.value = params
+              reloadTitres(carteTabId)
+            }}
+          />
+        ),
+      },
+      {
+        id: tableTabId,
+        icon: 'fr-icon-list-unordered',
+        title: 'Tableau',
+        renderContent: () => (
+          <TablePagination
+            route={router.currentRoute.value}
+            columns={colonnes.value}
+            data={titresForTable.value}
+            updateParams={async params => {
+              paramsForTable.value = params
+              await reloadTitres(tableTabId)
+            }}
+            caption="Tableau des titres"
+          />
+        ),
+      },
+    ] as const satisfies readonly Tab[]
+
+    type VueId = (typeof vues)[number]['id']
 
     return () => (
       <div>
-        <div class="desktop-blobs">
-          <div class="desktop-blob-2-3">
-            <h1 class="mt-xs mb-m">Titres miniers et autorisations</h1>
-          </div>
-
-          <div class="desktop-blob-1-3">{DemandeTitreButton(user.value, router)}</div>
+        <div class="dsfr">
+          <PageContentHeader
+            nom="Titres miniers et autorisations"
+            download={
+              titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
+                ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
+                : null
+            }
+            renderButton={() => <DemandeTitreButton user={user.value} />}
+          />
         </div>
 
-        <Filtres initialized={initialized.value} />
-        <div class="tablet-blobs tablet-flex-direction-reverse">
-          <div class="tablet-blob-1-3 flex mb-s">
-            {titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} downloadRoute="/titres" params={{}} class="flex-right full-x downloads" /> : null}
-          </div>
+        <TitresFiltres
+          subtitle={resultat.value}
+          apiClient={apiClient}
+          route={router.currentRoute.value}
+          router={router}
+          paramsUpdate={async params => {
+            paramsFiltres.value = params
+            paramsForTable.value = { page: 1, ordre: 'asc', colonne: titresColonnes[0].id }
+            await reloadTitres(tabId.value)
+          }}
+        />
 
-          <div class="tablet-blob-2-3 flex">
-            {vues.map(vue => {
-              return (
-                <div key={vue.id} class={vueId.value === vue.id ? 'active mr-xs' : 'mr-xs'}>
-                  <ButtonIcon
-                    class="p-m btn-tab rnd-t-s"
-                    style={vueId.value === vue.id ? { cursor: 'default' } : {}}
-                    onClick={() => vueId.value !== vue.id && vueClick(vue.id)}
-                    title={`Format d’affichage : ${vue.id === 'carte' ? 'Carte' : 'Tableau'}`}
-                    icon={vue.icon}
-                  />
-                </div>
-              )
-            })}
-            <div class="pl-m pt-m h5 bold">{resultat.value}</div>
-          </div>
+        <div class="dsfr dsfr-container">
+          {tabId.value ? (
+            <Tabs
+              initTab={tabId.value}
+              tabs={vues}
+              tabsTitle={'Affichage des titres en vue carte ou tableau'}
+              tabClicked={async newTabId => {
+                if (tabId.value !== newTabId) {
+                  titresForCarte.value = { hash: '', titres: [] }
+                  const query: LocationQuery = { ...router.currentRoute.value.query, vueId: newTabId }
+                  if (newTabId === tableTabId) {
+                    delete query.zoom
+                    delete query.perimetre
+                    delete query.centre
+                  }
+                  await router.push({ name: router.currentRoute.value.name ?? undefined, query })
+                  if (newTabId === tableTabId) {
+                    paramsForCarte.value = null
+                    reloadTitres(newTabId)
+                  }
+                  if (matomo) {
+                    // @ts-ignore
+                    matomo.trackEvent('titres-vue', 'titres-vueId', tabId)
+                  }
+                }
+              }}
+            />
+          ) : null}
         </div>
-        <div class="line-neutral width-full" />
-        {AfficheData(initialized.value, vueId.value, titres.value, total.value)}
       </div>
     )
   },

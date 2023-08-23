@@ -1,20 +1,20 @@
 import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
-import List from '../_ui/list.vue'
+import { List } from '../_ui/list'
 import { PureDGTMStats } from './pure-dgtm-stats'
 import {
   nomColumn,
   nomCell,
   referencesColumn,
-  statutColumn,
   titulairesColumn,
   statutCell,
   referencesCell,
   titulairesCell,
   typeColumn,
   typeCell,
-  activiteColumn,
   activitesCell,
+  activiteAutoColumn,
+  statutAutoColumn,
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -32,18 +32,16 @@ export interface Props {
 const derniereEtapeColumn: Column<'derniereEtape'> = {
   id: 'derniereEtape',
   name: 'Dernière étape',
-  class: ['min-width-8'],
 }
 
 const prochainesEtapesColumn: Column<'prochainesEtapes'> = {
   id: 'prochainesEtapes',
   name: 'Prochaines étapes',
-  class: ['min-width-8'],
 }
 
-const columns = [nomColumn, typeColumn, statutColumn, activiteColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
+const columns = [nomColumn, typeColumn, statutAutoColumn, activiteAutoColumn, referencesColumn, titulairesColumn, derniereEtapeColumn] as const
 
-const columnsEnAttente = [nomColumn, typeColumn, statutColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
+const columnsEnAttente = [nomColumn, typeColumn, statutAutoColumn, titulairesColumn, derniereEtapeColumn, prochainesEtapesColumn] as const
 
 export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'isDGTM'], props => {
   const data = ref<
@@ -133,7 +131,7 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'is
             return (
               <>
                 <h4>Titres en attente de la DREAL</h4>
-                <TableAuto class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
+                <TableAuto caption="Titres en attente de la DREAL" class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
               </>
             )
           }
@@ -141,7 +139,12 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'is
         }}
       />
       <h4>Titres en cours d’instruction</h4>
-      <LoadingElement data={data.value} renderItem={item => <TableAuto columns={columns} rows={item.drealTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />} />
+      <LoadingElement
+        data={data.value}
+        renderItem={item => (
+          <TableAuto caption="Titres en cours d’instruction" columns={columns} rows={item.drealTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+        )}
+      />
     </div>
   )
 })

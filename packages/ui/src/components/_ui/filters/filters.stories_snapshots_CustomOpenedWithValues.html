@@ -1,0 +1,46 @@
+<div class="flex flex-direction-column rnd-s border bg-bg mb-s"><button class="rnd-t-s border-b-s accordion-header flex btn-alt py-s px-s" title="Replier l’accordéon" aria-label="Replier l’accordéon">
+    <div>
+      <div style="display: flex; align-items: center;">
+        <div>Filtres</div>
+        <!---->
+      </div>
+    </div>
+    <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+        <use href="#icon-chevron-haut"></use>
+      </svg></div>
+  </button>
+  <div class="flex border-b-s">
+    <div class="px-m pt-m pb-s"><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Nom : test <!----></span><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Substances : argent <!----></span><span class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs pr-s">Substances : or <!----></span></div><button title="Réinitialiser les filtres" aria-label="Réinitialiser les filtres" class="flex-right btn-alt p-m"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+        <use href="#icon-close"></use>
+      </svg></button>
+  </div>
+  <div class="overflow-hidden">
+    <transition-stub name="slide" appear="false" persisted="false" css="true">
+      <div>
+        <div class="px-m">
+          <div class="tablet-blobs mt">
+            <div class="tablet-blob-1-2 large-blob-1-3">
+              <div>
+                <div class="mb">
+                  <h5>Nom</h5>
+                  <hr class="mb-s"><input class="p-xs" type="text" placeholder="Nom de l'administration">
+                </div>
+              </div>
+              <div>
+                <div class="mb">
+                  <h5>Substances</h5>
+                  <hr class="mb-s">
+                  <div id="filters_autocomplete_Substances_wrapper" class="_typeahead_8eddf1">
+                    <div class="flex typeahead-wrapper"><button class="bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs">argent <span>x</span></button><button class="bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs">or <span>x</span></button><input id="filters_autocomplete_Substances" type="text" name="filters_autocomplete_Substances" class="_typeahead-input_8eddf1 fr-input" placeholder="Substances" autocomplete="off"></div>
+                    <!---->
+                  </div>
+                </div>
+              </div><button class="btn-border small px-s p-xs rnd-xs mb">Tout effacer</button>
+            </div>
+          </div>
+          <div class="dsfr"><a href="/mocked-href" title="Valider les filtres" class="fr-btn fr-mb-2w" aria-label="Valider les filtres">Valider</a></div>
+        </div>
+      </div>
+    </transition-stub>
+  </div>
+</div>

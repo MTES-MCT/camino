@@ -240,7 +240,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               <div class="line-neutral width-full mb-xxl" />
               <h2>Utilisateurs</h2>
               <div class="line width-full" />
-              <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} />
+              <TableAuto caption={`Utilisateurs de l'administration ${administration.value.nom}`} class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} />
             </div>
           )}
         />

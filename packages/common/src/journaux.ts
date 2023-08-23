@@ -1,11 +1,13 @@
-import { Range } from './number'
+import { z } from 'zod'
+import { titreIdValidator } from './titres'
 
-export interface JournauxQueryParams {
-  page: number
-  intervalle: Range
-  recherche: string | null
-  titreId: string | null
-}
+const journauxQueryParamsValidator = z.object({
+  page: z.number(),
+  recherche: z.string().nullable(),
+  titreId: titreIdValidator.nullable(),
+})
+
+export type JournauxQueryParams = z.infer<typeof journauxQueryParamsValidator>
 
 export interface Journal {
   id: string
@@ -24,6 +26,5 @@ export interface Journal {
 export interface Journaux {
   elements: Journal[]
   page: number
-  intervalle: Range
   total: number
 }

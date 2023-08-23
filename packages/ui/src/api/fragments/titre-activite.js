@@ -32,41 +32,6 @@ const fragmentTitreActivite = gql`
   ${fragmentDocument}
 `
 
-const fragmentActivites = gql`
-  fragment activites on Activite {
-    id
-    slug
-    titre {
-      id
-      nom
-      titulaires {
-        ...titresEntreprises
-      }
-      amodiataires {
-        ...titresEntreprises
-      }
-    }
-    type {
-      ...activiteType
-    }
-    activiteStatutId
-    date
-    annee
-    periodeId
-    dateSaisie
-    sections
-    contenu
-
-    suppression
-    modification
-    deposable
-  }
-
-  ${fragmentActiviteType}
-
-  ${fragmentTitresEntreprises}
-`
-
 const fragmentActivite = gql`
   fragment activite on Activite {
     id
@@ -109,4 +74,4 @@ const fragmentActivite = gql`
   ${fragmentDocument}
 `
 
-export { fragmentActivites, fragmentActivite, fragmentTitreActivite }
+export { fragmentActivite, fragmentTitreActivite }

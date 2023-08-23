@@ -3,19 +3,6 @@ import { apiGraphQLFetch } from './_client'
 
 import { fragmentActiviteType, fragmentActiviteTypeDocumentType, fragmentActiviteTypePays } from './fragments/metas-activites'
 
-const activitesMetas = apiGraphQLFetch(
-  gql`
-    query MetasActivites {
-      entreprises {
-        elements {
-          id
-          nom
-        }
-      }
-    }
-  `
-)
-
 const activitesTypes = apiGraphQLFetch(
   gql`
     query ActivitesTypes {
@@ -52,4 +39,4 @@ const activitesTypesPays = apiGraphQLFetch(
   `
 )
 
-export { activitesMetas, activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays }
+export { activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays }

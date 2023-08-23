@@ -42,7 +42,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
   return () => (
     <div class="dsfr">
       <div class="fr-container">
-        <div class=" fr-table">
+        <div class="fr-table">
           <table style={{ display: 'table' }}>
             <caption>Documents de l'entreprise</caption>
             <thead>

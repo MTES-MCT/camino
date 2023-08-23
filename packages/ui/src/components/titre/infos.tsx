@@ -3,7 +3,6 @@ import { Pill } from '../_ui/pill'
 import { Tag } from '../_ui/tag'
 import { TagList } from '../_ui/tag-list'
 import { Dot } from '../_ui/dot'
-import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
 import { TitresLinkForm } from './titres-link-form'
 import { User } from 'camino-common/src/roles'
@@ -12,7 +11,7 @@ import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarch
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { getPhaseStatutId, PhaseStatutId, phaseStatuts } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
@@ -26,6 +25,7 @@ import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EntrepriseId } from 'camino-common/src/entreprise'
+import { TitreStatut } from '../_common/titre-statut'
 
 export interface Entreprise {
   id: EntrepriseId
@@ -122,8 +122,6 @@ export const Infos: FunctionalComponent<Props> = ({ titre, user, apiClient, curr
     })
     .filter(isNotNullNorUndefined)
 
-  const titreStatut = TitresStatuts[titre.titreStatutId]
-
   return (
     <div class="desktop-blobs">
       <div class="desktop-blob-1-2">
@@ -133,8 +131,8 @@ export const Infos: FunctionalComponent<Props> = ({ titre, user, apiClient, curr
             <span class="cap-first">{TitresTypesTypes[getTitreTypeType(titre.typeId)].nom}</span>
           </h4>
 
-          <div class="mb">
-            <Statut color={titreStatut.couleur} nom={titreStatut.nom} />
+          <div class="dsfr mb">
+            <TitreStatut titreStatutId={titre.titreStatutId} />
           </div>
 
           {phases && phases.length ? (

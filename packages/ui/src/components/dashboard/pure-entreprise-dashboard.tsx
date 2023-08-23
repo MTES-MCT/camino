@@ -105,7 +105,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                   )}
                 </div>
               ) : null}
-              <TableAuto columns={columns} rows={entrepriseTitres(item)} initialSort={{ column: 'statut', order: 'asc' }} class="width-full-p" />
+              <TableAuto caption={`Vos titres`} columns={columns} rows={entrepriseTitres(item)} initialSort={{ column: 'statut', order: 'asc' }} class="width-full-p" />
             </>
           )
         }}

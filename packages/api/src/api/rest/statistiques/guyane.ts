@@ -9,7 +9,7 @@ import { titresActivitesGet } from '../../../database/queries/titres-activites.j
 import { userSuper } from '../../../database/user-super.js'
 import { titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
+import { CaminoAnnee, caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import type { Pool } from 'pg'
 import { capitalize } from 'camino-common/src/strings.js'
@@ -145,16 +145,10 @@ const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreA
 
 export const statistiquesGuyane = async () => {
   try {
-    let anneeCurrent = getCurrentAnnee()
+    const anneeCurrent = getCurrentAnnee()
+    const anneeMoins5 = caminoAnneeToNumber(anneeCurrent) - 5
     // un tableau avec les 5 dernières années
-    const annees = Array.from(Array(6).keys())
-      .map(_id => {
-        const monAnnee = anneeCurrent
-        anneeCurrent = anneePrecedente(anneeCurrent)
-
-        return monAnnee
-      })
-      .reverse()
+    const annees = intervalleAnnees(toCaminoAnnee(anneeMoins5), anneeCurrent)
 
     const titres = await titresGet(
       {
@@ -174,7 +168,7 @@ export const statistiquesGuyane = async () => {
     const titresActivites = await titresActivitesGet(
       {
         titresDepartements: [DEPARTEMENT_IDS.Guyane],
-        annees: annees.map(annee => +annee),
+        annees,
         typesIds: ['grp', 'gra', 'grx'],
       },
       { fields: { titre: { id: {} } } },

@@ -1,0 +1,106 @@
+<div class="fr-container">
+  <div class="dsfr">
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-md-6">
+        <h1>Entreprises</h1>
+      </div>
+      <div class="fr-col-12 fr-col-md-6" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-end;">
+        <div class="dsfr" style="display: flex;"><span class="dsfr fr-mr-1v"><div class="fr-select-group"><!----><select class="fr-select" id="entreprisesDownload" aria-label="Téléchargements" name="entreprisesDownload"><option value="json">json</option><option value="csv">csv</option><option value="xlsx">xlsx</option><option value="ods">ods</option><option disabled="" hidden="" value="">Choississez un format d'export</option></select></div></span><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-file-download-line" disabled="" title="Télécharger (choisissez le format)" aria-label="Télécharger (choisissez le format)">
+            <!---->
+          </button></div><button class="fr-btn fr-btn--secondary fr-btn--md fr-icon-add-line fr-btn--icon-right fr-ml-1w" title="Ajouter une entreprise" aria-label="Ajouter une entreprise">Ajouter une entreprise</button>
+        <!---->
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-direction-column rnd-s border bg-bg mb-s"><button class="rnd-s accordion-header flex btn-alt py-s px-s" title="Déplier l’accordéon" aria-label="Déplier l’accordéon">
+      <div>
+        <div style="display: flex; align-items: center;">
+          <div>Filtres</div>
+          <div class="pl-s small">(10 / 1200 résultats)</div>
+        </div>
+      </div>
+      <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
+          <use href="#icon-chevron-bas"></use>
+        </svg></div>
+    </button>
+    <!--v-if-->
+    <div class="overflow-hidden">
+      <transition-stub name="slide" appear="false" persisted="false" css="true">
+        <!--v-if-->
+      </transition-stub>
+    </div>
+  </div>
+  <div class="dsfr">
+    <div class="dsfr">
+      <div class="fr-table fr-table--no-caption">
+        <table style="display: table; table-layout: fixed; width: 100%;">
+          <caption>entreprises</caption>
+          <thead>
+            <tr>
+              <th style="width: auto;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
+              <th style="width: auto;" scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Siren" class="fr-link" aria-label="Trier par la colonne Siren">Siren</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-899600233}}" type="primary"><span class="">10 A</span></a></td>
+              <td><span class="">899600233</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-529770646}}" type="primary"><span class="">2GRE</span></a></td>
+              <td><span class="">529770646</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-895187920}}" type="primary"><span class="">45-8 AVANT-MONTS</span></a></td>
+              <td><span class="">895187920</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-831762786}}" type="primary"><span class="">45-8 FONTS-BOUILLANTS</span></a></td>
+              <td><span class="">831762786</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-539449124}}" type="primary"><span class="">6EME SENS IMMOBILIER ENTREPRISES</span></a></td>
+              <td><span class="">539449124</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:xx-100000146}}" type="primary"><span class="">8 communes de la vallée de Vicdessos</span></a></td>
+              <td><span class="">–</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:xx-97300a001}}" type="primary"><span class="">Aboeka Alphonse</span></a></td>
+              <td><span class="">–</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-523359024}}" type="primary"><span class="">ABOEKA METAL</span></a></td>
+              <td><span class="">523359024</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:xx-97300a002}}" type="primary"><span class="">Aboeka Thomas</span></a></td>
+              <td><span class="">–</span></td>
+            </tr>
+            <tr>
+              <td><a class="fr-link" to="{name:entreprise,params:{id:fr-839888138}}" type="primary"><span class="">ABOUNAMI GOLD</span></a></td>
+              <td><span class="">839888138</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+      <ul class="fr-pagination__list">
+        <li><a aria-disabled="true" role="link" title="Première page" class="fr-pagination__link fr-pagination__link--first" aria-label="Première page">Première page</a></li>
+        <li><a aria-disabled="true" role="link" title="Page précédente" class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" aria-label="Page précédente">Page précédente</a></li>
+        <li><a href="/mocked-href" title="Page 1" class="fr-pagination__link" aria-label="Page 1" aria-current="page">1</a></li>
+        <!---->
+        <li><a href="/mocked-href" title="Page 2" class="fr-pagination__link" aria-label="Page 2">2</a></li>
+        <li><a href="/mocked-href" title="Page 3" class="fr-pagination__link" aria-label="Page 3">3</a></li>
+        <li><a href="/mocked-href" title="Page 4" class="fr-pagination__link" aria-label="Page 4">4</a></li>
+        <li><a href="/mocked-href" title="Page 5" class="fr-pagination__link" aria-label="Page 5">5</a></li>
+        <li><a class="fr-pagination__link fr-displayed-lg"> … </a></li>
+        <li><a href="/mocked-href" title="Page 120" class="fr-pagination__link" aria-label="Page 120">120</a></li>
+        <li><a href="/mocked-href" title="Page suivante" class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" aria-label="Page suivante">Page suivante</a></li>
+        <li><a href="/mocked-href" title="Dernière page" class="fr-pagination__link fr-pagination__link--last" aria-label="Dernière page">Dernière page</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
