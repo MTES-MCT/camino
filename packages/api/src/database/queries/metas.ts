@@ -98,6 +98,7 @@ const documentsTypesGet = async ({ repertoire, typeId }: { repertoire?: IDocumen
 
   if (repertoire) {
     if (typeId && repertoire === 'activites') {
+      // TODO 2023-08-23 à migrer (comme pour les entreprises) pour pouvoir supprimer définitivement activitesTypes__documentsTypes
       q.join('activitesTypes__documentsTypes as at_dt', b => {
         b.on(knex.raw('?? = ?', ['at_dt.activiteTypeId', typeId]))
         b.on(knex.raw('?? = ??', ['at_dt.documentTypeId', 'documentsTypes.id']))

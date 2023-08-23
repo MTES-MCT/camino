@@ -17,13 +17,6 @@ type ActiviteType {
   delaiMois: Int!
   frequenceId: ID!
   sections: Json
-  documentsTypes: [DocumentType]
   lectureInterdit: Boolean
   modificationInterdit: Boolean
-}
-
-type ActiviteTypeDocumentType {
-  activiteTypeId: ID!
-  documentTypeId: ID!
-  optionnel: Boolean
 }

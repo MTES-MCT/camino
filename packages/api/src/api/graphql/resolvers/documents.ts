@@ -211,7 +211,7 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
       {
         fields: {
           type: {
-            activitesTypes: { id: {} },
+            id: {},
           },
         },
       },

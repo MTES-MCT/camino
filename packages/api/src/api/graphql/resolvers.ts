@@ -32,7 +32,7 @@ import {
   pays,
 } from './resolvers/metas.js'
 
-import { activitesTypes, activitesStatuts, activitesTypesDocumentsTypes } from './resolvers/metas-activites.js'
+import { activitesTypes, activitesStatuts } from './resolvers/metas-activites.js'
 
 import { titresTypes, titresTypesTitresStatuts, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from './resolvers/metas-join.js'
 
@@ -99,7 +99,6 @@ export default {
   etapesTypesDocumentsTypes,
   activitesTypes,
   activitesStatuts,
-  activitesTypesDocumentsTypes,
   pays,
   pointsImporter,
   perimetreInformations,

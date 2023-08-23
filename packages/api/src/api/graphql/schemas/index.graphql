@@ -160,8 +160,6 @@ type Query {
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
 
-  activitesTypesDocumentsTypes: [ActiviteTypeDocumentType]
-
   "Liste des entreprises"
   entreprises(intervalle: Int, page: Int, colonne: String, ordre: String, noms: String, etapeId: ID, archive: Boolean, etapeUniquement: Boolean): Entreprises
 

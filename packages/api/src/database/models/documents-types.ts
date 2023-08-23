@@ -1,7 +1,6 @@
 import { Model } from 'objection'
 
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
-import ActivitesTypes from './activites-types.js'
 
 interface DocumentsTypes extends DocumentType {}
 
@@ -18,22 +17,6 @@ class DocumentsTypes extends Model {
       description: { type: ['string', 'null'] },
     },
   }
-
-  static relationMappings = () => ({
-    activitesTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: ActivitesTypes,
-      join: {
-        from: 'documentsTypes.id',
-        through: {
-          from: 'activitesTypes__documentsTypes.documentTypeId',
-          to: 'activitesTypes__documentsTypes.activiteTypeId',
-          extra: ['optionnel'],
-        },
-        to: 'activitesTypes.id',
-      },
-    },
-  })
 }
 
 export default DocumentsTypes

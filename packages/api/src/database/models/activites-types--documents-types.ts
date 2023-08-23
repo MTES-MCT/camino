@@ -1,9 +1,5 @@
 import { Model } from 'objection'
 
-import { IActiviteTypeDocumentType } from '../../types.js'
-
-interface ActivitesTypesDocumentsTypes extends IActiviteTypeDocumentType {}
-
 class ActivitesTypesDocumentsTypes extends Model {
   public static tableName = 'activitesTypes__documentsTypes'
 

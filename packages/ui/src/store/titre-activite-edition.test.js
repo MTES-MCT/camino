@@ -133,13 +133,12 @@ describe("état d'une activité", () => {
   })
 
   test('ajoute un nouveau document', async () => {
-    const type = { id: 'type-id', optionnel: false }
     store.state.titreActiviteEdition.element = {
-      type: { id: 'gpr', documentsTypes: [type] },
+      type: { id: 'gra' },
     }
 
     await store.dispatch('titreActiviteEdition/documentAdd', {
-      document: { id: 'document-id', type },
+      document: { id: 'document-id', typeId: 'rgr' },
     })
 
     expect(store.state.titreActiviteEdition.element.documents).toHaveLength(1)
@@ -147,14 +146,13 @@ describe("état d'une activité", () => {
   })
 
   test('remplace un document existant par un nouveau', async () => {
-    const type = { id: 'type-id', optionnel: false }
     store.state.titreActiviteEdition.element = {
       documents: [{ id: 'document-id1' }],
-      type: { id: 'gpr', documentsTypes: [type] },
+      type: { id: 'grx' },
     }
 
     await store.dispatch('titreActiviteEdition/documentAdd', {
-      document: { id: 'document-id2', type },
+      document: { id: 'document-id2', typeId: 'rgr' },
       idOld: 'document-id1',
     })
 
@@ -163,10 +161,9 @@ describe("état d'une activité", () => {
   })
 
   test('supprime un document', async () => {
-    const type = { id: 'type-id', optionnel: true }
     store.state.titreActiviteEdition.element = {
       documents: [{ id: 'document-id' }],
-      type: { id: 'gpr', documentsTypes: [type] },
+      type: { id: 'grx' },
     }
 
     await store.dispatch('titreActiviteEdition/documentRemove', {

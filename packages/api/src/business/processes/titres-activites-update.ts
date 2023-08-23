@@ -34,7 +34,6 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
   const activitesTypes = await activitesTypesGet({
     fields: {
       administrations: { id: {} },
-      documentsTypes: { id: {} },
     },
   })
 

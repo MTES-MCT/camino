@@ -3,7 +3,6 @@ import { dbManager } from '../../../../tests/db-manager.js'
 import { userSuper } from '../../user-super.js'
 
 import TitresEtapes from '../../models/titres-etapes.js'
-import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types.js'
 import TitresActivites from '../../models/titres-activites.js'
 import Document from '../../models/documents.js'
 
@@ -75,7 +74,6 @@ describe('documentSupprimer', () => {
     // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
     await TitresActivites.query().delete()
     await Document.query().delete()
-    await ActivitesTypesDocumentsTypes.query().delete()
     await knex.schema.alterTable(TitresActivites.tableName, table => {
       table.dropColumns('titreId')
     })
@@ -100,12 +98,6 @@ describe('documentSupprimer', () => {
       typeId: 'dec',
       date: toCaminoDate('2023-01-12'),
       titreActiviteId: 'titreActiviteId',
-    })
-
-    await ActivitesTypesDocumentsTypes.query().insertGraph({
-      activiteTypeId: 'grx',
-      documentTypeId: 'dec',
-      optionnel,
     })
 
     const documentRes = await documentGet(documentId, {}, userSuper)

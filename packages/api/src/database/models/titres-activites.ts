@@ -5,7 +5,6 @@ import { idGenerate } from './_format/id-create.js'
 import ActivitesTypes from './activites-types.js'
 import Titres from './titres.js'
 import Utilisateurs from './utilisateurs.js'
-import DocumentsTypes from './documents-types.js'
 import Document from './documents.js'
 
 interface TitresActivites extends ITitreActivite {}
@@ -59,15 +58,6 @@ class TitresActivites extends Model {
       join: {
         from: 'titresActivites.utilisateurId',
         to: 'utilisateurs.id',
-      },
-    },
-
-    documentsTypes: {
-      relation: Model.HasManyRelation,
-      modelClass: DocumentsTypes,
-      join: {
-        from: 'titresActivites.typeId',
-        to: 'activitesTypes__documentsTypes.activiteTypeId',
       },
     },
 

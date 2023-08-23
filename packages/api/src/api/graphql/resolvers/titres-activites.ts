@@ -196,7 +196,7 @@ const activiteDeposer = async ({ id }: { id: string }, { user }: Context, info: 
       {
         fields: {
           documents: { id: {} },
-          type: { documentsTypes: { id: {} } },
+          type: { id: {} },
         },
       },
       user
@@ -271,7 +271,7 @@ const activiteModifier = async ({ activite }: { activite: ITitreActivite & { doc
       {
         fields: {
           documents: { id: {} },
-          type: { documentsTypes: { id: {} } },
+          type: { id: {} },
         },
       },
       user

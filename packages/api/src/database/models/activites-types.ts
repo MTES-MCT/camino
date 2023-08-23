@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 import { IActiviteType } from '../../types.js'
 import Administrations from './administrations.js'
-import DocumentsTypes from './documents-types.js'
 
 interface ActivitesTypes extends IActiviteType {}
 
@@ -48,20 +47,6 @@ class ActivitesTypes extends Model {
           extra: ['email'],
         },
         to: 'administrations.id',
-      },
-    },
-
-    documentsTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: DocumentsTypes,
-      join: {
-        from: 'activitesTypes.id',
-        through: {
-          from: 'activitesTypes__documentsTypes.activiteTypeId',
-          to: 'activitesTypes__documentsTypes.documentTypeId',
-          extra: ['optionnel'],
-        },
-        to: 'documentsTypes.id',
       },
     },
   })
