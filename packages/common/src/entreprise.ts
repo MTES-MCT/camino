@@ -113,6 +113,7 @@ export const entrepriseDocumentValidator = z.object({
   entreprise_document_type_id: entrepriseDocumentTypeIdValidator,
   entreprise_id: entrepriseIdValidator,
   can_delete_document: z.boolean(),
+  largeobject_id: z.number(),
 })
 
 export type EntrepriseDocument = z.infer<typeof entrepriseDocumentValidator>

@@ -39,6 +39,7 @@ type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ?
   put?: { input: ZodType; output: ZodType }
   delete?: true
   download?: true
+  newDownload?: true
 }
 
 const IDS = [
@@ -74,6 +75,7 @@ const IDS = [
   '/changerMotDePasse',
   // NE PAS TOUCHER CES ROUTES, UTILISÉES PAR D'AUTRES
   '/download/fichiers/:documentId',
+  '/download/entrepriseDocuments/:documentId',
   '/fichiers/:documentId',
   '/titres/:id',
   '/titres',
@@ -131,6 +133,7 @@ export const CaminoRestRoutes = {
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
+  '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
   '/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
   '/titres/:id': { params: { id: titreIdValidator }, download: true },
   '/titres': { download: true },
@@ -166,9 +169,13 @@ isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
 isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
 isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
-type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = T extends CaminoRestRoute ? ((typeof CaminoRestRoutes)[T] extends { [m in Method]: any } ? T : never) : never
+type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
+  ? (typeof CaminoRestRoutes)[T] extends { [m in Method]: any }
+    ? T
+    : never
+  : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download'> = Route extends readonly [infer First, ...infer Rest]
+type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Rest]
   ? First extends can<First, Method>
     ? [First, ...CaminoRestRouteList<Rest, Method>]
     : CaminoRestRouteList<Rest, Method>
@@ -178,6 +185,7 @@ export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]
+export type NewDownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'newDownload'>[number]
 export type PutRestRoutes = CaminoRestRouteList<typeof IDS, 'put'>[number]
 
 export type CaminoRestParams<Route extends CaminoRestRoute> = (typeof CaminoRestRoutes)[Route] extends { params: any }
@@ -204,3 +212,13 @@ export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: CaminoR
 }
 
 export const isCaminoRestRoute = (route: string): route is CaminoRestRoute => IDS.includes(route)
+
+export const contentTypes: Record<DownloadFormat, string> = {
+  csv: 'text/csv',
+  geojson: 'application/geo+json',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  pdf: 'application/pdf',
+  json: 'application/json',
+  ods: 'application/vnd.oasis.opendocument.spreadsheet',
+  zip: 'application/zip',
+}

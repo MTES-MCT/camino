@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
-import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
+import { entrepriseDocumentDownload, etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
 import {
   getTitreLiaisons,
   postTitreLiaisons,
@@ -26,7 +26,19 @@ import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntre
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
-import { CaminoRestRoutes, DownloadFormat, GetRestRoutes, PostRestRoutes, PutRestRoutes, DeleteRestRoutes, isCaminoRestRoute, DownloadRestRoutes, CaminoRestRoute } from 'camino-common/src/rest.js'
+import {
+  CaminoRestRoutes,
+  DownloadFormat,
+  contentTypes,
+  GetRestRoutes,
+  PostRestRoutes,
+  PutRestRoutes,
+  DeleteRestRoutes,
+  isCaminoRestRoute,
+  DownloadRestRoutes,
+  CaminoRestRoute,
+  NewDownloadRestRoutes,
+} from 'camino-common/src/rest.js'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
@@ -36,15 +48,6 @@ import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
-const contentTypes: Record<DownloadFormat, string> = {
-  csv: 'text/csv',
-  geojson: 'application/geo+json',
-  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  pdf: 'application/pdf',
-  json: 'application/json',
-  ods: 'application/vnd.oasis.opendocument.spreadsheet',
-  zip: 'application/zip',
-}
 
 interface IRestResolverResult {
   nom: string
@@ -70,11 +73,13 @@ type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRe
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
 type RestDownloadCall = (pool: Pool) => IRestResolver
+type RestNewDownloadCall = (pool: Pool) => (req: CaminoRequest, res: express.Response) => Promise<void>
 
 type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
   (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
+  (Route extends NewDownloadRestRoutes ? { newDownload: RestNewDownloadCall } : {}) &
   (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
 export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
@@ -92,6 +97,7 @@ export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRe
 const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> }> = {
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
   '/download/fichiers/:documentId': { download: fichier },
+  '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
   '/fichiers/:documentId': { download: fichier },
   '/titres/:id': { download: titre },
   '/titres': { download: titres },
@@ -160,6 +166,10 @@ export const restWithPool = (dbPool: Pool) => {
 
         if ('download' in maRoute) {
           rest.get(route, restDownload(maRoute.download(dbPool)))
+        }
+
+        if ('newDownload' in maRoute) {
+          rest.get(route, restCatcher(maRoute.newDownload(dbPool)))
         }
       }
     })

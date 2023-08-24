@@ -39,6 +39,7 @@ select
     d.date,
     d.entreprise_document_type_id,
     d.entreprise_id,
+    d.largeobject_id,
     not exists (
         select
             *

@@ -1,4 +1,15 @@
-import { CaminoRestParams, CaminoRestRoute, CaminoRestRoutes, DeleteRestRoutes, DownloadRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes } from 'camino-common/src/rest'
+import {
+  CaminoRestParams,
+  CaminoRestRoute,
+  CaminoRestRoutes,
+  DeleteRestRoutes,
+  DownloadRestRoutes,
+  NewDownloadRestRoutes,
+  getRestRoute,
+  GetRestRoutes,
+  PostRestRoutes,
+  PutRestRoutes,
+} from 'camino-common/src/rest'
 import { z } from 'zod'
 
 type Loading = { status: 'LOADING' }
@@ -15,7 +26,7 @@ const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: CaminoRestP
 }
 
 // TODO 2023-05-25: move into Download component and make download component display href
-export const getDownloadRestRoute = <T extends DownloadRestRoutes>(route: T, params: CaminoRestParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
+export const getDownloadRestRoute = <T extends DownloadRestRoutes | NewDownloadRestRoutes>(route: T, params: CaminoRestParams<T>, searchParams: Record<string, string> = {}): UiRestRoute => {
   return getUiRestRoute(route, params, searchParams)
 }
 

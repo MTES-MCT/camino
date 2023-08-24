@@ -8,12 +8,15 @@ import { documentFilePathFind, entrepriseDocumentFilePathFind } from '../../tool
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
 import { User } from 'camino-common/src/roles'
-import { DOWNLOAD_FORMATS } from 'camino-common/src/rest.js'
+import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { DocumentId, EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocuments } from './entreprises.queries.js'
 import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { LargeObjectManager } from 'pg-large-object'
+import { CaminoRequest } from './express-type.js'
+import express from 'express'
 
 export const etapeTelecharger =
   (pool: Pool) =>
@@ -77,6 +80,50 @@ export const etapeTelecharger =
       throw e
     }
   }
+
+const bufferSize = 16384
+
+export const entrepriseDocumentDownload = (pool: Pool) => {
+  return async (req: CaminoRequest, res: express.Response) => {
+    const user = req.auth
+    const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(req.params.documentId)
+    const entrepriseDocuments = await getEntrepriseDocuments([entrepriseDocumentId], [], pool, user)
+
+    if (entrepriseDocuments.length !== 1) {
+      throw new Error('fichier inexistant')
+    }
+
+    const entrepriseDocument = entrepriseDocuments[0]
+
+    const client = await pool.connect()
+    try {
+      const man = new LargeObjectManager({ pg: client })
+
+      await client.query('BEGIN')
+
+      res.header('Content-disposition', `inline; filename=${encodeURIComponent(`${entrepriseDocument.id}.${DOWNLOAD_FORMATS.PDF}`)}`)
+      res.header('Content-Type', contentTypes[DOWNLOAD_FORMATS.PDF])
+      await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize).then(([size, stream]) => {
+        res.header('Content-Length', `${size}`)
+
+        stream.pipe(res)
+
+        stream.on('error', function () {
+          client.query('ROLLBACK')
+        })
+        res.on('close', function () {
+          client.query('COMMIT')
+        })
+      })
+    } catch (e) {
+      await client.query('ROLLBACK')
+      console.error(e)
+      throw e
+    } finally {
+      client.release()
+    }
+  }
+}
 
 export const fichier =
   (pool: Pool) =>
