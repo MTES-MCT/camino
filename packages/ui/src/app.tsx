@@ -56,7 +56,7 @@ export const App = defineComponent({
         <MapPattern />
         <IconSprite />
 
-        <Header user={user.value} currentMenuSection={currentMenuSection.value} trackEvent={trackEvent} />
+        <Header user={user.value} currentMenuSection={currentMenuSection.value} trackEvent={trackEvent} routePath={route.fullPath} />
 
         <main class="main" role="main">
           <div class="container">{error.value ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
