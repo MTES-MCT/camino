@@ -30,6 +30,7 @@ export interface IInsertEntrepriseDocumentInternalParams {
   entreprise_document_type_id?: string | null | void;
   entreprise_id?: string | null | void;
   id?: string | null | void;
+  largeobject_id: number;
 }
 
 /** 'InsertEntrepriseDocumentInternal' return type */

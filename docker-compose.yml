@@ -41,6 +41,7 @@ services:
       - default
     volumes:
       - ./postgresql:/var/lib/postgresql/data
+      - /srv/backups/dump/:/dump/
     restart: unless-stopped
   docs:
     container_name: camino_api_docs

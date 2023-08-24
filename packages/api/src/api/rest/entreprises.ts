@@ -31,6 +31,7 @@ import {
   entrepriseDocumentInputValidator,
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
+  TempDocumentName,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -43,6 +44,9 @@ import { entrepriseDocumentFilePathFind } from '../../tools/documents/document-p
 import fileRename from '../../tools/file-rename.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
 import { isGuyane } from 'camino-common/src/static/pays.js'
+import { LargeObjectManager } from 'pg-large-object'
+import {createReadStream} from 'node:fs'
+import { join } from 'node:path'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -420,6 +424,45 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
   }
 }
 
+const bufferSize = 16384
+
+const createLargeObject = (pool: Pool, tmpFileName: TempDocumentName) => new Promise<number>(async (resolve, reject) => {
+
+  const client = await pool.connect()
+  try {
+
+
+    const man = new LargeObjectManager({ pg: client })
+
+    await client.query('BEGIN')
+
+    await man.createAndWritableStreamAsync(bufferSize).then(([oid, stream]) => {
+    
+    const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
+      const fileStream = createReadStream(pathFrom)
+      fileStream.pipe(stream)
+      stream.on('finish', function () {
+        client.query('COMMIT');
+        
+
+        resolve(oid)
+      })
+      stream.on('error', function () {
+        client.query('ROLLBACK')
+        reject('error during largeobject creation')
+      })
+    })
+
+  } catch (e: any) {
+    await client.query('ROLLBACK')
+    console.error(e)
+    reject(e) 
+  } finally {
+    client.release()
+  }
+
+})
+
 export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocumentId | Error>) => {
   const user = req.auth
 
@@ -435,26 +478,26 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
 
     if (entrepriseDocumentInput.success) {
       const id = newEnterpriseDocumentId(entrepriseDocumentInput.data.date, entrepriseDocumentInput.data.typeId)
-      try {
-        const pathFrom = `/files/tmp/${entrepriseDocumentInput.data.tempDocumentName}`
-        const { fullPath } = entrepriseDocumentFilePathFind(id, entrepriseIdParsed.data)
-
-        await fileRename(pathFrom, fullPath)
-      } catch (e: any) {
-        res.status(constants.HTTP_STATUS_BAD_REQUEST)
-        res.json(e)
-
-        return
-      }
-
+        try {
+      const oid = await createLargeObject(pool, entrepriseDocumentInput.data.tempDocumentName)
+    
       await insertEntrepriseDocument(pool, {
         id,
         entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
         description: entrepriseDocumentInput.data.description,
         date: entrepriseDocumentInput.data.date,
         entreprise_id: entrepriseIdParsed.data,
+        largeobject_id: oid
       })
       res.json(id)
+    } catch (e: any) {
+      console.error(e)
+      res.status(constants.HTTP_STATUS_BAD_REQUEST)
+        res.json(e)
+        return 
+    } 
+
+      
     } else {
       res.status(constants.HTTP_STATUS_BAD_REQUEST)
       res.json(entrepriseDocumentInput.error)

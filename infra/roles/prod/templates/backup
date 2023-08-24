@@ -11,7 +11,12 @@ fi
 
 # sauvegarde la base de donnees
 rm -rf /srv/backups/camino.sql
-docker exec camino_api_db pg_dump --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino > /srv/backups/camino.sql
+
+# ce dossier est directement monté dans le docker postgres à /dump
+rm -rf /srv/backups/dump/*
+
+docker exec camino_api_db vacuumlo camino
+docker exec camino_api_db pg_dump --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino -f /dump > /srv/backups/camino.sql
 
 # sauvegarde les fichiers
 rsync --delete -r /srv/www/camino/files/  /srv/backups/files
