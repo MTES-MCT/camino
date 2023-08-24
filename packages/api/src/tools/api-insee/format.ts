@@ -128,7 +128,7 @@ export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, s
   // et null lors des tâches business
   entreprise.adresse = entreprise.adresse ? entreprise.adresse.trim() : null
 
-  if (adresse.codePostalEtablissement) {
+  if (adresse.codePostalEtablissement && adresse.codePostalEtablissement !== '[ND]') {
     try {
       entreprise.codePostal = checkCodePostal(adresse.codePostalEtablissement)
     } catch (e) {
