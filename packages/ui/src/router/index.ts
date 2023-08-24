@@ -81,7 +81,10 @@ const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
   return Globales
 }
-const Statistiques = () => import('../components/statistiques.vue')
+const Statistiques = async () => {
+  const { Statistiques } = await import('../components/statistiques')
+  return Statistiques
+}
 const StatsGuyane = async () => {
   const { Guyane } = await import('../components/statistiques/guyane')
   return Guyane
