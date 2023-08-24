@@ -6,7 +6,6 @@ import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
-import { PaysId } from 'camino-common/src/static/pays.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -147,17 +146,6 @@ interface IHeritageContenu {
   [sectionId: string]: IHeritageProps
 }
 
-interface IActiviteTypeDocumentType {
-  activiteTypeId: string
-  documentTypeId: string
-  optionnel: boolean
-}
-
-interface IActiviteTypePays {
-  activiteTypeId: string
-  paysId: PaysId
-}
-
 interface IActiviteType {
   id: ActivitesTypesId
   nom: string
@@ -166,9 +154,6 @@ interface IActiviteType {
   frequenceId: FrequenceId
   dateDebut: string
   delaiMois: number
-  titresTypes: ITitreType[]
-  documentsTypes: DocumentType[]
-  activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
   modification?: boolean | null
@@ -314,13 +299,6 @@ interface IGeometry {
   coordinates: number[] | number[][] | number[][][] | number[][][][]
 }
 
-interface IActiviteTypeTitreType {
-  titreTypeId: string
-  titreType?: ITitreType | null
-  activiteTypeId: string
-  activiteType?: IActiviteType | null
-}
-
 interface IAdministrationActiviteType {
   administrationId: string
   activiteTypeId: string
@@ -385,7 +363,7 @@ interface ITitreActivite {
   titreId: TitreId
   titre?: ITitre | null
   date: CaminoDate
-  typeId: string
+  typeId: ActivitesTypesId
   type?: IActiviteType | null
   activiteStatutId: ActivitesStatutId
   periodeId: number
@@ -654,7 +632,6 @@ export {
   Index,
   IFields,
   IActiviteType,
-  IActiviteTypeDocumentType,
   IAdministration,
   ICommune,
   IContenu,
@@ -672,7 +649,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  IActiviteTypeTitreType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitre,
@@ -703,7 +679,6 @@ export {
   IHeritageContenu,
   ICache,
   ICacheId,
-  IActiviteTypePays,
   ITitreDemande,
   IJournaux,
   IDecisionAnnexeContenu,

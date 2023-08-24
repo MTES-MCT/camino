@@ -1,5 +1,6 @@
 import { activite, activiteModifier } from '../api/titres-activites'
 import { documentsRequiredAdd } from '../utils/documents'
+import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
 
 const state = {
   element: null,
@@ -52,7 +53,7 @@ const actions = {
   },
 
   async documentInit({ state, commit, rootGetters }, documents) {
-    const documentsTypes = state.element.type.documentsTypes
+    const documentsTypes = activitesTypesDocumentsTypes[state.element.type.id].map(({ documentTypeId, optionnel }) => ({ id: documentTypeId, optionnel }))
 
     const newDocuments = documentsRequiredAdd(documents, documentsTypes, rootGetters['user/userIsAdmin'])
 

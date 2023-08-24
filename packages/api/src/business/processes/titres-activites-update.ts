@@ -33,10 +33,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   const activitesTypes = await activitesTypesGet({
     fields: {
-      titresTypes: { id: {} },
       administrations: { id: {} },
-      documentsTypes: { id: {} },
-      activitesTypesPays: { id: {} },
     },
   })
 
@@ -48,7 +45,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
 
     acc.push(
       ...titres.reduce((acc: ITitreActivite[], titre) => {
-        if (!titreActiviteTypeCheck(activiteType, titre)) return acc
+        if (!titreActiviteTypeCheck(activiteType.id, titre)) return acc
 
         acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 

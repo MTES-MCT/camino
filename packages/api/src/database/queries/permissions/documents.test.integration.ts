@@ -3,7 +3,6 @@ import { dbManager } from '../../../../tests/db-manager.js'
 import { userSuper } from '../../user-super.js'
 
 import TitresEtapes from '../../models/titres-etapes.js'
-import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types.js'
 import TitresActivites from '../../models/titres-activites.js'
 import Document from '../../models/documents.js'
 
@@ -14,6 +13,8 @@ import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
+import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -64,18 +65,15 @@ describe('documentSupprimer', () => {
     expect(documentRes.suppression).toBe(suppression)
   })
 
-  test.each<[boolean | undefined, ActivitesStatutId, boolean]>([
-    [true, 'enc', true],
-    [false, 'enc', true],
-    [undefined, 'enc', true],
-    [true, 'dep', true],
-    [false, 'dep', false],
-    [undefined, 'dep', false],
-  ])('vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)', async (optionnel, activiteStatutId, suppression) => {
+  test.each<[DocumentTypeId, ActivitesStatutId, ActivitesTypesId, boolean]>([
+    ['rie', 'enc', 'pma', true],
+    ['rgr', 'enc', 'wrp', true],
+    ['rie', 'dep', 'pma', true],
+    ['rgr', 'dep', 'wrp', false],
+  ])('vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)', async (documentTypeId, activiteStatutId, activiteTypeId, suppression) => {
     // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
     await TitresActivites.query().delete()
     await Document.query().delete()
-    await ActivitesTypesDocumentsTypes.query().delete()
     await knex.schema.alterTable(TitresActivites.tableName, table => {
       table.dropColumns('titreId')
     })
@@ -86,7 +84,7 @@ describe('documentSupprimer', () => {
 
     await TitresActivites.query().insertGraph({
       id: 'titreActiviteId',
-      typeId: 'grx',
+      typeId: activiteTypeId,
       titreId: newTitreId(''),
       date: getCurrent(),
       activiteStatutId,
@@ -97,15 +95,9 @@ describe('documentSupprimer', () => {
     const documentId = newDocumentId(toCaminoDate('2023-01-12'), 'dec')
     await documentCreate({
       id: documentId,
-      typeId: 'dec',
+      typeId: documentTypeId,
       date: toCaminoDate('2023-01-12'),
       titreActiviteId: 'titreActiviteId',
-    })
-
-    await ActivitesTypesDocumentsTypes.query().insertGraph({
-      activiteTypeId: 'grx',
-      documentTypeId: 'dec',
-      optionnel,
     })
 
     const documentRes = await documentGet(documentId, {}, userSuper)

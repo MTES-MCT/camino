@@ -46,7 +46,7 @@
         repertoire="activites"
         documentPopupTitle="documentPopupTitle"
         :parentTypeId="activite.type.id"
-        :documentsTypes="activite.type.documentsTypes"
+        :documentsTypes="documentsTypes"
         @complete-update="documentsComplete = $event"
       />
 
@@ -72,6 +72,7 @@ import DocumentsEdit from './document/multi-edit.vue'
 import DeposePopup from './activite/depose-popup.vue'
 import router from '@/router'
 import { getPeriode } from 'camino-common/src/static/frequence'
+import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
 
 export default {
   components: { Loader, SectionsEdit, DocumentsEdit, HelpTooltip },
@@ -85,6 +86,10 @@ export default {
   },
 
   computed: {
+    documentsTypes() {
+      return activitesTypesDocumentsTypes[this.activite.type.id].map(({ documentTypeId, optionnel }) => ({ id: documentTypeId, optionnel }))
+    },
+
     loaded() {
       return !this.$store.state.loading.includes('activiteEditionInit')
     },
