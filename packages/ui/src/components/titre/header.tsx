@@ -98,7 +98,7 @@ export const Header = caminoDefineComponent<Props>(['titre', 'titreEventTrack'],
     window.location.href = `mailto:camino@beta.gouv.fr?subject=Erreur ${route.params.id}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} : `
   }
 
-  return () => <PureHeader {...props} user={user.value} apiClient={{ ...titreApiClient, editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
+  return () => <PureHeader titre={props.titre} user={user.value} apiClient={{ ...titreApiClient, editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
 })
 
 export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack'>>(['titre', 'apiClient', 'user', 'emailSend'], props => {
