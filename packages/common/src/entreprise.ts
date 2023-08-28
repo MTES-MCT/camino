@@ -113,11 +113,14 @@ export const entrepriseDocumentValidator = z.object({
   entreprise_document_type_id: entrepriseDocumentTypeIdValidator,
   entreprise_id: entrepriseIdValidator,
   can_delete_document: z.boolean(),
+  // TODO 2023-08-28 n'est plus nullable après la migration
+  // Mettre le champ à non-nullable en base également
+  largeobject_id: z.number().nullable(),
 })
 
 export type EntrepriseDocument = z.infer<typeof entrepriseDocumentValidator>
 
-export const etapeEntrepriseDocumentValidator = entrepriseDocumentValidator.omit({ can_delete_document: true })
+export const etapeEntrepriseDocumentValidator = entrepriseDocumentValidator.omit({ can_delete_document: true, largeobject_id: true })
 export type EtapeEntrepriseDocument = z.infer<typeof etapeEntrepriseDocumentValidator>
 
 export const newEntrepriseId = (value: string): EntrepriseId => {

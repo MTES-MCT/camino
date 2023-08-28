@@ -14,6 +14,7 @@ export interface IGetEntrepriseDocumentsInternalResult {
   entreprise_document_type_id: string;
   entreprise_id: string | null;
   id: string;
+  largeobject_id: number | null;
 }
 
 /** 'GetEntrepriseDocumentsInternal' query type */
@@ -29,6 +30,7 @@ export interface IInsertEntrepriseDocumentInternalParams {
   entreprise_document_type_id?: string | null | void;
   entreprise_id?: string | null | void;
   id?: string | null | void;
+  largeobject_id: number;
 }
 
 /** 'InsertEntrepriseDocumentInternal' return type */

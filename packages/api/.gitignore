@@ -7,7 +7,6 @@
 
 node_modules
 /backups
-!/backups/infos.md
 /dist
 /sources/titres.json
 /sources/titres-*.json

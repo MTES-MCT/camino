@@ -39,6 +39,7 @@ select
     d.date,
     d.entreprise_document_type_id,
     d.entreprise_id,
+    d.largeobject_id,
     not exists (
         select
             *
@@ -62,6 +63,7 @@ export const insertEntrepriseDocument = async (
     date: CaminoDate
     entreprise_id: EntrepriseId
     description: string
+    largeobject_id: number
   }
 ) => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
 const insertEntrepriseDocumentInternal = sql<
@@ -73,12 +75,13 @@ const insertEntrepriseDocumentInternal = sql<
       date: CaminoDate
       entreprise_id: EntrepriseId
       description: string
+      largeobject_id: number
     },
     { id: EntrepriseDocumentId }
   >
 >`
-insert into entreprises_documents (id, entreprise_document_type_id, date, entreprise_id, description)
-    values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description)
+insert into entreprises_documents (id, entreprise_document_type_id, date, entreprise_id, description, largeobject_id)
+    values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description, $ largeobject_id !)
 RETURNING
     id;
 

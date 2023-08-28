@@ -30,19 +30,12 @@
 - Cloner ce repo : `git clone https://github.com/MTES-MCT/camino.git`.
 - Renommer le fichier `.env-example` en `.env` et le compléter.
 - Créer une base de données PostgreSQL correspondant au fichier `.env`.
-- Copier le fichier [Camino database](https://github.com/MTES-MCT/camino-database/raw/master/camino-public.sql) dans le répertoire `/backups`.
 
 ### Installation
 
 ```bash
 # installe les dépendances
 npm ci
-
-# importe les données depuis /backups/camino-public.sql
-npm run db:public-import -w packages/api
-
-# crée un utilisateur admin selon les paramètres ADMIN_EMAIL et ADMIN_PASSWORD du fichier .env
-npm run db:user -w packages/api
 ```
 
 ### Développement
@@ -79,8 +72,6 @@ npm run start -w packages/api
     ├── config           #
     │   ├── index        # `variables globales`
     │   └── knex         # `connexion à la base de données`
-    │
-    ├── dev               # `scripts de développement`
     │
     ├── database         # `base de données PostgreSQL`
     │   ├── models       # `modèles de la base de données (knex.js / objection.js)`

@@ -6,11 +6,11 @@ import {
   EntrepriseId,
   EntrepriseType,
   Siren,
-  EntrepriseDocument,
   EtapeEntrepriseDocument,
   entrepriseDocumentInputValidator,
   EntrepriseDocumentId,
   entrepriseDocumentIdValidator,
+  entrepriseDocumentValidator,
 } from 'camino-common/src/entreprise'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/fiscalite'
@@ -31,7 +31,7 @@ export interface EntrepriseApiClient {
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
   getEntreprises: (params: GetEntreprisesParams) => Promise<{ total: number; elements: GetEntreprisesEntreprise[] }>
-  getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
+  getEntrepriseDocuments: (id: EntrepriseId) => Promise<UiEntrepriseDocument[]>
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
   creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput) => Promise<EntrepriseDocumentId>
   deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
@@ -42,6 +42,8 @@ export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidat
 
 type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
 
+export const uiEntrepriseDocumentValidator = entrepriseDocumentValidator.omit({ largeobject_id: true })
+export type UiEntrepriseDocument = z.infer<typeof uiEntrepriseDocumentValidator>
 export const entrepriseApiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: async (annee, entrepriseId): Promise<Fiscalite> => {
     return getWithJson('/rest/entreprises/:entrepriseId/fiscalite/:annee', {
@@ -76,7 +78,7 @@ export const entrepriseApiClient: EntrepriseApiClient = {
     `)(params)
     return values
   },
-  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
+  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<UiEntrepriseDocument[]> => {
     return getWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
     })

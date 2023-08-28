@@ -37,6 +37,7 @@ const pool = new pg.Pool({
   user: process.env.PGUSER,
   password: process.env.PGPASSWORD,
   database: process.env.PGDATABASE,
+  idleTimeoutMillis: 60000,
 })
 
 consoleOverride()

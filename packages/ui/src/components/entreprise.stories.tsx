@@ -2,9 +2,9 @@ import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { Entreprise, EntrepriseDocument, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EntrepriseApiClient } from './entreprise/entreprise-api-client'
+import { EntrepriseApiClient, UiEntrepriseDocument } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { toUtilisateurId } from 'camino-common/src/roles'
 import { titreIdValidator } from 'camino-common/src/titres'
@@ -35,7 +35,7 @@ const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 
 const annee = toCaminoAnnee('2023')
 
-const entrepriseDocuments: EntrepriseDocument[] = [
+const entrepriseDocuments: UiEntrepriseDocument[] = [
   {
     id: toEntrepriseDocumentId(toCaminoDate('2019-08-26'), 'kbi', '12345678'),
     entreprise_document_type_id: 'kbi',

@@ -31,6 +31,7 @@ import {
   entrepriseDocumentInputValidator,
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
+  TempDocumentName,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -39,10 +40,11 @@ import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/in
 import { entrepriseFormat } from '../_format/entreprises.js'
 import { Pool } from 'pg'
 import { deleteEntrepriseDocument as deleteEntrepriseDocumentQuery, getEntrepriseDocuments as getEntrepriseDocumentsQuery, insertEntrepriseDocument } from './entreprises.queries.js'
-import { entrepriseDocumentFilePathFind } from '../../tools/documents/document-path-find.js'
-import fileRename from '../../tools/file-rename.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
 import { isGuyane } from 'camino-common/src/static/pays.js'
+import { LargeObjectManager } from 'pg-large-object'
+import { createReadStream } from 'node:fs'
+import { join } from 'node:path'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -420,6 +422,43 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
   }
 }
 
+const bufferSize = 16384
+
+const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<number> => {
+  const client = await pool.connect()
+  try {
+    const man = new LargeObjectManager({ pg: client })
+
+    await client.query('BEGIN')
+
+    const [oid, stream] = await man.createAndWritableStreamAsync(bufferSize)
+
+    const promise = new Promise<number>((resolve, reject) => {
+      const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
+      const fileStream = createReadStream(pathFrom)
+      fileStream.on('error', function (e) {
+        reject(e)
+      })
+      fileStream.pipe(stream)
+      stream.on('finish', function () {
+        client.query('COMMIT')
+        resolve(oid)
+      })
+      stream.on('error', function (e) {
+        reject(e)
+      })
+    })
+
+    return await promise
+  } catch (e: any) {
+    await client.query('ROLLBACK')
+    console.error(e)
+    throw new Error('error during largeobject creation')
+  } finally {
+    client.release()
+  }
+}
+
 export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseDocumentId | Error>) => {
   const user = req.auth
 
@@ -436,25 +475,22 @@ export const postEntrepriseDocument = (pool: Pool) => async (req: JWTRequest<Use
     if (entrepriseDocumentInput.success) {
       const id = newEnterpriseDocumentId(entrepriseDocumentInput.data.date, entrepriseDocumentInput.data.typeId)
       try {
-        const pathFrom = `/files/tmp/${entrepriseDocumentInput.data.tempDocumentName}`
-        const { fullPath } = entrepriseDocumentFilePathFind(id, entrepriseIdParsed.data)
+        const oid = await createLargeObject(pool, entrepriseDocumentInput.data.tempDocumentName)
 
-        await fileRename(pathFrom, fullPath)
+        await insertEntrepriseDocument(pool, {
+          id,
+          entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
+          description: entrepriseDocumentInput.data.description,
+          date: entrepriseDocumentInput.data.date,
+          entreprise_id: entrepriseIdParsed.data,
+          largeobject_id: oid,
+        })
+        res.json(id)
       } catch (e: any) {
+        console.error(e)
         res.status(constants.HTTP_STATUS_BAD_REQUEST)
         res.json(e)
-
-        return
       }
-
-      await insertEntrepriseDocument(pool, {
-        id,
-        entreprise_document_type_id: entrepriseDocumentInput.data.typeId,
-        description: entrepriseDocumentInput.data.description,
-        date: entrepriseDocumentInput.data.date,
-        entreprise_id: entrepriseIdParsed.data,
-      })
-      res.json(id)
     } else {
       res.status(constants.HTTP_STATUS_BAD_REQUEST)
       res.json(entrepriseDocumentInput.error)

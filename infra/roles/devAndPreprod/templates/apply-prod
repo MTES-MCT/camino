@@ -16,7 +16,7 @@ docker stop camino_api_app camino_keycloak
 echo "Insertion du dump de la BDD"
 docker exec -i camino_api_db dropdb --username=postgres camino
 docker exec -i camino_api_db createdb  --username=postgres camino
-docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino.sql
+docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino /dump
 echo "Redémarrage de l'api et de keycloak"
 docker restart camino_api_app camino_keycloak camino_ui_app
 
