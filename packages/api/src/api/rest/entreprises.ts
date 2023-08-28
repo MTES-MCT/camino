@@ -448,7 +448,7 @@ const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Pro
       })
     })
 
-    return promise
+    return await promise
   } catch (e: any) {
     await client.query('ROLLBACK')
     console.error(e)
