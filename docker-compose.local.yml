@@ -34,7 +34,7 @@ services:
     ports:
       - ${PGPORT}:${PGPORT}
     volumes:
-      - ./pg_dump/:/dump/
+      - ./packages/api/backups/:/dump/
   ui:
     container_name: camino_ui_app
     build:

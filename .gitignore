@@ -9,4 +9,3 @@ packages/ui/storybook-static/
 /*.csv
 .vscode
 **/coverage
-./pg_dump

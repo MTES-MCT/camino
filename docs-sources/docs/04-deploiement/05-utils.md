@@ -13,16 +13,6 @@ Pré-requis: avoir un utilisateur se connectant en SSH sur le serveur de product
 u=votre-nom-d-utilisateur npm run db:prod-fetch
 ```
 
-### Exporter la base de données publique vers le serveur de test
-
-Pré-requis: avoir un utilisateur se connectant en SSH sur le serveur de test.
-
-```sh
-# exporte la base de données
-# - depuis le dossier local: `/backups/camino-public.sql`
-# - vers le serveur de test: `/srv/backups/camino.sql`
-u=votre-nom-d-utilisateur npm run db:test-push
-```
 
 ### Recréer la base de données en production
 
