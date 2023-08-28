@@ -20,7 +20,7 @@ export function FiltersInput(props: Props) {
         value={props.initialValue}
         type="text"
         placeholder={filter.placeholder}
-        onChange={e => {
+        onInput={e => {
           if (isEventWithTarget(e)) {
             props.onFilterInput(e.target.value)
           }
