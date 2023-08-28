@@ -74,6 +74,7 @@ export const Titres = defineComponent({
       try {
         const titres = await titreApiClient.getTitresForTable({ ...paramsForTable.value, ...paramsFiltres.value })
         titresForTable.value = { status: 'LOADED', value: { total: titres.total, rows: titresLignesBuild(titres.elements, activitesCol.value) } }
+        total.value = titres.total
         data.value = { status: 'LOADED', value: true }
       } catch (e: any) {
         console.error('error', e)
