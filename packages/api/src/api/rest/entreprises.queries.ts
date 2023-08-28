@@ -62,7 +62,7 @@ export const insertEntrepriseDocument = async (
     entreprise_document_type_id: EntrepriseDocumentTypeId
     date: CaminoDate
     entreprise_id: EntrepriseId
-    description: string,
+    description: string
     largeobject_id: number
   }
 ) => dbQueryAndValidate(insertEntrepriseDocumentInternal, params, pool, z.object({ id: entrepriseDocumentIdValidator }))
@@ -74,14 +74,14 @@ const insertEntrepriseDocumentInternal = sql<
       entreprise_document_type_id: EntrepriseDocumentTypeId
       date: CaminoDate
       entreprise_id: EntrepriseId
-      description: string,
+      description: string
       largeobject_id: number
     },
     { id: EntrepriseDocumentId }
   >
 >`
 insert into entreprises_documents (id, entreprise_document_type_id, date, entreprise_id, description, largeobject_id)
-    values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description, $largeobject_id!)
+    values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description, $ largeobject_id !)
 RETURNING
     id;
 

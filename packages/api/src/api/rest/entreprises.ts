@@ -436,15 +436,16 @@ const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Pro
     const promise = new Promise<number>((resolve, reject) => {
       const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
       const fileStream = createReadStream(pathFrom)
+      fileStream.on('error', function (e) {
+        reject(e)
+      })
       fileStream.pipe(stream)
       stream.on('finish', function () {
         client.query('COMMIT')
         resolve(oid)
       })
       stream.on('error', function (e) {
-        console.error(e)
-        client.query('ROLLBACK')
-        reject(new Error('error during largeobject creation'))
+        reject(e)
       })
     })
 
@@ -452,7 +453,7 @@ const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Pro
   } catch (e: any) {
     await client.query('ROLLBACK')
     console.error(e)
-    throw e
+    throw new Error('error during largeobject creation')
   } finally {
     client.release()
   }

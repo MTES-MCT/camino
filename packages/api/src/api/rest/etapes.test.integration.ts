@@ -201,7 +201,6 @@ test('getEtapeEntrepriseDocuments', async () => {
       "entreprise_document_type_id": "kbi",
       "entreprise_id": "entreprise_id",
       "id": ${expect.anything()},
-      "largeobject_id": 12,
     }
   `
   )
@@ -221,7 +220,6 @@ test('getEtapeEntrepriseDocuments', async () => {
       "entreprise_document_type_id": "kbi",
       "entreprise_id": "entreprise_id",
       "id": ${expect.anything()},
-      "largeobject_id": 12,
     }
   `
   )
