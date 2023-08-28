@@ -301,7 +301,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
                       domainesIds: 'm',
                       typesIds: 'ar',
                       statutsIds: 'val,mod',
-                      territoires: 'guyane',
+                      departements: '973',
                       vueId: 'table',
                     },
                   }}
@@ -323,7 +323,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
                       domainesIds: 'm',
                       typesIds: 'pr',
                       statutsIds: 'val,mod',
-                      territoires: 'guyane',
+                      departements: '973',
                       vueId: 'table',
                     },
                   }}
@@ -357,7 +357,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
                       domainesIds: 'm',
                       typesIds: 'ax',
                       statutsIds: 'val,mod',
-                      territoires: 'guyane',
+                      departements: '973',
                       vueId: 'table',
                     },
                   }}
@@ -379,7 +379,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
                       domainesIds: 'm',
                       typesIds: 'cx',
                       statutsIds: 'val,mod',
-                      territoires: 'guyane',
+                      departements: '973',
                       vueId: 'table',
                     },
                   }}

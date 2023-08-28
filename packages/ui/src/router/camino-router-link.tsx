@@ -20,7 +20,8 @@ export const routerQueryToStringArray = (value: LocationQueryValue | LocationQue
   if (value === undefined) {
     return []
   }
-  return Array.isArray(value) ? value.map(value => String(value)) : [String(value)]
+  // le split est pour supporter les deux formats de liste, `typesIds=ar,ax,pr` ou `typesIds=ar&typesIds=ax`, le premier ayant été utilisé par le passé, il faut garder la rétro-compatibilité
+  return Array.isArray(value) ? value.map(value => String(value)) : String(value).split(',')
 }
 
 export type Props = {

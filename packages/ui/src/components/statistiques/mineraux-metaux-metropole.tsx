@@ -350,7 +350,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
                       domainesIds: 'm',
                       typesIds: 'ar,ap,pr',
                       statutsIds: 'dmi,mod',
-                      territoires: 'FR',
+                      regions: ['84', '27', '53', '24', '94', '44', '32', '11', '28', '75', '76', '52', '93'],
                       vueId: 'table',
                     },
                   }}
@@ -372,7 +372,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
                       domainesIds: 'm',
                       typesIds: 'pr',
                       statutsIds: 'val',
-                      territoires: 'FR',
+                      regions: ['84', '27', '53', '24', '94', '44', '32', '11', '28', '75', '76', '52', '93'],
                       vueId: 'table',
                     },
                   }}
@@ -412,7 +412,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
                       domainesIds: 'm',
                       typesIds: 'ax,cx,px',
                       statutsIds: 'dmi,mod',
-                      territoires: 'FR',
+                      regions: ['84', '27', '53', '24', '94', '44', '32', '11', '28', '75', '76', '52', '93'],
                       vueId: 'table',
                     },
                   }}
@@ -439,7 +439,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
                       domainesIds: 'm',
                       typesIds: 'cx',
                       statutsIds: 'val',
-                      territoires: 'FR',
+                      regions: ['84', '27', '53', '24', '94', '44', '32', '11', '28', '75', '76', '52', '93'],
                       vueId: 'table',
                     },
                   }}

@@ -9,7 +9,7 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
-import { TableRow } from './_ui/table'
+import { Column, TableRow } from './_ui/table'
 import { activitesDownloadFormats, activitesFiltresNames } from 'camino-common/src/filters'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { Activite } from './activite/activite-api-client'
@@ -27,19 +27,16 @@ const activitesColonnes = [
   {
     id: 'annee',
     name: 'Année',
-    width: '10%',
   },
   {
     id: 'periode',
     name: 'Période',
-    width: '15%',
   },
   {
     id: 'statut',
     name: 'Statut',
-    width: '15%',
   },
-] as const
+] as const satisfies readonly Column[]
 
 const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
   activites.map(activite => {

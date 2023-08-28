@@ -18,7 +18,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
-  { id: 'titreDomaine', name: '', width: '5%' },
+  { id: 'titreDomaine', name: '' },
   { id: 'titreType', name: 'Type de titre' },
   { id: 'titreStatut', name: 'Statut de titre' },
   { id: 'type', name: 'Type' },

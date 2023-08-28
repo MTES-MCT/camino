@@ -47,7 +47,6 @@ export const nomColumn: Column<'nom'> = {
 export const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
   name: '',
-  width: '50px',
 }
 export const typeColumn: Column<'type'> = {
   id: 'type',

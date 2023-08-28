@@ -5,34 +5,29 @@ import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/ta
 import { markRaw } from 'vue'
 import { Utilisateur } from 'camino-common/src/entreprise'
 
-export const utilisateursColonnes: Column[] = [
+export const utilisateursColonnes = [
   {
     id: 'nom',
     name: 'Nom',
-    width: '15%',
   },
   {
     id: 'prenom',
     name: 'Prénom',
-    width: '15%',
   },
   {
     id: 'email',
     name: 'Email',
-    width: '30%',
   },
   {
     id: 'role',
     name: 'Rôle',
-    width: '10%',
   },
   {
     id: 'lien',
     name: 'Lien',
     noSort: true,
-    width: '30%',
   },
-]
+] as const satisfies readonly Column[]
 
 export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]): TableRow[] =>
   utilisateurs.map(utilisateur => {
