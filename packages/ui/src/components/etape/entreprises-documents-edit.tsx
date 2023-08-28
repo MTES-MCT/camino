@@ -4,11 +4,11 @@ import { dateFormat } from '@/utils'
 import { Tag } from '../_ui/tag'
 import { Icon } from '@/components/_ui/icon'
 import { computed, onMounted, ref, watch } from 'vue'
-import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getEntries, getKeys } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
-import { EntrepriseApiClient } from '../entreprise/entreprise-api-client'
+import { EntrepriseApiClient, UiEntrepriseDocument } from '../entreprise/entreprise-api-client'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -34,7 +34,7 @@ interface Props {
 
 interface InnerEntrepriseDocument {
   id: EntrepriseDocumentId | ''
-  documents: EntrepriseDocument[]
+  documents: UiEntrepriseDocument[]
   entrepriseDocumentType: EntrepriseDocumentType
 }
 
@@ -93,12 +93,12 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     const tdeEntrepriseDocuments = computed<EntrepriseDocumentType[]>(() => {
       return getEntrepriseDocuments(props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.etapeTypeId)
     })
-    const entrepriseDocuments = ref<AsyncData<{ [key in EntrepriseId]?: EntrepriseDocument[] }>>({ status: 'LOADING' })
+    const entrepriseDocuments = ref<AsyncData<{ [key in EntrepriseId]?: UiEntrepriseDocument[] }>>({ status: 'LOADING' })
 
     const loadEntrepriseDocuments = async () => {
       entrepriseDocuments.value = { status: 'LOADING' }
       try {
-        const loadingEntrepriseDocuments: Record<EntrepriseId, EntrepriseDocument[]> = {}
+        const loadingEntrepriseDocuments: Record<EntrepriseId, UiEntrepriseDocument[]> = {}
         for (const entreprise of props.entreprises) {
           loadingEntrepriseDocuments[entreprise.id] = await props.apiClient.getEntrepriseDocuments(entreprise.id)
         }
@@ -114,7 +114,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     }
 
     const complete = computed<boolean>(() => {
-      const entreprisedocuments: EntrepriseDocument[] = []
+      const entreprisedocuments: UiEntrepriseDocument[] = []
       const documents = entrepriseDocuments.value
       if (documents.status === 'LOADED') {
         props.entreprises.forEach(entreprise => {

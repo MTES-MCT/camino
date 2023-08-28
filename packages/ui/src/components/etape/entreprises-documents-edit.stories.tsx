@@ -1,10 +1,11 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { action } from '@storybook/addon-actions'
-import { EntrepriseDocument, entrepriseDocumentIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { entrepriseDocumentIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { z } from 'zod'
 import { etapeIdValidator } from 'camino-common/src/etape'
+import { UiEntrepriseDocument } from '../entreprise/entreprise-api-client'
 
 const meta: Meta = {
   title: 'Components/Etape/EditionEntreprisesDocuments',
@@ -49,7 +50,7 @@ export const ArmUneEntrepriseSansDocumentDEntreprise: StoryFn = () => (
 
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
-        const entrepriseDocuments: EntrepriseDocument[] = [
+        const entrepriseDocuments: UiEntrepriseDocument[] = [
           {
             id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
             description: '',
@@ -139,7 +140,7 @@ export const ArmUneEntrepriseAvecDocumentDEntrepriseComplet: StoryFn = () => (
 
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
-        const entrepriseDocuments: EntrepriseDocument[] = [
+        const entrepriseDocuments: UiEntrepriseDocument[] = [
           {
             id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
             description: '',
@@ -280,7 +281,7 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
         if (id === 'id') {
-          const entrepriseDocuments: EntrepriseDocument[] = [
+          const entrepriseDocuments: UiEntrepriseDocument[] = [
             {
               id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
               description: '',

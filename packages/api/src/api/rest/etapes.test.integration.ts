@@ -165,7 +165,14 @@ test('getEtapeEntrepriseDocuments', async () => {
 
   const id1: EntrepriseDocumentId = newEnterpriseDocumentId(toCaminoDate('2022-01-01'), 'kbi')
 
-  await insertEntrepriseDocument(dbPool, { id: id1, date: toCaminoDate('2022-01-01'), description: '', entreprise_document_type_id: DOCUMENTS_TYPES_IDS.kbis, entreprise_id: entrepriseId })
+  await insertEntrepriseDocument(dbPool, {
+    id: id1,
+    date: toCaminoDate('2022-01-01'),
+    description: '',
+    entreprise_document_type_id: DOCUMENTS_TYPES_IDS.kbis,
+    entreprise_id: entrepriseId,
+    largeobject_id: 12,
+  })
 
   let tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, userSuper)
 
@@ -194,6 +201,7 @@ test('getEtapeEntrepriseDocuments', async () => {
       "entreprise_document_type_id": "kbi",
       "entreprise_id": "entreprise_id",
       "id": ${expect.anything()},
+      "largeobject_id": 12,
     }
   `
   )
@@ -213,6 +221,7 @@ test('getEtapeEntrepriseDocuments', async () => {
       "entreprise_document_type_id": "kbi",
       "entreprise_id": "entreprise_id",
       "id": ${expect.anything()},
+      "largeobject_id": 12,
     }
   `
   )

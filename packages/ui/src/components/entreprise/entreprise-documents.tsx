@@ -2,8 +2,8 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
-import { EntrepriseApiClient } from './entreprise-api-client'
-import { DocumentId, EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseApiClient, UiEntrepriseDocument } from './entreprise-api-client'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { dateFormat } from 'camino-common/src/date'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'
@@ -17,7 +17,7 @@ interface Props {
   entrepriseId: EntrepriseId
 }
 export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'entrepriseId', 'user'], props => {
-  const data = ref<AsyncData<EntrepriseDocument[]>>({ status: 'LOADING' })
+  const data = ref<AsyncData<UiEntrepriseDocument[]>>({ status: 'LOADING' })
 
   const addPopup = ref<boolean>(false)
   const deletePopup = ref<boolean>(false)

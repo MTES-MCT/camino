@@ -103,18 +103,22 @@ export const entrepriseDocumentDownload = (pool: Pool) => {
 
       res.header('Content-disposition', `inline; filename=${encodeURIComponent(`${entrepriseDocument.id}.${DOWNLOAD_FORMATS.PDF}`)}`)
       res.header('Content-Type', contentTypes[DOWNLOAD_FORMATS.PDF])
-      await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize).then(([size, stream]) => {
-        res.header('Content-Length', `${size}`)
 
-        stream.pipe(res)
+      // TODO 2023-08-28 condition a supprimé quand la colonne sere non null en bdd
+      if (entrepriseDocument.largeobject_id) {
+        await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize).then(([size, stream]) => {
+          res.header('Content-Length', `${size}`)
 
-        stream.on('error', function () {
-          client.query('ROLLBACK')
+          stream.pipe(res)
+
+          stream.on('error', function () {
+            client.query('ROLLBACK')
+          })
+          res.on('close', function () {
+            client.query('COMMIT')
+          })
         })
-        res.on('close', function () {
-          client.query('COMMIT')
-        })
-      })
+      }
     } catch (e) {
       await client.query('ROLLBACK')
       console.error(e)
