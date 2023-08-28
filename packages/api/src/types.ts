@@ -215,7 +215,7 @@ interface IDemarcheType {
   travaux?: boolean
 }
 
-export const DOCUMENTS_REPERTOIRES = ['demarches', 'activites', 'entreprises', 'tmp'] as const
+export const DOCUMENTS_REPERTOIRES = ['demarches', 'activites', 'tmp'] as const
 type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IDomaine {

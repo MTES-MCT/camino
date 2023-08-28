@@ -10,6 +10,7 @@ import { Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { ApiClient, apiClient } from '../api/api-client'
 import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
+import { Column } from './_ui/table'
 
 const entreprisesColonnes = [
   {
@@ -20,7 +21,7 @@ const entreprisesColonnes = [
     id: 'siren',
     name: 'Siren',
   },
-] as const
+] as const satisfies readonly Column[]
 
 const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
   entreprises.map(entreprise => {

@@ -1,7 +1,7 @@
 import { defineComponent, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { ADMINISTRATION_TYPES, Administrations as Adms } from 'camino-common/src/static/administrations'
-import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
+import { Column, ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { CaminoFiltre } from 'camino-common/src/filters'
@@ -19,9 +19,8 @@ const colonnes = [
   {
     id: 'type',
     name: 'Type',
-    width: '20%',
   },
-] as const
+] as const satisfies readonly Column[]
 
 const filtres: readonly CaminoFiltre[] = ['nomsAdministration', 'administrationTypesIds'] as const
 type ColonneId = (typeof colonnes)[number]['id']

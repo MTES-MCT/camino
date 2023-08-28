@@ -5,7 +5,7 @@ import { canReadMetas } from 'camino-common/src/permissions/metas'
 import { CaminoAccessError } from './error'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
-import { TableRow } from './_ui/table'
+import { Column, TableRow } from './_ui/table'
 import { metasIndex } from '@/store/metas-definitions'
 const metasColonnes = [
   {
@@ -13,13 +13,8 @@ const metasColonnes = [
     name: 'Nom',
     noSort: true,
   },
-] as const
+] as const satisfies readonly Column[]
 
-interface Meta {
-  nom: string
-  linkName?: string
-  id: string
-}
 const metasLignesBuild = (): Promise<{ values: TableRow[]; total: number }> => {
   const data = Object.entries(metasIndex).map(([id, element]) => {
     const columns = {

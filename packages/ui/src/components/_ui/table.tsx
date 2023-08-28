@@ -44,7 +44,6 @@ export interface Column<T = string> {
   id: T
   name: string
   noSort?: boolean
-  width?: string
 }
 
 export const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
@@ -96,13 +95,13 @@ export const Table = defineComponent(
 
     return () => (
       <div class="dsfr">
-        <div class="fr-table fr-table--no-caption">
-          <table style={{ display: 'table', tableLayout: 'fixed', width: '100%' }}>
+        <div class="fr-table fr-table--no-caption" style={{ overflow: 'auto' }}>
+          <table style={{ display: 'table', minWidth: '100%' }}>
             <caption>{props.caption}</caption>
             <thead>
               <tr>
                 {props.columns.map(col => (
-                  <th style={{ width: col.width ? col.width : 'auto' }} key={col.id} scope="col" class="nowrap">
+                  <th key={col.id} scope="col" class="nowrap">
                     {col.noSort ? (
                       <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
                         {col.name === '' ? '-' : col.name}
