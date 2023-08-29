@@ -44,7 +44,7 @@
         :addAction="{ name: 'titreActiviteEdition/documentAdd' }"
         :removeAction="{ name: 'titreActiviteEdition/documentRemove' }"
         repertoire="activites"
-        documentPopupTitle="documentPopupTitle"
+        :documentPopupTitle="documentPopupTitle"
         :parentTypeId="activite.type.id"
         :documentsTypes="documentsTypes"
         @complete-update="documentsComplete = $event"
@@ -73,6 +73,7 @@ import DeposePopup from './activite/depose-popup.vue'
 import router from '@/router'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
+import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 
 export default {
   components: { Loader, SectionsEdit, DocumentsEdit, HelpTooltip },
@@ -86,8 +87,11 @@ export default {
   },
 
   computed: {
+    documentPopupTitle() {
+      return `${this.activite.type.nom} | ${getPeriode(this.activite.type.frequenceId, this.activite.periodeId)} ${this.activite.annee}`
+    },
     documentsTypes() {
-      return activitesTypesDocumentsTypes[this.activite.type.id].map(({ documentTypeId, optionnel }) => ({ id: documentTypeId, optionnel }))
+      return activitesTypesDocumentsTypes[this.activite.type.id].map(({ documentTypeId, optionnel }) => ({ id: documentTypeId, optionnel, nom: DocumentsTypes[documentTypeId].nom }))
     },
 
     loaded() {
