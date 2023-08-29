@@ -1,0 +1,54 @@
+<div class="dsfr">
+  <dialog id="monId" class="fr-modal" role="dialog" aria-labelledby="monId-title">
+    <div class="fr-container fr-container--fluid fr-container-md">
+      <div class="fr-grid-row fr-grid-row--center">
+        <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+          <div class="fr-modal__body">
+            <div class="fr-modal__header"><button class="fr-btn--close fr-btn" aria-controls="monId" title="Fermer">Fermer</button></div>
+            <div class="fr-modal__content">
+              <h1 id="monId-title" class="fr-modal__title"><span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>Ajouter Rapport environnemental d'exploration</h1>
+              <div class="fr-container">
+                <form>
+                  <!---->
+                  <div class="dsfr">
+                    <fieldset class="fr-fieldset" id="add-activite-document-date-fieldset" role="group" aria-labelledby="add-activite-document-date-fieldset-legend add-activite-document-date-fieldset-messages">
+                      <legend class="fr-fieldset__legend" id="add-activite-document-date-fieldset-legend">Date de délivrance du document
+                        <!---->
+                      </legend>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+                        <div class="fr-input-group"><label class="fr-label" for="add-activite-document-date-date-jour">Jour<span class="fr-hint-text">Exemple : 14</span></label><input class="fr-input" type="number" min="1" max="31" name="day" id="add-activite-document-date-date-jour"></div>
+                      </div>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+                        <div class="fr-input-group"><label class="fr-label" for="add-activite-document-date-date-mois">Mois<span class="fr-hint-text">Exemple : 12</span></label><input class="fr-input" type="number" min="1" max="12" name="mois" id="add-activite-document-date-date-mois"></div>
+                      </div>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--inline-grow fr-fieldset__element--year">
+                        <div class="fr-input-group"><label class="fr-label" for="add-activite-document-date-date-annee">Année<span class="fr-hint-text">Exemple : 1984</span></label><input class="fr-input" type="number" min="1750" max="2099" name="annee" id="add-activite-document-date-date-annee"></div>
+                      </div>
+                      <div class="fr-messages-group" id="add-activite-document-date-fieldset-messages" aria-live="assertive"></div>
+                    </fieldset>
+                  </div>
+                  <fieldset class="fr-fieldset" id="text">
+                    <div class="fr-fieldset__element">
+                      <div class="dsfr">
+                        <div class="fr-upload-group"><label class="fr-label" for="file-upload">Ajouter un fichier<span class="fr-hint-text">Taille maximale : 30 Mo. Formats supportés : pdf.</span></label><input class="fr-upload" type="file" id="file-upload" name="file-upload" accept=".pdf"></div>
+                      </div>
+                    </div>
+                    <div class="fr-fieldset__element">
+                      <div class="fr-input-group"><label class="fr-label" for="description">Description</label><input class="fr-input" name="text" id="description" type="text"></div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+            <div class="fr-modal__footer">
+              <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                <li><button class="fr-btn fr-icon-check-line fr-btn--icon-left disabled" disabled="">Enregistrer</button></li>
+                <li><button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls="monId">Annuler</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>

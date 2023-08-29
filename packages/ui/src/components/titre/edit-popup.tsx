@@ -4,6 +4,7 @@ import { EditableTitre } from 'camino-common/src/titres'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
+import { DsfrInput } from '../_ui/dsfr-input'
 
 interface Props {
   titre: EditableTitre
@@ -26,26 +27,12 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
     references.value.splice(index, 1)
   }
 
+  const nomChange = (value: string) => {
+    nom.value = value
+  }
   const content = () => (
     <form>
-      <div class="fr-input-group">
-        <label class="fr-label" for="titreNom">
-          Nom *
-        </label>
-        <input
-          value={nom.value}
-          onInput={e => {
-            if (isEventWithTarget(e)) {
-              nom.value = e.target.value
-            }
-          }}
-          class="fr-input"
-          name="titreNom"
-          id="titreNom"
-          type="text"
-          required
-        />
-      </div>
+      <DsfrInput legend={{ main: 'Nom' }} type={{ type: 'text' }} valueChanged={nomChange} initialValue={nom.value} required={true} />
       <div class="fr-input-group">
         <label class="fr-label" for="references">
           Références

@@ -5,20 +5,15 @@ import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check.js'
 import { anneesBuild } from '../../tools/annees-build.js'
 import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
 import { titresGet } from '../../database/queries/titres.js'
-import { activitesTypesGet } from '../../database/queries/metas-activites.js'
 import { titreActivitesBuild } from '../rules/titre-activites-build.js'
 
-import { titresToutesActivites, titreActivitesTypes, titresSansActivite } from './__mocks__/titres-activites-update-titres.js'
+import { titresToutesActivites, titresSansActivite } from './__mocks__/titres-activites-update-titres.js'
 import { emailsSend, emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
-}))
-
-vi.mock('../../database/queries/metas-activites', () => ({
-  activitesTypesGet: vi.fn(),
 }))
 
 vi.mock('../utils/titre-activite-type-check', () => ({
@@ -48,7 +43,6 @@ vi.mock('../../tools/api-mailjet/emails', () => ({
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
-const activitesTypesGetMock = vi.mocked(activitesTypesGet, true)
 const titreActiviteTypeCheckMock = vi.mocked(titreActiviteTypeCheck, true)
 const anneesBuildMock = vi.mocked(anneesBuild, true)
 const titreActivitesBuildMock = vi.mocked(titreActivitesBuild, true)
@@ -62,7 +56,6 @@ afterEach(() => {
 describe("activités d'un titre", () => {
   test('met à jour un titre sans activité', async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
-    activitesTypesGetMock.mockResolvedValue(titreActivitesTypes)
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
     titreActivitesBuildMock.mockReturnValue([{ titreId: titresSansActivite[0].id }] as ITitreActivite[])
@@ -79,7 +72,6 @@ describe("activités d'un titre", () => {
 
   test('ne met pas à jour un titre possédant déjà des activités', async () => {
     titresGetMock.mockResolvedValue(titresToutesActivites)
-    activitesTypesGetMock.mockResolvedValue(titreActivitesTypes)
     titreActiviteTypeCheckMock.mockReturnValue(true)
     anneesBuildMock.mockReturnValue([2018])
     titreActivitesBuildMock.mockReturnValue([])
@@ -96,7 +88,6 @@ describe("activités d'un titre", () => {
 
   test("ne met pas à jour un titre ne correspondant à aucun type d'activité", async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
-    activitesTypesGetMock.mockResolvedValue(titreActivitesTypes)
     titreActiviteTypeCheckMock.mockReturnValue(false)
     anneesBuildMock.mockReturnValue([2018])
 
@@ -111,7 +102,6 @@ describe("activités d'un titre", () => {
 
   test('ne met pas à jour de titre si les activités ne sont valables sur aucune année', async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
-    activitesTypesGetMock.mockResolvedValue(titreActivitesTypes)
     titreActiviteTypeCheckMock.mockReturnValue(false)
     anneesBuildMock.mockReturnValue([])
 

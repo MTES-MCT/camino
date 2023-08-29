@@ -34,7 +34,7 @@ export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.El
         ) : (
           <p class={`cap-first ${props.element.description ? 'mb-s' : ''}`}>
             {valeurFind(props.element)}
-            {props.element.id === 'volumeGranulatsExtrait' && props.element.value !== undefined && isNumberElement(props.element) ? (
+            {props.element.id === 'volumeGranulatsExtrait' && props.element.value !== null && isNumberElement(props.element) ? (
               <span>m3. Soit l’équivalent de {numberFormat(props.element.value * 1.5)} tonnes.</span>
             ) : null}
           </p>

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isNullOrUndefined } from './typescript-tools.js'
 
 const datesDiffInDays = (a: Date, b: Date) => {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
@@ -94,7 +95,7 @@ export function toCaminoAnnee(annee: string | number): CaminoAnnee {
 }
 
 export const dateValidate = (str: CaminoDate | string | undefined | null): { valid: true; date: CaminoDate } | { valid: false; error: 'Date manquante' | 'Date invalide' } => {
-  if (!str) return { valid: false, error: 'Date manquante' }
+  if (isNullOrUndefined(str)) return { valid: false, error: 'Date manquante' }
 
   if (typeof str === 'string') {
     try {

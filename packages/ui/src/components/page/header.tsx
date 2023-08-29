@@ -1,5 +1,6 @@
-import { FunctionalComponent, onMounted } from 'vue'
+import { computed, FunctionalComponent, onMounted } from 'vue'
 import { Role, User } from 'camino-common/src/roles'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
@@ -30,16 +31,6 @@ const links = {
 const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.hasOwnProperty.call(link, 'path')
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
-// TODO 2023-05-16 attention il faudrait vérifier si l’utilisateur peut accéder aux onglets (ex: canReadActivites)
-const linksByRole: Record<Role, (Link | LinkList)[]> = {
-  super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE, links.METAS, links.JOURNAUX],
-  admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE],
-  editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.ACTIVITES, ANNUAIRE],
-  lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ANNUAIRE],
-  entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.ACTIVITES, ANNUAIRE],
-  'bureau d’études': [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ANNUAIRE],
-  defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
-}
 
 const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'>> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
@@ -131,6 +122,20 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     }
   }
 
+  const linksByRole = computed<Record<Role, (Link | LinkList)[]>>(() => {
+    const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
+
+    return {
+      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE, links.METAS, links.JOURNAUX],
+      admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE],
+      editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE],
+      lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ANNUAIRE],
+      entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ...linkActivites, ANNUAIRE],
+      'bureau d’études': [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ANNUAIRE],
+      defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
+    }
+  })
+
   return () => (
     <div class="dsfr" style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
@@ -192,7 +197,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
             </div>
             <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
-                {linksByRole[props.user?.role ?? 'defaut'].map((link, index) => (
+                {linksByRole.value[props.user?.role ?? 'defaut'].map((link, index) => (
                   <li key={link.label} class="fr-nav__item">
                     {isDirectLink(link) ? (
                       <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={() => linkClick(link.path)} {...getAriaPage(link)}>

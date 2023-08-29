@@ -16,8 +16,8 @@ import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.j
 import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 import { TitreId } from 'camino-common/src/titres.js'
 
 export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: TitreId[] } }, { user, pool }: Context) => {
@@ -104,13 +104,13 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
 
           const etapesStatuts = getEtapesStatuts(etapeTypeId)
 
-          const documentsElements: DeepReadonly<SectionsElement[]> = (getDocuments(titreDemande.typeId, titreDemarche.typeId, etapeTypeId)?.filter(dt => !dt.optionnel) ?? []).map(dt => ({
+          const documentsElements: DeepReadonly<SectionElement[]> = (getDocuments(titreDemande.typeId, titreDemarche.typeId, etapeTypeId)?.filter(dt => !dt.optionnel) ?? []).map(dt => ({
             id: dt.id,
             nom: dt.nom!,
             type: 'file',
           }))
 
-          const elements: (DeepReadonly<SectionsElement> & { sectionId: string })[] = []
+          const elements: (DeepReadonly<SectionElement> & { sectionId: string })[] = []
           const etapeTypeSections = [...getSections(titre.typeId, titreDemarche.typeId, etapeTypeId)]
           if (etapeTypeSections.length) {
             etapeTypeSections.forEach(section => {
@@ -138,7 +138,7 @@ export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitre
                   options: etapesStatuts.map(statut => ({
                     id: statut.id,
                     nom: statut.nom,
-                  })),
+                  })) as NonEmptyArray<{ id: string; nom: string }>,
                 },
                 ...elements,
                 ...documentsElements,

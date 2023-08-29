@@ -12,6 +12,7 @@ import TitresActivites from '../models/titres-activites.js'
 import { titresActivitesQueryModify, titresActivitesPropsQueryModify } from './permissions/titres-activites.js'
 import { isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
+import { ActiviteId } from 'camino-common/src/activite.js'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -355,9 +356,9 @@ const titresActivitesCount = async (
 const titresActivitesUpsert = async (titreActivites: ITitreActivite[]) =>
   TitresActivites.query().withGraphFetched(options.titresActivites.graph).upsertGraph(titreActivites, options.titresActivites.update)
 
-const titreActiviteUpdate = async (id: string, titreActivite: Partial<ITitreActivite>) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
+const titreActiviteUpdate = async (id: ActiviteId, titreActivite: Partial<ITitreActivite>) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
 
-const titreActiviteDelete = async (id: string, { fields }: { fields?: IFields }) => {
+const titreActiviteDelete = async (id: ActiviteId, { fields }: { fields?: IFields }) => {
   const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
 
   return TitresActivites.query().withGraphFetched(graph).deleteById(id).returning('*')

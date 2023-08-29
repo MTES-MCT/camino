@@ -7,9 +7,9 @@
     </div>
   </div>
 </template>
-
+FIXME
 <script>
-import Preview from '../activite/preview.vue'
+import { Preview } from '../activite/preview'
 
 export default {
   components: { Preview },

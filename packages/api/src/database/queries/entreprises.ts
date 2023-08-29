@@ -145,7 +145,7 @@ const titreDemandeEntreprisesGet = async ({ fields }: { fields?: IFields }, user
   }
 
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    if (!canCreateTitre(user, undefined)) return []
+    if (!canCreateTitre(user, null)) return []
 
     return entreprisesGet({ archive: false }, { fields }, user)
   }

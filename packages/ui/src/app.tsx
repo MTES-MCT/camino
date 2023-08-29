@@ -18,7 +18,7 @@ import { TrackEventFunction } from '@/utils/matomo'
 export const App = defineComponent({
   setup: () => {
     const store = useStore()
-    const matomo = inject('matomo', null)
+    const matomo = inject<{ trackEvent: TrackEventFunction } | null>('matomo', null)
     const route = useRoute()
 
     const user = computed(() => store.state.user.element)
@@ -47,7 +47,6 @@ export const App = defineComponent({
     // TODO 2023-03-16 typer l’instance matomo dans un .d.ts
     const trackEvent: TrackEventFunction = (segment, subSegment, event) => {
       if (matomo) {
-        // @ts-ignore
         matomo.trackEvent(segment, subSegment, event)
       }
     }

@@ -1,6 +1,5 @@
 # import * from 'scalars.graphql'
 # import * from 'titres.graphql'
-# import * from 'documents.graphql'
 # import * from 'metas-activites.graphql'
 
 type Activites {
@@ -25,15 +24,6 @@ type Activite {
   annee: Int
   sections: Json
   contenu: Json
-  documents: [Document]
 
-  modification: Boolean
   suppression: Boolean
-  deposable: Boolean
-}
-
-input InputActiviteModification {
-  id: ID!
-  contenu: Json
-  documentIds: [ID!]
 }

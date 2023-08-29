@@ -1,5 +1,6 @@
 import { DocumentType, DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from '../date'
+import { isNotNullNorUndefined } from '../typescript-tools.js'
 
 export const isDocumentsComplete = (
   documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; uri?: string | null; url?: string | null; date: CaminoDate }[],
@@ -11,7 +12,11 @@ export const isDocumentsComplete = (
     documentsTypes
       .filter(dt => !dt.optionnel)
       .forEach(dt => {
-        if (!documents?.find(d => d.typeId === dt.id && !!(d.fichier || d.fichierNouveau || d.uri || d.url) && d.date)) {
+        if (
+          !documents?.find(
+            d => d.typeId === dt.id && !!(isNotNullNorUndefined(d.fichier) || isNotNullNorUndefined(d.fichierNouveau) || isNotNullNorUndefined(d.uri) || isNotNullNorUndefined(d.url)) && d.date
+          )
+        ) {
           errors.push(`le document "${dt.id}" est obligatoire`)
         }
       })

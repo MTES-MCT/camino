@@ -39,15 +39,8 @@ import { titresTypes, titresTypesTitresStatuts, titresTypesDemarchesTypesEtapesT
 import { substances } from './resolvers/substances.js'
 
 import { entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
-import {
-  administration,
-  administrations,
-  administrationActiviteTypeModifier,
-  administrationActiviteTypeEmailCreer,
-  administrationActiviteTypeEmailSupprimer,
-  administrationActivitesTypesEmails,
-} from './resolvers/administrations.js'
-import { activite, activites, activiteModifier, activiteSupprimer, activiteDeposer } from './resolvers/titres-activites.js'
+import { administration, administrations, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer, administrationActivitesTypesEmails } from './resolvers/administrations.js'
+import { activites, activiteSupprimer, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
@@ -88,7 +81,6 @@ export default {
   utilisateur,
   utilisateurs,
   statistiquesGlobales,
-  activite,
   activites,
   administrationsTypes,
   administrationActivitesTypesEmails,
@@ -117,12 +109,10 @@ export default {
   documentCreer,
   documentModifier,
   documentSupprimer,
-  activiteModifier,
   activiteSupprimer,
   activiteDeposer,
   newsletterInscrire,
   entreprisesTitresCreation,
-  administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
   titreDemandeCreer,

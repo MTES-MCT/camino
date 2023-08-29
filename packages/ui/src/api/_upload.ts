@@ -2,7 +2,7 @@ import Uppy from '@uppy/core'
 import Tus, { TusOptions } from '@uppy/tus'
 import { errorThrow } from './_client'
 import { Upload } from 'tus-js-client'
-import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/entreprise'
+import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
 
 const CHUNK_SIZE = 1048576 // 1 Mo
 const apiUrl = '/apiUrl'

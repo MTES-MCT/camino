@@ -1,12 +1,13 @@
-import { DsfrButton, buttonTypes, buttonSizes, DsfrButtonIcon } from './dsfr-button'
+import { DsfrButton, buttonTypes, buttonSizes, DsfrButtonIcon, DsfrLink } from './dsfr-button'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
-  title: 'Components/UI/DsfrButton',
+  title: 'Components/UI/Dsfr/Button',
   component: DsfrButton,
   argTypes: {},
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'route', path: '/route' }])],
 }
 export default meta
 
@@ -34,5 +35,19 @@ export const AllIcon: StoryFn = () => (
         ))}
       </div>
     ))}
+  </div>
+)
+
+export const Link: StoryFn = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <DsfrLink disabled={false} icon={null} title="Titre" label="Label" to={{ name: 'route' }} />
+    <DsfrLink disabled={true} icon={null} title="Titre" to={{ name: 'route' }} />
+    <DsfrLink disabled={false} icon="fr-icon-account-circle-fill" title="Titre" to={{ name: 'route' }} />
+    <DsfrLink disabled={true} icon="fr-icon-add-line" title="Titre" to={{ name: 'route' }} />
+    <DsfrLink buttonType="primary" icon={null} disabled={true} title="Titre" to={{ name: 'route' }} />
+    <DsfrLink buttonType="primary" icon={null} disabled={false} title="Titre" to={{ name: 'route' }} />
+    <DsfrLink buttonType="primary" disabled={true} icon="fr-icon-add-line" title="Titre" to={{ name: 'route' }} />
+    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'route' }} />
+    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'route' }} label={null} />
   </div>
 )

@@ -49,6 +49,7 @@
 
     <TitreDemarches v-if="tabId === 'demarches'" :user="user" :demarches="demarches" :tabId="tabId" @event-track="eventTrack" />
 
+    FIXME LES ACTIVITES NE SONT PLUS CHARGEES EN MEME TEMPS QUE LE TITRE
     <TitreActivitesList v-if="tabId === 'activites'" :activites="titre.activites" :titreId="titre.id" />
 
     <TitreDemarches v-if="tabId === 'travaux'" :demarches="travaux" :tabId="tabId" :user="user" @titre-event-track="eventTrack" />

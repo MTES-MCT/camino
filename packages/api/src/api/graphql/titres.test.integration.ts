@@ -10,6 +10,7 @@ import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts
 
 import { vi, afterEach, afterAll, beforeAll, describe, test, expect } from 'vitest'
 import type { Pool } from 'pg'
+import { activiteIdValidator } from 'camino-common/src/activite.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -160,7 +161,7 @@ const titreWithActiviteGrp: ITitre = {
   activites: [
     {
       titreId: newTitreId('titre-id'),
-      id: 'titre-id-grp-2020-03',
+      id: activiteIdValidator.parse('titre-id-grp-2020-03'),
       date: toCaminoDate('2020-10-01'),
       typeId: 'grp',
       activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
@@ -218,7 +219,7 @@ const titreActivites: ITitre = {
   propsTitreEtapesIds: {},
   activites: [
     {
-      id: 'titre-id-activites-oct',
+      id: activiteIdValidator.parse('titre-id-activites-oct'),
       titreId: newTitreId('titre-id'),
       typeId: 'grp',
       date: toCaminoDate('2020-01-01'),
@@ -247,7 +248,7 @@ const titreActivites: ITitre = {
       ],
     },
     {
-      id: 'titre-id-activites-pro',
+      id: activiteIdValidator.parse('titre-id-activites-pro'),
       titreId: newTitreId('titre-id'),
       typeId: 'gra',
       date: toCaminoDate('2020-01-01'),

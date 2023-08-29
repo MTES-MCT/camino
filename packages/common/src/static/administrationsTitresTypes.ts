@@ -211,17 +211,17 @@ export const getTitreTypeIdsByAdministration = (administrationId: Administration
   }, [])
 }
 
-export const isGestionnaire = (administrationId: AdministrationId, titreTypeId?: TitreTypeId): boolean => isGestionnaireOrAssociee(administrationId, 'gestionnaire', titreTypeId)
-export const isAssociee = (administrationId: AdministrationId, titreTypeId?: TitreTypeId): boolean => isGestionnaireOrAssociee(administrationId, 'associee', titreTypeId)
+export const isGestionnaire = (administrationId: AdministrationId, titreTypeId: TitreTypeId | null): boolean => isGestionnaireOrAssociee(administrationId, 'gestionnaire', titreTypeId)
+export const isAssociee = (administrationId: AdministrationId, titreTypeId: TitreTypeId | null): boolean => isGestionnaireOrAssociee(administrationId, 'associee', titreTypeId)
 
-const isGestionnaireOrAssociee = (administrationId: AdministrationId, props: 'gestionnaire' | 'associee', titreTypeId?: TitreTypeId): boolean => {
+const isGestionnaireOrAssociee = (administrationId: AdministrationId, props: 'gestionnaire' | 'associee', titreTypeId: TitreTypeId | null): boolean => {
   const administrationTitresTypes = getTitreTypeIdsByAdministration(administrationId)
 
   if (!administrationTitresTypes.length) {
     return false
   }
 
-  if (!titreTypeId) {
+  if (titreTypeId === null) {
     return administrationTitresTypes.some(att => att[props])
   }
 

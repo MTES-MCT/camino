@@ -4,9 +4,11 @@ import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
 import { TDEType } from './index.js'
 import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../typescript-tools.js'
-import { uniteIdValidator, UNITES } from '../unites.js'
+import { uniteIdValidator, UNITES, Unites } from '../unites.js'
 import { sortedDevises } from '../devise.js'
 import { z } from 'zod'
+import { ElementWithValue, SectionWithValue } from '../../titres.js'
+import { Contenu } from '../../permissions/sections.js'
 
 const gestionDeLaDemandeDeComplements: Section[] = [
   {
@@ -861,12 +863,6 @@ const TDESections = {
   }
 }
 
-export interface Section {
-  id: string
-  nom?: string
-  elements: readonly SectionsElement[]
-}
-
 const basicElementValidator = z.object({
   id: z.string(),
   nom: z.string().optional(),
@@ -890,7 +886,9 @@ export type TextElement = z.infer<typeof textElementValidator>
 export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
 export type NumberElement = z.infer<typeof numberElementValidator>
 
-export const radioElementValidator = basicElementValidator.extend({ type: z.enum(['radio', 'checkbox']), optionnel: z.literal(false).optional() })
+export const radioElementValidator = basicElementValidator.extend({ type: z.literal('radio'), optionnel: z.literal(false).optional() })
+export const checkboxElementValidator = basicElementValidator.extend({ type: z.literal('checkbox'), optionnel: z.literal(false).optional() })
+
 export type RadioElement = z.infer<typeof radioElementValidator>
 
 export const checkboxesElementValidator = basicElementValidator.extend({
@@ -906,13 +904,27 @@ const isSelectElementWithOptions = (element: DeepReadonly<SelectElement>): eleme
 const selectElementWithMetasValidator = basicElementValidator.extend({ type: z.literal('select'), valeursMetasNom: z.enum(['devises', 'unites']) })
 type SelectElementWithMetas = z.infer<typeof selectElementWithMetasValidator>
 
-const selectElementWithOptionsValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })) })
+export const selectElementWithOptionsValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })).nonempty() })
 type SelectElementWithOptions = z.infer<typeof selectElementWithOptionsValidator>
 
 export const selectElementValidator = z.union([selectElementWithMetasValidator, selectElementWithOptionsValidator])
 export type SelectElement = z.infer<typeof selectElementValidator>
 
-export type SectionsElement = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
+export const sectionsElementValidator = z.union([
+  fileElementValidator,
+  dateElementValidator,
+  textElementValidator,
+  numberElementValidator,
+  radioElementValidator,
+  checkboxElementValidator,
+  checkboxesElementValidator,
+  selectElementValidator,
+])
+export type SectionElement = z.infer<typeof sectionsElementValidator>
+
+export const sectionValidator = z.object({ id: z.string(), nom: z.string().optional(), elements: z.array(sectionsElementValidator) })
+
+export type Section = z.infer<typeof sectionValidator>
 
 type EtapesTypesEtapesTypesSections = keyof typeof EtapesTypesSections
 
@@ -957,4 +969,40 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
   }
 
   return []
+}
+
+// FIXME unit test
+export const getSectionsWithValue = (sections: DeepReadonly<Section>[], contenu: Contenu): SectionWithValue[] => {
+  const sectionsWithValue: SectionWithValue[] = []
+
+  sections.forEach(section => {
+    const elementsWithValue: ElementWithValue[] = []
+    section.elements.forEach(element => {
+      let value = contenu?.[section.id]?.[element.id] ?? null
+
+      const optionsObject: { options?: { id: string; nom: string }[] } = {}
+
+      if (value === null && element.type === 'checkboxes') {
+        value = []
+      } else if (value && section.id === 'substancesFiscales') {
+        if ((element.type === 'integer' || element.type === 'number') && element.uniteId) {
+          const ratio = Unites[element.uniteId].referenceUniteRatio
+          if (isNotNullNorUndefined(ratio)) {
+            value = (value as number) / ratio
+          }
+        }
+      } else if (element.type === 'select') {
+        optionsObject.options = getElementValeurs(element)
+      }
+
+      // @ts-ignore typescript est perdu ici
+      elementsWithValue.push({ ...element, ...optionsObject, value })
+    })
+
+    const sectionWithValue: SectionWithValue = { ...section, elements: elementsWithValue }
+
+    sectionsWithValue.push(sectionWithValue)
+  })
+
+  return sectionsWithValue
 }

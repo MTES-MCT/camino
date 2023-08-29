@@ -1,15 +1,11 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { knex } from '../../../knex.js'
-
 import Titres from '../../models/titres.js'
-import Documents from '../../models/documents.js'
 import TitresActivites from '../../models/titres-activites.js'
 
-import { documentsQueryModify } from './documents.js'
-import { administrationsTitresQuery, administrationsActivitesModify } from './administrations.js'
+import { administrationsTitresQuery } from './administrations.js'
 import { entreprisesTitresQuery } from './entreprises.js'
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
+import { isAdministration, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 
 const activiteStatuts = [
   {
@@ -26,7 +22,7 @@ const activiteStatuts = [
   },
 ]
 
-const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User) => {
+export const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User) => {
   q.groupBy('titres.id')
 
   if (isSuper(user) || isAdministration(user) || isEntreprise(user)) {
@@ -47,11 +43,6 @@ const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, user: U
             isAssociee: true,
             isLocale: true,
           })
-            .leftJoin('administrations__activitesTypes as a_at', b => {
-              b.on(knex.raw('?? = ??', ['a_at.administrationId', 'administrations.id']))
-              b.andOn(knex.raw('?? = ??', ['a_at.activiteTypeId', 'activitesCount.typeId']))
-            })
-            .whereRaw('?? is not true', ['a_at.lectureInterdit'])
         )
       } else if (isEntreprise(user) && user?.entreprises?.length) {
         const entreprisesIds = user.entreprises.map(e => e.id)
@@ -84,7 +75,7 @@ const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, user: U
   return q
 }
 
-const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User, select = true) => {
+export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User, select = true) => {
   if (select) {
     q.select('titresActivites.*')
   }
@@ -97,7 +88,7 @@ const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActiv
         isGestionnaire: true,
         isAssociee: true,
         isLocale: true,
-      }).modify(administrationsActivitesModify, { lecture: true })
+      })
     )
   } else if (isEntreprise(user) && user?.entreprises?.length) {
     // vérifie que l'utilisateur a les permissions sur les titres
@@ -114,46 +105,15 @@ const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActiv
     q.where(false)
   }
 
-  q.modifyGraph('documents', b => {
-    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
-  })
-
   return q
 }
 
-const titresActivitesPropsQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
+export const titresActivitesPropsQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
   q.select('titresActivites.*')
-
-  if (isSuper(user)) {
-    q.select(raw('true').as('modification'))
-  } else if (isAdministration(user)) {
-    if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-      q.select(
-        administrationsTitresQuery(user.administrationId, 'titre', {
-          isGestionnaire: true,
-          isLocale: true,
-        })
-          .modify(administrationsActivitesModify, {
-            lecture: true,
-            modification: true,
-          })
-          .select(raw('true'))
-          .as('modification')
-      )
-    } else {
-      q.select(raw('false').as('modification'))
-    }
-  } else if (isEntreprise(user) && user?.entreprises?.length) {
-    // vérifie que l'utilisateur a les droits d'édition sur l'activité
-    // l'activité doit avoir un statut `absente ou `en cours`
-    q.select(raw('(case when ?? in (?, ?) then true else false end)', ['titresActivites.activiteStatutId', 'abs', 'enc']).as('modification'))
-  }
-
   if (!isSuper(user)) {
+    // Override le champ suppression qui est présent dans la table titres_activites...
     q.select(raw('false').as('suppression'))
   }
 
   return q
 }
-
-export { titresActivitesQueryModify, titresActivitesPropsQueryModify, titreActivitesCount }

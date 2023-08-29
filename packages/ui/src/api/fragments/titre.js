@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 
 import { fragmentTitreDemarche } from './titre-demarche'
-import { fragmentTitreActivite } from './titre-activite'
 import { fragmentTitreEntreprises, fragmentTitresEntreprises } from './entreprises'
 
 import { fragmentPoint } from './point'
@@ -46,10 +45,6 @@ const fragmentTitre = gql`
     demarches {
       ...titreDemarche
     }
-    activites {
-      ...titreActivite
-    }
-
     forets
     sdomZones
     secteursMaritime
@@ -65,8 +60,6 @@ const fragmentTitre = gql`
   ${fragmentTitreEntreprises}
 
   ${fragmentTitreDemarche}
-
-  ${fragmentTitreActivite}
 
   ${fragmentPoint}
 

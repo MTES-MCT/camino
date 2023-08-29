@@ -6,7 +6,7 @@
 
     <div v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]" class="flex-self-end pt-xxs">Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes</div>
 
-    <InputDate v-else-if="element.type === 'date'" :inputValue="contenu[element.id]" :dateChanged="dateChanged" />
+    <InputDate v-else-if="element.type === 'date'" :initialValue="contenu[element.id]" :dateChanged="dateChanged" />
 
     <textarea v-else-if="element.type === 'textarea'" v-model="contenu[element.id]" class="p-s" />
 

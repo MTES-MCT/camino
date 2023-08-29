@@ -41,7 +41,7 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // ajoute la propriété `type` sur les activités
   // pour savoir si une activité est liée à une administration
   if (fields.activites && !fields.activites.type) {
-    fields.activites.type = { id: {}, administrations: { id: {} } }
+    fields.activites.type = { id: {} }
   }
 
   // si `geojsonPoints` ou `geojsonMultiPolygon` sont présentes
@@ -110,14 +110,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   if (['activites', 'activite'].includes(parent)) {
     if (!fields.type) {
       fields.type = { id: {} }
-    }
-
-    if (!fields.type.administrations) {
-      fields.type.administrations = { id: {} }
-    }
-
-    if (!fields.documents) {
-      fields.documents = { id: {} }
     }
   }
 

@@ -33,7 +33,7 @@ export const visibleCheck = async (
 
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
-  const gestionnaire = isGestionnaire(administration.id)
+  const gestionnaire = isGestionnaire(administration.id, null)
 
   const titre = titreBuild(
     {

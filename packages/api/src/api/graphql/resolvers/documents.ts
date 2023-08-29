@@ -13,7 +13,6 @@ import { documentTypeGet } from '../../../database/queries/metas.js'
 import { fieldsBuild } from './_fields-build.js'
 import fileRename from '../../../tools/file-rename.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
-import { titreActiviteGet } from '../../../database/queries/titres-activites.js'
 
 import { documentInputValidate } from '../../../business/validations/document-input-validate.js'
 import { documentUpdationValidate } from '../../../business/validations/document-updation-validate.js'
@@ -72,14 +71,6 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
     ) {
       throw new Error('droits insuffisants')
     }
-  } else if (document.titreActiviteId) {
-    // si l'activité est récupérée depuis la base
-    // alors on a le droit de la visualiser, donc de l'éditer
-    const activite = await titreActiviteGet(document.titreActiviteId, { fields: { type: { id: {} }, titre: { id: {} } } }, user)
-
-    if (!activite) throw new Error("l'activité n'existe pas")
-
-    if (!activite.modification) throw new Error('droits insuffisants')
   }
 }
 
@@ -248,14 +239,7 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
   }
 }
 
-export const documentsLier = async (
-  context: Context,
-  documentIds: string[],
-
-  { parentId, propParentId }: { parentId: EtapeId; propParentId: 'titreEtapeId' } | { parentId: string; propParentId: 'titreActiviteId' },
-
-  oldParent?: { documents?: IDocument[] | null }
-) => {
+export const documentsLier = async (context: Context, documentIds: string[], etapeId: EtapeId, oldParent?: { documents?: IDocument[] | null }) => {
   if (oldParent?.documents?.length) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
@@ -272,17 +256,13 @@ export const documentsLier = async (
   for (const documentId of documentIds) {
     const document = await documentGet(documentId, { fields: {} }, userSuper)
 
-    if (!document[propParentId]) {
-      await documentUpdate(document.id, { [propParentId]: parentId })
+    if (!document.titreEtapeId) {
+      await documentUpdate(document.id, { titreEtapeId: etapeId })
 
       if (document.fichier) {
-        const documentPath = await documentFilePathFind(document)
-        if (propParentId === 'titreEtapeId') {
-          document[propParentId] = parentId
-        } else {
-          document[propParentId] = parentId
-        }
-        const newDocumentPath = await documentFilePathFind(document, true)
+        const documentPath = documentFilePathFind(document)
+        document.titreEtapeId = etapeId
+        const newDocumentPath = documentFilePathFind(document, true)
 
         await fileRename(documentPath, newDocumentPath)
       }

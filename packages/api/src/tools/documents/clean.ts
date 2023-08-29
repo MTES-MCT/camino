@@ -12,7 +12,7 @@ export const documentsClean = async (pool: Pool) => {
   console.info('suppression des documents orphelins')
   console.info()
 
-  const documents = await Document.query().whereNull('titreEtapeId').whereNull('titreActiviteId')
+  const documents = await Document.query().whereNull('titreEtapeId')
 
   for (const document of documents) {
     const path = documentFilePathFind(document)

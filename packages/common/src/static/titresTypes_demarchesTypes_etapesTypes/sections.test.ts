@@ -1,4 +1,4 @@
-import { getSections } from './sections.js'
+import { getSections, sectionValidator } from './sections.js'
 import { test, expect } from 'vitest'
 
 test('getSections erreurs', () => {
@@ -49,4 +49,96 @@ test('getSections surcharge', () => {
       },
     ]
   `)
+})
+
+test('sectionValidator prod', () => {
+  expect(
+    sectionValidator.parse({
+      id: 'travaux',
+      nom: 'Statut des travaux',
+      elements: [
+        {
+          id: '4',
+          nom: 'Avril',
+          type: 'checkboxes',
+          options: [
+            {
+              id: 'nonDebutes',
+              nom: 'non débutés',
+            },
+            {
+              id: 'exploitationEnCours',
+              nom: 'exploitation en cours',
+            },
+            {
+              id: 'arretTemporaire',
+              nom: 'arrêt temporaire',
+            },
+            {
+              id: 'rehabilitation',
+              nom: 'réhabilitation',
+            },
+            {
+              id: 'arretDefinitif',
+              nom: 'arrêt définitif (après réhabilitation)',
+            },
+          ],
+        },
+        {
+          id: '5',
+          nom: 'Mai',
+          type: 'checkboxes',
+          options: [
+            {
+              id: 'nonDebutes',
+              nom: 'non débutés',
+            },
+            {
+              id: 'exploitationEnCours',
+              nom: 'exploitation en cours',
+            },
+            {
+              id: 'arretTemporaire',
+              nom: 'arrêt temporaire',
+            },
+            {
+              id: 'rehabilitation',
+              nom: 'réhabilitation',
+            },
+            {
+              id: 'arretDefinitif',
+              nom: 'arrêt définitif (après réhabilitation)',
+            },
+          ],
+        },
+        {
+          id: '6',
+          nom: 'Juin',
+          type: 'checkboxes',
+          options: [
+            {
+              id: 'nonDebutes',
+              nom: 'non débutés',
+            },
+            {
+              id: 'exploitationEnCours',
+              nom: 'exploitation en cours',
+            },
+            {
+              id: 'arretTemporaire',
+              nom: 'arrêt temporaire',
+            },
+            {
+              id: 'rehabilitation',
+              nom: 'réhabilitation',
+            },
+            {
+              id: 'arretDefinitif',
+              nom: 'arrêt définitif (après réhabilitation)',
+            },
+          ],
+        },
+      ],
+    })
+  )
 })

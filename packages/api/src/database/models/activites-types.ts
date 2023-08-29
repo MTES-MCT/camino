@@ -23,19 +23,6 @@ class ActivitesTypes extends Model {
   }
 
   static relationMappings = () => ({
-    administrations: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Administrations,
-      join: {
-        from: 'activitesTypes.id',
-        through: {
-          from: 'administrations__activitesTypes.activiteTypeId',
-          to: 'administrations__activitesTypes.administrationId',
-          extra: ['modificationInterdit', 'lectureInterdit'],
-        },
-        to: 'administrations.id',
-      },
-    },
     administrationsEmails: {
       relation: Model.ManyToManyRelation,
       modelClass: Administrations,

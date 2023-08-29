@@ -4,7 +4,7 @@ import { numberFormat } from 'camino-common/src/number'
 import { computed } from 'vue'
 
 interface Props {
-  initialValue?: number | undefined
+  initialValue?: number | undefined | null
   negative?: boolean
   integer?: boolean
   numberChanged: (value: number | null) => void

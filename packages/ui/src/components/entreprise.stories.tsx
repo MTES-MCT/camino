@@ -2,13 +2,14 @@ import { PureEntreprise } from './entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { Entreprise, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { Entreprise, EntrepriseDocument, EntrepriseType, entrepriseIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EntrepriseApiClient, UiEntrepriseDocument } from './entreprise/entreprise-api-client'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { toUtilisateurId } from 'camino-common/src/roles'
 import { titreIdValidator } from 'camino-common/src/titres'
 import { vueRouter } from 'storybook-vue3-router'
+import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
@@ -32,10 +33,11 @@ const getEntrepriseAction = action('getEntreprise')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const deleteEntrepriseDocumentAction = action('deleteEntrepriseDocument')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
+const uploadTempDocumentAction = action('uploadTempDocumentAction')
 
 const annee = toCaminoAnnee('2023')
 
-const entrepriseDocuments: UiEntrepriseDocument[] = [
+const entrepriseDocuments: EntrepriseDocument[] = [
   {
     id: toEntrepriseDocumentId(toCaminoDate('2019-08-26'), 'kbi', '12345678'),
     entreprise_document_type_id: 'kbi',
@@ -72,7 +74,7 @@ const entreprise: EntrepriseType = {
 }
 
 const apiClient: Pick<
-  EntrepriseApiClient,
+  ApiClient,
   | 'getEtapeEntrepriseDocuments'
   | 'getEntreprise'
   | 'deleteEntrepriseDocument'
@@ -81,6 +83,7 @@ const apiClient: Pick<
   | 'modifierEntreprise'
   | 'creerEntreprise'
   | 'creerEntrepriseDocument'
+  | 'uploadTempDocument'
 > = {
   getEtapeEntrepriseDocuments: etapeId => {
     getEtapeEntrepriseDocumentsAction(etapeId)
@@ -117,6 +120,10 @@ const apiClient: Pick<
   creerEntrepriseDocument: (entrepriseId, document) => {
     creerEntrepriseDocumentAction(entrepriseId, document)
     return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
+  },
+  uploadTempDocument: document => {
+    uploadTempDocumentAction(document)
+    return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }
 

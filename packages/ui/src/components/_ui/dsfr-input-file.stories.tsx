@@ -3,8 +3,9 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Components/UI/InputFile',
+  title: 'Components/UI/Dsfr/InputFile',
   component: InputFile,
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 const uploadFile = action('uploadFile')

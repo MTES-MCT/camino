@@ -10,8 +10,9 @@ import {
   entrepriseDocumentInputValidator,
   EntrepriseDocumentId,
   entrepriseDocumentIdValidator,
-  entrepriseDocumentValidator,
+  EntrepriseDocument,
 } from 'camino-common/src/entreprise'
+import { TempDocumentName } from 'camino-common/src/document'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/fiscalite'
 import gql from 'graphql-tag'
@@ -31,19 +32,15 @@ export interface EntrepriseApiClient {
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
   getEntreprises: (params: GetEntreprisesParams) => Promise<{ total: number; elements: GetEntreprisesEntreprise[] }>
-  getEntrepriseDocuments: (id: EntrepriseId) => Promise<UiEntrepriseDocument[]>
+  getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
-  creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput) => Promise<EntrepriseDocumentId>
+  creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName) => Promise<EntrepriseDocumentId>
   deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
 }
-export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true }).extend({
-  document: z.instanceof(File),
-})
+export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true })
 
 type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
 
-export const uiEntrepriseDocumentValidator = entrepriseDocumentValidator.omit({ largeobject_id: true })
-export type UiEntrepriseDocument = z.infer<typeof uiEntrepriseDocumentValidator>
 export const entrepriseApiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: async (annee, entrepriseId): Promise<Fiscalite> => {
     return getWithJson('/rest/entreprises/:entrepriseId/fiscalite/:annee', {
@@ -78,7 +75,7 @@ export const entrepriseApiClient: EntrepriseApiClient = {
     `)(params)
     return values
   },
-  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<UiEntrepriseDocument[]> => {
+  getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
     return getWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
     })
@@ -88,12 +85,8 @@ export const entrepriseApiClient: EntrepriseApiClient = {
       etapeId,
     })
   },
-  creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput): Promise<EntrepriseDocumentId> => {
-    const tempDocumentName = await uploadCall(uiEntrepriseDocumentInput.document, _progress => {})
-
-    const { document, ...entrepriseDocumentInput } = uiEntrepriseDocumentInput
-
-    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...entrepriseDocumentInput, tempDocumentName })
+  creerEntrepriseDocument: async (entrepriseId: EntrepriseId, uiEntrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName): Promise<EntrepriseDocumentId> => {
+    const createDocument = await postWithJson('/rest/entreprises/:entrepriseId/documents', { entrepriseId }, { ...uiEntrepriseDocumentInput, tempDocumentName })
     const parsed = entrepriseDocumentIdValidator.safeParse(createDocument)
     if (parsed.success) {
       return parsed.data

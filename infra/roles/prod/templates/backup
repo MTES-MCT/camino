@@ -9,9 +9,7 @@ if [ "$(id -u)" != "{{git_user_uid}}" ]; then
 fi
 # backup
 
-# ce dossier est directement monté dans le docker postgres à /dump
-rm -rf /srv/backups/dump/*
-
+docker exec camino_api_db /bin/bash -c 'rm -rf /dump/*'
 docker exec camino_api_db vacuumlo camino
 docker exec camino_api_db pg_dump --clean --if-exists --format=d --no-owner --no-privileges --dbname=camino -f /dump
 

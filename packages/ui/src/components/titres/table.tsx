@@ -8,6 +8,7 @@ import { TitreEntreprise } from 'camino-common/src/entreprise'
 interface Props {
   titres: TitreEntreprise[]
   user: User
+  caption: string
 }
 
 export const TitresTable: FunctionalComponent<Props> = props => {
@@ -16,5 +17,5 @@ export const TitresTable: FunctionalComponent<Props> = props => {
   const colonnes = titresColonnes.filter(({ id }) => (accessActivites ? true : id !== 'activites'))
 
   const lignes = titresLignesBuild(props.titres, accessActivites)
-  return <TableAuto caption="Titres" columns={colonnes} rows={lignes} class="width-full-p" />
+  return <TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" />
 }

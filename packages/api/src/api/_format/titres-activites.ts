@@ -1,11 +1,9 @@
 import { ITitreActivite, IContenu } from '../../types.js'
-import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { Unites } from 'camino-common/src/static/unites.js'
-import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes.js'
 
+// FIXME la conversion des substancesFiscales doit être faite dans le nouveau code, comment on fait ? front ? back ?
 export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu, operation: 'read' | 'write') => {
   const section = sections.find(s => s.id === 'substancesFiscales')
 
@@ -30,10 +28,6 @@ export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, co
 export const titreActiviteFormat = (ta: ITitreActivite) => {
   if (ta.contenu) {
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
-  }
-
-  if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION && ta.modification) {
-    ta.deposable = titreActiviteCompleteCheck(ta.sections, activitesTypesDocumentsTypes[ta.typeId], ta.contenu, ta.documents)
   }
 
   return ta

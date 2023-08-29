@@ -5,19 +5,18 @@ import { caminoDateValidator, dateFormat } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
 import {
+  checkboxElementValidator,
   checkboxesElementValidator,
   dateElementValidator,
   fileElementValidator,
-  getElementValeurs,
   numberElementValidator,
   radioElementValidator,
-  selectElementValidator,
+  selectElementWithOptionsValidator,
   textElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { uniteIdValidator } from './static/unites.js'
-import { deviseIdValidator } from './static/devise.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
+import { isNotNullNorUndefined } from './typescript-tools.js'
 
 export const titreIdValidator = z.string().brand<'TitreId'>()
 export type TitreId = z.infer<typeof titreIdValidator>
@@ -99,33 +98,32 @@ export const titreLinksValidator = z.object({
 })
 export type TitreLinks = z.infer<typeof titreLinksValidator>
 
-const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.optional() })
-type DateElementWithValue = z.infer<typeof dateElementWithValueValidator>
+const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
+export type DateElementWithValue = z.infer<typeof dateElementWithValueValidator>
 
-const fileElementWithValueValidator = fileElementValidator.extend({ value: z.string().optional() })
-type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
+const fileElementWithValueValidator = fileElementValidator.extend({ value: z.string().nullable() })
+export type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
 
-const textElementWithValueValidator = textElementValidator.extend({ value: z.string().optional() })
+const textElementWithValueValidator = textElementValidator.extend({ value: z.string().nullable() })
+export type TextElementWithValue = z.infer<typeof textElementWithValueValidator>
 
-const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().optional() })
-type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
+const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().nullable() })
+export type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
-const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().optional() })
-type RadioElementWithValue = z.infer<typeof radioElementWithValueValidator>
+const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().nullable() })
+export type RadioElementWithValue = z.infer<typeof radioElementWithValueValidator>
+
+const checkboxElementWithValueValidator = checkboxElementValidator.extend({ value: z.boolean().nullable() })
+export type CheckboxElementWithValue = z.infer<typeof checkboxElementWithValueValidator>
 
 const checkboxesElementWithValueValidator = checkboxesElementValidator.extend({ value: z.array(z.string()) })
-type CheckboxesElementWithValue = z.infer<typeof checkboxesElementWithValueValidator>
+export type CheckboxesElementWithValue = z.infer<typeof checkboxesElementWithValueValidator>
 
-const selectElementWithValueValidator = z.intersection(
-  selectElementValidator,
-  z.union([
-    z.object({ options: z.array(z.object({ id: z.string(), nom: z.string() })), value: z.string().optional() }),
-    z.object({ valeursMetasNom: z.literal('unites'), value: uniteIdValidator.optional() }),
-    z.object({ valeursMetasNom: z.literal('devises'), value: deviseIdValidator.optional() }),
-  ])
-)
+const selectElementWithValueValidator = selectElementWithOptionsValidator.extend({
+  value: z.string().nullable(),
+})
 
-type SelectElementWithValue = z.infer<typeof selectElementWithValueValidator>
+export type SelectElementWithValue = z.infer<typeof selectElementWithValueValidator>
 
 const elementWithValueValidator = z.union([
   fileElementWithValueValidator,
@@ -133,6 +131,7 @@ const elementWithValueValidator = z.union([
   textElementWithValueValidator,
   numberElementWithValueValidator,
   radioElementWithValueValidator,
+  checkboxElementWithValueValidator,
   checkboxesElementWithValueValidator,
   selectElementWithValueValidator,
 ])
@@ -152,23 +151,27 @@ export const isNumberElement = (element: ElementWithValue): element is NumberEle
 }
 
 export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
-  return element.type === 'radio' || element.type === 'checkbox'
+  return element.type === 'radio'
 }
 
 export const isCheckboxesElement = (element: ElementWithValue): element is CheckboxesElementWithValue => {
   return element.type === 'checkboxes'
 }
 
+export const isCheckboxElement = (element: ElementWithValue): element is CheckboxElementWithValue => {
+  return element.type === 'checkbox'
+}
+
 export const isSelectElement = (element: ElementWithValue): element is SelectElementWithValue => {
   return element.type === 'select'
 }
 
-export const sectionValidator = z.object({ id: z.string(), nom: z.string().optional(), elements: z.array(elementWithValueValidator) })
+export const sectionWithValueValidator = z.object({ id: z.string(), nom: z.string().optional(), elements: z.array(elementWithValueValidator) })
 
-export type Section = z.infer<typeof sectionValidator>
+export type SectionWithValue = z.infer<typeof sectionWithValueValidator>
 
 export const valeurFind = (element: ElementWithValue): string => {
-  if (element.value === undefined || element.value === '') {
+  if (element.value === null || element.value === '') {
     return '–'
   }
 
@@ -176,26 +179,26 @@ export const valeurFind = (element: ElementWithValue): string => {
     return numberFormat(element.value)
   }
 
-  if (isCheckboxesElement(element)) {
+  if (element.type === 'checkboxes') {
     return element.value
       .map(id => {
         const option = element.options.find(e => e.id === id)
 
         return option ? option.nom : undefined
       })
-      .filter(valeur => !!valeur)
+      .filter(valeur => isNotNullNorUndefined(valeur))
       .join(', ')
   }
 
-  if (isSelectElement(element)) {
-    return getElementValeurs(element).find(v => v.id === element.value)?.nom ?? '-'
+  if (element.type === 'select') {
+    return element.options.find(v => v.id === element.value)?.nom ?? '-'
   }
 
-  if (isDateElement(element)) {
+  if (element.type === 'date') {
     return dateFormat(element.value)
   }
 
-  if (isRadioElement(element)) {
+  if (element.type === 'radio' || element.type === 'checkbox') {
     if (element.value === undefined) return '–'
     else if (element.value) return 'Oui'
     else return 'Non'

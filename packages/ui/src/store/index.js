@@ -13,8 +13,6 @@ import document from './document'
 import titresDemarches from './titres-demarches'
 import meta from './meta'
 import user from './user'
-import titreActivite from './titre-activite'
-import titreActiviteEdition from './titre-activite-edition'
 
 const modules = {
   titre,
@@ -25,8 +23,6 @@ const modules = {
   titresDemarches,
   meta,
   user,
-  titreActivite,
-  titreActiviteEdition,
 }
 
 const state = {

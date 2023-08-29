@@ -123,22 +123,17 @@ export const PureDrealDashboard = caminoDefineComponent<Props>(['apiClient', 'is
         </div>
       ) : null}
       <div class="line-neutral width-full mb-l"></div>
-      <h3>Titres</h3>
       <LoadingElement
         data={data.value}
         renderItem={item => {
           if (item.drealTitresBloques.length) {
             return (
-              <>
-                <h4>Titres en attente de la DREAL</h4>
-                <TableAuto caption="Titres en attente de la DREAL" class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
-              </>
+              <TableAuto caption="Titres en attente de la DREAL" class="mb-xxl" columns={columnsEnAttente} rows={item.drealTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
             )
           }
           return null
         }}
       />
-      <h4>Titres en cours d’instruction</h4>
       <LoadingElement
         data={data.value}
         renderItem={item => (

@@ -2,10 +2,10 @@ import { IDocument } from '../../types.js'
 import { documentRepertoireFind } from './document-repertoire-find.js'
 import { dirCreate } from '../dir-create.js'
 
-export const documentFilePathFind = (document: Pick<IDocument, 'id' | 'fichierTypeId' | 'titreActiviteId' | 'titreEtapeId'>, creation = false) => {
+export const documentFilePathFind = (document: Pick<IDocument, 'id' | 'fichierTypeId' | 'titreEtapeId'>, creation = false) => {
   const repertoire = documentRepertoireFind(document)
 
-  const parentId = document.titreEtapeId || document.titreActiviteId
+  const parentId = document.titreEtapeId
 
   let dirPath = `files/${repertoire}`
 

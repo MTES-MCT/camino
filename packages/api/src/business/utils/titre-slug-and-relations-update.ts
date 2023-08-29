@@ -16,6 +16,7 @@ import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresT
 import { slugify } from 'camino-common/src/strings.js'
 import { TitreId } from 'camino-common/src/titres.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
+import { ActiviteId } from 'camino-common/src/activite.js'
 
 const titreSlugFind = (titre: ITitre) => {
   const { typeId, nom } = titre
@@ -52,7 +53,7 @@ interface ITitreRelation<T extends string | DemarcheId = string> {
   relations?: ITitreRelation[]
 }
 
-const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
+const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation<ActiviteId> | ITitreRelation)[] = [
   {
     name: 'demarches',
     slugFind: titreDemarcheSlugFind,
@@ -87,7 +88,7 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
   },
 ]
 
-const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<DemarcheId> | ITitreRelation)[], titreId: TitreId): Promise<boolean> => {
+const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<DemarcheId> | ITitreRelation<ActiviteId> | ITitreRelation)[], titreId: TitreId): Promise<boolean> => {
   let hasChanged = false
   for (const relation of relations) {
     for (const element of parent[relation.name]) {

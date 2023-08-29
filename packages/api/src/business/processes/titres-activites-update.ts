@@ -5,12 +5,12 @@ import { anneesBuild } from '../../tools/annees-build.js'
 import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
 import { titreActivitesBuild } from '../rules/titre-activites-build.js'
 import { titresGet } from '../../database/queries/titres.js'
-import { activitesTypesGet } from '../../database/queries/metas-activites.js'
 import { userSuper } from '../../database/user-super.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { getCurrent } from 'camino-common/src/date.js'
+import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 
 export const titresActivitesUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -31,11 +31,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const activitesTypes = await activitesTypesGet({
-    fields: {
-      administrations: { id: {} },
-    },
-  })
+  const activitesTypes = sortedActivitesTypes
 
   const aujourdhui = getCurrent()
 

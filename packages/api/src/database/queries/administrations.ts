@@ -1,4 +1,4 @@
-import { IAdministrationActiviteType, IAdministrationActiviteTypeEmail, IFields } from '../../types.js'
+import { IAdministrationActiviteTypeEmail, IFields } from '../../types.js'
 
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
@@ -6,7 +6,6 @@ import options from './_options.js'
 
 import Administrations from '../models/administrations.js'
 import { administrationsQueryModify } from './permissions/administrations.js'
-import AdministrationsActivitesTypes from '../models/administrations-activites-types.js'
 import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails.js'
 import { User } from 'camino-common/src/roles'
 
@@ -30,13 +29,6 @@ const administrationsGet = async ({ fields }: { fields?: IFields }, user: User) 
   return administrationsQueryBuild({ fields }, user)
 }
 
-const administrationActiviteTypeUpsert = async (administrationActiviteType: IAdministrationActiviteType) =>
-  AdministrationsActivitesTypes.query().upsertGraph(administrationActiviteType, {
-    insertMissing: true,
-  })
-
-const administrationActiviteTypeDelete = async (administrationId: string, ActiviteTypeId: string) => AdministrationsActivitesTypes.query().deleteById([administrationId, ActiviteTypeId])
-
 const administrationActiviteTypeEmailCreate = async (administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail) =>
   AdministrationsActivitesTypesEmails.query().insertGraph(administrationActiviteTypeEmail)
 
@@ -50,4 +42,4 @@ const administrationActiviteTypeEmailDelete = async (administrationActiviteTypeE
   })
 }
 
-export { administrationGet, administrationsGet, administrationActiviteTypeUpsert, administrationActiviteTypeDelete, administrationActiviteTypeEmailCreate, administrationActiviteTypeEmailDelete }
+export { administrationGet, administrationsGet, administrationActiviteTypeEmailCreate, administrationActiviteTypeEmailDelete }

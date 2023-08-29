@@ -8,21 +8,21 @@ import { EntrepriseFiscalite } from './entreprise/entreprise-fiscalite'
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
-import { Icon } from './_ui/icon'
 import { CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { computed, onMounted, watch, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { entrepriseApiClient, EntrepriseApiClient } from './entreprise/entreprise-api-client'
 import { EntrepriseType, newEntrepriseId, EntrepriseId } from 'camino-common/src/entreprise'
 import { EntrepriseDocuments } from './entreprise/entreprise-documents'
 import { AsyncData } from '../api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
 import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
+import { ApiClient, apiClient } from '@/api/api-client'
 
+// FIXME c’est cassé connecté en tant que DGTM
 export const Entreprise = defineComponent({
   setup() {
     const store = useStore()
@@ -43,9 +43,9 @@ export const Entreprise = defineComponent({
     )
     const anneeCourante = getCurrentAnnee()
 
-    const apiClient = ref<
+    const apiClientRef = ref<
       Pick<
-        EntrepriseApiClient,
+        ApiClient,
         | 'getEtapeEntrepriseDocuments'
         | 'getEntreprise'
         | 'deleteEntrepriseDocument'
@@ -54,12 +54,13 @@ export const Entreprise = defineComponent({
         | 'modifierEntreprise'
         | 'creerEntreprise'
         | 'creerEntrepriseDocument'
+        | 'uploadTempDocument'
       >
     >({
-      ...entrepriseApiClient,
+      ...apiClient,
       modifierEntreprise: async entreprise => {
         try {
-          await entrepriseApiClient.modifierEntreprise(entreprise)
+          await apiClient.modifierEntreprise(entreprise)
           store.dispatch(
             'messageAdd',
             {
@@ -84,7 +85,7 @@ export const Entreprise = defineComponent({
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClient.value} user={user.value} />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClientRef.value} user={user.value} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}
@@ -96,7 +97,7 @@ export const Entreprise = defineComponent({
 interface Props {
   entrepriseId: EntrepriseId
   apiClient: Pick<
-    EntrepriseApiClient,
+    ApiClient,
     | 'getEtapeEntrepriseDocuments'
     | 'getEntreprise'
     | 'deleteEntrepriseDocument'
@@ -105,6 +106,7 @@ interface Props {
     | 'modifierEntreprise'
     | 'creerEntreprise'
     | 'creerEntrepriseDocument'
+    | 'uploadTempDocument'
   >
   user: User
   currentYear: CaminoAnnee
@@ -309,8 +311,6 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
           {item.utilisateurs.length ? (
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
-              <h3>Utilisateurs</h3>
-              <div class="line width-full" />
               <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} />
             </div>
           ) : null}
@@ -318,18 +318,14 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
           {item.titulaireTitres.length ? (
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
-              <h3>Titres miniers et autorisations</h3>
-              <div class="line width-full" />
-              <TitresTable titres={item.titulaireTitres} user={props.user} />
+              <TitresTable caption="Titres miniers et autorisations" titres={item.titulaireTitres} user={props.user} />
             </div>
           ) : null}
 
           {item.amodiataireTitres.length ? (
             <div class="mb-xxl">
               <div class="line width-full my-xxl" />
-              <h3>Titres miniers et autorisations (amodiataire)</h3>
-              <div class="line width-full" />
-              <TitresTable titres={item.amodiataireTitres} user={props.user} />
+              <TitresTable caption="Titres miniers et autorisations (amodiataire)" titres={item.amodiataireTitres} user={props.user} />
             </div>
           ) : null}
           {editPopup.value ? (

@@ -7,10 +7,10 @@ import { getPeriode } from 'camino-common/src/static/frequence.js'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { dateFormat } from 'camino-common/src/date.js'
 import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
-import { getElementValeurs, Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getElementValeurs, Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 
-const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionsElement>, contenu: IContenu) =>
+const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionElement>, contenu: IContenu) =>
   contenu[sectionId] && ((contenu[sectionId][element.id] as IContenuValeur) || (contenu[sectionId][element.id] as IContenuValeur) === 0 || (contenu[sectionId][element.id] as IContenuValeur) === false)
     ? `<li><strong>${element.nom ? element.nom + ' : ' : ''}</strong>${
         element.type === 'select'
@@ -29,7 +29,7 @@ const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionsEleme
       } <br><small>${element.description ?? ''}</small></li>`
     : `<li>–</li>`
 
-const elementsHtmlBuild = (sectionId: string, elements: DeepReadonly<SectionsElement[]>, contenu: IContenu) =>
+const elementsHtmlBuild = (sectionId: string, elements: DeepReadonly<SectionElement[]>, contenu: IContenu) =>
   elements
     ? elements.reduce(
         (html, element) => `

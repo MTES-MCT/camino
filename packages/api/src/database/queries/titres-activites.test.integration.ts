@@ -6,6 +6,7 @@ import Titres from '../models/titres.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { getCurrent } from 'camino-common/src/date.js'
+import { activiteIdValidator } from 'camino-common/src/activite.js'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {
@@ -28,7 +29,7 @@ describe('teste les requêtes sur les activités', () => {
       typeId: 'arm',
     })
 
-    const titreActiviteId = 'titreActiviteId'
+    const titreActiviteId = activiteIdValidator.parse('titreActiviteId')
     await TitresActivites.query().insertGraph({
       id: titreActiviteId,
       typeId: 'grx',

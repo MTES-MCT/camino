@@ -1,8 +1,14 @@
+import { z } from 'zod'
+const IDS = ['ann', 'men', 'tri'] as const
+
 export const FREQUENCES_IDS = {
   ANNUEL: 'ann',
   MENSUEL: 'men',
   TRIMESTRIEL: 'tri',
-} as const
+} as const satisfies Record<string, (typeof IDS)[number]>
+
+export const frequenceIdValidator = z.enum(IDS)
+export type FrequenceId = z.infer<typeof frequenceIdValidator>
 
 interface Definition<T> {
   id: T
@@ -10,7 +16,6 @@ interface Definition<T> {
   periodes_nom: string
   values: readonly string[]
 }
-export type FrequenceId = (typeof FREQUENCES_IDS)[keyof typeof FREQUENCES_IDS]
 export const Frequences: { [key in FrequenceId]: Definition<key> } = {
   ann: { id: 'ann', nom: 'annuel', periodes_nom: 'annees', values: ['année'] },
   men: { id: 'men', nom: 'mensuel', periodes_nom: 'mois', values: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'] },

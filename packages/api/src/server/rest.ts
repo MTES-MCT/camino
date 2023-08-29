@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
-import { entrepriseDocumentDownload, etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
+import { NewDownload, etapeFichier, etapeTelecharger, fichier, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import {
   getTitreLiaisons,
   postTitreLiaisons,
@@ -22,7 +22,16 @@ import {
   getTitreDate,
   getTitreCommunes,
 } from '../api/rest/titres.js'
-import { creerEntreprise, fiscalite, getEntreprise, modifierEntreprise, getEntrepriseDocuments, postEntrepriseDocument, deleteEntrepriseDocument } from '../api/rest/entreprises.js'
+import {
+  creerEntreprise,
+  fiscalite,
+  getEntreprise,
+  modifierEntreprise,
+  getEntrepriseDocuments,
+  postEntrepriseDocument,
+  deleteEntrepriseDocument,
+  entrepriseDocumentDownload,
+} from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
@@ -48,6 +57,7 @@ import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
+import { activiteDocumentDownload, getActivite, updateActivite } from '../api/rest/activites.js'
 
 interface IRestResolverResult {
   nom: string
@@ -73,13 +83,12 @@ type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRe
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
 type RestDownloadCall = (pool: Pool) => IRestResolver
-type RestNewDownloadCall = (pool: Pool) => (req: CaminoRequest, res: express.Response) => Promise<void>
 
 type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
   (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
-  (Route extends NewDownloadRestRoutes ? { newDownload: RestNewDownloadCall } : {}) &
+  (Route extends NewDownloadRestRoutes ? { newDownload: NewDownload } : {}) &
   (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
 export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
@@ -98,6 +107,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
   '/download/fichiers/:documentId': { download: fichier },
   '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
+  '/download/activiteDocuments/:documentId': { newDownload: activiteDocumentDownload },
   '/fichiers/:documentId': { download: fichier },
   '/titres/:id': { download: titre },
   '/titres': { download: titres },
@@ -137,6 +147,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
+  '/rest/activites/:activiteId': { get: getActivite, put: updateActivite },
   '/rest/communes': { get: getCommunes },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
@@ -169,7 +180,7 @@ export const restWithPool = (dbPool: Pool) => {
         }
 
         if ('newDownload' in maRoute) {
-          rest.get(route, restCatcher(maRoute.newDownload(dbPool)))
+          rest.get(route, restNewDownload(dbPool, maRoute.newDownload))
         }
       }
     })
@@ -195,6 +206,20 @@ const restCatcher = (expressCall: ExpressRoute) => async (req: CaminoRequest, re
     await expressCall(req, res, next)
   } catch (e) {
     console.error('catching error', e)
+    next(e)
+  }
+}
+
+const restNewDownload = (pool: Pool, resolver: NewDownload) => async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
+  try {
+    const user = req.auth
+
+    const result = await resolver(req.params, user, pool)
+
+    await streamLargeObjectInResponse(pool, res, result.loid, result.fileName)
+  } catch (e) {
+    console.error(inspect(e, { depth: null }))
+
     next(e)
   }
 }
