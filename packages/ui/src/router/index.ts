@@ -53,10 +53,22 @@ const Administrations = async () => {
   return Administrations
 }
 const Meta = () => import('../components/meta.vue')
-const MetaTitre = () => import('../components/meta-titre.vue')
-const MetaDemarche = () => import('../components/meta-demarche.vue')
-const MetaEtape = () => import('../components/meta-etape.vue')
-const MetaActivite = () => import('../components/meta-activite.vue')
+const MetaTitre = async () => {
+  const { MetaTitre } = await import('../components/meta-titre')
+  return MetaTitre
+}
+const MetaDemarche = async () => {
+  const { MetaDemarche } = await import('../components/meta-demarche')
+  return MetaDemarche
+}
+const MetaEtape = async () => {
+  const { MetaEtape } = await import('../components/meta-etape')
+  return MetaEtape
+}
+const MetaActivite = async () => {
+  const { MetaActivite } = await import('../components/meta-activite')
+  return MetaActivite
+}
 const Metas = async () => {
   const { Metas } = await import('../components/metas')
   return Metas

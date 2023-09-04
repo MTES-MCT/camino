@@ -422,3 +422,6 @@ export const metasIndex = {
     linkName: 'meta-activite',
   },
 } as const
+
+export type MetaIndexTable = keyof typeof metasIndex
+export type MetaIndexColonneId = (typeof metasIndex)[MetaIndexTable]['nom']
