@@ -888,7 +888,7 @@ exports[`vérifie si un utilisateur administrateur admin peut créer des titres 
     "prf": true,
     "prg": true,
     "prh": true,
-    "prm": false,
+    "prm": true,
     "prr": false,
     "prs": true,
     "prw": false,

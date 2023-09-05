@@ -154,7 +154,7 @@ describe('Création des titres', () => {
   ])('un utilisateur admin de l’administration $administrationId peut créer un titre CXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'cxm'))
 
   test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
+    ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut créer un titre PRM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'prm'))
@@ -195,7 +195,7 @@ describe('Modification des titres', () => {
   )
 
   test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
+    ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut modifier un titre PRM : $modifier', async (administrationId, modifier) =>

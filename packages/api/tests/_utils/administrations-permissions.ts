@@ -269,7 +269,7 @@ export const modificationCheck = async (
 ) => {
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
-  const gestionnaire = isGestionnaire(administrationId)
+  const gestionnaire = isGestionnaire(administrationId, titreTypeId)
 
   const titre = titreBuild(
     {

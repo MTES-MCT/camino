@@ -95,7 +95,7 @@ describe('Création des démarches', () => {
   )
 
   test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
+    ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PRM : $creer", async (administrationId, creer) =>
@@ -138,7 +138,7 @@ describe('Modification des démarches', () => {
   )
 
   test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
+    ['min-mtes-dgec-01', true],
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PRM : $modifier", async (administrationId, modifier) =>
