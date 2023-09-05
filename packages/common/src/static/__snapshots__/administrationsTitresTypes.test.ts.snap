@@ -153,6 +153,10 @@ exports[`vérifie les administrations gestionnaire d'un type de titre 1`] = `
       "administrationId": "min-mtes-dgaln-01",
       "associee": false,
     },
+    {
+      "administrationId": "min-mtes-dgec-01",
+      "associee": true,
+    },
   ],
   "prr": [
     {
@@ -5646,7 +5650,7 @@ exports[`vérifie si l’administration est gestionnaire par rapport au titreTyp
     "prf": true,
     "prg": true,
     "prh": true,
-    "prm": false,
+    "prm": true,
     "prr": false,
     "prs": true,
     "prw": false,
@@ -9818,7 +9822,7 @@ exports[`vérifie tous les droits sur les types de titre pour l’administration
     },
     {
       "associee": true,
-      "gestionnaire": false,
+      "gestionnaire": true,
       "titreTypeId": "prm",
     },
     {

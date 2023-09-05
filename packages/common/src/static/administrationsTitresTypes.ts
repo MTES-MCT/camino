@@ -138,7 +138,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: Readonly<Adminis
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_FOSSILES]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE]: { gestionnaire: true, associee: false },
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: true },
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: true, associee: true },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
