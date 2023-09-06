@@ -81,7 +81,7 @@ databaseInit(pool).then(() => {
     res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
     res.flush()
   })
-  app.use(express.urlencoded({ extended: true }), express.json(), restWithPool(pool))
+  app.use(express.urlencoded({ extended: true }), express.json({ limit: '5mb' }), restWithPool(pool))
 
   app.use('/televersement', uploadAllowedMiddleware, restUpload())
 
