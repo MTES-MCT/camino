@@ -1,11 +1,11 @@
-import { defineComponent, computed, onMounted, inject, FunctionalComponent, ref } from 'vue'
+import { defineComponent, defineAsyncComponent, computed, onMounted, inject, FunctionalComponent, ref } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
-import { CaminoTitresMap, TitreCarteParams } from './titres/map'
+import type { TitreCarteParams } from './titres/map'
 import { Navigation } from './_ui/navigation'
 import { Tab, newTabId, Tabs, TabId } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
@@ -14,8 +14,8 @@ import { AsyncData } from '@/api/client-rest'
 import { LocationQuery, useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
 import { titresColonnes, titresLignesBuild } from './titres/table-utils'
-import { TitreWithPoint } from './titres/mapUtil'
-import { displayPerimeterZoomMaxLevel } from './_map'
+import type { TitreWithPoint } from './titres/mapUtil'
+import { displayPerimeterZoomMaxLevel } from './_map/util'
 import { apiClient } from '../api/api-client'
 import { TablePagination, getInitialParams } from './_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
@@ -46,6 +46,10 @@ const tableTabId = newTabId('table')
 type TitresTablePaginationParams = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export const Titres = defineComponent({
   setup() {
+    const CaminoTitresMap = defineAsyncComponent(async () => {
+      const { CaminoTitresMap } = await import('./titres/map')
+      return CaminoTitresMap
+    })
     const matomo = inject('matomo', null)
     const store = useStore()
     const router = useRouter()

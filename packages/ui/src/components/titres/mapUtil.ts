@@ -1,7 +1,7 @@
 import { leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
-import { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
+import type { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'

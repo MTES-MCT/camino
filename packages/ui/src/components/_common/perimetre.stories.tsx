@@ -8,6 +8,7 @@ import { titreIdValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Common/Perimetre',
+  // @ts-ignore @storybook/vue3 n'aime pas les composants tsx
   component: Perimetre,
 }
 export default meta
