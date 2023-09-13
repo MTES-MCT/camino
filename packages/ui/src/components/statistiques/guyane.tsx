@@ -4,12 +4,13 @@ import { StatistiquesGuyane, StatistiquesGuyaneActivite, StatistiquesGuyaneData 
 import { GuyaneActivite } from './guyane-activite'
 import { ConfigurableChart } from '../_charts/configurable-chart'
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { numberFormat } from '@/utils/number-format'
 
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
 import { anneePrecedente, anneeSuivante, CaminoAnnee, CaminoDate, getAnnee, getCurrent, isAnnee, toCaminoDate } from 'camino-common/src/date'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import styles from './statistiques.module.css'
+import { numberFormat } from 'camino-common/src/number'
 
 const getStats = async (): Promise<StatistiquesGuyane> => {
   const data: StatistiquesGuyaneData = await getWithJson('/rest/statistiques/guyane', {})
@@ -289,7 +290,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
           <hr />
           <div class="tablet-blobs">
             <div class="tablet-blob-1-4">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresArm}</>} />
               </p>
               <p class="bold text-center">Autorisations de recherche</p>
@@ -311,7 +312,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
               </p>
             </div>
             <div class="tablet-blob-1-4">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresPrm}</>} />
               </p>
               <p class="bold text-center">Permis exclusifs de recherches</p>
@@ -333,7 +334,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
               </p>
             </div>
             <div class="tablet-blob-1-2">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.data.surfaceExploration)} ha</>} />
               </p>
               <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
@@ -345,7 +346,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
           <hr />
           <div class="tablet-blobs">
             <div class="tablet-blob-1-4">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresAxm}</>} />
               </p>
               <p class="bold text-center">Autorisations d'exploitation</p>
@@ -367,7 +368,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
               </p>
             </div>
             <div class="tablet-blob-1-4">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.data.titresCxm}</>} />
               </p>
               <p class="bold text-center">Concessions</p>
@@ -388,8 +389,8 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
                 </router-link>
               </p>
             </div>
-            <div class="tablet-blob-1-4">
-              <p class="h0 text-center">
+            <div class="tablet-blob-1-2">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.data.surfaceExploitation)} ha</>} />
               </p>
               <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
@@ -423,7 +424,7 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
         <h2>Activité</h2>
         <span class="separator" />
         <p>
-          Les données affichées ici sont celles contenues dans la base de donnée Camino. Les données antérieures à 2018 reprises d’anciens systèmes peuvent ne pas être exhautives. Ces données
+          Les données affichées ici sont celles contenues dans la base de donnée Camino. Les données antérieures à 2018 reprises d’anciens systèmes peuvent ne pas être exhaustives. Ces données
           concernent exclusivement le territoire guyanais.
         </p>
         <div class="mb-xl">

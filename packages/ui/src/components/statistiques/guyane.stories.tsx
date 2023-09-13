@@ -6,7 +6,7 @@ import { PureGuyane } from './guyane'
 const meta: Meta = {
   title: 'Components/Statistiques/Guyane',
   component: PureGuyane,
-  argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

@@ -8,6 +8,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 import { CaminoDate, getAnnee, getCurrent, toCaminoDate } from 'camino-common/src/date'
 import type { ChartConfiguration } from 'chart.js'
 import { numberFormat } from 'camino-common/src/number'
+import styles from './statistiques.module.css'
 
 const ids = ['titresPrw', 'titresPxw', 'titresCxw', 'concessionsValides'] as const
 
@@ -193,7 +194,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
             <hr />
             <div class="tablet-blobs">
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresInstructionExploration}</>} />
                 </p>
 
@@ -232,7 +233,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 </p>
               </div>
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresValPrw}</>} />
                 </p>
                 <p class="bold text-center">Permis exclusifs de recherches</p>
@@ -253,7 +254,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 </p>
               </div>
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{numberFormat(item.raw.surfaceExploration)} ha</>} />
                 </p>
                 <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
@@ -265,7 +266,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
             <hr />
             <div class="tablet-blobs">
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresInstructionExploitation}</>} />
                 </p>
                 <LoadingElement
@@ -304,7 +305,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 </p>
               </div>
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.raw.titresValCxw}</>} />
                 </p>
                 <LoadingElement
@@ -333,7 +334,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 </p>
               </div>
               <div class="tablet-blob-1-3">
-                <p class="h0 text-center">
+                <p class={['fr-display--xs', styles['donnee-importante']]}>
                   <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{numberFormat(item.raw.surfaceExploitation)} ha</>} />
                 </p>
                 <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
@@ -384,6 +385,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 enConstruction: id === anneeCurrent - 1, // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
               }
             })
+            // TODO 2023-09-13 utiliser le dsfrSelect un fois la PR https://github.com/MTES-MCT/camino/pull/635 mergée
             return (
               <>
                 <select class="p-s mb-l full" onChange={anneeSelect}>
@@ -410,7 +412,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
           <hr />
           <div class="tablet-float-blobs clearfix">
             <div class="tablet-float-blob-1-3 mb-xl mt">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresPrw.quantite}</>} />
               </p>
               <p>Permis exclusifs de recherches octroyés l’an dernier</p>
@@ -450,7 +452,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                       <hr />
                       <div class="tablet-float-blobs clearfix">
                         <div class="tablet-float-blob-1-3 mb-xl mt">
-                          <p class="h0 text-center">{statistiques[anneeCurrent - 1].titresPxw.quantite}</p>
+                          <p class={['fr-display--xs', styles['donnee-importante']]}>{statistiques[anneeCurrent - 1].titresPxw.quantite}</p>
                           <p>Permis d’exploitation octroyés l’an dernier</p>
                         </div>
                         <div class="tablet-float-blob-2-3 relative mb-xl">
@@ -482,7 +484,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
           <hr />
           <div class="tablet-float-blobs clearfix">
             <div class="tablet-float-blob-1-3 mb-xl mt">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].titresCxw.quantite}</>} />
               </p>
               <p>Concessions octroyées l’an dernier</p>
@@ -512,7 +514,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
           <hr />
           <div class="tablet-float-blobs clearfix">
             <div class="tablet-float-blob-1-3 mb-xl mt">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', styles['donnee-importante']]}>
                 <LoadingElement data={statistiquesGranulatsMarins.value} renderItem={item => <>{item.statistiques[anneeCurrent - 1].concessionsValides.quantite}</>} />
               </p>
               <p>Concessions valides l’an dernier</p>

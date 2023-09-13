@@ -49,17 +49,13 @@ export const Statistiques = defineComponent(() => {
   })
   const initTab: TabId = (getEntriesHardcore(routeToTab).find(([myTabId, tabRoute]) => tabRoute === (route.name ?? 'statistiques-globales')) ?? ['globales'])[0]
   return () => (
-    <>
-      {' '}
-      {route.name}{' '}
-      <Tabs
-        tabsTitle="Statistiques"
-        tabs={tabs}
-        initTab={initTab}
-        tabClicked={tabId => {
-          router.push({ name: routeToTab[tabId] })
-        }}
-      />{' '}
-    </>
+    <Tabs
+      tabsTitle="Statistiques"
+      tabs={tabs}
+      initTab={initTab}
+      tabClicked={tabId => {
+        router.push({ name: routeToTab[tabId] })
+      }}
+    />
   )
 })

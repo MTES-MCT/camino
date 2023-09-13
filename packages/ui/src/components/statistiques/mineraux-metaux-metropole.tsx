@@ -14,6 +14,8 @@ import { CHART_COLORS, nextColor } from '../_charts/utils'
 import styles from './mineraux-metaux-metropole.module.css'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { numberFormat } from 'camino-common/src/number'
+import statsStyles from './statistiques.module.css'
+
 const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> => getWithJson('/rest/statistiques/minerauxMetauxMetropole', {})
 
 export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxMetauxMetropole getStats={getStats} />
@@ -332,7 +334,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           <hr />
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.titres.instructionExploration}</>} />
               </p>
               <div>
@@ -360,7 +362,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               </p>
             </div>
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{item.titres.valPrm}</>} />
               </p>
               <p class="bold text-center">Permis exclusifs de recherches</p>
@@ -382,7 +384,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               </p>
             </div>
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.surfaceExploration)} ha</>} />
               </p>
               <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
@@ -394,7 +396,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           <hr />
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.titres.instructionExploitation)}</>} />
               </p>
               <div>
@@ -422,7 +424,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               </p>
             </div>
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.titres.valCxm)}</>} />
               </p>
               <div>
@@ -449,7 +451,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
               </p>
             </div>
             <div class="tablet-blob-1-3">
-              <p class="h0 text-center">
+              <p class={['fr-display--xs', statsStyles['donnee-importante']]}>
                 <LoadingElement data={data.value} renderItem={item => <>{numberFormat(item.surfaceExploitation)} ha</>} />
               </p>
               <p class="bold text-center">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
@@ -486,7 +488,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           </div>
           <div class="line-neutral mb" />
           <p>Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion</p>
-          <p class="h1 text-center color-info bold">
+          <p class={['fr-text--lead', statsStyles['donnee-importante']]}>
             <LoadingElement data={data.value} renderItem={_item => <>{numberFormat(bauxiteFiscalite.value)} €</>} />
           </p>
         </div>
@@ -509,7 +511,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           </div>
           <div class="line-neutral mb" />
           <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
-          <p class="h1 text-center color-info bold">
+          <p class={['fr-text--lead', statsStyles['donnee-importante']]}>
             <LoadingElement data={data.value} renderItem={item => <>{numberFormat(selsFiscalite.value)} €</>} />
           </p>
         </div>
