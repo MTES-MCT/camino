@@ -66,13 +66,29 @@ type GenericFiltreValidator<T extends Readonly<CaminoFiltre[]>> = { [key in T[nu
 
 const generateFilterValidator = <T extends readonly CaminoFiltre[]>(filtresNames: T) =>
   z.object<GenericFiltreValidator<T>>(
-    filtresNames.reduce(
-      (acc, filtre) => ({
+    filtresNames.reduce((acc, filtre) => {
+      const validator = caminoFiltres[filtre].validator
+
+      // Ceci est un hack pour le plugin camino QGIS, car la requête générée par le plugin ne respecte pas le "standard" pour les tableaux
+      if (validator._def.typeName === 'ZodArray') {
+        return {
+          ...acc,
+          [filtre]: validator
+            .or(
+              z
+                .string()
+                .transform(val => val.split(','))
+                .pipe(validator)
+            )
+            .optional(),
+        }
+      }
+
+      return {
         ...acc,
-        [filtre]: caminoFiltres[filtre].validator.optional(),
-      }),
-      {} as GenericFiltreValidator<T>
-    )
+        [filtre]: validator.optional(),
+      }
+    }, {} as GenericFiltreValidator<T>)
   )
 const commonValidator = <T extends Readonly<NonEmptyArray<string>>>(colonnes: T, formats: Readonly<['json', ...DownloadFormat[]]>) =>
   z.object({

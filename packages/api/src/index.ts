@@ -30,7 +30,7 @@ import { userLoader } from './server/user-loader.js'
 import { connectedCatcher } from './server/connected-catcher.js'
 import cookieParser from 'cookie-parser'
 import pg from 'pg'
-
+import qs from 'qs'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
   host: process.env.PGHOST,
@@ -46,7 +46,9 @@ filesInit()
 databaseInit(pool).then(() => {
   const app = express()
   app.disable('x-powered-by')
-
+  app.set('query parser', function (str: string) {
+    return qs.parse(str, { comma: true })
+  })
   if (process.env.API_SENTRY_URL) {
     Sentry.init({
       dsn: process.env.API_SENTRY_URL,
@@ -81,6 +83,7 @@ databaseInit(pool).then(() => {
     res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
     res.flush()
   })
+
   app.use(express.urlencoded({ extended: true }), express.json({ limit: '5mb' }), restWithPool(pool))
 
   app.use('/televersement', uploadAllowedMiddleware, restUpload())
