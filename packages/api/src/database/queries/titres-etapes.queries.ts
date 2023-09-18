@@ -1,9 +1,14 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IDeleteTitreEtapeEntrepriseDocumentInternalQuery, IGetEntrepriseDocumentIdsByEtapeIdQueryQuery, IInsertTitreEtapeEntrepriseDocumentInternalQuery } from './titres-etapes.queries.types.js'
+import {
+  IDeleteTitreEtapeEntrepriseDocumentInternalQuery,
+  IGetEntrepriseDocumentIdsByEtapeIdQueryQuery,
+  IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery,
+  IInsertTitreEtapeEntrepriseDocumentInternalQuery,
+} from './titres-etapes.queries.types.js'
 import { EtapeId } from 'camino-common/src/etape.js'
-import { EntrepriseDocumentId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentId, EtapeEntrepriseDocument, entrepriseDocumentValidator, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -39,6 +44,27 @@ where
 
 export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EtapeEntrepriseDocument[]> => {
   const result = await dbQueryAndValidate(getEntrepriseDocumentIdsByEtapeIdQuery, params, pool, etapeEntrepriseDocumentValidator)
+
+  return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
+}
+
+export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator.pick({ id: true, largeobject_id: true, entreprise_id: true })
+export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>
+
+const getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery = sql<Redefine<IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EntrepriseDocumentLargeObjectId>>`
+select
+    ed.id,
+    ed.entreprise_id,
+    ed.largeobject_id
+from
+    titres_etapes_entreprises_documents teed
+    join entreprises_documents ed on ed.id = teed.entreprise_document_id
+where
+    teed.titre_etape_id = $ titre_etape_id
+`
+
+export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { titre_etape_id: EtapeId }, pool: Pool, user: User): Promise<EntrepriseDocumentLargeObjectId[]> => {
+  const result = await dbQueryAndValidate(getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery, params, pool, entrepriseDocumentLargeObjectIdsValidator)
 
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }

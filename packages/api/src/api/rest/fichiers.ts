@@ -3,7 +3,7 @@ import { IContenuElement, IContenuValeur, IDocumentRepertoire } from '../../type
 import { documentGet } from '../../database/queries/documents.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find.js'
-import { documentFilePathFind, entrepriseDocumentFilePathFind } from '../../tools/documents/document-path-find.js'
+import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
@@ -13,7 +13,7 @@ import { Pool } from 'pg'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { DocumentId, EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocuments } from './entreprises.queries.js'
-import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 import { CaminoRequest } from './express-type.js'
 import express from 'express'
@@ -39,7 +39,7 @@ export const etapeTelecharger =
     if (!titreEtape) throw new Error("l'étape n'existe pas")
 
     const documents = titreEtape.documents ?? []
-    const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
+    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
       throw new Error("aucun document n'a été trouvé pour cette demande")
@@ -55,29 +55,37 @@ export const etapeTelecharger =
         zip.file(filename!, readFileSync(path))
       }
     }
-
-    for (let i = 0; i < entrepriseDocuments.length; i++) {
-      const { fullPath, fileName } = entrepriseDocumentFilePathFind(entrepriseDocuments[i].id, entrepriseDocuments[i].entreprise_id)
-
-      if (statSync(fullPath).isFile()) {
-        zip.file(fileName!, readFileSync(fullPath))
-      }
-    }
-
-    const base64Data = await zip.generateAsync({ type: 'base64' })
-
-    const nom = `documents-${etapeId}.zip`
+    const client = await pool.connect()
 
     try {
+      const man = new LargeObjectManager({ pg: client })
+
+      for (let i = 0; i < entrepriseDocuments.length; i++) {
+        await client.query('BEGIN')
+
+        const entrepriseDocument = entrepriseDocuments[i]
+        // TODO 2023-08-28 condition a supprimé quand la colonne sere non null en bdd
+        if (entrepriseDocument.largeobject_id) {
+          const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
+          zip.file(`${entrepriseDocument.id}.pdf`, stream)
+        }
+      }
+      const base64Data = await zip.generateAsync({ type: 'base64' })
+      await client.query('COMMIT')
+
+      const nom = `documents-${etapeId}.zip`
+
       return {
         nom,
         format: DOWNLOAD_FORMATS.Zip,
         buffer: Buffer.from(base64Data, 'base64'),
       }
     } catch (e) {
+      await client.query('ROLLBACK')
       console.error(e)
-
       throw e
+    } finally {
+      client.release()
     }
   }
 
@@ -130,7 +138,7 @@ export const entrepriseDocumentDownload = (pool: Pool) => {
 }
 
 export const fichier =
-  (pool: Pool) =>
+  (_pool: Pool) =>
   async ({ params: { documentId } }: { params: { documentId?: DocumentId | EntrepriseDocumentId } }, user: User) => {
     if (!documentId) {
       throw new Error('id du document absent')
@@ -150,46 +158,28 @@ export const fichier =
 
     const format = DOWNLOAD_FORMATS.PDF
 
-    if (!document) {
-      const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(documentId)
-      const entrepriseDocuments = await getEntrepriseDocuments([entrepriseDocumentId], [], pool, user)
+    if (!document.fichier) {
+      throw new Error('fichier inexistant')
+    }
 
-      if (entrepriseDocuments.length !== 1) {
-        throw new Error('fichier inexistant')
-      }
+    let dossier
 
-      const entrepriseDocument = entrepriseDocuments[0]
-      const { fullPath } = entrepriseDocumentFilePathFind(entrepriseDocument.id, entrepriseDocument.entreprise_id)
+    const repertoire = documentRepertoireFind(document)
 
-      return {
-        nom: entrepriseDocument.id,
-        format,
-        filePath: fullPath,
-      }
-    } else {
-      if (!document.fichier) {
-        throw new Error('fichier inexistant')
-      }
+    if (repertoire === 'demarches') {
+      dossier = document.etape!.id
+    } else if (repertoire === 'activites') {
+      dossier = document.activite!.id
+    }
 
-      let dossier
+    const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
 
-      const repertoire = documentRepertoireFind(document)
+    const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
 
-      if (repertoire === 'demarches') {
-        dossier = document.etape!.id
-      } else if (repertoire === 'activites') {
-        dossier = document.activite!.id
-      }
-
-      const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
-
-      const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
-
-      return {
-        nom,
-        format,
-        filePath,
-      }
+    return {
+      nom,
+      format,
+      filePath,
     }
   }
 

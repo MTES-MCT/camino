@@ -212,7 +212,7 @@ export default {
     },
 
     hasJustificatifs() {
-      return this.etape.justificatifs && !!this.etape.justificatifs.length
+      return this.entrepriseDocumentsData && !!this.entrepriseDocumentsData.length
     },
 
     statutNom() {

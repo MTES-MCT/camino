@@ -49,3 +49,21 @@ export interface IGetEntrepriseDocumentIdsByEtapeIdQueryQuery {
   result: IGetEntrepriseDocumentIdsByEtapeIdQueryResult;
 }
 
+/** 'GetEntrepriseDocumentLargeObjectIdsByEtapeIdQuery' parameters type */
+export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryParams {
+  titre_etape_id?: string | null | void;
+}
+
+/** 'GetEntrepriseDocumentLargeObjectIdsByEtapeIdQuery' return type */
+export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult {
+  entreprise_id: string | null;
+  id: string;
+  largeobject_id: number | null;
+}
+
+/** 'GetEntrepriseDocumentLargeObjectIdsByEtapeIdQuery' query type */
+export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery {
+  params: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryParams;
+  result: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult;
+}
+
