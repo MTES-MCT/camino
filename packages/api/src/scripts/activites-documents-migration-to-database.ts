@@ -1,7 +1,4 @@
 /* eslint-disable */
-
-// FIXME
-import { getEntrepriseDocuments } from '../api/rest/entreprises.queries.js'
 import { userSuper } from '../database/user-super.js'
 import '../init.js'
 import pg, { Pool } from 'pg'
@@ -9,11 +6,7 @@ import { knex } from '../knex.js'
 import { LargeObjectManager } from 'pg-large-object'
 import { join } from 'path'
 import { createReadStream } from 'node:fs'
-import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
-
-const entrepriseDocumentFilePathFind = (_documentId: EntrepriseDocumentId, _entrepriseId: EntrepriseId) => {
-  throw new Error('error')
-}
+import { getActiviteDocumentIds } from '../api/rest/activites.queries.js'
 
 const createLargeObject = (pool: Pool, fullPath: string) =>
   new Promise<number>(async (resolve, reject) => {
@@ -26,7 +19,13 @@ const createLargeObject = (pool: Pool, fullPath: string) =>
       await man.createAndWritableStreamAsync(16384).then(([oid, stream]) => {
         const pathFrom = join(process.cwd(), fullPath)
         const fileStream = createReadStream(pathFrom)
+
         fileStream.pipe(stream)
+        fileStream.on('error', e => {
+          console.error(e)
+          client.query('ROLLBACK')
+          reject()
+        })
         stream.on('finish', function () {
           client.query('COMMIT')
 
@@ -56,21 +55,21 @@ export const launchMigration = async () => {
     idleTimeoutMillis: 60000,
   })
 
-  const entreprisesDocuments = await getEntrepriseDocuments([], [], pool, userSuper)
+  const activitesDocuments = await getActiviteDocumentIds(pool, userSuper)
 
   console.time('migration')
-  console.log('documents à migrer : ', entreprisesDocuments.length)
-  for (const document of entreprisesDocuments) {
-    const { fullPath } = entrepriseDocumentFilePathFind(document.id, document.entreprise_id)
+  console.log('documents à migrer : ', activitesDocuments.length)
+  for (const document of activitesDocuments) {
+    const path = `files/activites/${document.activite_id}/${document.id}.pdf`
 
-    console.log('fichier : ', fullPath)
+    console.log('fichier : ', path)
 
     try {
-      const oid = await createLargeObject(pool, fullPath)
+      const oid = await createLargeObject(pool, path)
 
-      await knex.raw(`update entreprises_documents set largeobject_id='${oid}' where id='${document.id}';`)
+      await knex.raw(`update activites_documents set largeobject_id='${oid}' where id='${document.id}';`)
     } catch (e: any) {
-      console.error('pas la ', fullPath)
+      console.error('pas la ', path)
     }
   }
   console.timeEnd('migration')

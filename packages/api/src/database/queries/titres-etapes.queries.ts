@@ -13,6 +13,7 @@ import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { z } from 'zod'
+import { entrepriseDocumentLargeObjectIdValidator } from '../../api/rest/entreprises.queries.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -48,7 +49,7 @@ export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator.pick({ id: true, largeobject_id: true, entreprise_id: true })
+export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator.pick({ id: true, entreprise_id: true }).extend({ largeobject_id: entrepriseDocumentLargeObjectIdValidator })
 export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>
 
 const getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery = sql<Redefine<IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EntrepriseDocumentLargeObjectId>>`

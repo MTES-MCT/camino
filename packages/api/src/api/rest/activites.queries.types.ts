@@ -170,3 +170,18 @@ export interface IGetLargeobjectIdByActiviteDocumentIdInternalQuery {
   result: IGetLargeobjectIdByActiviteDocumentIdInternalResult;
 }
 
+/** 'GetActiviteDocumentIdsInternal' parameters type */
+export type IGetActiviteDocumentIdsInternalParams = void;
+
+/** 'GetActiviteDocumentIdsInternal' return type */
+export interface IGetActiviteDocumentIdsInternalResult {
+  activite_id: string | null;
+  id: string;
+}
+
+/** 'GetActiviteDocumentIdsInternal' query type */
+export interface IGetActiviteDocumentIdsInternalQuery {
+  params: IGetActiviteDocumentIdsInternalParams;
+  result: IGetActiviteDocumentIdsInternalResult;
+}
+

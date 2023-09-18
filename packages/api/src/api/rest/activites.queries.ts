@@ -4,6 +4,7 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IDeleteActiviteDocumentQueryQuery,
   IGetActiviteByIdQueryQuery,
+  IGetActiviteDocumentIdsInternalQuery,
   IGetActiviteDocumentsInternalQuery,
   IGetAdministrationsLocalesByActiviteIdQuery,
   IGetLargeobjectIdByActiviteDocumentIdInternalQuery,
@@ -24,7 +25,7 @@ import {
 } from 'camino-common/src/activite.js'
 import { Pool } from 'pg'
 import { canDeleteActiviteDocument, canEditActivite, canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
-import { User, isSuper, utilisateurIdValidator } from 'camino-common/src/roles.js'
+import { User, UserSuper, isSuper, utilisateurIdValidator } from 'camino-common/src/roles.js'
 import { z } from 'zod'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
@@ -297,4 +298,26 @@ from
 where
     d.id = $ activiteDocumentId !
 LIMIT 1
+`
+
+const getActiviteDocumentIdsValidator = z.object({ id: activiteDocumentIdValidator, activite_id: activiteIdValidator })
+
+export const getActiviteDocumentIds = async (pool: Pool, user: UserSuper) => {
+  const result = await dbQueryAndValidate(getActiviteDocumentIdsInternal, {}, pool, getActiviteDocumentIdsValidator)
+  if (isSuper(user)) {
+    return result
+  } else {
+    throw new Error('Cette fonction est appelée uniquement pour la migration des activités')
+  }
+}
+
+const getActiviteDocumentIdsInternal = sql<
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  Redefine<IGetActiviteDocumentIdsInternalQuery, {}, z.infer<typeof getActiviteDocumentIdsValidator>>
+>`
+select
+    d.id,
+    d.activite_id
+from
+    activites_documents d
 `

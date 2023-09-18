@@ -30,7 +30,7 @@ export interface IGetLargeobjectIdByEntrepriseDocumentIdInternalParams {
 /** 'GetLargeobjectIdByEntrepriseDocumentIdInternal' return type */
 export interface IGetLargeobjectIdByEntrepriseDocumentIdInternalResult {
   entreprise_id: string | null;
-  largeobject_id: number;
+  largeobject_id: number | null;
 }
 
 /** 'GetLargeobjectIdByEntrepriseDocumentIdInternal' query type */
