@@ -4,11 +4,15 @@ import { getEntrepriseDocuments } from '../api/rest/entreprises.queries.js'
 import { userSuper } from '../database/user-super.js'
 import '../init.js'
 import pg, { Pool } from 'pg'
-import { entrepriseDocumentFilePathFind } from '../tools/documents/document-path-find.js'
 import { knex } from '../knex.js'
 import { LargeObjectManager } from 'pg-large-object'
 import { join } from 'path'
 import { createReadStream } from 'node:fs'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
+
+const entrepriseDocumentFilePathFind = (_documentId: EntrepriseDocumentId, _entrepriseId: EntrepriseId) => {
+  throw new Error('error')
+}
 
 const createLargeObject = (pool: Pool, fullPath: string) =>
   new Promise<number>(async (resolve, reject) => {
