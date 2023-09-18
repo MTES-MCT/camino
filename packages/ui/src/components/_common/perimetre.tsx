@@ -1,9 +1,9 @@
 import { Point } from '@/utils/titre-etape-edit'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { FunctionalComponent } from 'vue'
+import { FunctionalComponent, defineAsyncComponent, defineComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
-import { CaminoCommonMap, Props as CaminoCommonMapProps } from './map'
+import type { Props as CaminoCommonMapProps } from './map'
 import { Points } from './points'
 import { TitreId } from 'camino-common/src/titres'
 import { ButtonIcon } from '../_ui/button-icon'
@@ -27,11 +27,15 @@ const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
   { id: 'points', nom: 'Points', icon: 'list' },
 ]
 
-export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
+export const Perimetre = defineComponent<Props>((props: Props) => {
   const isMain = props.isMain ?? false
   const tabId = props.tabId ?? 'carte'
   const titreId = props.titreId ?? ''
-  return (
+  const CaminoCommonMap = defineAsyncComponent(async () => {
+    const { CaminoCommonMap } = await import('./map')
+    return CaminoCommonMap
+  })
+  return () => (
     <div>
       <div class="tablet-blobs tablet-flex-direction-reverse dsfr" style={{ alignItems: 'center' }}>
         <div class="tablet-blob-1-2" style={{ display: 'flex', flexDirection: 'row-reverse' }}>
@@ -97,4 +101,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class={`${isMain ? 'width-full' : ''} line mb`} />
     </div>
   )
-}
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Perimetre.props = ['points', 'geojsonMultiPolygon', 'titreTypeId', 'titreId', 'isMain', 'tabId', 'tabUpdate', 'loading']

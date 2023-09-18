@@ -3,6 +3,7 @@ import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersContro
 import { ref, onMounted, markRaw, watch } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { displayPerimeterZoomMaxLevel } from './util'
 
 export interface Props {
   markerLayers: Layer[]
@@ -11,8 +12,6 @@ export interface Props {
   additionalOverlayLayers?: Record<string, LayerGroup>
   loading: boolean
 }
-
-export const displayPerimeterZoomMaxLevel = 7
 
 export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)

@@ -1,4 +1,4 @@
-import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, IconOptions } from 'leaflet'
+import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions } from 'leaflet'
 import { GeoJsonObject } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
