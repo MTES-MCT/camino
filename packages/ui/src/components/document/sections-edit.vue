@@ -46,7 +46,7 @@
           </div>
         </div>
         <div v-else>
-          <InputFile class="btn-border small p-s full-x rnd-xs mb-s" @change="fileChange" />
+          <InputFile class="btn-border small p-s full-x rnd-xs mb-s" :accept="fichiersTypesIds" :uploadFile="fileChange" />
           <p class="h5 italic">30 Mo max.</p>
         </div>
       </div>
@@ -141,7 +141,7 @@
 
 <script>
 import { InputDate } from '../_ui/input-date'
-import InputFile from '../_ui/input-file.vue'
+import { InputFile } from '../_ui/dsfr-input-file'
 import { Messages } from '../_ui/messages'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
@@ -209,20 +209,11 @@ export default {
     dateChanged(date) {
       this.document.date = date
     },
-    fileChange({
-      target: {
-        validity,
-        files: [file],
-      },
-    }) {
-      if (file && validity.valid && file.type === 'application/pdf') {
-        this.warnings = []
-        this.document.fichierNouveau = file
-        this.document.fichier = true
-        this.document.fichierTypeId = 'pdf'
-      } else {
-        this.warnings = [{ type: 'warning', value: 'seuls les fichiers pdf sont acceptés' }]
-      }
+    fileChange(file) {
+      this.warnings = []
+      this.document.fichierNouveau = file
+      this.document.fichier = true
+      this.document.fichierTypeId = 'pdf'
     },
 
     fileRemove() {

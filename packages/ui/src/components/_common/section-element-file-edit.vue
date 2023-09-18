@@ -8,13 +8,13 @@
     </div>
   </div>
   <div v-else>
-    <InputFile class="btn-border small p-s full-x rnd-xs mb-s" accept="application/pdf" @change="fileChange" />
+    <InputFile class="btn-border small p-s full-x rnd-xs mb-s" :accept="documents" :uploadFile="fileChange" />
     <p class="h5 italic">30 Mo max.</p>
   </div>
 </template>
 
 <script>
-import InputFile from '../_ui/input-file.vue'
+import { InputFile } from '../_ui/dsfr-input-file'
 import { ButtonIcon } from '@/components/_ui/button-icon'
 
 export default {
@@ -24,6 +24,11 @@ export default {
     contenu: { type: [Object], required: true },
     elementId: { type: String, required: true },
   },
+  data: function () {
+    return {
+      documents: ['pdf'],
+    }
+  },
 
   computed: {
     contenuElement() {
@@ -32,13 +37,8 @@ export default {
   },
 
   methods: {
-    fileChange({
-      target: {
-        validity,
-        files: [file],
-      },
-    }) {
-      if (file && validity.valid) {
+    fileChange(file) {
+      if (file) {
         this.contenu[this.elementId] = file
       }
     },

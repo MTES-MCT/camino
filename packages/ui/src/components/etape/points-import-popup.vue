@@ -16,8 +16,7 @@
     </div>
 
     <div v-if="geoSystemeId">
-      <InputFile class="btn-border small bg-alt p-s full-x rnd-xs mb-s" accept=".shp,.geojson" @change="fileChange" />
-      <p class="h6 italic mt-0">Seul les fichiers Shape (.shp) et GeoJson (.geojson) sont acceptés.</p>
+      <InputFile class="btn-border small bg-alt p-s full-x rnd-xs mb-s" :accept="documents" :uploadFile="fileChange" />
     </div>
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
@@ -31,7 +30,7 @@
 </template>
 
 <script>
-import InputFile from '../_ui/input-file.vue'
+import { InputFile } from '../_ui/dsfr-input-file'
 import Popup from '../_ui/popup.vue'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 
@@ -44,6 +43,7 @@ export default {
   data: function () {
     return {
       geoSystemeId: null,
+      documents: ['geojson', 'shp'],
     }
   },
 
@@ -70,11 +70,7 @@ export default {
   },
 
   methods: {
-    async fileChange({
-      target: {
-        files: [file],
-      },
-    }) {
+    async fileChange(file) {
       await this.$store.dispatch('titreEtapeEdition/pointsImport', {
         file,
         geoSystemeId: this.geoSystemeId,
