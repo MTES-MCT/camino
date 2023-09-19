@@ -5,9 +5,10 @@ import { QuantiteParMois, Statistiques } from 'camino-common/src/statistiques'
 
 import type { ChartConfiguration } from 'chart.js'
 
-import { numberFormat } from '@/utils/number-format'
 import { ADMINISTRATION_TYPE_IDS_ARRAY, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { ConfigurableChart } from '../_charts/configurable-chart'
+import { numberFormat } from 'camino-common/src/number'
+import styles from './statistiques.module.css'
 
 const pieConfiguration = (data: ChartConfiguration<'pie'>['data']): ChartConfiguration<'pie'> => ({
   type: 'pie',
@@ -141,18 +142,18 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         <div class="tablet-float-blobs clearfix">
           <div class="tablet-float-blob-1-3">
             <div class="mb-xl mt">
-              <p class="h0 text-center">{numberFormat(recherches)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(recherches)}</p>
               <p class="bold text-center">recherches effectuées le mois dernier</p>
               <p>Le nombre de recherches mensuelles est l'indicateur clé de l'utilisation du service de "cadastre minier"</p>
             </div>
 
             <div class="mb-xl">
-              <p class="h0 text-center">{Math.round(props.statistiques.actions)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{Math.round(props.statistiques.actions)}</p>
               <p class="bold text-center">nombre moyen d'actions effectuées par utilisateur</p>
             </div>
 
             <div class="mb-xl">
-              <p class="h0 text-center">{props.statistiques.sessionDuree} min</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.sessionDuree} min</p>
               <p class="bold text-center">temps de session moyen par utilisateur</p>
             </div>
           </div>
@@ -174,16 +175,16 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         <div class="tablet-float-blobs clearfix">
           <div class="tablet-float-blob-1-3">
             <div class="mb-xl mt">
-              <p class="h0 text-center">{numberFormat(totalUtilisateurs)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(totalUtilisateurs)}</p>
               <p class="bold text-center">utilisateurs sur la plateforme</p>
             </div>
             <div class="mb-xl mt">
-              <p class="h0 text-center">{numberFormat(props.statistiques.utilisateurs.rattachesAUneEntreprise)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiques.utilisateurs.rattachesAUneEntreprise)}</p>
               <p class="bold text-center">utilisateurs affiliés à une Entreprise</p>
             </div>
 
             <div class="mb-xl mt">
-              <p class="h0 text-center">{numberFormat(utilisateursAdmin)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(utilisateursAdmin)}</p>
               <p class="bold text-center">utilisateurs rattachés à un compte Administration</p>
             </div>
           </div>
@@ -200,7 +201,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         <div class="tablet-float-blobs clearfix">
           <div class="tablet-float-blob-1-3">
             <div class="mb-xl mt">
-              <p class="h0 text-center">{numberFormat(utilisateursAdmin)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(utilisateursAdmin)}</p>
               <p class="bold text-center">utilisateurs rattachés à un compte Administration</p>
             </div>
           </div>
@@ -217,7 +218,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         <p class="mb-xl">En tant que secteur régulé par l'État, la publication en ligne des données minières doit permettre leur amélioration et leur utilisation par la communauté</p>
         <div class="tablet-float-blobs clearfix">
           <div class="tablet-float-blob-1-3 mb-xl">
-            <p class="h0 text-center">{titresModifies}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{titresModifies}</p>
             <p class="bold text-center">mise à jour de titres miniers par l'administration et les entreprises du secteur le mois dernier</p>
             <p>
               Le nombre de mises à jour mensuelles du cadastre par les différents services de l'administration ou par les professionnels du secteur reflète l'intensité de l'activité d'instruction et
@@ -237,15 +238,15 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         </div>
         <div class="desktop-blobs">
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.telechargements}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.telechargements}</p>
             <p class="bold text-center">téléchargements de pièces relatives à la bonne instruction des titres et autorisations miniers le mois dernier</p>
           </div>
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.signalements}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.signalements}</p>
             <p class="bold text-center">erreurs corrigées sur les bases de données de l'État grâce à la participation des utilisateurs</p>
           </div>
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.reutilisations}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.reutilisations}</p>
             <p class="bold text-center">réutilisations connues des données ouvertes distribuées</p>
           </div>
         </div>
@@ -257,11 +258,11 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
         <p>La dématérialisation des démarches relatives à l'instruction minière doit permettre un gain de temps pour ceux qui les effectuent et ceux qui les instruisent</p>
         <div class="desktop-blobs">
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.demarches}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.demarches}</p>
             <p class="bold text-center">démarches effectuées en ligne cette année</p>
           </div>
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.titresActivitesBeneficesEntreprise}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.titresActivitesBeneficesEntreprise}</p>
             <p class="bold text-center">jours de travail sans valeur ajoutée économisés par les entreprises en Guyane</p>
             <p>
               La dématérialisation d’un rapport trimestriel d’activité de production d’or en Guyane permet en moyenne l’économie de 2 heures de travail de saisie ou de déplacement pour son dépôt
@@ -269,7 +270,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             </p>
           </div>
           <div class="desktop-blob-1-3 mb-xl">
-            <p class="h0 text-center">{props.statistiques.titresActivitesBeneficesAdministration}</p>
+            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.titresActivitesBeneficesAdministration}</p>
             <p class="bold text-center">jours de travail à faible valeur ajoutée économisés par l’administration</p>
             <p>
               La dématérialisation d’un rapport trimestriel d’activité de production d’or en Guyane permet en moyenne l’économie d’une heure de travail de traitement et re-saisie de données par un

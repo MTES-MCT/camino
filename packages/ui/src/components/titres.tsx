@@ -7,7 +7,7 @@ import { User } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import type { TitreCarteParams } from './titres/map'
 import { Navigation } from './_ui/navigation'
-import { Tab, newTabId, Tabs, TabId } from './_ui/tabs'
+import { Tab, Tabs } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
 import { titreApiClient } from './titre/titre-api-client'
 import { AsyncData } from '@/api/client-rest'
@@ -40,8 +40,9 @@ const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   }
   return null
 }
-const carteTabId = newTabId('carte')
-const tableTabId = newTabId('table')
+
+const tabs = ['carte', 'table'] as const
+type TabId = (typeof tabs)[number]
 
 type TitresTablePaginationParams = { page: number; colonne: (typeof titresColonnes)[number]['id']; ordre: 'asc' | 'desc' }
 export const Titres = defineComponent({
@@ -64,7 +65,7 @@ export const Titres = defineComponent({
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
 
     const reloadTitres = async (vueId: TabId) => {
-      if (vueId === tableTabId) {
+      if (vueId === 'table') {
         await loadTitresForTable()
       } else {
         if (paramsForCarte.value !== null) {
@@ -117,10 +118,10 @@ export const Titres = defineComponent({
 
     const user = computed<User>(() => store.state.user.element)
 
-    const tabId = computed<TabId>(() => routerQueryToString(router.currentRoute.value.query.vueId, carteTabId) as TabId)
+    const tabId = computed<TabId>(() => routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as TabId)
     const resultat = computed<string>(() => {
       let totalLoaded = 0
-      if (tabId.value === tableTabId) {
+      if (tabId.value === 'table') {
         if (titresForTable.value.status !== 'LOADED') {
           return '...'
         }
@@ -143,7 +144,7 @@ export const Titres = defineComponent({
 
     const vues = [
       {
-        id: carteTabId,
+        id: 'carte',
         icon: 'fr-icon-earth-fill',
         title: 'Carte',
         renderContent: () => (
@@ -153,13 +154,13 @@ export const Titres = defineComponent({
             router={router}
             updateCarte={async params => {
               paramsForCarte.value = params
-              reloadTitres(carteTabId)
+              reloadTitres('carte')
             }}
           />
         ),
       },
       {
-        id: tableTabId,
+        id: 'table',
         icon: 'fr-icon-list-unordered',
         title: 'Tableau',
         renderContent: () => (
@@ -169,13 +170,13 @@ export const Titres = defineComponent({
             data={titresForTable.value}
             updateParams={async params => {
               paramsForTable.value = params
-              await reloadTitres(tableTabId)
+              await reloadTitres('table')
             }}
             caption="Tableau des titres"
           />
         ),
       },
-    ] as const satisfies readonly Tab[]
+    ] as const satisfies readonly Tab<TabId>[]
 
     type VueId = (typeof vues)[number]['id']
 
@@ -215,13 +216,13 @@ export const Titres = defineComponent({
                 if (tabId.value !== newTabId) {
                   titresForCarte.value = { hash: '', titres: [] }
                   const query: LocationQuery = { ...router.currentRoute.value.query, vueId: newTabId }
-                  if (newTabId === tableTabId) {
+                  if (newTabId === 'table') {
                     delete query.zoom
                     delete query.perimetre
                     delete query.centre
                   }
                   await router.push({ name: router.currentRoute.value.name ?? undefined, query })
-                  if (newTabId === tableTabId) {
+                  if (newTabId === 'table') {
                     paramsForCarte.value = null
                     reloadTitres(newTabId)
                   }

@@ -6,7 +6,7 @@ import { toCaminoAnnee } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Statistiques/MinerauxMetauxMetropole',
   component: PureMinerauxMetauxMetropole,
-  argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

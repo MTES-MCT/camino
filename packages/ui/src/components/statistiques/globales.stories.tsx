@@ -5,7 +5,7 @@ import { Statistiques } from 'camino-common/src/statistiques'
 const meta: Meta = {
   title: 'Components/Statistiques/GlobalesNoStoryshots',
   component: PureGlobales,
-  argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

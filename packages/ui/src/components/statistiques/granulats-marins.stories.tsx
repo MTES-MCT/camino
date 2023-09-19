@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Statistiques/GranulatsMarins',
   component: PureGranulatsMarins,
-  argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

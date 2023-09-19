@@ -1,22 +1,19 @@
-import { nextTick, ref } from 'vue'
+import { Ref, defineComponent, nextTick, ref } from 'vue'
 
 import { DsfrIcon } from './dsfrIconSpriteType'
-import { caminoDefineComponent } from '../../utils/vue-tsx-utils'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
-export type Tab = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
+export type Tab<TabId> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
 
-export type TabId = string & { __camino: 'TabId' }
-export const newTabId = (tabId: string): TabId => tabId as TabId
-type Props = {
+type Props<TabId> = {
   tabsTitle: string
-  tabs: Readonly<NonEmptyArray<Tab>>
+  tabs: Readonly<NonEmptyArray<Tab<TabId>>>
   initTab: TabId
   tabClicked: (tabId: TabId) => void
 }
 
-export const Tabs = caminoDefineComponent<Props>(['tabsTitle', 'tabs', 'initTab', 'tabClicked'], props => {
-  const currentTab = ref<TabId>(props.initTab)
+export const Tabs = defineComponent(<TabId,>(props: Props<TabId>) => {
+  const currentTab = ref<TabId>(props.initTab) as Ref<TabId>
 
   nextTick(() => {
     props.tabs.forEach(tab => {
@@ -65,3 +62,6 @@ export const Tabs = caminoDefineComponent<Props>(['tabsTitle', 'tabs', 'initTab'
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+Tabs.props = ['tabsTitle', 'tabs', 'initTab', 'tabClicked']
