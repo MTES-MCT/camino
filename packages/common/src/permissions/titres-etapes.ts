@@ -209,7 +209,7 @@ export const isEtapeComplete = (
     }
   }
 
-  if (isNullOrUndefined(titreEtape.duree) && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
+  if ((isNullOrUndefined(titreEtape.duree) || titreEtape.duree === 0) && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
     errors.push('la durée doit être renseignée')
   }
 

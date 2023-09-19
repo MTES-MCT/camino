@@ -1,7 +1,7 @@
 import { User } from '../roles.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect, describe } from 'vitest'
-import { canDeleteActiviteDocument, canEditActivite, canReadActivites, canReadTitreActivites, isActiviteDeposable, isActiviteDocumentsComplete } from './activites.js'
+import { canDeleteActiviteDocument, canEditActivite, canReadActivites, canReadTitreActivites, isActiviteComplete, isActiviteDeposable, isActiviteDocumentsComplete } from './activites.js'
 import { testBlankUser, TestUser } from '../tests-utils'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../static/titresTypes.js'
 import { ActiviteDocumentTypeId, ActiviteDocumentTypeIds, DOCUMENTS_TYPES_IDS } from '../static/documentsTypes.js'
@@ -289,5 +289,46 @@ describe('isActiviteDeposable', () => {
         []
       )
     ).toEqual(false)
+  })
+})
+
+describe('isActiviteComplete', () => {
+  test('Une activité est complète si toutes ses sections sont complètes ', () => {
+    expect(
+      isActiviteComplete(
+        [{ nom: 'section', elements: [{ type: 'text', nom: 'element', optionnel: false, value: 'une valeur' }] }],
+        ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"],
+        []
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(
+      isActiviteComplete([{ nom: 'section', elements: [{ type: 'text', nom: 'element', optionnel: false, value: '' }] }], ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], [])
+    ).toMatchInlineSnapshot(`
+      {
+        "errors": [
+          "l’élément \\"element\\" de la section \\"section\\" est obligatoire",
+        ],
+        "valid": false,
+      }
+    `)
+  })
+  test('Une activité est complète si tous les documents obligatoires sont renseignés ', () => {
+    expect(isActiviteComplete([], ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], [{ activite_document_type_id: 'rgr' }])).toMatchInlineSnapshot(`
+      {
+        "valid": true,
+      }
+    `)
+    expect(isActiviteComplete([], ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], [])).toMatchInlineSnapshot(`
+      {
+        "errors": [
+          "le document \\"rgr\\" est obligatoire",
+        ],
+        "valid": false,
+      }
+    `)
   })
 })

@@ -8,7 +8,7 @@ import { Administrations, ADMINISTRATION_TYPE_IDS, ADMINISTRATION_IDS, Administr
 import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { ActiviteDocumentTypeId } from '../static/documentsTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
-import { SectionWithValue } from '../titres.js'
+import { ElementWithValue } from '../titres.js'
 import { isNonEmptyArray, isNullOrUndefined, memoize, NonEmptyArray, SimplePromiseFn } from '../typescript-tools.js'
 import { sectionsWithValueCompleteValidate } from './sections.js'
 
@@ -94,6 +94,10 @@ export const canEditActivite = async (
   return false
 }
 
+/**
+ * attention les tests unitaires s'appuient sur les tests de canEditActivite
+ * et de isActiviteComplete pour éviter une explosion combinatoire
+ */
 export const isActiviteDeposable = async (
   user: User,
   titreTypeId: SimplePromiseFn<TitreTypeId>,
@@ -106,17 +110,18 @@ export const isActiviteDeposable = async (
     return false
   }
 
-  // attention les tests unitaires s'appuient sur les tests de canEditActivite
-  // et de isActiviteComplete pour éviter une explosion combinatoire
   return (
     (await canEditActivite(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, activite.activite_statut_id)) &&
     isActiviteComplete(activite.sections_with_value, activite.type_id, documents).valid
   )
 }
 
-// FIXME Unit test me?
+/**
+ * attention les tests unitaires s'appuient sur les tests de sectionsWithValueCompleteValidate
+ * et de isActiviteDocumentsComplete pour éviter une explosion combinatoire
+ */
 export const isActiviteComplete = (
-  sections_with_value: SectionWithValue[],
+  sections_with_value: { nom?: string; elements: Pick<ElementWithValue, 'nom' | 'optionnel' | 'value' | 'type'>[] }[],
   activiteTypeId: ActivitesTypesId,
   documents: Pick<ActiviteDocument, 'activite_document_type_id'>[]
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {

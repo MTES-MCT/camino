@@ -336,7 +336,7 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
   `)
 })
 
-test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+test.only.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
   [undefined, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
@@ -345,7 +345,7 @@ test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeo
   [0, 'rde', 'arm', [], [], false],
   [3, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
   [3, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
-])('teste la complétude de la durée', (duree, etapeType, titreType, documents, entreprisedocuments, error) => {
+])('teste la complétude de la durée %i pour une étapeType %s, un titreType %s', (duree, etapeType, titreType, documents, entreprisedocuments, error) => {
   const titreEtape = {
     ...etapeComplete,
     duree,
@@ -359,7 +359,7 @@ test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeo
     if (!result.valid) {
       expect(result.errors).toContain(errorLabel)
     } else {
-      throw new Error('')
+      throw new Error('test valide alors que non')
     }
   } else {
     expect(result).toStrictEqual({ valid: true })
