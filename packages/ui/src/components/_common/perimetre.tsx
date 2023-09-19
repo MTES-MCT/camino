@@ -1,6 +1,6 @@
 import { Point } from '@/utils/titre-etape-edit'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { FunctionalComponent, defineAsyncComponent, defineComponent } from 'vue'
+import { defineAsyncComponent, defineComponent, computed } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
 import type { Props as CaminoCommonMapProps } from './map'
@@ -29,7 +29,7 @@ const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
 
 export const Perimetre = defineComponent<Props>((props: Props) => {
   const isMain = props.isMain ?? false
-  const tabId = props.tabId ?? 'carte'
+  const tabId = computed(() => props.tabId ?? 'carte')
   const titreId = props.titreId ?? ''
   const CaminoCommonMap = defineAsyncComponent(async () => {
     const { CaminoCommonMap } = await import('./map')
@@ -62,8 +62,8 @@ export const Perimetre = defineComponent<Props>((props: Props) => {
         <div class="tablet-blob-1-2 flex">
           {tabs.map(tab => {
             return (
-              <div key={tab.id} class={`${tabId === tab.id ? 'active' : ''} mr-xs`}>
-                {tabId !== tab.id ? (
+              <div key={tab.id} class={`${tabId.value === tab.id ? 'active' : ''} mr-xs`}>
+                {tabId.value !== tab.id ? (
                   <ButtonIcon class="p-m btn-tab rnd-t-s" onClick={() => props.tabUpdate(tab.id)} title={`Affiche le périmètre (${tab.nom})`} icon={tab.icon} />
                 ) : (
                   <div class="p-m span-tab rnd-t-s">
@@ -78,7 +78,7 @@ export const Perimetre = defineComponent<Props>((props: Props) => {
 
       <div class={`${isMain ? 'width-full' : ''} line-neutral`} />
 
-      {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
+      {props.points && props.geojsonMultiPolygon && tabId.value === 'carte' ? (
         <CaminoCommonMap
           class={`${isMain ? 'width-full' : ''} dsfr`}
           geojson={props.geojsonMultiPolygon}
@@ -90,7 +90,7 @@ export const Perimetre = defineComponent<Props>((props: Props) => {
         />
       ) : null}
 
-      {props.points && tabId === 'points' ? (
+      {props.points && tabId.value === 'points' ? (
         <div class={`${isMain ? 'width-full' : ''} points bg-alt`}>
           <div class={`${isMain ? 'container' : ''} bg-bg py`}>
             <Points points={props.points} />
