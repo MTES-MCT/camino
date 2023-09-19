@@ -42,6 +42,22 @@ test.each<[User, boolean]>([
     {
       ...testBlankUser,
       role: 'admin',
+      administrationId: ADMINISTRATION_IDS['PRÉFECTURE - GUYANE'],
+    },
+    true,
+  ],
+  [
+    {
+      ...testBlankUser,
+      role: 'admin',
+      administrationId: ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE'],
+    },
+    false,
+  ],
+  [
+    {
+      ...testBlankUser,
+      role: 'admin',
       administrationId: ADMINISTRATION_IDS["DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"],
     },
     true,
