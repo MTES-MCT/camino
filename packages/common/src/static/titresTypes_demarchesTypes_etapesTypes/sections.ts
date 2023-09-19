@@ -971,7 +971,6 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
   return []
 }
 
-// FIXME unit test
 export const getSectionsWithValue = (sections: DeepReadonly<Section>[], contenu: Contenu): SectionWithValue[] => {
   const sectionsWithValue: SectionWithValue[] = []
 
