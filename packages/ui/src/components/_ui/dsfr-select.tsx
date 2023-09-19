@@ -1,5 +1,5 @@
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
-import { isEventWithTarget } from '../../utils/vue-tsx-utils'
+import { isEventWithTarget, random } from '../../utils/vue-tsx-utils'
 import { HTMLAttributes } from 'vue'
 
 export type Item<T> = { id: T; label: string }
@@ -14,7 +14,7 @@ export type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
 } & HTMLAttributes
 
 export const DsfrSelect = <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(props: Props<T, Items>): JSX.Element => {
-  const id = props.id ?? `select_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `select_${(random() * 1000).toFixed()}`
 
   return (
     <div class={['fr-select-group', props.disabled ? 'fr-select-group--disabled' : null]}>

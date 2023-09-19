@@ -1,4 +1,4 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ref, watch } from 'vue'
@@ -14,7 +14,7 @@ type Props = {
 }
 
 export const DsfrInputRadio = caminoDefineComponent<Props>(['id', 'valueChanged', 'legend', 'disabled', 'elements', 'required', 'initialValue'], props => {
-  const id = props.id ?? `radio_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `radio_${(random() * 1000).toFixed()}`
 
   const onChangeRadio = (itemId: string) => (e: Event) => {
     if (isEventWithTarget(e) && Boolean(e.target.value)) {

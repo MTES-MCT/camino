@@ -22,7 +22,6 @@ import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 
-// FIXME c’est cassé connecté en tant que DGTM
 export const Entreprise = defineComponent({
   setup() {
     const store = useStore()

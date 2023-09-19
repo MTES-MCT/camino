@@ -32,7 +32,7 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
   }
   const content = () => (
     <form>
-      <DsfrInput legend={{ main: 'Nom' }} type={{ type: 'text' }} valueChanged={nomChange} initialValue={nom.value} required={true} />
+      <DsfrInput id="titre_nom" legend={{ main: 'Nom' }} type={{ type: 'text' }} valueChanged={nomChange} initialValue={nom.value} required={true} />
       <div class="fr-input-group">
         <label class="fr-label" for="references">
           Références

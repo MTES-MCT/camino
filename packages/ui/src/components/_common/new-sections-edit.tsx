@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref, watch } from 'vue'
-import { ElementWithValue, SectionWithValue } from 'camino-common/src/titres'
+import { ElementWithValue, isNumberElement, SectionWithValue } from 'camino-common/src/titres'
 import { exhaustiveCheck, isNonEmptyArray } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
 import { InputDate } from '../_ui/dsfr-input-date'
@@ -78,7 +78,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   }
 
   const info = computed<string>(() => {
-    return element.id === 'volumeGranulatsExtrait' && element.value ? `Soit l’équivalent de ${numberFormat(element.value * 1.5)} tonnes` : ''
+    return element.id === 'volumeGranulatsExtrait' && element.value && isNumberElement(element) ? `Soit l’équivalent de ${numberFormat((element.value ?? 0) * 1.5)} tonnes` : ''
   })
 
   const required = !(props.element.optionnel ?? true)
@@ -87,15 +87,13 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
     case 'integer':
     case 'number':
       sectionElementEditInput = (
-        <>
-          <DsfrInput
-            type={{ type: 'number', min: 0 }}
-            required={required}
-            initialValue={element.value}
-            valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
-            legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
-          />
-        </>
+        <DsfrInput
+          type={{ type: 'number', min: 0 }}
+          required={required}
+          initialValue={element.value}
+          valueChanged={(e: number | null) => onValueChange({ ...element, value: e })}
+          legend={{ main: element.nom ?? '', description: element.description, info: info.value }}
+        />
       )
       break
     case 'date':
@@ -164,9 +162,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
         />
       )
       break
-    case 'select':
-      // FIXME je n'ai pas compris
-      // eslint-disable-next-line no-case-declarations
+    case 'select': {
       const options = element.options.map(option => ({ id: option.id, label: option.nom }))
       if (isNonEmptyArray(options)) {
         sectionElementEditInput = (
@@ -180,7 +176,9 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
       } else {
         throw new Error('Select sans option, cas impossible ?')
       }
+
       break
+    }
     case 'file':
       // TODO 2023-09-12 non géré car pas appelé dans les étapes encore
       // Le jour où on migre les étapes pour appeler ce code, il faut réfléchir à comment gérer le fichier

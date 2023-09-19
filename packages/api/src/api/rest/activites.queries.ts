@@ -62,7 +62,7 @@ export const updateActiviteQuery = async (
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
 ) => {
-  if (user === null || user === undefined || !canEditActivite(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION)) {
+  if (user === null || user === undefined || !(await canEditActivite(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION))) {
     throw new Error("Interdiction d'éditer une activité")
   }
   await dbQueryAndValidate(updateActiviteDb, { userId: user.id, activiteId, dateSaisie: getCurrent(), activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION, contenu }, pool, z.void())

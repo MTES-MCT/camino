@@ -1,4 +1,4 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 
 type Props = {
   id?: string
@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const DsfrTextarea = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'required'], props => {
-  const id = props.id ?? `textarea_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `textarea_${(random() * 1000).toFixed()}`
 
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {

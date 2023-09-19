@@ -7,7 +7,7 @@ import { LoadingElement } from '../_ui/functional-loader'
 export type DefinitionTree = {
   joinTable?: MetaIndexTable
   id: MetaIndexTable
-  // FIXME better type foreignKey
+  // TOOD 2023-09-19 better type foreignKey
   foreignKey?: string
   definitions?: readonly DefinitionTree[]
 }

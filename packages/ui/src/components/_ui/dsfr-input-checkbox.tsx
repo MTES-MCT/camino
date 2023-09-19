@@ -1,4 +1,4 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 
 export type Props = {
   id?: string
@@ -9,7 +9,7 @@ export type Props = {
 }
 
 export const DsfrInputCheckbox = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'disabled'], props => {
-  const id = props.id ?? `checkbox_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `checkbox_${(random() * 1000).toFixed()}`
 
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {

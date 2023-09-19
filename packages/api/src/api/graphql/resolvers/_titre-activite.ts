@@ -96,7 +96,7 @@ const titreActiviteUtilisateursEmailsGet = (utilisateurs: IUtilisateur[] | undef
   return utilisateurs?.filter(u => !!u.email).map(u => u.email!) || []
 }
 
-export const productionCheck = (activiteTypeId: string, contenu: IContenu | null | undefined) => {
+export const productionCheck = (activiteTypeId: string, contenu: IContenu | null | undefined): boolean => {
   if (activiteTypeId === 'grx' || activiteTypeId === 'gra') {
     if (contenu?.substancesFiscales) {
       return Object.keys(contenu.substancesFiscales).some(key => !!contenu.substancesFiscales[key])

@@ -18,7 +18,6 @@ import { ActiviteRemovePopup } from './remove-popup'
 
 interface Props {
   activite: Activite
-  route: unknown
   initialOpened?: boolean
   apiClient: Pick<ActiviteApiClient, 'deposerActivite' | 'supprimerActivite'>
 }
@@ -146,7 +145,7 @@ export const Preview = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Preview.props = ['activite', 'route', 'initialOpened', 'apiClient']
+Preview.props = ['activite', 'initialOpened', 'apiClient']
 
 type ActiviteDocumentLinkProps = { activiteDocumentId: ActiviteDocumentId; activiteDocumentTypeId: ActiviteDocumentTypeId }
 export const ActiviteDocumentLink: FunctionalComponent<ActiviteDocumentLinkProps> = (props: ActiviteDocumentLinkProps) => {

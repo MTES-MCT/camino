@@ -1,4 +1,4 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 
 type TextInputType = {
   type: 'text'
@@ -34,7 +34,7 @@ const isTextProps = (props: Props): props is BaseProps & TextProps => props.type
 const isNumberProps = (props: Props): props is BaseProps & NumberProps => props.type.type === 'number'
 
 export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'disabled', 'required', 'type'], props => {
-  const id = props.id ?? `input_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `input_${(random() * 1000).toFixed()}`
 
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {

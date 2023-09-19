@@ -1,4 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
 import { CaminoDate, getAnnee, getDay, getMois, isCaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { ref } from 'vue'
 import { DsfrInput } from './dsfr-input'
@@ -15,7 +15,7 @@ const yearMin = 1750
 const yearMax = 2099
 
 export const InputDate = caminoDefineComponent<Props>(['id', 'initialValue', 'dateChanged', 'legend', 'required'], props => {
-  const id = props.id ?? `date_${(Math.random() * 1000).toFixed()}`
+  const id = props.id ?? `date_${(random() * 1000).toFixed()}`
   const dayId = ref<number | null>()
   const monthId = ref<number | null>()
   const yearId = ref<number | null>()

@@ -49,8 +49,8 @@ const apiClient: Pick<ActiviteApiClient, 'deposerActivite' | 'supprimerActivite'
   },
 }
 
-export const OuvertParDefaut: StoryFn = () => <Preview apiClient={apiClient} activite={activite} route="fakeRoute" initialOpened={true} />
-export const FermeParDefaut: StoryFn = () => <Preview apiClient={apiClient} activite={activite} route="fakeRoute" initialOpened={false} />
+export const OuvertParDefaut: StoryFn = () => <Preview apiClient={apiClient} activite={activite} initialOpened={true} />
+export const FermeParDefaut: StoryFn = () => <Preview apiClient={apiClient} activite={activite} initialOpened={false} />
 
 export const ACompleter: StoryFn = () => (
   <Preview
@@ -62,20 +62,14 @@ export const ACompleter: StoryFn = () => (
       type_id: ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"],
       activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
     }}
-    route="fakeRoute"
     initialOpened={false}
   />
 )
 
 export const Deposable: StoryFn = () => (
-  <Preview apiClient={apiClient} activite={{ ...activite, deposable: true, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION }} route="fakeRoute" initialOpened={false} />
+  <Preview apiClient={apiClient} activite={{ ...activite, deposable: true, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION }} initialOpened={false} />
 )
 
 export const Supprimable: StoryFn = () => (
-  <Preview
-    apiClient={apiClient}
-    activite={{ ...activite, suppression: true, deposable: false, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION }}
-    route="fakeRoute"
-    initialOpened={false}
-  />
+  <Preview apiClient={apiClient} activite={{ ...activite, suppression: true, deposable: false, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION }} initialOpened={false} />
 )
