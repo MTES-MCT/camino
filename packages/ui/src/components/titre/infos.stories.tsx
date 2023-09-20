@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { Infos, Props } from './infos'
-import { SectionWithValue, TitreId, TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
+import { TitreId, TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
 import { demarcheIdValidator } from 'camino-common/src/demarche'

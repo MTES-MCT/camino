@@ -13,16 +13,24 @@ import {
   insertActiviteDocument,
   titreTypeIdByActiviteId,
   updateActiviteQuery,
+  getActivitesByTitreId as getActivitesByTitreIdQuery,
+  DbActivite
 } from './activites.queries.js'
 import { NewDownload } from './fichiers.js'
-import { DeepReadonly, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { canEditActivite, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
-import { SectionWithValue } from 'camino-common/src/titres.js'
+import { ActivitesByTitre, titreIdValidator } from 'camino-common/src/titres.js'
+import { SectionWithValue } from 'camino-common/src/sections.js'
 import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { createLargeObject } from './entreprises.js'
 import { newActiviteDocumentId } from '../../database/models/_format/id-create.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { Unites } from 'camino-common/src/static/unites.js'
+import { getAdministrationsLocalesByTitreIdQuery, getTitreTypeIdByTitreIdQuery, getTitulairesAmodiatairesByTitreIdQuery } from './titres.queries.js'
+import { User } from 'camino-common/src/roles.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const extractContenuFromSectionWithValue = (sections: DeepReadonly<Section[]>, sectionsWithValue: SectionWithValue[]): Contenu => {
   const contenu: Contenu = {}
@@ -118,6 +126,40 @@ export const updateActivite =
     }
   }
 
+  const formatActivite = async (dbActivite: DbActivite, pool: Pool, user: User, titreTypeId: SimplePromiseFn<TitreTypeId>,    administrationsLocales: SimplePromiseFn<AdministrationId[]>,    entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>): Promise<Activite> => {
+    const sectionsWithValue: SectionWithValue[] = getSectionsWithValue(dbActivite.sections, dbActivite.contenu)
+
+          const activiteDocuments = await getActiviteDocumentsByActiviteId(dbActivite.id, pool)
+          const deposable = await isActiviteDeposable(
+            user,
+            titreTypeId,
+            administrationsLocales,
+            entreprisesTitulairesOuAmodiataires,
+            { ...dbActivite, sections_with_value: sectionsWithValue },
+            activiteDocuments
+          )
+          const modification = await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, dbActivite.activite_statut_id)
+
+          return {
+            id: dbActivite.id,
+            slug: dbActivite.slug,
+            activite_statut_id: dbActivite.activite_statut_id,
+            type_id: dbActivite.type_id,
+            annee: dbActivite.annee,
+            date_saisie: dbActivite.date_saisie,
+            date: dbActivite.date,
+            periode_id: dbActivite.periode_id,
+            suppression: dbActivite.suppression,
+            deposable,
+            modification,
+            sections_with_value: sectionsWithValue,
+            titre: {
+              nom: dbActivite.titre_nom,
+              slug: dbActivite.titre_slug,
+            },
+            activite_documents: activiteDocuments,
+          }
+  }
 export const getActivite =
   (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<Activite>): Promise<void> => {
@@ -135,39 +177,50 @@ export const getActivite =
         const result = await getActiviteById(activiteIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
         if (result !== null) {
-          const sectionsWithValue: SectionWithValue[] = getSectionsWithValue(result.sections, result.contenu)
-
-          const activiteDocuments = await getActiviteDocumentsByActiviteId(result.id, pool)
-          const deposable = await isActiviteDeposable(
-            user,
-            titreTypeId,
-            administrationsLocales,
-            entreprisesTitulairesOuAmodiataires,
-            { ...result, sections_with_value: sectionsWithValue },
-            activiteDocuments
-          )
-          const modification = await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, result.activite_statut_id)
-
-          const activite: Activite = {
-            id: result.id,
-            slug: result.slug,
-            activite_statut_id: result.activite_statut_id,
-            type_id: result.type_id,
-            annee: result.annee,
-            date_saisie: result.date_saisie,
-            date: result.date,
-            periode_id: result.periode_id,
-            suppression: result.suppression,
-            deposable,
-            modification,
-            sections_with_value: sectionsWithValue,
-            titre: {
-              nom: result.titre_nom,
-              slug: result.titre_slug,
-            },
-            activite_documents: activiteDocuments,
-          }
+          const activite = await formatActivite(result, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
           res.json(activite)
+        } else {
+          res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+        }
+      } catch (e) {
+        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
+    }
+  }
+
+  export const getActivitesByTitreId =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<ActivitesByTitre>): Promise<void> => {
+    const titreIdParsed = titreIdValidator.safeParse(req.params.titreId)
+    const user = req.auth
+
+    if (!titreIdParsed.success) {
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        const titreTypeId = memoize(() => getTitreTypeIdByTitreIdQuery(titreIdParsed.data, pool))
+        const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreIdQuery(titreIdParsed.data, pool))
+        const entreprisesTitulairesOuAmodiataires = memoize(() => getTitulairesAmodiatairesByTitreIdQuery(titreIdParsed.data, pool))
+
+        const result = await getActivitesByTitreIdQuery(titreIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
+
+        if (result !== null) {
+          const activites: ActivitesByTitre = []
+          for (const activite of result) {
+            
+            const activiteByAnnee = activites.find(({annee}) => annee === activite.annee)
+
+            const activiteFormated = await formatActivite(activite, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
+
+            if( isNullOrUndefined(activiteByAnnee)){
+              activites.push({annee: activite.annee, activites: [activiteFormated]})
+            }else{
+              activiteByAnnee.activites.push(activiteFormated)
+            }
+          }
+          
+          res.json(activites.sort((a, b) => a.annee.localeCompare(b.annee)))
         } else {
           res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
         }

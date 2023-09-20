@@ -51,6 +51,36 @@ export interface IGetActiviteByIdQueryQuery {
   result: IGetActiviteByIdQueryResult;
 }
 
+/** 'GetActivitesByTitreIdQuery' parameters type */
+export interface IGetActivitesByTitreIdQueryParams {
+  titreId: string;
+}
+
+/** 'GetActivitesByTitreIdQuery' return type */
+export interface IGetActivitesByTitreIdQueryResult {
+  activite_statut_id: string;
+  annee: number;
+  contenu: Json | null;
+  date: string;
+  date_saisie: string | null;
+  id: string;
+  periode_id: number;
+  sections: JsonArray;
+  slug: string;
+  suppression: boolean;
+  titre_id: string | null;
+  titre_nom: string;
+  titre_slug: string;
+  type_id: string;
+  utilisateur_id: string | null;
+}
+
+/** 'GetActivitesByTitreIdQuery' query type */
+export interface IGetActivitesByTitreIdQueryQuery {
+  params: IGetActivitesByTitreIdQueryParams;
+  result: IGetActivitesByTitreIdQueryResult;
+}
+
 /** 'GetAdministrationsLocalesByActiviteId' parameters type */
 export interface IGetAdministrationsLocalesByActiviteIdParams {
   activiteId: string;

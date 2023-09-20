@@ -1,5 +1,5 @@
 import { Section } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { ElementWithValue } from '../titres.js'
+import { ElementWithValue } from '../sections.js'
 import { DeepReadonly, isNullOrUndefined } from '../typescript-tools.js'
 
 export type Contenu = { [key in string]?: { [secondKey in string]?: unknown } } | null | undefined

@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref, watch } from 'vue'
-import { ElementWithValue, isNumberElement, SectionWithValue } from 'camino-common/src/titres'
+import { ElementWithValue, isNumberElement, SectionWithValue } from 'camino-common/src/sections'
 import { exhaustiveCheck, isNonEmptyArray } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
 import { InputDate } from '../_ui/dsfr-input-date'

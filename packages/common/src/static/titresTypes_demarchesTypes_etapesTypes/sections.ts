@@ -7,7 +7,7 @@ import { DeepReadonly, exhaustiveCheck, isNotNullNorUndefined } from '../../type
 import { uniteIdValidator, UNITES, Unites } from '../unites.js'
 import { sortedDevises } from '../devise.js'
 import { z } from 'zod'
-import { ElementWithValue, SectionWithValue } from '../../titres.js'
+import { ElementWithValue, SectionWithValue } from '../../sections.js'
 import { Contenu } from '../../permissions/sections.js'
 
 const gestionDeLaDemandeDeComplements: Section[] = [

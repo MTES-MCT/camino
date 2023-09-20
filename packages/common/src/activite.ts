@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { activiteDocumentTypeIdValidator } from './static/documentsTypes.js'
-import { sectionWithValueValidator } from './titres.js'
+import { sectionWithValueValidator } from './sections.js'
 import { activiteStatutIdValidator } from './static/activitesStatuts.js'
 import { activiteTypeIdValidator } from './static/activitesTypes.js'
 import { tempDocumentNameValidator } from './document.js'

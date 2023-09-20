@@ -5,7 +5,8 @@ import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import gql from 'graphql-tag'
 import { getWithJson, putWithJson } from '../../api/client-rest'
-import { SectionWithValue } from 'camino-common/src/titres'
+import { ActivitesByTitre, TitreId } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 
 export interface UiGraphqlActivite {
   id: string
@@ -26,6 +27,7 @@ export interface UiGraphqlActivite {
 export interface ActiviteApiClient {
   getActivites: (params: GetActivitesParams) => Promise<{ elements: UiGraphqlActivite[]; total: number }>
   getActivite: (activiteIdOrSlug: ActiviteIdOrSlug) => Promise<Activite>
+  getActivitesByTitreId: (titreId: TitreId) => Promise<ActivitesByTitre>
   deposerActivite: (activiteId: ActiviteId) => Promise<void>
   supprimerActivite: (activiteId: ActiviteId) => Promise<void>
   updateActivite: (activiteId: ActiviteId, sectionsWithValue: SectionWithValue[], activiteDocumentIds: ActiviteDocumentId[], newTempDocuments: TempActiviteDocument[]) => Promise<void>
@@ -103,6 +105,11 @@ export const activiteApiClient: ActiviteApiClient = {
   getActivite: async (activiteIdOrSlug: ActiviteIdOrSlug) => {
     return getWithJson('/rest/activites/:activiteId', {
       activiteId: activiteIdOrSlug,
+    })
+  },
+  getActivitesByTitreId: async (titreId: TitreId): Promise<ActivitesByTitre> => {
+    return getWithJson('/rest/titres/:titreId/activites', {
+      titreId,
     })
   },
   deposerActivite: async (activiteId: ActiviteId) => {

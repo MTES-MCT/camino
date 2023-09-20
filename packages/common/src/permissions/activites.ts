@@ -8,7 +8,7 @@ import { Administrations, ADMINISTRATION_TYPE_IDS, ADMINISTRATION_IDS, Administr
 import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { ActiviteDocumentTypeId } from '../static/documentsTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
-import { ElementWithValue } from '../titres.js'
+import { ElementWithValue } from '../sections.js'
 import { isNonEmptyArray, isNullOrUndefined, memoize, NonEmptyArray, SimplePromiseFn } from '../typescript-tools.js'
 import { sectionsWithValueCompleteValidate } from './sections.js'
 

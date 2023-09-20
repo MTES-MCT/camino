@@ -1,5 +1,5 @@
 import { Icon } from '@/components/_ui/icon'
-import { ElementWithValue, isFileElement, isNumberElement, valeurFind } from 'camino-common/src/titres'
+import { ElementWithValue, isFileElement, isNumberElement, valeurFind } from 'camino-common/src/sections'
 import { FunctionalComponent } from 'vue'
 import { ButtonIcon } from '../_ui/button-icon'
 import { numberFormat } from 'camino-common/src/number'

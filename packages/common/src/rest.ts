@@ -14,8 +14,8 @@ import {
 import { demarcheGetValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
+  activitesByTitreValidator,
   editableTitreValidator,
-  sectionWithValueValidator,
   titreDrealValidator,
   titreGetValidator,
   titreIdValidator,
@@ -24,6 +24,9 @@ import {
   titrePtmgValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
+import {
+  sectionWithValueValidator,
+} from './sections.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
@@ -62,6 +65,7 @@ const IDS = [
   '/rest/titresDREAL',
   '/rest/titres/:id/titreLiaisons',
   '/rest/titres/:id/communes',
+  '/rest/titres/:titreId/activites',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
   '/rest/entreprises',
@@ -114,6 +118,7 @@ export const CaminoRestRoutes = {
   '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
   '/rest/titres/:id/communes': { params: { id: titreIdValidator }, get: { output: z.array(communeValidator) } },
+  '/rest/titres/:titreId/activites': { params: { titreId: titreIdValidator }, get: { output: activitesByTitreValidator } },
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },

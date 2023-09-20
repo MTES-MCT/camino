@@ -1,4 +1,5 @@
-import { EditableTitre, SectionWithValue, TitreGet, TitreId } from 'camino-common/src/titres'
+import { EditableTitre, TitreGet, TitreId } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { Commune, CommuneId } from 'camino-common/src/static/communes'

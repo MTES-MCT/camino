@@ -8,8 +8,7 @@ import { RouteLocationNormalizedLoaded, useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { ActiviteDeposePopup } from './activite/depose-popup'
-import { SectionWithValue } from 'camino-common/src/titres'
-import { Contenu } from 'camino-common/src/permissions/sections'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { ApiClient, apiClient } from '../api/api-client'
 import { SectionsEdit } from './_common/new-sections-edit'
 import { DsfrLink } from './_ui/dsfr-button'
@@ -50,7 +49,6 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
   })
   const sectionsComplete = ref<{ complete: boolean; sectionsWithValue: SectionWithValue[] }>({ complete: false, sectionsWithValue: [] })
 
-  const contenu = ref<Contenu>({})
   const data = ref<AsyncData<Activite>>({ status: 'LOADING' })
 
   const deposePopupVisible = ref(false)

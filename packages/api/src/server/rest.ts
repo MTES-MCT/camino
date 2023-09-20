@@ -57,7 +57,7 @@ import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
-import { activiteDocumentDownload, getActivite, updateActivite } from '../api/rest/activites.js'
+import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite } from '../api/rest/activites.js'
 
 interface IRestResolverResult {
   nom: string
@@ -124,6 +124,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
   '/rest/titres/:id/communes': { get: getTitreCommunes },
+  '/rest/titres/:titreId/activites': { get: getActivitesByTitreId },
   '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/demarches/:demarcheId': { get: getDemarche },

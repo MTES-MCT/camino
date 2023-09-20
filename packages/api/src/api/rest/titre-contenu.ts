@@ -1,6 +1,6 @@
 import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
-import { SectionWithValue } from 'camino-common/src/titres.js'
+import { SectionWithValue } from 'camino-common/src/sections.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { getElementValeurs, getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'

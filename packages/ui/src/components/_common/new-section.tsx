@@ -1,5 +1,5 @@
 import { CaminoDate } from 'camino-common/src/date'
-import { SectionWithValue } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { FunctionalComponent } from 'vue'
 import { SectionElement } from './new-section-element'
 

@@ -10,7 +10,7 @@ import {
   RadioElementWithValue,
   SelectElementWithValue,
   TextElementWithValue,
-} from '../titres'
+} from '../sections.js'
 import { getCurrent } from '../date'
 
 describe('sectionElementWithValueCompleteValidate', () => {

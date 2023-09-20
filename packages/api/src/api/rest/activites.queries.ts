@@ -12,6 +12,7 @@ import {
   IGetTitulairesAmodiatairesTitreActiviteQuery,
   IInsertActiviteDocumentInternalQuery,
   IUpdateActiviteDbQuery,
+  IGetActivitesByTitreIdQueryQuery
 } from './activites.queries.types.js'
 import {
   ActiviteDocument,
@@ -27,16 +28,17 @@ import { Pool } from 'pg'
 import { canDeleteActiviteDocument, canEditActivite, canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 import { User, UserSuper, isSuper, utilisateurIdValidator } from 'camino-common/src/roles.js'
 import { z } from 'zod'
-import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
-import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
-import { titreIdValidator } from 'camino-common/src/titres.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { titreTypeIdObjectValidator, administrationsLocalesValidator, entrepriseIdObjectValidator } from './titres.queries.js'
 
 export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreActivite, { activiteId }, pool, entrepriseIdObjectValidator)
@@ -105,16 +107,20 @@ export const getActiviteById = async (
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
 ) => {
+
+
+  const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
+
+  if( !canRead){
+    return null
+  }
+
   const activite = await dbQueryAndValidate(getActiviteByIdQuery, { activiteId }, pool, dbActiviteValidator)
   if (activite.length === 0) {
     throw new Error(`Pas d'activité trouvée pour l'id '${activiteId}'`)
   }
 
-  const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
-
-  const suppression: boolean = isSuper(user) && !!activite[0].suppression
-
-  return canRead ? { ...activite[0], suppression } : null
+  return { ...activite[0], suppression: canDeleteActivite(activite[0], user) }
 }
 
 const getActiviteByIdQuery = sql<Redefine<IGetActiviteByIdQueryQuery, { activiteId: ActiviteIdOrSlug }, DbActivite>>`
@@ -131,8 +137,42 @@ where
 LIMIT 1
 `
 
+const canDeleteActivite = (activite: DbActivite, user: User): boolean => {
+  return  isSuper(user) && activite.suppression
+}
+export const getActivitesByTitreId = async (
+  titreId: TitreId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
+) => {
+  const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
+
+  if( !canRead){
+    return null
+  }
+
+  const activites = await dbQueryAndValidate(getActivitesByTitreIdQuery, { titreId }, pool, dbActiviteValidator)
+
+  return activites.map(activite => ({...activite, suppression: canDeleteActivite(activite, user)}))
+}
+
+const getActivitesByTitreIdQuery = sql<Redefine<IGetActivitesByTitreIdQueryQuery, { titreId: TitreId }, DbActivite>>`
+select
+    ta.*,
+    t.slug as titre_slug,
+    t.nom as titre_nom
+from
+    titres_activites ta
+    join titres t on t.id = ta.titre_id
+where
+    t.id = $titreId!
+`
+
 export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
-  const admins = await dbQueryAndValidate(getAdministrationsLocalesByActiviteId, { activiteId }, pool, administrationsLocalesByActiviteIdValidator)
+  const admins = await dbQueryAndValidate(getAdministrationsLocalesByActiviteId, { activiteId }, pool, administrationsLocalesValidator)
   if (admins.length > 1) {
     throw new Error(`Trop d'administrations locales trouvées pour l'activité ${activiteId}`)
   }
@@ -154,9 +194,7 @@ export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, p
   )
 }
 
-const administrationsLocalesByActiviteIdValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
-
-const getAdministrationsLocalesByActiviteId = sql<Redefine<IGetAdministrationsLocalesByActiviteIdQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof administrationsLocalesByActiviteIdValidator>>>`
+const getAdministrationsLocalesByActiviteId = sql<Redefine<IGetAdministrationsLocalesByActiviteIdQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof administrationsLocalesValidator>>>`
 select
     te.administrations_locales
 from
@@ -168,7 +206,6 @@ where
     or ta.slug = $ activiteId !
 `
 
-const titreTypeIdObjectValidator = z.object({ titre_type_id: titreTypeIdValidator })
 const getTitreTypeIdByActiviteId = sql<Redefine<IGetTitreTypeIdByActiviteIdQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof titreTypeIdObjectValidator>>>`
 select
     t.type_id as titre_type_id
@@ -180,7 +217,6 @@ where
     or ta.slug = $ activiteId !
 `
 
-const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
 const getTitulairesAmodiatairesTitreActivite = sql<Redefine<IGetTitulairesAmodiatairesTitreActiviteQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof entrepriseIdObjectValidator>>>`
 select distinct
     e.id
