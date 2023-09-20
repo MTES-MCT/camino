@@ -42,6 +42,7 @@ const demarches = async (
     ordre,
     colonne,
     typesIds,
+    travauxTypesIds,
     statutsIds,
     etapesInclues,
     etapesExclues,
@@ -60,6 +61,7 @@ const demarches = async (
     ordre?: 'asc' | 'desc' | null
     colonne?: ITitreDemarcheColonneId | null
     typesIds?: string[] | null
+    travauxTypesIds?: string[] | null
     statutsIds?: string[] | null
     etapesInclues?: ITitreEtapeFiltre[] | null
     etapesExclues?: ITitreEtapeFiltre[] | null
@@ -94,7 +96,7 @@ const demarches = async (
           page,
           ordre,
           colonne,
-          typesIds,
+          typesIds: [...(typesIds ?? []), ...(travauxTypesIds ?? [])],
           statutsIds,
           etapesInclues,
           etapesExclues,
@@ -113,7 +115,7 @@ const demarches = async (
       ),
       titresDemarchesCount(
         {
-          typesIds,
+          typesIds: [...(typesIds ?? []), ...(travauxTypesIds ?? [])],
           statutsIds,
           etapesInclues,
           etapesExclues,

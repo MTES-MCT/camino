@@ -69,6 +69,7 @@ type Query {
     colonne: String
     ordre: String
     typesIds: [ID]
+    travauxTypesIds: [ID]
     statutsIds: [ID]
     etapesInclues: [InputEtapeFiltre]
     etapesExclues: [InputEtapeFiltre]

@@ -109,6 +109,7 @@ export const demarcheApiClient: DemarcheApiClient = {
         $etapesExclues: [InputEtapeFiltre!]
         $domainesIds: [ID!]
         $demarchesTypesIds: [ID!]
+        $travauxTypesIds: [ID!]
         $demarchesStatutsIds: [ID!]
         $titresIds: [String]
         $entreprisesIds: [String]
@@ -123,6 +124,7 @@ export const demarcheApiClient: DemarcheApiClient = {
           colonne: $colonne
           ordre: $ordre
           typesIds: $demarchesTypesIds
+          travauxTypesIds: $travauxTypesIds
           statutsIds: $demarchesStatutsIds
           etapesInclues: $etapesInclues
           etapesExclues: $etapesExclues
