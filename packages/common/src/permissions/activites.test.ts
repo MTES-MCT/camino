@@ -75,7 +75,7 @@ test.each<[User, boolean]>([
 })
 
 describe('canEditActivite', () => {
-  test("l'ONF, le BRGM et la préfecture de Guyane ne peuvent pas éditer (ni voir) les activités", async () => {
+  test("l'ONF, le BRGM ne peuvent pas éditer (ni voir) les activités", async () => {
     expect(
       await canEditActivite(
         { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] },
@@ -95,7 +95,9 @@ describe('canEditActivite', () => {
         ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
       )
     ).toBe(false)
+  })
 
+  test('La préfecture de Guyane peut éditer les activités', async () => {
     expect(
       await canEditActivite(
         { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - GUYANE'] },
@@ -104,7 +106,7 @@ describe('canEditActivite', () => {
         () => Promise.resolve([]),
         ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
       )
-    ).toBe(false)
+    ).toBe(true)
   })
 })
 

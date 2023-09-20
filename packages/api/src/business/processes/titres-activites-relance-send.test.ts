@@ -22,8 +22,6 @@ console.info = vi.fn()
 
 describe('relance les opérateurs des activités qui vont se fermer automatiquement', () => {
   test('envoie un email aux opérateurs', async () => {
-    const delaiMois = 3
-
     const date = '2022-01-01'
 
     const email = 'toto.huhu@foo.com'
@@ -31,7 +29,7 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
     titresActivitesGetMock.mockResolvedValue([
       {
         date,
-        type: { delaiMois },
+        typeId: 'gra',
         titre: {
           titulaires: [{ utilisateurs: [{ email: 'toto.huhu@foo.com' }] }],
         },
@@ -47,7 +45,7 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
     titresActivitesGetMock.mockResolvedValue([
       {
         date: '1000-01-01',
-        type: { delaiMois: 3 },
+        typeId: 'gra',
       },
     ] as TitresActivites[])
     const titresActivites = await titresActivitesRelanceSend()

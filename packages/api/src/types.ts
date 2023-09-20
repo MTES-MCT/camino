@@ -356,7 +356,6 @@ interface ITitreActivite {
   titre?: ITitre | null
   date: CaminoDate
   typeId: ActivitesTypesId
-  type?: IActiviteType | null
   activiteStatutId: ActivitesStatutId
   periodeId: number
   annee: number

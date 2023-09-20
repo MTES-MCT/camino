@@ -1,5 +1,6 @@
 import { ITitreActivite } from '../../types.js'
 import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 import { dateAddMonths } from 'camino-common/src/date.js'
 
 /**
@@ -13,7 +14,7 @@ export const titreActiviteStatutIdFind = (titreActivite: ITitreActivite, aujourd
   // si l'activité a un statut différent de "déposé" ou "fermé"
 
   if (![ACTIVITES_STATUTS_IDS.DEPOSE, ACTIVITES_STATUTS_IDS.CLOTURE].includes(titreActivite.activiteStatutId)) {
-    const dateDelai = dateAddMonths(titreActivite.date, titreActivite.type!.delaiMois)
+    const dateDelai = dateAddMonths(titreActivite.date, ActivitesTypes[titreActivite.typeId].delaiMois)
 
     // si le délai de remplissage est dépassé
     // passe le statut de l'activité à "fermé"

@@ -9,6 +9,7 @@ import { dateFormat } from 'camino-common/src/date.js'
 import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 import { getElementValeurs, Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 
 const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionElement>, contenu: IContenu) =>
   contenu[sectionId] && ((contenu[sectionId][element.id] as IContenuValeur) || (contenu[sectionId][element.id] as IContenuValeur) === 0 || (contenu[sectionId][element.id] as IContenuValeur) === false)
@@ -89,8 +90,11 @@ ${body}
 `
 }
 
-const titreActiviteEmailTitleFormat = (activite: ITitreActivite, titreNom: string) =>
-  `${titreNom} | ${activite.type!.nom}, ${getPeriode(activite.type?.frequenceId, activite.periodeId)} ${activite.annee}`
+const titreActiviteEmailTitleFormat = (activite: ITitreActivite, titreNom: string): string => {
+  const activiteType = ActivitesTypes[activite.typeId]
+
+  return `${titreNom} | ${activiteType.nom}, ${getPeriode(activiteType.frequenceId, activite.periodeId)} ${activite.annee}`
+}
 
 const titreActiviteUtilisateursEmailsGet = (utilisateurs: IUtilisateur[] | undefined | null): string[] => {
   return utilisateurs?.filter(u => !!u.email).map(u => u.email!) || []

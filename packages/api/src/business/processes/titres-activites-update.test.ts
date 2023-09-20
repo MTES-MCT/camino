@@ -7,10 +7,11 @@ import { titresActivitesUpsert } from '../../database/queries/titres-activites.j
 import { titresGet } from '../../database/queries/titres.js'
 import { titreActivitesBuild } from '../rules/titre-activites-build.js'
 
-import { titresToutesActivites, titresSansActivite } from './__mocks__/titres-activites-update-titres.js'
 import { emailsSend, emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
+import { newTitreId } from '../../database/models/_format/id-create.js'
+import Titres from '../../database/models/titres.js'
 
 vi.mock('../../database/queries/titres', () => ({
   titresGet: vi.fn(),
@@ -42,6 +43,18 @@ vi.mock('../../tools/api-mailjet/emails', () => ({
   emailsWithTemplateSend: vi.fn().mockImplementation(a => a),
 }))
 
+const titresToutesActivites = [
+  {
+    id: newTitreId('h-cx-courdemanges-1988'),
+    activites: [
+      { annee: 2018, periodeId: 1 },
+      { annee: 2018, periodeId: 2 },
+      { annee: 2018, periodeId: 3 },
+      { annee: 2018, periodeId: 4 },
+    ],
+  },
+] as Titres[]
+
 const titresGetMock = vi.mocked(titresGet, true)
 const titreActiviteTypeCheckMock = vi.mocked(titreActiviteTypeCheck, true)
 const anneesBuildMock = vi.mocked(anneesBuild, true)
@@ -54,6 +67,14 @@ afterEach(() => {
   vi.resetAllMocks()
 })
 describe("activités d'un titre", () => {
+  const titresSansActivite = [
+    {
+      id: newTitreId('h-cx-courdemanges-1988'),
+      activites: [],
+      titulaires: [{ utilisateurs: [{ email: 'email' }] }],
+    },
+  ] as unknown as Titres[]
+
   test('met à jour un titre sans activité', async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)
     titreActiviteTypeCheckMock.mockReturnValue(true)
@@ -62,9 +83,9 @@ describe("activités d'un titre", () => {
 
     const titresActivitesNew = await titresActivitesUpdate()
 
-    expect(titresActivitesNew.length).toEqual(1)
+    expect(titresActivitesNew.length).toEqual(8)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(titresSansActivite.length)
+    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
     expect(titresActivitesUpsert).toHaveBeenCalled()
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(emailsWithTemplateSendMock).toHaveBeenCalledWith(['email'], EmailTemplateId.ACTIVITES_NOUVELLES, expect.any(Object))
@@ -80,7 +101,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(0)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(1)
+    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
     expect(emailsSendMock).not.toHaveBeenCalled()
@@ -95,7 +116,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(0)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(1)
+    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).not.toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
   })

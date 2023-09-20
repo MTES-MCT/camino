@@ -9,10 +9,10 @@ import { userSuper } from '../../database/user-super.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 
-export const titresActivitesUpdate = async (titresIds?: string[]) => {
+export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: CaminoDate = getCurrent()) => {
   console.info()
   console.info('activités des titres…')
 
@@ -32,8 +32,6 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
   )
 
   const activitesTypes = sortedActivitesTypes
-
-  const aujourdhui = getCurrent()
 
   const titresActivitesCreated = activitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
     const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
