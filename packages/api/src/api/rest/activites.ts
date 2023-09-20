@@ -14,7 +14,7 @@ import {
   titreTypeIdByActiviteId,
   updateActiviteQuery,
   getActivitesByTitreId as getActivitesByTitreIdQuery,
-  DbActivite
+  DbActivite,
 } from './activites.queries.js'
 import { NewDownload } from './fichiers.js'
 import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
@@ -126,40 +126,47 @@ export const updateActivite =
     }
   }
 
-  const formatActivite = async (dbActivite: DbActivite, pool: Pool, user: User, titreTypeId: SimplePromiseFn<TitreTypeId>,    administrationsLocales: SimplePromiseFn<AdministrationId[]>,    entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>): Promise<Activite> => {
-    const sectionsWithValue: SectionWithValue[] = getSectionsWithValue(dbActivite.sections, dbActivite.contenu)
+const formatActivite = async (
+  dbActivite: DbActivite,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  administrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
+): Promise<Activite> => {
+  const sectionsWithValue: SectionWithValue[] = getSectionsWithValue(dbActivite.sections, dbActivite.contenu)
 
-          const activiteDocuments = await getActiviteDocumentsByActiviteId(dbActivite.id, pool)
-          const deposable = await isActiviteDeposable(
-            user,
-            titreTypeId,
-            administrationsLocales,
-            entreprisesTitulairesOuAmodiataires,
-            { ...dbActivite, sections_with_value: sectionsWithValue },
-            activiteDocuments
-          )
-          const modification = await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, dbActivite.activite_statut_id)
+  const activiteDocuments = await getActiviteDocumentsByActiviteId(dbActivite.id, pool)
+  const deposable = await isActiviteDeposable(
+    user,
+    titreTypeId,
+    administrationsLocales,
+    entreprisesTitulairesOuAmodiataires,
+    { ...dbActivite, sections_with_value: sectionsWithValue },
+    activiteDocuments
+  )
+  const modification = await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, dbActivite.activite_statut_id)
 
-          return {
-            id: dbActivite.id,
-            slug: dbActivite.slug,
-            activite_statut_id: dbActivite.activite_statut_id,
-            type_id: dbActivite.type_id,
-            annee: dbActivite.annee,
-            date_saisie: dbActivite.date_saisie,
-            date: dbActivite.date,
-            periode_id: dbActivite.periode_id,
-            suppression: dbActivite.suppression,
-            deposable,
-            modification,
-            sections_with_value: sectionsWithValue,
-            titre: {
-              nom: dbActivite.titre_nom,
-              slug: dbActivite.titre_slug,
-            },
-            activite_documents: activiteDocuments,
-          }
+  return {
+    id: dbActivite.id,
+    slug: dbActivite.slug,
+    activite_statut_id: dbActivite.activite_statut_id,
+    type_id: dbActivite.type_id,
+    annee: dbActivite.annee,
+    date_saisie: dbActivite.date_saisie,
+    date: dbActivite.date,
+    periode_id: dbActivite.periode_id,
+    suppression: dbActivite.suppression,
+    deposable,
+    modification,
+    sections_with_value: sectionsWithValue,
+    titre: {
+      nom: dbActivite.titre_nom,
+      slug: dbActivite.titre_slug,
+    },
+    activite_documents: activiteDocuments,
   }
+}
 export const getActivite =
   (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<Activite>): Promise<void> => {
@@ -189,7 +196,7 @@ export const getActivite =
     }
   }
 
-  export const getActivitesByTitreId =
+export const getActivitesByTitreId =
   (pool: Pool) =>
   async (req: CaminoRequest, res: CustomResponse<ActivitesByTitre>): Promise<void> => {
     const titreIdParsed = titreIdValidator.safeParse(req.params.titreId)
@@ -208,19 +215,18 @@ export const getActivite =
         if (result !== null) {
           const activites: ActivitesByTitre = []
           for (const activite of result) {
-            
-            const activiteByAnnee = activites.find(({annee}) => annee === activite.annee)
+            const activiteByAnnee = activites.find(({ annee }) => annee === activite.annee)
 
             const activiteFormated = await formatActivite(activite, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
-            if( isNullOrUndefined(activiteByAnnee)){
-              activites.push({annee: activite.annee, activites: [activiteFormated]})
-            }else{
+            if (isNullOrUndefined(activiteByAnnee)) {
+              activites.push({ annee: activite.annee, activites: [activiteFormated] })
+            } else {
               activiteByAnnee.activites.push(activiteFormated)
             }
           }
-          
-          res.json(activites.sort((a, b) => a.annee.localeCompare(b.annee)))
+
+          res.json(activites.sort((a, b) => b.annee.localeCompare(a.annee)))
         } else {
           res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
         }

@@ -102,18 +102,4 @@ const fragmentTitres = gql`
   ${fragmentTitresEntreprises}
 `
 
-const fragmentDemarchesTitre = gql`
-  fragment demarchesTitre on Titre {
-    id
-    slug
-    nom
-    typeId
-    titreStatutId
-    references {
-      referenceTypeId
-      nom
-    }
-  }
-`
-
 export { fragmentTitre, fragmentTitres }

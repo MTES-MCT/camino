@@ -1,3 +1,4 @@
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { titre, titreCreer } from '../api/titres'
 
 import router from '../router'
@@ -29,7 +30,7 @@ const getters = {
     const tabs = [{ id: 'demarches', nom: 'Droits miniers' }]
 
     if (state.element) {
-      if (state.element.activites?.length) {
+      if (canReadActivites(rootState.user.element)) {
         tabs.push({ id: 'activites', nom: 'Activités' })
       }
 
