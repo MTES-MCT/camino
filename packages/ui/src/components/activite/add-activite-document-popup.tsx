@@ -1,4 +1,3 @@
-import { z } from 'zod'
 import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
 import { computed, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
@@ -55,7 +54,7 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
 
       <InputDate
         id="add-activite-document-date"
-        legend={{ main: 'Date de délivrance du document' }}
+        legend={{ main: 'Date du document' }}
         dateChanged={date => {
           documentDate.value = date
         }}
@@ -70,7 +69,7 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
           />
         </div>
         <div class="fr-fieldset__element">
-          <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} />
+          <DsfrInput legend={{ main: 'Description' }} initialValue={documentDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>

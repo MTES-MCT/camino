@@ -17,11 +17,7 @@ import { ActiviteApiClient } from './activite-api-client'
 import { ActiviteRemovePopup } from './remove-popup'
 
 // FIXME
-// - le bouton déposer dans la preview est moche sur http://localhost:4180/activites/m-cx-numero-82-repentir-1909-gra-2019-01/edition
-// - le tableau des documents ne prend pas la même largeur
-// - Est-ce qu’on fait le truc de mettre déposer en enabled par défaut et au click on dit où est le pb si il existe ?
 // - Est-ce que c’est normal qu’on a des statuts « Déposé (incomplet) » http://localhost:4180/titres/m-cx-numero-82-repentir-1909
-// - Des fois le style des 2 boutons est le même http://localhost:4180/activites/m-ax-1-2-affluent-mana-aval-2022-grp-2022-02/edition
 
 interface Props {
   activite: Activite

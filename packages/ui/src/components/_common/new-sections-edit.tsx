@@ -81,7 +81,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
     return element.id === 'volumeGranulatsExtrait' && element.value && isNumberElement(element) ? `Soit l’équivalent de ${numberFormat((element.value ?? 0) * 1.5)} tonnes` : ''
   })
 
-  const required = !(props.element.optionnel ?? true)
+  const required = !(props.element.optionnel ?? false)
   const element = props.element
   switch (element.type) {
     case 'integer':

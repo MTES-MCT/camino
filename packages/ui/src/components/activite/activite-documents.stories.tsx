@@ -11,6 +11,7 @@ import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activites
 const meta: Meta = {
   title: 'Components/Activite/ActiviteDocumentsEdit',
   component: ActiviteDocumentsEdit,
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

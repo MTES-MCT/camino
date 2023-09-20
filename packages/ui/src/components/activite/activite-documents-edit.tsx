@@ -24,6 +24,8 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
 
   const documents = ref<(ActiviteDocument | TempActiviteDocument)[]>([])
 
+  const isNotMandatory = isActiviteDocumentsComplete([], props.activiteTypeId).valid
+
   watch(
     () => props.activiteDocuments,
     () => {
@@ -40,50 +42,46 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
   notifyChange()
   return () => (
     <>
-      <div class="dsfr">
-        <div class="fr-container">
-          <div class="fr-table">
-            <table style={{ display: 'table' }}>
-              <caption>Documents de l'activité</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Nom</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Description</th>
-                  <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-                    <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {documents.value.map((item, index) => (
-                  <tr>
-                    <td>
-                      {isTempActiviteDocument(item) ? (
-                        <>{DocumentsTypes[item.activite_document_type_id].nom}</>
-                      ) : (
-                        <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
-                      )}
-                    </td>
-                    <td>{dateFormat(item.date)}</td>
-                    <td>{item.description}</td>
-                    <td>
-                      <DsfrButtonIcon
-                        icon="fr-icon-delete-bin-line"
-                        buttonType="secondary"
-                        title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
-                        onClick={() => {
-                          documents.value.splice(index, 1)
-                          notifyChange()
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="fr-table">
+        <table style={{ display: 'table' }}>
+          <caption>Documents de l'activité {isNotMandatory ? '' : '*'}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Nom</th>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
+                <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {documents.value.map((item, index) => (
+              <tr>
+                <td>
+                  {isTempActiviteDocument(item) ? (
+                    <>{DocumentsTypes[item.activite_document_type_id].nom}</>
+                  ) : (
+                    <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
+                  )}
+                </td>
+                <td>{dateFormat(item.date)}</td>
+                <td>{item.description}</td>
+                <td>
+                  <DsfrButtonIcon
+                    icon="fr-icon-delete-bin-line"
+                    buttonType="secondary"
+                    title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
+                    onClick={() => {
+                      documents.value.splice(index, 1)
+                      notifyChange()
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       {addPopup.value ? (
         <AddActiviteDocumentPopup

@@ -90,7 +90,7 @@ export const Default: StoryFn = () => (
   />
 )
 
-export const TousLesElementsVides: StoryFn = () => (
+export const TousLesElementsVidesOptionnels: StoryFn = () => (
   <SectionsEdit
     completeUpdate={(complete, newContent) => {
       completeUpdateAction(complete, newContent)
@@ -104,6 +104,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'integer',
             description: 'Description pour integer',
             type: 'integer',
+            optionnel: true,
             value: null,
           },
           {
@@ -111,6 +112,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'number',
             description: 'Description pour number',
             type: 'number',
+            optionnel: true,
             value: null,
           },
           {
@@ -118,6 +120,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'date',
             description: 'Description pour date',
             type: 'date',
+            optionnel: true,
             value: null,
           },
           {
@@ -125,6 +128,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'textarea',
             description: 'Description pour textarea',
             type: 'textarea',
+            optionnel: true,
             value: null,
           },
           {
@@ -132,6 +136,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'text',
             description: 'Description pour text',
             type: 'text',
+            optionnel: true,
             value: null,
           },
           {
@@ -164,6 +169,7 @@ export const TousLesElementsVides: StoryFn = () => (
             nom: 'select',
             description: 'Description pour select',
             type: 'select',
+            optionnel: true,
             options: UNITES as NonEmptyArray<Unite>,
             value: null,
           },
@@ -187,7 +193,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'integer',
             description: 'Description pour integer',
             type: 'integer',
-            optionnel: false,
             value: null,
           },
           {
@@ -195,7 +200,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'number',
             description: 'Description pour number',
             type: 'number',
-            optionnel: false,
             value: null,
           },
           {
@@ -203,7 +207,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'date',
             description: 'Description pour date',
             type: 'date',
-            optionnel: false,
             value: null,
           },
           {
@@ -211,7 +214,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'textarea',
             description: 'Description pour textarea',
             type: 'textarea',
-            optionnel: false,
             value: null,
           },
           {
@@ -219,7 +221,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'text',
             description: 'Description pour text',
             type: 'text',
-            optionnel: false,
             value: null,
           },
           {
@@ -227,7 +228,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'radio',
             description: 'Description pour radio',
             type: 'radio',
-            optionnel: false,
             value: null,
           },
           {
@@ -235,7 +235,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'checkbox',
             description: 'Description pour checkbox',
             type: 'checkbox',
-            optionnel: false,
             value: null,
           },
           {
@@ -247,7 +246,6 @@ export const TousLesElementsRequis: StoryFn = () => (
               { id: '1', nom: 'checkbox 1' },
               { id: '2', nom: 'checkbox2' },
             ],
-            optionnel: false,
             value: [],
           },
           {
@@ -256,7 +254,6 @@ export const TousLesElementsRequis: StoryFn = () => (
             description: 'Description pour select',
             type: 'select',
             options: UNITES as NonEmptyArray<Unite>,
-            optionnel: false,
             value: null,
           },
         ],

@@ -1,4 +1,3 @@
-import { dateFormat } from '@/utils'
 import { ActiviteDocumentsEdit } from './activite/activite-documents-edit'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -11,7 +10,7 @@ import { ActiviteDeposePopup } from './activite/depose-popup'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { ApiClient, apiClient } from '../api/api-client'
 import { SectionsEdit } from './_common/new-sections-edit'
-import { DsfrLink } from './_ui/dsfr-button'
+import { DsfrButton, DsfrLink } from './_ui/dsfr-button'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
 
@@ -129,17 +128,12 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
                     title={`Retourner vers le titre ${activite.titre.nom}`}
                   />
                 </p>
-                <p>
-                  {dateFormat(activite.date)} |{' '}
-                  <span class="cap-first">
-                    {activite.periode_id && ActivitesTypes[activite.type_id].frequenceId ? <span>{getPeriode(ActivitesTypes[activite.type_id].frequenceId, activite.periode_id)} </span> : null}{' '}
-                    {activite.annee}
-                  </span>
-                </p>
 
                 <div class="flex">
                   <h2 class="mb-s">
-                    <span class="cap-first">{ActivitesTypes[activite.type_id].nom}</span>
+                    <span class="cap-first">{ActivitesTypes[activite.type_id].nom}</span> (
+                    {activite.periode_id && ActivitesTypes[activite.type_id].frequenceId ? <span>{getPeriode(ActivitesTypes[activite.type_id].frequenceId, activite.periode_id)} </span> : null}{' '}
+                    {activite.annee})
                   </h2>
                 </div>
 
@@ -166,18 +160,15 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 
                 <ActiviteDocumentsEdit apiClient={props.apiClient} activiteDocuments={activite.activite_documents} activiteTypeId={activite.type_id} completeUpdate={activiteDocumentsCompleteUpdate} />
 
-                <div class="tablet-blobs mb">
-                  <div class="tablet-blob-1-3" />
-                  <div class="tablet-blob-1-3">
-                    <button class="btn btn-secondary" onClick={() => save()}>
-                      Enregistrer
-                    </button>
-                  </div>
-                  <div class="tablet-blob-1-3">
-                    <button ref="save-button" class="btn btn-primary" disabled={!sectionsComplete.value.complete || !documentsComplete.value.complete} onClick={deposePopupOpen}>
-                      Enregistrer et déposer
-                    </button>
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }} class="fr-pb-2w">
+                  <DsfrButton title="Enregistrer" buttonType="secondary" buttonSize="lg" onClick={save} class="fr-mr-2w" />
+                  <DsfrButton
+                    title="Enregistrer et déposer"
+                    buttonType="primary"
+                    buttonSize="lg"
+                    disabled={!sectionsComplete.value.complete || !documentsComplete.value.complete}
+                    onClick={deposePopupOpen}
+                  />
                 </div>
               </div>
               {deposePopupVisible.value ? <ActiviteDeposePopup close={closeDeposePopup} activite={activite} apiClient={props.apiClient} /> : null}
