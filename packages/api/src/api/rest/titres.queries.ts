@@ -2,7 +2,14 @@
 import { sql } from '@pgtyped/runtime'
 import { TitreGet, TitreId, titreGetValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetAdministrationsLocalesByTitreIdDbQuery, IGetLastJournalInternalQuery, IGetTitreCommunesInternalQuery, IGetTitreInternalQuery, IGetTitreTypeIdByTitreIdDbQuery, IGetTitulairesAmodiatairesByTitreIdDbQuery } from './titres.queries.types.js'
+import {
+  IGetAdministrationsLocalesByTitreIdDbQuery,
+  IGetLastJournalInternalQuery,
+  IGetTitreCommunesInternalQuery,
+  IGetTitreInternalQuery,
+  IGetTitreTypeIdByTitreIdDbQuery,
+  IGetTitulairesAmodiatairesByTitreIdDbQuery,
+} from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
 import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
@@ -62,34 +69,35 @@ where
 `
 
 export const getTitreTypeIdByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-    const typeIds = await dbQueryAndValidate(getTitreTypeIdByTitreIdDb, { titreId }, pool, titreTypeIdObjectValidator)
-    if (typeIds.length === 0) {
-      throw new Error(`Pas de type de titre trouvé pour le titre '${titreId}'`)
-    }
-  
-    return typeIds[0].titre_type_id
+  const typeIds = await dbQueryAndValidate(getTitreTypeIdByTitreIdDb, { titreId }, pool, titreTypeIdObjectValidator)
+  if (typeIds.length === 0) {
+    throw new Error(`Pas de type de titre trouvé pour le titre '${titreId}'`)
+  }
+
+  return typeIds[0].titre_type_id
 }
 
 export const titreTypeIdObjectValidator = z.object({ titre_type_id: titreTypeIdValidator })
 const getTitreTypeIdByTitreIdDb = sql<Redefine<IGetTitreTypeIdByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof titreTypeIdObjectValidator>>>`
 select
     t.type_id as titre_type_id
-from titres t
-where 
-t.id = $ titreId !
+from
+    titres t
+where
+    t.id = $ titreId !
 `
 
 export const getAdministrationsLocalesByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-    const admins = await dbQueryAndValidate(getAdministrationsLocalesByTitreIdDb, { titreId }, pool, administrationsLocalesValidator)
-    if (admins.length > 1) {
-      throw new Error(`Trop d'administrations locales trouvées pour l'activité ${titreId}`)
-    }
-    if (admins.length === 0) {
-      return []
-    }
-  
-    return admins[0].administrations_locales
+  const admins = await dbQueryAndValidate(getAdministrationsLocalesByTitreIdDb, { titreId }, pool, administrationsLocalesValidator)
+  if (admins.length > 1) {
+    throw new Error(`Trop d'administrations locales trouvées pour l'activité ${titreId}`)
   }
+  if (admins.length === 0) {
+    return []
+  }
+
+  return admins[0].administrations_locales
+}
 
 export const administrationsLocalesValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
 
@@ -97,17 +105,17 @@ const getAdministrationsLocalesByTitreIdDb = sql<Redefine<IGetAdministrationsLoc
 select
     te.administrations_locales
 from
-    titres t 
+    titres t
     left join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
-where 
-t.id = $ titreId !
+where
+    t.id = $ titreId !
 `
 
 export const getTitulairesAmodiatairesByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-    const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesByTitreIdDb, { titreId }, pool, entrepriseIdObjectValidator)
-  
-    return entreprises.map(({ id }) => id)
-  }
+  const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesByTitreIdDb, { titreId }, pool, entrepriseIdObjectValidator)
+
+  return entreprises.map(({ id }) => id)
+}
 
 export const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
 const getTitulairesAmodiatairesByTitreIdDb = sql<Redefine<IGetTitulairesAmodiatairesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof entrepriseIdObjectValidator>>>`
@@ -118,8 +126,8 @@ from
     titres t
     left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
     left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
-where 
-t.id = $ titreId !
-and (tt.entreprise_id = e.id
-    or tta.entreprise_id = e.id)
+where
+    t.id = $ titreId !
+    and (tt.entreprise_id = e.id
+        or tta.entreprise_id = e.id)
 `

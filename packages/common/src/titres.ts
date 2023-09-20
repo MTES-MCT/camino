@@ -89,6 +89,5 @@ export type TitreLinks = z.infer<typeof titreLinksValidator>
 
 export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
 
-
-export const activitesByTitreValidator = z.array(z.object({annee: caminoAnneeValidator, activites: z.array(activiteValidator)}))
+export const activitesByTitreValidator = z.array(z.object({ annee: caminoAnneeValidator, activites: z.array(activiteValidator) }))
 export type ActivitesByTitre = z.infer<typeof activitesByTitreValidator>

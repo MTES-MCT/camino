@@ -51,7 +51,7 @@ export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], 
         Ajouter un fichier
         <span class="fr-hint-text">Taille maximale : 30 Mo. Formats supportés : {props.accept.join(', ')}.</span>
       </label>
-        {/* @ts-ignore files n'est pas reconnu par le typage... */}
+      {/* @ts-ignore files n'est pas reconnu par le typage... */}
       <input files={inputValue.value} class="fr-upload" type="file" id="file-upload" name="file-upload" accept={props.accept.map(a => `.${a}`).join(',')} onChange={uploadFile} />
     </div>
   )

@@ -121,7 +121,6 @@ insert into entreprises_documents (id, entreprise_document_type_id, date, entrep
     values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description, $ largeobject_id !)
 RETURNING
     id;
-
 `
 
 export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }) =>

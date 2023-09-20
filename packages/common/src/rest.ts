@@ -24,9 +24,7 @@ import {
   titrePtmgValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
-import {
-  sectionWithValueValidator,
-} from './sections.js'
+import { sectionWithValueValidator } from './sections.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'

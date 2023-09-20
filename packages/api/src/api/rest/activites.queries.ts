@@ -12,7 +12,7 @@ import {
   IGetTitulairesAmodiatairesTitreActiviteQuery,
   IInsertActiviteDocumentInternalQuery,
   IUpdateActiviteDbQuery,
-  IGetActivitesByTitreIdQueryQuery
+  IGetActivitesByTitreIdQueryQuery,
 } from './activites.queries.types.js'
 import {
   ActiviteDocument,
@@ -107,11 +107,9 @@ export const getActiviteById = async (
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
 ) => {
-
-
   const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
 
-  if( !canRead){
+  if (!canRead) {
     return null
   }
 
@@ -138,7 +136,7 @@ LIMIT 1
 `
 
 const canDeleteActivite = (activite: DbActivite, user: User): boolean => {
-  return  isSuper(user) && activite.suppression
+  return isSuper(user) && activite.suppression
 }
 export const getActivitesByTitreId = async (
   titreId: TitreId,
@@ -150,13 +148,13 @@ export const getActivitesByTitreId = async (
 ) => {
   const canRead = await canReadTitreActivites(user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
 
-  if( !canRead){
+  if (!canRead) {
     return null
   }
 
   const activites = await dbQueryAndValidate(getActivitesByTitreIdQuery, { titreId }, pool, dbActiviteValidator)
 
-  return activites.map(activite => ({...activite, suppression: canDeleteActivite(activite, user)}))
+  return activites.map(activite => ({ ...activite, suppression: canDeleteActivite(activite, user) }))
 }
 
 const getActivitesByTitreIdQuery = sql<Redefine<IGetActivitesByTitreIdQueryQuery, { titreId: TitreId }, DbActivite>>`
@@ -168,7 +166,7 @@ from
     titres_activites ta
     join titres t on t.id = ta.titre_id
 where
-    t.id = $titreId!
+    t.id = $ titreId !
 `
 
 export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
@@ -293,7 +291,6 @@ insert into activites_documents (id, activite_document_type_id, date, activite_i
     values ($ id !, $ activite_document_type_id !, $ date !, $ activite_id !, $ description !, $ largeobject_id !)
 RETURNING
     id;
-
 `
 
 export const activiteDocumentLargeObjectIdValidator = z.number().brand('ActiviteDocumentLargeObjectId')
