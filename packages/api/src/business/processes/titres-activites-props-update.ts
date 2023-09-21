@@ -18,9 +18,7 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: { etapes: { id: {} } },
-        activites: {
-          type: { id: {} },
-        },
+        activites: { id: {} },
       },
     },
     userSuper

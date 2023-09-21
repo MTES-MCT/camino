@@ -1,49 +1,65 @@
-import Titres from '../../../database/models/titres.js'
-const activiteType = {
-  frequenceId: 'tri',
-}
+import { titreIdValidator } from 'camino-common/src/titres.js'
+import { ITitre } from '../../../types.js'
+import { activiteIdValidator } from 'camino-common/src/activite.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
-const titresActivitesToUpdate = [
+const titreId = titreIdValidator.parse('titre-id')
+export const titresActivitesToUpdate = [
   {
-    id: 'titre-id',
+    id: titreId,
+    nom: 'nom du titre',
+    titreStatutId: 'val',
+    propsTitreEtapesIds: {},
     typeId: 'axm',
-    demarches: [{}],
+    demarches: [],
     activites: [
       {
-        id: 'titre-activite-id-2019-03',
-        date: '2019-10-01',
+        id: activiteIdValidator.parse('titre-activite-id-2019-03'),
+        titreId,
+        sections: [],
+        activiteStatutId: 'abs',
+        date: toCaminoDate('2019-10-01'),
         annee: 2019,
         periodeId: 3,
-        type: activiteType,
+        typeId: 'grp',
         suppression: true,
       },
       {
-        id: 'titre-activite-id-2019-04',
-        date: '2020-01-01',
+        id: activiteIdValidator.parse('titre-activite-id-2019-04'),
+        titreId,
+        sections: [],
+        activiteStatutId: 'abs',
+        date: toCaminoDate('2020-01-01'),
         annee: 2019,
         periodeId: 4,
-        type: activiteType,
+        typeId: 'grp',
       },
       {
-        id: 'titre-activite-id-2020-01',
-        date: '2020-04-01',
+        id: activiteIdValidator.parse('titre-activite-id-2020-01'),
+        titreId,
+        sections: [],
+        activiteStatutId: 'abs',
+        date: toCaminoDate('2020-04-01'),
         annee: 2020,
         periodeId: 1,
-        type: activiteType,
+        typeId: 'grp',
         suppression: true,
       },
       {
-        id: 'titre-activite-id-2020-02',
-        date: '2020-07-01',
+        id: activiteIdValidator.parse('titre-activite-id-2020-02'),
+        titreId,
+        sections: [],
+        activiteStatutId: 'abs',
+        date: toCaminoDate('2020-07-01'),
         annee: 2020,
         periodeId: 2,
-        type: activiteType,
+        typeId: 'grp',
       },
     ],
   },
-] as unknown as Titres[]
+] as ITitre[]
 
-const titresActivitesNotToUpdate = [
+export const titresActivitesNotToUpdate = [
   {
     id: 'titre-id',
     typeId: 'axm',
@@ -62,7 +78,7 @@ const titresActivitesNotToUpdate = [
         date: '2019-10-01',
         annee: 2019,
         periodeId: 3,
-        type: activiteType,
+        typeid: 'grp',
         suppression: true,
       },
     ],
@@ -78,11 +94,9 @@ const titresActivitesNotToUpdate = [
         annee: 2019,
         statutId: 'abs',
         periodeId: 3,
-        type: activiteType,
+        typeid: 'grp',
         suppression: true,
       },
     ],
   },
-] as unknown as Titres[]
-
-export { titresActivitesToUpdate, titresActivitesNotToUpdate }
+] as ITitre[]
