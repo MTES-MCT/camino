@@ -7,9 +7,8 @@
       <ButtonIcon class="btn-border py-s px-m my--xs rnd-xs flex-right" :onClick="fileRemove" title="Supprimer le fichier" icon="delete" />
     </div>
   </div>
-  <div v-else>
+  <div v-else class="dsfr">
     <InputFile class="btn-border small p-s full-x rnd-xs mb-s" :accept="documents" :uploadFile="fileChange" />
-    <p class="h5 italic">30 Mo max.</p>
   </div>
 </template>
 

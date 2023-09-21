@@ -16,9 +16,6 @@ import { ActiviteDeposePopup } from './depose-popup'
 import { ActiviteApiClient } from './activite-api-client'
 import { ActiviteRemovePopup } from './remove-popup'
 
-// FIXME
-// - Est-ce que c’est normal qu’on a des statuts « Déposé (incomplet) » http://localhost:4180/titres/m-cx-numero-82-repentir-1909
-
 interface Props {
   activite: Activite
   initialOpened?: boolean

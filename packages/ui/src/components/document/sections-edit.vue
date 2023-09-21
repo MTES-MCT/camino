@@ -45,9 +45,8 @@
             <ButtonIcon class="btn-border py-s px-m my--xs rnd-r-xs" :onClick="fileDownload" icon="download" title="Télécharger le fichier" />
           </div>
         </div>
-        <div v-else>
+        <div v-else class="dsfr">
           <InputFile class="btn-border small p-s full-x rnd-xs mb-s" :accept="fichiersTypesIds" :uploadFile="fileChange" />
-          <p class="h5 italic">30 Mo max.</p>
         </div>
       </div>
     </div>

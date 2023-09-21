@@ -18,9 +18,6 @@ export const up = async (knex: Knex) => {
 
   await knex.raw('ALTER TABLE documents DROP CONSTRAINT documents_titreactiviteid_foreign')
 
-  await knex.raw('delete from documents where titre_etape_id is null')
-  await knex.raw('ALTER TABLE documents ALTER COLUMN titre_etape_id SET NOT NULL')
-
   await knex.raw('ALTER TABLE documents DROP COLUMN titre_activite_id')
 
   await knex.raw('ALTER TABLE entreprises_documents ALTER COLUMN largeobject_id SET NOT NULL')

@@ -3,7 +3,6 @@
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 1`] = `
 {
   "administration": {
-    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
@@ -23,7 +22,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 2`] = `
 {
   "administration": {
-    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
@@ -43,7 +41,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 3`] = `
 {
   "administration": {
-    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
@@ -63,7 +60,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 4`] = `
 {
   "administration": {
-    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
@@ -83,7 +79,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 5`] = `
 {
   "administration": {
-    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
