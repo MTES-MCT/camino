@@ -1,5 +1,6 @@
 import { getSections, getSectionsWithValue, sectionValidator } from './sections.js'
 import { test, expect, describe } from 'vitest'
+const activitesSectionsProd = require('./activites.sections.json')
 
 test('getSections erreurs', () => {
   expect(() => getSections(undefined, undefined, undefined)).toThrowErrorMatchingInlineSnapshot(
@@ -417,4 +418,9 @@ describe('getSectionsWithValue', () => {
     ]
   `)
   })
+})
+
+// pour regénérer le fichier: `npm run test:generate-sections-data -w packages/api`
+test.each(activitesSectionsProd as any[])("cas réel des sections d'activité N°$id", sections => {
+  sectionValidator.parse(sections)
 })

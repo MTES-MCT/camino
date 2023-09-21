@@ -894,7 +894,7 @@ export type RadioElement = z.infer<typeof radioElementValidator>
 export const checkboxesElementValidator = basicElementValidator.extend({
   type: z.literal('checkboxes'),
   options: z.array(z.object({ id: z.string(), nom: z.string() })),
-  optionnel: z.literal(false).optional(),
+  optionnel: z.boolean().optional(),
 })
 export type CheckboxesElement = z.infer<typeof checkboxesElementValidator>
 
