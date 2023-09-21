@@ -38,6 +38,11 @@ jobs:
           cache: 'npm'
       - name: Install
         run: make install
+      - name: Plop
+        run: |
+          ls packages/api/node_modules
+          echo 'toto'
+          ls node_modules
       - name: Lint
         run: make lint/api
   unit-test:
