@@ -139,7 +139,7 @@ describe('état du titre sélectionné', () => {
     expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }])
   })
 
-  test.only('la tab des travaux est visible si il existe au moins un travaux', () => {
+  test('la tab des travaux est visible si il existe au moins un travaux', () => {
     store.state.user = { ...testBlankUser, role: 'super' }
     store.state.titre.element = {
       demarches: [{ typeId: 'aom' }],
