@@ -167,6 +167,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
       if (isNonEmptyArray(options)) {
         sectionElementEditInput = (
           <DsfrSelect
+            required={required}
             legend={{ main: element.nom ?? '', description: element.description }}
             items={options}
             initialValue={element.value}

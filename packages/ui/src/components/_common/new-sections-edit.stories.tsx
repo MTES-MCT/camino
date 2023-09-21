@@ -253,6 +253,7 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'select',
             description: 'Description pour select',
             type: 'select',
+            optionnel: false,
             options: UNITES as NonEmptyArray<Unite>,
             value: null,
           },
@@ -399,10 +400,10 @@ export const Checkboxes: StoryFn = () => (
         id: 'renseignements',
         elements: [
           {
-            id: 'date',
+            id: 'checkbox',
             nom: 'Une checkbox',
             type: 'checkboxes',
-            description: 'Et quelle belle date',
+            description: 'Et quelle belle checkbox',
             options: [
               { id: '1', nom: 'nom' },
               { id: '2', nom: 'plop' },
