@@ -18,31 +18,34 @@ interface Props {
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
+  const sectionsWithValue = ref<SectionWithValue[]>([])
+
   watch(
     () => props.sectionsWithValue,
     () => {
+      sectionsWithValue.value = [...props.sectionsWithValue]
       props.completeUpdate(sectionsWithValueCompleteValidate(props.sectionsWithValue).length === 0, props.sectionsWithValue)
     },
     { immediate: true }
   )
 
   const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: ElementWithValue) => {
-    const newSection = { ...props.sectionsWithValue[sectionIndex] }
+    const newSection = { ...sectionsWithValue.value[sectionIndex] }
 
     newSection.elements = [...newSection.elements]
     newSection.elements.splice(elementIndex, 1, elementWithValue)
 
-    const newSectionsWithValue: SectionWithValue[] = [...props.sectionsWithValue]
+    const newSectionsWithValue: SectionWithValue[] = [...sectionsWithValue.value]
     newSectionsWithValue.splice(sectionIndex, 1, newSection)
 
     const complete: boolean = sectionsWithValueCompleteValidate(newSectionsWithValue).length === 0
-
+    sectionsWithValue.value = newSectionsWithValue
     props.completeUpdate(complete, newSectionsWithValue)
   }
 
   return () => (
     <div>
-      {props.sectionsWithValue.map((sectionWithValue, sectionIndex) => (
+      {sectionsWithValue.value.map((sectionWithValue, sectionIndex) => (
         <fieldset key={sectionWithValue.id} class="fr-fieldset" aria-labelledby={sectionWithValue.nom ? `${sectionWithValue.id}-legend` : undefined}>
           {sectionWithValue.nom ? (
             <legend class="fr-fieldset__legend" id={`${sectionWithValue.id}-legend`}>
