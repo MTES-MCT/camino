@@ -3,7 +3,6 @@
 # import * from 'utilisateurs.graphql'
 # import * from 'titres.graphql'
 # import * from 'metas.graphql'
-# import * from 'metas-activites.graphql'
 # import * from 'territoires.graphql'
 
 type Administration {

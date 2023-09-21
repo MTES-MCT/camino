@@ -69,6 +69,9 @@ import TitreDemarches from './titre/demarches.vue'
 import { TitreActivitesList } from './activites/titre-activites-list'
 import { defineAsyncComponent } from 'vue'
 import { apiClient } from '@/api/api-client'
+import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
+import { isSuper } from 'camino-common/src/roles'
+import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 
 export default {
   components: {
@@ -91,6 +94,8 @@ export default {
     return {
       geoTabId: 'carte',
       show: false,
+      tabs: [],
+      tabId: 'demarches',
     }
   },
 
@@ -105,14 +110,6 @@ export default {
 
     loaded() {
       return !!this.titre
-    },
-
-    tabs() {
-      return this.$store.getters['titre/tabs']
-    },
-
-    tabId() {
-      return this.$store.getters['titre/tabId']
     },
 
     demarches() {
@@ -130,8 +127,6 @@ export default {
         this.get()
       }
     },
-
-    user: 'get',
   },
 
   async created() {
@@ -160,6 +155,29 @@ export default {
     async get() {
       const titreId = this.$route.params.id
       await this.$store.dispatch('titre/get', titreId)
+
+      this.tabs = [{ id: 'demarches', nom: 'Droits miniers' }]
+
+      if (this.titre) {
+        if (
+          await canReadTitreActivites(
+            this.user,
+            () => Promise.resolve(this.titre.typeId),
+            () => Promise.resolve(this.titre.administrations),
+            () => Promise.resolve([...this.titre.titulaires.map(({ id }) => id), ...this.titre.amodiataires.map(({ id }) => id)])
+          )
+        ) {
+          this.tabs.push({ id: 'activites', nom: 'Activités' })
+        }
+
+        if (this.travaux.length || canCreateTravaux(this.user, this.titre.typeId, this.titre.administrations)) {
+          this.tabs.push({ id: 'travaux', nom: 'Travaux' })
+        }
+      }
+
+      if (isSuper(this.user)) {
+        this.tabs.push({ id: 'journaux', nom: 'Journaux' })
+      }
     },
 
     tabUpdate(tabId) {
@@ -169,7 +187,7 @@ export default {
         nom: this.$store.state.titre.element.id,
       })
 
-      this.$store.commit('titre/openTab', tabId)
+      this.tabId = tabId
     },
 
     geoTabUpdate(tabId) {

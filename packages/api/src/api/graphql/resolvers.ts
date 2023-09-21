@@ -40,7 +40,7 @@ import { substances } from './resolvers/substances.js'
 
 import { entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
 import { administration, administrations, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer, administrationActivitesTypesEmails } from './resolvers/administrations.js'
-import { activites, activiteSupprimer, activiteDeposer } from './resolvers/titres-activites.js'
+import { activites, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
@@ -109,7 +109,6 @@ export default {
   documentCreer,
   documentModifier,
   documentSupprimer,
-  activiteSupprimer,
   activiteDeposer,
   newsletterInscrire,
   entreprisesTitresCreation,

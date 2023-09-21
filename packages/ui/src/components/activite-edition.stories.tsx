@@ -2,11 +2,9 @@ import { vueRouter } from 'storybook-vue3-router'
 import { PureActiviteEdition, Props } from './activite-edition'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { ApiClient } from '@/api/api-client'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
-import { Activite, activiteIdValidator, activiteSlugValidator, TempActiviteDocument } from 'camino-common/src/activite'
+import { Activite, activiteIdOrSlugValidator, activiteIdValidator, activiteSlugValidator } from 'camino-common/src/activite'
 
 const meta: Meta = {
   title: 'Components/Activite/Edition',
@@ -19,7 +17,6 @@ export default meta
 const getActiviteAction = action('getActivite')
 const uploadTempDocumentAction = action('uploadTempDocument')
 const deposerActiviteAction = action('deposerActivite')
-const onSaveAction = action('onSave')
 
 const activite: Activite = {
   id: activiteIdValidator.parse('activiteId'),
@@ -180,22 +177,11 @@ const apiClient: Props['apiClient'] = {
   },
 }
 
-const onSave = (activiteTypeId: ActivitesTypesId) => {
-  onSaveAction(activiteTypeId)
-}
+const activiteId = activiteIdOrSlugValidator.parse('activiteId')
+export const Loading: StoryFn = () => <PureActiviteEdition apiClient={{ ...apiClient, getActivite: () => new Promise(() => ({})) }} activiteId={activiteId} />
+export const WithError: StoryFn = () => <PureActiviteEdition apiClient={{ ...apiClient, getActivite: () => Promise.reject(new Error('Une erreur est survenue')) }} activiteId={activiteId} />
 
-export const Loading: StoryFn = () => (
-  <PureActiviteEdition apiClient={{ ...apiClient, getActivite: () => new Promise(() => ({})) }} route={{ name: 'activite', params: { activiteId: 'activiteId' } }} onSave={onSave} />
-)
-export const WithError: StoryFn = () => (
-  <PureActiviteEdition
-    apiClient={{ ...apiClient, getActivite: () => Promise.reject(new Error('Une erreur est survenue')) }}
-    route={{ name: 'activite', params: { activiteId: 'activiteId' } }}
-    onSave={onSave}
-  />
-)
-
-export const FullEmpty: StoryFn = () => <PureActiviteEdition apiClient={apiClient} route={{ name: 'activite', params: { activiteId: 'activiteId' } }} onSave={onSave} />
+export const FullEmpty: StoryFn = () => <PureActiviteEdition apiClient={apiClient} activiteId={activiteId} />
 
 export const FullEmptyWithMandatoryDocument: StoryFn = () => (
   <PureActiviteEdition
@@ -205,8 +191,7 @@ export const FullEmptyWithMandatoryDocument: StoryFn = () => (
         return Promise.resolve({ ...activite, type_id: 'wrp' })
       },
     }}
-    route={{ name: 'activite', params: { activiteId: 'activiteId' } }}
-    onSave={onSave}
+    activiteId={activiteId}
   />
 )
 
@@ -251,7 +236,6 @@ export const FullDeposable: StoryFn = () => (
         })
       },
     }}
-    route={{ name: 'activite', params: { activiteId: 'activiteId' } }}
-    onSave={onSave}
+    activiteId={activiteId}
   />
 )

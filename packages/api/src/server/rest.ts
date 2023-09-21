@@ -57,7 +57,7 @@ import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
-import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite } from '../api/rest/activites.js'
+import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite, deleteActivite } from '../api/rest/activites.js'
 
 interface IRestResolverResult {
   nom: string
@@ -148,7 +148,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
-  '/rest/activites/:activiteId': { get: getActivite, put: updateActivite },
+  '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },

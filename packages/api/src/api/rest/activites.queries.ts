@@ -13,6 +13,7 @@ import {
   IInsertActiviteDocumentInternalQuery,
   IUpdateActiviteDbQuery,
   IGetActivitesByTitreIdQueryQuery,
+  IActiviteDeleteDbQuery,
 } from './activites.queries.types.js'
 import {
   ActiviteDocument,
@@ -138,6 +139,36 @@ LIMIT 1
 const canDeleteActivite = (activite: DbActivite, user: User): boolean => {
   return isSuper(user) && activite.suppression
 }
+
+export const activiteDeleteQuery = async (
+  activiteId: ActiviteId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
+): Promise<boolean> => {
+  const activite = await getActiviteById(activiteId, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires)
+
+  if (activite !== null && activite.suppression) {
+    await dbQueryAndValidate(activiteDocumentDeleteDb, { activiteId }, pool, z.void())
+    await dbQueryAndValidate(activiteDeleteDb, { activiteId }, pool, z.void())
+
+    return true
+  }
+
+  return false
+}
+
+const activiteDeleteDb = sql<Redefine<IActiviteDeleteDbQuery, { activiteId: ActiviteId }, void>>`
+delete from titres_activites ta
+where ta.id = $ activiteId !
+`
+
+const activiteDocumentDeleteDb = sql<Redefine<IActiviteDeleteDbQuery, { activiteId: ActiviteId }, void>>`
+delete from activites_documents
+where activite_id = $ activiteId !
+`
 export const getActivitesByTitreId = async (
   titreId: TitreId,
   pool: Pool,

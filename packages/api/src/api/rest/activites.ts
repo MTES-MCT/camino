@@ -1,7 +1,7 @@
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { constants } from 'http2'
 import { Pool } from 'pg'
-import { Activite, activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator } from 'camino-common/src/activite.js'
+import { Activite, activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteIdValidator } from 'camino-common/src/activite.js'
 import {
   Contenu,
   administrationsLocalesByActiviteId,
@@ -15,6 +15,7 @@ import {
   updateActiviteQuery,
   getActivitesByTitreId as getActivitesByTitreIdQuery,
   DbActivite,
+  activiteDeleteQuery,
 } from './activites.queries.js'
 import { NewDownload } from './fichiers.js'
 import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
@@ -76,7 +77,7 @@ export const updateActivite =
 
         const result = await getActiviteById(activiteIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
-        if (result === null || !canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, result.activite_statut_id)) {
+        if (result === null || !(await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, result.activite_statut_id))) {
           res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
         } else {
           const parsed = activiteEditionValidator.safeParse(req.body)
@@ -115,8 +116,7 @@ export const updateActivite =
               })
             }
 
-            // parsed.data
-            res.sendStatus(constants.HTTP_STATUS_OK)
+            res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
           }
         }
       } catch (e: any) {
@@ -192,6 +192,27 @@ export const getActivite =
       } catch (e) {
         res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
+      }
+    }
+  }
+
+export const deleteActivite =
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
+    const activiteIdParsed = activiteIdValidator.safeParse(req.params.activiteId)
+    if (!activiteIdParsed.success) {
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      const id = activiteIdParsed.data
+      const titreTypeId = memoize(() => titreTypeIdByActiviteId(id, pool))
+      const administrationsLocales = memoize(() => administrationsLocalesByActiviteId(id, pool))
+      const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByActiviteId(id, pool))
+
+      const isOk = await activiteDeleteQuery(id, pool, req.auth, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
+      if (isOk) {
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      } else {
+        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
       }
     }
   }

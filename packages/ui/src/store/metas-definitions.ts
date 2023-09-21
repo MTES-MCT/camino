@@ -1,6 +1,5 @@
 import { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
-import { activitesTypes } from '@/api/metas-activites'
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -15,6 +14,7 @@ import { TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_dem
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { etapesTypesEtapesStatutsMetas } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { TitresTypes } from 'camino-common/src/static/titresTypes'
+import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 
 const labelGet = (entity?: { id: string; nom: string }) => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -357,7 +357,7 @@ export const metasIndex = {
     ],
   },
   'activites-types': {
-    get: activitesTypes,
+    get: () => sortedActivitesTypes,
     labelGet,
     nom: 'Types des activités',
     colonnes: [

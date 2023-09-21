@@ -9,7 +9,7 @@ import graphBuild from './graph/build.js'
 
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresActivites from '../models/titres-activites.js'
-import { titresActivitesQueryModify, titresActivitesPropsQueryModify } from './permissions/titres-activites.js'
+import { titresActivitesQueryModify } from './permissions/titres-activites.js'
 import { isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
@@ -109,7 +109,6 @@ const titreActivitesQueryBuild = ({ fields }: { fields?: IFields }, user: User) 
   const q = TitresActivites.query().withGraphFetched(graph)
 
   titresActivitesQueryModify(q, user)
-  titresActivitesPropsQueryModify(q, user)
 
   // dans titresActivitesPropsQueryModify quand on est une administration on utilise les 3 colonnes suivantes pour une sous requête.
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
@@ -358,10 +357,4 @@ const titresActivitesUpsert = async (titreActivites: ITitreActivite[]) =>
 
 const titreActiviteUpdate = async (id: ActiviteId, titreActivite: Partial<ITitreActivite>) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
 
-const titreActiviteDelete = async (id: ActiviteId, { fields }: { fields?: IFields }) => {
-  const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
-
-  return TitresActivites.query().withGraphFetched(graph).deleteById(id).returning('*')
-}
-
-export { titreActiviteGet, titresActivitesCount, titresActivitesUpsert, titresActivitesGet, titreActiviteUpdate, titreActiviteDelete }
+export { titreActiviteGet, titresActivitesCount, titresActivitesUpsert, titresActivitesGet, titreActiviteUpdate }

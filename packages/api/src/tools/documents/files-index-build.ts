@@ -4,7 +4,7 @@ import { basename } from 'path'
 import { Index } from '../../types.js'
 
 export const filesIndexBuild = (path = './files'): Index<string> => {
-  const filesNames = execSync(`find ${path} | grep -v entreprises | grep pdf`).toString().split('\n')
+  const filesNames = execSync(`find ${path} | grep -v entreprises | grep -v activites | grep pdf`).toString().split('\n')
 
   return filesNames.reduce((res: Index<string>, fileName) => {
     if (fileName) {

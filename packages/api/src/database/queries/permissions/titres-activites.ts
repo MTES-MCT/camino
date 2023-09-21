@@ -75,10 +75,8 @@ export const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, 
   return q
 }
 
-export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User, select = true) => {
-  if (select) {
-    q.select('titresActivites.*')
-  }
+export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
+  q.select('titresActivites.*')
 
   q.leftJoinRelated('titre')
 
@@ -103,16 +101,6 @@ export const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, Titr
   } else if (!isSuper(user)) {
     // sinon, aucune activité n'est visible
     q.where(false)
-  }
-
-  return q
-}
-
-export const titresActivitesPropsQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
-  q.select('titresActivites.*')
-  if (!isSuper(user)) {
-    // Override le champ suppression qui est présent dans la table titres_activites...
-    q.select(raw('false').as('suppression'))
   }
 
   return q

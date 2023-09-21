@@ -3,9 +3,9 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { Activite, ActiviteDocumentId, ActiviteIdOrSlug, TempActiviteDocument, activiteIdOrSlugValidator } from 'camino-common/src/activite'
-import { RouteLocationNormalizedLoaded, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
-import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { ActiviteDeposePopup } from './activite/depose-popup'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { ApiClient, apiClient } from '../api/api-client'
@@ -18,25 +18,37 @@ export const ActiviteEdition = defineComponent(() => {
   const matomo = inject('matomo', null)
   const router = useRouter()
 
+  const activiteId = computed<ActiviteIdOrSlug>(() => {
+    return activiteIdOrSlugValidator.parse(router.currentRoute.value.params.activiteId)
+  })
+
   return () => (
     <PureActiviteEdition
-      apiClient={apiClient}
-      route={router.currentRoute.value}
-      onSave={(activiteTypeId: ActivitesTypesId) => {
-        if (matomo) {
-          // @ts-ignore
-          matomo.trackEvent('activite', 'activite-enregistrer', ActivitesTypes[activiteTypeId].nom)
-        }
-        router.back()
+      apiClient={{
+        ...apiClient,
+        updateActivite: async (activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments) => {
+          const result = await apiClient.updateActivite(activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments)
+          if (matomo) {
+            // @ts-ignore
+            matomo.trackEvent('activite', 'activite-enregistrer', ActivitesTypes[activiteTypeId].nom)
+          }
+          router.push({ name: 'activite', params: { activiteId } })
+          return result
+        },
+        deposerActivite: async activiteId => {
+          const result = await apiClient.deposerActivite(activiteId)
+          router.push({ name: 'activite', params: { activiteId } })
+          return result
+        },
       }}
+      activiteId={activiteId.value}
     />
   )
 })
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getActivite' | 'deposerActivite' | 'updateActivite'>
-  route: Pick<RouteLocationNormalizedLoaded, 'params' | 'name'>
-  onSave: (activiteTypeId: ActivitesTypesId) => void
+  activiteId: ActiviteIdOrSlug
 }
 
 export const PureActiviteEdition = defineComponent<Props>(props => {
@@ -75,14 +87,10 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
     document.removeEventListener('keyup', keyUp)
   })
 
-  const activiteId = computed<ActiviteIdOrSlug>(() => {
-    return activiteIdOrSlugValidator.parse(props.route.params.activiteId)
-  })
-
   const init = async () => {
     try {
       data.value = { status: 'LOADING' }
-      const result = await props.apiClient.getActivite(activiteId.value)
+      const result = await props.apiClient.getActivite(props.activiteId)
       data.value = { status: 'LOADED', value: result }
     } catch (e: any) {
       console.error('error', e)
@@ -95,10 +103,21 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 
   const save = async () => {
     if (data.value.status === 'LOADED') {
-      console.log(JSON.stringify(data.value.value))
-      props.onSave(data.value.value.type_id)
-
-      props.apiClient.updateActivite(data.value.value.id, sectionsComplete.value.sectionsWithValue, documentsComplete.value.activiteDocumentIds, documentsComplete.value.tempsDocuments)
+      try {
+        await props.apiClient.updateActivite(
+          data.value.value.id,
+          data.value.value.type_id,
+          sectionsComplete.value.sectionsWithValue,
+          documentsComplete.value.activiteDocumentIds,
+          documentsComplete.value.tempsDocuments
+        )
+      } catch (e: any) {
+        console.error('error', e)
+        data.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
+      }
     }
   }
 
@@ -131,7 +150,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 
                 <div class="flex">
                   <h2 class="mb-s">
-                    <span class="cap-first">{ActivitesTypes[activite.type_id].nom}</span> (
+                    <span>{capitalize(ActivitesTypes[activite.type_id].nom)}</span> (
                     {activite.periode_id && ActivitesTypes[activite.type_id].frequenceId ? <span>{getPeriode(ActivitesTypes[activite.type_id].frequenceId, activite.periode_id)} </span> : null}{' '}
                     {activite.annee})
                   </h2>
@@ -181,4 +200,4 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureActiviteEdition.props = ['apiClient', 'route', 'onSave']
+PureActiviteEdition.props = ['apiClient', 'activiteId']

@@ -85,18 +85,9 @@ const actions = {
     }
   },
 
-  async refreshAfterUpsert({ commit, dispatch }, { route, idOld, titreEtapeId, document, action }) {
+  async refreshAfterUpsert({ dispatch }, { route, idOld, document, action }) {
     if (route) {
       await dispatch('reload', route, { root: true })
-
-      if (route.name === 'titre') {
-        const section = route.section
-        let id
-
-        if (section === 'etapes') id = titreEtapeId
-
-        commit('titre/open', { section, id }, { root: true })
-      }
     } else if (action) {
       const params = { ...action.params, document }
 

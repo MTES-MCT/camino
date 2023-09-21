@@ -52,7 +52,6 @@
       :titreAdministrations="titreAdministrations"
       :user="user"
       @event-track="eventTrack"
-      @close="etapeClose(etape.id)"
       @toggle="etapeToggle(etape.id)"
     />
 
@@ -186,10 +185,6 @@ export default {
         action: 'titre-etape_ajouter',
         nom: this.$route.params.id,
       })
-    },
-
-    etapeClose(id) {
-      this.$store.commit('titre/close', { section: 'etapes', id })
     },
 
     etapeToggle(id) {

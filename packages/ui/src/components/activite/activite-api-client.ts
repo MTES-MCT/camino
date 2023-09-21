@@ -4,7 +4,7 @@ import { CaminoAnnee } from 'camino-common/src/date'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import gql from 'graphql-tag'
-import { getWithJson, putWithJson } from '../../api/client-rest'
+import { deleteWithJson, getWithJson, putWithJson } from '../../api/client-rest'
 import { ActivitesByTitre, TitreId } from 'camino-common/src/titres'
 import { SectionWithValue } from 'camino-common/src/sections'
 
@@ -30,7 +30,13 @@ export interface ActiviteApiClient {
   getActivitesByTitreId: (titreId: TitreId) => Promise<ActivitesByTitre>
   deposerActivite: (activiteId: ActiviteId) => Promise<void>
   supprimerActivite: (activiteId: ActiviteId) => Promise<void>
-  updateActivite: (activiteId: ActiviteId, sectionsWithValue: SectionWithValue[], activiteDocumentIds: ActiviteDocumentId[], newTempDocuments: TempActiviteDocument[]) => Promise<void>
+  updateActivite: (
+    activiteId: ActiviteId,
+    activiteTypeId: ActivitesTypesId,
+    sectionsWithValue: SectionWithValue[],
+    activiteDocumentIds: ActiviteDocumentId[],
+    newTempDocuments: TempActiviteDocument[]
+  ) => Promise<void>
 }
 
 export type GetActivitesParams = {
@@ -122,15 +128,17 @@ export const activiteApiClient: ActiviteApiClient = {
     `)({ id: activiteId })
   },
   supprimerActivite: async (activiteId: ActiviteId) => {
-    await apiGraphQLFetch(gql`
-      mutation ActiviteDeposer($id: ID!) {
-        activiteSupprimer(id: $id) {
-          id
-        }
-      }
-    `)({ id: activiteId })
+    return deleteWithJson('/rest/activites/:activiteId', {
+      activiteId,
+    })
   },
-  updateActivite: async (activiteId: ActiviteId, sectionsWithValue: SectionWithValue[], activiteDocumentIds: ActiviteDocumentId[], newTempDocuments: TempActiviteDocument[]) => {
+  updateActivite: async (
+    activiteId: ActiviteId,
+    _activiteTypeId: ActivitesTypesId,
+    sectionsWithValue: SectionWithValue[],
+    activiteDocumentIds: ActiviteDocumentId[],
+    newTempDocuments: TempActiviteDocument[]
+  ) => {
     return putWithJson(
       '/rest/activites/:activiteId',
       {

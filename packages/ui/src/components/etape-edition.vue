@@ -208,11 +208,7 @@ export default {
     },
 
     async reroute(titreEtapeId) {
-      const tabId = this.demarcheType?.travaux === true ? 'travaux' : 'demarches'
-
-      this.$store.commit('titre/open', { section: 'etapes', id: titreEtapeId })
-      this.$store.commit('titre/openTab', tabId)
-
+      // TODO 2023-09-21 il faut automatiquement déplier l'étape et aller sur l'ancre
       await this.$router.push({
         name: 'titre',
         params: { id: this.titre.id },
