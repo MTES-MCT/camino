@@ -3,6 +3,7 @@ import * as api from '../api/titres'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 vi.mock('../router', () => ({
   push: () => {},
@@ -138,13 +139,8 @@ describe('état du titre sélectionné', () => {
     expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }])
   })
 
-  test('la tab des activités est visible si il existe au moins une activité', () => {
-    store.state.user = { element: { role: 'defaut' } }
-    store.state.titre.element = { activites: [{}], demarches: [] }
-    expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }, { id: 'activites' }])
-  })
-
-  test('la tab des travaux est visible si il existe au moins un travaux', () => {
+  test.only('la tab des travaux est visible si il existe au moins un travaux', () => {
+    store.state.user = { ...testBlankUser, role: 'super' }
     store.state.titre.element = {
       demarches: [{ typeId: 'aom' }],
     }

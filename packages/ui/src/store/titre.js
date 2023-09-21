@@ -4,6 +4,7 @@ import { titre, titreCreer } from '../api/titres'
 import router from '../router'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { getDownloadRestRoute } from '@/api/client-rest'
 
 const state = {
   element: null,
