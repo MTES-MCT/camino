@@ -27,14 +27,16 @@ export interface TextColumnData {
   class?: string[]
 }
 
+export type TableRouterLink = {
+  name: string
+  params?: {
+    id?: string
+    activiteId?: string
+  }
+}
 export interface TableRow<T extends string = string> {
   id: string
-  link: {
-    name: string
-    params?: {
-      id: string
-    }
-  }
+  link: TableRouterLink | null
   columns: {
     [key in T]: ComponentColumnData | TextColumnData
   }
@@ -134,7 +136,7 @@ export const Table = defineComponent(
                     <tr key={row.id}>
                       {props.columns.map((col, index) => (
                         <td key={col.id}>
-                          {index === 0 ? (
+                          {index === 0 && row.link !== null ? (
                             <router-link class="fr-link" to={row.link}>
                               <DisplayColumn data={row.columns[col.id]} />
                             </router-link>

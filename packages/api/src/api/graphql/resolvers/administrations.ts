@@ -1,21 +1,13 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { IAdministrationActiviteType, IAdministrationActiviteTypeEmail, Context } from '../../../types.js'
+import { IAdministrationActiviteTypeEmail, Context } from '../../../types.js'
 
-import {
-  administrationGet,
-  administrationsGet,
-  administrationActiviteTypeDelete,
-  administrationActiviteTypeUpsert,
-  administrationActiviteTypeEmailCreate,
-  administrationActiviteTypeEmailDelete,
-} from '../../../database/queries/administrations.js'
+import { administrationGet, administrationsGet, administrationActiviteTypeEmailCreate, administrationActiviteTypeEmailDelete } from '../../../database/queries/administrations.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
 import { administrationFormat } from '../../_format/administrations.js'
 import { emailCheck } from '../../../tools/email-check.js'
-import { isSuper } from 'camino-common/src/roles.js'
 import { canReadActivitesTypesEmails, canReadAdministrations, canEditEmails } from 'camino-common/src/permissions/administrations.js'
 import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 import { isAdministrationId } from 'camino-common/src/static/administrations.js'
@@ -71,28 +63,6 @@ const administrations = async (_: unknown, { user }: Context, info: GraphQLResol
     if (!administrations.length) return []
 
     return administrations.map(administrationFormat)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const administrationActiviteTypeModifier = async ({ administrationActiviteType }: { administrationActiviteType: IAdministrationActiviteType }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (!administrationActiviteType.lectureInterdit && !administrationActiviteType.modificationInterdit) {
-      await administrationActiviteTypeDelete(administrationActiviteType.administrationId, administrationActiviteType.activiteTypeId)
-    } else {
-      await administrationActiviteTypeUpsert(administrationActiviteType)
-    }
-
-    return await administrationGet(administrationActiviteType.administrationId, { fields }, user)
   } catch (e) {
     console.error(e)
 
@@ -163,4 +133,4 @@ const administrationActiviteTypeEmailSupprimer = async (
   }
 }
 
-export { administration, administrations, administrationActiviteTypeModifier, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer }
+export { administration, administrations, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer }

@@ -8,7 +8,6 @@
 # import * from 'geojsons.graphql'
 # import * from 'points.graphql'
 # import * from 'territoires.graphql'
-# import * from 'titres-activites.graphql'
 
 type Titres {
   elements: [Titre]
@@ -81,9 +80,6 @@ type Titre {
 
   "Surface en Km² du titre dans son dernier état de validité"
   surface: Float
-
-  "Activités"
-  activites: [Activite]
 
   "Nombre d'activités déposées"
   activitesDeposees: Int

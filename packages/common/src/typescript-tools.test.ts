@@ -1,4 +1,4 @@
-import { isNotNullNorUndefined, onlyUnique } from './typescript-tools.js'
+import { isNotNullNorUndefined, memoize, onlyUnique } from './typescript-tools.js'
 import { Role } from './roles.js'
 import { AdministrationId } from './static/administrations.js'
 import { Departements } from './static/departement.js'
@@ -23,4 +23,19 @@ test('onlyUnique', () => {
   const a = ['a', 1, 'a', 2, '1']
   const unique = a.filter(onlyUnique)
   expect(unique).toStrictEqual(['a', 1, 2, '1'])
+})
+
+test('memoize', async () => {
+  let called = 0
+  const toMemoize = () => {
+    called++
+
+    return Promise.resolve(12)
+  }
+  const memoized = memoize(toMemoize)
+  expect(await memoized()).toBe(12)
+  expect(await memoized()).toBe(12)
+  expect(await memoized()).toBe(12)
+  expect(await memoized()).toBe(12)
+  expect(called).toBe(1)
 })

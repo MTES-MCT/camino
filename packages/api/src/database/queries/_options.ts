@@ -41,7 +41,7 @@ const utilisateursRelateTrue = ['entreprises']
 const utilisateursRelateFalse = ['entreprises']
 
 const utilisateurs = {
-  graph: `[administration.activitesTypes, entreprises.etablissements]`,
+  graph: `[administration, entreprises.etablissements]`,
   update: {
     relate: utilisateursRelateTrue,
     unrelate: utilisateursRelateTrue,
@@ -106,35 +106,13 @@ const titresDemarches = {
   },
 }
 
-const activitesTypesRelateTrue = ['administrations']
-
-const activitesTypesRelateFalse: string[] = []
-
-const activitesTypes = {
-  graph: `[administrations]`,
-
-  update: {
-    relate: activitesTypesRelateTrue,
-    unrelate: activitesTypesRelateTrue,
-    noInsert: activitesTypesRelateFalse,
-    noUpdate: activitesTypesRelateFalse,
-    noDelete: activitesTypesRelateFalse,
-    insertMissing: false,
-  },
-}
-
 const titresActivitesRelateTrue = ['type', 'utilisateur']
 
-const titresActivitesRelateFalse = [...documents.update.relate.map(k => `documents.${k}`)]
-
 const titresActivites = {
-  graph: `[type.${activitesTypes.graph}, utilisateur]`,
+  graph: `[utilisateur]`,
   update: {
     relate: titresActivitesRelateTrue,
     unrelate: titresActivitesRelateTrue,
-    noInsert: titresActivitesRelateFalse,
-    noUpdate: titresActivitesRelateFalse,
-    noDelete: titresActivitesRelateFalse,
     insertMissing: true,
   },
 }
@@ -158,7 +136,6 @@ const titresRelateFalse = [
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
   'surfaceEtape',
-  ...titresActivitesRelateFalse.map(k => `activites.${k}`),
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
 ]
 
@@ -187,7 +164,6 @@ const journaux = {
 }
 
 export default {
-  activitesTypes,
   administrations,
   demarchesTypes,
   domaines,

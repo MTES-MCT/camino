@@ -152,7 +152,7 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -174,7 +174,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -332,6 +332,6 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 })

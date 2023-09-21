@@ -151,7 +151,7 @@ describe('etapeModifier', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {
@@ -172,7 +172,7 @@ describe('etapeModifier', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('ne peut pas modifier une étape mia avec un statut fav (utilisateur admin)', async () => {
@@ -219,7 +219,7 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -270,6 +270,6 @@ describe('etapeSupprimer', () => {
     const { titreEtapeId } = await etapeCreate()
     const res = await graphQLCall(dbPool, etapeSupprimerQuery, { id: titreEtapeId }, userSuper)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 })

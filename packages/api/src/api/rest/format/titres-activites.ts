@@ -7,6 +7,7 @@ import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_eta
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Pool } from 'pg'
 import { getCommunesIndex } from '../../../database/queries/communes.js'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: DeepReadonly<Section[]>) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -40,17 +41,18 @@ export const titresActivitesFormatTable = async (pool: Pool, activites: ITitreAc
   )
 
   return activites.map(activite => {
+    const activiteType = ActivitesTypes[activite.typeId]
     const contenu = activite.contenu && activite.sections?.length ? titreActiviteContenuFormat(activite.contenu, activite.sections) : {}
 
     return {
       id: activite.slug,
       titre_id: activite.titre!.slug,
-      type: activite.type!.nom,
+      type: activiteType.nom,
       statut: ActivitesStatuts[activite.activiteStatutId].nom,
       titulaires: activite.titre?.titulaires?.map(({ nom }) => nom).join(';'),
       communes: activite.titre?.communes?.map(({ id }) => communesIndex[id]).join(';'),
       annee: activite.annee,
-      periode: getPeriode(activite.type?.frequenceId, activite.periodeId),
+      periode: getPeriode(activiteType.frequenceId, activite.periodeId),
       periode_id: activite.periodeId,
       ...contenu,
     }

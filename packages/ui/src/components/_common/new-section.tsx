@@ -1,9 +1,9 @@
 import { CaminoDate } from 'camino-common/src/date'
-import { Section as ISection } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { FunctionalComponent } from 'vue'
 import { SectionElement } from './new-section-element'
 
-export const Sections = (props: { sections: ISection[] }): JSX.Element | null => {
+export const Sections = (props: { sections: SectionWithValue[] }): JSX.Element | null => {
   return props.sections?.length ? (
     <>
       {props.sections.map(s => (
@@ -15,7 +15,7 @@ export const Sections = (props: { sections: ISection[] }): JSX.Element | null =>
 
 interface Props {
   entete?: boolean
-  section: ISection
+  section: SectionWithValue
   date?: CaminoDate
   fileDownload: (file: string) => void
 }

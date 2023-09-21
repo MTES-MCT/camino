@@ -4,6 +4,8 @@ import { isSuper, User } from 'camino-common/src/roles'
 import { ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { EntrepriseApiClient } from './entreprise-api-client'
+import { DsfrInput } from '../_ui/dsfr-input'
+import { DsfrInputCheckbox } from '../_ui/dsfr-input-checkbox'
 
 interface Props {
   close: () => void
@@ -24,38 +26,25 @@ export const EntrepriseEditPopup = caminoDefineComponent<Props>(['close', 'user'
   const url = ref(props.entreprise.url ?? '')
   const archive = ref(props.entreprise.archive ?? false)
 
+  const telephoneChange = (value: string) => {
+    telephone.value = value
+  }
+  const emailChange = (value: string) => {
+    email.value = value
+  }
+  const urlChange = (value: string) => {
+    url.value = value
+  }
+  const archiveChange = (value: boolean) => {
+    archive.value = value
+  }
   const content = () => (
     <form>
-      <div class="fr-input-group">
-        <label class="fr-label" for="telephone">
-          Téléphone
-        </label>
-        <input onInput={e => updateFromEvent(e, telephone)} value={telephone.value} class="fr-input" name="telephone" id="telephone" type="text" />
-      </div>
+      <DsfrInput legend={{ main: 'Téléphone' }} type={{ type: 'text' }} valueChanged={telephoneChange} initialValue={telephone.value} />
+      <DsfrInput legend={{ main: 'Adresse électronique' }} type={{ type: 'text' }} valueChanged={emailChange} initialValue={email.value} />
+      <DsfrInput legend={{ main: 'Site internet' }} type={{ type: 'text' }} valueChanged={urlChange} initialValue={url.value} />
 
-      <div class="fr-input-group">
-        <label class="fr-label" for="email">
-          Adresse électronique
-        </label>
-        <input onInput={e => updateFromEvent(e, email)} value={email.value} class="fr-input" name="email" id="email" type="text" />
-      </div>
-
-      <div class="fr-input-group">
-        <label class="fr-label" for="url">
-          Site internet
-        </label>
-        <input onInput={e => updateFromEvent(e, url)} value={url.value} class="fr-input" name="url" id="url" type="text" />
-      </div>
-      {isSuper(props.user) ? (
-        <div class="fr-fieldset__element fr-fieldset__element--inline">
-          <div class="fr-checkbox-group">
-            <input onInput={e => updateFromCheckboxEvent(e, archive)} checked={archive.value} name="archive" id="archive" type="checkbox" />
-            <label class="fr-label" for="archive">
-              Archivée
-            </label>
-          </div>
-        </div>
-      ) : null}
+      {isSuper(props.user) ? <DsfrInputCheckbox legend={{ main: 'Archivée' }} initialValue={archive.value} valueChanged={archiveChange} /> : null}
     </form>
   )
 

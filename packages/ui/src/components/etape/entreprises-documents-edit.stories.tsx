@@ -1,11 +1,10 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { action } from '@storybook/addon-actions'
-import { entrepriseDocumentIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { EntrepriseDocument, entrepriseDocumentIdValidator, newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
-import { z } from 'zod'
 import { etapeIdValidator } from 'camino-common/src/etape'
-import { UiEntrepriseDocument } from '../entreprise/entreprise-api-client'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/Etape/EditionEntreprisesDocuments',
@@ -18,6 +17,7 @@ const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const getEntrepriseDocumentsAction = action('getEntrepriseDocuments')
 const completeUpdateAction = action('completeUpdate')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
+const uploadTempDocumentAction = action('uploadTempDocumentAction')
 export const Loading: StoryFn = () => (
   <EntrepriseDocumentsEdit
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
@@ -31,6 +31,10 @@ export const Loading: StoryFn = () => (
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
         return Promise.resolve([])
+      },
+      uploadTempDocument: document => {
+        uploadTempDocumentAction(document)
+        return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
       },
     }}
     etapeId={etapeIdValidator.parse('etapeId')}
@@ -48,9 +52,14 @@ export const ArmUneEntrepriseSansDocumentDEntreprise: StoryFn = () => (
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
 
+      uploadTempDocument: document => {
+        uploadTempDocumentAction(document)
+        return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
+      },
+
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
-        const entrepriseDocuments: UiEntrepriseDocument[] = [
+        const entrepriseDocuments: EntrepriseDocument[] = [
           {
             id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
             description: '',
@@ -137,10 +146,14 @@ export const ArmUneEntrepriseAvecDocumentDEntrepriseComplet: StoryFn = () => (
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
+      uploadTempDocument: document => {
+        uploadTempDocumentAction(document)
+        return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
+      },
 
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
-        const entrepriseDocuments: UiEntrepriseDocument[] = [
+        const entrepriseDocuments: EntrepriseDocument[] = [
           {
             id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
             description: '',
@@ -277,11 +290,15 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
+      uploadTempDocument: document => {
+        uploadTempDocumentAction(document)
+        return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
+      },
 
       getEntrepriseDocuments: async id => {
         getEntrepriseDocumentsAction(id)
         if (id === 'id') {
-          const entrepriseDocuments: UiEntrepriseDocument[] = [
+          const entrepriseDocuments: EntrepriseDocument[] = [
             {
               id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
               description: '',

@@ -8,6 +8,8 @@ import { EtapeApiClient, etapeApiClient } from '@/components/etape/etape-api-cli
 import { DashboardApiClient, dashboardApiClient } from '@/components/dashboard/dashboard-api-client'
 import { JournauxApiClient, journauxApiClient } from '@/components/journaux/journaux-api-client'
 import { ActiviteApiClient, activiteApiClient } from '@/components/activite/activite-api-client'
+import { TempDocumentName } from 'camino-common/src/document'
+import { uploadCall } from './_upload'
 
 export interface ApiClient
   extends AdministrationApiClient,
@@ -19,7 +21,9 @@ export interface ApiClient
     JournauxApiClient,
     ActiviteApiClient,
     EntrepriseApiClient,
-    DemarcheApiClient {}
+    DemarcheApiClient {
+  uploadTempDocument: (document: File) => Promise<TempDocumentName>
+}
 
 // TODO 2023-08-10 certains noms de fonction peuvent être overrider comme getEntreprises, il faudrait avoir un controle plus contraignant
 export const apiClient: ApiClient = {
@@ -34,4 +38,8 @@ export const apiClient: ApiClient = {
   ...journauxApiClient,
   ...activiteApiClient,
   ...demarcheApiClient,
+  uploadTempDocument: async (document: File) => {
+    const tempDocumentName = await uploadCall(document, _progress => {})
+    return tempDocumentName
+  },
 }

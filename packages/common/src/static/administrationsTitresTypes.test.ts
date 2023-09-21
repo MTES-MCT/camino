@@ -13,7 +13,7 @@ const administrations: AdministrationsWithTitreTypeId[] = Object.values(ADMINIST
 test('vérifie si l’administration est gestionnaire', () => {
   const result: { [key in AdministrationId]?: boolean } = {}
   Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
-    result[administrationId] = isGestionnaire(administrationId)
+    result[administrationId] = isGestionnaire(administrationId, null)
   })
   expect(result).toMatchSnapshot()
 })
@@ -33,7 +33,7 @@ test('vérifie si l’administration dre-centre-val-de-loire-01 est gestionnaire
 test('vérifie si l’administration est associée', () => {
   const result: { [key in AdministrationId]?: boolean } = {}
   Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
-    result[administrationId] = isAssociee(administrationId)
+    result[administrationId] = isAssociee(administrationId, null)
   })
   expect(result).toMatchSnapshot()
 })

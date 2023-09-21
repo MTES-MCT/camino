@@ -2,6 +2,7 @@ import { Request as JWTRequest } from 'express-jwt'
 import { Fiscalite, FiscaliteFrance, FiscaliteGuyane, fiscaliteVisible, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
 import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { constants } from 'http2'
+
 import {
   apiOpenfiscaCalculate,
   OpenfiscaRequest,
@@ -31,7 +32,6 @@ import {
   entrepriseDocumentInputValidator,
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
-  TempDocumentName,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -39,12 +39,19 @@ import { emailCheck } from '../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../tools/api-insee/index.js'
 import { entrepriseFormat } from '../_format/entreprises.js'
 import { Pool } from 'pg'
-import { deleteEntrepriseDocument as deleteEntrepriseDocumentQuery, getEntrepriseDocuments as getEntrepriseDocumentsQuery, insertEntrepriseDocument } from './entreprises.queries.js'
+import {
+  deleteEntrepriseDocument as deleteEntrepriseDocumentQuery,
+  getEntrepriseDocuments as getEntrepriseDocumentsQuery,
+  getLargeobjectIdByEntrepriseDocumentId,
+  insertEntrepriseDocument,
+} from './entreprises.queries.js'
 import { newEnterpriseDocumentId } from '../../database/models/_format/id-create.js'
 import { isGuyane } from 'camino-common/src/static/pays.js'
 import { LargeObjectManager } from 'pg-large-object'
 import { createReadStream } from 'node:fs'
 import { join } from 'node:path'
+import { NewDownload } from './fichiers'
+import { TempDocumentName } from 'camino-common/src/document.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
   if (typeof quantite !== 'number') {
@@ -424,7 +431,7 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
 
 const bufferSize = 16384
 
-const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<number> => {
+export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<number> => {
   const client = await pool.connect()
   try {
     const man = new LargeObjectManager({ pg: client })
@@ -611,4 +618,11 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
       }
     }
   }
+}
+
+export const entrepriseDocumentDownload: NewDownload = async (params, user, pool) => {
+  const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(params.documentId)
+  const entrepriseDocumentLargeObjectId = await getLargeobjectIdByEntrepriseDocumentId(entrepriseDocumentId, pool, user)
+
+  return { loid: entrepriseDocumentLargeObjectId, fileName: entrepriseDocumentId }
 }

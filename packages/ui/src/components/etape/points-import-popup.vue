@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div v-if="geoSystemeId">
+    <div v-if="geoSystemeId" class="dsfr">
       <InputFile class="btn-border small bg-alt p-s full-x rnd-xs mb-s" :accept="documents" :uploadFile="fileChange" />
     </div>
     <template #footer>

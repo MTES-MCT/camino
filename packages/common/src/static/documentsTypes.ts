@@ -147,9 +147,23 @@ export const EntrepriseDocumentTypeIds = [
 ] as const satisfies readonly (typeof IDS)[number][]
 
 export const entrepriseDocumentTypeIdValidator = z.enum(EntrepriseDocumentTypeIds)
-export const isEntrepriseDocumentTypeId = (id: string): id is EntrepriseDocumentTypeId => entrepriseDocumentTypeIdValidator.safeParse(id).success
-export const documentTypeIdValidator = z.enum(IDS)
 export type EntrepriseDocumentTypeId = z.infer<typeof entrepriseDocumentTypeIdValidator>
+export const isEntrepriseDocumentTypeId = (id: string): id is EntrepriseDocumentTypeId => entrepriseDocumentTypeIdValidator.safeParse(id).success
+
+// TODO 2023-09-04 enlever depuis DOCUMENTS_TYPES_IDS et voir si ça casse rien
+export const ActiviteDocumentTypeIds = [
+  DOCUMENTS_TYPES_IDS.rapportAnnuelDExploitation,
+  DOCUMENTS_TYPES_IDS.rapportDIntensiteDExploration,
+  DOCUMENTS_TYPES_IDS.rapportFinancierDExploration,
+  DOCUMENTS_TYPES_IDS.rapportEnvironnementalDExploration,
+  DOCUMENTS_TYPES_IDS.rapportSocialEtEconomiqueDExploration,
+] as const satisfies readonly (typeof IDS)[number][]
+
+export const activiteDocumentTypeIdValidator = z.enum(ActiviteDocumentTypeIds)
+export type ActiviteDocumentTypeId = z.infer<typeof activiteDocumentTypeIdValidator>
+export const isActiviteDocumentTypeId = (id: string): id is ActiviteDocumentTypeId => activiteDocumentTypeIdValidator.safeParse(id).success
+
+export const documentTypeIdValidator = z.enum(IDS)
 export type DocumentTypeId = z.infer<typeof documentTypeIdValidator>
 
 export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {

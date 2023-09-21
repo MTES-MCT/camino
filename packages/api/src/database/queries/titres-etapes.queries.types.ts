@@ -58,7 +58,7 @@ export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryParams {
 export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult {
   entreprise_id: string | null;
   id: string;
-  largeobject_id: number | null;
+  largeobject_id: number;
 }
 
 /** 'GetEntrepriseDocumentLargeObjectIdsByEtapeIdQuery' query type */

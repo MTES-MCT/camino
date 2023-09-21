@@ -11,12 +11,12 @@ import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { EtapeId } from 'camino-common/src/etape.js'
-import { DocumentId, EntrepriseDocumentId, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
-import { getEntrepriseDocuments } from './entreprises.queries.js'
+import { DocumentId } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
-import { CaminoRequest } from './express-type.js'
+
 import express from 'express'
+export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const etapeTelecharger =
   (pool: Pool) =>
@@ -91,55 +91,43 @@ export const etapeTelecharger =
 
 const bufferSize = 16384
 
-export const entrepriseDocumentDownload = (pool: Pool) => {
-  return async (req: CaminoRequest, res: express.Response) => {
-    const user = req.auth
-    const entrepriseDocumentId = entrepriseDocumentIdValidator.parse(req.params.documentId)
-    const entrepriseDocuments = await getEntrepriseDocuments([entrepriseDocumentId], [], pool, user)
+export const streamLargeObjectInResponse = async (pool: Pool, res: express.Response, largeObjectId: number | null, documentName: string) => {
+  if (largeObjectId === null) {
+    throw new Error('fichier inexistant')
+  }
+  const client = await pool.connect()
+  try {
+    const man = new LargeObjectManager({ pg: client })
 
-    if (entrepriseDocuments.length !== 1) {
-      throw new Error('fichier inexistant')
-    }
+    await client.query('BEGIN')
 
-    const entrepriseDocument = entrepriseDocuments[0]
+    res.header('Content-disposition', `inline; filename=${encodeURIComponent(`${documentName}.${DOWNLOAD_FORMATS.PDF}`)}`)
+    res.header('Content-Type', contentTypes[DOWNLOAD_FORMATS.PDF])
 
-    const client = await pool.connect()
-    try {
-      const man = new LargeObjectManager({ pg: client })
+    await man.openAndReadableStreamAsync(largeObjectId, bufferSize).then(([size, stream]) => {
+      res.header('Content-Length', `${size}`)
 
-      await client.query('BEGIN')
+      stream.pipe(res)
 
-      res.header('Content-disposition', `inline; filename=${encodeURIComponent(`${entrepriseDocument.id}.${DOWNLOAD_FORMATS.PDF}`)}`)
-      res.header('Content-Type', contentTypes[DOWNLOAD_FORMATS.PDF])
-
-      // TODO 2023-08-28 condition a supprimé quand la colonne sere non null en bdd
-      if (entrepriseDocument.largeobject_id) {
-        await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize).then(([size, stream]) => {
-          res.header('Content-Length', `${size}`)
-
-          stream.pipe(res)
-
-          stream.on('error', function () {
-            client.query('ROLLBACK')
-          })
-          res.on('close', function () {
-            client.query('COMMIT')
-          })
-        })
-      }
-    } catch (e) {
-      await client.query('ROLLBACK')
-      console.error(e)
-      throw e
-    } finally {
-      client.release()
-    }
+      stream.on('error', function () {
+        client.query('ROLLBACK')
+      })
+      res.on('close', function () {
+        client.query('COMMIT')
+      })
+    })
+  } catch (e) {
+    await client.query('ROLLBACK')
+    console.error(e)
+    throw e
+  } finally {
+    client.release()
   }
 }
 
 export const fichier =
   (_pool: Pool) =>
-  async ({ params: { documentId } }: { params: { documentId?: DocumentId | EntrepriseDocumentId } }, user: User) => {
+  async ({ params: { documentId } }: { params: { documentId?: DocumentId } }, user: User) => {
     if (!documentId) {
       throw new Error('id du document absent')
     }
@@ -150,7 +138,6 @@ export const fichier =
         fields: {
           type: { id: {} },
           etape: { id: {} },
-          activite: { id: {} },
         },
       },
       user
@@ -168,8 +155,6 @@ export const fichier =
 
     if (repertoire === 'demarches') {
       dossier = document.etape!.id
-    } else if (repertoire === 'activites') {
-      dossier = document.activite!.id
     }
 
     const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`

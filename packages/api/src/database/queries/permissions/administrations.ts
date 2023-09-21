@@ -33,26 +33,6 @@ const administrationsLocalesModify = (q: QueryBuilder<AdministrationsModel, Admi
   q.joinRaw(`left join titres_etapes as t_e on t_e.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`)
 }
 
-const administrationsActivitesModify = (
-  q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
-
-  { lecture, modification }: { lecture?: boolean; modification?: boolean }
-) => {
-  q.leftJoin('administrations__activitesTypes as a_at', b => {
-    b.on(knex.raw('?? = ??', ['a_at.administrationId', 'administrations.id']))
-    b.andOn(knex.raw('?? = ??', ['a_at.activiteTypeId', 'titresActivites.typeId']))
-    b.andOn(c => {
-      if (lecture) {
-        c.orOn(knex.raw('?? is true', ['a_at.lectureInterdit']))
-      }
-      if (modification) {
-        c.orOn(knex.raw('?? is true', ['a_at.modificationInterdit']))
-      }
-    })
-  })
-  q.whereNull('a_at.administrationId')
-}
-
 const administrationsTitresQuery = (
   administrationId: AdministrationId,
   titreAlias: string,
@@ -131,11 +111,4 @@ const administrationsTitresTypesEtapesTypesModify = (
   }
 }
 
-export {
-  administrationsQueryModify,
-  administrationsLocalesModify,
-  administrationsTitresTypesTitresStatutsModify,
-  administrationsTitresTypesEtapesTypesModify,
-  administrationsTitresQuery,
-  administrationsActivitesModify,
-}
+export { administrationsQueryModify, administrationsLocalesModify, administrationsTitresTypesTitresStatutsModify, administrationsTitresTypesEtapesTypesModify, administrationsTitresQuery }

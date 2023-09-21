@@ -7,6 +7,7 @@ import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
 import { useStore } from 'vuex'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { DsfrInput } from '../_ui/dsfr-input'
 
 export interface Props {
   demarche: {
@@ -63,12 +64,9 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
     }
   }
 
-  const updateDescription = (e: Event) => {
-    if (isEventWithTarget(e)) {
-      description.value = e.target.value
-    }
+  const descriptionChange = (value: string) => {
+    description.value = value
   }
-
   const content = () => (
     <form>
       <div class="fr-input-group">
@@ -88,12 +86,8 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
           ))}
         </select>
       </div>
-      <div class="fr-input-group">
-        <label class="fr-label" for="description">
-          Description
-        </label>
-        <input onInput={updateDescription} value={description.value} class="fr-input" name="description" id="description" type="text" />
-      </div>
+
+      <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} initialValue={description.value} />
     </form>
   )
 

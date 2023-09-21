@@ -6,6 +6,7 @@ import { titreValideCheck } from '../utils/titre-valide-check.js'
 import { userSuper } from '../../database/user-super.js'
 import { getMonth } from 'camino-common/src/static/frequence.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
 
 // TODO 2023-04-12 à supprimer et à calculer lors de l’appel à l’API par un super
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
@@ -17,9 +18,7 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: { etapes: { id: {} } },
-        activites: {
-          type: { id: {} },
-        },
+        activites: { id: {} },
       },
     },
     userSuper
@@ -29,7 +28,9 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
     if (!titre.activites?.length) return acc
 
     return titre.activites.reduce((acc, titreActivite) => {
-      const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId), 1))
+      const activiteType = ActivitesTypes[titreActivite.typeId]
+
+      const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(activiteType.frequenceId, titreActivite.periodeId), 1))
 
       const isActiviteInPhase = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date)
 

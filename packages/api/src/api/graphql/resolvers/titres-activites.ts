@@ -1,28 +1,34 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, ITitre, ITitreActivite, ITitreActiviteColonneId, IUtilisateur } from '../../../types.js'
+import { Context, ITitre, ITitreActiviteColonneId, IUtilisateur } from '../../../types.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 import { titreActiviteEmailsSend } from './_titre-activite.js'
-import { titreActiviteContenuFormat, titreActiviteFormat } from '../../_format/titres-activites.js'
+import { titreActiviteFormat } from '../../_format/titres-activites.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
 import { titreActiviteDelete, titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites.js'
 import { utilisateursGet } from '../../../database/queries/utilisateurs.js'
 
-import { titreActiviteInputValidate } from '../../../business/validations/titre-activite-input-validate.js'
 import { titreActiviteDeletionValidate } from '../../../business/validations/titre-activite-deletion-validate.js'
 import { userSuper } from '../../../database/user-super.js'
-import { fichiersRepertoireDelete } from './_titre-document.js'
-import { documentsLier } from './documents.js'
 import { titreGet } from '../../../database/queries/titres.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { canReadActivites } from 'camino-common/src/permissions/activites.js'
+import { canReadActivites, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
+import {
+  administrationsLocalesByActiviteId,
+  entreprisesTitulairesOuAmoditairesByActiviteId,
+  getActiviteById,
+  getActiviteDocumentsByActiviteId,
+  titreTypeIdByActiviteId,
+} from '../../rest/activites.queries.js'
+import { ActiviteId } from 'camino-common/src/activite.js'
+import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 /**
  * Retourne une activité
@@ -33,25 +39,6 @@ import { canReadActivites } from 'camino-common/src/permissions/activites.js'
  * @returns une activité
  *
  */
-
-const activite = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!canReadActivites(user)) {
-      return null
-    }
-    const fields = fieldsBuild(info)
-
-    const titreActivite = await titreActiviteGet(id, { fields }, user)
-
-    if (!titreActivite) return null
-
-    return titreActivite && titreActiviteFormat(titreActivite)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
 
 /**
  * Retourne les activités
@@ -77,7 +64,7 @@ const activite = async ({ id }: { id: string }, { user }: Context, info: GraphQL
  *
  */
 
-const activites = async (
+export const activites = async (
   {
     page,
     intervalle,
@@ -187,24 +174,23 @@ const activites = async (
   }
 }
 
-const activiteDeposer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
-    const activite = await titreActiviteGet(
-      id,
-      {
-        fields: {
-          documents: { id: {} },
-          type: { id: {} },
-        },
-      },
-      user
-    )
+    const titreTypeId = memoize(() => titreTypeIdByActiviteId(id, pool))
+    const administrationsLocales = memoize(() => administrationsLocalesByActiviteId(id, pool))
+    const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByActiviteId(id, pool))
+
+    const activite = await getActiviteById(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
     if (!activite) throw new Error("l'activité n'existe pas")
 
-    if (!titreActiviteFormat(activite).deposable) throw new Error('droits insuffisants')
+    const activitesDocuments = await getActiviteDocumentsByActiviteId(id, pool)
+    const sectionsWithValue = getSectionsWithValue(activite.sections, activite.contenu)
+    if (!(await isActiviteDeposable(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, { ...activite, sections_with_value: sectionsWithValue }, activitesDocuments))) {
+      throw new Error('droits insuffisants')
+    }
 
     await titreActiviteUpdateQuery(activite.id, {
       activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
@@ -261,60 +247,7 @@ const activiteDeposer = async ({ id }: { id: string }, { user }: Context, info: 
   }
 }
 
-const activiteModifier = async ({ activite }: { activite: ITitreActivite & { documentIds?: string[] } }, context: Context, info: GraphQLResolveInfo) => {
-  try {
-    const user = context.user
-    if (!user) throw new Error('droits insuffisants')
-
-    const oldTitreActivite = await titreActiviteGet(
-      activite.id,
-      {
-        fields: {
-          documents: { id: {} },
-          type: { id: {} },
-        },
-      },
-      user
-    )
-
-    if (!oldTitreActivite) throw new Error("l'activité n'existe pas")
-
-    if (!oldTitreActivite.modification) throw new Error('droits insuffisants')
-
-    const inputErrors = titreActiviteInputValidate(activite, oldTitreActivite.sections)
-
-    if (inputErrors.length) {
-      throw new Error(inputErrors.join(', '))
-    }
-
-    activite.utilisateurId = user.id
-    activite.dateSaisie = getCurrent()
-    activite.activiteStatutId = ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
-
-    if (activite.contenu) {
-      activite.contenu = titreActiviteContenuFormat(oldTitreActivite.sections, activite.contenu, 'write')
-    }
-
-    const fields = fieldsBuild(info)
-
-    const documentIds = activite.documentIds || []
-    await documentsLier(context, documentIds, { parentId: activite.id, propParentId: 'titreActiviteId' }, oldTitreActivite)
-    delete activite.documentIds
-
-    await titreActiviteUpdateQuery(activite.id, activite)
-    const activiteRes = await titreActiviteGet(activite.id, { fields }, user)
-
-    if (!activiteRes) throw new Error("l'activité n'existe pas")
-
-    return titreActiviteFormat(activiteRes)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const activiteSupprimer = async ({ id }: { id: string }, { user }: Context) => {
+export const activiteSupprimer = async ({ id }: { id: ActiviteId }, { user }: Context) => {
   try {
     const oldTitreActivite = await titreActiviteGet(id, { fields: {} }, user)
 
@@ -330,8 +263,6 @@ const activiteSupprimer = async ({ id }: { id: string }, { user }: Context) => {
 
     const activite = titreActiviteDelete(id, {})
 
-    await fichiersRepertoireDelete(id, 'activites')
-
     return activite
   } catch (e) {
     console.error(e)
@@ -339,5 +270,3 @@ const activiteSupprimer = async ({ id }: { id: string }, { user }: Context) => {
     throw e
   }
 }
-
-export { activite, activites, activiteModifier, activiteSupprimer, activiteDeposer }

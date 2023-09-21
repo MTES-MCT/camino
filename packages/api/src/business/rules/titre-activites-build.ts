@@ -11,6 +11,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
 const substancesFiscalesFind = (substances: SubstanceLegaleId[]): SubstanceFiscale[] => substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
@@ -82,7 +83,7 @@ export const titreActiviteSectionsBuild = (
   }, [])
 }
 
-const titreActiviteFind = (activiteTypeId: string, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null) =>
+const titreActiviteFind = (activiteTypeId: ActivitesTypesId, annee: number, periodeId: number, titreActivites?: ITitreActivite[] | null) =>
   !!titreActivites?.length && titreActivites.find(a => a.typeId === activiteTypeId && a.annee === annee && a.periodeId === periodeId)
 
 /**
@@ -100,13 +101,13 @@ const titreActiviteFind = (activiteTypeId: string, annee: number, periodeId: num
  */
 
 const titreActiviteBuild = (
-  typeId: string,
+  typeId: ActivitesTypesId,
   periodeId: number,
   activiteTypeSections: DeepReadonly<ActiviteSection[]>,
   annee: number,
   frequenceId: FrequenceId,
   aujourdhui: CaminoDate,
-  titreId: string,
+  titreId: TitreId,
   titreDemarches: ITitreDemarche[],
   titreTypeId: TitreTypeId,
   titreActivites?: ITitreActivite[] | null
@@ -154,7 +155,7 @@ export const titreActivitesBuild = (
   activiteTypeId: ActivitesTypesId,
   annees: number[],
   aujourdhui: CaminoDate,
-  titreId: string,
+  titreId: TitreId,
   titreTypeId: TitreTypeId,
   titreDemarches?: ITitreDemarche[] | null,
   titreActivites?: ITitreActivite[] | null

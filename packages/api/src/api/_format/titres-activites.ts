@@ -1,12 +1,10 @@
 import { ITitreActivite, IContenu } from '../../types.js'
-import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { Unites } from 'camino-common/src/static/unites.js'
-import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes.js'
 
-export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu, operation: 'read' | 'write') => {
+// TODO 2023-09-19 à supprimer quand on arrêtera d’envoyer le contenu par email
+const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, contenu: IContenu) => {
   const section = sections.find(s => s.id === 'substancesFiscales')
 
   if (section?.elements?.length && contenu?.substancesFiscales) {
@@ -18,7 +16,7 @@ export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, co
       if (element && (element.type === 'integer' || element.type === 'number') && element.uniteId) {
         const ratio = Unites[element.uniteId].referenceUniteRatio
         if (ratio) {
-          contenu!.substancesFiscales[id] = operation === 'read' ? (contenu!.substancesFiscales[id] as number) / ratio : (contenu!.substancesFiscales[id] as number) * ratio
+          contenu!.substancesFiscales[id] = (contenu!.substancesFiscales[id] as number) / ratio
         }
       }
     })
@@ -29,11 +27,7 @@ export const titreActiviteContenuFormat = (sections: DeepReadonly<Section[]>, co
 
 export const titreActiviteFormat = (ta: ITitreActivite) => {
   if (ta.contenu) {
-    ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
-  }
-
-  if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION && ta.modification) {
-    ta.deposable = titreActiviteCompleteCheck(ta.sections, activitesTypesDocumentsTypes[ta.typeId], ta.contenu, ta.documents)
+    ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu)
   }
 
   return ta

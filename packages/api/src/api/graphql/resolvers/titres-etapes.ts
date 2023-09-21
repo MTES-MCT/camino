@@ -34,7 +34,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { getSections, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { getSDOMZoneByPoints } from './points.js'
@@ -243,7 +243,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
-    await documentsLier(context, documentIds, { parentId: etapeUpdated.id, propParentId: 'titreEtapeId' })
+    await documentsLier(context, documentIds, etapeUpdated.id)
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -409,7 +409,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    await documentsLier(context, documentIds, { parentId: etape.id, propParentId: 'titreEtapeId' }, titreEtapeOld)
+    await documentsLier(context, documentIds, etape.id, titreEtapeOld)
 
     const sections = getSections(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType.id)
 
@@ -548,7 +548,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
           statutId: decisionContenu.statutId,
         }
 
-        const contenu = decisionAnnexesElements.filter((element): element is Required<SectionsElement & { sectionId: string }> => element.type !== 'file' && !!element.sectionId) ?? []
+        const contenu = decisionAnnexesElements.filter((element): element is Required<SectionElement & { sectionId: string }> => element.type !== 'file' && !!element.sectionId) ?? []
 
         if (contenu) {
           etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {
@@ -581,7 +581,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
 
             const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
 
-            const newDocumentPath = await documentFilePathFind(document, true)
+            const newDocumentPath = documentFilePathFind(document, true)
 
             await fileRename(filePath, newDocumentPath)
 

@@ -3,11 +3,10 @@ import { HelpTooltip } from '../_ui/help-tooltip'
 import { dateFormat } from '@/utils'
 import { Tag } from '../_ui/tag'
 import { computed, onMounted, ref, watch } from 'vue'
-import { EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getEntries, getKeys } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
-import { EntrepriseApiClient, UiEntrepriseDocument } from '../entreprise/entreprise-api-client'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -16,6 +15,7 @@ import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_dem
 import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
 import { ButtonIcon } from '../_ui/button-icon'
+import { ApiClient } from '@/api/api-client'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -28,12 +28,12 @@ interface Props {
   completeUpdate: (etapeEntrepriseDocumentIds: EntrepriseDocumentId[], complete: boolean) => void
   entreprises: Entreprise[]
   etapeId: EtapeId
-  apiClient: Pick<EntrepriseApiClient, 'creerEntrepriseDocument' | 'getEntrepriseDocuments' | 'getEtapeEntrepriseDocuments'>
+  apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'getEntrepriseDocuments' | 'getEtapeEntrepriseDocuments' | 'uploadTempDocument'>
 }
 
 interface InnerEntrepriseDocument {
   id: EntrepriseDocumentId | ''
-  documents: UiEntrepriseDocument[]
+  documents: EntrepriseDocument[]
   entrepriseDocumentType: EntrepriseDocumentType
 }
 
@@ -92,12 +92,12 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     const tdeEntrepriseDocuments = computed<EntrepriseDocumentType[]>(() => {
       return getEntrepriseDocuments(props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.etapeTypeId)
     })
-    const entrepriseDocuments = ref<AsyncData<{ [key in EntrepriseId]?: UiEntrepriseDocument[] }>>({ status: 'LOADING' })
+    const entrepriseDocuments = ref<AsyncData<{ [key in EntrepriseId]?: EntrepriseDocument[] }>>({ status: 'LOADING' })
 
     const loadEntrepriseDocuments = async () => {
       entrepriseDocuments.value = { status: 'LOADING' }
       try {
-        const loadingEntrepriseDocuments: Record<EntrepriseId, UiEntrepriseDocument[]> = {}
+        const loadingEntrepriseDocuments: Record<EntrepriseId, EntrepriseDocument[]> = {}
         for (const entreprise of props.entreprises) {
           loadingEntrepriseDocuments[entreprise.id] = await props.apiClient.getEntrepriseDocuments(entreprise.id)
         }
@@ -113,7 +113,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     }
 
     const complete = computed<boolean>(() => {
-      const entreprisedocuments: UiEntrepriseDocument[] = []
+      const entreprisedocuments: EntrepriseDocument[] = []
       const documents = entrepriseDocuments.value
       if (documents.status === 'LOADED') {
         props.entreprises.forEach(entreprise => {
@@ -340,8 +340,9 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
             }}
             entrepriseId={addPopup.value.entrepriseId}
             apiClient={{
-              creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
-                const newDocumentId = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput)
+              ...props.apiClient,
+              creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput, tempDocumentName) => {
+                const newDocumentId = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
                 etapeEntrepriseDocumentIds.value.push(newDocumentId)
                 await loadEntrepriseDocuments()

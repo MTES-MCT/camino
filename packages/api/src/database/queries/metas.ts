@@ -96,23 +96,13 @@ const documentsTypesGet = async ({ repertoire, typeId }: { repertoire?: IDocumen
 
   q.select('documentsTypes.*')
 
-  if (repertoire) {
-    if (typeId && repertoire === 'activites') {
-      // TODO 2023-08-23 à migrer (comme pour les entreprises) pour pouvoir supprimer définitivement activitesTypes__documentsTypes
-      q.join('activitesTypes__documentsTypes as at_dt', b => {
-        b.on(knex.raw('?? = ?', ['at_dt.activiteTypeId', typeId]))
-        b.on(knex.raw('?? = ??', ['at_dt.documentTypeId', 'documentsTypes.id']))
-      })
+  if (typeId && repertoire === 'demarches') {
+    q.join('etapesTypes__documentsTypes as et_dt', b => {
+      b.on(knex.raw('?? = ?', ['et_dt.etapeTypeId', typeId]))
+      b.on(knex.raw('?? = ??', ['et_dt.documentTypeId', 'documentsTypes.id']))
+    })
 
-      q.select(raw('?? is true', ['at_dt.optionnel']).as('optionnel'))
-    } else if (typeId && repertoire === 'demarches') {
-      q.join('etapesTypes__documentsTypes as et_dt', b => {
-        b.on(knex.raw('?? = ?', ['et_dt.etapeTypeId', typeId]))
-        b.on(knex.raw('?? = ??', ['et_dt.documentTypeId', 'documentsTypes.id']))
-      })
-
-      q.select(raw('?? is true', ['et_dt.optionnel']).as('optionnel'))
-    }
+    q.select(raw('?? is true', ['et_dt.optionnel']).as('optionnel'))
   }
 
   return q

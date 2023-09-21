@@ -12,7 +12,7 @@ import { User } from 'camino-common/src/roles'
 import { Column, TableRow } from './_ui/table'
 import { activitesDownloadFormats, activitesFiltresNames } from 'camino-common/src/filters'
 import { ApiClient, apiClient } from '@/api/api-client'
-import { Activite } from './activite/activite-api-client'
+import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 
 const activitesColonnes = [
@@ -38,7 +38,7 @@ const activitesColonnes = [
   },
 ] as const satisfies readonly Column[]
 
-const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
+const activitesLignesBuild = (activites: UiGraphqlActivite[]): TableRow[] =>
   activites.map(activite => {
     const activiteStatut = ActivitesStatuts[activite.activiteStatutId]
     const columns = {
@@ -68,7 +68,7 @@ const activitesLignesBuild = (activites: Activite[]): TableRow[] =>
 
     return {
       id: activite.id,
-      link: { name: 'activite', params: { id: activite.slug } },
+      link: { name: 'activite', params: { activiteId: activite.slug } },
       columns,
     }
   })

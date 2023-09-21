@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { Infos, Props } from './infos'
-import { Section, TitreId, TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
+import { TitreId, TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
@@ -22,7 +23,7 @@ const apiClient: Props['apiClient'] = {
   loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
   linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: titresTo, amont: titresFrom })),
   loadTitreSections: (_titreId: TitreId) =>
-    new Promise<Section[]>(resolve =>
+    new Promise<SectionWithValue[]>(resolve =>
       resolve([
         {
           id: 'id',
@@ -115,7 +116,7 @@ export const Empty: StoryFn = () => (
       loadLinkableTitres: () => () => Promise.resolve([]),
       loadTitreLinks: () => Promise.resolve({ aval: [], amont: [] }),
       linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: [], amont: [] })),
-      loadTitreSections: (_titreId: string) => new Promise<Section[]>(resolve => resolve([])),
+      loadTitreSections: (_titreId: string) => new Promise<SectionWithValue[]>(resolve => resolve([])),
     }}
   ></Infos>
 )

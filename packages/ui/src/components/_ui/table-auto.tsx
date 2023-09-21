@@ -69,7 +69,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
 
   return () => (
     <div class="dsfr">
-      <div class="fr-table fr-table--no-caption">
+      <div class="fr-table">
         <table style={{ display: 'table' }}>
           <caption>{props.caption}</caption>
           <thead>
@@ -113,7 +113,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
               <tr key={row.id}>
                 {props.columns.map((col, index) => (
                   <td key={col.id} class={[...(col.class ?? [])]}>
-                    {index === 0 ? (
+                    {index === 0 && row.link !== null ? (
                       <router-link class="fr-link" to={row.link}>
                         <DisplayColumn data={row.columns[col.id]} />
                       </router-link>

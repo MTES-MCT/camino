@@ -3,7 +3,10 @@ import { titresActivitesUpsert } from '../../database/queries/titres-activites.j
 import { titresGet } from '../../database/queries/titres.js'
 import { titreValideCheck } from '../utils/titre-valide-check.js'
 import { vi, describe, expect, test, afterEach } from 'vitest'
-import { titresActivitesToUpdate, titresActivitesNotToUpdate } from './__mocks__/titre-activite-props-update.js'
+import { titreIdValidator } from 'camino-common/src/titres.js'
+import { ITitre, ITitreDemarche } from '../../types.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { activiteIdValidator } from 'camino-common/src/activite.js'
 
 vi.mock('../../database/queries/titres-activites', () => ({
   titresActivitesUpsert: vi.fn(),
@@ -27,6 +30,62 @@ afterEach(() => {
 })
 describe("propriété des activités d'un titre", () => {
   test("met à jour la propriété suppression d'une activité", async () => {
+    const titreId = titreIdValidator.parse('titre-id')
+    const titresActivitesToUpdate = [
+      {
+        id: titreId,
+        nom: 'nom du titre',
+        titreStatutId: 'val',
+        propsTitreEtapesIds: {},
+        typeId: 'axm',
+        demarches: [{} as unknown as ITitreDemarche],
+        activites: [
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2019-03'),
+            titreId,
+            sections: [],
+            activiteStatutId: 'abs',
+            date: toCaminoDate('2019-10-01'),
+            annee: 2019,
+            periodeId: 3,
+            typeId: 'grp',
+            suppression: true,
+          },
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2019-04'),
+            titreId,
+            sections: [],
+            activiteStatutId: 'abs',
+            date: toCaminoDate('2020-01-01'),
+            annee: 2019,
+            periodeId: 4,
+            typeId: 'grp',
+          },
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2020-01'),
+            titreId,
+            sections: [],
+            activiteStatutId: 'abs',
+            date: toCaminoDate('2020-04-01'),
+            annee: 2020,
+            periodeId: 1,
+            typeId: 'grp',
+            suppression: true,
+          },
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2020-02'),
+            titreId,
+            sections: [],
+            activiteStatutId: 'abs',
+            date: toCaminoDate('2020-07-01'),
+            annee: 2020,
+            periodeId: 2,
+            typeId: 'grp',
+          },
+        ],
+      },
+    ] as ITitre[]
+
     titresGetMock.mockResolvedValue(titresActivitesToUpdate)
     titreValideCheckMock.mockReturnValueOnce(false)
     titreValideCheckMock.mockReturnValueOnce(false)
@@ -37,7 +96,65 @@ describe("propriété des activités d'un titre", () => {
     expect(titresActivitesUpdated).toEqual(['titre-activite-id-2019-04', 'titre-activite-id-2020-01'])
     expect(titresActivitesUpsertMock).toHaveBeenCalled()
   })
-  test("be met pas à jour la propriété suppression d'une activité", async () => {
+  test("ne met pas à jour la propriété suppression d'une activité", async () => {
+    const titresActivitesNotToUpdate: ITitre[] = [
+      {
+        id: titreIdValidator.parse('titre-id'),
+        typeId: 'axm',
+        nom: 'nom du titre',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+      },
+      {
+        id: titreIdValidator.parse('titre-id'),
+        typeId: 'axm',
+        nom: 'nom du titre',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        activites: [],
+      },
+      {
+        id: titreIdValidator.parse('titre-id'),
+        typeId: 'axm',
+        nom: 'nom du titre',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        activites: [
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2019-03'),
+            date: toCaminoDate('2019-10-01'),
+            titreId: titreIdValidator.parse('titre-id'),
+            annee: 2019,
+            periodeId: 3,
+            typeId: 'grp',
+            activiteStatutId: 'abs',
+            sections: [],
+            suppression: true,
+          },
+        ],
+      },
+      {
+        id: titreIdValidator.parse('titre-id'),
+        typeId: 'axm',
+        nom: 'nom du titre',
+        titreStatutId: 'ind',
+        propsTitreEtapesIds: {},
+        demarches: [],
+        activites: [
+          {
+            id: activiteIdValidator.parse('titre-activite-id-2019-03'),
+            titreId: titreIdValidator.parse('titre-id'),
+            date: toCaminoDate('2019-10-01'),
+            annee: 2019,
+            activiteStatutId: 'abs',
+            periodeId: 3,
+            typeId: 'grp',
+            sections: [],
+            suppression: true,
+          },
+        ],
+      },
+    ]
     titresGetMock.mockResolvedValue(titresActivitesNotToUpdate)
     const titresActivitesUpdated = await titresActivitesPropsUpdate()
 

@@ -14,13 +14,29 @@ export interface IGetEntrepriseDocumentsInternalResult {
   entreprise_document_type_id: string;
   entreprise_id: string | null;
   id: string;
-  largeobject_id: number | null;
 }
 
 /** 'GetEntrepriseDocumentsInternal' query type */
 export interface IGetEntrepriseDocumentsInternalQuery {
   params: IGetEntrepriseDocumentsInternalParams;
   result: IGetEntrepriseDocumentsInternalResult;
+}
+
+/** 'GetLargeobjectIdByEntrepriseDocumentIdInternal' parameters type */
+export interface IGetLargeobjectIdByEntrepriseDocumentIdInternalParams {
+  entrepriseDocumentId: string;
+}
+
+/** 'GetLargeobjectIdByEntrepriseDocumentIdInternal' return type */
+export interface IGetLargeobjectIdByEntrepriseDocumentIdInternalResult {
+  entreprise_id: string | null;
+  largeobject_id: number;
+}
+
+/** 'GetLargeobjectIdByEntrepriseDocumentIdInternal' query type */
+export interface IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery {
+  params: IGetLargeobjectIdByEntrepriseDocumentIdInternalParams;
+  result: IGetLargeobjectIdByEntrepriseDocumentIdInternalResult;
 }
 
 /** 'InsertEntrepriseDocumentInternal' parameters type */
@@ -46,7 +62,7 @@ export interface IInsertEntrepriseDocumentInternalQuery {
 
 /** 'DeleteEntrepriseDocumentQuery' parameters type */
 export interface IDeleteEntrepriseDocumentQueryParams {
-  entrepriseId?: string | null | void;
+  entrepriseId: string;
   id?: string | null | void;
 }
 

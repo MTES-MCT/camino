@@ -9,14 +9,6 @@ export type ActiviteTypeEmail = {
   activiteTypeId: ActivitesTypesId
 }
 
-export type AdministrationMetas = {
-  activitesTypes: {
-    id: ActivitesTypesId
-    modificationInterdit: boolean
-    lectureInterdit: boolean
-  }[]
-}
-
 export interface AdministrationApiClient {
   administrationActivitesTypesEmails: (administrationId: AdministrationId) => Promise<ActiviteTypeEmail[]>
   administrationUtilisateurs: (administrationId: AdministrationId) => Promise<Utilisateur[]>
@@ -30,8 +22,6 @@ export interface AdministrationApiClient {
       administrationId: AdministrationId
     }
   ) => Promise<void>
-
-  administrationMetas: (administrationId: AdministrationId) => Promise<AdministrationMetas>
 }
 
 export const administrationApiClient: AdministrationApiClient = {
@@ -92,17 +82,4 @@ export const administrationApiClient: AdministrationApiClient = {
         }
       }
     `)({ administrationActiviteTypeEmail: activiteTypeEmail }),
-
-  administrationMetas: async (administrationId: AdministrationId) =>
-    await apiGraphQLFetch(gql`
-      query Administration($id: ID!) {
-        administration(id: $id) {
-          activitesTypes {
-            id
-            modificationInterdit
-            lectureInterdit
-          }
-        }
-      }
-    `)({ id: administrationId }),
 }

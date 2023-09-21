@@ -2,7 +2,7 @@ import { computed, Ref, ref, watch } from 'vue'
 import { Chip } from './chip'
 import styles from './typeahead.module.css'
 import './typeahead.css'
-import { isEventWithTarget, caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
@@ -27,7 +27,7 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
 
 const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
   caminoDefineComponent<Props<T, K>>(['props', 'overrideItems'], props => {
-    const id = props.props.id ?? `typeahead_${(Math.random() * 1000).toFixed()}`
+    const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
     const wrapperId = computed(() => `${id}_wrapper`)
     const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.props.items.find(i => i[props.props.itemKey] === o[props.props.itemKey])).filter(isNotNullNorUndefined)
     const selectedItems = ref<T[]>(getItems(props.overrideItems ?? [])) as Ref<T[]>

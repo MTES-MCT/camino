@@ -4,7 +4,6 @@ import { action } from '@storybook/addon-actions'
 
 import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
-import { administrationMetas } from './administration/permissions.stub'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toUtilisateurId } from 'camino-common/src/roles'
 import { vueRouter } from 'storybook-vue3-router'
@@ -52,7 +51,6 @@ export const Default: StoryFn = () => (
         administrationActiviteTypeEmailDeleteAction()
         return Promise.resolve()
       },
-      administrationMetas,
     }}
   />
 )

@@ -45,14 +45,14 @@ export const WithoutContent: StoryFn = () => (
           id: 'mecanisation',
           type: 'radio',
           nom: 'Mécanisation',
-          value: undefined,
+          value: null,
         },
         {
           id: 'franchissements',
           nom: "Franchissements de cours d'eau",
           type: 'integer',
           description: "Nombre de franchissements de cours d'eau",
-          value: undefined,
+          value: null,
         },
       ],
     }}

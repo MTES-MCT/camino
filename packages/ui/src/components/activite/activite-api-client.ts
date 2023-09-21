@@ -1,11 +1,14 @@
 import { apiGraphQLFetch } from '@/api/_client'
+import { Activite, ActiviteDocumentId, ActiviteId, ActiviteIdOrSlug, TempActiviteDocument } from 'camino-common/src/activite'
 import { CaminoAnnee } from 'camino-common/src/date'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
-
 import gql from 'graphql-tag'
+import { getWithJson, putWithJson } from '../../api/client-rest'
+import { ActivitesByTitre, TitreId } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 
-export interface Activite {
+export interface UiGraphqlActivite {
   id: string
   slug: string
   typeId: ActivitesTypesId
@@ -22,7 +25,12 @@ export interface Activite {
 }
 
 export interface ActiviteApiClient {
-  getActivites: (params: GetActivitesParams) => Promise<{ elements: Activite[]; total: number }>
+  getActivites: (params: GetActivitesParams) => Promise<{ elements: UiGraphqlActivite[]; total: number }>
+  getActivite: (activiteIdOrSlug: ActiviteIdOrSlug) => Promise<Activite>
+  getActivitesByTitreId: (titreId: TitreId) => Promise<ActivitesByTitre>
+  deposerActivite: (activiteId: ActiviteId) => Promise<void>
+  supprimerActivite: (activiteId: ActiviteId) => Promise<void>
+  updateActivite: (activiteId: ActiviteId, sectionsWithValue: SectionWithValue[], activiteDocumentIds: ActiviteDocumentId[], newTempDocuments: TempActiviteDocument[]) => Promise<void>
 }
 
 export type GetActivitesParams = {
@@ -93,5 +101,46 @@ export const activiteApiClient: ActiviteApiClient = {
       ...params,
     })
     return data
+  },
+  getActivite: async (activiteIdOrSlug: ActiviteIdOrSlug) => {
+    return getWithJson('/rest/activites/:activiteId', {
+      activiteId: activiteIdOrSlug,
+    })
+  },
+  getActivitesByTitreId: async (titreId: TitreId): Promise<ActivitesByTitre> => {
+    return getWithJson('/rest/titres/:titreId/activites', {
+      titreId,
+    })
+  },
+  deposerActivite: async (activiteId: ActiviteId) => {
+    await apiGraphQLFetch(gql`
+      mutation ActiviteDeposer($id: ID!) {
+        activiteDeposer(id: $id) {
+          id
+        }
+      }
+    `)({ id: activiteId })
+  },
+  supprimerActivite: async (activiteId: ActiviteId) => {
+    await apiGraphQLFetch(gql`
+      mutation ActiviteDeposer($id: ID!) {
+        activiteSupprimer(id: $id) {
+          id
+        }
+      }
+    `)({ id: activiteId })
+  },
+  updateActivite: async (activiteId: ActiviteId, sectionsWithValue: SectionWithValue[], activiteDocumentIds: ActiviteDocumentId[], newTempDocuments: TempActiviteDocument[]) => {
+    return putWithJson(
+      '/rest/activites/:activiteId',
+      {
+        activiteId,
+      },
+      {
+        sectionsWithValue,
+        activiteDocumentIds,
+        newTempDocuments,
+      }
+    )
   },
 }

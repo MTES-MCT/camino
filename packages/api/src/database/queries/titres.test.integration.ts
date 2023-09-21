@@ -49,7 +49,7 @@ describe('teste les requêtes sur les titres', () => {
 
       const archiveTitre = await Titres.query().findById(titre.id)
 
-      expect(archiveTitre).not.toBeUndefined()
+      expect(archiveTitre).not.toBe(undefined)
       expect(archiveTitre?.archive).toBe(true)
 
       const archiveDemarches = await TitresDemarches.query().where('titreId', archiveTitre!.id)

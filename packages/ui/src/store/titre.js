@@ -1,8 +1,10 @@
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { titre, titreCreer } from '../api/titres'
 
 import router from '../router'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { getDownloadRestRoute } from '@/api/client-rest'
 
 const state = {
   element: null,
@@ -29,7 +31,7 @@ const getters = {
     const tabs = [{ id: 'demarches', nom: 'Droits miniers' }]
 
     if (state.element) {
-      if (state.element.activites?.length) {
+      if (canReadActivites(rootState.user.element)) {
         tabs.push({ id: 'activites', nom: 'Activités' })
       }
 

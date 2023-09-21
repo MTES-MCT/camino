@@ -55,3 +55,51 @@ export interface IGetTitreCommunesInternalQuery {
   result: IGetTitreCommunesInternalResult;
 }
 
+/** 'GetTitreTypeIdByTitreIdDb' parameters type */
+export interface IGetTitreTypeIdByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetTitreTypeIdByTitreIdDb' return type */
+export interface IGetTitreTypeIdByTitreIdDbResult {
+  titre_type_id: string;
+}
+
+/** 'GetTitreTypeIdByTitreIdDb' query type */
+export interface IGetTitreTypeIdByTitreIdDbQuery {
+  params: IGetTitreTypeIdByTitreIdDbParams;
+  result: IGetTitreTypeIdByTitreIdDbResult;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' parameters type */
+export interface IGetAdministrationsLocalesByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' return type */
+export interface IGetAdministrationsLocalesByTitreIdDbResult {
+  administrations_locales: Json | null;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' query type */
+export interface IGetAdministrationsLocalesByTitreIdDbQuery {
+  params: IGetAdministrationsLocalesByTitreIdDbParams;
+  result: IGetAdministrationsLocalesByTitreIdDbResult;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' parameters type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' return type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbResult {
+  id: string;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' query type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbQuery {
+  params: IGetTitulairesAmodiatairesByTitreIdDbParams;
+  result: IGetTitulairesAmodiatairesByTitreIdDbResult;
+}
+

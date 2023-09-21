@@ -1,8 +1,8 @@
 import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
-import { Section } from 'camino-common/src/titres.js'
+import { SectionWithValue } from 'camino-common/src/sections.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getElementValeurs, getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
@@ -65,7 +65,7 @@ export const titreSectionsGet = ({
     | null
     | undefined
   contenusTitreEtapesIds?: ITitre['contenusTitreEtapesIds']
-}): Section[] => {
+}): SectionWithValue[] => {
   if (demarches === undefined) {
     throw new Error('les démarches doivent être chargées')
   }
@@ -74,7 +74,7 @@ export const titreSectionsGet = ({
     return []
   }
 
-  const sections: Section[] = []
+  const sections: SectionWithValue[] = []
 
   Object.keys(contenusTitreEtapesIds).forEach(sectionId => {
     if (contenusTitreEtapesIds[sectionId]) {
@@ -116,8 +116,14 @@ export const titreSectionsGet = ({
                       const value = etape.contenu[sectionId][elementId]
                       if (value !== null) {
                         if (!titreElement) {
+                          const optionsObject: { options?: { id: string; nom: string }[] } = {}
+                          if (etapeElement.type === 'select') {
+                            optionsObject.options = getElementValeurs(etapeElement)
+                          }
+
                           titreTypeSection.elements.push({
                             ...etapeElement,
+                            ...optionsObject,
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             value,
@@ -140,7 +146,7 @@ export const titreSectionsGet = ({
 
 export const getTitresSections =
   (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<Section[]>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<SectionWithValue[]>): Promise<void> => {
     try {
       const titreId: string | undefined = req.params.titreId
       if (!titreId) {
@@ -149,7 +155,7 @@ export const getTitresSections =
 
       const user = req.auth
 
-      let result: Section[] = []
+      let result: SectionWithValue[] = []
       const titre = await titreGet(
         titreId,
         {

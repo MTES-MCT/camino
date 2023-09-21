@@ -1,7 +1,20 @@
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
-export const isNotNullNorUndefined = <T>(value: T | null | undefined): value is T => {
-  return value !== null && value !== undefined
+export type Nullable<T> = { [P in keyof T]: T[P] | null }
+export function isNotNullNorUndefined<T>(value: T | null | undefined): value is T {
+  return !isNullOrUndefined(value)
+}
+
+export const isNotNullNorUndefinedNorEmpty = <U>(value: U[] | null | undefined): value is NonEmptyArray<U> => {
+  if (!isNullOrUndefined(value)) {
+    return isNonEmptyArray(value)
+  }
+
+  return false
+}
+
+export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
+  return value === null || value === undefined
 }
 
 export const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
@@ -40,3 +53,17 @@ export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 
 // from https://stackoverflow.com/questions/72789915/typescript-omit-seems-to-transform-an-union-into-an-intersection/72790170#72790170
 export type OmitDistributive<T, K extends string> = T extends unknown ? Omit<T, K> : never
+
+export type SimplePromiseFn<T> = () => Promise<T>
+export type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
+export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
+  let cache: T | null = null
+
+  return (async () => {
+    if (cache === null) {
+      cache = await fn()
+    }
+
+    return cache
+  }) as Memoized<T>
+}

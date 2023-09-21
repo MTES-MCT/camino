@@ -3,6 +3,7 @@ import type { Meta, StoryFn } from '@storybook/vue3'
 import { render } from '@testing-library/vue'
 import { composeStories } from '@storybook/testing-vue3'
 import { h } from 'vue'
+import { setSeed } from './utils/vue-tsx-utils'
 
 type StoryFile = {
   default: Meta
@@ -44,6 +45,7 @@ describe('Storybook Tests', async () => {
         .map(([name, story]) => ({ name, story }))
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async value => {
+      setSeed(12)
       // @ts-ignore
       window.dsfr = null
       const mounted = render(value.story(), {

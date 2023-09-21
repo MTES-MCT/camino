@@ -26,8 +26,11 @@ const meta: Meta = {
 export default meta
 
 export const Super: StoryFn = () => <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'super' }} routePath="/titres?domainesIds=['m']" />
-export const Admin: StoryFn = () => (
+export const AdminONF: StoryFn = () => (
   <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
+)
+export const AdminDGTM: StoryFn = () => (
+  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' }} routePath="/titres?domainesIds=['m']" />
 )
 export const Editeur: StoryFn = () => (
   <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'editeur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />

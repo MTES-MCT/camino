@@ -49,7 +49,7 @@
 
     <TitreDemarches v-if="tabId === 'demarches'" :user="user" :demarches="demarches" :tabId="tabId" @event-track="eventTrack" />
 
-    <TitreActivitesList v-if="tabId === 'activites'" :activites="titre.activites" :titreId="titre.id" />
+    <TitreActivitesList v-if="tabId === 'activites'" :titreId="titre.id" :apiClient="apiClient()" />
 
     <TitreDemarches v-if="tabId === 'travaux'" :demarches="travaux" :tabId="tabId" :user="user" @titre-event-track="eventTrack" />
 
@@ -66,7 +66,7 @@ import { Infos as TitreInfos } from './titre/infos'
 import { Territoires as TitreTerritoires } from './titre/territoires'
 import { Repertoire } from './titre/repertoire'
 import TitreDemarches from './titre/demarches.vue'
-import TitreActivitesList from './activites/list.vue'
+import { TitreActivitesList } from './activites/titre-activites-list'
 import { defineAsyncComponent } from 'vue'
 import { apiClient } from '@/api/api-client'
 

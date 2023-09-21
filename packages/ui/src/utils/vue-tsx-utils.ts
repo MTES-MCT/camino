@@ -28,3 +28,13 @@ export const updateFromCheckboxEvent = (e: Event, myRef: Ref<boolean>) => {
     myRef.value = e.target.checked
   }
 }
+
+let seed = Math.random()
+// USED Only for testing
+export const setSeed = (value: number): void => {
+  seed = value
+}
+export const random = () => {
+  const x = Math.sin(seed++) * 10000
+  return x - Math.floor(x)
+}

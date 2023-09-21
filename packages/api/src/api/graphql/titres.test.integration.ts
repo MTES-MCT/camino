@@ -6,7 +6,6 @@ import { ITitre } from '../../types.js'
 import { userSuper } from '../../database/user-super'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 import { vi, afterEach, afterAll, beforeAll, describe, test, expect } from 'vitest'
 import type { Pool } from 'pg'
@@ -150,132 +149,6 @@ const titreEtapesPubliques: ITitre = {
   ],
 }
 
-const titreWithActiviteGrp: ITitre = {
-  id: newTitreId('titre-id'),
-  nom: 'mon titre',
-  typeId: 'axm',
-  titreStatutId: 'ind',
-  publicLecture: true,
-  propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
-  activites: [
-    {
-      titreId: newTitreId('titre-id'),
-      id: 'titre-id-grp-2020-03',
-      date: toCaminoDate('2020-10-01'),
-      typeId: 'grp',
-      activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
-      periodeId: 3,
-      annee: 2020,
-      utilisateurId: null,
-      sections: [
-        {
-          id: 'renseignements',
-          elements: [
-            {
-              id: 'orBrut',
-              nom: 'Or brut extrait (g)',
-              type: 'number',
-              description: 'Masse d’or brut',
-            },
-            {
-              id: 'orExtrait',
-              nom: 'Or extrait (g)',
-              type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre.",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  demarches: [
-    {
-      id: newDemarcheId('titre-id-demarche-id'),
-      titreId: newTitreId('titre-id'),
-      typeId: 'oct',
-      publicLecture: true,
-      etapes: [
-        {
-          id: newEtapeId('titre-id-demarche-id-dpu'),
-          typeId: 'dpu',
-          ordre: 0,
-          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
-          statutId: 'acc',
-          date: toCaminoDate('2020-02-02'),
-          administrationsLocales: ['dea-guyane-01'],
-        },
-      ],
-    },
-  ],
-}
-
-const titreActivites: ITitre = {
-  id: newTitreId('titre-id'),
-  nom: 'mon titre',
-  typeId: 'arm',
-  titreStatutId: 'ind',
-  publicLecture: true,
-  propsTitreEtapesIds: {},
-  activites: [
-    {
-      id: 'titre-id-activites-oct',
-      titreId: newTitreId('titre-id'),
-      typeId: 'grp',
-      date: toCaminoDate('2020-01-01'),
-      activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
-      periodeId: 1,
-      annee: 2020,
-      sections: [
-        {
-          id: 'renseignements',
-          elements: [
-            {
-              id: 'orBrut',
-              nom: 'Or brut extrait (g)',
-              type: 'number',
-              dateDebut: toCaminoDate('2018-01-01'),
-              description: 'Masse d’or brut',
-            },
-            {
-              id: 'orExtrait',
-              nom: 'Or extrait (g)',
-              type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre.",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'titre-id-activites-pro',
-      titreId: newTitreId('titre-id'),
-      typeId: 'gra',
-      date: toCaminoDate('2020-01-01'),
-      activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
-      periodeId: 1,
-      annee: 2020,
-      sections: [
-        {
-          id: 'renseignements',
-          elements: [
-            {
-              id: 'orBrut',
-              nom: 'Or brut extrait (g)',
-              type: 'number',
-              description: 'Masse d’or brut',
-            },
-            {
-              id: 'orExtrait',
-              nom: 'Or extrait (g)',
-              type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre.",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-}
 describe('titre', () => {
   const titreQuery = queryImport('titre')
 
@@ -291,7 +164,7 @@ describe('titre', () => {
     await titreCreate(titrePublicLecture, {})
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data).toMatchObject({
       titre: { id: 'titre-id' },
     })
@@ -301,7 +174,7 @@ describe('titre', () => {
     await titreCreate(titrePublicLectureFalse, {})
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data).toMatchObject({ titre: null })
   })
 
@@ -309,7 +182,7 @@ describe('titre', () => {
     await titreCreate(titreDemarchesPubliques, {})
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data).toMatchObject({
       titre: {
         id: newTitreId('titre-id'),
@@ -320,25 +193,11 @@ describe('titre', () => {
     expect(res.body.data.titre.demarches.length).toEqual(1)
   })
 
-  test('ne peut pas voir les activités (utilisateur anonyme)', async () => {
-    await titreCreate(titreActivites, {})
-    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body.data).toMatchObject({
-      titre: {
-        id: newTitreId('titre-id'),
-      },
-    })
-
-    expect(res.body.data.titre.activites.length).toEqual(0)
-  })
-
   test('ne peut voir que les étapes qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreEtapesPubliques, {})
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, undefined)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data).toMatchObject({
       titre: {
         id: newTitreId('titre-id'),
@@ -357,7 +216,7 @@ describe('titre', () => {
     await titreCreate(titreEtapesPubliques, {})
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
     expect(
       res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
@@ -389,7 +248,7 @@ describe('titre', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.titre.demarches[0].etapes.length).toEqual(9)
     expect(
       res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
@@ -408,26 +267,6 @@ describe('titre', () => {
         { id: 'titre-id-demarche-id-dpu' },
       ])
     )
-  })
-
-  test('peut modifier les activités GRP (utilisateur DEAL Guyane)', async () => {
-    await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body.data).toMatchObject({
-      titre: { activites: [{ modification: true }] },
-    })
-  })
-
-  test('ne peut pas voir les activités GRP (utilisateur CACEM)', async () => {
-    await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM })
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body.data).toMatchObject({
-      titre: { activites: [] },
-    })
   })
 })
 
@@ -456,7 +295,7 @@ describe('titreCreer', () => {
   test("crée un titre (un utilisateur 'super')", async () => {
     const res = await graphQLCall(dbPool, titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body).toMatchObject({
       data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
     })
@@ -493,7 +332,7 @@ describe('titreCreer', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body).toMatchObject({
       data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
     })

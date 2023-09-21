@@ -6,10 +6,18 @@ import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
-import Activite from '../components/activite.vue'
 import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
-import ActiviteEdition from '../components/activite-edition.vue'
+
+const Activite = async () => {
+  const { Activite } = await import('../components/activite')
+  return Activite
+}
+
+const ActiviteEdition = async () => {
+  const { ActiviteEdition } = await import('../components/activite-edition')
+  return ActiviteEdition
+}
 const Activites = async () => {
   const { Activites } = await import('../components/activites')
   return Activites
@@ -323,7 +331,7 @@ const routes = [
     },
   },
   {
-    path: '/activites/:id',
+    path: '/activites/:activiteId',
     name: 'activite',
     component: Activite,
     meta: {
@@ -332,7 +340,7 @@ const routes = [
     },
   },
   {
-    path: '/activites/:id/edition',
+    path: '/activites/:activiteId/edition',
     name: 'activite-edition',
     component: ActiviteEdition,
     meta: {

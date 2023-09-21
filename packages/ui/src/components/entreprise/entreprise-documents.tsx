@@ -2,22 +2,23 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
-import { EntrepriseApiClient, UiEntrepriseDocument } from './entreprise-api-client'
-import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseApiClient } from './entreprise-api-client'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { dateFormat } from 'camino-common/src/date'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { AddEntrepriseDocumentPopup } from './add-entreprise-document-popup'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
 import { User } from 'camino-common/src/roles'
 import { RemoveEntrepriseDocumentPopup } from './remove-entreprise-document-popup'
+import { ApiClient } from '@/api/api-client'
 
 interface Props {
-  apiClient: Pick<EntrepriseApiClient, 'getEntrepriseDocuments' | 'creerEntrepriseDocument' | 'deleteEntrepriseDocument'>
+  apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'creerEntrepriseDocument' | 'deleteEntrepriseDocument' | 'uploadTempDocument'>
   user: User
   entrepriseId: EntrepriseId
 }
 export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'entrepriseId', 'user'], props => {
-  const data = ref<AsyncData<UiEntrepriseDocument[]>>({ status: 'LOADING' })
+  const data = ref<AsyncData<EntrepriseDocument[]>>({ status: 'LOADING' })
 
   const addPopup = ref<boolean>(false)
   const deletePopup = ref<boolean>(false)
@@ -99,8 +100,9 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
       {addPopup.value ? (
         <AddEntrepriseDocumentPopup
           apiClient={{
-            creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
-              const document = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput)
+            ...props.apiClient,
+            creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput, tempDocumentName) => {
+              const document = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
               await reloadDocuments()
               return document
             },

@@ -216,6 +216,7 @@ type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
 } & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
+
 export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
   const user = req.auth
 

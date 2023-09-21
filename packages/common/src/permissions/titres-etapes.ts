@@ -15,12 +15,13 @@ import { Section, getSections } from '../static/titresTypes_demarchesTypes_etape
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray } from '../typescript-tools.js'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined } from '../typescript-tools.js'
 import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
 import { CaminoDate } from '../date.js'
 import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { Contenu, contenuCompleteValidate } from './sections.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -97,7 +98,7 @@ export const canCreateOrEditEtape = (
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
+    if (isGestionnaire(user.administrationId, titre.typeId) || titresAdministrationsLocales.includes(user.administrationId)) {
       return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.titreStatutId) && canAdministrationEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId, permission)
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
@@ -112,22 +113,6 @@ export const canCreateOrEditEtape = (
   }
 
   return false
-}
-
-type Contenu = Record<string, Record<string, unknown>> | null | undefined
-const contenuCompleteValidate = (sections: DeepReadonly<Section[]>, contenu: Record<string, Record<string, unknown>> | null | undefined): string[] => {
-  const errors: string[] = []
-  sections.forEach(s =>
-    s.elements?.forEach(e => {
-      if (!e.optionnel && !['radio', 'checkbox'].includes(e.type)) {
-        if (!contenu || !contenu[s.id] || contenu[s.id][e.id] === undefined || contenu[s.id][e.id] === null || contenu[s.id][e.id] === '') {
-          errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
-        }
-      }
-    })
-  )
-
-  return errors
 }
 
 export type IsEtapeCompleteEtape = {
@@ -161,8 +146,8 @@ export const isEtapeComplete = (
     errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
   }
 
-  const dts: DocumentType[] = documentsTypes ? [...documentsTypes] : []
-  if (sdomZones?.length) {
+  const dts: DocumentType[] = [...documentsTypes]
+  if (isNotNullNorUndefined(sdomZones)) {
     // Ajoute les documents obligatoires en fonction des zones du SDOM
     const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
 
@@ -170,10 +155,18 @@ export const isEtapeComplete = (
   }
 
   // les fichiers obligatoires sont tous renseignés et complets
-  if (dts!.length) {
+  if (isNonEmptyArray(dts)) {
     // ajoute des documents obligatoires pour les arm mécanisées
     if (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm) {
-      dts.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !titreEtape.contenu?.arm.mecanise))
+      dts
+        .filter(dt => ['doe', 'dep'].includes(dt.id))
+        .forEach(dt => {
+          if (titreEtape.contenu?.arm?.mecanise === true) {
+            dt.optionnel = false
+          } else {
+            dt.optionnel = true
+          }
+        })
     }
     const documentsErrors = isDocumentsComplete(documents ?? [], dts)
     if (!documentsErrors.valid) {
@@ -216,7 +209,7 @@ export const isEtapeComplete = (
     }
   }
 
-  if (!titreEtape.duree && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
+  if ((isNullOrUndefined(titreEtape.duree) || titreEtape.duree === 0) && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
     errors.push('la durée doit être renseignée')
   }
 

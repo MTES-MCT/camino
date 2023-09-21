@@ -19,7 +19,8 @@ import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/new-section'
 import { FunctionalComponent, onMounted, ref, watch } from 'vue'
 import { AsyncData } from '../../api/client-rest'
-import { Section, TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -83,7 +84,7 @@ type InfosSectionsProps = {
   apiClient: Pick<ApiClient, 'loadTitreSections'>
 }
 const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiClient'], props => {
-  const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
+  const load = ref<AsyncData<SectionWithValue[]>>({ status: 'LOADING' })
 
   const loadTitreSections = async () => {
     load.value = { status: 'LOADING' }

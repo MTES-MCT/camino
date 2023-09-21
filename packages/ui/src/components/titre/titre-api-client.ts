@@ -1,4 +1,5 @@
-import { EditableTitre, Section, TitreGet, TitreId } from 'camino-common/src/titres'
+import { EditableTitre, TitreGet, TitreId } from 'camino-common/src/titres'
+import { SectionWithValue } from 'camino-common/src/sections'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { Commune, CommuneId } from 'camino-common/src/static/communes'
@@ -38,7 +39,7 @@ export type TitreForTable = {
   references?: { referenceTypeId: ReferenceTypeId; nom: string }[]
 }
 export interface TitreApiClient {
-  loadTitreSections: (titreId: TitreId) => Promise<Section[]>
+  loadTitreSections: (titreId: TitreId) => Promise<SectionWithValue[]>
   removeTitre: (titreId: TitreId) => Promise<void>
   titreUtilisateurAbonne: (titreId: TitreId, abonne: boolean) => Promise<void>
   editTitre: (titre: EditableTitre) => Promise<void>
@@ -104,7 +105,7 @@ export interface TitreApiClient {
 }
 
 export const titreApiClient: TitreApiClient = {
-  loadTitreSections: async (titreId: TitreId): Promise<Section[]> => {
+  loadTitreSections: async (titreId: TitreId): Promise<SectionWithValue[]> => {
     return getWithJson('/rest/titreSections/:titreId', { titreId })
   },
   removeTitre: async (titreId: TitreId): Promise<void> => {

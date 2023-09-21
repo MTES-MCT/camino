@@ -23,7 +23,6 @@ type Administration {
   commune: String
   cedex: String
   utilisateurs: [Utilisateur]
-  activitesTypes: [ActiviteType]
   modification: Boolean
 }
 
@@ -48,13 +47,6 @@ input InputAdministrationTitreTypeEtapeType {
   lectureInterdit: Boolean
   modificationInterdit: Boolean
   creationInterdit: Boolean
-}
-
-input InputAdministrationActiviteType {
-  administrationId: ID!
-  activiteTypeId: ID!
-  lectureInterdit: Boolean
-  modificationInterdit: Boolean
 }
 
 input InputAdministrationActiviteTypeEmail {

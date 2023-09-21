@@ -82,8 +82,8 @@ describe('documentSupprimer', () => {
 
     const res = await graphQLCall(dbPool, documentSupprimerQuery, { id: documentId }, { role: 'super' })
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.documentSupprimer).toBeTruthy()
-    expect(await documentGet(documentId, {}, userSuper)).toBeUndefined()
+    expect(await documentGet(documentId, {}, userSuper)).toBe(undefined)
   })
 })

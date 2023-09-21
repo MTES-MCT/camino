@@ -6,11 +6,11 @@ import { IContenu, IContenuValeur, IDocumentRepertoire, ITitreEtape } from '../.
 import { dirCreate } from '../../tools/dir-create.js'
 import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
-import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 
-const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: DeepReadonly<SectionsElement>) => {
+const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: DeepReadonly<SectionElement>) => {
   const newFiles = [] as FileUpload[]
   let newValue = contenuValeur as IContenuValeur | null
 
@@ -76,7 +76,7 @@ const contenuFilesGet = (contenu: IContenu | null | undefined, sections: DeepRea
   return files
 }
 
-const sectionElementFilesGet = (sectionElement: DeepReadonly<SectionsElement>, contenuValeur: IContenuValeur | null) => {
+const sectionElementFilesGet = (sectionElement: DeepReadonly<SectionElement>, contenuValeur: IContenuValeur | null) => {
   const files = [] as string[]
   if (sectionElement.type === 'file') {
     if (contenuValeur) {

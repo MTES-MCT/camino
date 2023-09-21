@@ -74,12 +74,10 @@ export const PurePTMGDashboard = caminoDefineComponent<Props>(['apiClient'], pro
             {item.ptmgTitresBloques.length ? (
               <>
                 <div class="line-neutral width-full mb-l"></div>
-                <h3>ARM en attente</h3>
                 <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={item.ptmgTitresBloques} initialSort={{ column: initialColumnId, order: 'asc' }} />
               </>
             ) : null}
             <div class="line-neutral width-full mb-l"></div>
-            <h3>ARM en cours d’instruction</h3>
             <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={item.ptmgTitres} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
           </>
         )}

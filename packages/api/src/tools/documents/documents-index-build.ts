@@ -14,8 +14,6 @@ const documentPathGet = (document: IDocument) => {
 
   if (path === 'demarches') {
     path += `/${document.titreEtapeId}`
-  } else if (path === 'activites') {
-    path += `/${document.titreActiviteId}`
   }
 
   return `${path}/${document.id}.${document.fichierTypeId}`

@@ -110,7 +110,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^16.0.0",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-sql": "^2.3.2",
+    "eslint-plugin-sql": "^2.4.4",
     "eslint-plugin-tsdoc": "^0.2.17",
     "pg-escape": "^0.2.0",
     "supertest": "^6.3.3",

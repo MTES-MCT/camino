@@ -46,7 +46,7 @@ describe('teste les requêtes sur les démarches', () => {
 
       const archiveDemarche = await TitresDemarches.query().findById(demarche.id).withGraphFetched('etapes')
 
-      expect(archiveDemarche).not.toBeUndefined()
+      expect(archiveDemarche).not.toBe(undefined)
       expect(archiveDemarche?.archive).toBe(true)
       expect(archiveDemarche?.etapes).toHaveLength(3)
 

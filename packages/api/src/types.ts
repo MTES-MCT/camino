@@ -25,12 +25,13 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
-import { Section, SectionsElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId } from 'camino-common/src/titres.js'
 import { EtapeId } from 'camino-common/src/etape'
+import { ActiviteId } from 'camino-common/src/activite'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -154,7 +155,6 @@ interface IActiviteType {
   frequenceId: FrequenceId
   dateDebut: string
   delaiMois: number
-  administrations?: IAdministration[] | null
   email?: string | null
   modification?: boolean | null
 }
@@ -175,7 +175,6 @@ interface IAdministration {
   departementId?: DepartementId | null
   regionId?: RegionId | null
   abreviation?: string | null
-  activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
   associee?: boolean | null
   modification?: boolean | null
@@ -215,7 +214,7 @@ interface IDemarcheType {
   travaux?: boolean
 }
 
-export const DOCUMENTS_REPERTOIRES = ['demarches', 'activites', 'tmp'] as const
+export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
 type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IDomaine {
@@ -299,13 +298,6 @@ interface IGeometry {
   coordinates: number[] | number[][] | number[][][] | number[][][][]
 }
 
-interface IAdministrationActiviteType {
-  administrationId: string
-  activiteTypeId: string
-  lectureInterdit: boolean
-  modificationInterdit: boolean
-}
-
 interface IAdministrationActiviteTypeEmail {
   administrationId: AdministrationId
   activiteTypeId: string
@@ -358,13 +350,12 @@ interface ITitre {
 }
 
 interface ITitreActivite {
-  id: string
+  id: ActiviteId
   slug?: string
   titreId: TitreId
   titre?: ITitre | null
   date: CaminoDate
   typeId: ActivitesTypesId
-  type?: IActiviteType | null
   activiteStatutId: ActivitesStatutId
   periodeId: number
   annee: number
@@ -373,10 +364,7 @@ interface ITitreActivite {
   dateSaisie?: CaminoDate
   contenu?: IContenu | null
   sections: DeepReadonly<Section[]>
-  documents?: IDocument[] | null
-  modification?: boolean | null
   suppression?: boolean | null
-  deposable?: boolean | null
 }
 
 interface ITitreDemarche {
@@ -418,8 +406,6 @@ interface IDocument {
   entreprisesLecture?: boolean | null
   titreEtapeId?: EtapeId | null
   etape?: ITitreEtape | null
-  titreActiviteId?: string | null
-  activite?: ITitreActivite | null
   suppression?: boolean | null
 }
 interface ITitreEtape {
@@ -456,7 +442,7 @@ interface ITitreEtape {
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
-  decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionsElement & { sectionId?: string })[] })[]> | null
+  decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
 }
 
@@ -649,7 +635,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,

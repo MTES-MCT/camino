@@ -1,11 +1,12 @@
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { DocumentId, EntrepriseDocumentId, documentIdValidator, entrepriseDocumentIdValidator } from 'camino-common/src/entreprise.js'
-import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { ActiviteDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { randomBytes } from 'node:crypto'
 import { TitreId } from 'camino-common/src/titres.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { UtilisateurId } from 'camino-common/src/roles.js'
+import { ActiviteDocumentId, ActiviteId, activiteDocumentIdValidator } from 'camino-common/src/activite.js'
 
 export const idGenerate = <T extends string = string>(length = 24): T => randomBytes(length / 2).toString('hex') as T
 
@@ -13,6 +14,10 @@ export const idGenerate = <T extends string = string>(length = 24): T => randomB
 // pour pouvoir utiliser « is » de Typescript et controler qu’on ne met pas n’importe quel string dans cette méthode
 export const newDemarcheId = (value: string = idGenerate()): DemarcheId => {
   return value as DemarcheId
+}
+
+export const newActiviteId = (value: string = idGenerate()): ActiviteId => {
+  return value as ActiviteId
 }
 
 export const newTitreId = (value: string = idGenerate()): TitreId => {
@@ -28,6 +33,13 @@ export const newEnterpriseDocumentId = (date: CaminoDate, documentTypeId: Docume
 
   return entrepriseDocumentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
 }
+
+export const newActiviteDocumentId = (date: CaminoDate, activiteDocumentTypeId: ActiviteDocumentTypeId): ActiviteDocumentId => {
+  const hash = idGenerate(8)
+
+  return activiteDocumentIdValidator.parse(`${date}-${activiteDocumentTypeId}-${hash}`)
+}
+
 export const newDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId): DocumentId => {
   const hash = idGenerate(8)
 

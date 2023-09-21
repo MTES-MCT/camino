@@ -1,6 +1,6 @@
 import { CaminoDate, toCaminoDate } from '../date.js'
 import { FrequenceId } from './frequence.js'
-import { Section, SectionsElement } from './titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Section, SectionElement } from './titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly } from '../typescript-tools.js'
 import { z } from 'zod'
 
@@ -36,7 +36,7 @@ type SubstancesFiscalesSection = { id: 'substancesFiscales'; nom: string }
 export const isSubstancesFiscales = (section: DeepReadonly<ActiviteSection>): section is DeepReadonly<SubstancesFiscalesSection> => section.id === 'substancesFiscales'
 
 export type ActiviteSection = (Omit<Section, 'elements'> & { elements: ActiviteSectionElement[] }) | SubstancesFiscalesSection
-export type ActiviteSectionElement = SectionsElement & { periodeId?: 1 | 2 | 3 | 4 }
+export type ActiviteSectionElement = SectionElement & { periodeId?: 1 | 2 | 3 | 4 }
 
 export const ActivitesTypes: {
   [key in ActivitesTypesId]: ActiviteType<key>

@@ -2,17 +2,19 @@ import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import { EntrepriseApiClient, uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
+import { uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
 import { DocumentsTypes, EntrepriseDocumentTypeId, EntrepriseDocumentTypeIds, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
 import { InputDate } from '../_ui/dsfr-input-date'
 import { CaminoDate } from 'camino-common/src/date'
 import { InputFile } from '../_ui/dsfr-input-file'
+import { ApiClient } from '@/api/api-client'
+import { DsfrInput } from '../_ui/dsfr-input'
 
 interface Props {
   close: () => void
   entrepriseId: EntrepriseId
   lockedEntrepriseDocumentTypeId?: EntrepriseDocumentTypeId
-  apiClient: Pick<EntrepriseApiClient, 'creerEntrepriseDocument'>
+  apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'>
 }
 export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close', 'entrepriseId', 'apiClient', 'lockedEntrepriseDocumentTypeId'], props => {
   const entrepriseDocumentTypeId = ref<(typeof EntrepriseDocumentTypeIds)[number] | null>(props.lockedEntrepriseDocumentTypeId ?? null)
@@ -20,6 +22,9 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
   const entrepriseDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>('')
 
+  const descriptionChange = (value: string) => {
+    documentDescription.value = value
+  }
   const content = () => (
     <form>
       {props.lockedEntrepriseDocumentTypeId ? null : (
@@ -59,12 +64,7 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
           />
         </div>
         <div class="fr-fieldset__element">
-          <div class="fr-input-group">
-            <label class="fr-label" for="description">
-              Description
-            </label>
-            <input class="fr-input" name="text" id="description" type="text" onChange={e => updateFromEvent(e, documentDescription)} />
-          </div>
+          <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>
@@ -76,22 +76,25 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
       close={props.close}
       validate={{
         action: async () => {
-          await props.apiClient.creerEntrepriseDocument(
-            props.entrepriseId,
-            uiEntrepriseDocumentInputValidator.parse({
-              typeId: entrepriseDocumentTypeId.value,
-              date: documentDate.value,
-              document: entrepriseDocumentFile.value,
-              description: documentDescription.value,
-            })
-          )
+          if (entrepriseDocumentFile.value !== null) {
+            const tempDocumentName = await props.apiClient.uploadTempDocument(entrepriseDocumentFile.value)
+            await props.apiClient.creerEntrepriseDocument(
+              props.entrepriseId,
+              uiEntrepriseDocumentInputValidator.parse({
+                typeId: entrepriseDocumentTypeId.value,
+                date: documentDate.value,
+                description: documentDescription.value,
+              }),
+              tempDocumentName
+            )
+          }
         },
-        can: uiEntrepriseDocumentInputValidator.safeParse({
-          typeId: entrepriseDocumentTypeId.value,
-          date: documentDate.value,
-          document: entrepriseDocumentFile.value,
-          description: documentDescription.value,
-        }).success,
+        can:
+          uiEntrepriseDocumentInputValidator.safeParse({
+            typeId: entrepriseDocumentTypeId.value,
+            date: documentDate.value,
+            description: documentDescription.value,
+          }).success && entrepriseDocumentFile.value !== null,
       }}
     />
   )

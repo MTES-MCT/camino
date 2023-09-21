@@ -33,7 +33,7 @@ export const visibleCheck = async (
 
   const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
-  const gestionnaire = isGestionnaire(administration.id)
+  const gestionnaire = isGestionnaire(administration.id, null)
 
   const titre = titreBuild(
     {
@@ -57,7 +57,7 @@ export const visibleCheck = async (
     }
   )
 
-  expect(res.body.errors).toBeUndefined()
+  expect(res.body.errors).toBe(undefined)
   if (cible === 'titres') {
     if (visible) {
       expect(res.body.data.titre).not.toBeNull()
@@ -120,7 +120,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     })
 
     if (creer) {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       expect(res.body.data).toMatchObject({ demarcheCreer: {} })
     } else {
       expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -130,7 +130,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 
     const demarcheCreated = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
 
-    expect(demarcheCreated.body.errors).toBeUndefined()
+    expect(demarcheCreated.body.errors).toBe(undefined)
 
     const etapeTypeId = 'mfr'
     const etapeType = (await etapeTypeGet(etapeTypeId, {
@@ -250,7 +250,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     )
 
     if (creer) {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       expect(res.body.data).toMatchObject({ etapeCreer: {} })
     } else {
       expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
@@ -294,7 +294,7 @@ export const modificationCheck = async (
 
   if (cible === 'titres') {
     if (modifier) {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       expect(res.body.data.titre).toMatchObject({
         modification: true,
       })
@@ -303,19 +303,19 @@ export const modificationCheck = async (
     }
   } else if (cible === 'demarches') {
     if (modifier) {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       expect(res.body.data.titre.demarches![0]).toMatchObject({
         modification: true,
       })
     } else {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       const demarches = res.body.data.titre.demarches
       const check = !demarches.length || !demarches[0].modification
       expect(check).toBeTruthy()
     }
   } else if (cible === 'etapes') {
     if (modifier) {
-      expect(res.body.errors).toBeUndefined()
+      expect(res.body.errors).toBe(undefined)
       expect(res.body.data.titre.demarches![0]!.etapes![0]).toMatchObject({
         modification: true,
       })

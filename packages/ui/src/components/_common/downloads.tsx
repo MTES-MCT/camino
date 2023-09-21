@@ -1,6 +1,6 @@
 import { inject, ref, defineComponent, HTMLAttributes } from 'vue'
 import { useRoute, RouteLocationNormalized, LocationQuery } from 'vue-router'
-import { Dropdown, Item } from '../_ui/dropdown'
+import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import { DownloadRestRoutes, DownloadFormat, CaminoRestParams } from 'camino-common/src/rest'
 import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools'
 import { getDownloadRestRoute } from '@/api/client-rest'
@@ -32,15 +32,13 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
   if (isNonEmptyArray(items)) {
     return () => (
       <div class="dsfr" style={{ display: 'flex' }}>
-        <Dropdown
+        <DsfrSelect
           id={props.id}
           class="fr-mr-1v"
-          labelVisible={false}
           items={items}
-          label="Téléchargements"
-          selectedItemId={null}
-          placeholder={"Choississez un format d'export"}
-          selectItem={id => {
+          legend={{ main: 'Téléchargements', visible: false, placeholder: "Choississez un format d'export" }}
+          initialValue={null}
+          valueChanged={id => {
             downloadFormat.value = id
           }}
         />

@@ -41,7 +41,7 @@ export function assertsCanCreateTitre(user: User, titreTypeId: TitreTypeId | und
   }
 }
 
-export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
+export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

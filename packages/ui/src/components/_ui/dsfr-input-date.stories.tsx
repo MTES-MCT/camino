@@ -4,7 +4,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Components/UI/InputDate(DSFR)',
+  title: 'Components/UI/Dsfr/InputDate',
   component: InputDate,
 }
 export default meta

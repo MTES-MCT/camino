@@ -1,8 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IDeleteEntrepriseDocumentQueryQuery, IGetEntrepriseDocumentsInternalQuery, IInsertEntrepriseDocumentInternalQuery } from './entreprises.queries.types.js'
-import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, entrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import {
+  IDeleteEntrepriseDocumentQueryQuery,
+  IGetEntrepriseDocumentsInternalQuery,
+  IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery,
+  IInsertEntrepriseDocumentInternalQuery,
+} from './entreprises.queries.types.js'
+import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, entrepriseDocumentValidator, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools.js'
@@ -39,7 +44,6 @@ select
     d.date,
     d.entreprise_document_type_id,
     d.entreprise_id,
-    d.largeobject_id,
     not exists (
         select
             *
@@ -53,6 +57,39 @@ where ('dummy' in $$ entrepriseDocumentIds
     OR d.id in $$ entrepriseDocumentIds)
 AND ('dummy' in $$ entrepriseIds
     OR d.entreprise_id in $$ entrepriseIds)
+`
+
+export const entrepriseDocumentLargeObjectIdValidator = z.number().brand('EntrepriseDocumentLargeObjectId')
+export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdValidator>
+const loidByEntrepriseDocumentIdValidator = z.object({ largeobject_id: entrepriseDocumentLargeObjectIdValidator, entreprise_id: entrepriseIdValidator })
+
+export const getLargeobjectIdByEntrepriseDocumentId = async (entrepriseDocumentId: EntrepriseDocumentId, pool: Pool, user: User): Promise<EntrepriseDocumentLargeObjectId | null> => {
+  const result = await dbQueryAndValidate(
+    getLargeobjectIdByEntrepriseDocumentIdInternal,
+    {
+      entrepriseDocumentId,
+    },
+    pool,
+    loidByEntrepriseDocumentIdValidator
+  )
+
+  if (result.length === 1 && canSeeEntrepriseDocuments(user, result[0].entreprise_id)) {
+    return result[0].largeobject_id
+  }
+
+  return null
+}
+const getLargeobjectIdByEntrepriseDocumentIdInternal = sql<
+  Redefine<IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery, { entrepriseDocumentId: EntrepriseDocumentId }, z.infer<typeof loidByEntrepriseDocumentIdValidator>>
+>`
+select
+    d.largeobject_id,
+    d.entreprise_id
+from
+    entreprises_documents d
+where
+    d.id = $ entrepriseDocumentId !
+LIMIT 1
 `
 
 export const insertEntrepriseDocument = async (
@@ -84,7 +121,6 @@ insert into entreprises_documents (id, entreprise_document_type_id, date, entrep
     values ($ id, $ entreprise_document_type_id, $ date, $ entreprise_id, $ description, $ largeobject_id !)
 RETURNING
     id;
-
 `
 
 export const deleteEntrepriseDocument = async (pool: Pool, params: { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }) =>
@@ -92,5 +128,5 @@ export const deleteEntrepriseDocument = async (pool: Pool, params: { id: Entrepr
 const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQueryQuery, { id: EntrepriseDocumentId; entrepriseId: EntrepriseId }, void>>`
 delete from entreprises_documents
 where id = $ id
-    and entreprise_id = $ entrepriseId
+    and entreprise_id = $ entrepriseId !
 `
