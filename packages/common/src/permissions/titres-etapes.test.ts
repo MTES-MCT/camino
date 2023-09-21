@@ -336,7 +336,7 @@ test('une demande d’ARM mécanisée a des documents obligatoires supplémentai
   `)
 })
 
-test.only.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
   [undefined, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
   [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
   [0, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
