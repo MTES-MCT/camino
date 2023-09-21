@@ -138,7 +138,7 @@ describe("état de l'utilisateur connecté", () => {
       nom: 'lataupe',
       role: 'admin',
     })
-    expect(store.state.user.element.entreprise).toBeUndefined()
+    expect(store.state.user.element.entreprise).toBe(undefined)
   })
 
   test.each([

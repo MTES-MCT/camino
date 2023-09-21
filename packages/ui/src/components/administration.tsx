@@ -47,10 +47,7 @@ export const Administration = defineComponent(() => {
 interface Props {
   administrationId: AdministrationId
   user: User
-  apiClient: Pick<
-    ApiClient,
-    'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationMetas' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'
-  >
+  apiClient: Pick<ApiClient, 'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'>
 }
 export const PureAdministration = caminoDefineComponent<Props>(['administrationId', 'user', 'apiClient'], props => {
   const administration = computed<Adm>(() => Administrations[props.administrationId])
@@ -281,7 +278,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
           <div class="line-neutral width-full mb-xxl" />
           <h2>Permissions</h2>
 
-          <Permissions administrationId={props.administrationId} apiClient={props.apiClient} />
+          <Permissions administrationId={props.administrationId} />
         </div>
       ) : null}
     </div>

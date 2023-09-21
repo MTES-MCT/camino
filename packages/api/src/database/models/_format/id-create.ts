@@ -6,7 +6,7 @@ import { randomBytes } from 'node:crypto'
 import { TitreId } from 'camino-common/src/titres.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { UtilisateurId } from 'camino-common/src/roles.js'
-import { ActiviteDocumentId, activiteDocumentIdValidator } from 'camino-common/src/activite.js'
+import { ActiviteDocumentId, ActiviteId, activiteDocumentIdValidator } from 'camino-common/src/activite.js'
 
 export const idGenerate = <T extends string = string>(length = 24): T => randomBytes(length / 2).toString('hex') as T
 
@@ -14,6 +14,10 @@ export const idGenerate = <T extends string = string>(length = 24): T => randomB
 // pour pouvoir utiliser « is » de Typescript et controler qu’on ne met pas n’importe quel string dans cette méthode
 export const newDemarcheId = (value: string = idGenerate()): DemarcheId => {
   return value as DemarcheId
+}
+
+export const newActiviteId = (value: string = idGenerate()): ActiviteId => {
+  return value as ActiviteId
 }
 
 export const newTitreId = (value: string = idGenerate()): TitreId => {

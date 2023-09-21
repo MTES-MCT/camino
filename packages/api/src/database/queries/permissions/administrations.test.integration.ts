@@ -52,7 +52,7 @@ describe('administrationsTitresQuery', () => {
     if (visible) {
       expect(titreRes).toMatchObject(mockTitre)
     } else {
-      expect(titreRes).toBeUndefined()
+      expect(titreRes).toBe(undefined)
     }
   })
 })

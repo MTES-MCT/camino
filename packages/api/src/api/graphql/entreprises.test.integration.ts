@@ -36,7 +36,7 @@ describe('entreprises', () => {
     }
 
     let res = await graphQLCall(dbPool, entreprisesQuery, { archive: false }, { role: 'super' })
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.entreprises.elements).toHaveLength(4)
 
     res = await graphQLCall(dbPool, entreprisesQuery, { archive: true }, { role: 'super' })

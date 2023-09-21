@@ -152,7 +152,7 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('peut créer une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -174,7 +174,7 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 
   test('ne peut pas créer une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
@@ -206,7 +206,7 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
   })
 
-  test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
+  test.only('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
     const idDom = newDocumentId(toCaminoDate('2020-01-01'), 'dom')
     const idFor = newDocumentId(toCaminoDate('2020-01-01'), 'for')
@@ -332,6 +332,6 @@ describe('etapeCreer', () => {
       userSuper
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
   })
 })

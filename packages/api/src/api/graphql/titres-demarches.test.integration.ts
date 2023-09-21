@@ -85,7 +85,7 @@ describe('demarcheCreer', () => {
 
     const res = await graphQLCall(dbPool, demarcheCreerQuery, { demarche: { titreId, typeId: 'oct' } }, userSuper)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body).toMatchObject({ data: { demarcheCreer: {} } })
   })
 
@@ -118,7 +118,7 @@ describe('demarcheCreer', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body).toMatchObject({ data: { demarcheCreer: {} } })
   })
 
@@ -174,7 +174,7 @@ describe('demarcheModifier', () => {
 
     const res = await graphQLCall(dbPool, demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, userSuper)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
   })
 
@@ -197,7 +197,7 @@ describe('demarcheModifier', () => {
       }
     )
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
   })
 
@@ -283,7 +283,7 @@ describe('demarcheSupprimer', () => {
     const { demarcheId } = await demarcheCreate()
     const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: demarcheId }, userSuper)
 
-    expect(res.body.errors).toBeUndefined()
+    expect(res.body.errors).toBe(undefined)
     expect(res.body.data.demarcheSupprimer.demarches.length).toBe(0)
   })
 })
@@ -301,7 +301,7 @@ const demarcheCreate = async () => {
 
   const resDemarchesCreer = await graphQLCall(dbPool, queryImport('titre-demarche-creer'), { demarche: { titreId: titre.id, typeId: 'oct' } }, userSuper)
 
-  expect(resDemarchesCreer.body.errors).toBeUndefined()
+  expect(resDemarchesCreer.body.errors).toBe(undefined)
 
   return {
     titreId: resDemarchesCreer.body.data.demarcheCreer.id,
