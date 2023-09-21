@@ -90,7 +90,8 @@ lint: lint/ui lint/api lint/common
 
 install:
 ifdef CI
-	HUSKY=0 npm ci --ignore-scripts
+# On a enlevé --ignore-scripts car pg-formatter fait un truc très étrange en postinstall, il curl une version de pg-format en perl et le met à côté de lui pour s'en servir
+	HUSKY=0 npm ci
 else
 	npm ci
 endif
