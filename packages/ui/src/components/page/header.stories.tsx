@@ -20,6 +20,7 @@ const meta: Meta = {
       { name: 'entreprises' },
       { name: 'metas' },
       { name: 'journaux' },
+      { name: 'statistiques' },
     ]),
   ],
 }
