@@ -240,9 +240,6 @@ type Mutation {
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
 
-  "Supprime une activité"
-  activiteSupprimer(id: ID!): Activite
-
   administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
   administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration

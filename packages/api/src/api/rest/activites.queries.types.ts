@@ -51,6 +51,34 @@ export interface IGetActiviteByIdQueryQuery {
   result: IGetActiviteByIdQueryResult;
 }
 
+/** 'ActiviteDeleteDb' parameters type */
+export interface IActiviteDeleteDbParams {
+  activiteId: string;
+}
+
+/** 'ActiviteDeleteDb' return type */
+export type IActiviteDeleteDbResult = void;
+
+/** 'ActiviteDeleteDb' query type */
+export interface IActiviteDeleteDbQuery {
+  params: IActiviteDeleteDbParams;
+  result: IActiviteDeleteDbResult;
+}
+
+/** 'ActiviteDocumentDeleteDb' parameters type */
+export interface IActiviteDocumentDeleteDbParams {
+  activiteId: string;
+}
+
+/** 'ActiviteDocumentDeleteDb' return type */
+export type IActiviteDocumentDeleteDbResult = void;
+
+/** 'ActiviteDocumentDeleteDb' query type */
+export interface IActiviteDocumentDeleteDbQuery {
+  params: IActiviteDocumentDeleteDbParams;
+  result: IActiviteDocumentDeleteDbResult;
+}
+
 /** 'GetActivitesByTitreIdQuery' parameters type */
 export interface IGetActivitesByTitreIdQueryParams {
   titreId: string;
@@ -137,7 +165,6 @@ export interface IGetActiviteDocumentsInternalParams {
 /** 'GetActiviteDocumentsInternal' return type */
 export interface IGetActiviteDocumentsInternalResult {
   activite_document_type_id: string;
-  date: string;
   description: string | null;
   id: string;
 }

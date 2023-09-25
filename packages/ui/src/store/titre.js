@@ -1,10 +1,7 @@
-import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { titre, titreCreer } from '../api/titres'
 
 import router from '../router'
-import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import { getDownloadRestRoute } from '@/api/client-rest'
 
 const state = {
   element: null,
@@ -13,40 +10,9 @@ const state = {
     activites: {},
     travaux: {},
   },
-  tabId: 'demarches',
 }
 
 const getters = {
-  tabId(state, getters) {
-    const tabIds = getters.tabs.map(({ id }) => id)
-
-    if (!tabIds.includes(state.tabId)) {
-      return tabIds[0]
-    }
-
-    return state.tabId
-  },
-
-  tabs(state, getters, rootState, rootGetters) {
-    const tabs = [{ id: 'demarches', nom: 'Droits miniers' }]
-
-    if (state.element) {
-      if (canReadActivites(rootState.user.element)) {
-        tabs.push({ id: 'activites', nom: 'Activités' })
-      }
-
-      if (getters.travaux.length || canCreateTravaux(rootState.user.element, state.element.typeId, state.element.administrations)) {
-        tabs.push({ id: 'travaux', nom: 'Travaux' })
-      }
-    }
-
-    if (rootGetters['user/userIsSuper']) {
-      tabs.push({ id: 'journaux', nom: 'Journaux' })
-    }
-
-    return tabs
-  },
-
   demarches(state) {
     return state.element?.demarches?.filter(d => !DemarchesTypes[d.typeId].travaux) || []
   },
@@ -112,14 +78,6 @@ const mutations = {
     state.element = null
   },
 
-  open(state, { section, id }) {
-    if (!state.opened[section][id]) {
-      state.opened[section][id] = true
-    }
-
-    state.tabId = section
-  },
-
   close(state, { section, id }) {
     if (state.opened[section][id]) {
       state.opened[section][id] = false
@@ -128,10 +86,6 @@ const mutations = {
 
   toggle(state, { section, id }) {
     state.opened[section][id] = !state.opened[section][id]
-  },
-
-  openTab(state, tabId) {
-    state.tabId = tabId
   },
 }
 

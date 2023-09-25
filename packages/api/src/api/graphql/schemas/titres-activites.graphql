@@ -1,6 +1,5 @@
 # import * from 'scalars.graphql'
 # import * from 'titres.graphql'
-# import * from 'metas-activites.graphql'
 
 type Activites {
   elements: [Activite]
@@ -14,7 +13,6 @@ type Activites {
 type Activite {
   id: ID!
   slug: String
-  type: ActiviteType!
   titre: Titre
   typeId: String!
   activiteStatutId: String!
@@ -24,6 +22,4 @@ type Activite {
   annee: Int
   sections: Json
   contenu: Json
-
-  suppression: Boolean
 }

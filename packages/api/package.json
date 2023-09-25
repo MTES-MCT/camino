@@ -28,6 +28,7 @@
     "test:unit": "vitest --environment node --root src/ --config ../vitest.unit.config.ts",
     "test:integration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' JWT_SECRET=secret-tests vitest --environment node --root src/ --config ../vitest.integration.config.ts",
     "test:generate-data": "node --loader ts-node/esm/transpile-only src/tools/demarches/tests-creation.ts",
+    "test:generate-sections-data": "node --loader ts-node/esm/transpile-only src/tools/activites/tests-creation.ts",
     "ci:lint": "prettier --check . && eslint .",
     "matrices": "node --loader ts-node/esm/transpile-only ./src/scripts/matrices.ts"
   },

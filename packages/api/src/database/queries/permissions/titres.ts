@@ -5,7 +5,7 @@ import TitresDemarches from '../../models/titres-demarches.js'
 import TitresActivites from '../../models/titres-activites.js'
 import Entreprises from '../../models/entreprises.js'
 
-import { titresActivitesQueryModify, titresActivitesPropsQueryModify, titreActivitesCount } from './titres-activites.js'
+import { titresActivitesQueryModify, titreActivitesCount } from './titres-activites.js'
 import { titresDemarchesQueryModify } from './titres-demarches.js'
 import { administrationsTitresTypesTitresStatutsModify, administrationsTitresQuery } from './administrations.js'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
@@ -170,7 +170,6 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
   // visibilité des activités
   q.modifyGraph('activites', b => {
     titresActivitesQueryModify(b as QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user)
-    titresActivitesPropsQueryModify(b as QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user)
   })
 
   q.modifyGraph('titulaires', b => {

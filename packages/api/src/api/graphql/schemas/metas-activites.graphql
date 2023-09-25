@@ -17,6 +17,4 @@ type ActiviteType {
   delaiMois: Int!
   frequenceId: ID!
   sections: Json
-  lectureInterdit: Boolean
-  modificationInterdit: Boolean
 }

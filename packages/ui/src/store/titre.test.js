@@ -106,24 +106,6 @@ describe('état du titre sélectionné', () => {
     expect(store.state.titre.element).toBeNull()
   })
 
-  test('ouvre et ferme une section', () => {
-    store.commit('titre/open', { section: 'etapes', id: 'etape-id' })
-
-    expect(store.state.titre.opened.etapes['etape-id']).toBeTruthy()
-
-    store.commit('titre/open', { section: 'etapes', id: 'etape-id' })
-
-    expect(store.state.titre.opened.etapes['etape-id']).toBeTruthy()
-
-    store.commit('titre/close', { section: 'etapes', id: 'etape-id' })
-
-    expect(store.state.titre.opened.etapes['etape-id']).toBeFalsy()
-
-    store.commit('titre/close', { section: 'etapes', id: 'etape-id' })
-
-    expect(store.state.titre.opened.etapes['etape-id']).toBeFalsy()
-  })
-
   test("permute l'ouverture une section", () => {
     expect(store.state.titre.opened.activites['activite-id']).toBeFalsy()
     store.commit('titre/toggle', { section: 'activites', id: 'activite-id' })
@@ -133,17 +115,5 @@ describe('état du titre sélectionné', () => {
     store.commit('titre/toggle', { section: 'activites', id: 'activite-id' })
 
     expect(store.state.titre.opened.activites['activite-id']).toBeFalsy()
-  })
-
-  test('une seule tab est visible par défaut', () => {
-    expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }])
-  })
-
-  test('la tab des travaux est visible si il existe au moins un travaux', () => {
-    store.state.user = { ...testBlankUser, role: 'super' }
-    store.state.titre.element = {
-      demarches: [{ typeId: 'aom' }],
-    }
-    expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }, { id: 'travaux' }])
   })
 })

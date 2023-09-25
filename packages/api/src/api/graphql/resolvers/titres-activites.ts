@@ -8,10 +8,9 @@ import { titreActiviteFormat } from '../../_format/titres-activites.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
-import { titreActiviteDelete, titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites.js'
+import { titreActiviteGet, titreActiviteUpdate as titreActiviteUpdateQuery, titresActivitesCount, titresActivitesGet } from '../../../database/queries/titres-activites.js'
 import { utilisateursGet } from '../../../database/queries/utilisateurs.js'
 
-import { titreActiviteDeletionValidate } from '../../../business/validations/titre-activite-deletion-validate.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreGet } from '../../../database/queries/titres.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
@@ -29,16 +28,6 @@ import {
 } from '../../rest/activites.queries.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-
-/**
- * Retourne une activité
- *
- * @param id - id de l'activité
- * @param context - contexte utilisateur
- * @param info - objet contenant les propriétés de la requête graphQl
- * @returns une activité
- *
- */
 
 /**
  * Retourne les activités
@@ -240,30 +229,6 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
     await titreActiviteEmailsSend(activiteFormated, activiteFormated.titre!.nom, user, utilisateurs, administrations.filter(onlyUnique))
 
     return activiteFormated
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const activiteSupprimer = async ({ id }: { id: ActiviteId }, { user }: Context) => {
-  try {
-    const oldTitreActivite = await titreActiviteGet(id, { fields: {} }, user)
-
-    if (!oldTitreActivite) throw new Error("l'activité n'existe pas")
-
-    if (!oldTitreActivite.suppression) throw new Error('droits insuffisants')
-
-    const rulesErrors = titreActiviteDeletionValidate(oldTitreActivite)
-
-    if (rulesErrors.length) {
-      throw new Error(rulesErrors.join(', '))
-    }
-
-    const activite = titreActiviteDelete(id, {})
-
-    return activite
   } catch (e) {
     console.error(e)
 

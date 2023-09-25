@@ -52,7 +52,7 @@ const callFetch = async <T extends CaminoRestRoute>(
     }
     return
   }
-  if (fetched.status === 403) {
+  if (fetched.status === 401) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
   console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)

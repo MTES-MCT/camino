@@ -2,8 +2,6 @@ import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
 import { computed, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { ActiviteDocumentTypeIds, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
-import { InputDate } from '../_ui/dsfr-input-date'
-import { CaminoDate } from 'camino-common/src/date'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
@@ -22,7 +20,6 @@ interface Props {
 export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', 'apiClient', 'activiteTypeId'], props => {
   const activiteDocumentTypes = activitesTypesDocumentsTypes[props.activiteTypeId].map(({ documentTypeId }) => documentTypeId)
   const activiteDocumentTypeId = ref<(typeof ActiviteDocumentTypeIds)[number] | null>(activiteDocumentTypes.length === 1 ? activiteDocumentTypes[0] : null)
-  const documentDate = ref<CaminoDate | null>(null)
   const activiteDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>('')
   const tempDocumentName = ref<TempDocumentName | null>(null)
@@ -52,13 +49,6 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
         </fieldset>
       )}
 
-      <InputDate
-        id="add-activite-document-date"
-        legend={{ main: 'Date du document' }}
-        dateChanged={date => {
-          documentDate.value = date
-        }}
-      />
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
           <InputFile
@@ -78,7 +68,6 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
   const canSave = computed<boolean>(() => {
     const tempDocument: Omit<Nullable<TempActiviteDocument>, 'tempDocumentName'> = {
       activite_document_type_id: activiteDocumentTypeId.value,
-      date: documentDate.value,
       description: documentDescription.value,
     }
     return tempActiviteDocumentValidator.omit({ tempDocumentName: true }).safeParse(tempDocument).success && activiteDocumentFile.value !== null
@@ -94,7 +83,6 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
           close={() => {
             const tempDocument: Nullable<TempActiviteDocument> = {
               activite_document_type_id: activiteDocumentTypeId.value,
-              date: documentDate.value,
               description: documentDescription.value,
               tempDocumentName: tempDocumentName.value,
             }
