@@ -2,10 +2,10 @@ import { ActiviteDocumentsEdit } from './activite/activite-documents-edit'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
-import { Activite, ActiviteDocumentId, ActiviteIdOrSlug, TempActiviteDocument, activiteIdOrSlugValidator } from 'camino-common/src/activite'
+import { Activite, ActiviteDocumentId, ActiviteId, ActiviteIdOrSlug, TempActiviteDocument, activiteIdOrSlugValidator } from 'camino-common/src/activite'
 import { useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
-import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { ActiviteDeposePopup } from './activite/depose-popup'
 import { SectionWithValue } from 'camino-common/src/sections'
 import { ApiClient, apiClient } from '../api/api-client'
@@ -27,19 +27,15 @@ export const ActiviteEdition = defineComponent(() => {
       apiClient={{
         ...apiClient,
         updateActivite: async (activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments) => {
-          const result = await apiClient.updateActivite(activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments)
+          await apiClient.updateActivite(activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments)
           if (matomo) {
             // @ts-ignore
             matomo.trackEvent('activite', 'activite-enregistrer', ActivitesTypes[activiteTypeId].nom)
           }
-          router.push({ name: 'activite', params: { activiteId } })
-          return result
         },
-        deposerActivite: async activiteId => {
-          const result = await apiClient.deposerActivite(activiteId)
-          router.push({ name: 'activite', params: { activiteId } })
-          return result
-        },
+      }}
+      goBack={(activiteId: ActiviteId): void => {
+        router.push({ name: 'activite', params: { activiteId } })
       }}
       activiteId={activiteId.value}
     />
@@ -49,6 +45,7 @@ export const ActiviteEdition = defineComponent(() => {
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getActivite' | 'deposerActivite' | 'updateActivite'>
   activiteId: ActiviteIdOrSlug
+  goBack: (activiteId: ActiviteId) => void
 }
 
 export const PureActiviteEdition = defineComponent<Props>(props => {
@@ -63,7 +60,8 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
   const data = ref<AsyncData<Activite>>({ status: 'LOADING' })
 
   const deposePopupVisible = ref(false)
-  const deposePopupOpen = () => {
+  const deposePopupOpen = async () => {
+    await save(false)
     deposePopupVisible.value = true
   }
 
@@ -74,7 +72,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
   const keyUp = (e: KeyboardEvent) => {
     if ((e.which || e.keyCode) === 13 && events.value.saveKeyUp && !deposePopupVisible.value && data.value.status === 'LOADED') {
       // $refs['save-button'].focus()
-      save()
+      save(true)
     }
   }
 
@@ -101,7 +99,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
     }
   }
 
-  const save = async () => {
+  const save = async (goBack: boolean) => {
     if (data.value.status === 'LOADED') {
       try {
         await props.apiClient.updateActivite(
@@ -111,6 +109,9 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
           documentsComplete.value.activiteDocumentIds,
           documentsComplete.value.tempsDocuments
         )
+        if (goBack) {
+          props.goBack(data.value.value.id)
+        }
       } catch (e: any) {
         console.error('error', e)
         data.value = {
@@ -180,7 +181,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
                 <ActiviteDocumentsEdit apiClient={props.apiClient} activiteDocuments={activite.activite_documents} activiteTypeId={activite.type_id} completeUpdate={activiteDocumentsCompleteUpdate} />
 
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }} class="fr-pb-2w">
-                  <DsfrButton title="Enregistrer" buttonType="secondary" buttonSize="lg" onClick={save} class="fr-mr-2w" />
+                  <DsfrButton title="Enregistrer" buttonType="secondary" buttonSize="lg" onClick={() => save(true)} class="fr-mr-2w" />
                   <DsfrButton
                     title="Enregistrer et déposer"
                     buttonType="primary"
@@ -190,7 +191,19 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
                   />
                 </div>
               </div>
-              {deposePopupVisible.value ? <ActiviteDeposePopup close={closeDeposePopup} activite={activite} apiClient={props.apiClient} /> : null}
+              {deposePopupVisible.value ? (
+                <ActiviteDeposePopup
+                  close={closeDeposePopup}
+                  activite={activite}
+                  apiClient={{
+                    ...props.apiClient,
+                    deposerActivite: async activiteId => {
+                      await props.apiClient.deposerActivite(activiteId)
+                      props.goBack(activiteId)
+                    },
+                  }}
+                />
+              ) : null}
             </>
           )
         }}
@@ -200,4 +213,4 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureActiviteEdition.props = ['apiClient', 'activiteId']
+PureActiviteEdition.props = ['apiClient', 'activiteId', 'goBack']

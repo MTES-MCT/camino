@@ -9,6 +9,7 @@ import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { ref, watch } from 'vue'
 import { isActiviteDocumentsComplete } from 'camino-common/src/permissions/activites'
 import { AddActiviteDocumentPopup } from './add-activite-document-popup'
+import { activitesTypesDocumentsTypes } from 'camino-common/src/static/activitesTypesDocumentsTypes'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
@@ -34,6 +35,8 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
     { immediate: true }
   )
 
+  const hasDocumentTypes: boolean = activitesTypesDocumentsTypes[props.activiteTypeId].map(({ documentTypeId }) => documentTypeId).length > 0
+
   const notifyChange = () => {
     const tempActiviteDocuments = documents.value.filter(isTempActiviteDocument)
     const alreadyExistingActiviteDocumentIds = documents.value.filter(isActiviteDocument).map(({ id }) => id)
@@ -42,45 +45,48 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
   notifyChange()
   return () => (
     <>
-      <div class="fr-table">
-        <table style={{ display: 'table' }}>
-          <caption>Documents de l'activité {isNotMandatory ? '' : '*'}</caption>
-          <thead>
-            <tr>
-              <th scope="col">Nom</th>
-              <th scope="col">Description</th>
-              <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
-                <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.value.map((item, index) => (
+      {hasDocumentTypes ? (
+        <div class="fr-table">
+          <table style={{ display: 'table' }}>
+            <caption>Documents de l'activité {isNotMandatory ? '' : '*'}</caption>
+            <thead>
               <tr>
-                <td>
-                  {isTempActiviteDocument(item) ? (
-                    <>{DocumentsTypes[item.activite_document_type_id].nom}</>
-                  ) : (
-                    <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
-                  )}
-                </td>
-                <td>{item.description}</td>
-                <td>
-                  <DsfrButtonIcon
-                    icon="fr-icon-delete-bin-line"
-                    buttonType="secondary"
-                    title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
-                    onClick={() => {
-                      documents.value.splice(index, 1)
-                      notifyChange()
-                    }}
-                  />
-                </td>
+                <th scope="col">Nom</th>
+                <th scope="col">Description</th>
+                <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
+                  <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {documents.value.map((item, index) => (
+                <tr>
+                  <td>
+                    {isTempActiviteDocument(item) ? (
+                      <>{DocumentsTypes[item.activite_document_type_id].nom}</>
+                    ) : (
+                      <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
+                    )}
+                  </td>
+                  <td>{item.description}</td>
+                  <td>
+                    <DsfrButtonIcon
+                      icon="fr-icon-delete-bin-line"
+                      buttonType="secondary"
+                      title={`Supprimer le document ${DocumentsTypes[item.activite_document_type_id].nom}`}
+                      onClick={() => {
+                        documents.value.splice(index, 1)
+                        notifyChange()
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
       {addPopup.value ? (
         <AddActiviteDocumentPopup
           apiClient={props.apiClient}
