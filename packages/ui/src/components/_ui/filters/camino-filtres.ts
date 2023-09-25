@@ -43,6 +43,7 @@ const caminoCheckboxesFiltresArrayIds = [
   'activiteTypesIds',
   'activiteStatutsIds',
   'demarchesTypesIds',
+  'travauxTypesIds',
   'demarchesStatutsIds',
 ] as const
 export const caminoCheckboxesFiltres = [
@@ -54,6 +55,7 @@ export const caminoCheckboxesFiltres = [
   caminoFiltres.activiteTypesIds,
   caminoFiltres.activiteStatutsIds,
   caminoFiltres.demarchesTypesIds,
+  caminoFiltres.travauxTypesIds,
   caminoFiltres.demarchesStatutsIds,
 ] as const satisfies readonly { type: 'checkboxes' }[]
 export type CheckboxesCaminoFiltres = (typeof caminoCheckboxesFiltres)[number]['id']

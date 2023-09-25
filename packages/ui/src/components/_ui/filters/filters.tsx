@@ -88,6 +88,7 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     activiteTypesIds: caminoFiltres.activiteTypesIds.validator.parse(routerQueryToStringArray(route.query.activiteTypesIds)),
     activiteStatutsIds: caminoFiltres.activiteStatutsIds.validator.parse(routerQueryToStringArray(route.query.activiteStatutsIds)),
     demarchesTypesIds: caminoFiltres.demarchesTypesIds.validator.parse(routerQueryToStringArray(route.query.demarchesTypesIds)),
+    travauxTypesIds: caminoFiltres.travauxTypesIds.validator.parse(routerQueryToStringArray(route.query.travauxTypesIds)),
     demarchesStatutsIds: caminoFiltres.demarchesStatutsIds.validator.parse(routerQueryToStringArray(route.query.demarchesStatutsIds)),
     etapesInclues: caminoFiltres.etapesInclues.validator.parse(JSON.parse(routerQueryToString(route.query.etapesInclues, '[]'))),
     etapesExclues: caminoFiltres.etapesExclues.validator.parse(JSON.parse(routerQueryToString(route.query.etapesExclues, '[]'))),

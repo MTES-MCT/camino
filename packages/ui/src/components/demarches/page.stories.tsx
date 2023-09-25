@@ -4,6 +4,8 @@ import { action } from '@storybook/addon-actions'
 import { RouteLocationRaw } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { vueRouter } from 'storybook-vue3-router'
+import { filtres as demarchesFiltres } from '../demarches'
+import { filtres as travauxFiltres } from '../travaux'
 
 const meta: Meta = {
   title: 'Components/Demarches/Page',
@@ -56,12 +58,18 @@ const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'get
 }
 
 export const Loading: StoryFn = () => (
-  <PurePage travaux updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }} />
+  <PurePage
+    travaux
+    updateUrlQuery={updateUrlQuery}
+    currentRoute={{ name: 'demarches', query: {} }}
+    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
+    filtres={demarchesFiltres}
+  />
 )
 
-export const Travaux: StoryFn = () => <PurePage travaux updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} />
+export const Travaux: StoryFn = () => <PurePage travaux updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={travauxFiltres} />
 
-export const Demarches: StoryFn = () => <PurePage travaux={false} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} />
+export const Demarches: StoryFn = () => <PurePage travaux={false} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
 
 export const WithError: StoryFn = () => (
   <PurePage
@@ -69,5 +77,6 @@ export const WithError: StoryFn = () => (
     updateUrlQuery={updateUrlQuery}
     currentRoute={{ name: 'demarches', query: {} }}
     apiClient={{ ...apiClient, getUtilisateurEntreprises: () => Promise.reject(new Error('Cassé')), getDemarches: () => Promise.reject(new Error('Cassé')) }}
+    filtres={demarchesFiltres}
   />
 )

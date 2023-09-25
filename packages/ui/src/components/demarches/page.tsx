@@ -26,24 +26,11 @@ const demarchesColonnes = [
   { id: 'references', name: 'Références', noSort: true },
 ] as const satisfies readonly Column[]
 
-const filtres = [
-  'titresIds',
-  'domainesIds',
-  'typesIds',
-  'statutsIds',
-  'entreprisesIds',
-  'substancesIds',
-  'references',
-  'titresTerritoires',
-  'demarchesTypesIds',
-  'demarchesStatutsIds',
-  'etapesInclues',
-  'etapesExclues',
-] as const satisfies readonly CaminoFiltre[]
-type Props = Pick<PureProps, 'travaux'>
+type Props = Pick<PureProps, 'travaux' | 'filtres'>
 
 interface PureProps {
   travaux: boolean
+  filtres: readonly CaminoFiltre[]
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
   apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
@@ -127,7 +114,7 @@ export const PurePage = defineComponent<PureProps>(props => {
       }}
       renderButton={null}
       listeFiltre={{
-        filtres,
+        filtres: props.filtres,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
       }}
@@ -138,12 +125,12 @@ export const PurePage = defineComponent<PureProps>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux']
+PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux', 'filtres']
 
 export const Page = defineComponent<Props>(props => {
   const router = useRouter()
-  return () => <PurePage travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PurePage filtres={props.filtres} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Page.props = ['travaux']
+Page.props = ['travaux', 'filtres']
