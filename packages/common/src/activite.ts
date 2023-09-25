@@ -21,7 +21,6 @@ export type ActiviteDocumentId = z.infer<typeof activiteDocumentIdValidator>
 export const activiteDocumentValidator = z.object({
   id: activiteDocumentIdValidator,
   description: z.string().nullable(),
-  date: caminoDateValidator,
   activite_document_type_id: activiteDocumentTypeIdValidator,
 })
 

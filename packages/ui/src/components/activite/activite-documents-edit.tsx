@@ -48,7 +48,6 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
           <thead>
             <tr>
               <th scope="col">Nom</th>
-              <th scope="col">Date</th>
               <th scope="col">Description</th>
               <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
                 <DsfrButtonIcon icon="fr-icon-add-line" title="Ajouter un document" onClick={() => (addPopup.value = true)} />
@@ -65,7 +64,6 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
                     <ActiviteDocumentLink activiteDocumentId={item.id} activiteDocumentTypeId={item.activite_document_type_id} />
                   )}
                 </td>
-                <td>{dateFormat(item.date)}</td>
                 <td>{item.description}</td>
                 <td>
                   <DsfrButtonIcon

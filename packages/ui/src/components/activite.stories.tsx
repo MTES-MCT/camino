@@ -30,7 +30,7 @@ const activite: Activite = {
   annee: toCaminoAnnee(2022),
   periode_id: 1,
   sections_with_value: [{ id: 'Id', nom: 'Nom de section', elements: [{ type: 'radio', id: 'radio', value: true, nom: 'Un radio button' }] }],
-  activite_documents: [{ activite_document_type_id: 'ree', date: toCaminoDate('2022-01-01'), description: 'description', id: activiteDocumentIdValidator.parse('id1') }],
+  activite_documents: [{ activite_document_type_id: 'ree', description: 'description', id: activiteDocumentIdValidator.parse('id1') }],
   titre: {
     nom: 'Nom du titre',
     slug: 'slug-du-titre',

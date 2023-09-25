@@ -165,7 +165,6 @@ export interface IGetActiviteDocumentsInternalParams {
 /** 'GetActiviteDocumentsInternal' return type */
 export interface IGetActiviteDocumentsInternalResult {
   activite_document_type_id: string;
-  date: string;
   description: string | null;
   id: string;
 }

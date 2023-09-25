@@ -24,7 +24,6 @@ interface Props {
 
 const documentColumns = [
   { id: 'activiteDocumentTypeId', name: 'Nom', noSort: true },
-  { id: 'date', name: 'Date', noSort: true },
   { id: 'description', name: 'Description', noSort: true },
 ] as const satisfies readonly Column[]
 
@@ -69,7 +68,6 @@ export const Preview = defineComponent<Props>(props => {
         props: { activiteDocumentId: document.id, activiteDocumentTypeId: document.activite_document_type_id },
         value: document.activite_document_type_id,
       },
-      date: { value: dateFormat(document.date) },
       description: { value: document.description ?? '' },
     },
   }))

@@ -265,7 +265,6 @@ const getActiviteDocumentsInternal = sql<Redefine<IGetActiviteDocumentsInternalQ
 select
     d.id,
     d.description,
-    d.date,
     d.activite_document_type_id
 from
     activites_documents d

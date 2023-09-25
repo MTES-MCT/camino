@@ -32,6 +32,7 @@ import { User } from 'camino-common/src/roles.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 const extractContenuFromSectionWithValue = (sections: DeepReadonly<Section[]>, sectionsWithValue: SectionWithValue[]): Contenu => {
   const contenu: Contenu = {}
@@ -106,11 +107,13 @@ export const updateActivite =
             for (const document of activiteDocumentsToCreate) {
               const loid = await createLargeObject(pool, document.tempDocumentName)
 
+              const date = getCurrent()
+
               await insertActiviteDocument(pool, {
-                id: newActiviteDocumentId(document.date, document.activite_document_type_id),
+                id: newActiviteDocumentId(date, document.activite_document_type_id),
                 activite_document_type_id: document.activite_document_type_id,
                 description: document.description ?? '',
-                date: document.date,
+                date,
                 largeobject_id: loid,
                 activite_id: result.id,
               })
