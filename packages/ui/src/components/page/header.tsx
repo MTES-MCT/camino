@@ -20,6 +20,7 @@ const links = {
   DEMARCHES: { label: 'Démarches', path: 'demarches' },
   TRAVAUX: { label: 'Travaux', path: 'travaux' },
   ACTIVITES: { label: 'Activités', path: 'activites' },
+  STATISTIQUES: { label: 'Statistiques', path: 'statistiques' },
   ENTREPRISES: { label: 'Entreprises', path: 'entreprises' },
   UTILISATEURS: { label: 'Utilisateurs', path: 'utilisateurs' },
   ADMINISTRATIONS: { label: 'Administrations', path: 'administrations' },
@@ -126,13 +127,13 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
 
     return {
-      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE, links.METAS, links.JOURNAUX],
-      admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE],
-      editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, ANNUAIRE],
-      lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ANNUAIRE],
-      entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ...linkActivites, ANNUAIRE],
-      'bureau d’études': [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ANNUAIRE],
-      defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
+      super: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE, links.METAS, links.JOURNAUX],
+      admin: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
+      editeur: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
+      lecteur: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.TRAVAUX, links.STATISTIQUES, ANNUAIRE],
+      entreprise: [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, ...linkActivites, links.STATISTIQUES, ANNUAIRE],
+      'bureau d’études': [links.TABLEAU_DE_BORD, links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.STATISTIQUES, ANNUAIRE],
+      defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.STATISTIQUES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
     }
   })
 

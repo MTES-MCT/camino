@@ -1,13 +1,13 @@
 type MatomoSegment = 'menu-utilisateur' | 'menu-sections' | 'menu'
 type MatomoSubsegment = 'menu-utilisateur' | 'menu-section' | 'bouton'
-export type MatomoEvent = 'deconnexion' | 'dashboard' | 'titres' | 'demarches' | 'travaux' | 'activites' | 'administrations' | 'entreprises' | 'utilisateurs' | 'metas' | 'utilisateur'
+export type MatomoEvent = 'deconnexion' | 'dashboard' | 'titres' | 'demarches' | 'travaux' | 'activites' | 'administrations' | 'entreprises' | 'utilisateurs' | 'metas' | 'utilisateur' | 'statistiques'
 
 const MatomoParams = {
   'menu-utilisateur': {
     'menu-utilisateur': ['deconnexion'],
   },
   'menu-sections': {
-    'menu-section': ['dashboard', 'titres', 'demarches', 'travaux', 'activites', 'administrations', 'entreprises', 'utilisateurs', 'metas'],
+    'menu-section': ['dashboard', 'titres', 'demarches', 'travaux', 'activites', 'administrations', 'entreprises', 'utilisateurs', 'metas', 'statistiques'],
   },
   menu: {
     bouton: ['utilisateur'],

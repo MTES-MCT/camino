@@ -28,7 +28,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
       <div class="fr-footer__top">
         <div class="fr-container">
           <div class="fr-grid-row fr-grid-row--start fr-grid-row--gutters">
-            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
               <p class="fr-footer__top-cat">Nous contacter</p>
               <ul class="fr-footer__top-list">
                 <li>
@@ -43,7 +43,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                 </li>
               </ul>
             </div>
-            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
               <p class="fr-footer__top-cat">Utiliser Camino</p>
               <ul class="fr-footer__top-list">
                 <li>
@@ -69,17 +69,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                 </li>
               </ul>
             </div>
-            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
-              <p class="fr-footer__top-cat">Indicateurs</p>
-              <ul class="fr-footer__top-list">
-                <li>
-                  <router-link class="fr-footer__top-link" to="/statistiques">
-                    Statistiques
-                  </router-link>
-                </li>
-              </ul>
-            </div>
-            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
               <p class="fr-footer__top-cat">Lien externes</p>
               <ul class="fr-footer__top-list">
                 <li>
