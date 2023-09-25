@@ -17,6 +17,7 @@ export default meta
 const getActiviteAction = action('getActivite')
 const uploadTempDocumentAction = action('uploadTempDocument')
 const deposerActiviteAction = action('deposerActivite')
+const goBackAction = action('goBack')
 
 const activite: Activite = {
   id: activiteIdValidator.parse('activiteId'),
@@ -178,13 +179,16 @@ const apiClient: Props['apiClient'] = {
 }
 
 const activiteId = activiteIdOrSlugValidator.parse('activiteId')
-export const Loading: StoryFn = () => <PureActiviteEdition apiClient={{ ...apiClient, getActivite: () => new Promise(() => ({})) }} activiteId={activiteId} />
-export const WithError: StoryFn = () => <PureActiviteEdition apiClient={{ ...apiClient, getActivite: () => Promise.reject(new Error('Une erreur est survenue')) }} activiteId={activiteId} />
+export const Loading: StoryFn = () => <PureActiviteEdition goBack={goBackAction} apiClient={{ ...apiClient, getActivite: () => new Promise(() => ({})) }} activiteId={activiteId} />
+export const WithError: StoryFn = () => (
+  <PureActiviteEdition goBack={goBackAction} apiClient={{ ...apiClient, getActivite: () => Promise.reject(new Error('Une erreur est survenue')) }} activiteId={activiteId} />
+)
 
-export const FullEmpty: StoryFn = () => <PureActiviteEdition apiClient={apiClient} activiteId={activiteId} />
+export const FullEmpty: StoryFn = () => <PureActiviteEdition goBack={goBackAction} apiClient={apiClient} activiteId={activiteId} />
 
 export const FullEmptyWithMandatoryDocument: StoryFn = () => (
   <PureActiviteEdition
+    goBack={goBackAction}
     apiClient={{
       ...apiClient,
       getActivite: () => {
@@ -197,6 +201,7 @@ export const FullEmptyWithMandatoryDocument: StoryFn = () => (
 
 export const FullDeposable: StoryFn = () => (
   <PureActiviteEdition
+    goBack={goBackAction}
     apiClient={{
       ...apiClient,
       getActivite: () => {
