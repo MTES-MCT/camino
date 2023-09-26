@@ -81,9 +81,6 @@ type Titre {
   "Surface en Km² du titre dans son dernier état de validité"
   surface: Float
 
-  "Nombre d'activités déposées"
-  activitesDeposees: Int
-
   "Nombre d'activités en construction"
   activitesEnConstruction: Int
 

@@ -93,7 +93,7 @@ export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
-type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | 'activites' | 'titulaires'
+type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | 'titulaires'
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
@@ -317,7 +317,6 @@ interface ITitre {
   type?: ITitreType | null
   titreStatutId: TitreStatutId
   references?: TitreReference[] | null
-  activitesDeposees?: number | null
   activitesEnConstruction?: number | null
   activitesAbsentes?: number | null
   substancesEtape?: ITitreEtape | null

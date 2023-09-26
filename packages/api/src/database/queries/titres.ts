@@ -61,11 +61,10 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 
 const titresColonnes = {
   nom: { id: 'nom', groupBy: ['titres.nom'] },
-  domaine: { id: raw(`SUBSTRING( titres.type_id, 3, 1 )`), groupBy: [] },
+  domaine: { id: raw(`right( titres.type_id, 1 )`), groupBy: [] },
   coordonnees: { id: 'coordonnees', groupBy: [] },
   type: { id: 'type:type.nom', relation: 'type.type' },
   statut: { id: 'titreStatutId', groupBy: ['titres.titreStatutId'] },
-  activites: { id: 'activites', groupBy: [] },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
@@ -175,12 +174,7 @@ export const titresGet = async (
       q.groupBy(titresColonnes[colonne].id)
     }
 
-    // Utilise orderByRaw pour intégrer la chaîne 'nulls first/last'
-    // dans le tri sur les activités
-    // sinon les résultats 'null' apparaissent toujours en premier
-    if (colonne === 'activites') {
-      q.orderByRaw(`"activites_absentes" + "activites_en_construction" ${ordre === 'asc' ? 'asc nulls first' : 'desc nulls last'}`)
-    } else if (colonne === 'coordonnees') {
+    if (colonne === 'coordonnees') {
       q.orderByRaw(`"coordonnees" notnull ${ordre}`)
     } else {
       q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
