@@ -1,13 +1,11 @@
-import { PureQuickAccessTitre } from './quick-access-titre'
+import { DisplayTitre, PureQuickAccessTitre } from './quick-access-titre'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Page/QuickAccessTitre',
   component: PureQuickAccessTitre,
-  argTypes: {
-    titres: { name: 'array', value: 'string', required: true },
-  },
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -35,3 +33,11 @@ export const Simple: StoryFn = () => (
 )
 
 export const Empty: StoryFn = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} id={'typeahead_id'} />
+export const DisplayTitreSeul: StoryFn = () => (
+  <DisplayTitre
+    titre={{
+      nom: 'monTitre',
+      typeId: 'arm',
+    }}
+  />
+)

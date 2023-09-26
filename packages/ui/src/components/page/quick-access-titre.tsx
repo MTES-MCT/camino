@@ -4,9 +4,10 @@ import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titr
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
-import { ref, inject } from 'vue'
+import { ref, inject, FunctionalComponent } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { titreApiClient } from '../titre/titre-api-client'
+import { capitalize } from 'camino-common/src/strings'
 
 export interface Titre {
   id: string
@@ -59,15 +60,24 @@ interface Props {
   onSelectedTitre: (titre: Titre | undefined) => void
   onSearch: (searchTerm: string) => void
 }
-export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres', 'onSelectedTitre', 'onSearch'], props => {
-  const display = (item: Titre) => {
-    return (
-      <div class="flex flex-center">
-        <Domaine domaineId={getDomaineId(item.typeId)} class="mr-s" />
-        <span class="cap-first bold">{item.nom}</span>
-        <span class="ml-xs"> ({TitresTypesTypes[getTitreTypeType(item.typeId)].nom}) </span>
+interface DisplayTitreProps {
+  titre: Pick<Titre, 'nom' | 'typeId'>
+}
+export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+      <Domaine domaineId={getDomaineId(props.titre.typeId)} />
+      <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-pl-2w">
+        <span class="cap-first bold">{capitalize(props.titre.nom)}</span>
+        <span> ({TitresTypesTypes[getTitreTypeType(props.titre.typeId)].nom}) </span>
       </div>
-    )
+    </div>
+  )
+}
+
+export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres', 'onSelectedTitre', 'onSearch'], props => {
+  const display = (titre: Titre) => {
+    return <DisplayTitre titre={titre} />
   }
 
   const createDebounce = () => {
