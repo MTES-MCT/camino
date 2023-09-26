@@ -70,6 +70,8 @@ databaseInit(pool).then(() => {
 
   app.use(cors({ credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic, userLoader, cookieParser(), connectedCatcher)
 
+  // Le Timeout du sse côté frontend est mis à 45 secondes, on envoie un ping toutes les 30 secondes
+  const ssePingDelayInSeconds = 30
   app.get('/stream/version', async (_req, res) => {
     const headers = {
       'Content-Type': 'text/event-stream',
@@ -82,6 +84,25 @@ databaseInit(pool).then(() => {
     res.write(`event: version\n`)
     res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
     res.flush()
+    let counter = 0
+    const interValID = setInterval(() => {
+      counter++
+      if (counter >= 10) {
+        clearInterval(interValID)
+        res.end()
+
+        return
+      }
+      res.write(`id: ${Date.now()}\n`)
+      res.write(`event: version\n`)
+      res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+      res.flush()
+    }, ssePingDelayInSeconds * 1000)
+
+    res.on('close', () => {
+      clearInterval(interValID)
+      res.end()
+    })
   })
 
   app.use(express.urlencoded({ extended: true }), express.json({ limit: '5mb' }), restWithPool(pool))
