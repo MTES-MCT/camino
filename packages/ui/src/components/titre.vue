@@ -72,6 +72,7 @@ import { apiClient } from '@/api/api-client'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
 import { isSuper } from 'camino-common/src/roles'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
+import { canHaveActivites } from 'camino-common/src/static/activitesTypesTitresTypes'
 
 export default {
   components: {
@@ -160,12 +161,13 @@ export default {
 
       if (this.titre) {
         if (
-          await canReadTitreActivites(
+          canHaveActivites(this.titre.typeId) &&
+          (await canReadTitreActivites(
             this.user,
             () => Promise.resolve(this.titre.typeId),
             () => Promise.resolve(this.titre.administrations),
             () => Promise.resolve([...this.titre.titulaires.map(({ id }) => id), ...this.titre.amodiataires.map(({ id }) => id)])
-          )
+          ))
         ) {
           this.tabs.push({ id: 'activites', nom: 'Activités' })
         }

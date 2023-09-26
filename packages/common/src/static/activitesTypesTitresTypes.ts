@@ -15,3 +15,6 @@ export const activitesTypesTitresTypes: { [key in ActivitesTypesId]: TitreTypeId
   [ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"]]: [TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS, TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS],
   [ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"]]: [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX],
 }
+
+const internalTitreTypeTypes = Object.values(activitesTypesTitresTypes)
+export const canHaveActivites = (titreTypeId: TitreTypeId): boolean => internalTitreTypeTypes.some(titreTypeIds => titreTypeIds.includes(titreTypeId))
