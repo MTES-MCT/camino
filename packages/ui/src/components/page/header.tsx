@@ -5,6 +5,7 @@ import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 import { Button } from '../_ui/button'
+import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 
 interface Props {
   user: User
@@ -174,16 +175,16 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                 </div>
                 <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
-                    <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={searchModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
-                    <div class="fr-search-bar" id="search-473" role="search">
-                      <label class="fr-label" for="search-473-input">
-                        Rechercher
-                      </label>
-                      <QuickAccessTitre id="search-473-input" onSelectTitre={closeSearchModal} />
-                      <button class="fr-btn" title="Rechercher">
-                        Rechercher
-                      </button>
-                    </div>
+                    <DsfrButtonIcon
+                      icon="fr-icon-close-line"
+                      buttonType="tertiary-no-outline"
+                      onClick={() => {}}
+                      aria-controls={searchModalId}
+                      title="Fermer la fenêtre de dialogue"
+                      label="Fermer"
+                      class="fr-btn--close"
+                    />
+                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeSearchModal} />
                   </div>
                 </div>
               </div>
@@ -192,7 +193,15 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
         </div>
         <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
-            <Button class="fr-btn--close fr-btn" onClick={() => {}} aria-controls={navigationModalId} title="Fermer la fenêtre de dialogue" render={() => <>Fermer</>} />
+            <DsfrButtonIcon
+              icon="fr-icon-close-line"
+              buttonType="tertiary-no-outline"
+              onClick={() => {}}
+              aria-controls={searchModalId}
+              title="Fermer la fenêtre de dialogue"
+              label="Fermer"
+              class="fr-btn--close"
+            />
             <div class="fr-header__menu-links">
               <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
             </div>

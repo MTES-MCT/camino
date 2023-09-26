@@ -38,6 +38,25 @@ export const Single: StoryFn = () => (
   />
 )
 
+export const SingleWithInitialItem: StoryFn = () => (
+  <TypeAhead
+    overrideItems={[{ id: 'id1' }]}
+    props={{
+      id: 'ello',
+      itemKey: 'id',
+      items,
+      placeholder: 'placeholder',
+      minInputLength: 3,
+      type: 'single',
+
+      itemChipLabel: item => item.titre,
+      onInput,
+      onSelectItem: selectItem,
+      onSelectItems: selectItems,
+    }}
+  />
+)
+
 export const Multiple: StoryFn = () => (
   <TypeAhead
     props={{
@@ -67,6 +86,40 @@ export const Multiple: StoryFn = () => (
       onInput,
       onSelectItem: selectItem,
       onSelectItems: selectItems,
+    }}
+  />
+)
+
+export const MultipleAlwaysOpen: StoryFn = () => (
+  <TypeAhead
+    props={{
+      id: 'plop',
+      itemKey: 'id',
+      items: [
+        { id: 'idTitreItem1', titre: 'titreItem1' },
+        { id: 'idTitreItem2', titre: 'titreItem2' },
+        { id: 'idTitreItem3', titre: 'titreItem3' },
+        { id: 'idTitreItem4', titre: 'titreItem4' },
+        { id: 'idTitreItem5', titre: 'titreItem5' },
+        { id: 'idTitreItem6', titre: 'titreItem6' },
+        { id: 'idTitreItem7', titre: 'titreItem7' },
+        { id: 'idTitreItem8', titre: 'titreItem8' },
+        { id: 'idTitreItem9', titre: 'titreItem9' },
+        { id: 'idTitreItem10', titre: 'titreItem10' },
+        { id: 'idTitreItem11', titre: 'titreItem11' },
+        { id: 'idTitreItem12', titre: 'titreItem12' },
+        { id: 'idTitreItem13', titre: 'titreItem13' },
+        { id: 'idTitreItem14', titre: 'titreItem14' },
+        { id: 'idTitreItem15', titre: 'titreItem15' },
+      ],
+      placeholder: 'placeholder',
+      minInputLength: 3,
+      type: 'multiple',
+      itemChipLabel: item => item.titre,
+      onInput,
+      onSelectItem: selectItem,
+      onSelectItems: selectItems,
+      alwaysOpen: true,
     }}
   />
 )
@@ -101,6 +154,41 @@ export const MultipleWithInitialItems: StoryFn = () => (
       onInput,
       onSelectItem: selectItem,
       onSelectItems: selectItems,
+    }}
+  />
+)
+
+export const MultipleWithInitialItemsAlwaysOpen: StoryFn = () => (
+  <TypeAhead
+    overrideItems={[{ id: 'idTitreItem1' }, { id: 'idTitreItemNotInItems' }, { id: 'idTitreItem2' }]}
+    props={{
+      id: 'plop',
+      itemKey: 'id',
+      items: [
+        { id: 'idTitreItem1', titre: 'titreItem1' },
+        { id: 'idTitreItem2', titre: 'titreItem2' },
+        { id: 'idTitreItem3', titre: 'titreItem3' },
+        { id: 'idTitreItem4', titre: 'titreItem4' },
+        { id: 'idTitreItem5', titre: 'titreItem5' },
+        { id: 'idTitreItem6', titre: 'titreItem6' },
+        { id: 'idTitreItem7', titre: 'titreItem7' },
+        { id: 'idTitreItem8', titre: 'titreItem8' },
+        { id: 'idTitreItem9', titre: 'titreItem9' },
+        { id: 'idTitreItem10', titre: 'titreItem10' },
+        { id: 'idTitreItem11', titre: 'titreItem11' },
+        { id: 'idTitreItem12', titre: 'titreItem12' },
+        { id: 'idTitreItem13', titre: 'titreItem13' },
+        { id: 'idTitreItem14', titre: 'titreItem14' },
+        { id: 'idTitreItem15', titre: 'titreItem15' },
+      ],
+      placeholder: 'placeholder',
+      minInputLength: 3,
+      type: 'multiple',
+      itemChipLabel: item => item.titre,
+      onInput,
+      onSelectItem: selectItem,
+      onSelectItems: selectItems,
+      alwaysOpen: true,
     }}
   />
 )
