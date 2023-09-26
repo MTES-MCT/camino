@@ -35,20 +35,10 @@
   margin-left: -5.5px;
 }
 
-.leaflet-marker-cluster-xs {
-  box-shadow: 0 0 0 var(--unit-xxs) var(--color-bg);
-}
-
-.leaflet-marker-cluster-s {
-  box-shadow: 0 0 0 var(--unit-xs) var(--color-bg-transparent);
-}
-
-.leaflet-marker-cluster-m {
-  box-shadow: 0 0 0 var(--unit-s) var(--color-bg-transparent);
-}
-
-.leaflet-marker-cluster-l {
-  box-shadow: 0 0 0 var(--unit-m) var(--color-bg-transparent);
+.leaflet-marker-cluster-big div p.fr-tag {
+  line-height: 2.5rem;
+  min-height: 3rem;
+  border-radius: 2rem;
 }
 
 .bg-domaine-c {
