@@ -67,17 +67,22 @@ export const clustersBuild = () =>
         if (element) {
           const childCount = cluster.getChildCount()
 
-          let size
-          if (childCount < 5) size = 'xs'
-          else if (childCount < 15) size = 's'
-          else if (childCount < 40) size = 'm'
-          else size = 'l'
           element.removeAttribute('id')
+          let className = 'pill'
+          if (childCount > 1) {
+            const dsfrTagElement = element.getElementsByTagName('p')[0]
+            if (childCount > 10) {
+              dsfrTagElement.textContent = '10+'
+              className += ' leaflet-marker-cluster-big'
+            } else {
+              dsfrTagElement.textContent = `${childCount}`
+            }
+          }
           const divIconOptions: DivIconOptions = {
             html: element,
-            className: `pill leaflet-marker-cluster-${size}`,
+            className,
             iconSize: undefined,
-            iconAnchor: [0, 0],
+            iconAnchor: [20, 20],
           }
 
           return new L.DivIcon(divIconOptions)
@@ -88,9 +93,6 @@ export const clustersBuild = () =>
       animate: true,
       spiderfyOnMaxZoom: false,
       showCoverageOnHover: false,
-      maxClusterRadius(x) {
-        return 2048 / Math.pow(x, 2)
-      },
     })
     const cluster = clusters[id]
     if (cluster) {
