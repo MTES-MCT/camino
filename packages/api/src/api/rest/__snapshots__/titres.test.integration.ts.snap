@@ -1,15 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`titresDREAL > teste la récupération des données pour les DREAL 1`] = `
+exports[`titresAdministration > teste la récupération des données pour les Administrations 1`] = `
 {
-  "activitesAbsentes": 0,
-  "activitesEnConstruction": 0,
   "derniereEtape": {
     "date": "2022-03-10",
     "etapeStatutId": "com",
     "etapeTypeId": "mcp",
   },
-  "enAttenteDeDREAL": false,
+  "enAttenteDeAdministration": false,
   "id": Any<String>,
   "nom": "titre1",
   "prochainesEtapes": [
@@ -49,16 +47,14 @@ exports[`titresDREAL > teste la récupération des données pour les DREAL 1`] =
 }
 `;
 
-exports[`titresDREAL > teste la récupération des données pour les DREAL 2`] = `
+exports[`titresAdministration > teste la récupération des données pour les Administrations 2`] = `
 {
-  "activitesAbsentes": 0,
-  "activitesEnConstruction": 0,
   "derniereEtape": {
     "date": "2022-02-10",
     "etapeStatutId": "fai",
     "etapeTypeId": "pfd",
   },
-  "enAttenteDeDREAL": false,
+  "enAttenteDeAdministration": false,
   "id": Any<String>,
   "nom": "titre2",
   "prochainesEtapes": [
@@ -129,50 +125,6 @@ exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
   "dateCompletudePTMG": "",
   "dateReceptionONF": "",
   "enAttenteDeONF": false,
-  "id": Any<String>,
-  "nom": "titre2",
-  "references": [
-    {
-      "nom": "ONF",
-      "referenceTypeId": "onf",
-    },
-  ],
-  "slug": Any<String>,
-  "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "nom": "Mon Entreprise",
-    },
-  ],
-  "type_id": "arm",
-}
-`;
-
-exports[`titresPTMG > teste la récupération des données pour le PTMG 1`] = `
-{
-  "enAttenteDePTMG": false,
-  "id": Any<String>,
-  "nom": "titre1",
-  "references": [
-    {
-      "nom": "ONF",
-      "referenceTypeId": "onf",
-    },
-  ],
-  "slug": Any<String>,
-  "titre_statut_id": "mod",
-  "titulaires": [
-    {
-      "nom": "Mon Entreprise",
-    },
-  ],
-  "type_id": "arm",
-}
-`;
-
-exports[`titresPTMG > teste la récupération des données pour le PTMG 2`] = `
-{
-  "enAttenteDePTMG": true,
   "id": Any<String>,
   "nom": "titre2",
   "references": [

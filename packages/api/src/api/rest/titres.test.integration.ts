@@ -183,35 +183,11 @@ describe('titresONF', () => {
   })
 })
 
-describe('titresPTMG', () => {
-  test('teste la récupération des données pour le PTMG', async () => {
+describe('titresAdministration', () => {
+  test('teste la récupération des données pour les Administrations', async () => {
     const tested = await restCall(
       dbPool,
-      '/rest/titresPTMG',
-      {},
-      {
-        role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
-      }
-    )
-
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toHaveLength(2)
-    expect(tested.body[0]).toMatchSnapshot({
-      id: expect.any(String),
-      slug: expect.any(String),
-    })
-    expect(tested.body[1]).toMatchSnapshot({
-      id: expect.any(String),
-      slug: expect.any(String),
-    })
-  })
-})
-describe('titresDREAL', () => {
-  test('teste la récupération des données pour les DREAL', async () => {
-    const tested = await restCall(
-      dbPool,
-      '/rest/titresDREAL',
+      '/rest/titresAdministrations',
       {},
       {
         role: 'admin',

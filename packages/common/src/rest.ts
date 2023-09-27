@@ -16,12 +16,11 @@ import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } 
 import {
   activitesByTitreValidator,
   editableTitreValidator,
-  titreDrealValidator,
+  titreAdministrationValidator,
   titreGetValidator,
   titreIdValidator,
   titreLinksValidator,
   titreOnfValidator,
-  titrePtmgValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
 import { sectionWithValueValidator } from './sections.js'
@@ -59,8 +58,7 @@ const IDS = [
   '/rest/titres/:titreId/date',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
-  '/rest/titresPTMG',
-  '/rest/titresDREAL',
+  '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
   '/rest/titres/:id/communes',
   '/rest/titres/:titreId/activites',
@@ -112,8 +110,7 @@ export const CaminoRestRoutes = {
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
   '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
-  '/rest/titresPTMG': { get: { output: z.array(titrePtmgValidator) } },
-  '/rest/titresDREAL': { get: { output: z.array(titreDrealValidator) } },
+  '/rest/titresAdministrations': { get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
   '/rest/titres/:id/communes': { params: { id: titreIdValidator }, get: { output: z.array(communeValidator) } },
   '/rest/titres/:titreId/activites': { params: { titreId: titreIdValidator }, get: { output: activitesByTitreValidator } },

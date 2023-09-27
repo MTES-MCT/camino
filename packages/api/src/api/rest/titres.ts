@@ -1,19 +1,17 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres.js'
-import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
+import { ADMINISTRATION_IDS, AdministrationId } from 'camino-common/src/static/administrations.js'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
 import {
-  CommonTitreDREAL,
+  CommonTitreAdministration,
   CommonTitreONF,
-  CommonTitrePTMG,
   editableTitreValidator,
   TitreLink,
   TitreLinks,
   TitreGet,
   titreOnfValidator,
-  titrePtmgValidator,
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
   titreIdValidator,
@@ -176,54 +174,21 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-export const titresPTMG = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitrePTMG[]>) => {
-  const user = req.auth
-
-  if (!user) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-  } else {
-    const administrationId = ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-
-    if (!isAdministration(user) || user.administrationId !== administrationId) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-    } else {
-      const titresFormated: CommonTitrePTMG[] = (await titresArmAvecOctroi(user, administrationId)).map(({ titre, references, blockedByMe }) => {
-        const value: CommonTitrePTMG = {
-          id: titre.id,
-          slug: titre.slug,
-          nom: titre.nom,
-          type_id: titre.typeId,
-          titre_statut_id: titre.titreStatutId,
-          references,
-          titulaires: titre.titulaires.map(entreprise => ({
-            nom: entreprise.nom ?? '',
-          })),
-          enAttenteDePTMG: blockedByMe,
-        }
-
-        return titrePtmgValidator.parse(value)
-      })
-
-      res.json(titresFormated)
-    }
-  }
-}
-
-type DrealTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>> &
+type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>> &
   Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>
 
-type TitreDrealAvecReferences = {
-  titre: DrealTitreSanitize
+type TitreAdministrationAvecReferences = {
+  titre: AdministrationTitreSanitize
   references: TitreReference[]
-} & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
+} & Pick<CommonTitreAdministration, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeAdministration'>
 
-export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreDREAL[]>) => {
+export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CommonTitreAdministration[]>) => {
   const user = req.auth
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    if (isAdministration(user) && [ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(Administrations[user.administrationId].typeId)) {
+    if (isAdministration(user)) {
       const filters = {
         statutsIds: ['dmi', 'mod'],
       }
@@ -265,8 +230,8 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
         userSuper
       )
 
-      const titresFormated: CommonTitreDREAL[] = titres
-        .map((titre: ITitre): TitreDrealAvecReferences | null => {
+      const titresFormated: CommonTitreAdministration[] = titres
+        .map((titre: ITitre): TitreAdministrationAvecReferences | null => {
           if (titre.slug === undefined) {
             return null
           }
@@ -294,7 +259,7 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
           }
 
           const demarcheLaPlusRecente = titre.demarches.sort(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches?.length - 1]
-          let enAttenteDeDREAL = false
+          let enAttenteDeAdministration = false
           const prochainesEtapes: EtapeTypeId[] = []
           let derniereEtape: {
             etapeTypeId: EtapeTypeId
@@ -313,7 +278,7 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
               const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
               if (dd) {
                 try {
-                  enAttenteDeDREAL = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
+                  enAttenteDeAdministration = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
                   const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche, getCurrent())
                   prochainesEtapes.push(
                     ...nextEtapes
@@ -329,15 +294,15 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
           }
 
           return {
-            titre: titre as DrealTitreSanitize,
+            titre: titre as AdministrationTitreSanitize,
             references,
-            enAttenteDeDREAL,
+            enAttenteDeAdministration,
             derniereEtape,
             prochainesEtapes,
           }
         })
-        .filter((titre: TitreDrealAvecReferences | null): titre is TitreDrealAvecReferences => titre !== null)
-        .map(({ titre, references, enAttenteDeDREAL, derniereEtape, prochainesEtapes }) => {
+        .filter((titre: TitreAdministrationAvecReferences | null): titre is TitreAdministrationAvecReferences => titre !== null)
+        .map(({ titre, references, enAttenteDeAdministration, derniereEtape, prochainesEtapes }) => {
           return {
             id: titre.id,
             slug: titre.slug,
@@ -346,10 +311,7 @@ export const titresDREAL = (_pool: Pool) => async (req: CaminoRequest, res: Cust
             type_id: titre.typeId,
             references,
             titulaires: titre.titulaires,
-            // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
-            activitesEnConstruction: typeof titre.activitesEnConstruction === 'string' ? parseInt(titre.activitesEnConstruction, 10) : titre.activitesEnConstruction ?? 0,
-            activitesAbsentes: typeof titre.activitesAbsentes === 'string' ? parseInt(titre.activitesAbsentes, 10) : titre.activitesAbsentes ?? 0,
-            enAttenteDeDREAL,
+            enAttenteDeAdministration,
             derniereEtape,
             prochainesEtapes,
           }
