@@ -1,9 +1,9 @@
 import { toCaminoDate, toCaminoAnnee } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CommonTitreDREAL, titreIdValidator } from 'camino-common/src/titres'
+import { CommonTitreAdministration, titreIdValidator } from 'camino-common/src/titres'
 
-export const titresDreal: CommonTitreDREAL[] = [
+export const titresDreal: CommonTitreAdministration[] = [
   {
     id: titreIdValidator.parse('firstId'),
     slug: 'first-id-slug',
@@ -16,9 +16,7 @@ export const titresDreal: CommonTitreDREAL[] = [
         nom: 'Titulaire1',
       },
     ],
-    activitesAbsentes: 0,
-    activitesEnConstruction: 0,
-    enAttenteDeDREAL: false,
+    enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
@@ -40,9 +38,7 @@ export const titresDreal: CommonTitreDREAL[] = [
         nom: 'Titulaire3',
       },
     ],
-    activitesEnConstruction: 2,
-    activitesAbsentes: 0,
-    enAttenteDeDREAL: true,
+    enAttenteDeAdministration: true,
     prochainesEtapes: [ETAPES_TYPES.depotDeLaDemande],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
@@ -58,9 +54,7 @@ export const titresDreal: CommonTitreDREAL[] = [
         nom: 'Titulaire1',
       },
     ],
-    activitesAbsentes: 0,
-    activitesEnConstruction: 3,
-    enAttenteDeDREAL: false,
+    enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },
@@ -82,9 +76,7 @@ export const titresDreal: CommonTitreDREAL[] = [
         nom: 'Titulaire 8',
       },
     ],
-    activitesEnConstruction: 8,
-    activitesAbsentes: 2,
-    enAttenteDeDREAL: false,
+    enAttenteDeAdministration: false,
     prochainesEtapes: [],
     derniereEtape: { date: toCaminoDate('2022-01-01'), etapeTypeId: 'mcr' },
   },

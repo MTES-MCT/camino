@@ -56,19 +56,13 @@ export const editableTitreValidator = commonTitreValidator.pick({
   nom: true,
   references: true,
 })
-export const titrePtmgValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
-  enAttenteDePTMG: z.boolean(),
-})
-export type CommonTitrePTMG = z.infer<typeof titrePtmgValidator>
 
-export const titreDrealValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
-  activitesAbsentes: z.number(),
-  activitesEnConstruction: z.number(),
+export const titreAdministrationValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
   derniereEtape: z.object({ etapeTypeId: etapeTypeIdValidator, date: caminoDateValidator }).nullable(),
-  enAttenteDeDREAL: z.boolean(),
+  enAttenteDeAdministration: z.boolean(),
   prochainesEtapes: z.array(etapeTypeIdValidator),
 })
-export type CommonTitreDREAL = z.infer<typeof titreDrealValidator>
+export type CommonTitreAdministration = z.infer<typeof titreAdministrationValidator>
 
 export const titreOnfValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
   dateCompletudePTMG: z.string(),
