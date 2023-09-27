@@ -3,7 +3,7 @@
     <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
       <DateEdit v-if="userIsAdmin" :date="etape.date" :incertitude="etape.incertitudes.date" :onDateChanged="onDateChanged" :onIncertitudeChanged="onIncertitudeChanged" />
 
-      <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="etapeApiClient" :onEtapeChange="onEtapeTypeChange" />
+      <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="apiClient" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
 
     <Accordion
@@ -72,7 +72,7 @@
       :enConstruction="enConstruction"
       @toggle="toggle('entrepriseDocuments')"
     >
-      <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="entrepriseApiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
+      <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
     </Accordion>
 
     <Accordion
@@ -99,10 +99,9 @@ import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
-import { etapeApiClient } from './etape-api-client'
+import { apiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
-import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
   components: {
@@ -149,8 +148,7 @@ export default {
         decisionsAnnexes: false,
       },
       help: {},
-      etapeApiClient,
-      entrepriseApiClient,
+      apiClient,
     }
   },
 
