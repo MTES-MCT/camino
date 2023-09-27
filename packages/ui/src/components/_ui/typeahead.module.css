@@ -28,7 +28,7 @@ input.typeahead-input:focus {
 .typeahead .typeahead-list .typeahead-list-item {
   cursor: pointer;
   background-color: var(--grey-1000-50);
-  padding: 0.6rem 1rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--grey-900-175);
   border-left: 1px solid var(--grey-900-175);
   border-right: 1px solid var(--grey-900-175);
