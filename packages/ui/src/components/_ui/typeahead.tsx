@@ -17,6 +17,7 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
     type: TypeAheadType
     items: T[]
     minInputLength: number
+    alwaysOpen?: boolean
     itemChipLabel: (key: T) => string
     displayItemInList?: (item: T) => JSX.Element
     onSelectItem?: (item: T | undefined) => void
@@ -53,7 +54,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
     const currentSelectionIndex = ref<number>(0)
 
     const isListVisible = computed(() => {
-      return isInputFocused.value && input.value.length >= props.props.minInputLength && props.props.items.length
+      return props.props.alwaysOpen === true ? true : isInputFocused.value && input.value.length >= props.props.minInputLength && props.props.items.length
     })
     const onInput = (payload: Event) => {
       if (isListVisible.value && currentSelectionIndex.value >= props.props.items.length) {
@@ -198,7 +199,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
                   onClick={() => selectItem(item)}
                   onMouseenter={() => (currentSelectionIndex.value = index)}
                 >
-                  <span>{props.props.displayItemInList ? props.props.displayItemInList(item) : props.props.itemChipLabel(item)}</span>
+                  {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
                 </div>
               )
             })}

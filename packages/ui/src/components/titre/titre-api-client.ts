@@ -38,6 +38,13 @@ export type TitreForTable = {
   secteursMaritime?: SecteursMaritimes[]
   references?: { referenceTypeId: ReferenceTypeId; nom: string }[]
 }
+
+export type TitreForTitresRerchercherByNom = {
+  id: TitreId
+  nom: string
+  typeId: TitreTypeId
+  demarches: { demarcheDateDebut: CaminoDate | null }[]
+}
 export interface TitreApiClient {
   loadTitreSections: (titreId: TitreId) => Promise<SectionWithValue[]>
   removeTitre: (titreId: TitreId) => Promise<void>
@@ -100,7 +107,7 @@ export interface TitreApiClient {
     facadesMaritimes: FacadesMaritimes[]
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPoint[]; total: number }>
-  titresRechercherByNom: (nom: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom' | 'typeId'>[] }>
+  titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
   getTitresByIds: (titreIds: TitreId[]) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
 }
 
@@ -347,6 +354,9 @@ export const titreApiClient: TitreApiClient = {
               id
               nom
               typeId
+              demarches {
+                demarcheDateDebut
+              }
             }
           }
         }
