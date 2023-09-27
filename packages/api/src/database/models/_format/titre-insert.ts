@@ -10,7 +10,6 @@ export const titreInsertFormat = (json: Pojo) => {
   delete json.suppression
   delete json.activitesAbsentes
   delete json.activitesEnConstruction
-  delete json.activitesDeposees
   delete json.abonnement
 
   return json

@@ -21,7 +21,6 @@ const fragmentTitre = gql`
     substances
     activitesEnConstruction
     activitesAbsentes
-    activitesDeposees
     surface
     administrations
     titulaires {
@@ -82,7 +81,6 @@ const fragmentTitres = gql`
     substances
     activitesEnConstruction
     activitesAbsentes
-    activitesDeposees
     titulaires {
       ...titresEntreprises
     }

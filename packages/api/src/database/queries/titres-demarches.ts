@@ -204,7 +204,7 @@ const titresDemarchesCount = async (
 const titresDemarchesColonnes = {
   titreNom: { id: 'titre.nom', relation: 'titre' },
   titreDomaine: {
-    id: raw(`SUBSTRING( titre.type_id, 3, 1 )`),
+    id: raw(`right( titre.type_id, 1 )`),
     relation: 'titre',
   },
   titreType: { id: 'titre:type:type.nom', relation: 'titre.type.type' },

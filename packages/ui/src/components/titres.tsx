@@ -3,7 +3,7 @@ import { Icon } from '@/components/_ui/icon'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
-import { User } from 'camino-common/src/roles'
+import { User, isAdministration } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import type { TitreCarteParams } from './titres/map'
 import { Navigation } from './_ui/navigation'
@@ -21,6 +21,13 @@ import { TablePagination, getInitialParams } from './_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
+
+const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
+  domainesIds: ['m', 'w', 'g'],
+  typesIds: ['ar', 'pr', 'ax', 'px', 'cx'],
+  statutsIds: ['val', 'dmi', 'mod'],
+}
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -54,6 +61,7 @@ export const Titres = defineComponent({
     const matomo = inject('matomo', null)
     const store = useStore()
     const router = useRouter()
+    const user = computed<User>(() => store.state.user.element)
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
@@ -63,6 +71,16 @@ export const Titres = defineComponent({
     const paramsForTable = ref<TitresTablePaginationParams>(getInitialParams(router.currentRoute.value, titresColonnes))
     const paramsForCarte = ref<TitreCarteParams | null>(null)
     const paramsFiltres = ref<TitreFiltresParams>(getInitialTitresFiltresParams(router.currentRoute.value))
+
+    const noFilter: boolean = Object.keys(paramsFiltres.value)
+      .filter((k): k is keyof TitreFiltresParams => true)
+      .every(key => {
+        return paramsFiltres.value[key] === '' || (Array.isArray(paramsFiltres.value[key]) && paramsFiltres.value[key].length === 0)
+      })
+
+    if (noFilter && isAdministration(user.value)) {
+      router.push({ name: router.currentRoute.value.name ?? 'titres', query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser } })
+    }
 
     const reloadTitres = async (vueId: TabId) => {
       if (vueId === 'table') {
@@ -115,8 +133,6 @@ export const Titres = defineComponent({
     onMounted(async () => {
       await reloadTitres(routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as VueId)
     })
-
-    const user = computed<User>(() => store.state.user.element)
 
     const tabId = computed<TabId>(() => routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as TabId)
     const resultat = computed<string>(() => {

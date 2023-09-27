@@ -18,6 +18,7 @@ interface GetDepotProps {
   etapeTypeId?: EtapeTypeId
   titreTypeId?: TitreTypeId
 }
+// TODO 2023-09-26 utiliser left et right plutôt que substring et mettre des index comme pour packages/api/src/knex/migrations/20230926083529_add-index-on-left-right.ts
 export const getDepot = async (pool: Pool, params: GetDepotProps) => dbQueryAndValidate(getDepotDb, params, pool, anneeCountStatistiqueValidator)
 const getDepotDb = sql<Redefine<IGetDepotDbQuery, GetDepotProps, AnneeCountStatistique>>`
 select

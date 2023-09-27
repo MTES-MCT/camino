@@ -2,7 +2,7 @@ import { defineComponent } from 'vue'
 import { Filtres } from '../_common/filtres'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { getInitialFiltres } from '../_ui/filters/filters'
-import { CaminoFiltre, titresFiltresNames } from 'camino-common/src/filters'
+import { titresFiltresNames } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 
 export type TitreFiltresParams = Pick<ReturnType<typeof getInitialFiltres>, (typeof titresFiltresNames)[number]>

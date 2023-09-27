@@ -56,6 +56,7 @@ export const typeColumn: Column<'type'> = {
 export const activiteColumn: Column<'activites'> = {
   id: 'activites',
   name: 'Activités',
+  noSort: true,
 }
 
 export const activiteAutoColumn: AutoColumn<'activites'> = {

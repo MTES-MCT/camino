@@ -116,7 +116,7 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // on a besoin des activités si elles sont absentes
   // pour calculer le nombre d'activités par type
   if (!fields.activites) {
-    if (fields.activitesDeposees || fields.activitesEnConstruction || fields.activitesAbsentes) {
+    if (fields.activitesEnConstruction || fields.activitesAbsentes) {
       fields.activites = { id: {} }
     }
   }

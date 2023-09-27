@@ -9,6 +9,7 @@ import { titreFormatFields } from './_fields.js'
 import { AdministrationId, Administrations, ADMINISTRATION_TYPES } from 'camino-common/src/static/administrations.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 // optimisation possible pour un expert SQL
 // remplacer le contenu de ce fichier
@@ -64,6 +65,11 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
 
       return titreActiviteFormat(ta)
     })
+  }
+
+  if (t.activites?.length) {
+    t.activitesAbsentes = t.activites.filter(({ activiteStatutId }) => activiteStatutId === ACTIVITES_STATUTS_IDS.ABSENT).length
+    t.activitesEnConstruction = t.activites.filter(({ activiteStatutId }) => activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION).length
   }
 
   if (fields.administrations) {
