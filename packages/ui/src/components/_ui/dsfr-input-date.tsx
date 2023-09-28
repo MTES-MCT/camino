@@ -48,7 +48,9 @@ export const InputDate = caminoDefineComponent<Props>(['id', 'initialValue', 'da
           date = toCaminoDate(`${yearId.value}-${String(monthId.value).padStart(2, '0')}-${String(dayId.value).padStart(2, '0')}`)
           dayMax = 1
         } catch (ex) {
-          dayId.value = dayId.value - 1
+          if (dayId.value > 28) {
+            dayId.value = dayId.value - 1
+          }
         }
         dayMax--
       }
