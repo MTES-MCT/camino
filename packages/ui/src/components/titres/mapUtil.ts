@@ -1,10 +1,13 @@
 import { leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
+import { DomaineId, Domaines, sortedDomaines } from 'camino-common/src/static/domaines'
 import type { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
+import { createVNode } from 'vue'
+import { couleurParDomaine } from '../_common/domaine'
+import { capitalize } from 'camino-common/src/strings'
 
 const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
   const coordinates = geojson.geometry.coordinates
@@ -112,6 +115,17 @@ export type CaminoMarker = {
   domaineId: DomaineId
 }
 
+export const svgDomaineAnchor = (domaineId: DomaineId): string => {
+  return `
+    <svg width="33" height="39" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.5 23C1 25 10.0563 32.5564 16.5 39C22.9437 32.5564 30 26 32 23C32.5 22 33 22 33 16C33 5.5 23.8967 0 17 0C10.1033 0 5.17674e-05 4 0 16C-1.16842e-05 18.7406 0 21 0.5 23Z" fill="var(--${
+    couleurParDomaine[domaineId]
+  })"/>
+<text x="12" y="22" class="mono" fill="#161616">${capitalize(domaineId)}</text>
+</svg>
+  `
+}
+
 export type LayerWithTitreId = Layer & { titreId: TitreId }
 export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
@@ -144,7 +158,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlr
 
         const icon = leafletDivIconBuild({
           className: ``,
-          html: element,
+          html: svgDomaineAnchor(domaineId),
           iconSize: [32, 40],
           iconAnchor: [16, 40],
         })
