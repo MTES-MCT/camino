@@ -69,58 +69,6 @@
       <hr />
     </div>
 
-    <div v-if="document.typeId === 'dec' || document.typeId === 'arr'">
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5 class="mb-xs">Jorf</h5>
-          <p class="h6 italic mb-0">Optionnel</p>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <input v-model="document.jorf" type="text" class="p-s" />
-        </div>
-      </div>
-      <hr />
-    </div>
-
-    <div v-if="document.typeId === 'dec' || document.typeId === 'arr'">
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5 class="mb-xs">Nor</h5>
-          <p class="h6 italic mb-0">Optionnel</p>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <input v-model="document.nor" type="text" class="p-s" />
-        </div>
-      </div>
-      <hr />
-    </div>
-
-    <div v-if="repertoire === 'demarches' && userIsAdmin">
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5 class="mb-xs">URI</h5>
-          <p class="h6 italic mb-0">Optionnel</p>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <input v-model="document.uri" type="url" class="p-s" placeholder="https://…" />
-        </div>
-      </div>
-      <hr />
-    </div>
-
-    <div v-if="repertoire === 'demarches' && userIsAdmin">
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5 class="mb-xs">URL</h5>
-          <p class="h6 italic mb-0">Optionnel</p>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <input v-model="document.url" type="url" class="p-s" placeholder="https://…" />
-        </div>
-      </div>
-      <hr />
-    </div>
-
     <div>
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
