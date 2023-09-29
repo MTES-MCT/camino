@@ -74,7 +74,7 @@ export const clustersBuild = () =>
           let className = 'pill'
           if (childCount > 1) {
             const dsfrTagElement = element.getElementsByTagName('p')[0]
-            if (childCount > 10) {
+            if (childCount >= 10) {
               dsfrTagElement.textContent = '10+'
               className += ' leaflet-marker-cluster-big'
             } else {
