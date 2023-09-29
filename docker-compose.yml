@@ -125,7 +125,7 @@ services:
       - nginx-proxy
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:19.0.3
+    image: quay.io/keycloak/keycloak:22.0.3
     depends_on:
       - db
     environment:
@@ -142,9 +142,9 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
       # A Synchroniser avec ansible infra/roles/camino/tasks
-      - ./keycloak-franceconnect-4.1.0.jar:/opt/keycloak/providers/keycloak-franceconnect-4.1.0.jar
+      - ./keycloak-franceconnect-6.0.0.jar:/opt/keycloak/providers/keycloak-franceconnect-6.0.0.jar
       # FROM https://github.com/leroyguillaume/keycloak-bcrypt
-      - ./keycloak-bcrypt-1.5.1.jar:/opt/keycloak/providers/keycloak-bcrypt-1.5.1.jar
+      - ./keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
     command: "start"
     expose:
       - ${KEYCLOAK_PORT}
