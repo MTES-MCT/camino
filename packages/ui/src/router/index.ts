@@ -449,6 +449,13 @@ const router = createRouter({
   history,
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
 router.isReady().then(async () => {})
