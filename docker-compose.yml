@@ -88,7 +88,7 @@ services:
     restart: unless-stopped
   oauth2:
     container_name: camino_oauth2
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
     depends_on:
       - ui
       - keycloak
