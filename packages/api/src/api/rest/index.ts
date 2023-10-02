@@ -37,7 +37,7 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck } from 'camino-common/src/typescript-tools.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -90,14 +90,23 @@ const generateFilterValidator = <T extends readonly CaminoFiltre[]>(filtresNames
       }
     }, {} as GenericFiltreValidator<T>)
   )
-const commonValidator = <T extends Readonly<NonEmptyArray<string>>>(colonnes: T, formats: Readonly<['json', ...DownloadFormat[]]>) =>
-  z.object({
-    format: z.enum(formats).default('json'),
+
+const commonValidator = <T extends Readonly<NonEmptyArray<string>>, D extends DownloadFormat = DownloadFormat>(colonnes: T, formats: Readonly<NonEmptyArray<D>>) => {
+  return z.object({
+    format: z
+      .enum(formats)
+      // @ts-ignore ici formats[0] est un string, on est sûr de sa valeur vu qu'on est sur un nonemptyarray
+      .default(formats[0]),
     ordre: z.enum(['asc', 'desc']).default('asc'),
     colonne: z.enum(colonnes).optional(),
   })
+}
 
-const generateValidator = <T extends readonly CaminoFiltre[], U extends Readonly<NonEmptyArray<string>>>(filtresNames: T, colonnes: U, formats: Readonly<['json', ...DownloadFormat[]]>) => {
+const generateValidator = <T extends readonly CaminoFiltre[], U extends Readonly<NonEmptyArray<string>>, D extends DownloadFormat = DownloadFormat>(
+  filtresNames: T,
+  colonnes: U,
+  formats: Readonly<NonEmptyArray<D>>
+) => {
   return generateFilterValidator(filtresNames).merge(commonValidator(colonnes, formats))
 }
 type GenericQueryInput<T extends ZodType> = { [key in keyof z.infer<T>]?: null | string }
@@ -109,8 +118,8 @@ interface ITitreInput {
 
 export const titre =
   (pool: Pool) =>
-  async ({ query: { format = 'json' }, params: { id } }: ITitreInput, user: User) => {
-    formatCheck(['geojson', 'json'], format)
+  async ({ query: { format = 'geojson' }, params: { id } }: ITitreInput, user: User) => {
+    formatCheck(['geojson'], format)
 
     const titre = await titreGet(id!, { fields: titreFields }, user)
 
@@ -119,20 +128,13 @@ export const titre =
     }
 
     const titreFormatted = titreFormat(titre)
-    let contenu
 
-    if (format === 'geojson') {
-      const titreGeojson = await titreGeojsonFormat(pool, titreFormatted)
-
-      contenu = JSON.stringify(titreGeojson, null, 2)
-    } else {
-      contenu = JSON.stringify(titreFormatted, null, 2)
-    }
+    const titreGeojson = await titreGeojsonFormat(pool, titreFormatted)
 
     return {
       nom: fileNameCreate(titre.id, format),
       format,
-      contenu,
+      contenu: JSON.stringify(titreGeojson, null, 2),
     }
   }
 
@@ -177,16 +179,17 @@ export const titres =
 
     let contenu
 
-    if (params.format === 'geojson') {
-      const elements = await titresGeojsonFormat(pool, titresFormatted)
-
-      contenu = JSON.stringify(elements, null, 2)
-    } else if (['csv', 'xlsx', 'ods'].includes(params.format)) {
-      const elements = await titresTableFormat(pool, titresFormatted)
-
-      contenu = tableConvert('titres', elements, params.format)
-    } else {
-      contenu = JSON.stringify(titresFormatted, null, 2)
+    switch (params.format) {
+      case 'csv':
+      case 'xlsx':
+      case 'ods':
+        contenu = tableConvert('titres', await titresTableFormat(pool, titresFormatted), params.format)
+        break
+      case 'geojson':
+        contenu = JSON.stringify(await titresGeojsonFormat(pool, titresFormatted), null, 2)
+        break
+      default:
+        exhaustiveCheck(params.format)
     }
 
     if (matomo) {
@@ -273,12 +276,14 @@ export const demarches =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
-      const elements = await titresDemarchesFormatTable(pool, demarchesFormatted)
-
-      contenu = tableConvert('demarches', elements, params.format)
-    } else {
-      contenu = JSON.stringify(demarchesFormatted, null, 2)
+    switch (params.format) {
+      case 'csv':
+      case 'xlsx':
+      case 'ods':
+        contenu = tableConvert('demarches', await titresDemarchesFormatTable(pool, demarchesFormatted), params.format)
+        break
+      default:
+        exhaustiveCheck(params.format)
     }
 
     return contenu
@@ -328,12 +333,14 @@ export const activites =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
-      const elements = await titresActivitesFormatTable(pool, titresActivitesFormatted)
-
-      contenu = tableConvert('activites', elements, params.format)
-    } else {
-      contenu = JSON.stringify(titresActivitesFormatted, null, 2)
+    switch (params.format) {
+      case 'csv':
+      case 'xlsx':
+      case 'ods':
+        contenu = tableConvert('activites', await titresActivitesFormatTable(pool, titresActivitesFormatted), params.format)
+        break
+      default:
+        exhaustiveCheck(params.format)
     }
 
     return contenu
@@ -368,12 +375,14 @@ export const utilisateurs = async ({ query }: { query: GenericQueryInput<typeof 
 
   let contenu
 
-  if (['csv', 'xlsx', 'ods'].includes(params.format)) {
-    const elements = utilisateursFormatTable(utilisateurs)
-
-    contenu = tableConvert('utilisateurs', elements, params.format)
-  } else {
-    contenu = JSON.stringify(utilisateurs, null, 2)
+  switch (params.format) {
+    case 'csv':
+    case 'xlsx':
+    case 'ods':
+      contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), params.format)
+      break
+    default:
+      exhaustiveCheck(params.format)
   }
 
   return contenu
@@ -400,12 +409,14 @@ export const entreprises =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(params.format)) {
-      const elements = entreprisesFormatTable(entreprisesFormatted)
-
-      contenu = tableConvert('entreprises', elements, params.format)
-    } else {
-      contenu = JSON.stringify(entreprisesFormatted, null, 2)
+    switch (params.format) {
+      case 'csv':
+      case 'xlsx':
+      case 'ods':
+        contenu = tableConvert('entreprises', entreprisesFormatTable(entreprisesFormatted), params.format)
+        break
+      default:
+        exhaustiveCheck(params.format)
     }
 
     return contenu

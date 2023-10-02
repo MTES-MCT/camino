@@ -151,13 +151,12 @@ export const CaminoRestRoutes = {
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 
-const DOWNLOAD_FORMATS_IDS = ['xlsx', 'csv', 'ods', 'geojson', 'json', 'pdf', 'zip'] as const
+const DOWNLOAD_FORMATS_IDS = ['xlsx', 'csv', 'ods', 'geojson', 'pdf', 'zip'] as const
 export const DOWNLOAD_FORMATS = {
   Excel: 'xlsx',
   Csv: 'csv',
   Ods: 'ods',
   GeoJSON: 'geojson',
-  JSON: 'json',
   PDF: 'pdf',
   Zip: 'zip',
 } as const satisfies Record<string, (typeof DOWNLOAD_FORMATS_IDS)[number]>
@@ -223,7 +222,6 @@ export const contentTypes: Record<DownloadFormat, string> = {
   geojson: 'application/geo+json',
   xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   pdf: 'application/pdf',
-  json: 'application/json',
   ods: 'application/vnd.oasis.opendocument.spreadsheet',
   zip: 'application/zip',
 }
