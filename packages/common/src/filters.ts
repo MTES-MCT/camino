@@ -287,9 +287,9 @@ export const entreprisesFiltresNames = ['nomsEntreprise'] as const satisfies rea
 
 export const utilisateursFiltresNames = ['nomsUtilisateurs', 'emails', 'roles', 'administrationIds', 'entreprisesIds'] as const satisfies readonly CaminoFiltre[]
 
-const baseDownloadFormats = ['json', 'csv', 'xlsx', 'ods'] as const satisfies readonly DownloadFormat[]
+const baseDownloadFormats = ['csv', 'xlsx', 'ods'] as const satisfies readonly DownloadFormat[]
 export const demarchesDownloadFormats = baseDownloadFormats
-export const titresDownloadFormats = [...baseDownloadFormats, 'geojson'] as const satisfies readonly DownloadFormat[]
+export const titresDownloadFormats = ['geojson', ...baseDownloadFormats] as const satisfies readonly DownloadFormat[]
 export const activitesDownloadFormats = baseDownloadFormats
 export const utilisateursDownloadFormats = baseDownloadFormats
 export const entreprisesDownloadFormats = baseDownloadFormats

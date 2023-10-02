@@ -172,7 +172,7 @@ interface IUtilisateursQueryInput {
 
 export const utilisateurs =
   (_pool: Pool) =>
-  async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails, nomsUtilisateurs } }: { query: IUtilisateursQueryInput }, user: User) => {
+  async ({ query: { format = 'csv', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails, nomsUtilisateurs } }: { query: IUtilisateursQueryInput }, user: User) => {
     const utilisateurs = await utilisateursGet(
       {
         colonne,
@@ -189,12 +189,14 @@ export const utilisateurs =
 
     let contenu
 
-    if (['csv', 'xlsx', 'ods'].includes(format)) {
-      const elements = utilisateursFormatTable(utilisateurs)
-
-      contenu = tableConvert('utilisateurs', elements, format)
-    } else {
-      contenu = JSON.stringify(utilisateurs, null, 2)
+    switch (format) {
+      case 'csv':
+      case 'xlsx':
+      case 'ods':
+        contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), format)
+        break
+      default:
+        throw new Error(`Format non supporté ${format}`)
     }
 
     return contenu
