@@ -243,8 +243,7 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
       res.header('x-timestamp', Date.now().toString())
       const options: SendFileOptions = {
         dotfiles: 'deny',
-        // TODO 2023-06-27 hack moche mais on va bientôt travailler sur https://github.com/MTES-MCT/camino/issues/611 et supprimer cette partie du code
-        root: filePath && filePath.includes('entreprises') ? process.cwd() : join(process.cwd(), 'files'),
+        root: join(process.cwd(), 'files'),
       }
 
       if (filePath) {

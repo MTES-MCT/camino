@@ -68,6 +68,14 @@
         job: "/srv/scripts/monthly"
         user: git
       become: True
+- name: Ajoute le cron de nettoyage
+  ansible.builtin.cron:
+    name: "cleanup_downloads"
+    minute: "0"
+    hour: "5"
+    job: "rm -rf /srv/www/camino/files/downloads/*"
+    user: git
+  become: True
 - name: Continuous deployment
   block:
     - name: Ajoute le service de continuous deployment
