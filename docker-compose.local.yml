@@ -86,7 +86,7 @@ services:
       - ${OAUTH_PORT}:${OAUTH_PORT}
   keycloak:
     container_name: camino_keycloak
-    image: quay.io/keycloak/keycloak:19.0.3
+    image: quay.io/keycloak/keycloak:22.0.3
     depends_on:
       - db
     environment:
@@ -96,8 +96,8 @@ services:
       KC_DB_PASSWORD: "${PGPASSWORD}"
       KC_DB_USERNAME: "${PGUSER}"
     volumes:
-      - $PWD/infra/roles/camino/files/keycloak-franceconnect-4.1.0.jar:/opt/keycloak/providers/keycloak-franceconnect-4.1.0.jar
-      - $PWD/infra/roles/camino/files/keycloak-bcrypt-1.5.1.jar:/opt/keycloak/providers/keycloak-bcrypt-1.5.1.jar
+      - $PWD/infra/roles/camino/files/keycloak-franceconnect-6.0.0.jar:/opt/keycloak/providers/keycloak-franceconnect-6.0.0.jar
+      - $PWD/infra/roles/camino/files/keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
     command:
       - '/opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh start-dev --hostname=127.0.0.1'
     entrypoint: "/bin/bash -c"
