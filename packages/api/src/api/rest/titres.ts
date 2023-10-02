@@ -38,6 +38,7 @@ import { getLastJournal, getTitre as getTitreDb, getTitreCommunes as getTitreCom
 import type { Pool } from 'pg'
 import { Commune } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -104,7 +105,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   const filters = {
     domainesIds: [DOMAINES_IDS.METAUX],
     typesIds: [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE],
-    statutsIds: ['dmi', 'mod', 'val'],
+    statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
   }
   const titresAutorises = await titresGet(
     filters,
@@ -190,7 +191,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
   } else {
     if (isAdministration(user)) {
       const filters = {
-        statutsIds: ['dmi', 'mod'],
+        statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
       }
 
       const titresAutorises = await titresGet(

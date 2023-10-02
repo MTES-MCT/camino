@@ -8,6 +8,7 @@ import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { capitalize } from 'camino-common/src/strings.js'
 import { caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
+import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(
@@ -56,21 +57,24 @@ const statistiquesGranulatsMarinsTitresGet = (titres: { id: string; typeId: stri
 const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<StatistiquesGranulatsMarins, 'annees'> => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
-      if (titre.titreStatutId && ['val', 'mod', 'dmi'].includes(titre.titreStatutId) && titre.surfaceEtape && titre.surfaceEtape.surface) {
+      const isValide = isTitreValide(titre.titreStatutId)
+      const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
+
+      if ((isValide || instructionEnCours) && titre.surfaceEtape && titre.surfaceEtape.surface) {
         if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.surfaceEtape.surface
-          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+          if (instructionEnCours) {
             acc.titresInstructionExploration++
           }
         } else {
-          if (['val', 'mod'].includes(titre.titreStatutId)) {
+          if (isValide) {
             acc.surfaceExploitation += titre.surfaceEtape.surface
           }
-          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+          if (instructionEnCours) {
             acc.titresInstructionExploitation++
           }
         }
-        const id = `titres${capitalize(titre.titreStatutId!)}${capitalize(titre.typeId!)}` as IStatsGranulatsMarinsTitresTypesInstant
+        const id = `titres${capitalize(titre.titreStatutId)}${capitalize(titre.typeId!)}` as IStatsGranulatsMarinsTitresTypesInstant
 
         acc[id]++
       }

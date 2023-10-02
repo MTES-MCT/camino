@@ -3,7 +3,7 @@ import { CaminoAnnee, anneeSuivante, toCaminoAnnee } from 'camino-common/src/dat
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titresGet } from '../../../database/queries/titres.js'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
 import { REGION_IDS } from 'camino-common/src/static/region.js'
@@ -59,20 +59,22 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
   )
   const statsInstant: StatistiquesMinerauxMetauxMetropoleInstantBuild = titres.reduce(
     (acc, titre) => {
-      if (titre.titreStatutId && ['val', 'mod', 'dmi'].includes(titre.titreStatutId)) {
+      const isValide = isTitreValide(titre.titreStatutId)
+      const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
+      if (isValide || titre.titreStatutId === TitresStatutIds.DemandeInitiale) {
         if (!titre.surfaceEtape) {
           console.warn(`ce titre ${titre.slug} n'a pas de surface`)
         }
         if (['arm', 'apm', 'prm'].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
-          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+          if (instructionEnCours) {
             acc.titres.instructionExploration++
           }
         } else {
-          if (['val', 'mod'].includes(titre.titreStatutId)) {
+          if (isValide) {
             acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
           }
-          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+          if (instructionEnCours) {
             acc.titres.instructionExploitation++
           }
         }

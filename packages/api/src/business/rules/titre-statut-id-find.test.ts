@@ -1,4 +1,4 @@
-import { titreInSurvieProvisoire, titreStatutIdFind, TitreStatutIdFindDemarche } from './titre-statut-id-find.js'
+import { titreInModificationEnInstance, titreStatutIdFind, TitreStatutIdFindDemarche } from './titre-statut-id-find.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
@@ -59,16 +59,16 @@ describe("statut d'un titre", () => {
     expect(titreStatutIdFind(aujourdhui, [{ typeId: 'oct', statutId: 'des' }])).toEqual('dmc')
   })
 
-  test("le statut d'un titre avec une démarche en instruction est “mod”", () => {
+  test("le statut d'un titre avec une démarche en instruction est en survie provisoire", () => {
     expect(
       titreStatutIdFind(aujourdhui, [
         { typeId: 'mut', statutId: 'ins', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: null },
         { typeId: 'oct', statutId: 'acc', demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2014-04-01') },
       ])
-    ).toEqual('mod')
+    ).toEqual('sup')
   })
 
-  test("le statut d'un titre PER M ou W avec une prolongation déposée est “mod”", () => {
+  test("le statut d'un titre PER M ou W avec une prolongation déposée est survie provisoire", () => {
     expect(
       titreStatutIdFind(aujourdhui, [
         {
@@ -84,10 +84,10 @@ describe("statut d'un titre", () => {
           demarcheDateFin: toCaminoDate('2020-04-01'),
         },
       ])
-    ).toEqual('mod')
+    ).toEqual('sup')
   })
 
-  test("le statut d'un titre PER M ou W avec une prolongation2 déposée est “mod”", () => {
+  test("le statut d'un titre PER M ou W avec une prolongation2 déposée est survie provisoire après la fin de la prolongation1 et est en modification en instance avant celle-ci", () => {
     const demarches: TitreStatutIdFindDemarche[] = [
       {
         typeId: 'pr2',
@@ -108,13 +108,13 @@ describe("statut d'un titre", () => {
         demarcheDateFin: toCaminoDate('2020-04-01'),
       },
     ]
-    expect(titreStatutIdFind(aujourdhui, demarches)).toEqual('mod')
-    expect(titreStatutIdFind(toCaminoDate('2020-03-01'), demarches)).toEqual('val')
+    expect(titreStatutIdFind(aujourdhui, demarches)).toEqual('sup')
+    expect(titreStatutIdFind(toCaminoDate('2020-03-01'), demarches)).toEqual('mod')
   })
 
   test('un titre est en modification en instance si une prolongation est créée après une prolongation qui est toujours valide', () => {
     expect(
-      titreInSurvieProvisoire([
+      titreInModificationEnInstance([
         { demarcheDateDebut: toCaminoDate('2020-06-01'), demarcheDateFin: null },
         { demarcheDateDebut: toCaminoDate('2020-01-01'), demarcheDateFin: toCaminoDate('2020-10-01') },
         { demarcheDateDebut: toCaminoDate('1014-04-01'), demarcheDateFin: toCaminoDate('2020-04-01') },

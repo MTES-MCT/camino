@@ -6,7 +6,7 @@ import { ITitreEtape, ITitreDemarche } from '../../types.js'
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
-import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
+import { titreInModificationEnInstance } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: DemarcheTypeId,
@@ -137,7 +137,7 @@ const titreDemarchePublicLectureFind = (
   }
 
   // Pour les PRM d’un titre en survie provisoire, les demandes de prolongations sont public
-  if (titreTypeId === 'prm' && titreEtape.typeId === 'mdp' && ['pr1', 'pr2'].includes(demarcheTypeId) && titreInSurvieProvisoire([demarche])) {
+  if (titreTypeId === 'prm' && titreEtape.typeId === 'mdp' && ['pr1', 'pr2'].includes(demarcheTypeId) && titreInModificationEnInstance([demarche])) {
     return true
   }
 
