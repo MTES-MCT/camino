@@ -6,7 +6,7 @@ import { documentRepertoireFind } from '../../tools/documents/document-repertoir
 import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
-import { statSync, readFileSync } from 'fs'
+import { statSync, readFileSync, createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
@@ -16,7 +16,10 @@ import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/que
 import { LargeObjectManager } from 'pg-large-object'
 
 import express from 'express'
+import { join } from 'node:path'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
+
+export const DOWNLOADS_DIRECTORY = 'downloads'
 
 export const etapeTelecharger =
   (pool: Pool) =>
@@ -64,21 +67,27 @@ export const etapeTelecharger =
         await client.query('BEGIN')
 
         const entrepriseDocument = entrepriseDocuments[i]
-        // TODO 2023-08-28 condition a supprimé quand la colonne sere non null en bdd
-        if (entrepriseDocument.largeobject_id) {
-          const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
-          zip.file(`${entrepriseDocument.id}.pdf`, stream)
-        }
+        const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
+        zip.file(`${entrepriseDocument.id}.pdf`, stream)
       }
-      const base64Data = await zip.generateAsync({ type: 'base64' })
-      await client.query('COMMIT')
-
       const nom = `documents-${etapeId}.zip`
+
+      const filePath = `/${DOWNLOADS_DIRECTORY}/${nom}`
+      await new Promise<void>(resolve =>
+        zip
+          .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+          .pipe(createWriteStream(join(process.cwd(), `files/${filePath}`)))
+          .on('finish', function () {
+            resolve()
+          })
+      )
+
+      await client.query('COMMIT')
 
       return {
         nom,
         format: DOWNLOAD_FORMATS.Zip,
-        buffer: Buffer.from(base64Data, 'base64'),
+        filePath,
       }
     } catch (e) {
       await client.query('ROLLBACK')
