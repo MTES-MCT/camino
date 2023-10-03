@@ -157,6 +157,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
           type: { etapesTypes: { id: {} } },
           titre: {
             demarches: { etapes: { id: {} } },
+            pointsEtape: { id: {} },
           },
           etapes: { type: { id: {} } },
         },
