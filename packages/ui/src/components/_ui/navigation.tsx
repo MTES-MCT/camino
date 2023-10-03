@@ -8,6 +8,7 @@ type Props = {
 } & AnchorHTMLAttributes
 export const Navigation: FunctionalComponent<Props> = (props: Props) => {
   const Children = props.render
+
   return (
     <router-link title={props.title} aria-label={props.title} to={props.to}>
       <Children />

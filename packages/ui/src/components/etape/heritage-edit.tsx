@@ -20,6 +20,7 @@ const HeritageEditGeneric = <P extends EtapeHeritageProps, T extends EtapeHerita
     const hasHeritage = computed<boolean>(() => {
       return hasValeurCheck(props.propId, props.prop.etape)
     })
+
     return () => (
       <div class="mb-s">
         {!props.prop.actif && props.write ? (

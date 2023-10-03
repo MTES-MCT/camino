@@ -80,6 +80,7 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
       return '...'
     } else {
       const res = tableData.value.value.total > tableData.value.value.rows.length ? `${tableData.value.value.rows.length} / ${tableData.value.value.total}` : tableData.value.value.rows.length
+
       return `(${res} résultat${tableData.value.value.rows.length > 1 ? 's' : ''})`
     }
   })

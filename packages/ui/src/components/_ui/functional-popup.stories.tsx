@@ -20,6 +20,7 @@ export const Main: StoryFn = () => (
     validate={{
       action: () => {
         doStuff()
+
         return Promise.resolve()
       },
     }}
@@ -42,6 +43,7 @@ export const NotValid: StoryFn = () => (
     validate={{
       action: () => {
         doStuff()
+
         return Promise.resolve()
       },
     }}

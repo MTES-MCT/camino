@@ -34,6 +34,7 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresR
   },
   getEntreprises: _ => {
     getEntreprisesAction()
+
     return Promise.resolve({
       total: 1200,
       elements: [
@@ -52,6 +53,7 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresR
   },
   creerEntreprise: siren => {
     creerEntrepriseAction(siren)
+
     return Promise.resolve()
   },
 }

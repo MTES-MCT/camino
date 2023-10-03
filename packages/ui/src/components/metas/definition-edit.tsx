@@ -42,6 +42,7 @@ export const DefinitionEdit = defineComponent<Props>(props => {
   const title = computed(() => {
     if ('colonnes' in definition.value) {
       const colonnes = [...definition.value.colonnes]
+
       return colonnes.find(colonne => colonne.id === props.definitionsTree.foreignKey)?.nom
     } else {
       return definition.value.nom
@@ -70,8 +71,10 @@ export const DefinitionEdit = defineComponent<Props>(props => {
   const colonnesToEdit = computed(() => {
     if ('colonnes' in definition.value) {
       const colonnes = [...definition.value.colonnes]
+
       return colonnes.filter((colonne: any) => colonne.id !== 'id').filter(colonne => !('type' in colonne) || colonne.type !== 'entities')
     }
+
     return []
   })
 
@@ -92,6 +95,7 @@ export const DefinitionEdit = defineComponent<Props>(props => {
         [props.definitionsTree.foreignKey]: elementSelected.value?.id,
       }
     }
+
     return { ...props.foreignKeys }
   })
 
@@ -105,6 +109,7 @@ export const DefinitionEdit = defineComponent<Props>(props => {
     if ('labelGet' in meta) {
       return meta.labelGet(element)
     }
+
     return ''
   }
   const elementSelect = async (element: any) => {

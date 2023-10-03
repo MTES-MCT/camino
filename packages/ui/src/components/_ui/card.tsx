@@ -10,6 +10,7 @@ export const Card: FunctionalComponent<Props & HTMLAttributes['class']> = props 
   const Title = props.title
   const Content = props.content
   const Buttons = props.buttons ?? null
+
   return (
     <div class="flex flex-direction-column rnd-s border bg-bg">
       {props.buttons ? (

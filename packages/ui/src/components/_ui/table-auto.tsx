@@ -53,6 +53,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
       if (value2) {
         return event.order === 'asc' ? 1 : -1
       }
+
       return 0
     }
     if (column?.sort !== undefined) {

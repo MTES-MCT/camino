@@ -31,8 +31,10 @@ export const Administration = defineComponent(() => {
     if (isAdministrationId(route.params.id)) {
       return route.params.id
     }
+
     return null
   })
+
   return () => (
     <>
       {administrationId.value ? (
@@ -99,6 +101,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
       }
     }
   })
+
   return () => (
     <div>
       <h5>Administration</h5>

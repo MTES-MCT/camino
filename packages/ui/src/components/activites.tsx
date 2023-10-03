@@ -83,6 +83,7 @@ interface Props {
 export const PureActivites = defineComponent<Props>(props => {
   const getData = async (params: Params<string>) => {
     const activites = await props.apiClient.getActivites({ ordre: params.ordre, colonne: params.colonne, page: params.page, ...params.filtres })
+
     return { total: activites.total, values: activitesLignesBuild(activites.elements) }
   }
 

@@ -41,10 +41,12 @@ const supprimerActiviteAction = action('supprimerActiviteAction')
 const apiClient: Pick<ActiviteApiClient, 'deposerActivite' | 'supprimerActivite'> = {
   deposerActivite: (...params: unknown[]) => {
     deposerActiviteAction(params)
+
     return Promise.resolve()
   },
   supprimerActivite(activiteId) {
     supprimerActiviteAction(activiteId)
+
     return Promise.resolve()
   },
 }

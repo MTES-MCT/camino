@@ -44,6 +44,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
             {props.statutIds.length > 1 && etapeStatutIdSelected === null ? <option value={null} selected={true}></option> : null}
             {props.statutIds.map(etapeStatutId => {
               const etapeStatut = EtapesStatuts[etapeStatutId]
+
               return (
                 <option key={etapeStatut.id} value={etapeStatut.id} selected={etapeStatutIdSelected === etapeStatut.id} disabled={etapeStatutIdSelected === etapeStatut.id}>
                   {etapeStatut.nom}

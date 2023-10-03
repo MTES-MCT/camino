@@ -47,7 +47,8 @@ export const Statistiques = defineComponent(() => {
       router.replace({ name: 'statistiques-globales' })
     }
   })
-  const initTab: TabId = (getEntriesHardcore(routeToTab).find(([myTabId, tabRoute]) => tabRoute === (route.name ?? 'statistiques-globales')) ?? ['globales'])[0]
+  const initTab: TabId = (getEntriesHardcore(routeToTab).find(([_myTabId, tabRoute]) => tabRoute === (route.name ?? 'statistiques-globales')) ?? ['globales'])[0]
+
   return () => (
     <Tabs
       tabsTitle="Statistiques"

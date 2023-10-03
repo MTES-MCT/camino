@@ -18,6 +18,7 @@ export const Default: StoryFn = () => (
     close={close}
     deleteTitre={() => {
       deleteTitre()
+
       return Promise.resolve()
     }}
     titreNom="Nom du titre"

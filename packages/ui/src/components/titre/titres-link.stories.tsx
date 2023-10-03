@@ -8,7 +8,6 @@ import { titreIdValidator } from 'camino-common/src/titres'
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
   component: TitresLink,
-  argTypes: {},
 }
 export default meta
 
@@ -81,7 +80,7 @@ export const Loading: StoryFn = () => (
       type: 'multiple',
       selectedTitreIds: [titreIdValidator.parse('id1')],
     }}
-    loadLinkableTitres={() => new Promise<LinkableTitre[]>(resolve => {})}
+    loadLinkableTitres={() => new Promise<LinkableTitre[]>(_resolve => {})}
     onSelectTitre={onSelectTitre}
     onSelectTitres={onSelectTitres}
   />

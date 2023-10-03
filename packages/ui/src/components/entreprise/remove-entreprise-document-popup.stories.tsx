@@ -18,6 +18,7 @@ const deleteDoc = action('deleteDoc')
 const apiClient: Pick<EntrepriseApiClient, 'deleteEntrepriseDocument'> = {
   deleteEntrepriseDocument: (entepriseId, documentId) => {
     deleteDoc(entepriseId, document)
+
     return Promise.resolve()
   },
 }

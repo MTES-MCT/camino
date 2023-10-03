@@ -17,5 +17,6 @@ export const TitresTable: FunctionalComponent<Props> = props => {
   const colonnes = titresColonnes.filter(({ id }) => (accessActivites ? true : id !== 'activites'))
 
   const lignes = titresLignesBuild(props.titres, accessActivites)
+
   return <TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" />
 }

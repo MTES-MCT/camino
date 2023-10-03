@@ -10,6 +10,7 @@ type Props = {
 
 export function FiltersInput(props: Props) {
   const filter = caminoFiltres[props.filter]
+
   return (
     <div class="mb">
       <h5>{filter.name}</h5>

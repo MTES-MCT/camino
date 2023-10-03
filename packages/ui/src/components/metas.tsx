@@ -29,6 +29,7 @@ const metasLignesBuild = (): Promise<{ values: TableRow[]; total: number }> => {
       columns,
     }
   })
+
   return Promise.resolve({ values: data, total: data.length })
 }
 
@@ -48,5 +49,6 @@ export const Metas = defineComponent(() => {
   const route = useRoute()
   const store = useStore()
   const user = computed<User>(() => store.state.user.element)
+
   return () => <PureMetas user={user.value} currentRoute={route} />
 })

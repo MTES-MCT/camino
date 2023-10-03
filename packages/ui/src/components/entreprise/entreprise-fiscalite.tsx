@@ -47,6 +47,7 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
       style: 'currency',
       currency: 'EUR',
     }).format(number)
+
   return () => (
     <div>
       Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)

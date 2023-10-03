@@ -59,6 +59,7 @@ export const DisplayTitre: FunctionalComponent<DisplayTitreProps> = props => {
   if (isNotNullNorUndefined(props.titre.demarches?.[0]?.demarcheDateDebut)) {
     annee = getAnnee(props.titre.demarches?.[0]?.demarcheDateDebut)
   }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left' }}>
       <Domaine domaineId={getDomaineId(props.titre.typeId)} />
@@ -80,6 +81,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
 
   const createDebounce = () => {
     let timeout: ReturnType<typeof setTimeout>
+
     return function (fnc: Function, delayMs = 500) {
       clearTimeout(timeout)
       timeout = setTimeout(() => {

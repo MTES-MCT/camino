@@ -50,6 +50,7 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
       }
     }
   }
+
   return () => (
     <div class={['fr-input-group', props.disabled ? 'fr-input-group--disabled' : null]}>
       <label class="fr-label" for={id}>

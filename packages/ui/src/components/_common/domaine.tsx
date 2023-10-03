@@ -22,6 +22,7 @@ export const Domaine: FunctionalComponent<Props> = props => {
   if (domaine === undefined) {
     domaine = DOMAINES_IDS.METAUX
   }
+
   return (
     <DsfrTag
       class="mono"

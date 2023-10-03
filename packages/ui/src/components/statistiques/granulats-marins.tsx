@@ -84,6 +84,7 @@ const statsBarFormat = ({
 
 const getStats = async (): Promise<StatistiquesGranulatsMarins> => {
   const data: StatistiquesGranulatsMarins = await getWithJson('/rest/statistiques/granulatsMarins', {})
+
   return data
 }
 
@@ -149,6 +150,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
 
       const statistiques = data.annees.reduce<Record<string, any>>((acc, statsAnnee) => {
         acc[statsAnnee.annee] = statsAnnee
+
         return acc
       }, {})
 
@@ -379,6 +381,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
           renderItem={item => {
             const annees = item.statsAnneesAfter2010.map(annee => {
               const id = annee.annee
+
               return {
                 id,
                 nom: id.toString(),

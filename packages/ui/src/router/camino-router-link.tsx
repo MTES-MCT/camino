@@ -9,6 +9,7 @@ export const routerQueryToNumberArray = (value: LocationQueryValue | LocationQue
   if (value === undefined) {
     return defaultValue
   }
+
   return Array.isArray(value) ? value.map(value => Number(value)) : [Number(value)]
 }
 

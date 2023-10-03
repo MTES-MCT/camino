@@ -20,6 +20,7 @@ const completeUpdateAction = action('completeUpdate')
 const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   uploadTempDocument: (...params: unknown[]) => {
     uploadTempDocumentAction(params)
+
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }

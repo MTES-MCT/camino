@@ -6,6 +6,7 @@ interface Props {
 export const PropDuree: FunctionalComponent<Props> = props => {
   const ans = props.duree ? Math.floor(props.duree / 12) : null
   const mois = props.duree ? Math.floor(props.duree % 12) : null
+
   return (
     <span>
       {ans ? <span>{`${ans} an${ans > 1 ? 's' : ''}`}</span> : null}

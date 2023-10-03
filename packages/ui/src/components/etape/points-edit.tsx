@@ -34,6 +34,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           return pointsTotal
         }, [])
       )
+
       return pointsTotal
     }, [])
   })
@@ -194,6 +195,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   onMounted(() => {
     completeUpdate()
   })
+
   return () => (
     <div>
       {showTitle ? <h4 class="mb-s">Périmètre</h4> : null}

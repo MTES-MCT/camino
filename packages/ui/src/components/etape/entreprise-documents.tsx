@@ -44,6 +44,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
       data.value = { status: 'LOADED', value: [] }
     }
   })
+
   return () => (
     <LoadingElement
       data={data.value}

@@ -43,6 +43,7 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
     props.completeUpdate(alreadyExistingActiviteDocumentIds, tempActiviteDocuments, isActiviteDocumentsComplete(documents.value, props.activiteTypeId).valid)
   }
   notifyChange()
+
   return () => (
     <>
       {hasDocumentTypes ? (

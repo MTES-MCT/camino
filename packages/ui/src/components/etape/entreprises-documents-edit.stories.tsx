@@ -24,16 +24,19 @@ export const Loading: StoryFn = () => (
     apiClient={{
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
+
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
 
       getEntrepriseDocuments: () => new Promise(() => ({})),
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
+
         return Promise.resolve([])
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
+
         return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
       },
     }}
@@ -49,11 +52,13 @@ export const ArmUneEntrepriseSansDocumentDEntreprise: StoryFn = () => (
     apiClient={{
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
+
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
 
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
+
         return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
       },
 
@@ -125,10 +130,12 @@ export const ArmUneEntrepriseSansDocumentDEntreprise: StoryFn = () => (
             entreprise_id: id,
           },
         ]
+
         return entrepriseDocuments
       },
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
+
         return Promise.resolve([])
       },
     }}
@@ -144,10 +151,12 @@ export const ArmUneEntrepriseAvecDocumentDEntrepriseComplet: StoryFn = () => (
     apiClient={{
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
+
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
+
         return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
       },
 
@@ -219,10 +228,12 @@ export const ArmUneEntrepriseAvecDocumentDEntrepriseComplet: StoryFn = () => (
             entreprise_id: id,
           },
         ]
+
         return entrepriseDocuments
       },
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
+
         return Promise.resolve([
           {
             entreprise_id: newEntrepriseId('id'),
@@ -288,10 +299,12 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
     apiClient={{
       creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
         creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
+
         return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
+
         return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
       },
 
@@ -364,12 +377,15 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
               entreprise_id: id,
             },
           ]
+
           return entrepriseDocuments
         }
+
         return []
       },
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
+
         return Promise.resolve([
           {
             entreprise_id: newEntrepriseId('id'),

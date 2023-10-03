@@ -454,6 +454,7 @@ export const ToutesLesActivites: StoryFn = () => (
                         }),
                       }
                     }
+
                     return section
                   }),
                   {}

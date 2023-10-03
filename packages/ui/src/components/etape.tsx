@@ -43,6 +43,7 @@ export const Etape = defineComponent({
 
     watch(() => route.params.id, loadEtape)
     watch(user, loadEtape)
+
     return () => (
       <>
         <LoadingElement

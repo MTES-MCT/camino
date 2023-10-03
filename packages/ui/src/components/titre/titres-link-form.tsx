@@ -7,7 +7,6 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresLink } from './titres-link'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { Icon } from '@/components/_ui/icon'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreId, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { ApiClient } from '@/api/api-client'
@@ -108,6 +107,7 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
       }
     }
   }
+
   return () => (
     <div>
       <LoadingElement

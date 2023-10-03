@@ -45,6 +45,7 @@ export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], 
   const onDragLeave = (e: Event) => {
     dragHover.value = false
   }
+
   return () => (
     <div class="fr-upload-group" style={{ opacity: dragHover.value ? '20%' : '100%' }} onDragover={onDragHover} onDragleave={onDragLeave} onDrop={dropFile}>
       <label class="fr-label" for="file-upload">

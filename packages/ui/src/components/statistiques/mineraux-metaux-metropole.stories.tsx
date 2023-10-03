@@ -258,5 +258,5 @@ export const DefaultNoSnapshot: StoryFn = () => (
   />
 )
 
-export const Loading: StoryFn = () => <PureMinerauxMetauxMetropole getStats={() => new Promise<StatistiquesMinerauxMetauxMetropole>(resolve => {})} />
+export const Loading: StoryFn = () => <PureMinerauxMetauxMetropole getStats={() => new Promise<StatistiquesMinerauxMetauxMetropole>(_resolve => {})} />
 export const WithError: StoryFn = () => <PureMinerauxMetauxMetropole getStats={() => Promise.reject(new Error('because reasons'))} />

@@ -17,6 +17,7 @@ export const Default: StoryFn = () => (
     utilisateur={{ nom: 'Nom', prenom: 'Prénom' }}
     deleteUser={() => {
       deleteUser()
+
       return Promise.resolve()
     }}
     close={close}

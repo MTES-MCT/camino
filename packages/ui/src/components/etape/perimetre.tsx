@@ -17,6 +17,7 @@ interface Props {
 export const Perimetre = caminoDefineComponent<Props>(['titreTypeId', 'incertitude', 'etape', 'geojsonMultiPolygon'], props => {
   const incertitude: boolean = props.incertitude ?? false
   const tabId = ref<TabId>('points')
+
   return () => (
     <div>
       <div class="tablet-blobs">

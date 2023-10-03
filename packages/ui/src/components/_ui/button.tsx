@@ -11,6 +11,7 @@ type Props = {
  */
 export const Button: FunctionalComponent<Props> = (props: Props) => {
   const Children = props.render
+
   return (
     <button disabled={props.disabled ?? false} title={props.title} aria-label={props.title} onClick={props.onClick}>
       <Children />

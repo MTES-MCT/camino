@@ -90,6 +90,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
                             disabled={!canValidate.value}
                             onClick={e => {
                               e.stopPropagation()
+
                               return validate()
                             }}
                           >

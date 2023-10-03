@@ -86,6 +86,7 @@ function CommunesEtRegions({ communes }: { communes: Commune[] }) {
       </>
     )
   }
+
   return null
 }
 
@@ -114,6 +115,7 @@ function SdomZones(sdomZones?: SDOMZoneId[]) {
 function SecteursMaritimesTsx(secteursMaritimes: SecteursMaritimes[]) {
   if (secteursMaritimes.length) {
     const facadesMaritime: FacadeComputed[] = getFacadesComputed(secteursMaritimes)
+
     return (
       <>
         {facadesMaritime.map(facade => {
@@ -127,6 +129,7 @@ function SecteursMaritimesTsx(secteursMaritimes: SecteursMaritimes[]) {
       </>
     )
   }
+
   return null
 }
 

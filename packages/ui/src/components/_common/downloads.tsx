@@ -10,6 +10,7 @@ import { DsfrButtonIcon } from '../_ui/dsfr-button'
 export const Downloads = defineComponent(<T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'> & { class?: HTMLAttributes['class'] }) => {
   const route = useRoute()
   const matomo = inject('matomo', undefined)
+
   return () => <PureDownloads {...props} route={route} matomo={matomo} />
 })
 

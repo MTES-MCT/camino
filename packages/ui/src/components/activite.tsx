@@ -22,6 +22,7 @@ export const Activite = defineComponent(() => {
     if (validated.success) {
       return validated.data
     }
+
     return null
   })
 

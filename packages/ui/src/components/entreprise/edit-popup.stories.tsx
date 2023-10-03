@@ -17,6 +17,7 @@ const save = action('save')
 const apiClient = {
   modifierEntreprise: (...params: unknown[]) => {
     save(params)
+
     return Promise.resolve()
   },
 }

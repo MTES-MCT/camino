@@ -119,6 +119,7 @@ export const Infos: FunctionalComponent<Props> = ({ titre, user, apiClient, curr
       if (status) {
         return { ...d, phaseStatutId: status }
       }
+
       return null
     })
     .filter(isNotNullNorUndefined)

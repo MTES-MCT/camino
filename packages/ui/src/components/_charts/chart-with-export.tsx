@@ -30,6 +30,7 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
 
     return ConfigurableChart
   })
+
   return (
     <LoadingElement
       data={props.data}

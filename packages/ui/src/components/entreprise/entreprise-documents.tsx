@@ -40,6 +40,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
   onMounted(async () => {
     await reloadDocuments()
   })
+
   return () => (
     <div class="dsfr">
       <div class="fr-container">
@@ -104,6 +105,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
             creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput, tempDocumentName) => {
               const document = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
               await reloadDocuments()
+
               return document
             },
           }}

@@ -22,6 +22,7 @@ export const RemoveEntrepriseDocumentPopup: FunctionalComponent<Props> = props =
       )}
     />
   )
+
   return (
     <FunctionalPopup
       title={`Suppression du document`}

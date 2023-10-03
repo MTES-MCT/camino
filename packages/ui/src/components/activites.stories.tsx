@@ -31,10 +31,12 @@ const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'get
   },
   getUtilisateurEntreprises: () => {
     getEntreprisesAction()
+
     return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])
   },
   getActivites: siren => {
     getActivitesAction(siren)
+
     return Promise.resolve({
       total: 180,
       elements: [...Array(10).keys()].map(value => ({

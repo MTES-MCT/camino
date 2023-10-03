@@ -17,6 +17,7 @@ const save = action('save')
 const apiClient = {
   creerEntreprise: (...params: unknown[]) => {
     save(params)
+
     return Promise.resolve()
   },
 }

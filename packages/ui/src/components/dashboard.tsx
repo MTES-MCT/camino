@@ -29,8 +29,10 @@ export const Dashboard = defineComponent({
       } else {
         dashboard = <PureAdministrationDashboard apiClient={dashboardApiClient} user={user} />
       }
+
       return () => <dashboard />
     }
+
     return () => null
   },
 })

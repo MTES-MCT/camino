@@ -47,8 +47,10 @@ const columns = [
         if (Number.isNaN(number2)) {
           return 1
         }
+
         return number1 - number2
       }
+
       return 0
     },
   },
@@ -80,6 +82,7 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
       dateCARM: dateCell(titre.dateCARM),
       delaiJourONFCARM: { value: delai },
     }
+
     return {
       id: titre.id,
       link: { name: 'titre', params: { id: titre.slug } },

@@ -19,10 +19,12 @@ const displayMessage = action('displayMessage')
 const apiClient: Props['apiClient'] = {
   createDemarche: demarche => {
     create(demarche)
+
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
   },
   updateDemarche: demarche => {
     update(demarche)
+
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
   },
 }

@@ -9,7 +9,6 @@ import { canEditPermission, getAssignableRoles } from 'camino-common/src/permiss
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
-import { Icon } from '../_ui/icon'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
 import { ButtonIcon } from '../_ui/button-icon'
 
@@ -41,6 +40,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
       }
     }
   })
+
   return () => (
     <>
       {mode.value === 'read' ? (
@@ -77,6 +77,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
                           isEntrepriseOrBureauDEtude(props.utilisateur.value) &&
                           props.utilisateur.value.entreprises.map(ent => {
                             const e = loadedEntreprises.find(({ id }) => id === ent.id)
+
                             return e ? (
                               <li key={e.id} class="mb-xs">
                                 <router-link

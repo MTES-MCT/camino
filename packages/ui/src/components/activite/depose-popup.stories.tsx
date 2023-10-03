@@ -15,6 +15,7 @@ const deposerActiviteAction = action('deposerActiviteAction')
 const apiClient = {
   deposerActivite: (...params: unknown[]) => {
     deposerActiviteAction(params)
+
     return Promise.resolve()
   },
 }

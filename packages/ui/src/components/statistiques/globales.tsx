@@ -73,6 +73,7 @@ export const Globales = defineComponent({
         statistiques.value = await statistiquesGlobales()
       } catch (e) {}
     })
+
     return () => (
       <>
         {statistiques.value ? (

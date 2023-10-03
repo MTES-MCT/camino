@@ -55,6 +55,7 @@ export const Entreprise = caminoDefineComponent<Props>(['entreprise', 'onEventTr
       entreprise.etablissements.reduce<EntrepriseEtablissement | null>((res, e) => (res && res.dateDebut > e.dateDebut ? res : e), null)?.nom
     )
   }
+
   return () => (
     <Accordion class="mb" opened={opened.value} slotDefault={content.value} slotButtons={true} onToggle={toggle}>
       {{

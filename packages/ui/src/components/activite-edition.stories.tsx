@@ -166,14 +166,17 @@ const apiClient: Props['apiClient'] = {
   },
   getActivite: activiteId => {
     getActiviteAction(activiteId)
+
     return Promise.resolve(activite)
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
+
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
   deposerActivite: activiteId => {
     deposerActiviteAction(activiteId)
+
     return Promise.resolve()
   },
 }

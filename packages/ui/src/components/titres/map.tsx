@@ -33,6 +33,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     const zoom = routerQueryToNumber(route.query.zoom, Number.NaN)
     const centre = routerQueryToNumberArray(route.query.centre, [Number.NaN, Number.NaN]) as [number, number]
     const perimetre = routerQueryToNumberArray(route.query.perimetre, [Number.NaN, Number.NaN, Number.NaN, Number.NaN]) as [number, number, number, number]
+
     return { zoom, centre, perimetre }
   })
 
@@ -94,6 +95,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
       (acc, marker) => {
         acc[marker.domaineId].push(marker.marker)
         layerIdToTitreIdDisplayed.value[marker.id] = marker.id
+
         return acc
       },
       { c: [], m: [], f: [], g: [], h: [], r: [], s: [], w: [] }
@@ -107,8 +109,10 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
         const layersToRemove = cluster.getLayers().filter(layer => {
           if (isLayerWithTitreId(layer) && !titreIdsToBeOnMap.includes(layer.titreId)) {
             delete layerIdToTitreIdDisplayed.value[layer.titreId]
+
             return true
           }
+
           return false
         })
         cluster.removeLayers(layersToRemove)
@@ -201,6 +205,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
     },
     { immediate: true }
   )
+
   return () => (
     <div class="dsfr" style={{ backgroundColor: 'var(--background-alt-blue-france)' }}>
       <CaminoMap ref={map} loading={props.loading} markerLayers={clusters.value} geojsonLayers={[geojsonLayers.value]} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
