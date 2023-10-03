@@ -42,7 +42,7 @@ export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], 
     e.preventDefault()
     e.stopPropagation()
   }
-  const onDragLeave = (e: Event) => {
+  const onDragLeave = (_e: Event) => {
     dragHover.value = false
   }
 

@@ -27,6 +27,7 @@ export interface Props {
 
 export const DemarcheEditPopup = caminoDefineComponent<Omit<Props, 'reload' | 'displayMessage'>>(['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close'], props => {
   const store = useStore()
+
   return () => (
     <PureDemarcheEditPopup
       apiClient={props.apiClient}
@@ -114,5 +115,6 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
       matomo.trackEvent('titre-sections', `titre-${props.tabId}-enregistrer`, props.demarche.id)
     }
   }
+
   return () => <FunctionalPopup title={title.value} content={content} close={props.close} validate={{ action: save }} canValidate={!!typeId.value} />
 })

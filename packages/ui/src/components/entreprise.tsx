@@ -302,7 +302,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
               <EntrepriseFiscalite
                 getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
                   if (item.id) {
-                    return await props.apiClient.getFiscaliteEntreprise(annee, item.id)
+                    return props.apiClient.getFiscaliteEntreprise(annee, item.id)
                   }
 
                   return { redevanceCommunale: 0, redevanceDepartementale: 0 }

@@ -14,5 +14,5 @@ const meta: Meta = {
 export default meta
 
 export const OkNoSnapshot: StoryFn = () => <DGTMStatsFull getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
-export const Loading: StoryFn = () => <DGTMStatsFull getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})} />
+export const Loading: StoryFn = () => <DGTMStatsFull getDgtmStats={() => new Promise<StatistiquesDGTM>(_resolve => {})} />
 export const WithError: StoryFn = () => <DGTMStatsFull getDgtmStats={() => Promise.reject(new Error('because reasons'))} />

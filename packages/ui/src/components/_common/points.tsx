@@ -1,6 +1,6 @@
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { FunctionalComponent, ref } from 'vue'
+import { ref } from 'vue'
 import { etapeGroupesBuild, Point } from '../../utils/titre-etape-edit'
 import { Unites, UNITE_IDS } from 'camino-common/src/static/unites'
 import { Tag } from '../_ui/tag'

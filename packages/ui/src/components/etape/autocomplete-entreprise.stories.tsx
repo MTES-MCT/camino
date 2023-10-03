@@ -1,8 +1,7 @@
 import { AutocompleteEntreprise } from './autocomplete-entreprise'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { EtapeEntreprise } from 'camino-common/src/etape'
-import { EntrepriseId, Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Etape/AutoCompleteEntreprise',
@@ -10,13 +9,6 @@ const meta: Meta = {
   argTypes: {},
 }
 export default meta
-
-type Props = {
-  nonSelectableEntities?: EntrepriseId[]
-  selectedEntities?: EtapeEntreprise[]
-  allEntities: Entreprise[]
-  placeholder: string
-}
 
 const onEntreprisesUpdate = action('onEntreprisesUpdate')
 export const Default: StoryFn = () => (

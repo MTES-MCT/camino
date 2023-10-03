@@ -2,7 +2,7 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { hasValeurCheck } from '@/utils/contenu'
 import { Tag } from '@/components/_ui/tag'
 import { dateFormat } from '@/utils'
-import { computed, FunctionalComponent, HTMLAttributes, HtmlHTMLAttributes } from 'vue'
+import { computed, HTMLAttributes } from 'vue'
 import { HeritageProp } from 'camino-common/src/etape'
 import { EtapeHeritageProps, EtapeHeritage } from './heritage-edit.types'
 

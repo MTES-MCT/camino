@@ -13,7 +13,7 @@ const loading: AsyncData<null> = { status: 'LOADING' }
 const loaded: AsyncData<string> = { status: 'LOADED', value: 'chargé' }
 const error: AsyncData<string> = { status: 'ERROR', message: 'Erreur' }
 
-export const All: StoryFn = args => (
+export const All: StoryFn = () => (
   <div>
     <LoadingElement data={loading} renderItem={() => null} />
     <LoadingElement data={loaded} renderItem={item => <>La valeur de l’item est : {item}</>} />

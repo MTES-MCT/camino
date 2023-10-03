@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'

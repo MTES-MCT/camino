@@ -100,5 +100,5 @@ const onfs: CommonTitreONF[] = [
 
 export const Ok: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.resolve(onfs) }} />
 export const OkSansAttenteDeONF: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false }))) }} />
-export const Loading: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {}) }} />
+export const Loading: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => new Promise<CommonTitreONF[]>(_resolve => {}) }} />
 export const WithError: StoryFn = () => <PureONFDashboard apiClient={{ getOnfTitres: () => Promise.reject(new Error('because reasons')) }} />

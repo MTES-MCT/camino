@@ -23,8 +23,6 @@ const meta: Meta = {
 }
 export default meta
 
-type Item = { id: string; titre: string }
-
 const getFiscaliteEntrepriseAction = action('getFiscaliteEntreprise')
 const modifierEntrepriseAction = action('modifierEntreprise')
 const creerEntrepriseAction = action('creerEntreprise')

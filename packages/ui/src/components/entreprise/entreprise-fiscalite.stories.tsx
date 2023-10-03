@@ -60,7 +60,7 @@ export const GuyaneAnneePrecedente: StoryFn = () => (
 )
 
 export const Loading: StoryFn = () => (
-  <EntrepriseFiscalite getFiscaliteEntreprise={() => new Promise<Fiscalite>(resolve => {})} anneeCourante={toCaminoAnnee('2021')} annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]} />
+  <EntrepriseFiscalite getFiscaliteEntreprise={() => new Promise<Fiscalite>(_resolve => {})} anneeCourante={toCaminoAnnee('2021')} annees={[toCaminoAnnee('2021'), toCaminoAnnee('2022')]} />
 )
 
 export const WithError: StoryFn = () => (

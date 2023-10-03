@@ -152,7 +152,7 @@ export const Table = defineComponent(
               ) : (
                 [...Array(10).keys()].map(index => (
                   <tr key={index}>
-                    {props.columns.map((col, index) => (
+                    {props.columns.map((col, _index) => (
                       <td key={col.id}>...</td>
                     ))}
                   </tr>

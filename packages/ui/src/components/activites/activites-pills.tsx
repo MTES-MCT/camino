@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes } from 'vue'
+import { FunctionalComponent } from 'vue'
 import { Badge } from '../_ui/badge'
 
 interface Props {

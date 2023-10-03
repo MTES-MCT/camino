@@ -1,7 +1,7 @@
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { Domaine } from '@/components/_common/domaine'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
 import { ref, inject, FunctionalComponent } from 'vue'
@@ -82,7 +82,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
   const createDebounce = () => {
     let timeout: ReturnType<typeof setTimeout>
 
-    return function (fnc: Function, delayMs = 500) {
+    return function (fnc: () => void, delayMs = 500) {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         fnc()
