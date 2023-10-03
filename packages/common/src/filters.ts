@@ -5,7 +5,7 @@ import { regionIdValidator, regions } from './static/region.js'
 import { FACADES, facadeMaritimeIdValidator } from './static/facades.js'
 import { SubstancesLegales, substanceLegaleIdValidator } from './static/substancesLegales.js'
 import { domaineIdValidator, sortedDomaines } from './static/domaines.js'
-import { sortedTitresStatuts, titreStatutIdValidator } from './static/titresStatuts.js'
+import { titresStatutsArray, titreStatutIdValidator } from './static/titresStatuts.js'
 import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from './static/titresTypesTypes.js'
 import { titreIdValidator } from './titres.js'
 import { z, ZodType } from 'zod'
@@ -153,7 +153,7 @@ export const caminoFiltres = {
     id: 'statutsIds',
     name: 'Statuts de titre',
     type: 'checkboxes',
-    elements: sortedTitresStatuts,
+    elements: titresStatutsArray,
     component: 'FiltresTitresStatuts',
     validator: z.array(titreStatutIdValidator),
   },

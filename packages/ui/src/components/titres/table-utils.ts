@@ -10,7 +10,7 @@ import { Departement, Departements, toDepartementId } from 'camino-common/src/st
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { sortedTitresStatuts, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { titresStatutsArray, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { getDepartementsBySecteurs } from 'camino-common/src/static/facades'
@@ -22,14 +22,15 @@ import { TitreForTable } from '../titre/titre-api-client'
 const ordreStatut: { [key in TitreStatutId]: number } = {
   dmi: 0,
   mod: 1,
-  val: 2,
-  dmc: 3,
-  ech: 4,
-  ind: 5,
+  sup: 2,
+  val: 3,
+  dmc: 4,
+  ech: 5,
+  ind: 6,
 }
 
 const ordreFromStatut = (entry: string) => {
-  const titreStatut = sortedTitresStatuts.find(({ nom }) => nom === entry)
+  const titreStatut = titresStatutsArray.find(({ nom }) => nom === entry)
   if (titreStatut) {
     return ordreStatut[titreStatut.id]
   }
@@ -37,7 +38,7 @@ const ordreFromStatut = (entry: string) => {
 }
 
 const isTitreStatut = (entry: string | number | string[] | undefined): entry is string => {
-  return sortedTitresStatuts.some(({ nom }) => nom === entry)
+  return titresStatutsArray.some(({ nom }) => nom === entry)
 }
 
 export const nomColumn: Column<'nom'> = {

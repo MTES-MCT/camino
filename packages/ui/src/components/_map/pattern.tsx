@@ -2,7 +2,7 @@ import { domainesIds } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { FunctionalComponent } from 'vue'
 import { Domaine } from '../_common/domaine'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { titresStatutsArray } from 'camino-common/src/static/titresStatuts'
 import { TitreStatut } from '../_common/titre-statut'
 
 const domainesIdsDefault = [...domainesIds, ''] as const
@@ -30,7 +30,7 @@ export const MapPattern: FunctionalComponent = () => {
             <Domaine domaineId={id} />
           </div>
         ))}
-        {sortedTitresStatuts.map(({ id }) => (
+        {titresStatutsArray.map(({ id }) => (
           <div key={id} id={`titre_statut_${id}`}>
             <TitreStatut titreStatutId={id} />
           </div>
