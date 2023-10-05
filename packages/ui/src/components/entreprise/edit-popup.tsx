@@ -1,4 +1,4 @@
-import { caminoDefineComponent, updateFromEvent, updateFromCheckboxEvent } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { isSuper, User } from 'camino-common/src/roles'
 import { ref } from 'vue'
@@ -57,5 +57,6 @@ export const EntrepriseEditPopup = caminoDefineComponent<Props>(['close', 'user'
       archive: archive.value,
     })
   }
+
   return () => <FunctionalPopup title="Modification d'une entreprise" content={content} close={props.close} validate={{ action: save }} canValidate={true} />
 })

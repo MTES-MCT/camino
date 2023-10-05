@@ -4,7 +4,6 @@ import { ActiviteDocument, ActiviteDocumentId, TempActiviteDocument } from 'cami
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { ActiviteDocumentLink } from './preview'
-import { dateFormat } from 'camino-common/src/date'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { ref, watch } from 'vue'
 import { isActiviteDocumentsComplete } from 'camino-common/src/permissions/activites'
@@ -43,6 +42,7 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
     props.completeUpdate(alreadyExistingActiviteDocumentIds, tempActiviteDocuments, isActiviteDocumentsComplete(documents.value, props.activiteTypeId).valid)
   }
   notifyChange()
+
   return () => (
     <>
       {hasDocumentTypes ? (

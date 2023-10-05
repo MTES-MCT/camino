@@ -18,6 +18,7 @@ const displayMessage = action('displayMessage')
 const apiClient: Props['apiClient'] = {
   deleteDemarche: demarcheId => {
     deleteAction(demarcheId)
+
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
   },
 }

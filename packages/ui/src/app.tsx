@@ -50,6 +50,7 @@ export const App = defineComponent({
         matomo.trackEvent(segment, subSegment, event)
       }
     }
+
     return () => (
       <div class="page relative">
         <MapPattern />

@@ -53,6 +53,7 @@ const TypeSelect = ({ user, element, domaineId }: Props): JSX.Element | null => 
       </>
     )
   }
+
   return null
 }
 

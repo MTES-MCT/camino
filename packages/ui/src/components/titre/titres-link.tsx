@@ -67,6 +67,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     if (data.value.status === 'LOADED') {
       return search.value.length ? data.value.value.filter(({ nom, id }) => nom.toLowerCase().includes(search.value) || selectedTitres.value.some(t => t.id === id)) : data.value.value
     }
+
     return []
   })
 
@@ -91,7 +92,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
   return () => (
     <LoadingElement
       data={data.value}
-      renderItem={item => (
+      renderItem={_item => (
         <TypeAhead
           overrideItems={selectedTitres.value}
           props={{

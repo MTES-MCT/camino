@@ -22,6 +22,7 @@ export const EntrepriseAddPopup = caminoDefineComponent<Props>(['close', 'user',
       <DsfrInput legend={{ main: 'Siren' }} valueChanged={sirenChange} type={{ type: 'text' }} />
     </form>
   )
+
   return () => (
     <FunctionalPopup
       title="Création d'une entreprise"

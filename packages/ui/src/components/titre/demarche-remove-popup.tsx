@@ -25,6 +25,7 @@ export const DemarcheRemovePopup = caminoDefineComponent<Omit<Props, 'reload' | 
   ['titreTypeId', 'titreNom', 'titreId', 'demarcheTypeId', 'demarcheId', 'close', 'apiClient'],
   props => {
     const store = useStore()
+
     return () => (
       <PureDemarcheRemovePopup
         titreTypeId={props.titreTypeId}

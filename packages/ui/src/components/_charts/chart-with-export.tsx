@@ -1,5 +1,4 @@
 import { saveAs } from 'file-saver'
-import { Icon } from '@/components/_ui/icon'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
@@ -30,6 +29,7 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
 
     return ConfigurableChart
   })
+
   return (
     <LoadingElement
       data={props.data}

@@ -17,6 +17,7 @@ const uploadTempDocumentAction = action('uploadTempDocument')
 const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   uploadTempDocument: (...params) => {
     uploadTempDocumentAction(params)
+
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }

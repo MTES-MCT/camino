@@ -67,6 +67,7 @@ export const Administrations = defineComponent({
           if (options.ordre === 'asc') {
             return first.localeCompare(second)
           }
+
           return second.localeCompare(first)
         })
         .map(administration => {

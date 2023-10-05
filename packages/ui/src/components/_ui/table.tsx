@@ -77,6 +77,7 @@ export const getSortOrderFromRoute = (route: Pick<RouteLocationNormalizedLoaded,
   if (value !== 'asc' && value !== 'desc') {
     return 'asc'
   }
+
   return value
 }
 export const Table = defineComponent(
@@ -151,7 +152,7 @@ export const Table = defineComponent(
               ) : (
                 [...Array(10).keys()].map(index => (
                   <tr key={index}>
-                    {props.columns.map((col, index) => (
+                    {props.columns.map((col, _index) => (
                       <td key={col.id}>...</td>
                     ))}
                   </tr>
@@ -180,5 +181,6 @@ export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnDat
       return <myComp {...props.data.props} class={props.data.class ?? ''} />
     }
   }
+
   return <span class={(props.data.class ?? []).join(' ') ?? ''}>{props.data.value}</span>
 }

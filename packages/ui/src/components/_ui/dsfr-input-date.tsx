@@ -61,6 +61,7 @@ export const InputDate = caminoDefineComponent<Props>(['id', 'initialValue', 'da
       props.dateChanged(null)
     }
   }
+
   return () => (
     <div class="dsfr">
       <fieldset class="fr-fieldset" id={`${id}-fieldset`} role="group" aria-labelledby={`${id}-fieldset-legend`}>

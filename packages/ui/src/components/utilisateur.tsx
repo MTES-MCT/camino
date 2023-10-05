@@ -81,6 +81,7 @@ export const Utilisateur = defineComponent({
         utilisateurId.value = Array.isArray(newId) ? newId[0] : newId
       }
     )
+
     return () => (
       <PureUtilisateur
         passwordUpdate={passwordUpdate}
@@ -176,6 +177,7 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
       }
     }
   }
+
   return () => (
     <div>
       <h5>Utilisateur</h5>

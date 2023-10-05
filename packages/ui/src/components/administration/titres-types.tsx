@@ -22,6 +22,7 @@ type AdministrationTitresTypes = {
 const titresTypes = (administrationId: AdministrationId): AdministrationTitresTypes[] => {
   return getTitreTypeIdsByAdministration(administrationId).map(att => {
     const titreType = TT[att.titreTypeId]
+
     return {
       titreTypeId: att.titreTypeId,
       domaineId: titreType.domaineId,

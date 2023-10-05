@@ -3,7 +3,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { PureUtilisateur, Props } from './utilisateur'
-import { UtilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { toUtilisateurId } from 'camino-common/src/roles'
 
 const meta: Meta = {
@@ -31,14 +30,17 @@ const apiClientMock: Props['apiClient'] = {
   getUtilisateurNewsletter: () => Promise.resolve(true),
   removeUtilisateur: params => {
     deleteUtilisateur(params)
+
     return Promise.resolve()
   },
   updateUtilisateur: params => {
     updateUtilisateur(params)
+
     return Promise.resolve()
   },
   updateUtilisateurNewsletter: (...values) => {
     editNewsletter(values)
+
     return Promise.resolve()
   },
   getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),

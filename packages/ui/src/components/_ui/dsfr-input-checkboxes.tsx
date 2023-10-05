@@ -1,6 +1,5 @@
-import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ref, watch } from 'vue'
 
 type Props = {

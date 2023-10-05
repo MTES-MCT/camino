@@ -4,8 +4,7 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
-import { Button } from '../_ui/button'
-import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
 interface Props {
   user: User

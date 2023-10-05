@@ -39,6 +39,7 @@ export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], prop
       }
     }
   })
+
   return () => (
     <div class="width-full-p">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">

@@ -55,6 +55,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
       }
     }
   })
+
   return () => (
     <div>
       <div class="desktop-blobs">

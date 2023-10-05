@@ -33,8 +33,10 @@ export const Perimetre = defineComponent<Props>((props: Props) => {
   const titreId = props.titreId ?? ''
   const CaminoCommonMap = defineAsyncComponent(async () => {
     const { CaminoCommonMap } = await import('./map')
+
     return CaminoCommonMap
   })
+
   return () => (
     <div>
       <div class="tablet-blobs tablet-flex-direction-reverse dsfr" style={{ alignItems: 'center' }}>

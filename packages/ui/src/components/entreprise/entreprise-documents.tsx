@@ -2,7 +2,6 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
-import { EntrepriseApiClient } from './entreprise-api-client'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { dateFormat } from 'camino-common/src/date'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
@@ -40,6 +39,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
   onMounted(async () => {
     await reloadDocuments()
   })
+
   return () => (
     <div class="dsfr">
       <div class="fr-container">
@@ -104,6 +104,7 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
             creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput, tempDocumentName) => {
               const document = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
               await reloadDocuments()
+
               return document
             },
           }}

@@ -33,6 +33,7 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntrepri
   },
   getUtilisateurs: () => {
     getUtilisateursAction()
+
     return Promise.resolve({
       total: 125,
       elements: [
@@ -64,6 +65,7 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntrepri
   },
   getUtilisateurEntreprises: () => {
     getEntreprisesAction()
+
     return Promise.resolve([enterprise])
   },
 }

@@ -70,8 +70,10 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
       activite_document_type_id: activiteDocumentTypeId.value,
       description: documentDescription.value,
     }
+
     return tempActiviteDocumentValidator.omit({ tempDocumentName: true }).safeParse(tempDocument).success && activiteDocumentFile.value !== null
   })
+
   return () => (
     <>
       {activiteDocumentTypes.length === 0 ? (

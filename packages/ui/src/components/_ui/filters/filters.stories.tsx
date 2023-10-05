@@ -17,6 +17,7 @@ export default meta
 const pushAction = action('push')
 const push = (params: RouteLocationRaw) => {
   pushAction(params)
+
   return Promise.resolve()
 }
 

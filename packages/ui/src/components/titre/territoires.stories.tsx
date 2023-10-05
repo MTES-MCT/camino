@@ -19,6 +19,7 @@ const apiClient: Pick<TitreApiClient, 'getTitreCommunes'> = {
     if (titreId === 'pasDeCommunes') {
       return Promise.resolve([])
     }
+
     return Promise.resolve([
       { nom: 'Flée', id: toCommuneId('72000') },
       { nom: 'Montval-sur-loir', id: toCommuneId('72000') },

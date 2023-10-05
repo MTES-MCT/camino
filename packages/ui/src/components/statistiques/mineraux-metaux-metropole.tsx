@@ -23,7 +23,6 @@ export const MinerauxMetauxMetropole: FunctionalComponent = () => <PureMinerauxM
 MinerauxMetauxMetropole.displayName = 'MinerauxMetauxMetropole'
 const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): ChartConfiguration => {
   const annees: CaminoAnnee[] = Object.keys(data.substances.aloh).filter(isAnnee)
-  const label = Unites[SubstancesFiscale.aloh.uniteId].nom
   const chartData: ChartData = {
     labels: annees,
     datasets: [
@@ -35,6 +34,7 @@ const bauxiteChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): C
       },
     ],
   }
+
   return {
     type: 'bar',
     data: chartData,
@@ -68,6 +68,7 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
   const datasetByRegion: ChartDataset[] = regionsIds.map((regionId, index) => {
     const label = Regions[regionId].nom
     const sum = (annee: CaminoAnnee) => (data.substances.naca[annee]?.[regionId] ?? 0) + (data.substances.nacb[annee]?.[regionId] ?? 0) + (data.substances.nacc[annee]?.[regionId] ?? 0)
+
     return {
       type: 'bar',
       label: label[0].toUpperCase() + label.substring(1),
@@ -79,6 +80,7 @@ const selsChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole): Char
     labels: annees,
     datasets: datasetByRegion,
   }
+
   return {
     type: 'bar',
     data: chartData,
@@ -512,7 +514,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           <div class="line-neutral mb" />
           <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
           <p class={['fr-text--lead', statsStyles['donnee-importante']]}>
-            <LoadingElement data={data.value} renderItem={item => <>{numberFormat(selsFiscalite.value)} €</>} />
+            <LoadingElement data={data.value} renderItem={_item => <>{numberFormat(selsFiscalite.value)} €</>} />
           </p>
         </div>
         <div style="grid-column-end: span 2">

@@ -86,6 +86,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     const entreprisesNoms = computed<Record<EntrepriseId, string>>(() => {
       return props.entreprises.reduce<Record<EntrepriseId, string>>((acc, e) => {
         acc[e.id] = e.nom
+
         return acc
       }, {})
     })
@@ -128,6 +129,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
           tdeEntrepriseDocument => tdeEntrepriseDocument.optionnel || entreprisedocuments.find(({ entreprise_document_type_id }) => entreprise_document_type_id === tdeEntrepriseDocument.id)
         )
       }
+
       return false
     })
 

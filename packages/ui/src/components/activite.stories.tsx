@@ -43,14 +43,17 @@ const getActiviteAction = action('getActiviteAction')
 const apiClient: Pick<ActiviteApiClient, 'deposerActivite' | 'supprimerActivite' | 'getActivite'> = {
   deposerActivite: (...params: unknown[]) => {
     deposerActiviteAction(params)
+
     return Promise.resolve()
   },
   supprimerActivite(activiteId: ActiviteId) {
     supprimerActiviteAction(activiteId)
+
     return Promise.resolve()
   },
   getActivite(activiteId: ActiviteIdOrSlug) {
     getActiviteAction(activiteId)
+
     return Promise.resolve(activite)
   },
 }
@@ -71,6 +74,7 @@ export const ACompleter: StoryFn = () => (
       ...apiClient,
       getActivite(activiteId) {
         getActiviteAction(activiteId)
+
         return Promise.resolve({
           ...activite,
           deposable: false,
@@ -91,6 +95,7 @@ export const Deposable: StoryFn = () => (
       ...apiClient,
       getActivite(activiteId) {
         getActiviteAction(activiteId)
+
         return Promise.resolve({ ...activite, deposable: true, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION })
       },
     }}
@@ -105,6 +110,7 @@ export const Supprimable: StoryFn = () => (
       ...apiClient,
       getActivite(activiteId) {
         getActiviteAction(activiteId)
+
         return Promise.resolve({ ...activite, suppression: true, deposable: false, modification: true, activite_statut_id: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION })
       },
     }}

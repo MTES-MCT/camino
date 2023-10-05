@@ -225,5 +225,5 @@ export const DefaultNoSnapshot: StoryFn = () => <PureGranulatsMarins getStatisti
 
 export const EnConstruction20210402NoSnapshot: StoryFn = () => <PureGranulatsMarins getStatistiques={() => Promise.resolve(data)} currentDate={toCaminoDate('2021-04-02')} />
 
-export const Loading: StoryFn = () => <PureGranulatsMarins getStatistiques={() => new Promise<any>(resolve => {})} />
+export const Loading: StoryFn = () => <PureGranulatsMarins getStatistiques={() => new Promise<any>(_resolve => {})} />
 export const WithError: StoryFn = () => <PureGranulatsMarins getStatistiques={() => Promise.reject(new Error('because reasons'))} />

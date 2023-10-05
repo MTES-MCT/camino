@@ -23,8 +23,6 @@ const meta: Meta = {
 }
 export default meta
 
-type Item = { id: string; titre: string }
-
 const getFiscaliteEntrepriseAction = action('getFiscaliteEntreprise')
 const modifierEntrepriseAction = action('modifierEntreprise')
 const creerEntrepriseAction = action('creerEntreprise')
@@ -87,14 +85,17 @@ const apiClient: Pick<
 > = {
   getEtapeEntrepriseDocuments: etapeId => {
     getEtapeEntrepriseDocumentsAction(etapeId)
+
     return Promise.resolve(entrepriseDocuments)
   },
   getEntreprise: entrepriseId => {
     getEntrepriseAction(entrepriseId)
+
     return Promise.resolve(entreprise)
   },
   deleteEntrepriseDocument(entrepriseId, documentId) {
     deleteEntrepriseDocumentAction(entrepriseId, documentId)
+
     return Promise.resolve()
   },
   getEntrepriseDocuments: entrepriseId => {
@@ -104,6 +105,7 @@ const apiClient: Pick<
   },
   getFiscaliteEntreprise: data => {
     getFiscaliteEntrepriseAction(data)
+
     return Promise.resolve({
       redevanceCommunale: 0,
       redevanceDepartementale: 0,
@@ -111,18 +113,22 @@ const apiClient: Pick<
   },
   modifierEntreprise: entreprise => {
     modifierEntrepriseAction(entreprise)
+
     return Promise.resolve()
   },
   creerEntreprise: siren => {
     creerEntrepriseAction(siren)
+
     return Promise.resolve()
   },
   creerEntrepriseDocument: (entrepriseId, document) => {
     creerEntrepriseDocumentAction(entrepriseId, document)
+
     return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
+
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }
@@ -305,10 +311,12 @@ export const Complet: StoryFn = () => (
       ...apiClient,
       getEntreprise: entrepriseId => {
         getEntrepriseAction(entrepriseId)
+
         return Promise.resolve(completeEntreprise)
       },
       getFiscaliteEntreprise: data => {
         getFiscaliteEntrepriseAction(data)
+
         return Promise.resolve({
           guyane: {
             taxeAurifere: 12,

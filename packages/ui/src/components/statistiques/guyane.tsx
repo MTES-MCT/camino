@@ -1,4 +1,4 @@
-import { FunctionalComponent, Ref, ref, computed, onMounted, defineComponent } from 'vue'
+import { FunctionalComponent, Ref, ref, computed, onMounted } from 'vue'
 import { getWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesGuyane, StatistiquesGuyaneActivite, StatistiquesGuyaneData } from 'camino-common/src/statistiques'
 import { GuyaneActivite } from './guyane-activite'
@@ -14,6 +14,7 @@ import { numberFormat } from 'camino-common/src/number'
 
 const getStats = async (): Promise<StatistiquesGuyane> => {
   const data: StatistiquesGuyaneData = await getWithJson('/rest/statistiques/guyane', {})
+
   return {
     data,
     parAnnee: data.annees.reduce((acc: Record<CaminoAnnee, StatistiquesGuyaneActivite>, statsAnnee: StatistiquesGuyaneActivite) => {
@@ -174,6 +175,7 @@ const axmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
       },
     ],
   }
+
   return defaultConfiguration(chartData)
 }
 
@@ -228,10 +230,12 @@ export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate
 
   const tabs = computed<CaminoAnnee[]>(() => {
     let annee = getAnnee(currentDate)
+
     return [0, 1, 2, 3, 4]
       .map(_id => {
         const monAnnee = annee
         annee = anneePrecedente(annee)
+
         return monAnnee
       })
       .reverse()

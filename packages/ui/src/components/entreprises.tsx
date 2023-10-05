@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
@@ -57,6 +57,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
   const getData = async (params: Params<string>) => {
     const values = await props.apiClient.getEntreprises({ ordre: params.ordre, colonne: params.colonne, page: params.page, nomsEntreprise: params.filtres?.nomsEntreprise ?? '' })
     const entreprises = entreprisesLignesBuild(values.elements)
+
     return { total: values.total, values: entreprises }
   }
 
@@ -110,5 +111,6 @@ export const Entreprises = defineComponent(() => {
       },
     }
   }
+
   return () => <PureEntreprises currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user.value} apiClient={customApiClient()} />
 })

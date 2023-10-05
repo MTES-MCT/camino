@@ -1,4 +1,4 @@
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { EditableTitre } from 'camino-common/src/titres'
 import { TitreReference } from 'camino-common/src/titres-references'

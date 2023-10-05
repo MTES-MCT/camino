@@ -81,6 +81,7 @@ export const Entreprise = defineComponent({
         }
       },
     })
+
     return () => (
       <>
         {entrepriseId.value ? (
@@ -127,6 +128,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
       anneeAAjouter++
       annees.push(toCaminoAnnee(anneeAAjouter.toString()))
     }
+
     return annees
   })
 
@@ -135,6 +137,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
     if (entreprise.value.status === 'LOADED') {
       return utilisateursLignesBuild(entreprise.value.value.utilisateurs)
     }
+
     return []
   })
   const editPopup = ref(false)
@@ -146,6 +149,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
         ...entreprise.value.value.amodiataireTitres.map(({ typeId }) => ({ type_id: typeId })),
       ])
     }
+
     return false
   })
 
@@ -163,6 +167,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
   onMounted(async () => {
     await refreshEntreprise()
   })
+
   return () => (
     <LoadingElement
       data={entreprise.value}
@@ -297,8 +302,9 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
               <EntrepriseFiscalite
                 getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
                   if (item.id) {
-                    return await props.apiClient.getFiscaliteEntreprise(annee, item.id)
+                    return props.apiClient.getFiscaliteEntreprise(annee, item.id)
                   }
+
                   return { redevanceCommunale: 0, redevanceDepartementale: 0 }
                 }}
                 anneeCourante={annees.value[annees.value.length - 1]}

@@ -30,6 +30,7 @@ const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'get
   },
   getDemarches: () => {
     getDemarchesAction()
+
     return Promise.resolve({
       total: 1200,
       elements: [...Array(10).keys()].map(value => ({
@@ -53,6 +54,7 @@ const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'get
   },
   getUtilisateurEntreprises: () => {
     getEntreprisesAction()
+
     return Promise.resolve([])
   },
 }

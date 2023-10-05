@@ -41,6 +41,7 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
     const substance = substanceRemove(index)
     props.substances.splice(index - 1, 0, substance)
   }
+
   return () => (
     <div>
       <h3 class="mb-s">Substances</h3>

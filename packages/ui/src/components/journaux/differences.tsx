@@ -10,6 +10,7 @@ interface Props {
 export const Differences: FunctionalComponent<Props> = props => {
   const differencesHtml =
     props.journal.operation !== 'create' && props.journal.differences ? formatters.html.format(props.journal.differences, null).replaceAll('jsondiffpatch-child-node-type-object', '') : ''
+
   return (
     <>
       {props.journal.operation === 'create' ? (

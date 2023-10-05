@@ -21,7 +21,6 @@ import { TablePagination, getInitialParams } from './_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
-import { DeepReadonly } from 'camino-common/src/typescript-tools'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -45,6 +44,7 @@ const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
       />
     )
   }
+
   return null
 }
 
@@ -56,6 +56,7 @@ export const Titres = defineComponent({
   setup() {
     const CaminoTitresMap = defineAsyncComponent(async () => {
       const { CaminoTitresMap } = await import('./titres/map')
+
       return CaminoTitresMap
     })
     const matomo = inject('matomo', null)

@@ -19,10 +19,12 @@ const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'> = {
   creerEntrepriseDocument: (entepriseId, document) => {
     save(entepriseId, document)
+
     return Promise.resolve(toEntrepriseDocumentId(document.date, document.typeId, '12345678'))
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
+
     return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
   },
 }

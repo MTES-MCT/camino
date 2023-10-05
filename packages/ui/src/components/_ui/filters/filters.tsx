@@ -44,6 +44,7 @@ type Props = {
 
 const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[]): FormatedLabel[] => {
   const fullFilter = caminoFiltres[filter]
+
   return values
     .filter(value => value.typeId)
     .map(value => {
@@ -57,6 +58,7 @@ const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[
       if (value.dateFin) {
         message += `, avant le ${value.dateFin}`
       }
+
       return {
         id: fullFilter.id,
         name: fullFilter.name,
@@ -101,6 +103,7 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
       Reflect.deleteProperty(allValues, filter)
     }
   })
+
   return allValues
 }
 
@@ -118,6 +121,7 @@ export const Filters = defineComponent((props: Props) => {
     if ('etapesExclues' in nonValidatedValues.value) {
       filtres.etapesExclues = JSON.stringify(nonValidatedValues.value.etapesExclues)
     }
+
     return { name: props.route.name ?? undefined, query: { ...props.route.query, page: 1, ...filtres } }
   })
 
@@ -274,6 +278,7 @@ export const Filters = defineComponent((props: Props) => {
       } else if (filterType.type === 'etape' && nonValidatedValues.value[filter]) {
         return etapesLabelFormat(filterType.id, nonValidatedValues.value[filter])
       }
+
       return []
     })
   }

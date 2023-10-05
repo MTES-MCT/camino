@@ -1,7 +1,4 @@
 import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
-import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { ref, watch } from 'vue'
 
 type Props = {
   id?: string
@@ -21,6 +18,7 @@ export const DsfrInputRadio = caminoDefineComponent<Props>(['id', 'valueChanged'
       props.valueChanged(itemId)
     }
   }
+
   return () => (
     <fieldset class="fr-fieldset" id={id} aria-labelledby={`${id}-legend`} disabled={props.disabled ?? false}>
       <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id={`${id}-legend`}>

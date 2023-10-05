@@ -23,6 +23,7 @@ export const DefaultNoReference: StoryFn = () => (
     close={close}
     editTitre={(...params) => {
       editTitre(params)
+
       return Promise.resolve()
     }}
   />
@@ -38,6 +39,7 @@ export const OneReference: StoryFn = () => (
     close={close}
     editTitre={(...params) => {
       editTitre(params)
+
       return Promise.resolve()
     }}
   />

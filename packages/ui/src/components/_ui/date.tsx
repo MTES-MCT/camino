@@ -8,5 +8,6 @@ export interface Props {
 
 export const DateComponent: FunctionalComponent<Props> = (props: Props) => {
   const dateValue = dateFormat(props.date)
+
   return <div style="white-space: nowrap">{dateValue}</div>
 }

@@ -1,6 +1,5 @@
 import emailValidator from 'email-validator'
-import { PropType, ref, computed } from 'vue'
-import { Icon } from '@/components/_ui/icon'
+import { ref, computed } from 'vue'
 import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'

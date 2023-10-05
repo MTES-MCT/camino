@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { UNITES, Unite, Unites } from 'camino-common/src/static/unites'
 import { ActiviteSectionElement, ActivitesTypes, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes'
 import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { SubstancesFiscale, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales'
+import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
 import { DeepReadonly } from 'vue'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
@@ -454,6 +454,7 @@ export const ToutesLesActivites: StoryFn = () => (
                         }),
                       }
                     }
+
                     return section
                   }),
                   {}

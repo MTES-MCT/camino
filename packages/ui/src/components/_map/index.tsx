@@ -56,6 +56,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
 
       return [bounds.getSouthWest().lng, bounds.getSouthWest().lat, bounds.getNorthEast().lng, bounds.getNorthEast().lat]
     }
+
     return []
   }
 
@@ -248,6 +249,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
           gauge.style.background = 'rgba(255,255,255)'
           gauge.style.textAlign = 'right'
           gauge.innerHTML = `Chargement...`
+
           return gauge
         },
       })
@@ -282,6 +284,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
             }
           })
           legend.style.display = 'none'
+
           return legend
         },
       })
@@ -302,6 +305,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
             }
           })
           legend.style.display = 'none'
+
           return legend
         },
       })

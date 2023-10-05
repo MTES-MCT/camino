@@ -67,6 +67,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
     onSelectItem: addEntity,
     onInput: (event: string) => (inputValue.value = event),
   }
+
   return () => (
     <div>
       {mySelectedEntities.value.map(entity => (

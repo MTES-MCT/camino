@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { newEntrepriseId, toDocumentId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
+import { newEntrepriseId, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { RemoveEntrepriseDocumentPopup } from './remove-entreprise-document-popup'
 import { EntrepriseApiClient } from './entreprise-api-client'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -17,7 +17,8 @@ const deleteDoc = action('deleteDoc')
 
 const apiClient: Pick<EntrepriseApiClient, 'deleteEntrepriseDocument'> = {
   deleteEntrepriseDocument: (entepriseId, documentId) => {
-    deleteDoc(entepriseId, document)
+    deleteDoc(entepriseId, documentId)
+
     return Promise.resolve()
   },
 }

@@ -1,6 +1,5 @@
 import { PureGlobales } from './globales'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Statistiques } from 'camino-common/src/statistiques'
 
 const meta: Meta = {
   title: 'Components/Statistiques/GlobalesNoStoryshots',

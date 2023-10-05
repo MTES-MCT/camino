@@ -99,6 +99,7 @@ export const PurePage = defineComponent<PureProps>(props => {
       ordre: params.ordre,
       ...params.filtres,
     })
+
     return { total: demarches.total, values: demarchesLignesBuild(demarches.elements) }
   }
 
@@ -129,6 +130,7 @@ PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux', 'fil
 
 export const Page = defineComponent<Props>(props => {
   const router = useRouter()
+
   return () => <PurePage filtres={props.filtres} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
 

@@ -13,6 +13,7 @@ export const Footer = defineComponent({
     const displayNewsletter = computed(() => {
       return !store.state.user.element
     })
+
     return () => <PureFooter version={version.value} displayNewsletter={displayNewsletter.value} />
   },
 })

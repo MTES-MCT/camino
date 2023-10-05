@@ -1,6 +1,5 @@
-import { PureEntrepriseDashboard, Props } from './pure-entreprise-dashboard'
+import { PureEntrepriseDashboard } from './pure-entreprise-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
@@ -75,14 +74,6 @@ const titres: TitreEntreprise[] = [
     ],
   },
 ]
-
-const Template: StoryFn<Props> = (args: Props) => ({
-  components: { PureEntrepriseDashboard },
-  setup() {
-    return { args }
-  },
-  template: '<PureEntrepriseDashboard v-bind="args" />',
-})
 
 export const Ok: StoryFn = () => (
   <PureEntrepriseDashboard
@@ -159,7 +150,7 @@ export const Loading: StoryFn = () => (
     user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
-    apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(resolve => {}) }}
+    apiClient={{ getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(_resolve => {}) }}
   />
 )
 

@@ -16,6 +16,7 @@ export const DsfrTextarea = caminoDefineComponent<Props>(['id', 'initialValue', 
       props.valueChanged(e.target.value)
     }
   }
+
   return () => (
     <div class="fr-input-group">
       <label class="fr-label" for={id}>

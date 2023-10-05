@@ -14,5 +14,6 @@ export const Pill: FunctionalComponent<Props> = props => {
   if (props.noCapitalize) {
     text = props.text
   }
+
   return <div class={`${props.color ?? 'bg-neutral'} inline-block small bold color-bg pill py-xs px-s`}>{text}</div>
 }

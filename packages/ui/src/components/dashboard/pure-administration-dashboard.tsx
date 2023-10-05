@@ -73,6 +73,7 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
         },
         prochainesEtapes: prochainesEtapesCell(titre),
       }
+
       return {
         id: titre.id,
         link: { name: 'titre', params: { id: titre.slug } },
@@ -129,6 +130,7 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
               />
             )
           }
+
           return null
         }}
       />

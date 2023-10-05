@@ -1,6 +1,5 @@
 import { InputNumber } from './input-number'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { toCaminoDate } from 'camino-common/src/date'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {

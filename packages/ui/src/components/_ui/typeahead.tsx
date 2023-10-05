@@ -107,6 +107,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
     }
     const notSelectedItems = computed(() => {
       const selectItemKeys = selectedItems.value.map(i => i[props.props.itemKey])
+
       return props.props.items.filter(item => !selectItemKeys.includes(item[props.props.itemKey]))
     })
     const currentSelection = computed(() => {
@@ -142,6 +143,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
         myTypeaheadInput?.value?.focus?.()
       }
     }
+
     return () => (
       <div id={wrapperId.value} class={styles.typeahead}>
         <div class={['flex', 'typeahead-wrapper']}>

@@ -22,18 +22,22 @@ const getLastModifiedDateAction = action('getLastModifiedDate')
 const apiClientMock: Pick<TitreApiClient, 'titreUtilisateurAbonne' | 'editTitre' | 'removeTitre' | 'getLastModifiedDate'> = {
   removeTitre: async titreId => {
     removeTitre(titreId)
+
     return Promise.resolve()
   },
   titreUtilisateurAbonne: async (...params) => {
     titreUtilisateurAbonne(params)
+
     return Promise.resolve()
   },
   editTitre: async (...params) => {
     editTitre(params)
+
     return Promise.resolve()
   },
   getLastModifiedDate: async (...params) => {
     getLastModifiedDateAction(params)
+
     return Promise.resolve(toCaminoDate('2022-01-01'))
   },
 }
@@ -115,7 +119,7 @@ export const Loading: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={{
       ...apiClientMock,
-      getLastModifiedDate: (titreId: string) => {
+      getLastModifiedDate: (_titreId: string) => {
         return new Promise(() => ({}))
       },
     }}

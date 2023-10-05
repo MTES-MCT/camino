@@ -62,6 +62,7 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
     if (!props.titreId) {
       return colonnesData
     }
+
     return colonnesData.filter(({ id }) => id !== 'titre')
   }
 

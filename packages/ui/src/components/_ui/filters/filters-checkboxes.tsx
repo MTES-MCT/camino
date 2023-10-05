@@ -46,6 +46,7 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       return <span class="cap-first h6 bold">{fullFilter.elements[index].nom}</span>
     default:
       exhaustiveCheck(component)
+
       return null
   }
 }

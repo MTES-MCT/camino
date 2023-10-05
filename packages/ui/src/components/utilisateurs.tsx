@@ -29,6 +29,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       entreprisesIds: params.filtres?.entreprisesIds,
     }
     const utilisateurs = await props.apiClient.getUtilisateurs(getUtilisateursParams)
+
     return { values: utilisateursLignesBuild(utilisateurs.elements), total: utilisateurs.total }
   }
 
