@@ -1,6 +1,6 @@
 import { caminoDefineComponent, updateFromEvent } from '@/utils/vue-tsx-utils'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
 import { DocumentsTypes, EntrepriseDocumentTypeId, EntrepriseDocumentTypeIds, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
@@ -25,6 +25,16 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
   const descriptionChange = (value: string) => {
     documentDescription.value = value
   }
+
+  const fileChange = (file: File) => {
+    entrepriseDocumentFile.value = file
+  }
+
+  const dateChange = (date: CaminoDate | null) => {
+    documentDate.value = date
+  }
+
+  const typeChange = (e: Event) => updateFromEvent(e, entrepriseDocumentTypeId)
   const content = () => (
     <form>
       {props.lockedEntrepriseDocumentTypeId ? null : (
@@ -34,7 +44,7 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
               <label class="fr-label" for="type">
                 Type de document
               </label>
-              <select class="fr-select" name="type" onChange={e => updateFromEvent(e, entrepriseDocumentTypeId)}>
+              <select class="fr-select" name="type" onChange={typeChange}>
                 <option value="" selected disabled hidden>
                   Selectionnez un type de document
                 </option>
@@ -47,21 +57,10 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
         </fieldset>
       )}
 
-      <InputDate
-        id="add-entreprise-document-date"
-        legend={{ main: 'Date de délivrance du document' }}
-        dateChanged={date => {
-          documentDate.value = date
-        }}
-      />
+      <InputDate id="add-entreprise-document-date" legend={{ main: 'Date de délivrance du document' }} dateChanged={dateChange} />
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
-          <InputFile
-            accept={['pdf']}
-            uploadFile={file => {
-              entrepriseDocumentFile.value = file
-            }}
-          />
+          <InputFile accept={['pdf']} uploadFile={fileChange} />
         </div>
         <div class="fr-fieldset__element">
           <DsfrInput legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} />
@@ -69,33 +68,31 @@ export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close',
       </fieldset>
     </form>
   )
+
+  const inputed = computed(() => {
+    return {
+      typeId: entrepriseDocumentTypeId.value,
+      date: documentDate.value,
+      description: documentDescription.value,
+    }
+  })
+
+  const validate = {
+    action: async () => {
+      if (entrepriseDocumentFile.value !== null) {
+        const tempDocumentName = await props.apiClient.uploadTempDocument(entrepriseDocumentFile.value)
+        await props.apiClient.creerEntrepriseDocument(props.entrepriseId, uiEntrepriseDocumentInputValidator.parse(inputed.value), tempDocumentName)
+      }
+    },
+  }
+
   return () => (
     <FunctionalPopup
       title={props.lockedEntrepriseDocumentTypeId ? `Ajouter ${DocumentsTypes[props.lockedEntrepriseDocumentTypeId].nom}` : "Ajout d'un document"}
       content={content}
       close={props.close}
-      validate={{
-        action: async () => {
-          if (entrepriseDocumentFile.value !== null) {
-            const tempDocumentName = await props.apiClient.uploadTempDocument(entrepriseDocumentFile.value)
-            await props.apiClient.creerEntrepriseDocument(
-              props.entrepriseId,
-              uiEntrepriseDocumentInputValidator.parse({
-                typeId: entrepriseDocumentTypeId.value,
-                date: documentDate.value,
-                description: documentDescription.value,
-              }),
-              tempDocumentName
-            )
-          }
-        },
-        can:
-          uiEntrepriseDocumentInputValidator.safeParse({
-            typeId: entrepriseDocumentTypeId.value,
-            date: documentDate.value,
-            description: documentDescription.value,
-          }).success && entrepriseDocumentFile.value !== null,
-      }}
+      validate={validate}
+      canValidate={uiEntrepriseDocumentInputValidator.safeParse(inputed.value).success && entrepriseDocumentFile.value !== null}
     />
   )
 })

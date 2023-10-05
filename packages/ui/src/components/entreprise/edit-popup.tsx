@@ -57,5 +57,5 @@ export const EntrepriseEditPopup = caminoDefineComponent<Props>(['close', 'user'
       archive: archive.value,
     })
   }
-  return () => <FunctionalPopup title="Modification d'une entreprise" content={content} close={props.close} validate={{ action: save }} />
+  return () => <FunctionalPopup title="Modification d'une entreprise" content={content} close={props.close} validate={{ action: save }} canValidate={true} />
 })

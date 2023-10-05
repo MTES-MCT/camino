@@ -43,6 +43,7 @@ export const ActiviteDeposePopup = caminoDefineComponent<Props>(['close', 'apiCl
         },
         text: 'Déposer',
       }}
+      canValidate={true}
     />
   )
 })

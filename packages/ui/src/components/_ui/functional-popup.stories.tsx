@@ -16,8 +16,8 @@ export const Main: StoryFn = () => (
     id="mainId"
     close={close}
     title="Titre de la popup"
+    canValidate={true}
     validate={{
-      can: true,
       action: () => {
         doStuff()
         return Promise.resolve()
@@ -25,7 +25,6 @@ export const Main: StoryFn = () => (
     }}
     content={() => (
       <div>
-        <input type="text" class="tablet-blob-2-3 p-s" />
         <div class="bg-warning color-bg p-s mb-l">
           <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
         </div>
@@ -36,10 +35,11 @@ export const Main: StoryFn = () => (
 
 export const NotValid: StoryFn = () => (
   <FunctionalPopup
+    id="mainId"
     close={close}
     title="Titre de la popup"
+    canValidate={false}
     validate={{
-      can: false,
       action: () => {
         doStuff()
         return Promise.resolve()
@@ -47,7 +47,6 @@ export const NotValid: StoryFn = () => (
     }}
     content={() => (
       <div>
-        <input type="text" class="tablet-blob-2-3 p-s" />
         <div class="bg-warning color-bg p-s mb-l">
           <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
         </div>
