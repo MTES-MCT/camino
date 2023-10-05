@@ -180,8 +180,8 @@ deploy/prod:
 
 dsfr/generate:
 	mkdir tmp
-	cp packages/ui/node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
-	cp packages/ui/node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
+	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
+	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
 	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss
 	sed -n "/\@font-face {/,/}/p" tmp/_dsfr.scss > tmp/font-face.scss
 	sed -i "/\@font-face {/,/}/d" tmp/_dsfr.scss
@@ -190,8 +190,8 @@ dsfr/generate:
 	rm -r tmp
 	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
 	sed -i 's/.dsfr body/body/g' packages/ui/src/styles/dsfr/dsfr.css
-	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
-	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
+	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
+	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
 	$(MAKE) icons/generate
 
 icons/generate:
