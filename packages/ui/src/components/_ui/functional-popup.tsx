@@ -1,6 +1,6 @@
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 
 interface Props {
@@ -9,15 +9,15 @@ interface Props {
   content: () => JSX.Element
   close: () => void
   validate: {
-    can?: boolean
     text?: string
     action: () => Promise<void>
   }
+  canValidate: boolean
 }
 
-export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'content', 'close', 'validate'], (props: Props) => {
+export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'content', 'close', 'validate', 'canValidate'], (props: Props) => {
   const canValidate = computed<boolean>(() => {
-    return props.validate.can ?? true
+    return props.canValidate
   })
 
   const id = props.id ?? 'monId'

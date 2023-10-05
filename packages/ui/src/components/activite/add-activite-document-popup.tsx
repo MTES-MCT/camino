@@ -100,8 +100,8 @@ export const AddActiviteDocumentPopup = caminoDefineComponent<Props>(['close', '
                 tempDocumentName.value = await props.apiClient.uploadTempDocument(activiteDocumentFile.value)
               }
             },
-            can: canSave.value,
           }}
+          canValidate={canSave.value}
         />
       )}
     </>

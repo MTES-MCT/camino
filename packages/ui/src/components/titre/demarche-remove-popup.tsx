@@ -66,5 +66,5 @@ export const PureDemarcheRemovePopup: FunctionalComponent<Omit<Props, 'titreId'>
     props.reload()
   }
 
-  return <FunctionalPopup title="Suppression de la démarche" content={content} close={props.close} validate={{ action: deleteDemarche, text: 'Supprimer' }} />
+  return <FunctionalPopup title="Suppression de la démarche" content={content} close={props.close} validate={{ action: deleteDemarche, text: 'Supprimer' }} canValidate={true} />
 }

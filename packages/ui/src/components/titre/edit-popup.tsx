@@ -71,9 +71,9 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
             nom: nom.value,
             references: references.value.filter(isTitreReference),
           }),
-        can: nom.value !== '',
         text: 'Enregistrer',
       }}
+      canValidate={nom.value !== ''}
     />
   )
 })

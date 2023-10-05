@@ -25,5 +25,13 @@ export const ActiviteRemovePopup = caminoDefineComponent<Props>(['close', 'apiCl
     />
   )
 
-  return () => <FunctionalPopup title="Suppression" content={content} close={props.close} validate={{ action: () => props.apiClient.supprimerActivite(props.activite.id), text: 'Supprimer' }} />
+  return () => (
+    <FunctionalPopup
+      title="Suppression"
+      content={content}
+      close={props.close}
+      validate={{ action: () => props.apiClient.supprimerActivite(props.activite.id), text: 'Supprimer' }}
+      canValidate={true}
+    />
+  )
 })

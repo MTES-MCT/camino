@@ -27,7 +27,8 @@ export const EntrepriseAddPopup = caminoDefineComponent<Props>(['close', 'user',
       title="Création d'une entreprise"
       content={content}
       close={props.close}
-      validate={{ action: () => props.apiClient.creerEntreprise(sirenValidator.parse(siren.value)), can: sirenValidator.safeParse(siren.value).success }}
+      validate={{ action: () => props.apiClient.creerEntreprise(sirenValidator.parse(siren.value)) }}
+      canValidate={sirenValidator.safeParse(siren.value).success}
     />
   )
 })

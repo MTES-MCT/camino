@@ -28,5 +28,5 @@ export const RemovePopup: FunctionalComponent<Props> = props => {
     />
   )
 
-  return <FunctionalPopup title="Suppression du titre" content={content} close={props.close} validate={{ action: props.deleteTitre, text: 'Supprimer' }} />
+  return <FunctionalPopup title="Suppression du titre" content={content} close={props.close} validate={{ action: props.deleteTitre, text: 'Supprimer' }} canValidate={true} />
 }

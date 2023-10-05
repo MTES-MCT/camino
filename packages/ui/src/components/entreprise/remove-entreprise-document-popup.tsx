@@ -33,6 +33,7 @@ export const RemoveEntrepriseDocumentPopup: FunctionalComponent<Props> = props =
         },
         text: 'Supprimer',
       }}
+      canValidate={true}
     />
   )
 }
