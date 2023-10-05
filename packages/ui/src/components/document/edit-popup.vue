@@ -76,7 +76,7 @@ export default {
     },
 
     complete() {
-      return this.document.typeId && this.document.date && (this.document.uri || this.document.url || this.document.fichier || this.document.fichierNouveau)
+      return this.document.typeId && this.document.date && (this.document.fichier || this.document.fichierNouveau)
     },
 
     messages() {

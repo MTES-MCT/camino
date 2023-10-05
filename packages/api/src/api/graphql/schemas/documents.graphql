@@ -29,18 +29,6 @@ type Document {
   "Extension du fichier"
   fichierTypeId: ID
 
-  "Url du document"
-  url: String
-
-  "Uri du document"
-  uri: String
-
-  "Référence au Journal Officiel"
-  jorf: String
-
-  "Référence Nor"
-  nor: String
-
   titreEtapeId: String
 
   publicLecture: Boolean
@@ -58,10 +46,6 @@ input InputDocumentCreation {
   fichierTypeId: ID
   fichierNouveau: FileUpload
   nomTemporaire: String
-  url: String
-  uri: String
-  jorf: String
-  nor: String
   publicLecture: Boolean
   entreprisesLecture: Boolean
 }
@@ -94,10 +78,6 @@ input InputDocument {
   fichier: Boolean
   fichierTypeId: ID
   fichierNouveau: FileUpload
-  url: String
-  uri: String
-  jorf: String
-  nor: String
   publicLecture: Boolean
   entreprisesLecture: Boolean
 }

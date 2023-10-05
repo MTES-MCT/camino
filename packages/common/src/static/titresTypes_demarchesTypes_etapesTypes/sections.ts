@@ -49,6 +49,25 @@ const suiviDeLaDemarche: Section[] = [
   },
 ]
 
+const publicationAuJorf: Section[] = [
+  {
+    id: 'publication',
+    elements: [
+      { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: false, description: '' },
+      { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
+    ],
+  },
+]
+const publication: Section[] = [
+  {
+    id: 'publication',
+    elements: [
+      { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: true, description: '' },
+      { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
+    ],
+  },
+]
+
 const EtapesTypesSections = {
   [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
     {
@@ -161,6 +180,16 @@ const EtapesTypesSections = {
       ],
     },
   ],
+
+  [ETAPES_TYPES.publicationDeDecisionAuJORF]: publicationAuJorf,
+  [ETAPES_TYPES.decisionDeLadministration]: publication,
+  [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: publicationAuJorf,
+  [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: publicationAuJorf,
+  [ETAPES_TYPES.decisionAdministrative]: publication,
+  [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
+  [ETAPES_TYPES.abrogationDeLaDecision]: publication,
+  // FIXME truc de Jean-Raymond
+  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [

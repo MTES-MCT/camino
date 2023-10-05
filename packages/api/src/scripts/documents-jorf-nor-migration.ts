@@ -4,6 +4,7 @@ import '../init.js'
 import { knex } from '../knex.js'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 const jorfRegex = /.*(JORFTEXT[0-9]*).*/
 const norRegex = /.*([A-Z]{4}[0-9]{7}[A-Z]{1}).*/
@@ -70,34 +71,28 @@ export const processDocument = (document: Omit<MigrationDocument, 'id' | 'type_i
   }
 
   if (nor === 'TRER2003625A') {
-    jorf = ''
+    jorf = null
   }
   if (nor === 'INDD8800798A') {
-    jorf = ''
+    jorf = 'JORFTEXT000000692845'
   }
   if (nor === 'INDE8800855A') {
-    jorf = ''
-  }
-  if (nor === 'INDE8800855A') {
-    jorf = ''
+    jorf = 'JORFTEXT000000693083'
   }
   if (nor === 'TRER2002467A') {
-    jorf = ''
+    jorf = null
   }
   if (nor === 'ECOL1904514A') {
-    jorf = ''
+    jorf = null
   }
   if (nor === 'TRER1833478A') {
-    jorf = ''
-  }
-  if (nor === 'TRER1833478A') {
-    jorf = ''
+    jorf = null
   }
   if (nor === 'INDD8800797A') {
-    jorf = ''
+    jorf = 'JORFTEXT000000294619'
   }
   if (nor === 'INDD8800799A') {
-    jorf = ''
+    jorf = 'JORFTEXT000000294619'
   }
   if (nor === 'INDE8700354A') {
     jorf = 'JORFTEXT000000296038'
@@ -105,33 +100,71 @@ export const processDocument = (document: Omit<MigrationDocument, 'id' | 'type_i
   return { jorf, nor }
 }
 
-type MigrationDocument = { id: DocumentId; type_id: DocumentTypeId; titre_etape_id: string; url: string | null; uri: string | null; jorf: string | null; nor: string | null }
+type MigrationDocument = {
+  id: DocumentId
+  etape_type_id: EtapeTypeId
+  type_id: DocumentTypeId
+  titre_etape_id: string
+  url: string | null
+  uri: string | null
+  jorf: string | null
+  nor: string | null
+}
 
 export const launchMigration = async () => {
   const documents: { rowCount: number; rows: MigrationDocument[] } = await knex.raw(
-    "SELECT * from documents where uri is not null or url is not null or (jorf is not null and jorf != '') or (nor is not null and nor != '')"
+    `SELECT d.id, d.type_id, d.titre_etape_id , d.url, d.uri, d.jorf, d.nor, te.type_id as etape_type_id  from documents d
+    left join titres_etapes te on te.id =d.titre_etape_id 
+    where uri is not null or url is not null or (jorf is not null and jorf != '') or (nor is not null and nor != '');`
   )
 
   console.time('migration')
   console.log('documents à migrer : ', documents.rowCount)
 
+  const etapeIdsToFix = ['vgpRF2RTu4Di1WVpnGFydd5Y', 'xGOzUgA86H3NsABPLiWEkW26', 'WvGZt4Zt7sTMBRmrDVaSjaNJ', 'hhaJVLpPD95dqQiIQweXwPk8']
+  const etapeIdsToIgnoreFixedInProd = ['cbmeQOmj0TuTxcOglIgy0xKR', 'ibWF5DFzGAv0Ea5OKe9wh56n']
+
+  const etapesIds: string[] = [...etapeIdsToFix]
+  const etapesTypeIds: Set<EtapeTypeId> = new Set()
+
   for (const document of documents.rows) {
-    const { jorf, nor } = processDocument(document)
+    let { jorf, nor } = processDocument(document)
 
     if (!jorf && !nor) {
       //console.log(`https://camino.beta.gouv.fr/etapes/${document.titre_etape_id}`, document.url, document.uri, document.jorf, document.nor, jorf, nor)
     }
 
-    const token = 'jJ7j6MoeCQIubca28YIyEnjPCg8dLtnpZg5qjRoPL56j2N5eIzcGXA' as Bearer
+    const token = '1KGUsVuawwmel6UQyEJmqoyEuZVRuzoj0ZpJ53cNqYhjsVj2uAl4QY' as Bearer
     if (nor && !jorf) {
       const result = await searchPublication(token, nor)
       if (result !== null) {
-        //console.log('trouvé ', result.jorf, result.nor)
+        jorf = result.jorf
       } else {
         console.log('nor non trouvé', nor)
       }
     }
+
+    if (jorf) {
+      etapesTypeIds.add(document.etape_type_id)
+
+      //FIXME étapes comportant plusieurs JORF
+      if (etapesIds.includes(document.titre_etape_id) && !etapeIdsToFix.includes(document.titre_etape_id) && !etapeIdsToIgnoreFixedInProd.includes(document.titre_etape_id)) {
+        console.log(`les types d'étapes trouvés : ${JSON.stringify([...etapesTypeIds.values()])}`)
+        throw new Error(`etapeId en double ${document.titre_etape_id}`)
+      }
+
+      etapesIds.push(document.titre_etape_id)
+
+      //Mettre dans la section
+      //FIXME ça marche pas
+      await knex.raw(`update titres_etapes set contenu = '${JSON.stringify({ publication: { jorf, nor } })}' || coalesce(contenu || '{}') where id = '${document.titre_etape_id}'`)
+
+      //Supprime le document
+      await knex.raw(`delete from documents where id = '${document.id}'`)
+    }
   }
+
+  console.log(`les types d'étapes trouvés : ${JSON.stringify([...etapesTypeIds.values()])}`)
 
   console.timeEnd('migration')
 }
