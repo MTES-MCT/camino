@@ -102,9 +102,7 @@ const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, 
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }
-  const { communes, departements, regions } = titreTerritoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
-
-  const separator = ', '
+  const { departements, regions } = titreTerritoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
 
   const { dateDebut, dateFin, dateDemande } = getTitreDates(titre)
 
@@ -117,19 +115,20 @@ const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, 
     date_fin: dateFin,
     date_demande: dateDemande,
     statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
-    substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)?.join(separator) || null,
-    'surface renseignee km2': titre.surface,
-    'communes (surface calculee km2)': communes.join(separator),
-    forets: titre.forets?.map(fId => Forets[fId].nom).join(separator),
-    facades_maritimes: getFacadesMaritimeCell(titre.secteursMaritime, separator),
-    departements: departements.join(separator),
-    regions: regions.join(separator),
+    substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) || null,
+    surface_totale: titre.surface,
+    communes: titre.communes?.map(({ id }) => communesIndex[id]),
+    surface_par_communes: titre.communes?.map(({ id, surface }) => ({ nom: communesIndex[id], surface: Math.round((surface ?? 0) / 100) / 10000 })),
+    forets: titre.forets?.map(fId => Forets[fId].nom),
+    facades_maritimes: getFacadesComputed(titre.secteursMaritime).map(({ facade }) => facade),
+    departements,
+    regions,
     administrations_noms: titre.administrations!.map(id => Administrations[id].nom),
-    titulaires_noms: titre.titulaires?.map(e => e.nom).join(separator) || null,
-    titulaires_legal: titre.titulaires?.map(e => e.legalEtranger || e.legalSiren).join(separator) || null,
-    amodiataires_noms: titre.amodiataires?.map(e => e.nom).join(separator) || null,
-    amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator) || null,
-    references: titre.references && titre.references.map(reference => `${ReferencesTypes[reference.referenceTypeId].nom}: ${reference.nom}`).join(separator),
+    titulaires_noms: titre.titulaires?.map(e => e.nom) || null,
+    titulaires_legal: titre.titulaires?.map(e => e.legalEtranger || e.legalSiren) || null,
+    amodiataires_noms: titre.amodiataires?.map(e => e.nom) || null,
+    amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren) || null,
+    references: titre.references && titre.references.map(reference => `${ReferencesTypes[reference.referenceTypeId].nom}: ${reference.nom}`),
     ...titreContenuTableFormat(titre),
   }
 }
