@@ -182,7 +182,7 @@ dsfr/generate_keycloak:
 	mkdir -p infra/roles/camino/files/keycloak_theme/login/resources/css
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/dsfr.min.css
 	cp node_modules/@gouvfr/dsfr/dist/utility/utility.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/utility.min.css
-	cp -r node_modules/@gouvfr/dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/css/
+	cp -r node_modules/@gouvfr/dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts infra/roles/camino/files/keycloak_theme/login/resources/css/
 dsfr/generate:
 	mkdir tmp
