@@ -39,10 +39,24 @@
 <body class="${properties.kcBodyClass!}">
 <div class="${properties.kcLoginClass!}">
     <div class="${properties.kcFormCardClass!}">
-        <header class="${properties.kcFormHeaderClass!}">
- 
-            <h1 id="kc-page-title"><#nested "header"></h1>
-            
+        <header role="banner" class="fr-header">
+            <div class="fr-header__body">
+                <div class="fr-container">
+                    <div class="fr-header__body-row">
+                        <div class="fr-header__brand fr-enlarge-link">
+                            <div class="fr-header__brand-top">
+                                <div class="fr-header__logo">
+                                    <a href="https://camino.beta.gouv.fr/" title="Accueil - Camino - République Française">
+                                        <p class="fr-logo">
+                                            Camino
+                                        </p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
       <div id="kc-content">
         <div id="kc-content-wrapper">
