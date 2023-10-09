@@ -121,10 +121,9 @@ export const launchMigration = async () => {
   console.time('migration')
   console.log('documents à migrer : ', documents.rowCount)
 
-  const etapeIdsToFix = ['vgpRF2RTu4Di1WVpnGFydd5Y', 'xGOzUgA86H3NsABPLiWEkW26', 'WvGZt4Zt7sTMBRmrDVaSjaNJ', 'hhaJVLpPD95dqQiIQweXwPk8']
-  const etapeIdsToIgnoreFixedInProd = ['cbmeQOmj0TuTxcOglIgy0xKR', 'ibWF5DFzGAv0Ea5OKe9wh56n']
+  const etapeIdsToIgnoreFixedInProd: string[] = ['vgpRF2RTu4Di1WVpnGFydd5Y', 'xGOzUgA86H3NsABPLiWEkW26', 'WvGZt4Zt7sTMBRmrDVaSjaNJ', 'hhaJVLpPD95dqQiIQweXwPk8']
 
-  const etapesIds: string[] = [...etapeIdsToFix]
+  const etapesIds: string[] = [...etapeIdsToIgnoreFixedInProd]
   const etapesTypeIds: Set<EtapeTypeId> = new Set()
 
   for (const document of documents.rows) {
@@ -133,8 +132,7 @@ export const launchMigration = async () => {
     if (!jorf && !nor) {
       //console.log(`https://camino.beta.gouv.fr/etapes/${document.titre_etape_id}`, document.url, document.uri, document.jorf, document.nor, jorf, nor)
     }
-
-    const token = '1KGUsVuawwmel6UQyEJmqoyEuZVRuzoj0ZpJ53cNqYhjsVj2uAl4QY' as Bearer
+    const token = process.env.TOKEN as Bearer
     if (nor && !jorf) {
       const result = await searchPublication(token, nor)
       if (result !== null) {
@@ -147,8 +145,7 @@ export const launchMigration = async () => {
     if (jorf) {
       etapesTypeIds.add(document.etape_type_id)
 
-      //FIXME étapes comportant plusieurs JORF
-      if (etapesIds.includes(document.titre_etape_id) && !etapeIdsToFix.includes(document.titre_etape_id) && !etapeIdsToIgnoreFixedInProd.includes(document.titre_etape_id)) {
+      if (etapesIds.includes(document.titre_etape_id) && !etapeIdsToIgnoreFixedInProd.includes(document.titre_etape_id)) {
         console.log(`les types d'étapes trouvés : ${JSON.stringify([...etapesTypeIds.values()])}`)
         throw new Error(`etapeId en double ${document.titre_etape_id}`)
       }
@@ -156,8 +153,7 @@ export const launchMigration = async () => {
       etapesIds.push(document.titre_etape_id)
 
       //Mettre dans la section
-      //FIXME ça marche pas
-      await knex.raw(`update titres_etapes set contenu = '${JSON.stringify({ publication: { jorf, nor } })}' || coalesce(contenu || '{}') where id = '${document.titre_etape_id}'`)
+      await knex.raw(`update titres_etapes set contenu = '${JSON.stringify({ publication: { jorf, nor } })}' || coalesce(contenu, '{}') where id = '${document.titre_etape_id}'`)
 
       //Supprime le document
       await knex.raw(`delete from documents where id = '${document.id}'`)
@@ -165,6 +161,13 @@ export const launchMigration = async () => {
   }
 
   console.log(`les types d'étapes trouvés : ${JSON.stringify([...etapesTypeIds.values()])}`)
+
+  await knex.raw(
+    `update titres_etapes set contenu = '${JSON.stringify({
+      opdp: { lien: 'https://www.economie.gouv.fr/consultation-demande-octroi-permis-exclusif-recherches-mines-lithium-Vinzelle' },
+    })}' || coalesce(contenu, '{}') where id = 'bb49d4b82c4bee721fb1f657'`
+  )
+  await knex.raw(`delete from documents where id = '2023-09-04-not-bb72be95'`)
 
   console.timeEnd('migration')
 }

@@ -13,6 +13,11 @@
 
         <ButtonIcon v-if="contenu[element.id]" class="btn-border py-xs px-s rnd-xs flex-right mt--xs" :onClick="fileDownload(contenu[element.id])" icon="download" title="Télécharger le fichier" />
       </div>
+      <div v-else-if="element.type === 'url'" class="flex h6 pb-xs">
+        <a :class="{ 'mb-s': element.description }" target="_blank" rel="noopener noreferrer" :href="valeur" title="Lien externe">
+          {{ valeur }}
+        </a>
+      </div>
 
       <p v-else class="cap-first" :class="{ 'mb-s': element.description }">
         {{ valeur }}

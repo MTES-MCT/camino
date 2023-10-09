@@ -6,7 +6,6 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Common/SectionElement',
   component: SectionElement,
-  argTypes: {},
 }
 export default meta
 
@@ -21,6 +20,18 @@ export const Text: StoryFn = () => (
       nom: "nom de l'élément",
       description: 'description',
       value: 'Valeur',
+    }}
+  />
+)
+export const Url: StoryFn = () => (
+  <SectionElement
+    fileDownload={fileDownload}
+    element={{
+      id: 'id',
+      type: 'url',
+      nom: "nom de l'élément",
+      description: 'description',
+      value: 'https://google.fr',
     }}
   />
 )

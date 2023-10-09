@@ -52,6 +52,7 @@ const suiviDeLaDemarche: Section[] = [
 const publicationAuJorf: Section[] = [
   {
     id: 'publication',
+    nom: 'Références Légifrance',
     elements: [
       { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: false, description: '' },
       { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
@@ -61,6 +62,8 @@ const publicationAuJorf: Section[] = [
 const publication: Section[] = [
   {
     id: 'publication',
+    nom: 'Références Légifrance',
+
     elements: [
       { id: 'jorf', nom: 'Numéro JORF', type: 'text', optionnel: true, description: '' },
       { id: 'nor', nom: 'Numéro NOR', type: 'text', optionnel: true, description: '' },
@@ -188,8 +191,12 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.decisionAdministrative]: publication,
   [ETAPES_TYPES.publicationDeLavisDeDecisionImplicite]: publication,
   [ETAPES_TYPES.abrogationDeLaDecision]: publication,
-  // FIXME truc de Jean-Raymond
-  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [],
+  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
+    {
+      id: 'opdp',
+      elements: [{ id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' }],
+    },
+  ],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [
@@ -912,6 +919,9 @@ export type FileElement = z.infer<typeof fileElementValidator>
 export const textElementValidator = basicElementValidator.extend({ type: z.enum(['text', 'textarea']) })
 export type TextElement = z.infer<typeof textElementValidator>
 
+export const urlElementValidator = basicElementValidator.extend({ type: z.literal('url') })
+export type UrlElement = z.infer<typeof urlElementValidator>
+
 export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
 export type NumberElement = z.infer<typeof numberElementValidator>
 
@@ -943,6 +953,7 @@ export const sectionsElementValidator = z.union([
   fileElementValidator,
   dateElementValidator,
   textElementValidator,
+  urlElementValidator,
   numberElementValidator,
   radioElementValidator,
   checkboxElementValidator,
