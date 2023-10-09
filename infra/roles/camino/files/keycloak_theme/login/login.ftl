@@ -1,16 +1,14 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('username','password') displayInfo=realm.password && realm.registrationAllowed && !registrationDisabled??; section>
     <#if section = "form">
-    <div id="kc-form">
-      <div id="kc-form-wrapper">
       <main class="fr-pt-md-14v" role="main" id="content">
     <div class="fr-container fr-container--fluid fr-mb-md-14v">
         <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                <h1>Connexion à Camino</h1>
                 <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
                     <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
                         <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
-                            <h1>Connexion à Camino</h1>
                             <div>
                                 <form id="login-1760" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
                                     <fieldset class="fr-fieldset" id="login-1760-fieldset" aria-labelledby="login-1760-fieldset-legend">
@@ -53,7 +51,7 @@
                                         <div class="fr-fieldset__element">
                                             <ul class="fr-btns-group">
                                                 <li>
-                                                    <button tabindex="3" class="fr-mt-2v fr-btn" name="login" id="kc-login" type="submit">
+                                                    <button tabindex="3" class="fr-mt-2v fr-btn" name="login" type="submit">
                                                         Se connecter
                                                     </button>
                                                 </li>
@@ -63,7 +61,7 @@
                                 </form>
                             </div>
                             <#if social.providers??>
-                                <div id="kc-social-providers" class="${properties.kcFormSocialAccountSectionClass!} fr-mb-3w">
+                                <div class="${properties.kcFormSocialAccountSectionClass!} fr-mb-3w">
                                     <p class="fr-hr-or">ou</p>
                                     <h3>Se connecter avec Cerbère</h3>
 
@@ -89,9 +87,6 @@
         </div>
     </div>
 </main>
-        </div>
-
-    </div>
     </#if>
 
 </@layout.registrationLayout>

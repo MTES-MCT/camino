@@ -36,9 +36,9 @@
     </#if>
 </head>
 
-<body class="${properties.kcBodyClass!}">
-<div class="${properties.kcLoginClass!}">
-    <div class="${properties.kcFormCardClass!}">
+<body>
+<div>
+    <div>
         <header role="banner" class="fr-header">
             <div class="fr-header__body">
                 <div class="fr-container">
@@ -63,16 +63,13 @@
 
           <#-- App-initiated actions should not see warning messages about the need to complete the action -->
           <#-- during login.                                                                               -->
+          
           <#if displayMessage && message?has_content && (message.type != 'warning' || !isAppInitiatedAction??)>
-              <div class="alert-${message.type} ${properties.kcAlertClass!} pf-m-<#if message.type = 'error'>danger<#else>${message.type}</#if>">
-                  <div class="pf-c-alert__icon">
-                      <#if message.type = 'success'><span class="${properties.kcFeedbackSuccessIcon!}"></span></#if>
-                      <#if message.type = 'warning'><span class="${properties.kcFeedbackWarningIcon!}"></span></#if>
-                      <#if message.type = 'error'><span class="${properties.kcFeedbackErrorIcon!}"></span></#if>
-                      <#if message.type = 'info'><span class="${properties.kcFeedbackInfoIcon!}"></span></#if>
-                  </div>
-                      <span class="${properties.kcAlertTitleClass!}">${kcSanitize(message.summary)?no_esc}</span>
-              </div>
+            <div class="fr-container">
+                <div class="fr-alert fr-alert--${message.type} fr-mt-3w">
+                    <h3 class="fr-alert__title">${kcSanitize(message.summary)?no_esc}</h3>
+                </div>
+            </div>
           </#if>
 
           <#nested "form">
