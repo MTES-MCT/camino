@@ -216,25 +216,25 @@ describe('etapeCreer', () => {
       id: idDom,
       typeId: 'dom',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr',
+      fichier: true,
     })
     await documentCreate({
       id: idFor,
       typeId: 'for',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr',
+      fichier: true,
     })
     await documentCreate({
       id: idJpa,
       typeId: 'jpa',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr',
+      fichier: true,
     })
     await documentCreate({
       id: idCar,
       typeId: 'car',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr',
+      fichier: true,
     })
     const res = await graphQLCall(
       dbPool,

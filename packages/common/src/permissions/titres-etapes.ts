@@ -128,7 +128,7 @@ export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; uri?: string | null; url?: string | null; date: CaminoDate }[] | null | undefined,
+  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; date: CaminoDate }[] | null | undefined,
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
@@ -244,8 +244,6 @@ export const isEtapeDeposable = (
         typeId: DocumentTypeId
         fichier?: unknown
         fichierNouveau?: unknown
-        uri?: string | null
-        url?: string | null
         date: CaminoDate
       }[]
     | null

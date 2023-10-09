@@ -189,7 +189,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
         id,
         typeId: documentTypeId,
         date: toCaminoDate('2020-01-01'),
-        uri: 'https://camino.beta.gouv.fr',
+        fichier: true,
       })
     }
     const res = await graphQLCall(
