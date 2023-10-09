@@ -123,6 +123,7 @@ const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
       break
 
     case 'text':
+    case 'url':
       sectionElementEditInput = (
         <DsfrInput
           required={required}

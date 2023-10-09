@@ -140,6 +140,14 @@ export const TousLesElementsVidesOptionnels: StoryFn = () => (
             value: null,
           },
           {
+            id: 'url',
+            nom: 'url',
+            description: 'Description pour url',
+            type: 'url',
+            optionnel: true,
+            value: null,
+          },
+          {
             id: 'radio',
             nom: 'radio',
             description: 'Description pour radio',
@@ -221,6 +229,13 @@ export const TousLesElementsRequis: StoryFn = () => (
             nom: 'text',
             description: 'Description pour text',
             type: 'text',
+            value: null,
+          },
+          {
+            id: 'url',
+            nom: 'url',
+            description: 'Description pour url',
+            type: 'url',
             value: null,
           },
           {
@@ -306,6 +321,13 @@ export const TousLesElementsRemplis: StoryFn = () => (
             description: 'Description pour text',
             type: 'text',
             value: 'ceci est un text',
+          },
+          {
+            id: 'url',
+            nom: 'url',
+            description: 'Description pour url',
+            type: 'url',
+            value: 'https://google.fr',
           },
           {
             id: 'radio',
