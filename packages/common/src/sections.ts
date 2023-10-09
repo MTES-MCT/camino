@@ -9,6 +9,7 @@ import {
   radioElementValidator,
   selectElementWithOptionsValidator,
   textElementValidator,
+  urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { z } from 'zod'
 import { isNotNullNorUndefined } from './typescript-tools.js'
@@ -21,6 +22,9 @@ export type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
 
 const textElementWithValueValidator = textElementValidator.extend({ value: z.string().nullable() })
 export type TextElementWithValue = z.infer<typeof textElementWithValueValidator>
+
+const urlElementWithValueValidator = urlElementValidator.extend({ value: z.string().nullable() })
+export type UrlElementWithValue = z.infer<typeof urlElementWithValueValidator>
 
 const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().nullable() })
 export type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
@@ -44,6 +48,7 @@ const elementWithValueValidator = z.union([
   fileElementWithValueValidator,
   dateElementWithValueValidator,
   textElementWithValueValidator,
+  urlElementWithValueValidator,
   numberElementWithValueValidator,
   radioElementWithValueValidator,
   checkboxElementWithValueValidator,
@@ -55,6 +60,10 @@ export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
 export const isFileElement = (element: ElementWithValue): element is FileElementWithValue => {
   return element.type === 'file'
+}
+
+export const isUrlElement = (element: ElementWithValue): element is UrlElementWithValue => {
+  return element.type === 'url'
 }
 
 export const isDateElement = (element: ElementWithValue): element is DateElementWithValue => {

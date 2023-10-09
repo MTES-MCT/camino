@@ -32,12 +32,26 @@ export const SectionElement: FunctionalComponent<Props> = (props: Props): JSX.El
             />
           </div>
         ) : (
-          <p class={`cap-first ${props.element.description ? 'mb-s' : ''}`}>
-            {valeurFind(props.element)}
-            {props.element.id === 'volumeGranulatsExtrait' && props.element.value !== null && isNumberElement(props.element) ? (
-              <span>m3. Soit l’équivalent de {numberFormat(props.element.value * 1.5)} tonnes.</span>
-            ) : null}
-          </p>
+          <>
+            {props.element.type === 'url' ? (
+              <a class={`${props.element.description ? 'mb-s' : ''}`} target="_blank" rel="noopener noreferrer" href={valeurFind(props.element)} title={`${props.element.nom} - Lien externe`}>
+                {valeurFind(props.element)}
+              </a>
+            ) : (
+              <p class={`cap-first ${props.element.description ? 'mb-s' : ''}`}>
+                {props.element.id === 'jorf' && props.element.value !== null && props.element.value !== '' ? (
+                  <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(props.element)}`} title={`Légifrance - Lien externe`}>
+                    {valeurFind(props.element)}
+                  </a>
+                ) : (
+                  valeurFind(props.element)
+                )}
+                {props.element.id === 'volumeGranulatsExtrait' && props.element.value !== null && isNumberElement(props.element) ? (
+                  <span>m3. Soit l’équivalent de {numberFormat(props.element.value * 1.5)} tonnes.</span>
+                ) : null}
+              </p>
+            )}
+          </>
         )}
 
         {props.element.description ? (

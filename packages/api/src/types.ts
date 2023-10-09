@@ -397,10 +397,6 @@ interface IDocument {
   fichierTypeId?: FileUploadType | null
   fichierNouveau?: { file: FileUpload } | null
   nomTemporaire?: string | null
-  url?: string | null
-  uri?: string | null
-  jorf?: string | null
-  nor?: string | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
   titreEtapeId?: EtapeId | null

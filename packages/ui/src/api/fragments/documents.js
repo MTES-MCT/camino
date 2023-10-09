@@ -13,10 +13,6 @@ const fragmentDocument = gql`
     fichier
     fichierTypeId
     titreEtapeId
-    url
-    uri
-    jorf
-    nor
     publicLecture
     entreprisesLecture
     suppression

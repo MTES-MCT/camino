@@ -22,7 +22,7 @@
         v-if="boutonSuppression"
         class="btn py-s px-m my--xs"
         :class="{
-          'rnd-r-xs': !document.url && !document.uri && !document.fichier,
+          'rnd-r-xs': !document.fichier,
         }"
         icon="delete"
         title="Supprimer le document"
@@ -30,9 +30,8 @@
       />
       <a
         v-if="document.fichier || document.fichierNouveau"
-        class="btn-border py-s px-m my--xs"
+        class="btn-border py-s px-m my--xs rnd-r-xs"
         :class="{
-          'rnd-r-xs': !document.url && !document.uri,
           'rnd-l-xs': !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
         }"
         :href="`/apiUrl/download/fichiers/${document.id}`"
@@ -42,36 +41,6 @@
         aria-label="Consulter le document - nouvelle fenêtre"
       >
         <Icon name="download" size="M" aria-hidden="true" />
-      </a>
-      <a
-        v-if="document.url"
-        class="btn-border py-s px-m my--xs"
-        :class="{
-          'rnd-r-xs': !document.uri,
-          'rnd-l-xs': !document.fichier && !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
-        }"
-        :href="document.url"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Consulter le document - lien externe"
-        aria-label="Consulter le document - lien externe"
-        alt="Url"
-      >
-        <Icon size="M" name="link" aria-hidden="true" />
-      </a>
-      <a
-        v-if="document.uri"
-        class="btn-border py-s px-m my--xs rnd-r-xs"
-        :class="{
-          'rnd-l-xs': !document.url && !document.fichier && !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
-        }"
-        :href="document.uri"
-        target="_blank"
-        title="Consulter le document - lien externe"
-        rel="noopener noreferrer"
-        alt="Uri"
-      >
-        <Icon size="M" name="link" aria-hidden="true" />
       </a>
     </td>
   </tr>
@@ -121,7 +90,7 @@ export default {
 
   computed: {
     manquant() {
-      return !(this.document.fichier || this.document.fichierNouveau || this.document.uri || this.document.url)
+      return !(this.document.fichier || this.document.fichierNouveau)
     },
     documentType() {
       if (this.document.typeId) {

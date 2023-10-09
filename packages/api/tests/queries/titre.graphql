@@ -170,9 +170,5 @@ fragment geojsonPoints on GeojsonPoints {
 
 fragment document on Document {
   id
-  url
-  uri
   fichier
-  jorf
-  nor
 }
