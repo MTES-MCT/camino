@@ -178,6 +178,12 @@ deploy/preprod:
 deploy/prod:
 	$(MAKE) DEPLOY_URL=camino.beta.gouv.fr _deploy
 
+dsfr/generate_keycloak:
+	mkdir -p infra/roles/camino/files/keycloak_theme/login/resources/css
+	cp node_modules/@gouvfr/dsfr/dist/dsfr.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/dsfr.min.css
+	cp node_modules/@gouvfr/dsfr/dist/utility/utility.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/utility.min.css
+	cp -r node_modules/@gouvfr/dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/css/
+	cp -r node_modules/@gouvfr/dsfr/dist/fonts infra/roles/camino/files/keycloak_theme/login/resources/css/
 dsfr/generate:
 	mkdir tmp
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
@@ -193,6 +199,7 @@ dsfr/generate:
 	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
 	$(MAKE) icons/generate
+	$(MAKE) dsfr/generate_keycloak
 
 icons/generate:
 	npm run generate-icon-types -w packages/ui
