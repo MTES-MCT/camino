@@ -20,7 +20,10 @@
       </div>
 
       <p v-else class="cap-first" :class="{ 'mb-s': element.description }">
-        {{ valeur }}
+        <a v-if="element.id === 'jorf' && valeur !== null && valeur !== ''" target="_blank" rel="noopener noreferrer" :href="href" title="Légifrance - Lien externe">
+          {{ valeur }}
+        </a>
+        <template v-else>{{ valeur }}</template>
         <span v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]"> m3. Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes. </span>
       </p>
       <!-- eslint-disable vue/no-v-html -->
@@ -47,6 +50,9 @@ export default {
   emits: ['file-download'],
 
   computed: {
+    href() {
+      return `https://www.legifrance.gouv.fr/jorf/id/${this.valeur}`
+    },
     valeur() {
       return valeurFind(this.element, this.contenu)
     },

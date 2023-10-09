@@ -206,9 +206,10 @@ graphql/check:
 	for f in $(shell find ./packages/ui/src -name '*-api-client.ts'); do \
 	    if grep -q gql "$$f"; then \
 	        echo $$f; \
-            graphql-inspector validate --onlyErrors --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql; \
+            graphql-inspector validate --onlyErrors --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql || exit 1; \
         fi \
     done
 	for f in packages/api/tests/queries/*.graphql; do \
-		graphql-inspector validate --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql; \
+		echo $$f; \
+		graphql-inspector validate --noStrictFragments "$$f" packages/api/src/api/graphql/schemas/index.graphql || exit 1; \
 	done

@@ -23,6 +23,33 @@ export const Text: StoryFn = () => (
     }}
   />
 )
+
+export const GranulatsMarins: StoryFn = () => (
+  <SectionElement
+    fileDownload={fileDownload}
+    element={{
+      id: 'volumeGranulatsExtrait',
+      type: 'number',
+      nom: 'Granulats Marins',
+      description: 'description',
+      value: 200,
+    }}
+  />
+)
+
+export const JORF: StoryFn = () => (
+  <SectionElement
+    fileDownload={fileDownload}
+    element={{
+      id: 'jorf',
+      type: 'text',
+      nom: 'JORF',
+      description: 'description',
+      value: 'JORFTEXT000000592092',
+    }}
+  />
+)
+
 export const Url: StoryFn = () => (
   <SectionElement
     fileDownload={fileDownload}
