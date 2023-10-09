@@ -10,12 +10,12 @@
                 <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
                     <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
                         <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
-                            <h1>Connexion sur Camino</h1>
+                            <h1>Connexion à Camino</h1>
                             <div>
                                 <form id="login-1760" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
-                                    <fieldset class="fr-fieldset" id="login-1760-fieldset" aria-labelledby="login-1760-fieldset-legend login-1760-fieldset-messages">
+                                    <fieldset class="fr-fieldset" id="login-1760-fieldset" aria-labelledby="login-1760-fieldset-legend">
                                         <legend class="fr-fieldset__legend" id="login-1760-fieldset-legend">
-                                            <h2>Se connecter avec ses identifiants</h2>
+                                            <h2>Se connecter avec son compte</h2>
                                         </legend>
                                         <div class="fr-fieldset__element">
                                         <#if messagesPerField.existsError('username','password')>
@@ -23,14 +23,14 @@
                                                 <h3 class="fr-alert__title">${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}</h3>
                                             </div>
                                         </#if>
-                                            <fieldset class="fr-fieldset" id="credentials" aria-labelledby="credentials-messages">                                                
+                                            <fieldset class="fr-fieldset" id="credentials">                                                
                                                 <div class="fr-fieldset__element">
                                                     <div class="fr-input-group">
                                                         <label class="fr-label" for="username-1757">
                                                             ${msg("email")}
                                                             <span class="fr-hint-text">Format attendu : nom@domaine.fr</span>
                                                         </label>
-                                                        <input tabindex="1" autofocus class="fr-input" autocomplete="username" aria-required="true" aria-describedby="username-1757-messages" name="username" id="username-1757" type="text"  value="${(login.username!'')}" aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>">
+                                                        <input tabindex="1" autofocus class="fr-input" autocomplete="username" aria-required="true" name="username" id="username-1757" type="text"  value="${(login.username!'')}" aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>">
              
                                                        
                                                     </div>
@@ -41,7 +41,7 @@
                                                             Mot de passe
                                                         </label>
                                                         <div class="fr-input-wrap">
-                                                            <input tabindex="2" class="fr-password__input fr-input" aria-describedby="password-1758-input-messages" aria-required="true" name="password" autocomplete="current-password" id="password-1758-input" type="password" aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>">
+                                                            <input tabindex="2" class="fr-password__input fr-input" aria-required="true" name="password" autocomplete="current-password" id="password-1758-input" type="password" aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>">
                                                         </div>
                                                         <p>
                                                             <a tabindex="4" href="${url.loginResetCredentialsUrl}" class="fr-link">${msg("doForgotPassword")}</a>
