@@ -5,5 +5,5 @@
 users:
   - nom: mbitard
     ssh: https://github.com/MichaelBitard.keys
-  - nom: vincent
+  - nom: vmaubert
     ssh: https://github.com/vmaubert.keys

@@ -145,6 +145,7 @@ services:
       - ./keycloak-franceconnect-6.0.0.jar:/opt/keycloak/providers/keycloak-franceconnect-6.0.0.jar
       # FROM https://github.com/leroyguillaume/keycloak-bcrypt
       - ./keycloak-bcrypt-1.6.0.jar:/opt/keycloak/providers/keycloak-bcrypt-1.6.0.jar
+      - ./keycloak_theme/:/opt/keycloak/themes/camino/
     command: "start"
     expose:
       - ${KEYCLOAK_PORT}
