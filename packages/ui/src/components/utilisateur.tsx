@@ -273,10 +273,11 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
                 </div>
                 <div class="tablet-blobs pb-m">
                   <div class="tablet-blob-1-4">
-                    <h5>Jeton QGIS</h5>
+                    <h5>QGis</h5>
                   </div>
-
-                  <QGisToken apiClient={props.apiClient} />
+                  <div class="tablet-blob-3-4">
+                    <QGisToken apiClient={props.apiClient} />
+                  </div>
                 </div>
               </>
             ) : null}

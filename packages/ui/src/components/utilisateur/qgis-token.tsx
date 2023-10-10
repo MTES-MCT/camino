@@ -12,7 +12,7 @@ export interface Props {
 }
 
 export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
-  const data = ref<AsyncData<QGISToken>>({ status: 'LOADED', value: {} })
+  const data = ref<AsyncData<QGISToken> | null>(null)
   const messages = ref<{ type: 'error' | 'success'; value: string }[]>([])
 
   const generateToken = async () => {
@@ -20,8 +20,8 @@ export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
     try {
       const tokenData = await props.apiClient.getQGISToken()
       data.value = { status: 'LOADED', value: tokenData }
-      if (tokenData.token) {
-        copyToClipboard(tokenData.token)
+      if (tokenData.url) {
+        copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, tokenData.url)
       }
     } catch (e: any) {
       data.value = {
@@ -31,39 +31,39 @@ export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
     }
   }
 
-  const copyToClipboard = (token: string | undefined) => {
-    if (token) {
-      navigator.clipboard.writeText(token)
-      messages.value.push({
-        type: 'success',
-        value: "Le jeton vient d'être copié dans votre presse papier",
-      })
-      setTimeout(() => {
-        messages.value.shift()
-      }, 4500)
-    }
+  const copyToClipboard = (message: string, token: string) => {
+    navigator.clipboard.writeText(token)
+    messages.value.push({
+      type: 'success',
+      value: message,
+    })
+    setTimeout(() => {
+      messages.value.shift()
+    }, 4500)
   }
 
   return () => (
     <>
-      <LoadingElement
-        data={data.value}
-        renderItem={item => (
-          <>
-            {item.token ? (
-              <div class="mb-s">
-                Voici le jeton généré <Pill noCapitalize onClick={() => copyToClipboard(item.token)} text={item.token} />
-                <br />
-                Assurez-vous de le copier, vous ne pourrez plus le revoir !
-              </div>
-            ) : null}
+      <button class="btn btn-secondary mb-s" onClick={() => generateToken()}>
+        Générer des identifiants pour QGis
+      </button>
+      {data.value !== null ? (
+        <LoadingElement
+          data={data.value}
+          renderItem={item => (
+            <>
+              {item.token ? (
+                <div>
+                  Voici l'URL à utiliser dans QGis <Pill noCapitalize onClick={() => copyToClipboard(`L'URL vient d'être copiée dans votre presse papier`, item.url)} text={item.url} />
+                  <br />
+                  Voici le jeton généré <Pill noCapitalize onClick={() => copyToClipboard(`Le token vient d'être copié dans votre presse papier`, item.token)} text={item.token} />
+                </div>
+              ) : null}
+            </>
+          )}
+        ></LoadingElement>
+      ) : null}
 
-            <button class="btn btn-secondary" onClick={() => generateToken()}>
-              Générer un jeton QGIS
-            </button>
-          </>
-        )}
-      ></LoadingElement>
       <Messages messages={messages.value} />
     </>
   )
