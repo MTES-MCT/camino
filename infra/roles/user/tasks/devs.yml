@@ -9,7 +9,7 @@
     name: "{{ camino_dev.nom }}"
     shell: "/bin/bash"
     update_password: "on_create"
-    # 'caminimino' -> seul l'utilisateur avec la bonne clef ssh peut se connecter + force le changement de mot de passe au login donc on peut laisser ce mot de passe publique
+    # 'caminimino' -> seul l'utilisateur avec la bonne clef ssh peut se connecter + force le changement de mot de passe au login donc on peut laisser ce mot de passe public
     password: "$6$MYtufjmobe/GD$fKrKSXr0R6Zm4ATQqAFJXsXRSOLcOVnkdwfNiDw3nnsBWdojA4BW4TTeVmQP48j6bRck./BnQ4/fRlqtvqavP1"
     groups: "{{ camino_dev.nom }}, git, users, docker, sudo"
   become: True
