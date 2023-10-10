@@ -5,7 +5,9 @@
     <div class="fr-container fr-container--fluid fr-mb-md-14v">
         <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                <div class="fr-container">
                 <h1>Récupération de mot de passe sur Camino</h1>
+                </div>
                 <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
                     <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
                         <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">

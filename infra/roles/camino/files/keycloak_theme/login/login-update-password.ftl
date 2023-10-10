@@ -3,62 +3,86 @@
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('password','password-confirm'); section>
 
     <#if section = "form">
-    ICI
-        <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
-            <input type="text" id="username" name="username" value="${username}" autocomplete="username"
-                   readonly="readonly" style="display:none;"/>
-            <input type="password" id="password" name="password" autocomplete="current-password" style="display:none;"/>
-
-            <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-new" class="${properties.kcLabelClass!}">${msg("passwordNew")}</label>
+        <main class="fr-pt-md-14v" role="main" id="content">
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                <div class="fr-container">
+                <h1>Mise à jour du mot de passe</h1>
                 </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="password" id="password-new" name="password-new" class="${properties.kcInputClass!}"
-                           autofocus autocomplete="new-password"
-                           aria-invalid="<#if messagesPerField.existsError('password','password-confirm')>true</#if>"
-                    />
+                <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
+                    <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+                        <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
+                            <div>
+                                <form id="login-1760" action="${url.loginAction}" method="post">
 
-                    <#if messagesPerField.existsError('password')>
-                        <span id="input-error-password" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password'))?no_esc}
-                        </span>
-                    </#if>
+                                    <input type="text" id="username" name="username" value="${username}" autocomplete="username" readonly="readonly" style="display:none;"/>
+                                    <input type="password" id="password" name="password" autocomplete="current-password" style="display:none;"/>
+                                    <fieldset class="fr-fieldset" id="login-1760-fieldset" aria-labelledby="login-1760-fieldset-legend">
+                                        <legend class="fr-fieldset__legend" id="login-1760-fieldset-legend">
+                                            <h2>Changer votre mot de passe</h2>
+                                        </legend>
+                                        <div class="fr-fieldset__element">
+
+                                        <#if messagesPerField.existsError('password', 'password-confirm')>
+                                            <div class="fr-alert fr-alert--error fr-mb-3w">
+                                                <h3 class="fr-alert__title">${kcSanitize(messagesPerField.getFirstError('password', 'password-confirm'))?no_esc}</h3>
+                                            </div>
+                                        </#if>
+                                            <fieldset class="fr-fieldset" id="credentials">                                                
+                                                <div class="fr-fieldset__element">
+                                                    <div class="fr-input-group">
+                                                        <label class="fr-label" for="password-new-1757">
+                                                           ${msg("passwordNew")}
+                                                        </label>
+                                                        <input tabindex="1" class="fr-input" id="password-new-1757" type="password" name="password-new" 
+                                                        autofocus autocomplete="new-password"
+                                                        aria-invalid="<#if messagesPerField.existsError('password','password-confirm')>true</#if>"
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="fr-fieldset" id="credentials">                                                
+                                                <div class="fr-fieldset__element">
+                                                    <div class="fr-input-group">
+                                                        <label class="fr-label" for="password-confirm-1201">
+                                                           ${msg("passwordConfirm")}
+                                                        </label>
+                                                        <input tabindex="2" class="fr-input" id="password-confirm-1201" type="password" name="password-confirm"
+                                                        autocomplete="new-password"
+                                                        aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <ul class="fr-btns-group">
+                                                <li>
+                                                    <button tabindex="3" class="fr-mt-2v fr-btn" name="login" type="submit">
+                                                        Valider
+                                                    </button>
+                                                </li>
+                                                <#if isAppInitiatedAction??>
+                                                    <li>
+                                                        <button type="submit" tabindex="4" class="fr-mt-2v fr-btn fr-btn--secondary" name="cancel-aia">
+                                                            ${msg("doCancel")}
+                                                        </button>
+                                                    </li>
+                                                </#if>
+                                            </ul>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+</main>
 
-            <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-confirm" class="${properties.kcLabelClass!}">${msg("passwordConfirm")}</label>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="password" id="password-confirm" name="password-confirm"
-                           class="${properties.kcInputClass!}"
-                           autocomplete="new-password"
-                           aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
-                    />
-
-                    <#if messagesPerField.existsError('password-confirm')>
-                        <span id="input-error-password-confirm" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password-confirm'))?no_esc}
-                        </span>
-                    </#if>
-
-                </div>
-            </div>
-
-            <div class="${properties.kcFormGroupClass!}">
-                <@passwordCommons.logoutOtherSessions/>
-
-                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
-                    <#if isAppInitiatedAction??>
-                        <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}" />
-                        <button class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" type="submit" name="cancel-aia" value="true" />${msg("doCancel")}</button>
-                    <#else>
-                        <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}" />
-                    </#if>
-                </div>
-            </div>
-        </form>
+       
     </#if>
 </@layout.registrationLayout>
