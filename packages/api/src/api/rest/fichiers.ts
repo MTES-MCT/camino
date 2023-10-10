@@ -152,11 +152,11 @@ export const fichier =
       user
     )
 
-    const format = DOWNLOAD_FORMATS.PDF
-
-    if (!document.fichier) {
+    if (!document || !document.fichier) {
       throw new Error('fichier inexistant')
     }
+
+    const format = DOWNLOAD_FORMATS.PDF
 
     let dossier
 

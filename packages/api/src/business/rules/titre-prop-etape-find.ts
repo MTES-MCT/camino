@@ -52,7 +52,7 @@ const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: Demarche
   // si
   // - le titre est en modification en instance
   // - et que la prop est points, surface, substances ou communes
-  if (propId && titreStatutId && ['points', 'surface', 'communes', 'forets'].includes(propId) && titreStatutId === 'mod') {
+  if (propId && titreStatutId && ['points', 'surface', 'communes', 'forets'].includes(propId) && [TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titreStatutId)) {
     return true
   }
 

@@ -45,6 +45,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
     },
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
@@ -53,6 +54,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
@@ -61,6 +63,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
   },
@@ -71,6 +74,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -79,6 +83,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
   },
@@ -89,6 +94,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -97,6 +103,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
   },
@@ -107,6 +114,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -115,6 +123,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
   },
@@ -125,6 +134,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -133,6 +143,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: false },
     },
   },
@@ -148,6 +159,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
@@ -156,6 +168,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
@@ -164,6 +177,7 @@ const AdministrationsTitresTypesTitresStatuts: {
       [TitresStatutIds.Echu]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Indetermine]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.ModificationEnInstance]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
+      [TitresStatutIds.SurvieProvisoire]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
       [TitresStatutIds.Valide]: { titresModificationInterdit: true, demarchesModificationInterdit: true, etapesModificationInterdit: true },
     },
   },

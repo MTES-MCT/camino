@@ -871,20 +871,12 @@ exports[`statuts > peut voir tous les statuts 1`] = `
   ],
   "statuts": [
     {
-      "id": "dmi",
-      "nom": "demande initiale",
-    },
-    {
       "id": "dmc",
       "nom": "demande classée",
     },
     {
-      "id": "val",
-      "nom": "valide",
-    },
-    {
-      "id": "mod",
-      "nom": "modification en instance",
+      "id": "dmi",
+      "nom": "demande initiale",
     },
     {
       "id": "ech",
@@ -893,6 +885,18 @@ exports[`statuts > peut voir tous les statuts 1`] = `
     {
       "id": "ind",
       "nom": "indéterminé",
+    },
+    {
+      "id": "mod",
+      "nom": "valide - modification en instance",
+    },
+    {
+      "id": "sup",
+      "nom": "valide - survie provisoire",
+    },
+    {
+      "id": "val",
+      "nom": "valide",
     },
   ],
   "types": [

@@ -30,17 +30,28 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
     }
   }
 
-  if (demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin)) {
+  const isValide: boolean =
+    demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin) ?? false
+  const inModificationEnInstance = titreInModificationEnInstance(titreDemarches)
+
+  // Le titre est encore valide, mais il y a une demande de modification en cours
+  if (isValide && inModificationEnInstance) {
+    return TitresStatutIds.ModificationEnInstance
+  }
+
+  if (isValide) {
     return TitresStatutIds.Valide
   }
 
-  if (titreInSurvieProvisoire(titreDemarches)) {
-    return TitresStatutIds.ModificationEnInstance
+  // Le titre n’est plus valide, mais il y a une demande de modification en cours
+  // qui permet au titre de rester valide, il est donc en survie provisoire
+  if (inModificationEnInstance) {
+    return TitresStatutIds.SurvieProvisoire
   }
 
   return TitresStatutIds.Echu
 }
 
-export const titreInSurvieProvisoire = (demarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin'>[] | null | undefined): boolean => {
+export const titreInModificationEnInstance = (demarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin'>[] | null | undefined): boolean => {
   return demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && !demarcheDateFin) ?? false
 }

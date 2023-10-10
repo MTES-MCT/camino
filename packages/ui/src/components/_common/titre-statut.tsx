@@ -12,7 +12,8 @@ const couleurParStatut = {
   dmi: 'orange-terre-battue',
   ech: 'beige-gris-galet',
   ind: 'purple-glycine',
-  mod: 'orange-terre-battue',
+  mod: 'green-emeraude',
+  sup: 'green-menthe',
   val: 'green-bourgeon',
 } as const satisfies Record<TitreStatutId, CouleurIllustrative>
 

@@ -104,7 +104,7 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
     try {
       // TODO 2023-08-27 this should be an apiClient props
       const res: { elements: TitreWithPoint[] } = await titreApiClient.getTitresWithPerimetreForCarte({
-        statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance],
+        statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
         perimetre: data.bbox,
         communes: '',
         departements: [],

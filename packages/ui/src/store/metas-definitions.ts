@@ -3,7 +3,7 @@ import { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etap
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { titresStatutsArray } from 'camino-common/src/static/titresStatuts'
 import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -40,7 +40,7 @@ export const metasIndex = {
     ],
   },
   'titres-statuts': {
-    get: () => sortedTitresStatuts,
+    get: () => titresStatutsArray,
     labelGet,
     nom: 'Statuts des titres',
     colonnes: [

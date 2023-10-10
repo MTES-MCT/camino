@@ -11,7 +11,7 @@ import { documentsQueryModify } from './permissions/documents.js'
 import { User } from 'camino-common/src/roles'
 import { DocumentId } from 'camino-common/src/entreprise.js'
 
-const documentGet = async (documentId: string, { fields }: { fields?: IFields }, user: User) => {
+const documentGet = async (documentId: string, { fields }: { fields?: IFields }, user: User): Promise<IDocument | null> => {
   const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)
@@ -20,7 +20,7 @@ const documentGet = async (documentId: string, { fields }: { fields?: IFields },
 
   const document = await q.findById(documentId)
 
-  return document as IDocument
+  return document as IDocument | null
 }
 
 const documentsGet = async ({ ids }: { ids?: string[] }, { fields }: { fields?: IFields }, user: User) => {

@@ -14,7 +14,7 @@ import intersect from '@turf/intersect'
 import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
-import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
 import { EtapeId } from 'camino-common/src/etape.js'
@@ -158,7 +158,11 @@ const sdomZonesInformationsGet = async (
 
     if ((isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && points?.length > 2) {
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
-      const titres = await titresGet({ statutsIds: ['val', 'mod', 'dmi'], domainesIds: ['m'] }, { fields: { points: { id: {} } } }, userSuper)
+      const titres = await titresGet(
+        { statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire], domainesIds: ['m'] },
+        { fields: { points: { id: {} } } },
+        userSuper
+      )
       const geojsonFeatures = geojsonFeatureMultiPolygon(points as ITitrePoint[])
 
       // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect

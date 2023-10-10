@@ -21,11 +21,12 @@ import { TablePagination, getInitialParams } from './_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
   typesIds: ['ar', 'pr', 'ax', 'px', 'cx'],
-  statutsIds: ['val', 'dmi', 'mod'],
+  statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
 }
 
 const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {

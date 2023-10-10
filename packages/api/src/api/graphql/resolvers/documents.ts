@@ -256,15 +256,17 @@ export const documentsLier = async (context: Context, documentIds: string[], eta
   for (const documentId of documentIds) {
     const document = await documentGet(documentId, { fields: {} }, userSuper)
 
-    if (!document.titreEtapeId) {
-      await documentUpdate(document.id, { titreEtapeId: etapeId })
+    if (document) {
+      if (!document.titreEtapeId) {
+        await documentUpdate(document.id, { titreEtapeId: etapeId })
 
-      if (document.fichier) {
-        const documentPath = documentFilePathFind(document)
-        document.titreEtapeId = etapeId
-        const newDocumentPath = documentFilePathFind(document, true)
+        if (document.fichier) {
+          const documentPath = documentFilePathFind(document)
+          document.titreEtapeId = etapeId
+          const newDocumentPath = documentFilePathFind(document, true)
 
-        await fileRename(documentPath, newDocumentPath)
+          await fileRename(documentPath, newDocumentPath)
+        }
       }
     }
   }

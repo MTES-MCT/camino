@@ -10,7 +10,7 @@ import { Pays, PaysList } from 'camino-common/src/static/pays.js'
 import { Departement, Departements } from 'camino-common/src/static/departement.js'
 import { Region, Regions } from 'camino-common/src/static/region.js'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts.js'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { titresStatutsArray } from 'camino-common/src/static/titresStatuts.js'
 import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts.js'
 import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
@@ -56,7 +56,7 @@ export const types = async () => {
   }
 }
 
-export const statuts = () => sortedTitresStatuts
+export const statuts = () => titresStatutsArray
 
 export const demarchesTypes = () => sortedDemarchesTypes
 

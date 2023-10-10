@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreStatut } from './titre-statut'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { titresStatutsArray } from 'camino-common/src/static/titresStatuts'
 
 const meta: Meta = {
   title: 'Components/Common/TitreStatut',
@@ -16,7 +16,7 @@ export const All: StoryFn = () => (
         <th>Statut de titre</th>
         <th>Rendu</th>
       </tr>
-      {Object.values(sortedTitresStatuts).map(statut => (
+      {Object.values(titresStatutsArray).map(statut => (
         <tr>
           <td>{statut.nom}</td>
           <td>

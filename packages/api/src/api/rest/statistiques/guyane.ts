@@ -13,6 +13,7 @@ import { CaminoAnnee, caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, to
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import type { Pool } from 'pg'
 import { capitalize } from 'camino-common/src/strings.js'
+import { isTitreValide } from 'camino-common/src/static/titresStatuts.js'
 
 const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: ITitreActivite[], init: { [key: string]: number }) =>
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
@@ -56,7 +57,7 @@ const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId
 const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
-      if (titre.titreStatutId && ['val', 'mod'].includes(titre.titreStatutId)) {
+      if (isTitreValide(titre.titreStatutId)) {
         if (['arm', 'prm'].includes(titre.typeId)) {
           acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
         } else {

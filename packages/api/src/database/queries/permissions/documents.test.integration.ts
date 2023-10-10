@@ -58,6 +58,6 @@ describe('documentSupprimer', () => {
 
     const documentRes = await documentGet(documentId, {}, userSuper)
 
-    expect(documentRes.suppression).toBe(suppression)
+    expect(documentRes?.suppression).toBe(suppression)
   })
 })
