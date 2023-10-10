@@ -10,7 +10,7 @@
 
     <textarea v-else-if="element.type === 'textarea'" v-model="contenu[element.id]" class="p-s" />
 
-    <input v-else-if="element.type === 'text'" v-model="contenu[element.id]" type="text" class="p-s" />
+    <input v-else-if="element.type === 'text' || element.type === 'url'" v-model="contenu[element.id]" type="text" class="p-s" />
 
     <div v-else-if="element.type === 'radio'">
       <label class="mr">
