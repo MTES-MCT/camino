@@ -12,11 +12,13 @@ const couleurParStatut = {
   dmi: 'orange-terre-battue',
   ech: 'beige-gris-galet',
   ind: 'purple-glycine',
-  mod: 'green-emeraude',
-  sup: 'green-menthe',
+  mod: 'green-bourgeon',
+  sup: 'green-bourgeon',
   val: 'green-bourgeon',
 } as const satisfies Record<TitreStatutId, CouleurIllustrative>
 
 export const TitreStatut: FunctionalComponent<Props> = (props: Props) => {
-  return <Badge ariaLabel={TitresStatuts[props.titreStatutId].nom} badgeColor={couleurParStatut[props.titreStatutId]} />
+  const couleur = couleurParStatut[props.titreStatutId]
+
+  return <Badge ariaLabel={TitresStatuts[props.titreStatutId].nom} badgeColor={couleur} />
 }
