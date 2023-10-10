@@ -179,11 +179,16 @@ deploy/prod:
 	$(MAKE) DEPLOY_URL=camino.beta.gouv.fr _deploy
 
 dsfr/generate_keycloak:
+	wget https://github.com/GouvernementFR/dsfr/releases/download/v1.10.1/dsfr-v1.10.1.zip
+	unzip dsfr-v1.10.1.zip -d dsfr
+	rm -rf infra/roles/camino/files/keycloak_theme/login/resources/css/
 	mkdir -p infra/roles/camino/files/keycloak_theme/login/resources/css/utility
-	cp node_modules/@gouvfr/dsfr/dist/dsfr.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/dsfr.min.css
-	cp node_modules/@gouvfr/dsfr/dist/utility/utility.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/utility/utility.min.css
-	cp -r node_modules/@gouvfr/dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/css/
-	cp -r node_modules/@gouvfr/dsfr/dist/fonts infra/roles/camino/files/keycloak_theme/login/resources/css/
+	mv dsfr/dist/dsfr.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/dsfr.min.css
+	mv dsfr/dist/utility/utility.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/utility/utility.min.css
+	mv dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/css/
+	mv dsfr/dist/fonts infra/roles/camino/files/keycloak_theme/login/resources/css/
+	rm -rf dsfr
+	rm dsfr-v1.10.1.zip
 dsfr/generate:
 	mkdir tmp
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
