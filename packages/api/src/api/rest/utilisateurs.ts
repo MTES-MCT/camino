@@ -153,7 +153,7 @@ export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res
     await knex('utilisateurs')
       .update({ qgis_token: bcrypt.hashSync(token, 10) })
       .where('email', user.email)
-    res.send({ token })
+    res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${process.env.API_HOST ?? 'api.camino.beta.gouv.fr'}/titres_qgis` })
   }
 }
 

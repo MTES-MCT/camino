@@ -11,7 +11,7 @@ export default meta
 export const Default: StoryFn = () => (
   <QGisToken
     apiClient={{
-      getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
+      getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123', url: 'https://google.fr' }), 1000)),
     }}
   />
 )
