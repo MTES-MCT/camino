@@ -56,7 +56,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
 
   const itemKey: keyof Entreprise = 'id'
   const type: TypeAheadType = 'single'
-  const typeAheadProps = {
+  const typeAheadProps = computed(() => ({
     id: 'autocomplete_entreprise',
     itemKey,
     placeholder: props.placeholder,
@@ -66,7 +66,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
     itemChipLabel: (item: Entreprise) => item.nom,
     onSelectItem: addEntity,
     onInput: (event: string) => (inputValue.value = event),
-  }
+  }))
 
   return () => (
     <div>
@@ -87,7 +87,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
         </div>
       ))}
 
-      <TypeAhead props={typeAheadProps} overrideItems={overrideItems.value} />
+      <TypeAhead props={typeAheadProps.value} overrideItems={overrideItems.value} />
     </div>
   )
 })
