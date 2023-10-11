@@ -106,9 +106,7 @@ export const Table = defineComponent(
                 {props.columns.map(col => (
                   <th key={col.id} scope="col" class="nowrap">
                     {col.noSort ? (
-                      <CaminoRouterLink class={['fr-link']} isDisabled={true} title={col.name} to="">
-                        {col.name === '' ? '-' : col.name}
-                      </CaminoRouterLink>
+                      <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
                     ) : sortParams.value.column === col.id ? (
                       <CaminoRouterLink
                         class={['fr-link', 'fr-link--icon-right', sortParams.value.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}

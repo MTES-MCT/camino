@@ -78,9 +78,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
               {props.columns.map(col => (
                 <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                   {col.noSort ? (
-                    <a class={['fr-link']} title={col.name} aria-label={col.name}>
-                      {col.name === '' ? '-' : col.name}
-                    </a>
+                    <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
                   ) : sort.column === col.id ? (
                     <a
                       class={['fr-link', 'fr-link--icon-right', sort.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
