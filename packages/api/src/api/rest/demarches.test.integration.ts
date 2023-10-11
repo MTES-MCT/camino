@@ -6,6 +6,7 @@ import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import type { Pool } from 'pg'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -38,7 +39,7 @@ describe('getDemarche', () => {
         nom: '',
         typeId: 'arm',
         titreStatutId: 'ind',
-        slug: 'arm-slug',
+        slug: titreSlugValidator.parse('arm-slug'),
         propsTitreEtapesIds: {},
       },
       {}

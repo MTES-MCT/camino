@@ -8,6 +8,7 @@ import { HTMLAttributes, defineComponent, ref, Ref, watch } from 'vue'
 import { CheckboxesCaminoFiltres } from './camino-filtres'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { DemarcheStatut } from '../../_common/demarche-statut'
 
 type Props = {
   filter: CheckboxesCaminoFiltres
@@ -40,6 +41,12 @@ function DrawComponent(filter: CheckboxesCaminoFiltres, index: number): JSX.Elem
       return (
         <div class="dsfr">
           <TitreStatutComp titreStatutId={fullFilter.elements[index].id} />
+        </div>
+      )
+    case 'FiltresDemarchesStatuts':
+      return (
+        <div class="dsfr">
+          <DemarcheStatut demarcheStatutId={fullFilter.elements[index].id} />
         </div>
       )
     case 'FiltresLabel':

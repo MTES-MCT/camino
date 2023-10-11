@@ -17,7 +17,7 @@ import { idGenerate, newTitreId } from '../../database/models/_format/id-create.
 import { constants } from 'http2'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId, titreSlugValidator } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -405,7 +405,7 @@ describe('getTitre', () => {
         nom: 'mon nouveau titre',
         typeId: 'arm',
         titreStatutId: 'ind',
-        slug: 'arm-slug',
+        slug: titreSlugValidator.parse('arm-slug'),
         propsTitreEtapesIds: {},
       },
       {}
@@ -417,7 +417,7 @@ describe('getTitre', () => {
     expect(tested.body).toEqual({
       id: titre.id,
       type_id: 'arm',
-      slug: 'arm-slug',
+      slug: titreSlugValidator.parse('arm-slug'),
       nom: 'mon nouveau titre',
       titre_statut_id: 'ind',
       administrations_locales: [],
@@ -428,7 +428,7 @@ describe('getTitre', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
-        slug: 'slug',
+        slug: titreSlugValidator.parse('slug'),
         titreStatutId: 'val',
         propsTitreEtapesIds: {},
       },
@@ -458,7 +458,7 @@ describe('getTitre', () => {
     expect(tested.body).toEqual({
       id: titre.id,
       type_id: 'arm',
-      slug: 'slug',
+      slug: titreSlugValidator.parse('slug'),
       nom: 'mon titre',
       titre_statut_id: 'val',
       administrations_locales: ['aut-97300-01', 'aut-mrae-guyane-01'],
@@ -471,7 +471,7 @@ test('getTitreDate', async () => {
     {
       nom: 'mon autre titre',
       typeId: 'arm',
-      slug: 'slug',
+      slug: titreSlugValidator.parse('slug'),
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
     },
@@ -493,7 +493,7 @@ test('utilisateurTitreAbonner', async () => {
     {
       nom: 'mon autre titre',
       typeId: 'arm',
-      slug: 'slug',
+      slug: titreSlugValidator.parse('slug'),
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
     },

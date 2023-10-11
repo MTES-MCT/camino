@@ -127,7 +127,7 @@ export const svgDomaineAnchor = (domaineId: DomaineId): string => {
 }
 
 export type LayerWithTitreId = Layer & { titreId: TitreId }
-export const layersBuild = (titres: TitreWithPoint[], router: Router, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push'>, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
   const listeTitulaires = document.createElement('ul')

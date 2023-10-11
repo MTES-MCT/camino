@@ -19,7 +19,7 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
 
   if (titreEtape.points && titreEtape.points.length) {
     if (fields.geojsonMultiPolygon) {
-      titreEtape.geojsonMultiPolygon = geojsonFeatureMultiPolygon(titreEtape.points) as IGeoJson
+      titreEtape.geojsonMultiPolygon = geojsonFeatureMultiPolygon(titreEtape.points)
     }
 
     if (fields.geojsonPoints) {

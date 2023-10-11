@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { newTitreId } from '../database/models/_format/id-create.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -94,7 +95,7 @@ describe('matrices', () => {
             legalSiren: 'legalSiren1',
           },
         ],
-        slug: 'slug-titre-1',
+        slug: titreSlugValidator.parse('slug-titre-1'),
         communes: [
           {
             id: toCommuneId('97310'),
@@ -111,7 +112,7 @@ describe('matrices', () => {
             legalSiren: 'legalSiren2',
           },
         ],
-        slug: 'slug-titre-2',
+        slug: titreSlugValidator.parse('slug-titre-2'),
         communes: [
           {
             id: toCommuneId('97358'),
@@ -133,7 +134,7 @@ describe('matrices', () => {
             legalSiren: 'legalSiren3',
           },
         ],
-        slug: 'slug-titre-3',
+        slug: titreSlugValidator.parse('slug-titre-3'),
         communes: [
           {
             id: toCommuneId('97311'),

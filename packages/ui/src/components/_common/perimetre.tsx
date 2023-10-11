@@ -27,6 +27,9 @@ const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
   { id: 'points', nom: 'Points', icon: 'list' },
 ]
 
+/**
+ * @deprecated migrate to DsfrPerimetre
+ */
 export const Perimetre = defineComponent<Props>((props: Props) => {
   const isMain = props.isMain ?? false
   const tabId = computed(() => props.tabId ?? 'carte')

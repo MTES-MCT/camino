@@ -14,15 +14,15 @@ import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug, titreSlugValidator } from 'camino-common/src/titres.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
 
-const titreSlugFind = (titre: ITitre) => {
+const titreSlugFind = (titre: ITitre): TitreSlug => {
   const { typeId, nom } = titre
   const demarcheOctroiDateDebut = titreDemarcheOctroiDateDebutFind(titre.demarches)
 
-  return slugify(`${getDomaineId(typeId)}-${getTitreTypeType(typeId)}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`)
+  return titreSlugValidator.parse(slugify(`${getDomaineId(typeId)}-${getTitreTypeType(typeId)}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`))
 }
 
 const titreDemarcheSlugFind = (titreDemarche: ITitreDemarche, titre: ITitre) => {
@@ -106,7 +106,7 @@ const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<Dema
   return hasChanged
 }
 
-export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasChanged: boolean; slug: string }> => {
+export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasChanged: boolean; slug: TitreSlug }> => {
   let slug = titreSlugFind(titre)
   let doublonTitreId: string | null = null
   let hasChanged = false
@@ -115,7 +115,7 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
 
   if (titreWithTheSameSlug?.length > 1 || (titreWithTheSameSlug?.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
     if (!titre.slug?.startsWith(slug)) {
-      slug += `-${idGenerate(8)}`
+      slug = titreSlugValidator.parse(`${slug}-${idGenerate(8)}`)
       doublonTitreId = titreWithTheSameSlug[0].id
     } else {
       slug = titre.slug

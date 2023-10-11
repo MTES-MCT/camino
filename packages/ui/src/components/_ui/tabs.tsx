@@ -2,6 +2,7 @@ import { Ref, defineComponent, nextTick, ref } from 'vue'
 
 import { DsfrIcon } from './dsfrIconSpriteType'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { random } from '../../utils/vue-tsx-utils'
 
 export type Tab<TabId> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
 
@@ -15,9 +16,11 @@ type Props<TabId> = {
 export const Tabs = defineComponent(<TabId,>(props: Props<TabId>) => {
   const currentTab = ref<TabId>(props.initTab) as Ref<TabId>
 
+  const idSuffix = `${(random() * 1000).toFixed()}`
+
   nextTick(() => {
     props.tabs.forEach(tab => {
-      const tabElement = document.getElementById(`tabpanel-${tab.id}-panel`)
+      const tabElement = document.getElementById(`tabpanel-${tab.id}-${idSuffix}-panel`)
       if (tabElement) {
         tabElement.addEventListener('dsfr.disclose', () => {
           currentTab.value = tab.id
@@ -34,13 +37,13 @@ export const Tabs = defineComponent(<TabId,>(props: Props<TabId>) => {
           {props.tabs.map(tab => (
             <li role="presentation">
               <button
-                id={`tabpanel-${tab.id}`}
+                id={`tabpanel-${tab.id}-${idSuffix}`}
                 class={['fr-tabs__tab', tab.icon, 'fr-tabs__tab--icon-left']}
                 tabindex={props.initTab === tab.id ? '0' : '-1'}
                 role="tab"
                 aria-label={tab.title}
                 aria-selected={props.initTab === tab.id ? 'true' : 'false'}
-                aria-controls={`tabpanel-${tab.id}-panel`}
+                aria-controls={`tabpanel-${tab.id}-${idSuffix}-panel`}
               >
                 {tab.title}
               </button>
@@ -49,10 +52,10 @@ export const Tabs = defineComponent(<TabId,>(props: Props<TabId>) => {
         </ul>
         {props.tabs.map(tab => (
           <div
-            id={`tabpanel-${tab.id}-panel`}
+            id={`tabpanel-${tab.id}-${idSuffix}-panel`}
             class={['fr-tabs__panel', tab.id === props.initTab ? 'fr-tabs__panel--selected' : undefined]}
             role="tabpanel"
-            aria-labelledby={`tabpanel-${tab.id}`}
+            aria-labelledby={`tabpanel-${tab.id}-${idSuffix}`}
             tabindex="0"
           >
             {currentTab.value === tab.id ? tab.renderContent() : null}

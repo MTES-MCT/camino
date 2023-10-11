@@ -29,7 +29,7 @@ import { Section, SectionElement } from 'camino-common/src/static/titresTypes_de
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug } from 'camino-common/src/titres.js'
 import { EtapeId } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite'
 
@@ -274,13 +274,13 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-type IGeoJsonProperties = Index<string | number>
+type IGeoJsonProperties = Index<string | number | undefined | null | ITitrePointReference[]>
 
 interface IGeoJson {
   type: string
   geometry?: IGeometry | null
   bbox?: number[] | null
-  properties: IGeoJsonProperties
+  properties: IGeoJsonProperties | null
   features?: IGeoJson[] | null
 }
 
@@ -308,7 +308,7 @@ export interface ITitreTitre {
 
 interface ITitre {
   id: TitreId
-  slug?: string
+  slug?: TitreSlug
   nom: string
   typeId: TitreTypeId
   type?: ITitreType | null

@@ -1,6 +1,6 @@
 import { PureONFDashboard } from './pure-onf-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { CommonTitreONF, titreIdValidator } from 'camino-common/src/titres'
+import { CommonTitreONF, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
 import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
@@ -18,7 +18,7 @@ export default meta
 const onfs: CommonTitreONF[] = [
   {
     id: titreIdValidator.parse('firstId'),
-    slug: 'first-id-slug',
+    slug: titreSlugValidator.parse('first-id-slug'),
     nom: 'first-name',
     titre_statut_id: 'dmi',
     type_id: 'arm',
@@ -35,7 +35,7 @@ const onfs: CommonTitreONF[] = [
   },
   {
     id: titreIdValidator.parse('secondId'),
-    slug: 'second-slug',
+    slug: titreSlugValidator.parse('second-slug'),
     nom: 'Second Nom de titre',
     titre_statut_id: 'dmi',
     type_id: 'arm',
@@ -58,7 +58,7 @@ const onfs: CommonTitreONF[] = [
   },
   {
     id: titreIdValidator.parse('thirdId'),
-    slug: 'third-id-slug',
+    slug: titreSlugValidator.parse('third-id-slug'),
     nom: 'third-name',
     titre_statut_id: 'dmi',
     type_id: 'arm',
@@ -75,7 +75,7 @@ const onfs: CommonTitreONF[] = [
   },
   {
     id: titreIdValidator.parse('fourthId'),
-    slug: 'fourth-slug',
+    slug: titreSlugValidator.parse('fourth-slug'),
     nom: 'Quatrième Nom de titre',
     titre_statut_id: 'dmi',
     type_id: 'arm',

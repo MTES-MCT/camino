@@ -11,6 +11,7 @@ import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
 import { useRouter } from 'vue-router'
 import { ButtonIcon } from '../_ui/button-icon'
 import { titreApiClient } from '../titre/titre-api-client'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   geojson: GeoJsonObject
@@ -37,7 +38,12 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
   }
 
   const bounds = computed(() => {
-    return geojsonLayers.value[0] ? geojsonLayers.value[0].getBounds() : [0, 0]
+    return isNotNullNorUndefined(geojsonLayers.value[0])
+      ? geojsonLayers.value[0].getBounds()
+      : [
+          [0, 0],
+          [0, 0],
+        ]
   })
 
   const geojsonLayers = computed(() => {

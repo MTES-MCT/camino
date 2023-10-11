@@ -70,8 +70,8 @@ export const getDay = (date: CaminoDate): number => {
   return Number(date.substring(8, 10))
 }
 
-export const dateFormat = (date: CaminoDate): CaminoDateFormated => {
-  return `${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated
+export const dateFormat = (date: CaminoDate | null): CaminoDateFormated => {
+  return date === null ? ('' as CaminoDateFormated) : (`${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated)
 }
 
 export const getCurrent = () => toCaminoDate(new Date())

@@ -1,12 +1,12 @@
 import { toCaminoDate, toCaminoAnnee } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CommonTitreAdministration, titreIdValidator } from 'camino-common/src/titres'
+import { CommonTitreAdministration, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
 
 export const titresDreal: CommonTitreAdministration[] = [
   {
     id: titreIdValidator.parse('firstId'),
-    slug: 'first-id-slug',
+    slug: titreSlugValidator.parse('first-id-slug'),
     nom: 'first-name',
     type_id: 'prm',
     titre_statut_id: 'dmi',
@@ -22,7 +22,7 @@ export const titresDreal: CommonTitreAdministration[] = [
   },
   {
     id: titreIdValidator.parse('secondId'),
-    slug: 'second-slug',
+    slug: titreSlugValidator.parse('second-slug'),
     nom: 'Second Nom de titre',
     type_id: 'prm',
     titre_statut_id: 'dmi',
@@ -44,7 +44,7 @@ export const titresDreal: CommonTitreAdministration[] = [
   },
   {
     id: titreIdValidator.parse('thirdId'),
-    slug: 'third-id-slug',
+    slug: titreSlugValidator.parse('third-id-slug'),
     nom: 'third-name',
     type_id: 'prm',
     titre_statut_id: 'dmi',
@@ -60,7 +60,7 @@ export const titresDreal: CommonTitreAdministration[] = [
   },
   {
     id: titreIdValidator.parse('fourthId'),
-    slug: 'fourth-slug',
+    slug: titreSlugValidator.parse('fourth-slug'),
     nom: 'Quatrième Nom de titre',
     type_id: 'arc',
     titre_statut_id: 'dmi',

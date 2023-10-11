@@ -10,10 +10,13 @@ import { activiteValidator } from './activite.js'
 export const titreIdValidator = z.string().brand<'TitreId'>()
 export type TitreId = z.infer<typeof titreIdValidator>
 
+export const titreSlugValidator = z.string().brand<'TitreSlug'>()
+export type TitreSlug = z.infer<typeof titreSlugValidator>
+
 export const commonTitreValidator = z.object({
   id: titreIdValidator,
   nom: z.string(),
-  slug: z.string(),
+  slug: titreSlugValidator,
   type_id: titreTypeIdValidator,
   titre_statut_id: titreStatutIdValidator,
   administrations_locales: z.array(administrationIdValidator.brand('administrationLocale')),

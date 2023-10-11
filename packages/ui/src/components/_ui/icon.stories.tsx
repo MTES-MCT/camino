@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Icon } from './icon'
+import { Icon, DsfrIcon } from './icon'
 import { icons } from './iconSpriteType'
+import { icons as dsfrIcons } from './dsfrIconSpriteType'
 import { IconSprite } from '@/components/_ui/iconSprite'
 
 const meta: Meta = {
@@ -49,5 +50,30 @@ export const AllIcons: StoryFn = () => (
         </tr>
       ))}
     </table>
+  </div>
+)
+
+export const AllDsfrIcons: StoryFn = () => (
+  <div style="height:100%;width:100%;background:white" class="dsfr">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Component</th>
+      </tr>
+      {dsfrIcons.map(iconName => (
+        <tr>
+          <td>{iconName}</td>
+          <td>
+            <DsfrIcon name={`fr-icon-${iconName}`} />
+          </td>
+        </tr>
+      ))}
+    </table>
+  </div>
+)
+
+export const DsfrIconColor: StoryFn = () => (
+  <div class="dsfr">
+    <DsfrIcon name={`fr-icon-calendar-2-fill`} color="text-title-blue-france" />
   </div>
 )

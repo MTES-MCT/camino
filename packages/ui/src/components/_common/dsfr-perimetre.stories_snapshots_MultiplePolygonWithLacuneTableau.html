@@ -1,0 +1,463 @@
+<div style="display: none;" aria-hidden="true">
+  <div id="domaine_m">
+    <p class="fr-tag fr-tag--md mono" title="Domaine minéraux et métaux" aria-label="Domaine minéraux et métaux" style="min-width: 2rem; color: black;">M</p>
+  </div>
+  <div id="domaine_c">
+    <p class="fr-tag fr-tag--md mono" title="Domaine carrières" aria-label="Domaine carrières" style="min-width: 2rem; color: black;">C</p>
+  </div>
+  <div id="domaine_f">
+    <p class="fr-tag fr-tag--md mono" title="Domaine combustibles fossiles" aria-label="Domaine combustibles fossiles" style="min-width: 2rem; color: black;">F</p>
+  </div>
+  <div id="domaine_g">
+    <p class="fr-tag fr-tag--md mono" title="Domaine géothermie" aria-label="Domaine géothermie" style="min-width: 2rem; color: black;">G</p>
+  </div>
+  <div id="domaine_h">
+    <p class="fr-tag fr-tag--md mono" title="Domaine hydrocarbures liquides ou gazeux" aria-label="Domaine hydrocarbures liquides ou gazeux" style="min-width: 2rem; color: black;">H</p>
+  </div>
+  <div id="domaine_r">
+    <p class="fr-tag fr-tag--md mono" title="Domaine éléments radioactifs" aria-label="Domaine éléments radioactifs" style="min-width: 2rem; color: black;">R</p>
+  </div>
+  <div id="domaine_s">
+    <p class="fr-tag fr-tag--md mono" title="Domaine stockages souterrains" aria-label="Domaine stockages souterrains" style="min-width: 2rem; color: black;">S</p>
+  </div>
+  <div id="domaine_w">
+    <p class="fr-tag fr-tag--md mono" title="Domaine granulats marins" aria-label="Domaine granulats marins" style="min-width: 2rem; color: black;">W</p>
+  </div>
+  <div id="titre_statut_dmc">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="demande classée" aria-label="demande classée">demande classée</p>
+  </div>
+  <div id="titre_statut_dmi">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--orange-terre-battue" title="demande initiale" aria-label="demande initiale">demande initiale</p>
+  </div>
+  <div id="titre_statut_ech">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p>
+  </div>
+  <div id="titre_statut_ind">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="indéterminé" aria-label="indéterminé">indéterminé</p>
+  </div>
+  <div id="titre_statut_mod">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - modification en instance" aria-label="valide - modification en instance">valide - modification en instance</p>
+  </div>
+  <div id="titre_statut_sup">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide - survie provisoire" aria-label="valide - survie provisoire">valide - survie provisoire</p>
+  </div>
+  <div id="titre_statut_val">
+    <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--green-bourgeon" title="valide" aria-label="valide">valide</p>
+  </div>
+</div>
+<svg class="absolute z--100">
+  <defs>
+    <g>
+      <g>
+        <pattern id="pattern-ap-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-m" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-c" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-f" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-g" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-h" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-r" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-s" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke-domaine-w" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ap" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M-1,4 l2,0 M6,4 l2,0" class="svg-stroke" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-ar-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-m" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-c" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-f" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-g" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-h" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-r" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-s" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke-domaine-w" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ar" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M1,4 l4,0 M3,2 l0,4" class="svg-stroke" stroke-width="2" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-ax-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-ax" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-cx-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-cx" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-in-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-m" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-c" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-f" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-g" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-h" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-r" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-s" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke-domaine-w" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-in" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+          <path d="M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0" class="svg-stroke" stroke-width="1" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-pc-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pc" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(90)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-pr-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-pr" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+          <path d="M4,4 l0,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+    <g>
+      <g>
+        <pattern id="pattern-px-m" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-m" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-c" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-c" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-f" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-f" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-g" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-g" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-h" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-h" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-r" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-r" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-s" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-s" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px-w" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke-domaine-w" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+        <pattern id="pattern-px" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(135)">
+          <path d="M0,0 l8,0 M0,8 l8,0" class="svg-stroke" stroke-width="5" stroke-linecap="round" fill="none"></path>
+        </pattern>
+      </g>
+    </g>
+  </defs>
+</svg>
+<div class="dsfr">
+  <div class="fr-tabs">
+    <ul class="fr-tabs__list" role="tablist" aria-label="Affichage des titres en vue carte ou tableau">
+      <li role="presentation"><button id="tabpanel-carte-271" class="fr-tabs__tab fr-icon-earth-fill fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-label="Carte" aria-selected="false" aria-controls="tabpanel-carte-271-panel">Carte</button></li>
+      <li role="presentation"><button id="tabpanel-points-271" class="fr-tabs__tab fr-icon-list-unordered fr-tabs__tab--icon-left" tabindex="0" role="tab" aria-label="Tableau" aria-selected="true" aria-controls="tabpanel-points-271-panel">Tableau</button></li>
+    </ul>
+    <div id="tabpanel-carte-271-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-carte-271" tabindex="0">
+      <!---->
+    </div>
+    <div id="tabpanel-points-271-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-points-271" tabindex="0">
+      <div class="dsfr">
+        <div class="fr-table">
+          <table style="display: table;">
+            <caption></caption>
+            <thead>
+              <tr>
+                <th scope="col" class="nowrap">
+                  <div class="fr-text--md">Polygone</div>
+                </th>
+                <th scope="col" class="nowrap">
+                  <div class="fr-text--md">Référentiel WGS 84</div>
+                </th>
+                <th scope="col" class="nowrap">
+                  <div class="fr-text--md">Latitude</div>
+                </th>
+                <th scope="col" class="nowrap">
+                  <div class="fr-text--md">Longitude</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class=""><span class="">...</span></td>
+                <td class=""><span class="">...</span></td>
+                <td class=""><span class="">...</span></td>
+                <td class=""><span class="">...</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 5</span></td>
+                <td class=""><span class="">20</span></td>
+                <td class=""><span class="">-52.54</span></td>
+                <td class=""><span class="">4.22269896902571</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 4</span></td>
+                <td class=""><span class="">19</span></td>
+                <td class=""><span class="">-53.57989914401643</span></td>
+                <td class=""><span class="">3.8480725119510217</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 4</span></td>
+                <td class=""><span class="">18</span></td>
+                <td class=""><span class="">-53.588417035915334</span></td>
+                <td class=""><span class="">3.8321501920354253</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 4</span></td>
+                <td class=""><span class="">17</span></td>
+                <td class=""><span class="">-53.592379712320195</span></td>
+                <td class=""><span class="">3.834289122043602</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 4</span></td>
+                <td class=""><span class="">16</span></td>
+                <td class=""><span class="">-53.583861926103765</span></td>
+                <td class=""><span class="">3.8502114455117433</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 3</span></td>
+                <td class=""><span class="">15</span></td>
+                <td class=""><span class="">-53.58320964990986</span></td>
+                <td class=""><span class="">3.828093576227541</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 3</span></td>
+                <td class=""><span class="">14</span></td>
+                <td class=""><span class="">-53.58181205656814</span></td>
+                <td class=""><span class="">3.82379854768971</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 3</span></td>
+                <td class=""><span class="">13</span></td>
+                <td class=""><span class="">-53.59891645305842</span></td>
+                <td class=""><span class="">3.8181831495446303</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 3</span></td>
+                <td class=""><span class="">12</span></td>
+                <td class=""><span class="">-53.60031408473134</span></td>
+                <td class=""><span class="">3.8224780986447566</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 2</span></td>
+                <td class=""><span class="">11</span></td>
+                <td class=""><span class="">-53.57281257175149</span></td>
+                <td class=""><span class="">3.8309926670647294</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 2</span></td>
+                <td class=""><span class="">10</span></td>
+                <td class=""><span class="">-53.572785590706495</span></td>
+                <td class=""><span class="">3.82195493825841</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 2</span></td>
+                <td class=""><span class="">9</span></td>
+                <td class=""><span class="">-53.58178306390299</span></td>
+                <td class=""><span class="">3.8219278216269807</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 2</span></td>
+                <td class=""><span class="">8</span></td>
+                <td class=""><span class="">-53.58181013905019</span></td>
+                <td class=""><span class="">3.8309654861273</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1 - Lacune 1</span></td>
+                <td class=""><span class="">7</span></td>
+                <td class=""><span class="">-52.561</span></td>
+                <td class=""><span class="">4.236</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1 - Lacune 1</span></td>
+                <td class=""><span class="">6</span></td>
+                <td class=""><span class="">-52.5591878553913</span></td>
+                <td class=""><span class="">4.227</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1 - Lacune 1</span></td>
+                <td class=""><span class="">5</span></td>
+                <td class=""><span class="">-52.563</span></td>
+                <td class=""><span class="">4.236</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1</span></td>
+                <td class=""><span class="">4</span></td>
+                <td class=""><span class="">-52.5619271168799</span></td>
+                <td class=""><span class="">4.24113309117193</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1</span></td>
+                <td class=""><span class="">3</span></td>
+                <td class=""><span class="">-52.5550566725882</span></td>
+                <td class=""><span class="">4.22438936251509</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1</span></td>
+                <td class=""><span class="">2</span></td>
+                <td class=""><span class="">-52.5591878553913</span></td>
+                <td class=""><span class="">4.22269896902571</span></td>
+              </tr>
+              <tr>
+                <td class=""><span class="">Polygone 1</span></td>
+                <td class=""><span class="">1</span></td>
+                <td class=""><span class="">-52.5660583466962</span></td>
+                <td class=""><span class="">4.23944263425535</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

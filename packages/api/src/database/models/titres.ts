@@ -11,6 +11,7 @@ import { idGenerate } from './_format/id-create.js'
 import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -138,7 +139,7 @@ class Titres extends Model {
     }
 
     if (!this.slug && this.typeId && this.nom) {
-      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`
+      this.slug = titreSlugValidator.parse(`${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`)
     }
 
     return super.$beforeInsert(context)

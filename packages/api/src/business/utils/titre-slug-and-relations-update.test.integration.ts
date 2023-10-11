@@ -6,6 +6,7 @@ import { ITitre } from '../../types.js'
 import Titres from '../../database/models/titres.js'
 import { objectClone } from '../../tools/index.js'
 import { expect, test, describe, afterAll, beforeAll } from 'vitest'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 beforeAll(async () => {
   await dbManager.populateDb()
 })
@@ -94,7 +95,7 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     let titre = await titreAdd(objectClone(titrePojo))
     const { slug: firstSlug } = await titreSlugAndRelationsUpdate(titre)
-    titre = await titreAdd({ ...titrePojo, slug: `${firstSlug}-123123` })
+    titre = await titreAdd({ ...titrePojo, slug: titreSlugValidator.parse(`${firstSlug}-123123`) })
 
     const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(titre)
     expect(hasChanged).toEqual(false)

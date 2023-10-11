@@ -33,11 +33,11 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   if (isNullOrUndefined(fields)) return t
 
   if (isNotNullNorUndefined(fields.geojsonMultiPolygon) && t.points?.length) {
-    t.geojsonMultiPolygon = geojsonFeatureMultiPolygon(t.points) as IGeoJson
+    t.geojsonMultiPolygon = geojsonFeatureMultiPolygon(t.points)
   }
 
   if (fields.geojsonPoints && t.points?.length) {
-    t.geojsonPoints = geojsonFeatureCollectionPoints(t.points) as unknown as IGeoJson
+    t.geojsonPoints = geojsonFeatureCollectionPoints(t.points) as IGeoJson
   }
 
   if (fields.geojsonCentre && t.coordonnees && t.propsTitreEtapesIds.points) {

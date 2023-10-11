@@ -31,6 +31,11 @@ const Travaux = async () => {
   return Travaux
 }
 
+const Demarche = async () => {
+  const { Demarche } = await import('../components/demarche')
+  return Demarche
+}
+
 const Etape = async () => {
   const { Etape } = await import('../components/etape')
   return Etape
@@ -184,6 +189,15 @@ const routes = [
     meta: {
       title: 'Liste des travaux',
       menuSection: 'travaux',
+    },
+  },
+  {
+    path: '/demarches/:demarcheId',
+    name: 'demarche',
+    component: Demarche,
+    meta: {
+      title: "Détail d'une démarche",
+      menuSection: 'demarches',
     },
   },
   {
