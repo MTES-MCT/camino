@@ -1,9 +1,4 @@
 ---
-- name: Ajout utilisateurs
-  include_tasks: "devs.yml"
-  loop: "{{ users }}"
-  loop_control:
-    loop_var: camino_dev
 - name: ajoute le groupe "git"
   ansible.builtin.group:
     name: git
@@ -14,10 +9,16 @@
   ansible.builtin.user:
     name: git
     comment: Git
+    shell: "/bin/bash"
     # L'UID doit être le même que dans le Dockerfile.api
     uid: "{{ git_user_uid }}"
     groups: git, users, docker
   become: True
+- name: Ajout utilisateurs
+  include_tasks: "devs.yml"
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: camino_dev
 - file:
     path: /srv/www/camino/files
     group: users
@@ -25,4 +26,11 @@
     recurse: True
     owner: git
     mode: u=rwx,g=rwx,o=r
+  become: True
+- name: supprime l'utilisateur debian
+  ansible.builtin.user:
+    name: debian
+    state: absent
+    remove: True
+    force: True
   become: True

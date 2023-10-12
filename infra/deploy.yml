@@ -5,8 +5,8 @@
   roles:
     - role: swap
       when: ansible_swaptotal_mb < 1
-    - role: init
     - role: user
+    - role: init
     - role: nginx
     - role: camino
     - role: devAndPreprod

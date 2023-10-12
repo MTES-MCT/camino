@@ -7,12 +7,6 @@
     owner: git
     group: users
   become: True
-- name: Donne les droits du dossier de backup à l'utilisateur "git"
-  file:
-    path: /srv/backups
-    owner: git
-    group: users
-  become: True
 - name: Ajoute le job de restauration du backup de la prod
   ansible.builtin.cron:
     name: "backup"

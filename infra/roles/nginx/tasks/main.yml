@@ -1,4 +1,11 @@
 ---
+- file:
+    path: /srv/www/nginx-proxy
+    group: users
+    state: directory
+    owner: git
+    mode: u=rwx,g=rwx,o=r
+  become: True
 - name: Met en place le docker-compose
   ansible.builtin.copy:
     src: docker-compose.yml
@@ -16,16 +23,15 @@
     mode: u=rw,g=r,o=r
   become: True
 
-- name: Install python-pip
-  ansible.builtin.apt:
-    name: python3-pip
-    state: present
-  become: True
 - name: Install docker support for python
-  ansible.builtin.pip:
-    name:
-      - docker
-      - docker-compose
+  ansible.builtin.apt:
+    name: python3-docker
+  become: True
+- name: Create a network
+  community.docker.docker_network:
+    name: nginx-proxy
+# TODO 2023-10-12 https://github.com/ansible-collections/community.docker/issues/672
 - name: Create and start services
-  community.docker.docker_compose:
-    project_src: /srv/www/nginx-proxy
+  shell:
+    chdir: /srv/www/nginx-proxy
+    cmd: "docker-compose up -d"

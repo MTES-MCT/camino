@@ -7,6 +7,30 @@
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
+- name: Donne les bons droits sur le dossier backups
+  ansible.builtin.file:
+    path: /srv/backups
+    state: directory
+    owner: git
+    group: users
+    mode: u=rwx,g=rwx,o=rx
+  become: True
+- name: Donne les bons droits sur le dossier dump
+  ansible.builtin.file:
+    path: /srv/backups/dump
+    state: directory
+    owner: git
+    group: users
+    mode: u=rwx,g=rwx,o=rx
+  become: True
+- name: Donne les bons droits sur le dossier files
+  ansible.builtin.file:
+    path: /srv/backups/files
+    state: directory
+    owner: git
+    group: users
+    mode: u=rwx,g=rwx,o=rx
+  become: True
 - name: Met en place le docker-compose
   ansible.builtin.copy:
     src: ../../../../docker-compose.yml
