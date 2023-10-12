@@ -2,6 +2,16 @@
 hide circle
 skinparam linetype ortho
 
+entity "**activites_documents**" {
+  + ""id"": //character varying(255) [PK]//
+  --
+  *""activite_document_type_id"": //character varying(3) //
+  *""date"": //character varying(10) //
+  ""activite_id"": //character varying(255) [FK]//
+  ""description"": //character varying(1024) //
+  *""largeobject_id"": //oid //
+}
+
 entity "**activites_types**" {
   + ""id"": //character varying(3) [PK]//
   --
@@ -13,36 +23,9 @@ entity "**activites_types**" {
   ""description"": //text //
 }
 
-entity "**activites_types__documents_types**" {
-  + ""activite_type_id"": //character varying(3) [PK][FK]//
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""optionnel"": //boolean //
-}
-
-entity "**activites_types__pays**" {
-  + ""pays_id"": //character varying(3) [PK]//
-  + ""activite_type_id"": //character varying(3) [PK][FK]//
-  --
-}
-
-entity "**activites_types__titres_types**" {
-  + ""titre_type_id"": //character varying(3) [PK][FK]//
-  + ""activite_type_id"": //character varying(3) [PK][FK]//
-  --
-}
-
 entity "**administrations**" {
   + ""id"": //character varying(64) [PK]//
   --
-}
-
-entity "**administrations__activites_types**" {
-  --
-  *""activite_type_id"": //character varying(3) [FK]//
-  *""administration_id"": //character varying(64) [FK]//
-  ""modification_interdit"": //boolean //
-  ""lecture_interdit"": //boolean //
 }
 
 entity "**administrations__activites_types__emails**" {
@@ -91,16 +74,10 @@ entity "**documents**" {
   --
   *""type_id"": //character varying(3) [FK]//
   *""date"": //character varying(10) //
-  ""entreprise_id"": //character varying(64) [FK]//
   ""titre_etape_id"": //character varying(128) [FK]//
   *""description"": //character varying(1024) //
-  ""titre_activite_id"": //character varying(128) [FK]//
   ""fichier"": //boolean //
   ""fichier_type_id"": //character varying(3) //
-  ""url"": //character varying(1024) //
-  ""uri"": //character varying(1024) //
-  ""jorf"": //character varying(32) //
-  ""nor"": //character varying(32) //
   ""public_lecture"": //boolean //
   ""entreprises_lecture"": //boolean //
 }
@@ -138,6 +115,16 @@ entity "**entreprises**" {
   ""email"": //character varying(255) //
   ""telephone"": //character varying(255) //
   ""archive"": //boolean //
+}
+
+entity "**entreprises_documents**" {
+  + ""id"": //character varying(255) [PK]//
+  --
+  *""entreprise_document_type_id"": //character varying(3) //
+  *""date"": //character varying(10) //
+  ""entreprise_id"": //character varying(64) [FK]//
+  ""description"": //character varying(1024) //
+  *""largeobject_id"": //oid //
 }
 
 entity "**entreprises_etablissements**" {
@@ -250,10 +237,10 @@ entity "**titres_activites**" {
   *""type_id"": //character varying(3) [FK]//
   *""activite_statut_id"": //character varying(3) //
   *""annee"": //integer //
-  ""periode_id"": //integer //
-  ""sections"": //jsonb[] //
-  ""suppression"": //boolean //
-  ""slug"": //character varying(255) //
+  *""periode_id"": //integer //
+  *""sections"": //jsonb[] //
+  *""suppression"": //boolean //
+  *""slug"": //character varying(255) //
 }
 
 entity "**titres_amodiataires**" {
@@ -307,9 +294,9 @@ entity "**titres_etapes**" {
   *""communes"": //jsonb //
 }
 
-entity "**titres_etapes_justificatifs**" {
+entity "**titres_etapes_entreprises_documents**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""document_id"": //character varying(255) [PK][FK]//
+  + ""entreprise_document_id"": //character varying(255) [PK][FK]//
   --
 }
 
@@ -396,29 +383,7 @@ entity "**utilisateurs__titres**" {
   --
 }
 
-"**activites_types__documents_types**"   }--  "**activites_types**"
-
-"**activites_types__documents_types**"   }--  "**activites_types**"
-
-"**activites_types__documents_types**"   }--  "**documents_types**"
-
-"**activites_types__documents_types**"   }--  "**documents_types**"
-
-"**activites_types__pays**"   }--  "**activites_types**"
-
-"**activites_types__pays**"   }--  "**activites_types**"
-
-"**activites_types__titres_types**"   }--  "**activites_types**"
-
-"**activites_types__titres_types**"   }--  "**activites_types**"
-
-"**activites_types__titres_types**"   }--  "**titres_types**"
-
-"**activites_types__titres_types**"   }--  "**titres_types**"
-
-"**administrations__activites_types**"   }--  "**activites_types**"
-
-"**administrations__activites_types**"   }--  "**administrations**"
+"**activites_documents**"   }--  "**titres_activites**"
 
 "**administrations__activites_types__emails**"   }--  "**activites_types**"
 
@@ -427,14 +392,12 @@ entity "**utilisateurs__titres**" {
 "**administrations__activites_types__emails**"   }--  "**administrations**"
 
 "**administrations__activites_types__emails**"   }--  "**administrations**"
-
-"**documents**"   }--  "**entreprises**"
-
-"**documents**"   }--  "**titres_activites**"
 
 "**documents**"   }--  "**titres_etapes**"
 
 "**documents**"   }--  "**documents_types**"
+
+"**entreprises_documents**"   }--  "**entreprises**"
 
 "**entreprises_etablissements**"   }--  "**entreprises**"
 
@@ -472,13 +435,13 @@ entity "**utilisateurs__titres**" {
 
 "**titres_etapes**"   }--  "**etapes_types**"
 
-"**titres_etapes_justificatifs**"   }--  "**documents**"
+"**titres_etapes_entreprises_documents**"   }--  "**entreprises_documents**"
 
-"**titres_etapes_justificatifs**"   }--  "**documents**"
+"**titres_etapes_entreprises_documents**"   }--  "**entreprises_documents**"
 
-"**titres_etapes_justificatifs**"   }--  "**titres_etapes**"
+"**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
 
-"**titres_etapes_justificatifs**"   }--  "**titres_etapes**"
+"**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
 
 "**titres_points**"   }--  "**titres_etapes**"
 
