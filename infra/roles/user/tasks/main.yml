@@ -5,6 +5,11 @@
     state: present
     gid: "{{ git_user_uid }}"
   become: True
+- name: ajoute le groupe "docker"
+  ansible.builtin.group:
+    name: docker
+    state: present
+  become: True
 - name: ajoute l'utilisateur 'git'
   ansible.builtin.user:
     name: git

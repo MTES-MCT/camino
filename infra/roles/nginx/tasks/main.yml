@@ -16,8 +16,8 @@
   become: True
 - name: Ajoute le fichier de template nginx
   ansible.builtin.copy:
-    src: nginx.tmpl
-    dest: /srv/www/nginx-proxy/nginx.tmpl
+    src: proxy.conf
+    dest: /srv/www/nginx-proxy/proxy.conf
     owner: git
     group: users
     mode: u=rw,g=r,o=r
