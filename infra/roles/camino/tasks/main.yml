@@ -78,6 +78,8 @@
     delete: True
     times: False
     perms: False
+    rsync_opts:
+      - "--chown=git:users"
 - name: Donne les bons droits au dossier du theme keycloak
   ansible.builtin.file:
     path: /srv/www/camino/keycloak_theme
@@ -87,6 +89,26 @@
     mode: u=rwx,g=rwx,o=rx
     recurse: True
   become: True
+- name: Restauration des backups
+  block:
+    - name: Ajoute le script pour pouvoir mettre les données de production sur cet environnement
+      template:
+        src: restore-last-backup
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+    - name: Ajoute le job de restauration du backup de la prod
+      ansible.builtin.cron:
+        name: "backup"
+        minute: "0"
+        hour: "6"
+        weekday: "0"
+        job: "/srv/scripts/restore-last-backup"
+        user: git
+      become: True
+      when: env == 'dev'
 - name: Daily
   block:
     - name: Ajoute le script pour pouvoir lancer le daily

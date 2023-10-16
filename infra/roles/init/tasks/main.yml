@@ -3,6 +3,10 @@
   ansible.builtin.hostname:
     name: "camino-{{ env }}"
   become: True
+- name: Set timezone to Europe/Paris
+  community.general.timezone:
+    name: Europe/Paris
+  become: True
 - name: Upgrade machine
   ansible.builtin.apt:
     upgrade: safe

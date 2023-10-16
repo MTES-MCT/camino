@@ -9,8 +9,6 @@
     - role: init
     - role: nginx
     - role: camino
-    - role: devAndPreprod
-      when: env != 'prod'
     - role: prod
       when: env == 'prod'
 
