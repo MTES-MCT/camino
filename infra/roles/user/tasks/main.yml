@@ -3,6 +3,7 @@
   ansible.builtin.group:
     name: git
     state: present
+    # Le GID doit être le même que dans le Dockerfile.api
     gid: "{{ git_user_uid }}"
   become: True
 - name: ajoute le groupe "docker"

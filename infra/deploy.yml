@@ -1,6 +1,7 @@
 ---
 - hosts: servers
   vars:
+    # L'UID doit être le même que dans le Dockerfile.api
     git_user_uid: 1002
   roles:
     - role: swap
