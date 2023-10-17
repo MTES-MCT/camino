@@ -1,24 +1,24 @@
 ---
-- name: ajoute le groupe "git"
+- name: ajoute le groupe "camino"
   ansible.builtin.group:
-    name: git
+    name: camino
     state: present
     # Le GID doit être le même que dans le Dockerfile.api
-    gid: "{{ git_user_gid }}"
+    gid: "{{ camino_user_gid }}"
   become: True
 - name: ajoute le groupe "docker"
   ansible.builtin.group:
     name: docker
     state: present
   become: True
-- name: ajoute l'utilisateur 'git'
+- name: ajoute l'utilisateur 'camino'
   ansible.builtin.user:
-    name: git
-    comment: Git
+    name: camino
+    comment: Camino
     shell: "/bin/bash"
     # L'UID doit être le même que dans le Dockerfile.api
-    uid: "{{ git_user_uid }}"
-    groups: git, users, docker
+    uid: "{{ camino_user_uid }}"
+    groups: camino, users, docker
   become: True
 - name: Ajout utilisateurs
   include_tasks: "devs.yml"
@@ -30,7 +30,7 @@
     group: users
     state: directory
     recurse: True
-    owner: git
+    owner: camino
     mode: u=rwx,g=rwx,o=r
   become: True
 - name: supprime l'utilisateur debian

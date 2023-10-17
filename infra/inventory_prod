@@ -3,5 +3,4 @@ camino.beta.gouv.fr
 
 [servers:vars]
 env=prod
-ansible_port=212
 ansible_python_interpreter=/usr/bin/python3

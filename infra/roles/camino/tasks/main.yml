@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: /srv/www/camino/
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
@@ -11,7 +11,7 @@
   ansible.builtin.file:
     path: /srv/backups
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
@@ -19,7 +19,7 @@
   ansible.builtin.file:
     path: /srv/backups/dump
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
@@ -27,7 +27,7 @@
   ansible.builtin.file:
     path: /srv/backups/files
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
@@ -35,7 +35,7 @@
   ansible.builtin.copy:
     src: ../../../../docker-compose.yml
     dest: /srv/www/camino/docker-compose.yml
-    owner: git
+    owner: camino
     group: users
     mode: u=rw,g=r,o=r
   become: True
@@ -44,7 +44,7 @@
     src: env
     dest: /srv/www/camino/.env
     mode: u=rw,g=r,o=r
-    owner: git
+    owner: camino
     group: users
   become: True
 - name: Installe le jar keycloak france connect
@@ -52,7 +52,7 @@
     src: keycloak-franceconnect-6.0.0.jar
     dest: /srv/www/camino/keycloak-franceconnect-6.0.0.jar
     mode: u=rwx,g=rw,o=r
-    owner: git
+    owner: camino
     group: users
   become: True
 - name: Installe le jar keycloak bcrypt
@@ -60,14 +60,14 @@
     src: keycloak-bcrypt-1.6.0.jar
     dest: /srv/www/camino/keycloak-bcrypt-1.6.0.jar
     mode: u=rwx,g=rw,o=r
-    owner: git
+    owner: camino
     group: users
   become: True
 - name: Crée le dossier pour le theme keycloak
   ansible.builtin.file:
     path: /srv/www/camino/keycloak_theme
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
   become: True
@@ -79,12 +79,12 @@
     times: False
     perms: False
     rsync_opts:
-      - "--chown=git:users"
+      - "--chown=camino:users"
 - name: Donne les bons droits au dossier du theme keycloak
   ansible.builtin.file:
     path: /srv/www/camino/keycloak_theme
     state: directory
-    owner: git
+    owner: camino
     group: users
     mode: u=rwx,g=rwx,o=rx
     recurse: True
@@ -96,7 +96,7 @@
         src: restore-last-backup
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
     - name: Ajoute le job de restauration du backup de la prod
@@ -106,7 +106,7 @@
         hour: "6"
         weekday: "0"
         job: "/srv/scripts/restore-last-backup"
-        user: git
+        user: camino
       become: True
       when: env == 'dev'
 - name: Daily
@@ -116,7 +116,7 @@
         src: daily
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
     - name: Ajoute le cron de daily
@@ -125,7 +125,7 @@
         minute: "0"
         hour: "4"
         job: "/srv/scripts/daily"
-        user: git
+        user: camino
       become: True
 - name: Monthly
   block:
@@ -134,7 +134,7 @@
         src: monthly
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
     - name: Ajoute le cron de monthly
@@ -144,7 +144,7 @@
         hour: "6"
         day: "1"
         job: "/srv/scripts/monthly"
-        user: git
+        user: camino
       become: True
 - name: Ajoute le cron de nettoyage
   ansible.builtin.cron:
@@ -152,7 +152,7 @@
     minute: "0"
     hour: "5"
     job: "rm -rf /srv/www/camino/files/downloads/*"
-    user: git
+    user: camino
   become: True
 - name: Continuous deployment
   block:
@@ -165,7 +165,7 @@
       ansible.builtin.file:
         path: /srv/www/cd
         state: directory
-        owner: git
+        owner: camino
         group: users
         mode: u=rwx,g=rwx,o=r
       become: True
@@ -173,7 +173,7 @@
       ansible.builtin.copy:
         src: ../../cd/target/x86_64-unknown-linux-gnu/release/cd
         dest: /srv/www/cd/cd
-        owner: git
+        owner: camino
         group: users
         mode: u=rwx,g=rwx,o=rx
       become: True

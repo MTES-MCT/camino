@@ -3,14 +3,14 @@
     path: /srv/www/nginx-proxy
     group: users
     state: directory
-    owner: git
+    owner: camino
     mode: u=rwx,g=rwx,o=r
   become: True
 - name: Met en place le docker-compose
   ansible.builtin.copy:
     src: docker-compose.yml
     dest: /srv/www/nginx-proxy/docker-compose.yml
-    owner: git
+    owner: camino
     group: users
     mode: u=rw,g=r,o=r
   become: True
@@ -18,7 +18,7 @@
   ansible.builtin.copy:
     src: proxy.conf
     dest: /srv/www/nginx-proxy/proxy.conf
-    owner: git
+    owner: camino
     group: users
     mode: u=rw,g=r,o=r
   become: True

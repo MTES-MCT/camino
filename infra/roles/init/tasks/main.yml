@@ -61,7 +61,7 @@
     checksum: sha256:1178848502b0771b96895febeb4b1736acd5019c4ed71a8efbabf6915185fe8a
     dest: /usr/local/bin/docker-compose
     mode: u=rwx,g=rx,o=rx
-    owner: git
+    owner: camino
     group: users
   become: True
 - name: Ajoute les variables liées au bon environnement
@@ -82,6 +82,6 @@
         src: restic_data
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
