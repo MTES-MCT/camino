@@ -40,3 +40,39 @@
     remove: True
     force: True
   become: True
+- name: Configure le serveur ssh
+  block:
+    - name: Empêche ssh de charger des configurations dans des sous-fichiers
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^Include '
+        line: '#Include /etc/ssh/sshd_config.d/*.conf'
+      become: True
+      notify: Restart SSH
+    - name: Empêche le forwarding de x11
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^X11Forwarding'
+        line: 'X11Forwarding no'
+      become: True
+      notify: Restart SSH
+    - name: Empêche le login par mot de passe
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+      become: True
+      notify: Restart SSH
+    - name: Empêche le login de l'utilisateur root
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+      become: True
+      notify: Restart SSH
+    - name: Supprime les configurations extra de ssh
+      file:
+        state: absent
+        path: /etc/ssh/sshd_config.d
+      become: True
+      notify: Restart SSH
