@@ -3,6 +3,8 @@
   vars:
     # L'UID doit être le même que dans le Dockerfile.api
     git_user_uid: 1002
+    # Le GID doit être le même que dans le Dockerfile.api
+    git_user_gid: 1002
   roles:
     - role: swap
       when: ansible_swaptotal_mb < 1
