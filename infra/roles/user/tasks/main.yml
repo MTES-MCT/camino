@@ -1,28 +1,42 @@
 ---
+- name: ajoute le groupe "camino"
+  ansible.builtin.group:
+    name: camino
+    state: present
+    # Le GID doit être le même que dans le Dockerfile.api
+    gid: "{{ camino_user_gid }}"
+  become: True
+- name: ajoute le groupe "docker"
+  ansible.builtin.group:
+    name: docker
+    state: present
+  become: True
+- name: ajoute l'utilisateur 'camino'
+  ansible.builtin.user:
+    name: camino
+    comment: Camino
+    shell: "/bin/bash"
+    # L'UID doit être le même que dans le Dockerfile.api
+    uid: "{{ camino_user_uid }}"
+    groups: camino, users, docker
+  become: True
 - name: Ajout utilisateurs
   include_tasks: "devs.yml"
   loop: "{{ users }}"
   loop_control:
     loop_var: camino_dev
-- name: ajoute le groupe "git"
-  ansible.builtin.group:
-    name: git
-    state: present
-    gid: "{{ git_user_uid }}"
-  become: True
-- name: ajoute l'utilisateur 'git'
-  ansible.builtin.user:
-    name: git
-    comment: Git
-    # L'UID doit être le même que dans le Dockerfile.api
-    uid: "{{ git_user_uid }}"
-    groups: git, users, docker
-  become: True
 - file:
     path: /srv/www/camino/files
     group: users
     state: directory
     recurse: True
-    owner: git
+    owner: camino
     mode: u=rwx,g=rwx,o=r
+  become: True
+- name: supprime l'utilisateur debian
+  ansible.builtin.user:
+    name: debian
+    state: absent
+    remove: True
+    force: True
   become: True

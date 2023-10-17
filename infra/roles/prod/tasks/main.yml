@@ -4,7 +4,7 @@
     src: backup
     dest: /srv/scripts/
     mode: u=rwx,g=rx,o=r
-    owner: git
+    owner: camino
     group: users
   become: True
 - name: Ajoute le job de backup de la prod
@@ -13,7 +13,7 @@
     minute: "0"
     hour: "2"
     job: "/srv/scripts/backup"
-    user: git
+    user: camino
   become: True
 - name: Configure le S3 pour les backups
   block:
@@ -27,7 +27,7 @@
         src: owner.cfg
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
       register: owner
@@ -36,7 +36,7 @@
         src: bucket-ro.json
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r
-        owner: git
+        owner: camino
         group: users
       become: True
       register: bucket_ro

@@ -3,8 +3,8 @@ set eufo -pipefail
 
 source /srv/scripts/restic_data
 
-if [ "$(id -u)" != "{{git_user_uid}}" ]; then
-   echo "This script must be run as git" 1>&2
+if [ "$(id -u)" != "{{camino_user_uid}}" ]; then
+   echo "This script must be run as user 'camino'" 1>&2
    exit 1
 fi
 # backup
@@ -15,6 +15,6 @@ docker exec camino_api_db pg_dump --clean --if-exists --format=d --no-owner --no
 
 # sauvegarde les fichiers
 rsync --delete -r /srv/www/camino/files/  /srv/backups/files
-chown git:users -R /srv/backups/
+chown camino:users -R /srv/backups/
 
 restic backup /srv/backups/

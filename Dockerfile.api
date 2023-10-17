@@ -2,10 +2,11 @@ FROM node:20.3-alpine
 WORKDIR /
 
 # on profite que
-# - l'utilisateur a le même id sur toutes les machines
+# - l'utilisateur a le même uid/gid sur toutes les machines
 # - ansible crée les dossiers avec les bons droits
 RUN apk add make && \
-    adduser -u 1002 -D nonroot && \
+    addgroup -g 1002 nonroot && \
+    adduser -u 1002 -D -G nonroot nonroot && \
     mkdir node_modules && \
     chown nonroot:nonroot node_modules
 
