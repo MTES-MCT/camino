@@ -230,6 +230,13 @@ export const titres =
 const demarchesColonnes = ['titreNom', 'titreDomaine', 'titreType', 'titreStatut', 'type', 'statut'] as const
 const demarchesValidator = generateValidator(demarchesFiltresNames, demarchesColonnes, demarchesDownloadFormats).extend({ travaux: z.coerce.boolean().default(false) })
 
+export const travaux =
+  (pool: Pool) =>
+  async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User) => {
+    const funcDemarche = demarches(pool)
+
+    return funcDemarche({ query: { ...query, travaux: 'true' } }, user)
+  }
 export const demarches =
   (pool: Pool) =>
   async ({ query }: { query: GenericQueryInput<typeof demarchesValidator> }, user: User) => {
@@ -239,7 +246,7 @@ export const demarches =
       {
         ordre: params.ordre,
         colonne: params.colonne,
-        typesIds: params.demarchesTypesIds,
+        typesIds: [...(params.demarchesTypesIds ?? []), ...(params.travauxTypesIds ?? [])],
         statutsIds: params.demarchesStatutsIds,
         etapesInclues: params.etapesInclues ? JSON.parse(params.etapesInclues) : null,
         etapesExclues: params.etapesExclues ? JSON.parse(params.etapesExclues) : null,
