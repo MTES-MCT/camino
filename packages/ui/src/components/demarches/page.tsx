@@ -109,7 +109,7 @@ export const PurePage = defineComponent<PureProps>(props => {
       colonnes={demarchesColonnes}
       download={{
         id: `download${props.travaux ? 'Travaux' : 'Démarches'}`,
-        downloadRoute: '/demarches',
+        downloadRoute: props.travaux ? '/travaux' : '/demarches',
         formats: demarchesDownloadFormats,
         params: {},
       }}

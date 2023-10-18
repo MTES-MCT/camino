@@ -250,6 +250,7 @@ export const demarchesFiltresNames = [
   'references',
   'titresTerritoires',
   'demarchesTypesIds',
+  'travauxTypesIds',
   'demarchesStatutsIds',
   'etapesInclues',
   'etapesExclues',

@@ -7,7 +7,7 @@ import express from 'express'
 import { join } from 'path'
 import { inspect } from 'node:util'
 
-import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
+import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
 import { NewDownload, etapeFichier, etapeTelecharger, fichier, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import {
   getTitreLiaisons,
@@ -112,6 +112,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/titres': { download: titres },
   '/titres_qgis': { download: titres },
   '/demarches': { download: demarches },
+  '/travaux': { download: travaux },
   '/activites': { download: activites },
   '/utilisateurs': { download: utilisateurs },
   '/etape/zip/:etapeId': { download: etapeTelecharger },
