@@ -30,33 +30,37 @@ const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
 export const Perimetre = defineComponent<Props>((props: Props) => {
   const isMain = props.isMain ?? false
   const tabId = computed(() => props.tabId ?? 'carte')
-  const titreId = props.titreId ?? ''
+  const titreId = computed<'' | TitreId>(() => props.titreId ?? '')
   const CaminoCommonMap = defineAsyncComponent(async () => {
     const { CaminoCommonMap } = await import('./map')
 
     return CaminoCommonMap
   })
 
+  const downloadPerimetre = async (titreId: TitreId | '') => {
+    if (titreId !== '') {
+      await download(
+        'geojson',
+        {},
+        {
+          downloadRoute: '/titres/:id',
+          params: { id: titreId },
+        }
+      )
+    }
+  }
+
   return () => (
     <div>
       <div class="tablet-blobs tablet-flex-direction-reverse dsfr" style={{ alignItems: 'center' }}>
         <div class="tablet-blob-1-2" style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-          {props.points?.length && titreId ? (
+          {props.points?.length && titreId.value !== '' ? (
             <DsfrButtonIcon
               label="geojson"
               icon="fr-icon-file-download-line"
               buttonType="secondary"
               title="Télécharger le périmètre au format geojson"
-              onClick={() =>
-                download(
-                  'geojson',
-                  {},
-                  {
-                    downloadRoute: '/titres/:id',
-                    params: { id: titreId },
-                  }
-                )
-              }
+              onClick={() => downloadPerimetre(titreId.value)}
             />
           ) : null}
         </div>
