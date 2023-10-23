@@ -2,17 +2,17 @@ import express from 'express'
 import { Request as JWTRequest } from 'express-jwt'
 import { knex } from '../knex.js'
 import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
-import { userByEmailGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
+import { userByKeycloakIdGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
 import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails.js'
 import { formatUser } from '../types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { EmailTemplateId } from '../tools/api-mailjet/types.js'
 
-export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string }>, _res: express.Response, next: express.NextFunction) => {
+export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string; sub?: string }>, _res: express.Response, next: express.NextFunction) => {
   try {
     const reqUser = req.auth
     if (reqUser?.email) {
-      let user = await userByEmailGet(reqUser.email)
+      let user = await userByKeycloakIdGet(reqUser.sub)
       if (!user) {
         if (!reqUser.family_name || !reqUser.given_name) {
           next(new Error('utilisateur inconnu'))
@@ -29,6 +29,7 @@ export const userLoader = async (req: JWTRequest<{ email?: string; family_name?:
             nom: reqUser.family_name,
             prenom: reqUser.given_name,
             dateCreation: getCurrent(),
+            keycloakId: reqUser.sub,
           },
           { fields: { entreprises: { id: {} } } }
         )

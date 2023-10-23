@@ -8,7 +8,7 @@ import { isAdministrationEditeur, isAdministrationLecteur, isBureauDEtudes, isDe
 export const utilisateursQueryModify = (q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user: User) => {
   q.select('utilisateurs.*')
 
-  q.whereNotNull('utilisateurs.email')
+  q.whereNotNull('utilisateurs.keycloakId')
 
   if (isAdministrationEditeur(user) || isAdministrationLecteur(user)) {
     // un utilisateur 'editeur' ou 'lecteur'

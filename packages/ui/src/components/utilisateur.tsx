@@ -27,16 +27,16 @@ export const Utilisateur = defineComponent({
     })
 
     const deleteUtilisateur = async (userId: string) => {
-      await utilisateurApiClient.removeUtilisateur(userId)
-
       const isMe: boolean = (user.value && userId === user.value.id) ?? false
       if (isMe) {
         if (matomo) {
           // @ts-ignore
           matomo.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
         }
-        window.location.replace('/apiUrl/deconnecter')
+        // TODO 2023-10-23 type window.location pour s'appuyer sur nos routes rest et pas sur n'importe quoi
+        window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
       } else {
+        await utilisateurApiClient.removeUtilisateur(userId)
         store.dispatch(
           'messageAdd',
           {

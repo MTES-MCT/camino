@@ -15,6 +15,7 @@ class Utilisateurs extends Model {
 
     properties: {
       id: { type: 'string', minLength: 1, maxLength: 64 },
+      keycloakId: { type: ['string', 'null'] },
       email: { type: ['string', 'null'] },
       nom: { type: ['string', 'null'] },
       prenom: { type: ['string', 'null'] },

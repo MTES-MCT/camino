@@ -26,6 +26,11 @@ JWT_SECRET="-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
 JWT_SECRET_ALGORITHM='RS256'
 KEYCLOAK_CLIENT_ID={{ keycloak_client_id }}
 KEYCLOAK_CLIENT_SECRET={{ keycloak_client_secret }}
+
+KEYCLOAK_API_CLIENT_ID={{ keycloak_api_client_id }}
+KEYCLOAK_API_CLIENT_SECRET={{ keycloak_api_client_secret }}
+KEYCLOAK_URL=https://auth.{{ base_host }}
+
 OAUTH2_COOKIE_SECRET={{ oauth2_cookie_secret }}
 
 DOC_HOST=docs.{{ base_host }}

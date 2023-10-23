@@ -15,6 +15,7 @@ import { utilisateurUpdationValidate } from '../../business/validations/utilisat
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
@@ -68,6 +69,40 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
     }
   }
 }
+
+export const getKeycloakApiToken = async (): Promise<string> => {
+  const client_id = process.env.KEYCLOAK_API_CLIENT_ID
+  const client_secret = process.env.KEYCLOAK_API_CLIENT_SECRET
+  const url = process.env.KEYCLOAK_URL
+
+  if (!client_id || !client_secret || !url) {
+    throw new Error('variables KEYCLOAK_API_CLIENT_ID and KEYCLOAK_API_CLIENT_SECRET and KEYCLOAK_URL must be set')
+  }
+
+  const response = await fetch(`${url}/realms/Camino/protocol/openid-connect/token`, {
+    method: 'POST',
+    body: `grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+
+  if (response.ok) {
+    const responseBody = (await response.json()) as { access_token: string; token_type: 'Bearer'; expires_in: 3600; scope: 'openid resource.READ' }
+
+    const token = responseBody.access_token
+    if (isNullOrUndefined(token)) {
+      throw new Error('token vide')
+    }
+
+    return token
+  } else {
+    console.error('error', await response.text())
+    throw new Error('Pas de token')
+  }
+}
+
 export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
@@ -83,6 +118,19 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
       if (!canDeleteUtilisateur(user, utilisateur.id)) {
         throw new Error('droits insuffisants')
       }
+      const utilisateurKeycloakId = utilisateur.keycloakId
+
+      const authorizationToken = await getKeycloakApiToken()
+
+      const deleteFromKeycloak = await fetch(`${process.env.KEYCLOAK_URL}/admin/realms/Camino/users/${utilisateurKeycloakId}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${authorizationToken}`,
+        },
+      })
+      if (!deleteFromKeycloak.ok) {
+        throw new Error(`une erreur est apparue durant la suppression de l'utilisateur sur keycloak`)
+      }
 
       utilisateur.email = null
       utilisateur.telephoneFixe = ''
@@ -90,10 +138,18 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
       utilisateur.role = 'defaut'
       utilisateur.entreprises = []
       utilisateur.administrationId = undefined
+      // TODO 2023-10-23 tout ce qui est au dessus n'est plus nécessaire une fois la migration des utilisateurs vers keycloak faite (suppression du champ email dans notre base)
+      utilisateur.keycloakId = null
 
       await utilisateurUpsert(utilisateur)
 
-      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      if (isNotNullNorUndefined(user) && user.id === req.params.id) {
+        const uiUrl = process.env.OAUTH_URL ?? ''
+        const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
+        res.redirect(oauthLogoutUrl.href)
+      } else {
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      }
     } catch (e: any) {
       console.error(e)
 
