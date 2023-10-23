@@ -48,7 +48,7 @@ export const TitresStatuts: {
     nom: 'valide',
   },
 } as const satisfies {
-  [key in TitreStatutId]: Omit<Definition<key>, 'ordre' | 'description'>
+  [key in TitreStatutId]: Omit<Definition<key>, 'description'>
 }
 
 const TITRES_STATUTS_IDS = Object.values(TitresStatutIds)

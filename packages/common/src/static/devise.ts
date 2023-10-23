@@ -12,9 +12,9 @@ export const deviseIdValidator = z.enum(IDS)
 export type DeviseId = z.infer<typeof deviseIdValidator>
 export type Devise<T = DeviseId> = Omit<Definition<T>, 'description'>
 export const Devises: { [key in DeviseId]: Devise<key> } = {
-  EUR: { id: 'EUR', nom: 'Euros', ordre: 1 },
-  XPF: { id: 'XPF', nom: 'Francs Pacifique', ordre: 2 },
-  FRF: { id: 'FRF', nom: 'Francs', ordre: 3 },
+  EUR: { id: 'EUR', nom: 'Euros' },
+  XPF: { id: 'XPF', nom: 'Francs Pacifique' },
+  FRF: { id: 'FRF', nom: 'Francs' },
 }
 
-export const sortedDevises = Object.values(Devises).sort((a, b) => a.ordre - b.ordre)
+export const sortedDevises = Object.values(Devises).sort((a, b) => a.nom.localeCompare(b.nom))

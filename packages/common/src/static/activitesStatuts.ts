@@ -19,9 +19,9 @@ export type ActivitesStatut<T = ActivitesStatutId> = {
 }
 export const ActivitesStatuts: { [key in ActivitesStatutId]: ActivitesStatut<key> } = {
   abs: { id: 'abs', nom: 'absent', couleur: 'error' },
+  fer: { id: 'fer', nom: 'cloturé', couleur: 'neutral' },
   dep: { id: 'dep', nom: 'déposé', couleur: 'success' },
   enc: { id: 'enc', nom: 'en construction', couleur: 'warning' },
-  fer: { id: 'fer', nom: 'cloturé', couleur: 'neutral' },
 }
 
 export const activitesStatutsIds = Object.values(ACTIVITES_STATUTS_IDS)

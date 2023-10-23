@@ -180,7 +180,7 @@ export const etapeTypeIdValidator = z.enum(IDS)
 
 export type EtapeTypeId = z.infer<typeof etapeTypeIdValidator>
 
-export type EtapeType<T = EtapeTypeId> = Omit<Definition<T>, 'ordre'> & { unique: boolean; fondamentale: boolean; dateFin: CaminoDate | null }
+export type EtapeType<T = EtapeTypeId> = Definition<T> & { unique: boolean; fondamentale: boolean; dateFin: CaminoDate | null }
 export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
   aac: {
     id: 'aac',

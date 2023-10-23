@@ -7,6 +7,7 @@ export interface EtapeTypeEtapeStatut<T extends EtapeTypeId, R extends EtapeStat
   ordre: number
 }
 
+// FIXME on supprime ces ordres là aussi ? Ça me semble inutile
 export const EtapesTypesEtapesStatuts = {
   avisDeDirectionRegionaleDesAffairesCulturelles: {
     DEFAVORABLE: { etapeTypeId: 'aac', etapeStatutId: 'def', ordre: 3 },

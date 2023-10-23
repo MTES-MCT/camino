@@ -220,7 +220,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
 
 export type TitresTypesDemarchesTypes = typeof TITRES_TYPES_DEMARCHES_TYPES
 export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
-  return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.ordre - b.ordre)
+  return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.nom.localeCompare(b.nom))
 }
 
 export const titresTypesDemarcheTypesMetas = Object.keys(TITRES_TYPES_DEMARCHES_TYPES)

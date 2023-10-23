@@ -18,7 +18,7 @@ export const titreDemarcheSortAsc = <T extends TitreDemarcheSortAscMinimalDemarc
       const aType = DemarchesTypes[a.typeId]
       const bType = DemarchesTypes[b.typeId]
 
-      return aType.ordre - bType.ordre
+      return aType.nom.localeCompare(bType.nom)
     }
 
     const dateA = titreEtapesSortAscByOrdre(a.etapes!)[0].date

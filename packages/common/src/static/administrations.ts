@@ -24,15 +24,15 @@ export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, '
 export const ADMINISTRATION_TYPES: {
   [key in AdministrationTypeId]: AdministrationType<key>
 } = {
-  aut: { id: 'aut', nom: 'Autorité', ordre: 6 },
-  dea: { id: 'dea', nom: 'Déal', ordre: 3 },
-  dre: { id: 'dre', nom: 'Dréal', ordre: 2 },
-  min: { id: 'min', nom: 'Ministère', ordre: 1 },
-  ope: { id: 'ope', nom: 'Opérateur', ordre: 5 },
-  pre: { id: 'pre', nom: 'Préfecture', ordre: 4 },
+  aut: { id: 'aut', nom: 'Autorité' },
+  dea: { id: 'dea', nom: 'Déal' },
+  dre: { id: 'dre', nom: 'Dréal' },
+  min: { id: 'min', nom: 'Ministère' },
+  ope: { id: 'ope', nom: 'Opérateur' },
+  pre: { id: 'pre', nom: 'Préfecture' },
 }
 
-export const sortedAdministrationTypes = Object.values(ADMINISTRATION_TYPES).sort((a, b) => a.ordre - b.ordre)
+export const sortedAdministrationTypes = Object.values(ADMINISTRATION_TYPES).sort((a, b) => a.nom.localeCompare(b.nom))
 // prettier-ignore
 export const IDS = [ 'aut-97300-01', 'aut-mrae-guyane-01', 'dea-guadeloupe-01', 'dea-guyane-01', 'dea-martinique-01', 'dea-mayotte-01', 'dea-reunion-01', 'dre-aura-01', 'dre-bfc-01', 'dre-bretagne-01', 'dre-centre-val-de-loire-01', 'dre-corse-01', 'dre-grand-est-01', 'dre-hauts-de-france-01', 'dre-ile-de-france-01', 'dre-normandie-01', 'dre-nouvelle-aquitaine-01', 'dre-occitanie-01', 'dre-paca-01', 'dre-pays-de-la-loire-01', 'min-dajb-01', 'min-mctrct-dgcl-01', 'min-mtes-dgaln-01', 'min-mtes-dgec-01', 'min-mtes-dgpr-01', 'ope-brgm-01', 'ope-brgm-02', 'ope-cacem-01', 'ope-onf-973-01', 'ope-ptmg-973-01', 'pre-01053-01', 'pre-02408-01', 'pre-03190-01', 'pre-04070-01', 'pre-05061-01', 'pre-06088-01', 'pre-07186-01', 'pre-08105-01', 'pre-09122-01', 'pre-10387-01', 'pre-11069-01', 'pre-12202-01', 'pre-13203-01', 'pre-14118-01', 'pre-15014-01', 'pre-16015-01', 'pre-17300-01', 'pre-18033-01', 'pre-19272-01', 'pre-21231-01', 'pre-22278-01', 'pre-23096-01', 'pre-24322-01', 'pre-25056-01', 'pre-26362-01', 'pre-27229-01', 'pre-28085-01', 'pre-29232-01', 'pre-2A004-01', 'pre-2B033-01', 'pre-30189-01', 'pre-31555-01', 'pre-32013-01', 'pre-33063-01', 'pre-34172-01', 'pre-35238-01', 'pre-36044-01', 'pre-37261-01', 'pre-38185-01', 'pre-39300-01', 'pre-40192-01', 'pre-41018-01', 'pre-42218-01', 'pre-43157-01', 'pre-44109-01', 'pre-45234-01', 'pre-46042-01', 'pre-47001-01', 'pre-48095-01', 'pre-49007-01', 'pre-50502-01', 'pre-51108-01', 'pre-52121-01', 'pre-53130-01', 'pre-54395-01', 'pre-55029-01', 'pre-56260-01', 'pre-57463-01', 'pre-58194-01', 'pre-59350-01', 'pre-60057-01', 'pre-61001-01', 'pre-62041-01', 'pre-63113-01', 'pre-64445-01', 'pre-65440-01', 'pre-66136-01', 'pre-67482-01', 'pre-68066-01', 'pre-69383-01', 'pre-70550-01', 'pre-71270-01', 'pre-72181-01', 'pre-73065-01', 'pre-74010-01', 'pre-75104-01', 'pre-76540-01', 'pre-77288-01', 'pre-78646-01', 'pre-79191-01', 'pre-80021-01', 'pre-81004-01', 'pre-82121-01', 'pre-83137-01', 'pre-84007-01', 'pre-85191-01', 'pre-86194-01', 'pre-87085-01', 'pre-88160-01', 'pre-89024-01', 'pre-90010-01', 'pre-91228-01', 'pre-92050-01', 'pre-93008-01', 'pre-94028-01', 'pre-95127-01', 'pre-97105-01', 'pre-97209-01', 'pre-97302-01', 'pre-97411-01', 'pre-97611-01', ] as const
 

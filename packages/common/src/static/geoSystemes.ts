@@ -38,6 +38,7 @@ export type GeoSystemeId = (typeof GEO_SYSTEME_IDS)[keyof typeof GEO_SYSTEME_IDS
 
 export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => GEO_SYSTEME_KEYS.includes(entry)
 
+// FIXME on supprime ces ordres là ? Et on met le 4326 en défaut dans le front, avec un autocomplete si les gens veulent mettre autre chose
 export const GeoSystemes = {
   '2154': {
     id: '2154',
