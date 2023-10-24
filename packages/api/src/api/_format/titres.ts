@@ -92,7 +92,6 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
     ids.push(...titre.administrationsLocales)
   }
 
-  // FIXME on filtrait par type d'administration, c'est à faire côté ui IMHO (si tant est qu'on veuille toujours le faire)
   return ids.filter(onlyUnique)
 }
 
