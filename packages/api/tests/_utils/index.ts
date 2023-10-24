@@ -14,6 +14,7 @@ import { getCurrent } from 'camino-common/src/date.js'
 import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams } from 'camino-common/src/rest.js'
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
+import { idUserKeycloakRecognised } from '../keycloak.js'
 
 export const queryImport = (nom: string) =>
   fs
@@ -122,6 +123,7 @@ export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
         nom: `nom-${user.role}`,
         email: `${id}@camino.local`,
         dateCreation: getCurrent(),
+        keycloakId: idUserKeycloakRecognised,
       },
       {}
     )

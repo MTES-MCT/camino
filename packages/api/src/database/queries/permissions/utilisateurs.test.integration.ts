@@ -28,6 +28,7 @@ const mockUser: IUtilisateur = {
   email: 'utilisateurEmail',
   administrationId: mockAdministration.id,
   dateCreation: '2022-05-12',
+  keycloakId: 'keycloakId',
 }
 
 describe('utilisateursQueryModify', () => {

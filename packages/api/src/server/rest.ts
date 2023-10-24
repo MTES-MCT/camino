@@ -139,7 +139,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/dgtm': { get: getDGTMStats },
   '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
   '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },
-  '/rest/utilisateurs/:id': { delete: deleteUtilisateur },
+  '/rest/utilisateurs/:id/delete': { get: deleteUtilisateur },
   '/rest/utilisateurs/:id/newsletter': { get: isSubscribedToNewsletter, post: manageNewsletterSubscription }, // UNTESTED YET
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { get: fiscalite }, // UNTESTED YET
   '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },

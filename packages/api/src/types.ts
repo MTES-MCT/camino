@@ -520,6 +520,7 @@ interface ITitreTypeDemarcheTypeEtapeType {
 interface IUtilisateur {
   id: UtilisateurId
   email?: string | null
+  keycloakId?: string | null
   dateCreation: string
   nom?: string | null
   prenom?: string | null

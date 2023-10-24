@@ -122,6 +122,27 @@ const userByEmailGet = async (email: string | null | undefined) => {
   return undefined
 }
 
+export const userByKeycloakIdGet = async (keycloakId: string | null | undefined) => {
+  if (keycloakId) {
+    const user: IUtilisateur | undefined = await Utilisateurs.query().withGraphFetched('[entreprises]').where('utilisateurs.keycloakId', keycloakId).first()
+
+    if (user) {
+      const q = utilisateursQueryBuild(
+        {
+          fields: {
+            entreprises: { id: {} },
+          },
+        },
+        formatUser(user)
+      )
+
+      return q.findById(user.id)
+    }
+  }
+
+  return undefined
+}
+
 const utilisateurGet = async (id: string, { fields }: { fields?: IFields } = {}, user: User) => {
   const q = utilisateursQueryBuild({ fields }, user)
 

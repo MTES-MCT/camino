@@ -2,19 +2,20 @@ import express from 'express'
 import { Request as JWTRequest } from 'express-jwt'
 import { knex } from '../knex.js'
 import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
-import { userByEmailGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
+import { userByKeycloakIdGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
 import { emailsSend, emailsWithTemplateSend } from '../tools/api-mailjet/emails.js'
 import { formatUser } from '../types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { EmailTemplateId } from '../tools/api-mailjet/types.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
-export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string }>, _res: express.Response, next: express.NextFunction) => {
+export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string; sub?: string }>, _res: express.Response, next: express.NextFunction) => {
   try {
     const reqUser = req.auth
-    if (reqUser?.email) {
-      let user = await userByEmailGet(reqUser.email)
+    if (isNotNullNorUndefined(reqUser)) {
+      let user = await userByKeycloakIdGet(reqUser.sub)
       if (!user) {
-        if (!reqUser.family_name || !reqUser.given_name) {
+        if (isNullOrUndefined(reqUser.family_name) || isNullOrUndefined(reqUser.given_name)) {
           next(new Error('utilisateur inconnu'))
 
           return
@@ -29,6 +30,7 @@ export const userLoader = async (req: JWTRequest<{ email?: string; family_name?:
             nom: reqUser.family_name,
             prenom: reqUser.given_name,
             dateCreation: getCurrent(),
+            keycloakId: reqUser.sub,
           },
           { fields: { entreprises: { id: {} } } }
         )
@@ -38,7 +40,9 @@ export const userLoader = async (req: JWTRequest<{ email?: string; family_name?:
           `Nouvel utilisateur ${user.email} créé`,
           `L'utilisateur ${user.nom} ${user.prenom} vient de se créer un compte : ${process.env.OAUTH_URL}/utilisateurs/${user.id}`
         )
-        await emailsWithTemplateSend([reqUser.email], EmailTemplateId.CREATION_COMPTE, {})
+        if (isNotNullNorUndefined(reqUser.email)) {
+          await emailsWithTemplateSend([reqUser.email], EmailTemplateId.CREATION_COMPTE, {})
+        }
       } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name) {
         // mise à jour du nom et du prénom de l’utilisateur
         await knex('utilisateurs').update({ nom: reqUser.family_name, prenom: reqUser.given_name }).where('email', reqUser.email)

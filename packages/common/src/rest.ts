@@ -47,7 +47,7 @@ const IDS = [
   '/config',
   '/moi',
   '/rest/utilisateurs/:id/newsletter',
-  '/rest/utilisateurs/:id',
+  '/rest/utilisateurs/:id/delete',
   '/rest/utilisateurs/:id/permission',
   '/rest/statistiques/minerauxMetauxMetropole',
   '/rest/statistiques/guyane',
@@ -100,7 +100,8 @@ export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
   '/moi': { get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: { id: z.string() }, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
-  '/rest/utilisateurs/:id': { params: { id: z.string() }, delete: true },
+  // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
+  '/rest/utilisateurs/:id/delete': { params: { id: z.string() }, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: { id: z.string() }, post: { input: utilisateurToEdit, output: z.void() } },
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },

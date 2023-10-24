@@ -109,7 +109,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     `)({ email })
   },
   removeUtilisateur: async (userId: string) => {
-    return await deleteWithJson('/rest/utilisateurs/:id', { id: userId })
+    return await getWithJson('/rest/utilisateurs/:id/delete', { id: userId })
   },
   updateUtilisateur: async (utilisateur: UtilisateurToEdit) => {
     return await postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur)
