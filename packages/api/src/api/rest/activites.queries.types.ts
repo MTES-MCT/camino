@@ -218,7 +218,7 @@ export interface IGetLargeobjectIdByActiviteDocumentIdInternalParams {
 /** 'GetLargeobjectIdByActiviteDocumentIdInternal' return type */
 export interface IGetLargeobjectIdByActiviteDocumentIdInternalResult {
   activite_id: string | null;
-  largeobject_id: number | null;
+  largeobject_id: number;
 }
 
 /** 'GetLargeobjectIdByActiviteDocumentIdInternal' query type */
