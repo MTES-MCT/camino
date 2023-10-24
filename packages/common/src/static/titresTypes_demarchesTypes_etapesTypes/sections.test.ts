@@ -274,149 +274,146 @@ describe('getSectionsWithValue', () => {
         { section: { unites: 'mtk', devises: null } }
       )
     ).toMatchInlineSnapshot(`
-    [
-      {
-        "elements": [
-          {
-            "id": "unites",
-            "options": [
-              {
-                "id": "deg",
-                "nom": "degré",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "º",
-              },
-              {
-                "id": "gon",
-                "nom": "grade",
-                "referenceUniteId": "deg",
-                "referenceUniteRatio": 0.9,
-                "symbole": "gon",
-              },
-              {
-                "id": "km3",
-                "nom": "kilomètre cube",
-                "referenceUniteId": "m3x",
-                "referenceUniteRatio": 1000000000,
-                "symbole": "km³",
-              },
-              {
-                "id": "m3a",
-                "nom": "mètre cube par an",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "m³ / an",
-              },
-              {
-                "id": "m3x",
-                "nom": "mètre cube",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "m³",
-              },
-              {
-                "id": "met",
-                "nom": "mètre",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "m",
-              },
-              {
-                "id": "mgr",
-                "nom": "gramme",
-                "referenceUniteId": "mkg",
-                "referenceUniteRatio": 0.001,
-                "symbole": "g",
-              },
-              {
-                "id": "mkc",
-                "nom": "quintal",
-                "openfiscaId": "100kg",
-                "referenceUniteId": "mkg",
-                "referenceUniteRatio": 100,
-                "symbole": "x 100 kg",
-              },
-              {
-                "id": "mkg",
-                "nom": "kilogramme",
-                "openfiscaId": "kg",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "kg",
-              },
-              {
-                "id": "mtc",
-                "nom": "centaine de tonnes",
-                "openfiscaId": "100t",
-                "referenceUniteId": "mkg",
-                "referenceUniteRatio": 100000,
-                "symbole": "x 100 t",
-              },
-              {
-                "id": "mtk",
-                "nom": "millier de tonnes",
-                "openfiscaId": "kt",
-                "referenceUniteId": "mkg",
-                "referenceUniteRatio": 1000000,
-                "symbole": "x 1000 t",
-              },
-              {
-                "id": "mtt",
-                "nom": "tonne",
-                "openfiscaId": "t",
-                "referenceUniteId": "mkg",
-                "referenceUniteRatio": 1000,
-                "symbole": "t",
-              },
-              {
-                "id": "txa",
-                "nom": "tonnes par an",
-                "referenceUniteId": null,
-                "referenceUniteRatio": null,
-                "symbole": "t / an",
-              },
-              {
-                "id": "vmd",
-                "nom": "100 000 mètres cubes",
-                "openfiscaId": "100km3",
-                "referenceUniteId": "m3x",
-                "referenceUniteRatio": 100000,
-                "symbole": "x 100 000 m³",
-              },
-            ],
-            "type": "select",
-            "valeursMetasNom": "unites",
-            "value": "mtk",
-          },
-          {
-            "id": "devises",
-            "options": [
-              {
-                "id": "EUR",
-                "nom": "Euros",
-                "ordre": 1,
-              },
-              {
-                "id": "XPF",
-                "nom": "Francs Pacifique",
-                "ordre": 2,
-              },
-              {
-                "id": "FRF",
-                "nom": "Francs",
-                "ordre": 3,
-              },
-            ],
-            "type": "select",
-            "valeursMetasNom": "devises",
-            "value": null,
-          },
-        ],
-        "id": "section",
-      },
-    ]
-  `)
+      [
+        {
+          "elements": [
+            {
+              "id": "unites",
+              "options": [
+                {
+                  "id": "deg",
+                  "nom": "degré",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "º",
+                },
+                {
+                  "id": "gon",
+                  "nom": "grade",
+                  "referenceUniteId": "deg",
+                  "referenceUniteRatio": 0.9,
+                  "symbole": "gon",
+                },
+                {
+                  "id": "km3",
+                  "nom": "kilomètre cube",
+                  "referenceUniteId": "m3x",
+                  "referenceUniteRatio": 1000000000,
+                  "symbole": "km³",
+                },
+                {
+                  "id": "m3a",
+                  "nom": "mètre cube par an",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "m³ / an",
+                },
+                {
+                  "id": "m3x",
+                  "nom": "mètre cube",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "m³",
+                },
+                {
+                  "id": "met",
+                  "nom": "mètre",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "m",
+                },
+                {
+                  "id": "mgr",
+                  "nom": "gramme",
+                  "referenceUniteId": "mkg",
+                  "referenceUniteRatio": 0.001,
+                  "symbole": "g",
+                },
+                {
+                  "id": "mkc",
+                  "nom": "quintal",
+                  "openfiscaId": "100kg",
+                  "referenceUniteId": "mkg",
+                  "referenceUniteRatio": 100,
+                  "symbole": "x 100 kg",
+                },
+                {
+                  "id": "mkg",
+                  "nom": "kilogramme",
+                  "openfiscaId": "kg",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "kg",
+                },
+                {
+                  "id": "mtc",
+                  "nom": "centaine de tonnes",
+                  "openfiscaId": "100t",
+                  "referenceUniteId": "mkg",
+                  "referenceUniteRatio": 100000,
+                  "symbole": "x 100 t",
+                },
+                {
+                  "id": "mtk",
+                  "nom": "millier de tonnes",
+                  "openfiscaId": "kt",
+                  "referenceUniteId": "mkg",
+                  "referenceUniteRatio": 1000000,
+                  "symbole": "x 1000 t",
+                },
+                {
+                  "id": "mtt",
+                  "nom": "tonne",
+                  "openfiscaId": "t",
+                  "referenceUniteId": "mkg",
+                  "referenceUniteRatio": 1000,
+                  "symbole": "t",
+                },
+                {
+                  "id": "txa",
+                  "nom": "tonnes par an",
+                  "referenceUniteId": null,
+                  "referenceUniteRatio": null,
+                  "symbole": "t / an",
+                },
+                {
+                  "id": "vmd",
+                  "nom": "100 000 mètres cubes",
+                  "openfiscaId": "100km3",
+                  "referenceUniteId": "m3x",
+                  "referenceUniteRatio": 100000,
+                  "symbole": "x 100 000 m³",
+                },
+              ],
+              "type": "select",
+              "valeursMetasNom": "unites",
+              "value": "mtk",
+            },
+            {
+              "id": "devises",
+              "options": [
+                {
+                  "id": "EUR",
+                  "nom": "Euros",
+                },
+                {
+                  "id": "FRF",
+                  "nom": "Francs",
+                },
+                {
+                  "id": "XPF",
+                  "nom": "Francs Pacifique",
+                },
+              ],
+              "type": "select",
+              "valeursMetasNom": "devises",
+              "value": null,
+            },
+          ],
+          "id": "section",
+        },
+      ]
+    `)
   })
 })
 

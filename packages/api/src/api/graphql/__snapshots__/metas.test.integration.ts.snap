@@ -9,6 +9,11 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "nom": "absent",
     },
     {
+      "couleur": "neutral",
+      "id": "fer",
+      "nom": "cloturé",
+    },
+    {
       "couleur": "success",
       "id": "dep",
       "nom": "déposé",
@@ -17,11 +22,6 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "couleur": "warning",
       "id": "enc",
       "nom": "en construction",
-    },
-    {
-      "couleur": "neutral",
-      "id": "fer",
-      "nom": "cloturé",
     },
   ],
   "departements": [
@@ -537,12 +537,12 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "nom": "Euros",
     },
     {
-      "id": "XPF",
-      "nom": "Francs Pacifique",
-    },
-    {
       "id": "FRF",
       "nom": "Francs",
+    },
+    {
+      "id": "XPF",
+      "nom": "Francs Pacifique",
     },
   ],
   "domaines": [
@@ -581,46 +581,22 @@ exports[`statuts > peut voir tous les statuts 1`] = `
   ],
   "geoSystemes": [
     {
-      "id": "2154",
-      "nom": "RGF93 / Lambert-93",
-      "uniteId": "met",
-      "zone": "France - onshore et offshore - continentale et Corse.",
-    },
-    {
-      "id": "2972",
-      "nom": "RGFG95 / UTM zone 22N",
-      "uniteId": "met",
-      "zone": "Guyane française - onshore et offshore.",
-    },
-    {
-      "id": "5490",
-      "nom": "RGAF09 / UTM zone 20N",
-      "uniteId": "met",
-      "zone": "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
-    },
-    {
-      "id": "4171",
-      "nom": "RGF93",
-      "uniteId": "deg",
-      "zone": "France - onshore et offshore - continentale et Corse.",
-    },
-    {
-      "id": "4624",
-      "nom": "RGFG95",
-      "uniteId": "deg",
-      "zone": "French Guiana - onshore and offshore.",
-    },
-    {
-      "id": "4326",
-      "nom": "WGS84",
-      "uniteId": "deg",
-      "zone": "Monde",
-    },
-    {
       "id": "4230",
       "nom": "ED50",
       "uniteId": "deg",
       "zone": "Europe",
+    },
+    {
+      "id": "2970",
+      "nom": "Guadeloupe 1948 / UTM zone 20N",
+      "uniteId": "met",
+      "zone": "Guadeloupe - onshore - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.",
+    },
+    {
+      "id": "4471",
+      "nom": "Mayotte 2004 / UTM zone 38S",
+      "uniteId": "met",
+      "zone": "Mayotte - onshore et offshore",
     },
     {
       "id": "4275",
@@ -665,10 +641,58 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "zone": "France - continentale au sud de 50,5 grades nord (45°27'N).",
     },
     {
+      "id": "2975",
+      "nom": "Réunion / UTM zone 40S",
+      "uniteId": "met",
+      "zone": "Réuinon",
+    },
+    {
+      "id": "5490",
+      "nom": "RGAF09 / UTM zone 20N",
+      "uniteId": "met",
+      "zone": "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
+    },
+    {
+      "id": "4171",
+      "nom": "RGF93",
+      "uniteId": "deg",
+      "zone": "France - onshore et offshore - continentale et Corse.",
+    },
+    {
       "id": "3949",
       "nom": "RGF93 / CC49",
       "uniteId": "met",
       "zone": "France - continentale entre 48°N et 50°N.",
+    },
+    {
+      "id": "2154",
+      "nom": "RGF93 / Lambert-93",
+      "uniteId": "met",
+      "zone": "France - onshore et offshore - continentale et Corse.",
+    },
+    {
+      "id": "4624",
+      "nom": "RGFG95",
+      "uniteId": "deg",
+      "zone": "French Guiana - onshore and offshore.",
+    },
+    {
+      "id": "3313",
+      "nom": "RGFG95 / UTM zone 21N",
+      "uniteId": "met",
+      "zone": "Guyane française - onshore et offshore.",
+    },
+    {
+      "id": "2972",
+      "nom": "RGFG95 / UTM zone 22N",
+      "uniteId": "met",
+      "zone": "Guyane française - onshore et offshore.",
+    },
+    {
+      "id": "4326",
+      "nom": "WGS84",
+      "uniteId": "deg",
+      "zone": "Monde",
     },
     {
       "id": "32620",
@@ -693,30 +717,6 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "nom": "WGS84 / UTM zone 30N",
       "uniteId": "met",
       "zone": "Hémisphère Nord - entre 6°W et 0°W",
-    },
-    {
-      "id": "2970",
-      "nom": "Guadeloupe 1948 / UTM zone 20N",
-      "uniteId": "met",
-      "zone": "Guadeloupe - onshore - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.",
-    },
-    {
-      "id": "3313",
-      "nom": "RGFG95 / UTM zone 21N",
-      "uniteId": "met",
-      "zone": "Guyane française - onshore et offshore.",
-    },
-    {
-      "id": "4471",
-      "nom": "Mayotte 2004 / UTM zone 38S",
-      "uniteId": "met",
-      "zone": "Mayotte - onshore et offshore",
-    },
-    {
-      "id": "2975",
-      "nom": "Réunion / UTM zone 40S",
-      "uniteId": "met",
-      "zone": "Réuinon",
     },
   ],
   "pays": [
