@@ -19,7 +19,7 @@ interface Definition<T> {
   description?: string
 }
 
-export type FileUploadType = 'pdf' | 'doc' | 'docx'
+export type FileUploadType = 'pdf' | 'doc' | 'docx' | 'geojson' | 'shp'
 
 export const FICHIERS_TYPES = {
   Pdf: 'pdf',

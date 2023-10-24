@@ -3,16 +3,17 @@ import GeoSystemeEdit from './points-geo-systemes-edit.vue'
 import PointEdit from './points-point-edit.vue'
 import PointsLotEdit from './points-lot-edit.vue'
 import { HeritageEdit } from './heritage-edit'
-import PointsImportPopup from './points-import-popup.vue'
+import { PointsImportPopup } from './points-import-popup'
 import { Points } from '../_common/points'
 import { InputNumber } from '../_ui/input-number'
 import { Icon } from '@/components/_ui/icon'
 import { HelpTooltip } from '@/components/_ui/help-tooltip'
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { EtapeEdit, GroupeBuildPoint } from '@/utils/titre-etape-edit'
 import { ButtonIcon } from '../_ui/button-icon'
 import { Button } from '../_ui/button'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
 interface Props {
   etape: EtapeEdit
@@ -25,6 +26,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   const events = props.events ?? { saveKeyUp: true }
   const showTitle = props.showTitle ?? true
 
+  const importPopup = ref<boolean>(false)
   const pointsTotal = computed(() => {
     return props.etape.groupes.reduce((pointsTotal, contours) => {
       pointsTotal = pointsTotal.concat(
@@ -162,12 +164,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
     context.emit('complete-update', complete.value)
   }
 
-  const pointsImport = () => {
-    store.commit('popupOpen', {
-      component: PointsImportPopup,
-    })
-  }
-
   const surfaceRefresh = () => {
     store.dispatch('titreEtapeEdition/surfaceRefresh', props.etape)
   }
@@ -196,6 +192,21 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
     completeUpdate()
   })
 
+  const openPopup = () => {
+    importPopup.value = true
+  }
+
+  const closePopup = () => {
+    importPopup.value = false
+  }
+
+  const importPoints = async (file: File, geoSystemeId: GeoSystemeId) => {
+    store.dispatch('titreEtapeEdition/pointsImport', {
+      file,
+      geoSystemeId,
+    })
+  }
+
   return () => (
     <div>
       {showTitle ? <h4 class="mb-s">Périmètre</h4> : null}
@@ -206,7 +217,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           <>
             <Button
               class="btn small rnd-xs py-s px-m full-x flex mb-s"
-              onClick={pointsImport}
+              onClick={openPopup}
               title="Importer depuis un fichier"
               render={() => (
                 <>
@@ -420,6 +431,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           read={() => <div class="border p-s mb-s bold">{props.etape.heritageProps.surface.etape?.surface}</div>}
         />
       </div>
+      {importPopup.value ? <PointsImportPopup close={closePopup} pointsImport={importPoints} /> : null}
     </div>
   )
 })
