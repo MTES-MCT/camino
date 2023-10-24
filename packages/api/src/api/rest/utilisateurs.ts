@@ -70,6 +70,8 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
   }
 }
 
+export type KeycloakAccessTokenResponse = { access_token: string }
+
 export const getKeycloakApiToken = async (): Promise<string> => {
   const client_id = process.env.KEYCLOAK_API_CLIENT_ID
   const client_secret = process.env.KEYCLOAK_API_CLIENT_SECRET
@@ -89,7 +91,7 @@ export const getKeycloakApiToken = async (): Promise<string> => {
   })
 
   if (response.ok) {
-    const responseBody = (await response.json()) as { access_token: string; token_type: 'Bearer'; expires_in: 3600; scope: 'openid resource.READ' }
+    const responseBody = (await response.json()) as KeycloakAccessTokenResponse
 
     const token = responseBody.access_token
     if (isNullOrUndefined(token)) {
@@ -144,7 +146,7 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
       await utilisateurUpsert(utilisateur)
 
       if (isNotNullNorUndefined(user) && user.id === req.params.id) {
-        const uiUrl = process.env.OAUTH_URL ?? ''
+        const uiUrl = process.env.OAUTH_URL
         const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
         res.redirect(oauthLogoutUrl.href)
       } else {

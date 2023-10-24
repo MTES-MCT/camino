@@ -1,4 +1,4 @@
-import { restCall, restDeleteCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
+import { restCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
@@ -7,20 +7,24 @@ import type { Pool } from 'pg'
 import { constants } from 'http2'
 import { userSuper } from '../../database/user-super.js'
 import { newUtilisateurId } from '../../database/models/_format/id-create.js'
+import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
+let keycloak: KeycloakFakeServer
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
   knex = knexInstance
+  keycloak = await setupKeycloak()
 })
 
 afterAll(async () => {
   await dbManager.reseedDb()
   await dbManager.closeKnex()
+  await teardownKeycloak(keycloak)
 })
 
 describe('moi', () => {
@@ -81,7 +85,7 @@ describe('utilisateurModifier', () => {
 
 describe('utilisateurSupprimer', () => {
   test('ne peut pas supprimer un compte (utilisateur anonyme)', async () => {
-    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: 'test' }, undefined)
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: 'test' }, undefined)
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -91,10 +95,13 @@ describe('utilisateurSupprimer', () => {
   })
 
   test('peut supprimer son compte utilisateur', async () => {
+    const OAUTH_URL = 'http://unused'
+    process.env.OAUTH_URL = OAUTH_URL
     const user = await userGenerate({ role: 'defaut' })
 
-    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: user.id }, { role: 'defaut' })
-    expect(tested.statusCode).toBe(204)
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })
+    expect(tested.statusCode).toBe(302)
+    expect(tested.header.location).toBe(`${OAUTH_URL}/oauth2/sign_out`)
   })
 
   test('peut supprimer un utilisateur (utilisateur super)', async () => {
@@ -106,14 +113,15 @@ describe('utilisateurSupprimer', () => {
       email: 'user-to-delete@camino.local',
       role: 'defaut',
       dateCreation: '2022-05-12',
+      keycloakId: idUserKeycloakRecognised,
     })
 
-    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id }, { role: 'super' })
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id }, { role: 'super' })
     expect(tested.statusCode).toBe(204)
   })
 
   test('ne peut pas supprimer un utilisateur inexistant (utilisateur super)', async () => {
-    const tested = await restDeleteCall(dbPool, '/rest/utilisateurs/:id', { id: 'not-existing' }, { role: 'super' })
+    const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: 'not-existing' }, { role: 'super' })
     expect(tested.statusCode).toBe(500)
     expect(tested.body).toMatchInlineSnapshot(`
       {
