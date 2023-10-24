@@ -13,7 +13,7 @@ interface PhaseDefinition<T> extends Omit<Definition<T>, 'description'> {
   couleur: Couleur
 }
 
-// FIXME utiliser les couleurs de Sarah
+// TODO 2023-10-24 utiliser les couleurs de Sarah
 export const phaseStatuts: { [key in PhaseStatutId]: PhaseDefinition<key> } = {
   ech: { id: 'ech', nom: 'échu', couleur: 'neutral' },
   val: { id: 'val', nom: 'valide', couleur: 'success' },
