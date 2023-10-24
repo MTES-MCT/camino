@@ -151,7 +151,6 @@ interface IActiviteType {
   id: ActivitesTypesId
   nom: string
   description?: string
-  ordre: number
   frequenceId: FrequenceId
   dateDebut: string
   delaiMois: number
@@ -194,14 +193,12 @@ interface ICoordonnees {
 interface IDemarcheStatut {
   id: string
   nom: string
-  ordre: number
   couleur: Couleur
 }
 
 interface IDemarcheType {
   id: DemarcheTypeId
   nom: string
-  ordre: number
   duree?: boolean | null
   points?: boolean | null
   substances?: boolean | null

@@ -12,7 +12,6 @@ type ActiviteType {
   id: ID!
   nom: String!
   description: String
-  ordre: Int
   dateDebut: String!
   delaiMois: Int!
   frequenceId: ID!
