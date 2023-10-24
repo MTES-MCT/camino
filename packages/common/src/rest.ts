@@ -100,6 +100,7 @@ export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
   '/moi': { get: { output: userValidator } },
   '/rest/utilisateurs/:id/newsletter': { params: { id: z.string() }, get: { output: z.boolean() }, post: { input: newsletterAbonnementValidator, output: z.boolean() } },
+  // On passe par un http get plutot qu'un http delete car nous terminons par une redirection vers la deconnexion de oauth2, qui se traduit mal sur certains navigateurs et essaie de faire un delete sur une route get
   '/rest/utilisateurs/:id/delete': { params: { id: z.string() }, get: { output: z.void() } },
   '/rest/utilisateurs/:id/permission': { params: { id: z.string() }, post: { input: utilisateurToEdit, output: z.void() } },
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
