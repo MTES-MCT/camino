@@ -197,6 +197,12 @@ const EtapesTypesSections = {
       elements: [{ id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' }],
     },
   ],
+  [ETAPES_TYPES.ouvertureDeLenquetePublique]: [
+    {
+      id: 'odlep',
+      elements: [{ id: 'lien', nom: 'Lien public externe', type: 'url', optionnel: true, description: '' }],
+    },
+  ],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [
