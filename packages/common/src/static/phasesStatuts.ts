@@ -1,4 +1,5 @@
 import { CaminoDate } from '../date.js'
+import { Definition } from '../definition.js'
 import { Couleur } from './couleurs.js'
 
 export const PHASES_STATUTS_IDS = {
@@ -8,13 +9,12 @@ export const PHASES_STATUTS_IDS = {
 
 export type PhaseStatutId = (typeof PHASES_STATUTS_IDS)[keyof typeof PHASES_STATUTS_IDS]
 
-interface Definition<T> {
-  id: T
-  nom: string
+interface PhaseDefinition<T> extends Omit<Definition<T>, 'description'> {
   couleur: Couleur
 }
 
-export const phaseStatuts: { [key in PhaseStatutId]: Definition<key> } = {
+// TODO 2023-10-24 utiliser les couleurs de Sarah
+export const phaseStatuts: { [key in PhaseStatutId]: PhaseDefinition<key> } = {
   ech: { id: 'ech', nom: 'échu', couleur: 'neutral' },
   val: { id: 'val', nom: 'valide', couleur: 'success' },
 } as const

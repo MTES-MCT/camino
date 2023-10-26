@@ -52,7 +52,7 @@ export const caminoFiltres = {
     name: 'Rôles',
     type: 'checkboxes',
     component: 'FiltresLabel',
-    elements: ROLES.map(r => ({ id: r, nom: r })),
+    elements: ROLES.map(r => ({ id: r, nom: r })).sort((a, b) => a.nom.localeCompare(b.nom)),
     validator: z.array(roleValidator),
   },
   administrationIds: {

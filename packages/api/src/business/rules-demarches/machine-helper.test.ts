@@ -460,12 +460,6 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "ede",
           "mainStep": false,
@@ -473,12 +467,18 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
           "etapeTypeId": "edm",
           "mainStep": false,
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "fav",
+          "etapeStatutId": "def",
           "etapeTypeId": "edm",
           "mainStep": false,
         },
@@ -527,18 +527,6 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "dre",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "aof",
           "mainStep": true,
@@ -546,6 +534,18 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fre",
+          "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "dre",
           "etapeTypeId": "aof",
           "mainStep": true,
         },
@@ -569,12 +569,6 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "ede",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "ede",
           "mainStep": false,
@@ -582,12 +576,18 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "def",
+          "etapeTypeId": "ede",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fav",
           "etapeTypeId": "edm",
           "mainStep": false,
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "fav",
+          "etapeStatutId": "def",
           "etapeTypeId": "edm",
           "mainStep": false,
         },
@@ -670,18 +670,6 @@ describe('mainStep', () => {
       [
         {
           "contenu": undefined,
-          "etapeStatutId": "def",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "dre",
-          "etapeTypeId": "aof",
-          "mainStep": true,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "aof",
           "mainStep": true,
@@ -689,6 +677,18 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fre",
+          "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "def",
+          "etapeTypeId": "aof",
+          "mainStep": true,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "dre",
           "etapeTypeId": "aof",
           "mainStep": true,
         },

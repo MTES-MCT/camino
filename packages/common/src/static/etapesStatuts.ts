@@ -39,6 +39,7 @@ export interface EtapeStatut<T = EtapeStatutId> {
   couleur: Couleur
   description?: string
 }
+// TODO 2023-10-24 utiliser les couleurs de Sarah
 export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
   acc: { id: 'acc', nom: 'accepté', couleur: 'success', description: "La demande a fait l’objet d’une décision favorable de l'administration." },
   aco: { id: 'aco', nom: 'en construction', couleur: 'warning' },

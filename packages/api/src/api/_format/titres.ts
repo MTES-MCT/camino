@@ -6,8 +6,8 @@ import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
-import { AdministrationId, Administrations, ADMINISTRATION_TYPES } from 'camino-common/src/static/administrations.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
@@ -16,7 +16,7 @@ import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts
 // par des requêtes SQL (dans /database/queries/titres)
 // qui retournent les données directement formatées
 export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
-  if (t.confidentiel) {
+  if ((t.confidentiel ?? false) === true) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
       titreStatutId: t.titreStatutId,
@@ -30,9 +30,9 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
     } as ITitre
   }
 
-  if (!fields) return t
+  if (isNullOrUndefined(fields)) return t
 
-  if (fields.geojsonMultiPolygon && t.points?.length) {
+  if (isNotNullNorUndefined(fields.geojsonMultiPolygon) && t.points?.length) {
     t.geojsonMultiPolygon = geojsonFeatureMultiPolygon(t.points) as IGeoJson
   }
 
@@ -92,11 +92,7 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
     ids.push(...titre.administrationsLocales)
   }
 
-  return ids
-    .filter(onlyUnique)
-    .map(id => Administrations[id])
-    .sort((a, b) => ADMINISTRATION_TYPES[a.typeId].ordre - ADMINISTRATION_TYPES[b.typeId].ordre)
-    .map(({ id }) => id)
+  return ids.filter(onlyUnique)
 }
 
 export const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>

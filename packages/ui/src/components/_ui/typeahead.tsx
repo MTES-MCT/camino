@@ -181,11 +181,16 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
                 onArrowUp()
                 payload.preventDefault()
               }
+              if (payload.key === 'Enter') {
+                payload.preventDefault()
+                payload.stopPropagation()
+              }
             }}
             onKeyup={payload => {
               if (payload.key === 'Enter') {
                 selectCurrentSelection(payload)
                 payload.preventDefault()
+                payload.stopPropagation()
               }
             }}
           />

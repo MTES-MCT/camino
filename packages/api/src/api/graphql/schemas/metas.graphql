@@ -64,9 +64,6 @@ type DemarcheType {
 
   description: String
 
-  "Ordre de ce type de démarche"
-  ordre: Int
-
   "Si la démarche contient une information de duréee"
   duree: Boolean
 
@@ -108,8 +105,6 @@ type DemarcheStatut {
   couleur: Couleur!
 
   description: String
-
-  ordre: Int
 }
 
 "Statut d'une phase de titre minier"
