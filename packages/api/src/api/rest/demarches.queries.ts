@@ -28,7 +28,7 @@ import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales.js'
 import { EtapesTypes, EtapeTypeId, EtapeTypeIdFondamentale, etapeTypeIdFondamentaleValidator, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
-import { getAmodiatairesByEtapeIdQuery, getPointsByEtapeIdQuery, getTitulairesByEtapeIdQuery, PointByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { getAmodiatairesByEtapeIdQuery, getEntrepriseDocumentIdsByEtapeId, getPointsByEtapeIdQuery, getTitulairesByEtapeIdQuery, PointByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
@@ -39,6 +39,8 @@ import { UNITE_IDS, UniteId, uniteIdValidator, Unites } from 'camino-common/src/
 import { capitalize } from 'camino-common/src/strings.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
+import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
+import { userSuper } from '../../database/user-super.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -177,12 +179,19 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug): Promis
 
     const contenu: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
 
+    const entrepriseDocuments = []
+
+    const entrepriseDocumentsTypes = getEntrepriseDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
+    if (entrepriseDocumentsTypes.length > 0) {
+      // FIXME user not super
+      entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, userSuper)))
+    }
     const etapeCommon: DemarcheEtapeCommon = {
       date: etape.date,
       etape_statut_id: etape.etape_statut_id,
       sections_with_values: contenu,
+      entreprises_documents: entrepriseDocuments,
       // FIXME ajouter les documents d'étapes
-      // FIXME ajouter les documents d'entreprises
     }
     if (isFondamentale(etape.etape_type_id)) {
       let geojsonMultiPolygon: FeatureMultiPolygon | null = null

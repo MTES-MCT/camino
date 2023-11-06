@@ -7,7 +7,7 @@ import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { communeIdValidator } from './static/communes.js'
 import { secteurMaritimeValidator } from './static/facades.js'
 import { substanceLegaleIdValidator } from './static/substancesLegales.js'
-import { entrepriseIdValidator } from './entreprise.js'
+import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entreprise.js'
 import { etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
@@ -70,6 +70,7 @@ const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
   date: caminoDateValidator,
   sections_with_values: z.array(sectionWithValueValidator),
+  entreprises_documents: z.array(etapeEntrepriseDocumentValidator),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>

@@ -66,7 +66,7 @@
         <hr class="mx--" />
       </div>
 
-      <EntrepriseDocuments
+      <AsyncEntrepriseDocuments
         :apiClient="entrepriseApiClient"
         :user="user"
         :etapeId="etape.id"
@@ -118,7 +118,7 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { EntrepriseDocuments } from './entreprise-documents'
+import { AsyncEntrepriseDocuments } from './entreprise-documents'
 import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
@@ -132,7 +132,7 @@ export default {
     Fondamentales,
     UiSection,
     Documents,
-    EntrepriseDocuments,
+    AsyncEntrepriseDocuments,
   },
 
   props: {

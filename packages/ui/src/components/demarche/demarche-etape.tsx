@@ -17,6 +17,7 @@ import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { valeurFind } from 'camino-common/src/sections'
+import { EntrepriseDocuments } from '../etape/entreprise-documents'
 
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
@@ -88,6 +89,13 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
         <>
           <DsfrSeparator />
           <DsfrPerimetre titreSlug={props.titreSlug} apiClient={null} geojsonMultiPolygon={props.fondamentale.geojsonMultiPolygon} router={props.router} />
+        </>
+      ) : null}
+
+      {props.entreprises_documents.length > 0 ? (
+        <>
+          <DsfrSeparator />
+          <EntrepriseDocuments etapeEntrepriseDocuments={props.entreprises_documents} />
         </>
       ) : null}
     </div>
