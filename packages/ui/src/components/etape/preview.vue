@@ -9,7 +9,9 @@
       <h3 class="cap-first mb-s">{{ etapeType.nom }}</h3>
 
       <div class="mb-xs flex flex-center">
-        <Statut :color="etapeStatut.couleur" :nom="statutNom" />
+        <div class="dsfr">
+          <EtapeStatut :etapeStatutId="etape.statutId" />
+        </div>
 
         <HelpTooltip v-if="demandeHelp" :text="demandeHelp" class="ml-m" />
       </div>
@@ -103,7 +105,7 @@ import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
 import Accordion from '../_ui/accordion.vue'
 import { Tag } from '../_ui/tag'
-import { Statut } from '../_common/statut'
+import { EtapeStatut } from '../_common/etape-statut'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
@@ -125,7 +127,7 @@ export default {
     HelpTooltip,
     Accordion,
     Tag,
-    Statut,
+    EtapeStatut,
     Perimetre,
     Fondamentales,
     UiSection,
