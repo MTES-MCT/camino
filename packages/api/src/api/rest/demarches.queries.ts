@@ -37,7 +37,8 @@ import { contenuValidator } from './activites.queries.js'
 import { numberFormat } from 'camino-common/src/number.js'
 import { UNITE_IDS, UniteId, uniteIdValidator, Unites } from 'camino-common/src/static/unites.js'
 import { capitalize } from 'camino-common/src/strings.js'
-import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { SectionWithValue } from 'camino-common/src/sections.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -170,12 +171,16 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug): Promis
   }
   const formatedEtapes: DemarcheGet['etapes'] = []
   for (const etape of etapes) {
+    const sections = getSections(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
+      .map(section => ({ ...section, elements: section.elements.filter(element => !(etape.heritage_contenu?.[section.id]?.[element.id]?.actif ?? false)) }))
+      .filter(section => section.elements.length > 0)
+
+    const contenu: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
+
     const etapeCommon: DemarcheEtapeCommon = {
       date: etape.date,
       etape_statut_id: etape.etape_statut_id,
-      // FIXME contenu
-      // FIXME ne pas mettre le contenu hérité
-      contenu: {},
+      sections_with_values: contenu,
       // FIXME ajouter les documents d'étapes
       // FIXME ajouter les documents d'entreprises
     }
@@ -314,8 +319,8 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   substances: z.array(substanceLegaleIdValidator).nullable(),
   etape_type_id: etapeTypeIdValidator,
   etape_statut_id: etapeStatutIdValidator,
-  incertitudes: z.record(z.string(), z.boolean()).nullable(),
   heritage_props: z.record(z.string(), z.object({ actif: z.boolean() })).nullable(),
+  heritage_contenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))).nullable(),
   date_debut: caminoDateValidator.nullable(),
   date_fin: caminoDateValidator.nullable(),
   duree: z.number().nullable(),
@@ -332,8 +337,8 @@ select
     e.substances,
     e.type_id as etape_type_id,
     e.statut_id as etape_statut_id,
-    e.incertitudes,
     e.heritage_props,
+    e.heritage_contenu,
     e.date_debut,
     e.date_fin,
     e.duree,

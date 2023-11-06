@@ -138,21 +138,21 @@ const demarche: DemarcheGet = {
 
         surface: 10,
       },
-      contenu: { mécanisation: 'oui' },
+      sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
     },
     {
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date: dateAddDays(date, 10),
 
-      contenu: {},
+      sections_with_values: [],
     },
     {
       etape_type_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeStatutId,
       date: dateAddDays(date, 20),
 
-      contenu: {},
+      sections_with_values: [],
     },
   ],
 }

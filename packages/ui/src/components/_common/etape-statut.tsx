@@ -28,7 +28,6 @@ const couleurParStatut = {
   [ETAPES_STATUTS.PROGRAMME]: 'orange-terre-battue',
 } as const satisfies Record<EtapeStatutId, CouleurIllustrative>
 
-// FIXME utiliser dans les filtres et dans l'affichage des étapes sur la page d'un titre
 export const EtapeStatut: FunctionalComponent<Props> = (props: Props) => {
   const couleur = couleurParStatut[props.etapeStatutId]
 

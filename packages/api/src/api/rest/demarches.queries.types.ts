@@ -58,9 +58,9 @@ export interface IGetEtapesByDemarcheIdDbResult {
   duree: number | null;
   etape_statut_id: string;
   etape_type_id: string;
+  heritage_contenu: Json | null;
   heritage_props: Json | null;
   id: string;
-  incertitudes: Json | null;
   secteurs_maritime: Json | null;
   substances: Json;
   surface: number | null;

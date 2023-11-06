@@ -6,12 +6,13 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
   // @ts-ignore
   component: DemarcheEtape,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
+  decorators: [vueRouter([{ name: 'entreprise' }]), () => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 
 export default meta
@@ -49,7 +50,7 @@ export const DemandeNoMap: StoryFn = () => (
       geojsonMultiPolygon: null,
       surface: null,
     }}
-    contenu={{ mécanisation: 'oui' }}
+    sections_with_values={[{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }]}
   />
 )
 
@@ -108,7 +109,7 @@ export const DemandeNoSnapshot: StoryFn = () => (
       },
       surface: 10,
     }}
-    contenu={{ mécanisation: 'oui' }}
+    sections_with_values={[{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }]}
   />
 )
 
@@ -119,7 +120,7 @@ export const Depot: StoryFn = () => (
     etape_type_id={EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId}
     etape_statut_id={EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId}
     date={date}
-    contenu={{}}
+    sections_with_values={[]}
   />
 )
 
@@ -130,6 +131,6 @@ export const AvisDefavorable: StoryFn = () => (
     etape_type_id={EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId}
     etape_statut_id={EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId}
     date={date}
-    contenu={{}}
+    sections_with_values={[]}
   />
 )

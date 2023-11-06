@@ -16,6 +16,7 @@ import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { valeurFind } from 'camino-common/src/sections'
 
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
@@ -36,7 +37,7 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 
 export const DemarcheEtape: FunctionalComponent<Props> = props => {
   const hasContent: boolean =
-    (fondamentalePropsName in props && getValues(props.fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0))) || Object.keys(props.contenu).length > 0
+    (fondamentalePropsName in props && getValues(props.fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0))) || props.sections_with_values.length > 0
 
   return (
     <div class="fr-pt-1w fr-pb-1w fr-pl-2w fr-pr-2w" style={{ border: '1px solid var(--grey-900-175)' }}>
@@ -72,8 +73,14 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
             {props.fondamentale.surface !== null ? <EtapePropItem title="Surface" text={`${numberFormat(props.fondamentale.surface)} km² environ`} /> : null}
           </>
         ) : null}
-        {Object.entries(props.contenu).map(([label, value]) => (
-          <EtapePropItem title={label} text={value} />
+        {props.sections_with_values.map(section => (
+          <>
+            {section.elements
+              .filter(element => valeurFind(element) !== '–')
+              .map(element => (
+                <EtapePropItem title={element.nom ?? element.id} text={valeurFind(element)} />
+              ))}
+          </>
         ))}
       </div>
 
