@@ -23,7 +23,7 @@ import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/sr
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
 import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
@@ -366,7 +366,7 @@ interface ITitreActivite {
 interface ITitreDemarche {
   id: DemarcheId
   description?: string
-  slug?: string
+  slug?: DemarcheSlug
   titreId: TitreId
   titre?: ITitre | null
   typeId: DemarcheTypeId

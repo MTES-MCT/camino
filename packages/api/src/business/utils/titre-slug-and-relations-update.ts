@@ -17,6 +17,7 @@ import { slugify } from 'camino-common/src/strings.js'
 import { TitreId, TitreSlug, titreSlugValidator } from 'camino-common/src/titres.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const titreSlugFind = (titre: ITitre): TitreSlug => {
   const { typeId, nom } = titre
@@ -57,6 +58,7 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation<ActiviteId> |
   {
     name: 'demarches',
     slugFind: titreDemarcheSlugFind,
+    // @ts-ignore 2023-11-06 il faut retravailler ça
     update: titreDemarcheUpdate,
     relations: [
       {
@@ -114,11 +116,11 @@ export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasC
   const titreWithTheSameSlug = await titresGet({ slugs: [slug] }, { fields: { id: {} } }, userSuper)
 
   if (titreWithTheSameSlug?.length > 1 || (titreWithTheSameSlug?.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
-    if (!titre.slug?.startsWith(slug)) {
+    if (isNotNullNorUndefined(titre.slug) && titre.slug.startsWith(slug)) {
+      slug = titre.slug
+    } else {
       slug = titreSlugValidator.parse(`${slug}-${idGenerate(8)}`)
       doublonTitreId = titreWithTheSameSlug[0].id
-    } else {
-      slug = titre.slug
     }
   }
 
