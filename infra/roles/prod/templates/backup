@@ -1,5 +1,5 @@
 #!/bin/bash
-set eufo -pipefail
+set -eufo pipefail
 
 source /srv/scripts/restic_data
 
