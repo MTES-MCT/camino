@@ -9,7 +9,11 @@ const meta: Meta = {
 }
 export default meta
 
-export const Empty: StoryFn = () => <EntrepriseDocuments etapeEntrepriseDocuments={[]} />
+export const Empty: StoryFn = () => (
+  <div>
+    <EntrepriseDocuments etapeEntrepriseDocuments={[]} />
+  </div>
+)
 
 export const WithDocuments: StoryFn = () => (
   <EntrepriseDocuments
