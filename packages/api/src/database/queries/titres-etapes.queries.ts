@@ -9,8 +9,9 @@ import {
   IGetAmodiatairesByEtapeIdQueryDbQuery,
   IInsertTitreEtapeEntrepriseDocumentInternalQuery,
   IGetPointsByEtapeIdQueryDbQuery,
+  IGetDocumentsByEtapeIdQueryQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeDocument, etapeDocumentValidator, EtapeId } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
@@ -135,3 +136,23 @@ from
 where
     tt.titre_etape_id = $ etapeId !
 `
+
+const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeDocument>>`
+select
+    d.id,
+    d.type_id as document_type_id,
+    d.description,
+    public_lecture,
+    entreprises_lecture
+from
+    documents d
+where
+    d.titre_etape_id = $ titre_etape_id !
+`
+
+export const getDocumentsByEtapeId = async (titre_etape_id: EtapeId, pool: Pool, _user: User): Promise<EtapeDocument[]> => {
+  const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
+
+  // FIXME canSeeEtapeDocuments
+  return result
+}

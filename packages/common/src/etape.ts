@@ -1,9 +1,9 @@
 import { CaminoDate } from './date.js'
 import { DemarcheId } from './demarche.js'
-import { EntrepriseId } from './entreprise.js'
+import { EntrepriseId, documentIdValidator } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
-import { DocumentTypeId } from './static/documentsTypes.js'
+import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
@@ -73,3 +73,13 @@ export type CommonEtape = {
   titreDemarcheId: DemarcheId
   typeId: DemarcheTypeId
 }
+
+export const etapeDocumentValidator = z.object({
+  id: documentIdValidator,
+  description: z.string().nullable(),
+  document_type_id: documentTypeIdValidator,
+  public_lecture: z.boolean().default(false),
+  entreprises_lecture: z.boolean().default(false),
+})
+
+export type EtapeDocument = z.infer<typeof etapeDocumentValidator>

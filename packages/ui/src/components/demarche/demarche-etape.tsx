@@ -18,6 +18,8 @@ import { numberFormat } from 'camino-common/src/number'
 import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { valeurFind } from 'camino-common/src/sections'
 import { EntrepriseDocuments } from '../etape/entreprise-documents'
+import { EtapeDocuments } from '../etape/etape-documents'
+import { User } from 'camino-common/src/roles'
 
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
@@ -25,6 +27,7 @@ const fondamentalePropsName = 'fondamentale'
 type Props = CommonDemarcheEtape & {
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
+  user: User
 }
 
 const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeStatutId): boolean => {
@@ -96,6 +99,13 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
         <>
           <DsfrSeparator />
           <EntrepriseDocuments etapeEntrepriseDocuments={props.entreprises_documents} />
+        </>
+      ) : null}
+
+      {props.documents.length > 0 ? (
+        <>
+          <DsfrSeparator />
+          <EtapeDocuments etapeDocuments={props.documents} user={props.user} />
         </>
       ) : null}
     </div>

@@ -167,8 +167,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
           titresIds: [],
           typesIds: [],
         })
-        titresValidesGeojson.value.splice(0)
-        titresValidesGeojson.value.push(...res.elements.filter(({ slug }) => slug !== props.titreSlug))
+        titresValidesGeojson.value = res.elements.filter(({ slug }) => slug !== props.titreSlug)
       } catch (e) {
         console.error(e)
       }

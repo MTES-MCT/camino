@@ -4,13 +4,17 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { DemarcheGet, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { titreSlugValidator } from 'camino-common/src/titres'
+import { titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
 import { communeIdValidator } from 'camino-common/src/static/communes'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument, documentIdValidator, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { Router } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeDocument } from 'camino-common/src/etape'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
+import { MapPattern } from './_map/pattern'
 
 const meta: Meta = {
   title: 'Components/DemarcheNoStoryshots',
@@ -20,7 +24,6 @@ const meta: Meta = {
 }
 export default meta
 
-// FIXME ajouter un test avec des voisins sur la carte
 const getDemarcheAction = action('getDemarcheAction')
 const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
 const routerPushAction = action('routerPushAction')
@@ -34,6 +37,48 @@ const routerPushMock: Pick<Router, 'push'> = {
     return Promise.resolve()
   },
 }
+
+const documents: EtapeDocument[] = [
+  {
+    id: documentIdValidator.parse('id'),
+    document_type_id: 'atf',
+    description: 'Une description',
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id2'),
+    document_type_id: 'bil',
+    description: null,
+    public_lecture: true,
+    entreprises_lecture: true,
+  },
+  {
+    id: documentIdValidator.parse('id2'),
+    document_type_id: 'bil',
+    description: null,
+    public_lecture: false,
+    entreprises_lecture: true,
+  },
+]
+
+const entrepriseDocuments: EtapeEntrepriseDocument[] = [
+  {
+    id: entrepriseDocumentIdValidator.parse('id'),
+    date: toCaminoDate('2023-01-01'),
+    entreprise_document_type_id: 'atf',
+    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    description: null,
+  },
+  {
+    id: entrepriseDocumentIdValidator.parse('id2'),
+    date: toCaminoDate('2023-03-01'),
+    entreprise_document_type_id: 'bil',
+    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    description: 'Une description',
+  },
+]
+
 const demarche: DemarcheGet = {
   id: demarcheIdValidator.parse('demarcheId'),
   demarche_type_id: 'oct',
@@ -139,6 +184,8 @@ const demarche: DemarcheGet = {
         surface: 10,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
+      documents,
+      entreprises_documents: entrepriseDocuments,
     },
     {
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
@@ -146,6 +193,8 @@ const demarche: DemarcheGet = {
       date: dateAddDays(date, 10),
 
       sections_with_values: [],
+      documents: [],
+      entreprises_documents: [],
     },
     {
       etape_type_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeTypeId,
@@ -153,6 +202,8 @@ const demarche: DemarcheGet = {
       date: dateAddDays(date, 20),
 
       sections_with_values: [],
+      documents: [],
+      entreprises_documents: [],
     },
   ],
 }
@@ -161,7 +212,38 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
   getTitresWithPerimetreForCarte: params => {
     getTitresWithPerimetreForCarteAction(params)
 
-    return Promise.resolve({ elements: [], total: 0 })
+    return Promise.resolve({
+      elements: [
+        {
+          id: titreIdValidator.parse('id-du-titre-voisin'),
+          nom: 'nom du titre',
+          references: [],
+          slug: titreSlugValidator.parse('slug-du-titre-voisin'),
+          titreStatutId: TitresStatutIds.Valide,
+          typeId: TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES,
+          titulaires: [],
+          geojsonMultiPolygon: {
+            type: 'Feature',
+            properties: {},
+
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
+                [
+                  [
+                    [-53.57, 3.84],
+                    [-53.56, 3.81],
+                    [-53.565, 3.8309926670647294],
+                    [-53.57, 3.84],
+                  ],
+                ],
+              ],
+            },
+          },
+        },
+      ],
+      total: 1,
+    })
   },
   getDemarche: demarcheIdOrSlug => {
     getDemarcheAction(demarcheIdOrSlug)
@@ -170,7 +252,12 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
   },
 }
 
-export const FullNoSnapshot: StoryFn = () => <PureDemarche user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
+export const FullNoSnapshot: StoryFn = () => (
+  <>
+    <MapPattern />
+    <PureDemarche user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
+  </>
+)
 export const FullSingularNoSnapshot: StoryFn = () => (
   <PureDemarche
     user={{ ...testBlankUser, role: 'super' }}

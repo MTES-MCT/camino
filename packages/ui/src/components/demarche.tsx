@@ -146,7 +146,7 @@ export const PureDemarche = defineComponent<Props>(props => {
             <div>
               {demarche.etapes.map(etape => (
                 <div class="fr-pb-1w">
-                  <DemarcheEtape {...etape} titreSlug={demarche.titre.slug} router={props.router} />
+                  <DemarcheEtape {...etape} titreSlug={demarche.titre.slug} router={props.router} user={props.user} />
                 </div>
               ))}
             </div>

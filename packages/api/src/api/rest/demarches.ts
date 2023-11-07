@@ -15,7 +15,7 @@ export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: Custo
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const demarche = await getDemarcheQuery(pool, demarcheId.data)
+      const demarche = await getDemarcheQuery(pool, demarcheId.data, user)
 
       res.json(demarche)
     } catch (e) {

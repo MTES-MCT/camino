@@ -126,3 +126,23 @@ export interface IGetAmodiatairesByEtapeIdQueryDbQuery {
   result: IGetAmodiatairesByEtapeIdQueryDbResult;
 }
 
+/** 'GetDocumentsByEtapeIdQuery' parameters type */
+export interface IGetDocumentsByEtapeIdQueryParams {
+  titre_etape_id: string;
+}
+
+/** 'GetDocumentsByEtapeIdQuery' return type */
+export interface IGetDocumentsByEtapeIdQueryResult {
+  description: string;
+  document_type_id: string;
+  entreprises_lecture: boolean | null;
+  id: string;
+  public_lecture: boolean | null;
+}
+
+/** 'GetDocumentsByEtapeIdQuery' query type */
+export interface IGetDocumentsByEtapeIdQueryQuery {
+  params: IGetDocumentsByEtapeIdQueryParams;
+  result: IGetDocumentsByEtapeIdQueryResult;
+}
+

@@ -2,11 +2,13 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { DemarcheEtape } from './demarche-etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument, documentIdValidator, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
+import { testBlankUser } from 'camino-common/src/tests-utils'
+import { EtapeDocument } from 'camino-common/src/etape'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -29,8 +31,50 @@ const routerPushMock: Pick<Router, 'push'> = {
   },
 }
 
+const documents: EtapeDocument[] = [
+  {
+    id: documentIdValidator.parse('id'),
+    document_type_id: 'atf',
+    description: 'Une description',
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id2'),
+    document_type_id: 'bil',
+    description: null,
+    public_lecture: true,
+    entreprises_lecture: true,
+  },
+  {
+    id: documentIdValidator.parse('id2'),
+    document_type_id: 'bil',
+    description: null,
+    public_lecture: false,
+    entreprises_lecture: true,
+  },
+]
+
+const entrepriseDocuments: EtapeEntrepriseDocument[] = [
+  {
+    id: entrepriseDocumentIdValidator.parse('id'),
+    date: toCaminoDate('2023-01-01'),
+    entreprise_document_type_id: 'atf',
+    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    description: null,
+  },
+  {
+    id: entrepriseDocumentIdValidator.parse('id2'),
+    date: toCaminoDate('2023-03-01'),
+    entreprise_document_type_id: 'bil',
+    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    description: 'Une description',
+  },
+]
+
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
+    user={{ ...testBlankUser, role: 'super' }}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId}
@@ -51,11 +95,14 @@ export const DemandeNoMap: StoryFn = () => (
       surface: null,
     }}
     sections_with_values={[{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }]}
+    documents={documents}
+    entreprises_documents={entrepriseDocuments}
   />
 )
 
 export const DemandeNoSnapshot: StoryFn = () => (
   <DemarcheEtape
+    user={{ ...testBlankUser, role: 'super' }}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId}
@@ -110,27 +157,35 @@ export const DemandeNoSnapshot: StoryFn = () => (
       surface: 10,
     }}
     sections_with_values={[{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }]}
+    documents={[]}
+    entreprises_documents={[]}
   />
 )
 
 export const Depot: StoryFn = () => (
   <DemarcheEtape
+    user={{ ...testBlankUser, role: 'super' }}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId}
     etape_statut_id={EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId}
     date={date}
     sections_with_values={[]}
+    documents={documents}
+    entreprises_documents={entrepriseDocuments}
   />
 )
 
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
+    user={{ ...testBlankUser, role: 'super' }}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId}
     etape_statut_id={EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId}
     date={date}
     sections_with_values={[]}
+    documents={[]}
+    entreprises_documents={[]}
   />
 )
