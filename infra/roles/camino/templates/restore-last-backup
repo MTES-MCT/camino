@@ -1,5 +1,5 @@
 #!/bin/bash
-set eufo -pipefail
+set -eufo pipefail
 
 if [ "$(id -u)" != "{{camino_user_uid}}" ]; then
    echo "This script must be run as user 'camino'" 1>&2
