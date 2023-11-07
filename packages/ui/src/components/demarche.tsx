@@ -153,7 +153,6 @@ export const PureDemarche = defineComponent<Props>(props => {
           </div>
         )}
       />
-      {/* // FIXME <CaminoAccessError user={props.user} /> */}
     </div>
   )
 })

@@ -185,7 +185,6 @@ export const BigNoSnapshot: StoryFn = () => (
   </>
 )
 
-// FIXME les gros geojson ont des index qui débordent du cercle bleu (> 999 points)
 export const MultipleNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />

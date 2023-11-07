@@ -3,12 +3,16 @@ import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { userSuper } from '../../database/user-super.js'
 import { titreCreate } from '../../database/queries/titres.js'
-import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import type { Pool } from 'pg'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { titreSlugValidator } from 'camino-common/src/titres.js'
-import { DemarcheGet, demarcheGetValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
+import { demarcheGetValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import TitresDemarches from '../../database/models/titres-demarches.js'
+import { SUBSTANCES_LEGALES_IDS } from 'camino-common/src/static/substancesLegales.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -49,45 +53,117 @@ describe('getDemarche', () => {
       {}
     )
 
-    const titreDemarche = await titreDemarcheCreate({
+    const demarcheId = newDemarcheId('superDemarcheId')
+    const titreDemarche = await TitresDemarches.query().insertAndFetch({
+      id: demarcheId,
+      slug: demarcheSlugValidator.parse('demarche-slug'),
       titreId: titre.id,
       typeId: 'oct',
       statutId: 'acc',
       demarcheDateDebut: toCaminoDate('2023-01-01'),
       demarcheDateFin: toCaminoDate('2025-01-01'),
     })
+
+    await titreEtapeCreate(
+      {
+        typeId: ETAPES_TYPES.demande,
+        statutId: ETAPES_STATUTS.DEPOSE,
+        date: toCaminoDate('2023-01-01'),
+        titreDemarcheId: titreDemarche.id,
+        contenu: {
+          arm: {
+            franchissements: 3,
+          },
+        },
+        dateDebut: toCaminoDate('2023-01-01'),
+        duree: 5,
+        substances: [SUBSTANCES_LEGALES_IDS.or, SUBSTANCES_LEGALES_IDS.argent],
+      },
+      userSuper,
+      titre.id
+    )
     const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: titreDemarche.id }, userSuper)
 
     expect(tested.statusCode).toBe(200)
     const data = demarcheGetValidator.parse(tested.body)
 
-    const expected: DemarcheGet = {
-      id: titreDemarche.id,
-      slug: demarcheSlugValidator.parse(titreDemarche.slug),
-      titre: {
-        nom: titreNom,
-        phases: [
+    expect(data).toMatchInlineSnapshot(`
+      {
+        "amodiataires": [],
+        "communes": [],
+        "contenu": {
+          "Franchissements de cours d'eau": "3",
+        },
+        "demarche_statut_id": "acc",
+        "demarche_type_id": "oct",
+        "etapes": [
           {
-            demarche_date_debut: toCaminoDate('2023-01-01'),
-            demarche_date_fin: toCaminoDate('2025-01-01'),
-            demarche_type_id: titreDemarche.typeId,
-            slug: demarcheSlugValidator.parse(titreDemarche.slug),
+            "date": "2023-01-01",
+            "documents": [],
+            "entreprises_documents": [],
+            "etape_statut_id": "dep",
+            "etape_type_id": "mfr",
+            "fondamentale": {
+              "amodiataires": null,
+              "date_debut": "2023-01-01",
+              "date_fin": null,
+              "duree": 5,
+              "geojsonMultiPolygon": null,
+              "substances": [
+                "auru",
+                "arge",
+              ],
+              "surface": null,
+              "titulaires": null,
+            },
+            "sections_with_values": [
+              {
+                "elements": [
+                  {
+                    "description": "",
+                    "id": "mecanise",
+                    "nom": "Prospection mécanisée",
+                    "type": "radio",
+                    "value": null,
+                  },
+                  {
+                    "description": "Nombre de franchissements de cours d'eau",
+                    "id": "franchissements",
+                    "nom": "Franchissements de cours d'eau",
+                    "optionnel": true,
+                    "type": "integer",
+                    "value": 3,
+                  },
+                ],
+                "id": "arm",
+                "nom": "Caractéristiques ARM",
+              },
+            ],
           },
         ],
-        slug: titreSlugValidator.parse(titre.slug),
-        titre_type_id: titreTypeId,
-      },
-      contenu: {},
-      amodiataires: [],
-      communes: [],
-      demarche_statut_id: 'acc',
-      demarche_type_id: 'oct',
-      etapes: [],
-      geojsonMultiPolygon: null,
-      secteurs_maritimes: [],
-      substances: [],
-      titulaires: [],
-    }
-    expect(data).toEqual(expected)
+        "geojsonMultiPolygon": null,
+        "id": "superDemarcheId",
+        "secteurs_maritimes": [],
+        "slug": "demarche-slug",
+        "substances": [
+          "auru",
+          "arge",
+        ],
+        "titre": {
+          "nom": "nom-titre",
+          "phases": [
+            {
+              "demarche_date_debut": "2023-01-01",
+              "demarche_date_fin": "2025-01-01",
+              "demarche_type_id": "oct",
+              "slug": "demarche-slug",
+            },
+          ],
+          "slug": "arm-slug",
+          "titre_type_id": "arm",
+        },
+        "titulaires": [],
+      }
+    `)
   })
 })

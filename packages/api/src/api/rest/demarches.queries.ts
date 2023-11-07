@@ -83,7 +83,7 @@ const getDemarcheContenu = (etapes: GetEtapesByDemarcheIdDb[], titreTypeId: Titr
     titreTypeId === TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS ||
     titreTypeId === TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS
   ) {
-    // FIXME à voir avec Pierre-Olivier, les sections VOLUME ne sont jamais utilisées pour les PXW
+    // TODO 2023-11-07 à voir avec Pierre-Olivier, les sections VOLUME ne sont jamais utilisées pour les PXW
     const getVolume = (sectionName: 'cxx' | 'pxx'): Record<string, string> => {
       let volume: number | null = null
       let volumeUniteId: UniteId | null = null
@@ -155,8 +155,6 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
   const phases = await dbQueryAndValidate(getDemarchesPhasesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesPhasesByTitreIdDbValidator)
 
   // FIXME charger les étapes que  l’utilisateur a le droit de voir
-
-  // FIXME integration tests
 
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
