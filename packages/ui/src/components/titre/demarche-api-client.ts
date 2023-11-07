@@ -1,14 +1,14 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { getWithJson } from '@/api/client-rest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheGet, DemarcheId } from 'camino-common/src/demarche'
+import { DemarcheGet, DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreId } from 'camino-common/src/titres'
-import { DomaineId, domainesIds } from 'camino-common/src/static/domaines'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
@@ -56,7 +56,7 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: InputDemarcheCreation) => Promise<void>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<void>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarche: (demarcheId: DemarcheId) => Promise<DemarcheGet>
+  getDemarche: (demarcheId: DemarcheIdOrSlug) => Promise<DemarcheGet>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 
@@ -94,7 +94,7 @@ export const demarcheApiClient: DemarcheApiClient = {
       }
     `)({ id: demarcheId })
   },
-  getDemarche: (demarcheId: DemarcheId): Promise<DemarcheGet> => {
+  getDemarche: (demarcheId: DemarcheIdOrSlug): Promise<DemarcheGet> => {
     return getWithJson('/rest/demarches/:demarcheId', { demarcheId })
   },
   getDemarches: async (params: GetDemarchesParams) => {

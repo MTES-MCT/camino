@@ -2,6 +2,8 @@ import { computed, defineComponent, watch } from 'vue'
 import { CaminoRouterLink, routerQueryToString } from '@/router/camino-router-link'
 import { RouteLocationNormalizedLoaded, onBeforeRouteLeave } from 'vue-router'
 import { AsyncData } from '../../api/client-rest'
+import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -32,10 +34,12 @@ export type TableRouterLink = {
   params?: {
     id?: string
     activiteId?: string
+    demarcheId?: DemarcheIdOrSlug
   }
 }
 export interface TableRow<T extends string = string> {
   id: string
+  class?: NonEmptyArray<string>
   link: TableRouterLink | null
   columns: {
     [key in T]: ComponentColumnData | TextColumnData
@@ -105,7 +109,7 @@ export const Table = defineComponent(
               <tr>
                 {props.columns.map(col => (
                   <th key={col.id} scope="col" class="nowrap">
-                    {col.noSort ? (
+                    {col.noSort !== undefined && col.noSort ? (
                       <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
                     ) : sortParams.value.column === col.id ? (
                       <CaminoRouterLink
@@ -132,7 +136,7 @@ export const Table = defineComponent(
               {props.rows.status === 'LOADED' ? (
                 <>
                   {props.rows.value.rows.map(row => (
-                    <tr key={row.id}>
+                    <tr key={row.id} class={row.class}>
                       {props.columns.map((col, index) => (
                         <td key={col.id}>
                           {index === 0 && row.link !== null ? (
@@ -169,7 +173,7 @@ export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnDat
   if (isComponentColumnData(props.data)) {
     const myComp = props.data.component
 
-    if (props.data.value) {
+    if (props.data.value !== undefined) {
       return (
         <myComp {...props.data.props} class={props.data.class ?? ''}>
           {props.data.value}

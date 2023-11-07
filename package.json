@@ -28,17 +28,17 @@
   },
   "lint-staged": {
     "packages/ui/**/*.{js,ts,vue,tsx}": [
-      "eslint --cache --fix",
+      "eslint --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/ui/**/*.css": "prettier --write",
     "packages/api/**/*.{js,ts}": [
-      "eslint --cache --fix",
+      "eslint --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/api/**/*.{graphql,md}": "prettier --write",
     "packages/common/**/*.ts": [
-      "eslint --cache --fix",
+      "eslint --cache --fix --max-warnings=0",
       "prettier --write"
     ],
     "packages/ui/src/components/_ui/iconSprite.vue": [

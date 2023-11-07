@@ -11,7 +11,7 @@ const couleurParStatut = {
   dmc: 'beige-gris-galet',
   dmi: 'orange-terre-battue',
   ech: 'beige-gris-galet',
-  ind: 'purple-glycine',
+  ind: 'beige-gris-galet',
   mod: 'green-bourgeon',
   sup: 'green-bourgeon',
   val: 'green-bourgeon',

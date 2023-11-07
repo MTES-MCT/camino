@@ -533,29 +533,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-popup-content-wrapper {
   padding: 1px;
   text-align: left;
-  border-radius: var(--unit-xs);
 }
 
 .leaflet-popup-content {
-  padding: var(--unit-s) var(--unit-m) 0;
+  padding: var(--unit-s) var(--unit-m);
 }
-
-/* .leaflet-popup-tip-container {
-  width: 40px;
-  height: 20px;
-  position: absolute;
-  left: 50%;
-  margin-left: -20px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.leaflet-popup-tip {
-  width: 17px;
-  height: 17px;
-  margin: -10px auto 0;
-  transform: rotate(45deg);
-} */
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {

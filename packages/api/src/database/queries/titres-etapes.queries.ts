@@ -1,14 +1,19 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { dbQueryAndValidate, Redefine } from '../../pg-database.js'
 import {
   IDeleteTitreEtapeEntrepriseDocumentInternalQuery,
   IGetEntrepriseDocumentIdsByEtapeIdQueryQuery,
   IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery,
+  IGetTitulairesByEtapeIdQueryDbQuery,
+  IGetAmodiatairesByEtapeIdQueryDbQuery,
   IInsertTitreEtapeEntrepriseDocumentInternalQuery,
+  IGetPointsByEtapeIdQueryDbQuery,
+  IGetDocumentsByEtapeIdQueryQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeId } from 'camino-common/src/etape.js'
-import { EntrepriseDocumentId, EtapeEntrepriseDocument, entrepriseDocumentValidator, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import { EtapeDocument, etapeDocumentValidator, EtapeId } from 'camino-common/src/etape.js'
+import { EntrepriseDocumentId, entrepriseDocumentValidator, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -68,4 +73,86 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   const result = await dbQueryAndValidate(getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery, params, pool, entrepriseDocumentLargeObjectIdsValidator)
 
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
+}
+
+export const getTitulairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
+  return dbQueryAndValidate(getTitulairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)
+}
+
+const getTitulairesByEtapeIdQueryDb = sql<Redefine<IGetTitulairesByEtapeIdQueryDbQuery, { etapeId: EtapeId }, EntreprisesByEtapeId>>`
+select
+    e.id,
+    e.nom,
+    tt.operateur
+from
+    titres_titulaires tt
+    join entreprises e on e.id = tt.entreprise_id
+where
+    tt.titre_etape_id = $ etapeId !
+`
+
+const pointsByEtapeIdValidator = z.object({
+  id: z.string(),
+  coordonnees: z.object({ x: z.number(), y: z.number() }),
+  groupe: z.number(),
+  contour: z.number(),
+  point: z.number(),
+  description: z.string().nullable(),
+  nom: z.string().nullable(),
+})
+export type PointByEtapeId = z.infer<typeof pointsByEtapeIdValidator>
+
+export const getPointsByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<PointByEtapeId[]> => {
+  return dbQueryAndValidate(getPointsByEtapeIdQueryDb, { etapeId }, pool, pointsByEtapeIdValidator)
+}
+
+const getPointsByEtapeIdQueryDb = sql<Redefine<IGetPointsByEtapeIdQueryDbQuery, { etapeId: EtapeId }, PointByEtapeId>>`
+select
+    id,
+    coordonnees,
+    groupe,
+    contour,
+    point,
+    nom,
+    description
+from
+    titres_points
+where
+    titre_etape_id = $ etapeId !
+`
+
+export const getAmodiatairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
+  return dbQueryAndValidate(getAmodiatairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)
+}
+
+const getAmodiatairesByEtapeIdQueryDb = sql<Redefine<IGetAmodiatairesByEtapeIdQueryDbQuery, { etapeId: EtapeId }, EntreprisesByEtapeId>>`
+select
+    e.id,
+    e.nom,
+    tt.operateur
+from
+    titres_amodiataires tt
+    join entreprises e on e.id = tt.entreprise_id
+where
+    tt.titre_etape_id = $ etapeId !
+`
+
+const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeDocument>>`
+select
+    d.id,
+    d.type_id as document_type_id,
+    d.description,
+    public_lecture,
+    entreprises_lecture
+from
+    documents d
+where
+    d.titre_etape_id = $ titre_etape_id !
+`
+
+export const getDocumentsByEtapeId = async (titre_etape_id: EtapeId, pool: Pool, _user: User): Promise<EtapeDocument[]> => {
+  const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
+
+  // FIXME canSeeEtapeDocuments
+  return result
 }

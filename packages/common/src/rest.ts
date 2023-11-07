@@ -11,7 +11,7 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
 } from './entreprise.js'
-import { demarcheGetValidator, demarcheIdValidator } from './demarche.js'
+import { demarcheGetValidator, demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
   activitesByTitreValidator,
@@ -107,7 +107,7 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionWithValueValidator) } },
-  '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdValidator }, get: { output: demarcheGetValidator } },
+  '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: demarcheGetValidator } },
   '/rest/titres/:titreId': { params: { titreId: titreIdValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
   '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },

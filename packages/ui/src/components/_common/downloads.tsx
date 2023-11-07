@@ -64,8 +64,6 @@ export async function download<T extends DownloadRestRoutes>(selectedFormat: Dow
   if (selectedFormat !== null) {
     const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...query })
 
-    console.log(url)
-
     saveAs(url)
 
     if (props.matomo) {

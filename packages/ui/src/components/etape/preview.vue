@@ -9,7 +9,9 @@
       <h3 class="cap-first mb-s">{{ etapeType.nom }}</h3>
 
       <div class="mb-xs flex flex-center">
-        <Statut :color="etapeStatut.couleur" :nom="statutNom" />
+        <div class="dsfr">
+          <EtapeStatut :etapeStatutId="etape.statutId" />
+        </div>
 
         <HelpTooltip v-if="demandeHelp" :text="demandeHelp" class="ml-m" />
       </div>
@@ -64,7 +66,7 @@
         <hr class="mx--" />
       </div>
 
-      <EntrepriseDocuments
+      <AsyncEntrepriseDocuments
         :apiClient="entrepriseApiClient"
         :user="user"
         :etapeId="etape.id"
@@ -103,7 +105,7 @@ import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
 import Accordion from '../_ui/accordion.vue'
 import { Tag } from '../_ui/tag'
-import { Statut } from '../_common/statut'
+import { EtapeStatut } from '../_common/etape-statut'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
@@ -116,7 +118,7 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { EntrepriseDocuments } from './entreprise-documents'
+import { AsyncEntrepriseDocuments } from './entreprise-documents'
 import { entrepriseApiClient } from '../entreprise/entreprise-api-client'
 
 export default {
@@ -125,12 +127,12 @@ export default {
     HelpTooltip,
     Accordion,
     Tag,
-    Statut,
+    EtapeStatut,
     Perimetre,
     Fondamentales,
     UiSection,
     Documents,
-    EntrepriseDocuments,
+    AsyncEntrepriseDocuments,
   },
 
   props: {

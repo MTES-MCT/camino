@@ -23,13 +23,13 @@ import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/sr
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
 import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug } from 'camino-common/src/titres.js'
 import { EtapeId } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite'
 
@@ -274,13 +274,13 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-type IGeoJsonProperties = Index<string | number>
+type IGeoJsonProperties = Index<string | number | undefined | null | ITitrePointReference[]>
 
 interface IGeoJson {
   type: string
   geometry?: IGeometry | null
   bbox?: number[] | null
-  properties: IGeoJsonProperties
+  properties: IGeoJsonProperties | null
   features?: IGeoJson[] | null
 }
 
@@ -308,7 +308,7 @@ export interface ITitreTitre {
 
 interface ITitre {
   id: TitreId
-  slug?: string
+  slug?: TitreSlug
   nom: string
   typeId: TitreTypeId
   type?: ITitreType | null
@@ -366,7 +366,7 @@ interface ITitreActivite {
 interface ITitreDemarche {
   id: DemarcheId
   description?: string
-  slug?: string
+  slug?: DemarcheSlug
   titreId: TitreId
   titre?: ITitre | null
   typeId: DemarcheTypeId

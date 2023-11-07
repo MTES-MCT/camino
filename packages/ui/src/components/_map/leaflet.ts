@@ -1,4 +1,4 @@
-import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions } from 'leaflet'
+import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, MarkerOptions } from 'leaflet'
 import { GeoJsonObject } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
@@ -21,7 +21,7 @@ L.Marker.prototype.options.icon = L.icon({
   shadowSize: [41, 41],
 })
 
-export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIcon | undefined) => L.marker(latLng, { icon })
+export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIcon | undefined, options?: MarkerOptions | undefined) => L.marker(latLng, { icon, ...options })
 
 export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?: GeoJSONOptions<any> | undefined) => L.geoJSON(geojson, options)
 

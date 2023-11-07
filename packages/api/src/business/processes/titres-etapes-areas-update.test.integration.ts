@@ -15,6 +15,7 @@ import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { Pool } from 'pg'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -53,7 +54,7 @@ describe('titresEtapesAreasUpdate', () => {
     const titreId = newTitreId('titreIdUniquePourMiseAJourAreas')
     await Titres.query().insert({
       id: titreId,
-      slug: `slug-${titreId}`,
+      slug: titreSlugValidator.parse(`slug-${titreId}`),
       nom: `nom-${titreId}`,
       titreStatutId: 'val',
       typeId: 'arm',

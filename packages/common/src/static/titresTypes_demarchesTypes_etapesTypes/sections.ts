@@ -978,13 +978,13 @@ const isEtapesTypesEtapesTypesSections = (etapeTypeId?: EtapeTypeId): etapeTypeI
   return Object.keys(EtapesTypesSections).includes(etapeTypeId)
 }
 
-export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheId: DemarcheTypeId | undefined, etapeTypeId: EtapeTypeId | undefined): DeepReadonly<Section[]> => {
-  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
+export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheTypeId: DemarcheTypeId | undefined, etapeTypeId: EtapeTypeId | undefined): DeepReadonly<Section[]> => {
+  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheTypeId) && isNotNullNorUndefined(etapeTypeId)) {
     const sections: DeepReadonly<Section>[] = []
 
     type TDESectionsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: DeepReadonly<Section[]> } } }
 
-    sections.push(...((TDESections as TDESectionsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? []))
+    sections.push(...((TDESections as TDESectionsTypesUnleashed)[titreTypeId]?.[demarcheTypeId]?.[etapeTypeId] ?? []))
 
     if (isEtapesTypesEtapesTypesSections(etapeTypeId)) {
       EtapesTypesSections[etapeTypeId].forEach(section => {
@@ -996,7 +996,7 @@ export const getSections = (titreTypeId: TitreTypeId | undefined, demarcheId: De
 
     return sections
   } else {
-    throw new Error(`il manque des éléments pour trouver les sections titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
+    throw new Error(`il manque des éléments pour trouver les sections titreTypeId: '${titreTypeId}', demarcheId: ${demarcheTypeId}, etapeTypeId: ${etapeTypeId}`)
   }
 }
 
@@ -1017,7 +1017,7 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
   return []
 }
 
-export const getSectionsWithValue = (sections: DeepReadonly<Section>[], contenu: Contenu): SectionWithValue[] => {
+export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu): SectionWithValue[] => {
   const sectionsWithValue: SectionWithValue[] = []
 
   sections.forEach(section => {

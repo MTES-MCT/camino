@@ -46,16 +46,20 @@ describe('Storybook Tests', async () => {
         .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async value => {
       setSeed(12)
-      // @ts-ignore
-      window.dsfr = null
-      const mounted = render(value.story(), {
-        global: {
-          components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
-        },
-      })
+      try {
+        // @ts-ignore
+        window.dsfr = null
+        const mounted = render(value.story(), {
+          global: {
+            components: { 'router-link': (props, { slots }) => h('a', { ...props, type: 'primary', to: JSON.stringify(props.to).replaceAll('"', '') }, slots) },
+          },
+        })
 
-      await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
-      expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+        await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
+        expect(mounted.html()).toMatchFileSnapshot(`./${filePath.replace(/\.[^/.]+$/, '')}_snapshots_${value.name}.html`)
+      } catch (e) {
+        throw new Error(`le test ${name} du fichier ${filePath} plante ${e}`)
+      }
     })
   })
 })

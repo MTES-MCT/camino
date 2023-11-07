@@ -94,7 +94,7 @@ export const sectionWithValueValidator = z.object({ id: z.string(), nom: z.strin
 
 export type SectionWithValue = z.infer<typeof sectionWithValueValidator>
 
-export const valeurFind = (element: ElementWithValue): string => {
+export const valeurFind = (element: ElementWithValue): string | '–' => {
   if (element.value === null || element.value === '') {
     return '–'
   }

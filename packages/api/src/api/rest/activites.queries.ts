@@ -75,7 +75,7 @@ const updateActiviteDb = sql<
   Redefine<IUpdateActiviteDbQuery, { userId: string; dateSaisie: CaminoDate; activiteId: ActiviteId; activiteStatutId: ActivitesStatutId; contenu: Contenu }, void>
 >`update titres_activites set utilisateur_id = $userId!, date_saisie = $dateSaisie!, activite_statut_id = $activiteStatutId!, contenu = $contenu! where id = $activiteId;`
 
-const contenuValidator = z.record(z.string(), z.record(z.string(), z.unknown().optional()).optional()).nullable()
+export const contenuValidator = z.record(z.string(), z.record(z.string(), z.unknown().optional()).optional()).nullable()
 
 export type Contenu = z.infer<typeof contenuValidator>
 const dbActiviteValidator = activiteValidator

@@ -2,36 +2,26 @@ import { constants } from 'http2'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import type { Pool } from 'pg'
-import { DemarcheGet, demarcheGetValidator, demarcheIdValidator } from 'camino-common/src/demarche.js'
-import { getDemarcheDb } from './demarches.queries.js'
+import { DemarcheGet, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
+import { getDemarcheQuery } from './demarches.queries.js'
 
 export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<DemarcheGet>) => {
-  const demarcheId: string | undefined = req.params.demarcheId
+  const demarcheId = demarcheIdOrSlugValidator.safeParse(req.params.demarcheId)
   const user = req.auth
-  // TODO  2023-04-25 Route actuellement réservée au super, car il faut réfléchir comment vérifier toutes les permissions
+  // TODO 2023-10-25 ouvrir cette route aux autres utilisateurs
   if (!isSuper(user)) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-  } else if (!demarcheId) {
+  } else if (!demarcheId.success) {
     res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const demarches = await getDemarcheDb(pool, { id: demarcheIdValidator.parse(demarcheId) })
+      const demarche = await getDemarcheQuery(pool, demarcheId.data, user)
 
-      if (demarches.length !== 1) {
-        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
-      } else {
-        const parsed = demarcheGetValidator.safeParse(demarches[0])
-        if (parsed.success) {
-          res.json(parsed.data)
-        } else {
-          console.error(parsed.error)
-          res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        }
-      }
+      res.json(demarche)
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
     }
   }
 }

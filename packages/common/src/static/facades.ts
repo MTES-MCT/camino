@@ -2,11 +2,17 @@ import { DepartementId, DEPARTEMENT_IDS } from './departement.js'
 import { getEntries, getKeys, onlyUnique } from '../typescript-tools.js'
 import { z } from 'zod'
 
+// prettier-ignore
 const IDS = ['Manche Est - Mer du Nord', 'Nord Atlantique - Manche Ouest', 'Sud Atlantique', 'Méditerranée'] as const
 
+// prettier-ignore
+const SECTEURS_MARITIME_IDS = [
+  'Caps et détroit du Pas de Calais', "Estuaires picards et mer d'Opale", "Côte d'Albâtre et ses ouverts", 'Baie de Seine', 'Large baie de Seine', 'Nord Cotentin', 'Ouest Cotentin - Baie du Mont Saint-Michel', 'Manche Ouest au large des îles anglo-normandes', 'Plaine abyssale', 'Talus continental', 'Plateau continental nord', 'Plateau continental central', 'Manche occidentale', 'Golfe normand breton et baie du Mont Saint-Michel', 'Bretagne nord', "Parc naturel marin d'Iroise", 'Rade de Brest', 'Bretagne sud', 'Estuaire de la Loire', 'Baie de Bourgneuf et littoral vendéen', "Parc naturel marin de l'estuaire de la Gironde et de la mer des Pertuis", "Parc Naturel Marin de l'estuaire de la Gironde et de la Mer des Pertuis", 'Côte sableuse aquitaine', "Parc naturel marin du Bassin d'Arcachon", "Côte rocheuse basque, estuaire de l'Adour, Gouf de Capbreton", 'Talus du Golfe de Gascogne', 'Plaine abyssale du Golfe de Gascogne', 'Périmètre du Parc naturel marin du Golfe du Lion', 'Port-la-Nouvelle', 'Littoral languedocien', 'Sète', 'Camargue', 'Plateau du Golfe du Lion', 'Côte Bleue', 'Golfe de Fos-sur-Mer', 'Rade de Marseille', 'Périmètre du parc national des Calanques', 'Littoral varois Ouest', 'Rade de Toulon', 'Périmètre du Parc national de Port-Cros', 'Littoral varois Est', 'Riviera', 'Nice et abords', 'Littoral des Alpes-Maritimes', "Large Provence Alpes Côte d'Azur", 'Plaine bathyale', 'Canyons du Golfe du Lion', "Périmètre du Parc naturel marin du Cap Corse et de l'Agriate", 'Bastia', 'Balagne', 'Scandola', 'Littoral occidental de la Corse', "Golfe d'Ajaccio", 'Large côte occidental de la Corse', 'Bouches de Bonifacio Ouest', 'Bouches de Bonifacio Est - Porto-Vecchio', 'Plaine orientale et large Est de la Corse', 'Plateau continental du Golfe de Gascogne',] as const
 export const facadeMaritimeIdValidator = z.enum(IDS)
 export type FacadesMaritimes = z.infer<typeof facadeMaritimeIdValidator>
 
+export const secteurMaritimeValidator = z.enum(SECTEURS_MARITIME_IDS)
+export type SecteursMaritimes = z.infer<typeof secteurMaritimeValidator>
 const facades = {
   'Manche Est - Mer du Nord': {
     'Caps et détroit du Pas de Calais': { ids: [2], secteurId: '1', departementIds: [DEPARTEMENT_IDS.Nord, DEPARTEMENT_IDS['Pas-de-Calais']] },
@@ -78,11 +84,10 @@ const facades = {
     'Bouches de Bonifacio Est - Porto-Vecchio': { ids: [57], secteurId: '29', departementIds: [] },
     'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] },
   },
-} as const satisfies Record<FacadesMaritimes, unknown>
+} as const satisfies Record<FacadesMaritimes, { [key in SecteursMaritimes]?: unknown }>
 export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
 
-export type SecteursMaritimes = { [Key in FacadesMaritimes]: keyof (typeof facades)[Key] }[FacadesMaritimes]
 type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
 export type SecteursMaritimesIds = sect['ids'][number]
 

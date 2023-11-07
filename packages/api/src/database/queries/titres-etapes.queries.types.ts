@@ -1,4 +1,5 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
+export type numberArray = (number)[];
 
 /** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
 export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
@@ -65,5 +66,83 @@ export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult {
 export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery {
   params: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryParams;
   result: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult;
+}
+
+/** 'GetTitulairesByEtapeIdQueryDb' parameters type */
+export interface IGetTitulairesByEtapeIdQueryDbParams {
+  etapeId: string;
+}
+
+/** 'GetTitulairesByEtapeIdQueryDb' return type */
+export interface IGetTitulairesByEtapeIdQueryDbResult {
+  id: string;
+  nom: string;
+  operateur: boolean | null;
+}
+
+/** 'GetTitulairesByEtapeIdQueryDb' query type */
+export interface IGetTitulairesByEtapeIdQueryDbQuery {
+  params: IGetTitulairesByEtapeIdQueryDbParams;
+  result: IGetTitulairesByEtapeIdQueryDbResult;
+}
+
+/** 'GetPointsByEtapeIdQueryDb' parameters type */
+export interface IGetPointsByEtapeIdQueryDbParams {
+  etapeId: string;
+}
+
+/** 'GetPointsByEtapeIdQueryDb' return type */
+export interface IGetPointsByEtapeIdQueryDbResult {
+  contour: number;
+  coordonnees: numberArray;
+  description: string | null;
+  groupe: number;
+  id: string;
+  nom: string | null;
+  point: number;
+}
+
+/** 'GetPointsByEtapeIdQueryDb' query type */
+export interface IGetPointsByEtapeIdQueryDbQuery {
+  params: IGetPointsByEtapeIdQueryDbParams;
+  result: IGetPointsByEtapeIdQueryDbResult;
+}
+
+/** 'GetAmodiatairesByEtapeIdQueryDb' parameters type */
+export interface IGetAmodiatairesByEtapeIdQueryDbParams {
+  etapeId: string;
+}
+
+/** 'GetAmodiatairesByEtapeIdQueryDb' return type */
+export interface IGetAmodiatairesByEtapeIdQueryDbResult {
+  id: string;
+  nom: string;
+  operateur: boolean | null;
+}
+
+/** 'GetAmodiatairesByEtapeIdQueryDb' query type */
+export interface IGetAmodiatairesByEtapeIdQueryDbQuery {
+  params: IGetAmodiatairesByEtapeIdQueryDbParams;
+  result: IGetAmodiatairesByEtapeIdQueryDbResult;
+}
+
+/** 'GetDocumentsByEtapeIdQuery' parameters type */
+export interface IGetDocumentsByEtapeIdQueryParams {
+  titre_etape_id: string;
+}
+
+/** 'GetDocumentsByEtapeIdQuery' return type */
+export interface IGetDocumentsByEtapeIdQueryResult {
+  description: string;
+  document_type_id: string;
+  entreprises_lecture: boolean | null;
+  id: string;
+  public_lecture: boolean | null;
+}
+
+/** 'GetDocumentsByEtapeIdQuery' query type */
+export interface IGetDocumentsByEtapeIdQueryQuery {
+  params: IGetDocumentsByEtapeIdQueryParams;
+  result: IGetDocumentsByEtapeIdQueryResult;
 }
 

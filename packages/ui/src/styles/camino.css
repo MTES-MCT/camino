@@ -21,6 +21,12 @@
   --color-domaine-w: #1ea88c;
 }
 
+.leaflet-marker-camino-dsfr {
+  background-color: var(--blue-france-sun-113-625);
+  color: white;
+  border-radius: 100%;
+}
+
 .leaflet-marker-camino::before {
   display: block;
   position: absolute;

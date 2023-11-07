@@ -12,8 +12,8 @@ import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
 import { z } from 'zod'
-import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
+import { communeValidator } from 'camino-common/src/static/communes.js'
 
 export const getEtapesByDemarcheValidator = z.object({
   contenu: z.any(),
@@ -27,7 +27,7 @@ export const getEtapesByDemarcheValidator = z.object({
   statut_id: etapeStatutIdValidator,
   titre_id: titreIdValidator,
   titre_type_id: titreTypeIdValidator,
-  communes: z.array(z.object({ id: communeIdValidator })),
+  communes: z.array(communeValidator.pick({ id: true })),
   surface: z.number().nullable(),
   type_id: etapeTypeIdValidator,
 })

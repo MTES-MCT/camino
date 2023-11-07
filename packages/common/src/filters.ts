@@ -202,7 +202,7 @@ export const caminoFiltres = {
     name: 'Statuts de démarche',
     type: 'checkboxes',
     elements: sortedDemarchesStatuts,
-    component: 'FiltresStatuts',
+    component: 'FiltresDemarchesStatuts',
     validator: z.array(demarcheStatutIdValidator),
   },
   nomsEntreprise: {
@@ -233,7 +233,7 @@ export const caminoFiltres = {
     placeholder?: string
     validator: ZodType
     elements?: unknown[]
-    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresStatuts'
+    component?: 'FiltresLabel' | 'FiltresTypes' | 'FiltreDomaine' | 'FiltresTitresStatuts' | 'FiltresStatuts' | 'FiltresDemarchesStatuts'
     lazy?: boolean
   }
 }

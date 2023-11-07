@@ -4,6 +4,7 @@ import { titresSlugsUpdate } from './titres-slugs-update.js'
 import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { vi, describe, expect, test } from 'vitest'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
   titreSlugAndRelationsUpdate: vi.fn(),
@@ -26,7 +27,7 @@ const titre = { slug: 'slug-old' } as Titres
 
 describe("mise à jour du slug d'un titre", () => {
   test('met à jour le titre si le slug a changé', async () => {
-    const slug = 'slug-new'
+    const slug = titreSlugValidator.parse('slug-new')
 
     titresGetMock.mockResolvedValue([titre])
     titreSlugAndRelationsUpdateMock.mockResolvedValue({

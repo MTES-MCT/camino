@@ -1,5 +1,7 @@
 import type { Icon as IconType } from './iconSpriteType'
+import type { DsfrIcon as DsfrIconType } from './dsfrIconSpriteType'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export type Size = 'S' | 'M'
 export type Props = {
@@ -28,4 +30,13 @@ export const Icon: FunctionalComponent<Props> = (props: Props): JSX.Element => {
       <use href={`#icon-${props.name}`} />
     </svg>
   )
+}
+
+export type DsfrIconProps = {
+  name: DsfrIconType
+  color?: 'text-title-blue-france'
+}
+
+export const DsfrIcon: FunctionalComponent<DsfrIconProps> = (props): JSX.Element => {
+  return <span class={props.name} aria-hidden="true" style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
 }

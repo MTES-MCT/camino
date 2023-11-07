@@ -3,7 +3,16 @@ import { CaminoDate, toCaminoDate } from '../date.js'
 import { Definition } from '../definition.js'
 
 // prettier-ignore
-const IDS = ['aac','aaf','abd','abs','aca','acd','acg','acl','aco','aec','aep','afp','agn','aim','ama','ami','and','ane','anf','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','def','des','dex','dim','dpu','dup','dux','ede','edm','eof','epc','epu','esb','ide','ihi','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mfr','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','mod','mom','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rca','rcb','rcd','rcg','rcm','rco','rcs','rde','ria','rie','rif','rim','rio','rpe','rpu','rtd','sas','sca','scg','scl','sco','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp',] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','rtd','sco', 'aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const
+
+// prettier-ignore
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','rtd','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+
+// prettier-ignore
+const NON_FONDAMENTALES_IDS = ['aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+
+// Ceci est un test :)
+;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
 
 export const ETAPES_TYPES = {
   avisDeDirectionRegionaleDesAffairesCulturelles: 'aac',
@@ -177,11 +186,13 @@ export const ETAPES_TYPES = {
 export type EtapeTypeKey = keyof typeof ETAPES_TYPES
 
 export const etapeTypeIdValidator = z.enum(IDS)
+export const etapeTypeIdFondamentaleValidator = z.enum(FONDAMENTALES_IDS)
+export const etapeTypeIdNonFondamentaleValidator = z.enum(NON_FONDAMENTALES_IDS)
 
 export type EtapeTypeId = z.infer<typeof etapeTypeIdValidator>
 
 export type EtapeType<T = EtapeTypeId> = Definition<T> & { unique: boolean; fondamentale: boolean; dateFin: CaminoDate | null }
-export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
+export const EtapesTypes = {
   aac: {
     id: 'aac',
     dateFin: null,
@@ -862,7 +873,19 @@ export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
   wse: { id: 'wse', dateFin: null, fondamentale: false, unique: false, nom: "saisine de l'autorité environnementale", description: '' },
   wss: { id: 'wss', dateFin: null, fondamentale: false, unique: false, nom: "saisine des services de l'Etat", description: '' },
   wtp: { id: 'wtp', dateFin: null, fondamentale: false, unique: false, nom: 'Transmission du projet de prescriptions au demandeur', description: '' },
-}
+} as const satisfies { [key in EtapeTypeId]: EtapeType<key> }
+
+type IsFondamentale<T> = T extends EtapeTypeId ? ((typeof EtapesTypes)[T] extends { fondamentale: true } ? T : never) : never
+
+type EtapeFondamentaleIdFinder<Etapes> = Etapes extends readonly [infer First, ...infer Rest]
+  ? First extends IsFondamentale<First>
+    ? [First, ...EtapeFondamentaleIdFinder<Rest>]
+    : EtapeFondamentaleIdFinder<Rest>
+  : []
+
+type EtapeTypeIdFondamentaleArray = EtapeFondamentaleIdFinder<typeof IDS>
+export type EtapeTypeIdFondamentale = EtapeFondamentaleIdFinder<typeof IDS>[number]
+export type EtapeTypeIdNonFondamentale = Exclude<EtapeTypeId, EtapeTypeIdFondamentale>
 
 export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId => {
   return etapeTypeIdValidator.safeParse(etapeTypeId).success

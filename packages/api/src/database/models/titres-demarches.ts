@@ -6,6 +6,8 @@ import DemarchesTypes from './demarches-types.js'
 import TitresTypes from './titres-types.js'
 import Titres from './titres.js'
 import TitresEtapes from './titres-etapes.js'
+import { demarcheSlugValidator } from 'camino-common/src/demarche.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export interface DBTitresDemarches extends ITitreDemarche {
   archive: boolean
@@ -85,12 +87,12 @@ class TitresDemarches extends Model {
   }
 
   async $beforeInsert(context: QueryContext) {
-    if (!this.id) {
+    if (isNullOrUndefined(this.id)) {
       this.id = newDemarcheId()
     }
 
-    if (!this.slug && this.titreId && this.typeId) {
-      this.slug = `${this.titreId}-${this.typeId}99`
+    if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.titreId) && isNotNullNorUndefined(this.typeId)) {
+      this.slug = demarcheSlugValidator.parse(`${this.titreId}-${this.typeId}99`)
     }
 
     return super.$beforeInsert(context)

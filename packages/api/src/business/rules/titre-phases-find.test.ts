@@ -1,5 +1,5 @@
 import { ITitreDemarche } from '../../types.js'
-import { DemarcheId } from 'camino-common/src/demarche.js'
+import { DemarcheId, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
@@ -617,7 +617,7 @@ describe("phases d'une démarche", () => {
         typeId: 'mut',
         statutId: 'acc',
         ordre: 2,
-        slug: 'm-cx-pontaubert-1970-mut01',
+        slug: demarcheSlugValidator.parse('m-cx-pontaubert-1970-mut01'),
         etapes: [
           {
             id: newEtapeId('demarcheId2EtapeId2'),

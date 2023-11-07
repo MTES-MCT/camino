@@ -1,14 +1,13 @@
-import { ITitre, Index, ICommune } from '../../../types.js'
-import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
-import { RegionLabel, Regions } from 'camino-common/src/static/region.js'
+import { ITitre, Index } from '../../../types.js'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 import { Domaines } from 'camino-common/src/static/domaines.js'
-import { getDepartementsBySecteurs, getFacadesComputed, SecteursMaritimes } from 'camino-common/src/static/facades.js'
+import { getFacadesComputed, SecteursMaritimes } from 'camino-common/src/static/facades.js'
+import { territoiresFind } from 'camino-common/src/territoires.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { valeurFind } from 'camino-common/src/sections.js'
 import { titreSectionsGet } from '../titre-contenu.js'
@@ -50,7 +49,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
       throw new Error('les secteurs maritimes ne sont pas chargés')
     }
 
-    const { communes, departements, regions } = titreTerritoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
+    const { communes, departements, regions } = territoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
 
     const titreReferences = titre.references
       ? titre.references.reduce((titreReferences: Index<string>, reference) => {
@@ -75,7 +74,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
       statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
       substances: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)?.join(separator),
       'surface renseignee km2': titre.surface,
-      'communes (surface calculee km2)': communes.join(separator),
+      'communes (surface calculee km2)': communes.map(({ nom, surface }) => `${nom} ${surface !== null ? ` (${surface})` : ''}`).join(separator),
       forets: titre.forets?.map(fId => Forets[fId].nom).join(separator),
       facades_maritimes: getFacadesMaritimeCell(titre.secteursMaritime, separator),
       departements: departements.join(separator),
@@ -102,7 +101,7 @@ const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, 
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }
-  const { departements, regions } = titreTerritoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
+  const { departements, regions } = territoiresFind(communesIndex, titre.communes, titre.secteursMaritime)
 
   const { dateDebut, dateFin, dateDemande } = getTitreDates(titre)
 
@@ -167,51 +166,4 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]) => {
       properties: titreGeojsonPropertiesFormat(communesIndex, titre),
     })),
   }
-}
-
-// FOR TESTING
-export const titreTerritoiresFind = (
-  communesWithName: Record<CommuneId, string>,
-  communes?: Pick<ICommune, 'id' | 'surface'>[] | null | undefined,
-  secteursMaritime?: SecteursMaritimes[] | null | undefined
-): { communes: string[]; departements: DepartementLabel[]; regions: RegionLabel[] } => {
-  const result: {
-    communes: string[]
-    departements: DepartementLabel[]
-    regions: RegionLabel[]
-  } = { communes: [], departements: [], regions: [] }
-
-  getDepartementsBySecteurs(secteursMaritime ?? [])
-    .filter(onlyUnique)
-    .forEach(departementId => {
-      const departement = Departements[departementId]
-      if (!result.departements.includes(departement.nom)) {
-        result.departements.push(departement.nom)
-
-        const region = Regions[departement.regionId]
-        if (!result.regions.includes(region.nom)) {
-          result.regions.push(region.nom)
-        }
-      }
-    })
-  ;(communes ?? []).forEach((commune: Pick<ICommune, 'id' | 'surface'>) => {
-    result.communes.push(`${communesWithName[commune.id] ?? ''} (${Math.round(commune.surface! / 100) / 10000})`)
-
-    const departement = Departements[toDepartementId(commune.id)]
-
-    if (!result.departements.includes(departement.nom)) {
-      result.departements.push(departement.nom)
-
-      const region = Regions[departement.regionId]
-      if (!result.regions.includes(region.nom)) {
-        result.regions.push(region.nom)
-      }
-    }
-  })
-
-  result.regions.sort()
-  result.communes.sort()
-  result.departements.sort()
-
-  return result
 }

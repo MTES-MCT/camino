@@ -10,6 +10,7 @@ import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, afterEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { newDocumentId } from '../../database/models/_format/id-create.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -47,7 +48,7 @@ describe('documentSupprimer', () => {
     const titre = await titreCreate(
       {
         nom: '',
-        slug: 'slug-arm-2',
+        slug: titreSlugValidator.parse('slug-arm-2'),
         typeId: 'arm',
         titreStatutId: 'ind',
         propsTitreEtapesIds: {},

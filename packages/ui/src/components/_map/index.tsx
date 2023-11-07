@@ -1,9 +1,11 @@
-import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent, Control } from 'leaflet'
+import type { LatLngBoundsExpression, LatLngExpression, Layer, LayersControlEvent, LeafletEvent, Control, Map } from 'leaflet'
 
 import { ref, onMounted, markRaw, watch } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { displayPerimeterZoomMaxLevel } from './util'
+
+import './leaflet'
 
 export interface Props {
   markerLayers: Layer[]
@@ -47,8 +49,13 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     },
     { immediate: true }
   )
-
-  props.markerLayers.forEach(l => l.addTo(markerLayer))
+  watch(
+    () => props.markerLayers,
+    (layers: Layer[]) => {
+      layers.forEach(l => l.addTo(markerLayer))
+    },
+    { immediate: true }
+  )
 
   const boundsGet = (): [number, number, number, number] | [] => {
     if (leafletComponent.value !== null) {
@@ -61,7 +68,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
   }
 
   function boundsFit(bounds: LatLngBoundsExpression) {
-    leafletComponent.value?.fitBounds(bounds)
+    leafletComponent.value?.fitBounds(bounds, { padding: [2, 2] })
   }
 
   function fitWorld() {
@@ -80,7 +87,12 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     updateCenterAndZoomOnly.value = true
     boundsFit(featureGroup.getBounds())
   }
-  expose({ boundsFit, positionSet, allFit, fitWorld })
+  const clearAllLayers = () => {
+    geojsonLayer.clearLayers()
+    markerLayer.clearLayers()
+  }
+
+  expose({ boundsFit, positionSet, allFit, fitWorld, clearAllLayers })
 
   const sdomLegends = [
     { icon: 'icon-map-legend-sdom-zone-0', label: 'Zone 0' },
@@ -176,6 +188,8 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
           minZoom: 1,
           // @ts-ignore
           gestureHandling: true,
+          center: [48.8588254, 2.2644635],
+          zoom: 6,
           fullscreenControl: {
             pseudoFullscreen: true,
           },
@@ -227,14 +241,10 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
         }
       })
 
-      // TODO 2022-11-07 add gesture handling typing
       leafletComponentOnMounted.on('fullscreenchange', () => {
-        // @ts-ignore
         if (leafletComponentOnMounted.isFullscreen()) {
-          // @ts-ignore
           leafletComponentOnMounted.gestureHandling.disable()
         } else {
-          // @ts-ignore
           leafletComponentOnMounted.gestureHandling.enable()
         }
       })

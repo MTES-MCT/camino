@@ -2,32 +2,38 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { ITitrePoint } from '../types.js'
+import { IGeoJson, ITitrePoint } from '../types.js'
 import { knex } from '../knex.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
-import { Feature, MultiPolygon } from 'geojson'
+import { Feature } from 'geojson'
 import { CommuneId } from 'camino-common/src/static/communes.js'
+import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/demarche.js'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'
 
-export const geojsonFeatureMultiPolygon = (points: ITitrePoint[]): Feature => ({
-  type: 'Feature',
-  properties: { etapeId: points[0].titreEtapeId },
-  geometry: rewind(
-    {
-      type: 'MultiPolygon',
-      coordinates: geojsonMultiPolygonCoordinates(points),
-    },
-    false
-  ) as MultiPolygon,
-})
+export const geojsonFeatureMultiPolygon = (points: Pick<ITitrePoint, 'groupe' | 'contour' | 'coordonnees' | 'point'>[]): FeatureMultiPolygon => {
+  const feature: FeatureMultiPolygon = {
+    type: 'Feature',
+    properties: null,
+    geometry: rewind(
+      {
+        type: 'MultiPolygon',
+        coordinates: geojsonMultiPolygonCoordinates(points),
+      },
+      false
+    ),
+  }
+
+  return featureMultiPolygonValidator.parse(feature)
+}
 
 // convertit des points
 // en un geojson de type 'FeatureCollection' de 'Points'
 
-export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]) => ({
+export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]): IGeoJson => ({
   type: 'FeatureCollection',
   properties: { etapeId: points[0].titreEtapeId },
   features: points.map(p => ({
@@ -51,15 +57,15 @@ export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]) => ({
 // convertit une liste de points
 // en un tableau 'coordinates' geoJson
 // (le premier et le dernier point d'un contour ont les mêmes coordonnées)
-const geojsonMultiPolygonCoordinates = (points: ITitrePoint[]) => multiPolygonContoursClose(multiPolygonCoordinates(points))
+const geojsonMultiPolygonCoordinates = (points: Pick<ITitrePoint, 'groupe' | 'contour' | 'coordonnees' | 'point'>[]) => multiPolygonContoursClose(multiPolygonCoordinates(points))
 
 // convertit une liste de points
 // [{groupe: 1, contour: 1, point: 1, coordonnees: {x: 1.111111, y: 1.111111}}]
 // en un tableau de 'coordinates': [[[[1.11111, 1.111111]]]]
-const multiPolygonCoordinates = (points: ITitrePoint[]) =>
-  points.reduce((res: number[][][][], p) => {
-    res[p.groupe - 1] = res[p.groupe - 1] || []
-    res[p.groupe - 1][p.contour - 1] = res[p.groupe - 1][p.contour - 1] || []
+const multiPolygonCoordinates = (points: Pick<ITitrePoint, 'groupe' | 'contour' | 'coordonnees' | 'point'>[]): [number, number][][][] =>
+  points.reduce((res: [number, number][][][], p) => {
+    res[p.groupe - 1] = isNotNullNorUndefinedNorEmpty(res[p.groupe - 1]) ? res[p.groupe - 1] : []
+    res[p.groupe - 1][p.contour - 1] = isNotNullNorUndefinedNorEmpty(res[p.groupe - 1][p.contour - 1]) ? res[p.groupe - 1][p.contour - 1] : []
     res[p.groupe - 1][p.contour - 1][p.point - 1] = [p.coordonnees.x, p.coordonnees.y]
 
     return res
@@ -67,9 +73,9 @@ const multiPolygonCoordinates = (points: ITitrePoint[]) =>
 
 // duplique le premier point de chaque contour
 // en fin de contour pour fermer le tracé
-const multiPolygonContoursClose = (groupes: number[][][][]) =>
+const multiPolygonContoursClose = (groupes: [number, number][][][]): [number, number][][][] =>
   groupes.map(contours =>
-    contours.reduce((acc: number[][][], points) => {
+    contours.reduce((acc: [number, number][][], points) => {
       points[points.length] = points[0]
       acc.push(points)
 

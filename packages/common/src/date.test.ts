@@ -26,6 +26,7 @@ test('toCaminoDate', () => {
 
 test('dateFormat', () => {
   expect(dateFormat(toCaminoDate('2022-12-01'))).toBe('01-12-2022')
+  expect(dateFormat(null)).toBe('')
 })
 
 test('getAnnee', () => {

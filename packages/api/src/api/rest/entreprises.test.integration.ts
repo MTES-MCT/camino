@@ -17,6 +17,7 @@ import { constants } from 'http2'
 import { mkdirSync, writeFileSync } from 'fs'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 console.info = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
@@ -273,7 +274,7 @@ describe('getEntrepriseDocument', () => {
         nom: '',
         typeId: 'arm',
         titreStatutId: 'ind',
-        slug: 'arm-slug',
+        slug: titreSlugValidator.parse('arm-slug'),
         propsTitreEtapesIds: {},
       },
       {}

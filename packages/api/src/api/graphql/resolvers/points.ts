@@ -163,13 +163,13 @@ const sdomZonesInformationsGet = async (
         { fields: { points: { id: {} } } },
         userSuper
       )
-      const geojsonFeatures = geojsonFeatureMultiPolygon(points as ITitrePoint[])
+      const geojsonFeatures = geojsonFeatureMultiPolygon(points)
 
       // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect
       titres
         ?.filter(t => t.id !== titreId)
         ?.filter(t => t.points && t.points.length > 2)
-        .filter(t => !!intersect(geojsonFeatures as Feature<Polygon>, geojsonFeatureMultiPolygon(t.points as ITitrePoint[]) as Feature<Polygon>))
+        .filter(t => !!intersect(geojsonFeatures, geojsonFeatureMultiPolygon(t.points ?? [])))
         .forEach(t =>
           alertes.push({
             message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titreStatutId) ? TitresStatuts[t.titreStatutId].nom : ''} » est superposé à ce titre`,

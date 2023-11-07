@@ -37,7 +37,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
     let sortFunction = (row1: TableRow, row2: TableRow): number => {
       const value1 = row1.columns[event.column].value
       const value2 = row2.columns[event.column].value
-      if (value1 && value2) {
+      if (value1 !== undefined && value2 !== undefined) {
         if (value1 < value2) {
           return event.order === 'asc' ? -1 : 1
         }
@@ -46,11 +46,11 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
         }
       }
 
-      if (value1) {
+      if (value1 !== undefined) {
         return event.order === 'asc' ? -1 : 1
       }
 
-      if (value2) {
+      if (value2 !== undefined) {
         return event.order === 'asc' ? 1 : -1
       }
 
@@ -77,7 +77,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
             <tr>
               {props.columns.map(col => (
                 <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
-                  {col.noSort ? (
+                  {col.noSort !== undefined && col.noSort ? (
                     <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
                   ) : sort.column === col.id ? (
                     <a
@@ -109,7 +109,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
           </thead>
           <tbody>
             {myRows.map(row => (
-              <tr key={row.id}>
+              <tr key={row.id} class={row.class}>
                 {props.columns.map((col, index) => (
                   <td key={col.id} class={[...(col.class ?? [])]}>
                     {index === 0 && row.link !== null ? (

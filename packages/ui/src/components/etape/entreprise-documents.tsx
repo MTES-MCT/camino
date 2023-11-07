@@ -1,5 +1,5 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { onMounted, ref } from 'vue'
+import { FunctionalComponent, onMounted, ref } from 'vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { EntrepriseApiClient } from '../entreprise/entreprise-api-client'
@@ -22,7 +22,8 @@ interface Props {
   etapeTypeId: EtapeTypeId
   entrepriseDocuments: (etapeEntrepriseDocuments: EtapeEntrepriseDocument[]) => void
 }
-export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'etapeId', 'user', 'titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'entrepriseDocuments'], props => {
+
+export const AsyncEntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'etapeId', 'user', 'titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'entrepriseDocuments'], props => {
   const data = ref<AsyncData<EtapeEntrepriseDocument[]>>({ status: 'LOADING' })
 
   onMounted(async () => {
@@ -45,43 +46,45 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
     }
   })
 
-  return () => (
-    <LoadingElement
-      data={data.value}
-      renderItem={items => (
-        <>
-          {' '}
-          {items.length > 0 ? (
-            <div class="dsfr">
-              <div class="fr-container">
-                <div class=" fr-table">
-                  <table style={{ display: 'table' }}>
-                    <caption>Documents de l'entreprise</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map(item => (
-                        <tr>
-                          <td>
-                            <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
-                          </td>
-                          <td>{dateFormat(item.date)}</td>
-                          <td>{item.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </>
-      )}
-    />
-  )
+  return () => <LoadingElement data={data.value} renderItem={items => <EntrepriseDocuments etapeEntrepriseDocuments={items} />} />
 })
+
+interface EntrepriseDocumentsProps {
+  etapeEntrepriseDocuments: EtapeEntrepriseDocument[]
+}
+export const EntrepriseDocuments: FunctionalComponent<EntrepriseDocumentsProps> = props => {
+  return (
+    <>
+      {' '}
+      {props.etapeEntrepriseDocuments.length > 0 ? (
+        <div class="dsfr">
+          <div class="fr-container">
+            <div class=" fr-table">
+              <table style={{ display: 'table' }}>
+                <caption>Documents d'entreprise</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.etapeEntrepriseDocuments.map(item => (
+                    <tr>
+                      <td>
+                        <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
+                      </td>
+                      <td>{dateFormat(item.date)}</td>
+                      <td>{item.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
+  )
+}
