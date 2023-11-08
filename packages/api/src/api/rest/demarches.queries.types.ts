@@ -10,7 +10,9 @@ export interface IGetDemarcheQueryDbParams {
 export interface IGetDemarcheQueryDbResult {
   demarche_statut_id: string;
   demarche_type_id: string;
+  entreprises_lecture: boolean | null;
   id: string;
+  public_lecture: boolean | null;
   slug: string | null;
   titre_id: string;
   titre_nom: string;

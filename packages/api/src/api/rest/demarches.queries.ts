@@ -47,8 +47,12 @@ import { capitalize } from 'camino-common/src/strings.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
-import { User } from 'camino-common/src/roles.js'
+import { isAdministration, isEntrepriseOrBureauDEtude, isSuper, User } from 'camino-common/src/roles.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { isAssociee, isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { getTitreEtapeAdministrationsLocales } from '../../business/processes/titres-etapes-administrations-locales-update.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -142,6 +146,30 @@ const getDemarcheContenu = (etapes: GetEtapesByDemarcheIdDb[], titreTypeId: Titr
   return {}
 }
 
+export const canReadDemarche = (demarche: GetDemarcheQueryDb, user: User, titresAdministrationsLocales: AdministrationId[], entreprisesTitulairesOuAmodiataires: EntrepriseId[]): boolean => {
+  if (isSuper(user)) {
+    return true
+  }
+
+  if (demarche.public_lecture) {
+    return true
+  }
+
+  if (isAdministration(user)) {
+    return isGestionnaire(user.administrationId, demarche.titre_type_id) || isAssociee(user.administrationId, demarche.titre_type_id) || titresAdministrationsLocales.includes(user.administrationId)
+  }
+
+  if (isEntrepriseOrBureauDEtude(user)) {
+    if (!demarche.entreprises_lecture) {
+      return false
+    }
+
+    return user.entreprises.map(({ id }) => id).some(entrepriseId => entreprisesTitulairesOuAmodiataires.includes(entrepriseId))
+  }
+
+  return false
+}
+
 export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: User): Promise<DemarcheGet> => {
   const demarches = await dbQueryAndValidate(getDemarcheQueryDb, { id }, pool, getDemarcheQueryDbValidator)
 
@@ -149,7 +177,6 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     throw new Error(`demarche ${id} introuvable`)
   }
 
-  // FIXME vérifier que l’utilisateur peut consulter la démarche
   const demarche = demarches[0]
 
   const phases = await dbQueryAndValidate(getDemarchesPhasesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesPhasesByTitreIdDbValidator)
@@ -177,6 +204,14 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     amodiataires.push(...(await getAmodiatairesByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
     points.push(...(await getPointsByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
   }
+
+  const administrationsLocales = getTitreEtapeAdministrationsLocales(latestFondamentaleEtape?.communes, latestFondamentaleEtape?.secteurs_maritime)
+  const entreprisesTitulairesOuAmodiataires = [...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)]
+
+  if (!canReadDemarche(demarche, user, administrationsLocales, entreprisesTitulairesOuAmodiataires)) {
+    throw new Error('droit insuffisant')
+  }
+
   const formatedEtapes: DemarcheGet['etapes'] = []
   for (const etape of etapes) {
     const sections = getSections(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
@@ -289,6 +324,8 @@ const getDemarcheQueryDbValidator = z.object({
   titre_nom: z.string(),
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  public_lecture: z.boolean().default(false),
+  entreprises_lecture: z.boolean().default(false),
 })
 type GetDemarcheQueryDb = z.infer<typeof getDemarcheQueryDbValidator>
 
@@ -301,7 +338,9 @@ select
     d.statut_id as demarche_statut_id,
     t.nom as titre_nom,
     t.slug as titre_slug,
-    t.type_id as titre_type_id
+    t.type_id as titre_type_id,
+    d.public_lecture,
+    d.entreprises_lecture
 from
     titres_demarches d
     left join titres t on t.id = d.titre_id
@@ -369,6 +408,7 @@ from
     titres_etapes e
 where
     e.titre_demarche_id = $ demarcheId !
+    and e.archive is false
 order by
     date desc
 `
