@@ -205,7 +205,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
       const documents = []
       const documentsTypes = getDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
       if (documentsTypes.length > 0) {
-        documents.push(...(await getDocumentsByEtapeId(etape.id, pool, user)))
+        documents.push(...(await getDocumentsByEtapeId(etape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etape.etape_type_id, demarche)))
       }
 
       const etapeCommon: DemarcheEtapeCommon = {
