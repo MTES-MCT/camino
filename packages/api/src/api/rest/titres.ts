@@ -1,6 +1,6 @@
 import { titreArchive, titresGet, titreGet, titreUpsert } from '../../database/queries/titres.js'
 import { ADMINISTRATION_IDS, AdministrationId } from 'camino-common/src/static/administrations.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
@@ -52,12 +52,12 @@ export const titresONF = (_pool: Pool) => async (req: CaminoRequest, res: Custom
   const user = req.auth
 
   if (!user) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const onf = ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
 
     if (!isAdministration(user) || user.administrationId !== onf) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
       res.json(
@@ -187,7 +187,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
   const user = req.auth
 
   if (!user) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     if (isAdministration(user)) {
       const filters = {
@@ -320,7 +320,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
 
       res.json(titresFormated)
     } else {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     }
   }
 }
@@ -380,7 +380,7 @@ export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res:
   } else {
     const titre = await titreGet(titreId, { fields: { id: {} } }, user)
     if (!titre) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       const value: TitreLinks = {
         amont: await titreLinksGet(titreId, 'titreFromId', user),
@@ -397,11 +397,11 @@ export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: 
   const titreId = req.params.id
 
   if (!titreId) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     const titre = await titreGet(titreId, { fields: { id: {} } }, user)
     if (!titre) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       const communes = await getTitreCommunesQuery(pool, { id: titreIdValidator.parse(titreId) })
 
@@ -428,7 +428,7 @@ export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
 
   const titreId = titreIdValidator.safeParse(req.params.titreId)
   if (!titreId.success) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     const titreOld = await titreGet(
       titreId.data,
@@ -442,12 +442,12 @@ export const removeTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     )
 
     if (!titreOld) {
-      res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
     } else if (!canDeleteTitre(user)) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       await titreArchive(titreId.data)
-      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
     }
   }
 }
@@ -457,18 +457,18 @@ export const utilisateurTitreAbonner = (_pool: Pool) => async (req: CaminoReques
   const parsedBody = utilisateurTitreAbonneValidator.safeParse(req.body)
   const titreId: string | undefined = req.params.titreId
   if (!titreId) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else if (!parsedBody.success) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
       if (!user) {
-        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
       } else {
         const titre = await titreGet(titreId, { fields: { id: {} } }, user)
 
         if (!titre) {
-          res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
         } else {
           if (parsedBody.data.abonne) {
             await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
@@ -476,12 +476,12 @@ export const utilisateurTitreAbonner = (_pool: Pool) => async (req: CaminoReques
             await utilisateurTitreDelete(user.id, titreId)
           }
         }
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       }
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -491,33 +491,33 @@ export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
   const user = req.auth
   const parsedBody = editableTitreValidator.safeParse(req.body)
   if (!titreId) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else if (!parsedBody.success) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else if (titreId !== parsedBody.data.id) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
       const titreOld = await titreGet(titreId, { fields: {} }, user)
 
       if (!titreOld) {
-        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
         if (!titreOld.modification) {
-          res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
         } else {
           // on doit utiliser upsert (plutôt qu'un simple update)
           // car le titre contient des références (tableau d'objet)
           await titreUpsert(parsedBody.data)
 
           await titreUpdateTask(titreId)
-          res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
         }
       }
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -527,22 +527,22 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
   const user = req.auth
   // TODO  2023-04-25 Route actuellement réservée au super, car il faut réfléchir comment vérifier toutes les permissions
   if (!isSuper(user)) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else if (!titreId) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
       const titres = await getTitreDb(pool, { id: titreIdValidator.parse(titreId) })
 
       if (titres.length !== 1) {
-        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
         res.json(titres[0])
       }
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
     }
   }
 }
@@ -550,20 +550,20 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
 export const getTitreDate = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CaminoDate | null>) => {
   const titreId: string | undefined = req.params.titreId
   if (!titreId) {
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
       const journaux = await getLastJournal(pool, { titreId: titreIdValidator.parse(titreId) })
 
       if (journaux.length !== 1) {
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       } else {
         res.json(journaux[0].date)
       }
     } catch (e) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
     }
   }
 }

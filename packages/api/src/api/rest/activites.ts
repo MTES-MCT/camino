@@ -1,5 +1,5 @@
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Pool } from 'pg'
 import { Activite, activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteIdValidator } from 'camino-common/src/activite.js'
 import {
@@ -67,9 +67,9 @@ export const updateActivite =
     const user = req.auth
 
     if (!activiteIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else if (isNullOrUndefined(user)) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
         const titreTypeId = memoize(() => titreTypeIdByActiviteId(activiteIdParsed.data, pool))
@@ -79,12 +79,12 @@ export const updateActivite =
         const result = await getActiviteById(activiteIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
 
         if (result === null || !(await canEditActivite(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, result.activite_statut_id))) {
-          res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
         } else {
           const parsed = activiteEditionValidator.safeParse(req.body)
 
           if (!parsed.success) {
-            res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+            res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
           } else {
             const contenu = extractContenuFromSectionWithValue(result.sections, parsed.data.sectionsWithValue)
             await updateActiviteQuery(pool, user, result.id, contenu, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
@@ -119,12 +119,12 @@ export const updateActivite =
               })
             }
 
-            res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+            res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
           }
         }
       } catch (e: any) {
         console.error(e)
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       }
     }
   }
@@ -177,7 +177,7 @@ export const getActivite =
     const user = req.auth
 
     if (!activiteIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
         const titreTypeId = memoize(() => titreTypeIdByActiviteId(activiteIdParsed.data, pool))
@@ -190,10 +190,10 @@ export const getActivite =
           const activite = await formatActivite(result, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
           res.json(activite)
         } else {
-          res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
         }
       } catch (e) {
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -204,7 +204,7 @@ export const deleteActivite =
   async (req: CaminoRequest, res: CustomResponse<void>): Promise<void> => {
     const activiteIdParsed = activiteIdValidator.safeParse(req.params.activiteId)
     if (!activiteIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       const id = activiteIdParsed.data
       const titreTypeId = memoize(() => titreTypeIdByActiviteId(id, pool))
@@ -213,9 +213,9 @@ export const deleteActivite =
 
       const isOk = await activiteDeleteQuery(id, pool, req.auth, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
       if (isOk) {
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       } else {
-        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       }
     }
   }
@@ -227,7 +227,7 @@ export const getActivitesByTitreId =
     const user = req.auth
 
     if (!titreIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
         const titreTypeId = memoize(() => getTitreTypeIdByTitreIdQuery(titreIdParsed.data, pool))
@@ -252,10 +252,10 @@ export const getActivitesByTitreId =
 
           res.json(activites.sort((a, b) => b.annee.localeCompare(a.annee)))
         } else {
-          res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
         }
       } catch (e) {
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }

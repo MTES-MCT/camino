@@ -6,7 +6,7 @@ import { restCall } from '../../../tests/_utils/index.js'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { insertEntrepriseDocument } from './entreprises.queries.js'
 import { EntrepriseDocumentId, newEntrepriseId } from 'camino-common/src/entreprise.js'
@@ -47,7 +47,7 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
 
   const tested = await restCall(dbPool, '/rest/etapesTypes/:demarcheId/:date', { demarcheId: titreDemarche.id, date: getCurrent() }, userSuper)
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toMatchInlineSnapshot(`
       [
         {
@@ -176,19 +176,19 @@ test('getEtapeEntrepriseDocuments', async () => {
 
   let tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, userSuper)
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toEqual([])
 
   await insertTitreEtapeEntrepriseDocument(dbPool, { entreprise_document_id: id1, titre_etape_id: etape.id })
 
   tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, { role: 'defaut' })
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toEqual([])
 
   tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, userSuper)
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toHaveLength(1)
   expect(tested.body[0]).toMatchInlineSnapshot(
     {
@@ -207,7 +207,7 @@ test('getEtapeEntrepriseDocuments', async () => {
 
   tested = await restCall(dbPool, '/rest/etapes/:etapeId/entrepriseDocuments', { etapeId: etape.id }, { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] })
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toHaveLength(1)
   expect(tested.body[0]).toMatchInlineSnapshot(
     {

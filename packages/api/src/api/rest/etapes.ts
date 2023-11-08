@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
@@ -31,13 +31,13 @@ export const getEtapeEntrepriseDocuments =
     const user = req.auth
 
     if (!etapeIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
         const result = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etapeIdParsed.data }, pool, user)
         res.json(result)
       } catch (e) {
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }
@@ -52,13 +52,13 @@ export const getEtapesTypesEtapesStatusWithMainStep =
     const user = req.auth
 
     if (!demarcheIdParsed.success || !dateParsed.success || !etapeIdParsed.success) {
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
         const result = await demarcheEtapesTypesGet(demarcheIdParsed.data, dateParsed.data, etapeIdParsed.data ?? null, user)
         res.json(result)
       } catch (e) {
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
       }
     }

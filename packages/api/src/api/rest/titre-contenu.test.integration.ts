@@ -11,7 +11,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -117,7 +117,7 @@ test('get titreSections', async () => {
 
   const tested = await restCall(dbPool, '/rest/titreSections/:titreId', { titreId: id }, userSuper)
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toMatchInlineSnapshot(`
       [
         {
