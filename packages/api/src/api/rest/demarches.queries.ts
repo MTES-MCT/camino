@@ -300,6 +300,7 @@ const getDemarcheQueryDbValidator = z.object({
   titre_nom: z.string(),
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  titre_public_lecture: z.boolean().default(false),
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
 })
@@ -315,6 +316,7 @@ select
     t.nom as titre_nom,
     t.slug as titre_slug,
     t.type_id as titre_type_id,
+    t.public_lecture as titre_public_lecture,
     d.public_lecture,
     d.entreprises_lecture
 from

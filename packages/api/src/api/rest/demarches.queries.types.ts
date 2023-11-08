@@ -16,6 +16,7 @@ export interface IGetDemarcheQueryDbResult {
   slug: string | null;
   titre_id: string;
   titre_nom: string;
+  titre_public_lecture: boolean | null;
   titre_slug: string;
   titre_type_id: string;
 }

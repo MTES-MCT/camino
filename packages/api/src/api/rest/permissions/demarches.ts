@@ -1,11 +1,11 @@
-import { EntrepriseId } from 'camino-common/src/entreprise'
-import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { isGestionnaire, isAssociee } from 'camino-common/src/static/administrationsTitresTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { isGestionnaire, isAssociee } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 
-export type CanReadDemarche = { public_lecture: boolean; entreprises_lecture: boolean }
+export type CanReadDemarche = { public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
 
 // FIXME test
 export const canReadDemarche = async (
@@ -19,7 +19,7 @@ export const canReadDemarche = async (
     return true
   }
 
-  if (demarche.public_lecture) {
+  if (demarche.titre_public_lecture && demarche.public_lecture) {
     return true
   }
 

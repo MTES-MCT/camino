@@ -1,11 +1,11 @@
-import { EntrepriseId } from 'camino-common/src/entreprise'
-import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes'
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { SimplePromiseFn } from 'camino-common/src/typescript-tools'
-import { CanReadDemarche, canReadDemarche } from './demarches'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
+import { CanReadDemarche, canReadDemarche } from './demarches.js'
 
 // FIXME test
 export const canReadEtape = async (
