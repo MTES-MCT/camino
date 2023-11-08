@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from 'camino-common/src/http'
 import {
   CaminoRestParams,
   CaminoRestRoute,
@@ -52,7 +53,7 @@ const callFetch = async <T extends CaminoRestRoute>(
     }
     return
   }
-  if (fetched.status === 401) {
+  if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
   console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)

@@ -14,7 +14,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
 import { createJournalCreate } from '../../database/queries/journaux.js'
 import { idGenerate, newTitreId } from '../../database/models/_format/id-create.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { TitreId, titreSlugValidator } from 'camino-common/src/titres.js'
@@ -480,7 +480,7 @@ test('getTitreDate', async () => {
 
   let tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
   await createJournalCreate(idGenerate(), userSuper.id, titre.id)
 
   tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
@@ -502,7 +502,7 @@ test('utilisateurTitreAbonner', async () => {
 
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
-  expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
 })
 
 test('peut récupérer les communes d’un titre', async () => {

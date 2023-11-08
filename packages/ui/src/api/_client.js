@@ -4,6 +4,7 @@ import fetchGraphQL from 'graphql-react/fetchGraphQL.mjs'
 import Cache from 'graphql-react/Cache.mjs'
 import Loading from 'graphql-react/Loading.mjs'
 import LoadingCacheValue from 'graphql-react/LoadingCacheValue.mjs'
+import { HTTP_STATUS } from 'camino-common/src/http'
 
 const apiUrl = '/apiUrl'
 const cache = new Cache()
@@ -56,7 +57,7 @@ const apiGraphQLFetch = (query, cacheKey) => async variables => {
   try {
     return await graphQLCall(apiUrl, query, variables, cacheKey)
   } catch (e) {
-    if (e.status === 401 || e.message === 'HTTP 401 status.') {
+    if (e.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED || e.message === `HTTP ${HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED} status.`) {
       // si la session est expirée on doit réauthentifier l’utilisateur
       window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
     } else {

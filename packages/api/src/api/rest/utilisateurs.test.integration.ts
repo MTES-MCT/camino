@@ -4,7 +4,7 @@ import { Knex } from 'knex'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import type { Pool } from 'pg'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { userSuper } from '../../database/user-super.js'
 import { newUtilisateurId } from '../../database/models/_format/id-create.js'
 import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak.js'
@@ -32,7 +32,7 @@ describe('moi', () => {
     const user = await userGenerate({ role: 'defaut' })
     let tested = await restCall(dbPool, '/moi', {}, undefined)
 
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_NO_CONTENT)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
 
     tested = await restCall(dbPool, '/moi', {}, user)
     expect(tested.body).toMatchInlineSnapshot(`

@@ -1,7 +1,7 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { formatUser, IUtilisateursColonneId } from '../../types.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter.js'
 import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
@@ -21,12 +21,12 @@ export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoReque
   const user = req.auth
 
   if (!req.params.id) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
 
     if (!user || !utilisateur) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
       res.json(subscribed)
@@ -37,12 +37,12 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
   const user = req.auth
 
   if (!req.params.id) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const utilisateurOld = await userGet(req.params.id)
 
     if (!user || !utilisateurOld) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       try {
         const utilisateur = utilisateurToEdit.parse(req.body)
@@ -60,11 +60,11 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
         // TODO 2023-03-13: le jour où les entreprises sont un tableau d'ids dans la table user, passer à knex
         await utilisateurUpsert({ ...utilisateur, entreprises: utilisateur.entreprises.map(id => ({ id })) })
 
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       } catch (e) {
         console.error(e)
 
-        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       }
     }
   }
@@ -109,7 +109,7 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
   const user = req.auth
 
   if (!req.params.id) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     try {
       const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
@@ -150,12 +150,12 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
         const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
         res.redirect(oauthLogoutUrl.href)
       } else {
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       }
     } catch (e: any) {
       console.error(e)
 
-      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
+      res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
     }
   }
 }
@@ -164,7 +164,7 @@ export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomRespon
   res.clearCookie('shouldBeConnected')
   const user = req.auth
   if (!user) {
-    res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
   } else {
     try {
       const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: { id: {} } } }, user)
@@ -173,7 +173,7 @@ export const moi = (_pool: Pool) => async (req: CaminoRequest, res: CustomRespon
       res.json(formatUser(utilisateur!))
     } catch (e) {
       console.error(e)
-      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
       throw e
     }
   }
@@ -183,19 +183,19 @@ export const manageNewsletterSubscription = (_pool: Pool) => async (req: CaminoR
   const user = req.auth
 
   if (!req.params.id) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
 
     if (!user || !utilisateur) {
-      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       const subscriptionParsed = newsletterAbonnementValidator.safeParse(req.body)
       if (subscriptionParsed.success) {
         await newsletterSubscriberUpdate(utilisateur.email, subscriptionParsed.data.newsletter)
-        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       } else {
-        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
       }
     }
   }
@@ -205,7 +205,7 @@ export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res
   const user = req.auth
 
   if (!user) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const token = idGenerate()
     await knex('utilisateurs')

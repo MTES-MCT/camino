@@ -2,7 +2,7 @@ import { restCall } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { ITitre } from '../../types.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -36,10 +36,10 @@ describe('getActivitesByTitreId', () => {
       {}
     )
     let tested = await restCall(dbPool, '/rest/titres/:titreId/activites', { titreId: titre.id }, undefined)
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_NOT_FOUND)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
 
     tested = await restCall(dbPool, '/rest/titres/:titreId/activites', { titreId: titre.id }, userSuper)
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   })
 
   const titreWithActiviteGrp = (): ITitre => {
@@ -110,7 +110,7 @@ describe('getActivitesByTitreId', () => {
     const titre = await titreCreate(titreWithActiviteGrp(), {})
 
     const tested = await restCall(dbPool, '/rest/titres/:titreId/activites', { titreId: titre.id }, { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_OK)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
 
     expect(tested.body).toHaveLength(1)
     expect(tested.body[0]).toMatchObject({
@@ -121,6 +121,6 @@ describe('getActivitesByTitreId', () => {
   test('ne peut pas voir les activités GRP (utilisateur CACEM)', async () => {
     const titre = await titreCreate(titreWithActiviteGrp(), {})
     const tested = await restCall(dbPool, '/rest/titres/:titreId/activites', { titreId: titre.id }, { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM })
-    expect(tested.statusCode).toBe(constants.HTTP_STATUS_NOT_FOUND)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
   })
 })

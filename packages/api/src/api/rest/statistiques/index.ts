@@ -3,7 +3,7 @@ import { StatistiquesMinerauxMetauxMetropole, StatistiquesDGTM, StatistiquesGuya
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { constants } from 'http2'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
 import { isAdministration } from 'camino-common/src/roles.js'
@@ -16,7 +16,7 @@ export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: Cust
   const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
 
   if (!isAdministration(user) || user?.administrationId !== administrationId) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     const result = await getDGTMStatsInside(pool)(administrationId)
 
