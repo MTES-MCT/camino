@@ -32,6 +32,10 @@
   height: 100%;
 }
 
+.leaflet-marker-camino-dsfr-popup {
+  font-weight: 500;
+}
+
 .leaflet-marker-camino::before {
   display: block;
   position: absolute;

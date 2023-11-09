@@ -129,7 +129,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
               const latLng: LatLngTuple = [y, x]
               const titreMarker = leafletMarkerBuild(latLng, icon, { interactive: true })
               titreMarker.bindPopup(
-                `<div><div>Latitude : <span class="fr-text--md" style="font-weight: 500">${y}</span></div><div>Longitude : <span class="fr-text--md" style="font-weight: 500">${x}</span></div></div>`,
+                `<div><div>Latitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${y}</span></div><div>Longitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${x}</span></div></div>`,
                 { closeButton: false }
               )
               markers.push(titreMarker)
@@ -200,6 +200,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
       mapUpdate={mapUpdate}
       geojsonLayers={geojsonLayers.value}
       markerLayers={markerLayers.value}
+      maxMarkers={maxRows}
       additionalOverlayLayers={additionalOverlayLayers.value}
       style={{ minHeight: '400px' }}
     />

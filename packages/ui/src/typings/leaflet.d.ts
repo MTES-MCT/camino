@@ -1,9 +1,5 @@
 import * as leaflet from 'leaflet'
 
-// export class Map extends Evented {
-
-//     isFullscreen(): boolean;
-// }
 export class CaminoLeafletMap extends leaflet.Map {
   isFullscreen(): boolean
   gestureHandling: {
