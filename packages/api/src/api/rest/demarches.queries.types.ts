@@ -10,13 +10,13 @@ export interface IGetDemarcheQueryDbParams {
 export interface IGetDemarcheQueryDbResult {
   demarche_statut_id: string;
   demarche_type_id: string;
-  entreprises_lecture: boolean | null;
+  entreprises_lecture: boolean;
   id: string;
-  public_lecture: boolean | null;
+  public_lecture: boolean;
   slug: string | null;
   titre_id: string;
   titre_nom: string;
-  titre_public_lecture: boolean | null;
+  titre_public_lecture: boolean;
   titre_slug: string;
   titre_type_id: string;
 }
@@ -65,6 +65,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   heritage_props: Json | null;
   id: string;
   secteurs_maritime: Json | null;
+  slug: string | null;
   substances: Json;
   surface: number | null;
 }

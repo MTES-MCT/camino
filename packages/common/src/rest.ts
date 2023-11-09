@@ -26,7 +26,7 @@ import {
 import { sectionWithValueValidator } from './sections.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
@@ -149,7 +149,7 @@ export const CaminoRestRoutes = {
   '/travaux': { download: true },
   '/activites': { download: true },
   '/utilisateurs': { download: true },
-  '/etape/zip/:etapeId': { params: { etapeId: etapeIdValidator }, download: true },
+  '/etape/zip/:etapeId': { params: { etapeId: etapeIdOrSlugValidator }, download: true },
   '/etape/:etapeId/:fichierNom': { params: { etapeId: etapeIdValidator, fichierNom: z.string() }, download: true },
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }

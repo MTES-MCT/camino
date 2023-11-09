@@ -10,20 +10,21 @@ import { statSync, readFileSync, createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
 import { DocumentId } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 
 import express from 'express'
 import { join } from 'node:path'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
 
 export const etapeTelecharger =
   (pool: Pool) =>
-  async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User) => {
+  async ({ params: { etapeId } }: { params: { etapeId?: EtapeIdOrSlug } }, user: User) => {
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }
@@ -39,10 +40,10 @@ export const etapeTelecharger =
       user
     )
 
-    if (!titreEtape) throw new Error("l'étape n'existe pas")
+    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
 
     const documents = titreEtape.documents ?? []
-    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
+    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
       throw new Error("aucun document n'a été trouvé pour cette demande")
@@ -70,7 +71,7 @@ export const etapeTelecharger =
         const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
         zip.file(`${entrepriseDocument.id}.pdf`, stream)
       }
-      const nom = `documents-${etapeId}.zip`
+      const nom = `documents-${titreEtape.id}.zip`
 
       const filePath = `/${DOWNLOADS_DIRECTORY}/${nom}`
       await new Promise<void>(resolve =>
@@ -152,7 +153,7 @@ export const fichier =
       user
     )
 
-    if (!document || !document.fichier) {
+    if (isNullOrUndefined(document) || isNullOrUndefined(document.fichier)) {
       throw new Error('fichier inexistant')
     }
 
@@ -184,7 +185,7 @@ const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuVa
       const contenuElement = contenuArray[i]
       for (const contenuElementAttr of Object.keys(contenuElement)) {
         const etapeIdFound = etapeIdPathGet(etapeId, fichierNom, contenuElement[contenuElementAttr], heritageContenu)
-        if (etapeIdFound) {
+        if (isNotNullNorUndefined(etapeIdFound)) {
           return etapeIdFound
         }
       }
@@ -206,13 +207,13 @@ export const etapeFichier =
     if (!etapeId) {
       throw new Error('id de l’étape absent')
     }
-    if (!fichierNom) {
+    if (isNullOrUndefined(fichierNom)) {
       throw new Error('nom du fichier absent')
     }
 
     const etape = await titreEtapeGet(etapeId, { fields: {} }, user)
 
-    if (!etape) {
+    if (isNullOrUndefined(etape)) {
       throw new Error('fichier inexistant')
     }
 
@@ -227,11 +228,11 @@ export const etapeFichier =
       }
     }
 
-    if (!etapeIdPath && etape.decisionsAnnexesContenu) {
+    if (isNullOrUndefined(etapeIdPath) && etape.decisionsAnnexesContenu) {
       etapeIdPath = etape.id
     }
 
-    if (!etapeIdPath) {
+    if (isNullOrUndefined(etapeIdPath)) {
       throw new Error('fichier inexistant')
     }
     const repertoire = 'demarches' as IDocumentRepertoire

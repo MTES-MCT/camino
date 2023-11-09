@@ -27,7 +27,7 @@ import { isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/s
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales.js'
 import { EtapesTypes, EtapeTypeId, EtapeTypeIdFondamentale, etapeTypeIdFondamentaleValidator, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import {
   getAmodiatairesByEtapeIdQuery,
   getDocumentsByEtapeId,
@@ -210,6 +210,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
       const etapeCommon: DemarcheEtapeCommon = {
         date: etape.date,
+        slug: etape.slug,
         etape_statut_id: etape.etape_statut_id,
         sections_with_values: contenu,
         entreprises_documents: entrepriseDocuments,
@@ -351,6 +352,7 @@ where
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
+  slug: etapeSlugValidator,
   date: caminoDateValidator,
   communes: z.array(communeValidator.pick({ id: true })),
   secteurs_maritime: z.array(secteurMaritimeValidator).nullable(),
@@ -381,7 +383,8 @@ select
     e.date_fin,
     e.duree,
     e.surface,
-    e.contenu
+    e.contenu,
+    e.slug
 from
     titres_etapes e
 where

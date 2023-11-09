@@ -8,7 +8,7 @@ import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
 import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
 import { User, UserNotNull } from 'camino-common/src/roles'
 import { TitreId } from 'camino-common/src/titres.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : options.titresEtapes.graph
@@ -23,7 +23,7 @@ const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) =>
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-const titreEtapeGet = async (titreEtapeId: EtapeId, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
+const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })

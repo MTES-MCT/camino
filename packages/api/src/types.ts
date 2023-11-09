@@ -30,7 +30,7 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/titres.js'
-import { EtapeId } from 'camino-common/src/etape'
+import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite'
 
 enum TitreEtapesTravauxTypes {
@@ -402,7 +402,7 @@ interface IDocument {
 }
 interface ITitreEtape {
   id: EtapeId
-  slug?: string
+  slug?: EtapeSlug
   typeId: EtapeTypeId
   type?: IEtapeType | null
   statutId: EtapeStatutId

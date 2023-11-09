@@ -10,6 +10,7 @@ import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
 import { User } from 'camino-common/src/roles'
 import { RemoveEntrepriseDocumentPopup } from './remove-entreprise-document-popup'
 import { ApiClient } from '@/api/api-client'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
 interface Props {
   apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'creerEntrepriseDocument' | 'deleteEntrepriseDocument' | 'uploadTempDocument'>
@@ -53,9 +54,10 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
                 <th scope="col">Description</th>
                 <th scope="col" style={{ display: 'flex', justifyContent: 'end' }}>
                   {canEditEntreprise(props.user, props.entrepriseId) ? (
-                    <button
-                      class={['fr-btn', 'fr-icon-add-line', 'fr-btn--primary', 'fr-mb-0']}
-                      title={`Ajouter un document`}
+                    <DsfrButtonIcon
+                      icon="fr-icon-add-line"
+                      buttonType="primary"
+                      title="Ajouter un document"
                       onClick={() => {
                         addPopup.value = true
                       }}

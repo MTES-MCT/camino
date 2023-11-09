@@ -25,8 +25,8 @@ export const up = async (knex: Knex) => {
   await knex.raw('ALTER TABLE titres ALTER COLUMN entreprises_lecture SET default false')
   await knex.raw('ALTER TABLE titres ALTER COLUMN entreprises_lecture SET NOT NULL')
 
-  // FIXME pouvoir éditer/supprimer une étape
-  // FIXME permettre de "Télécharger l'ensemble de la demande dans un fichier .zip"
+  // FIXME pouvoir supprimer une étape
+  // FIXME pouvoir déposer une étape
   // FIXME https://preprod.camino.beta.gouv.fr/demarches/w-cx-chassiron-d-2002-pro01 le lien public externe ne s'affiche pas en tant qu'URL
   // FIXME import du périmètre qui ne fonctionne plus (nouvelle espérance prolongation 2)
   // FIXME quand on zoom sur la carte, ça scroll en haut de page
