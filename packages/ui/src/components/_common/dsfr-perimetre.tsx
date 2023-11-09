@@ -122,7 +122,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
             if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
               const icon = leafletDivIconBuild({
                 className: 'fr-text--sm',
-                html: `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%" class="leaflet-marker-camino-dsfr">${index}</div>`,
+                html: `<div class="leaflet-marker-camino-dsfr">${index}</div>`,
                 iconSize: [32, 32],
               })
 
