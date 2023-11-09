@@ -49,7 +49,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 
 const columns: Column<string>[] = [
   { id: 'polygone', name: 'Polygone', noSort: true },
-  { id: 'nom', name: 'Référentiel WGS 84', sort: () => -1, noSort: true },
+  { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
   { id: 'latitude', name: 'Latitude', noSort: true },
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
