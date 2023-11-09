@@ -31,6 +31,7 @@ export const up = async (knex: Knex) => {
   // FIXME import du périmètre qui ne fonctionne plus (nouvelle espérance prolongation 2)
   // FIXME quand on zoom sur la carte, ça scroll en haut de page
   // FIXME ancre sur les étapes
+  // FIXME impossible d'éditer une étape avec de l'héritage --> http://localhost:4180/etapes/w-cx-chassiron-d-2002-pro01-epu01/edition
 }
 
 export const down = () => ({})

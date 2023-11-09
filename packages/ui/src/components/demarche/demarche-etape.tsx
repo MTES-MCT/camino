@@ -16,7 +16,7 @@ import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { valeurFind } from 'camino-common/src/sections'
+import { isNumberElement, valeurFind } from 'camino-common/src/sections'
 import { EntrepriseDocuments } from '../etape/entreprise-documents'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
@@ -134,7 +134,33 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
                 {section.elements
                   .filter(element => valeurFind(element) !== '–')
                   .map(element => (
-                    <EtapePropItem title={element.nom ?? element.id} text={valeurFind(element)} />
+                    <>
+                      <EtapePropItem
+                        title={element.nom ?? element.id}
+                        item={
+                          <>
+                            {element.type === 'url' ? (
+                              <a target="_blank" rel="noopener noreferrer" href={valeurFind(element)} title={`${element.nom} - Lien externe`}>
+                                {valeurFind(element)}
+                              </a>
+                            ) : (
+                              <p class="cap-first">
+                                {element.id === 'jorf' && element.value !== null && element.value !== '' ? (
+                                  <a target="_blank" rel="noopener noreferrer" href={`https://www.legifrance.gouv.fr/jorf/id/${valeurFind(element)}`} title={`Légifrance - Lien externe`}>
+                                    {valeurFind(element)}
+                                  </a>
+                                ) : (
+                                  valeurFind(element)
+                                )}
+                                {element.id === 'volumeGranulatsExtrait' && element.value !== null && isNumberElement(element) ? (
+                                  <span>m3. Soit l’équivalent de {numberFormat(element.value * 1.5)} tonnes.</span>
+                                ) : null}
+                              </p>
+                            )}
+                          </>
+                        }
+                      />
+                    </>
                   ))}
               </>
             ))}
