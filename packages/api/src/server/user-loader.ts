@@ -43,11 +43,12 @@ export const userLoader = async (req: JWTRequest<{ email?: string; family_name?:
         if (isNotNullNorUndefined(reqUser.email)) {
           await emailsWithTemplateSend([reqUser.email], EmailTemplateId.CREATION_COMPTE, {})
         }
-      } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name) {
+      } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name || user.email !== reqUser.email) {
         // mise à jour du nom et du prénom de l’utilisateur
-        await knex('utilisateurs').update({ nom: reqUser.family_name, prenom: reqUser.given_name }).where('email', reqUser.email)
+        await knex('utilisateurs').update({ nom: reqUser.family_name, prenom: reqUser.given_name, email: reqUser.email }).where('id', user.id)
         user.nom = reqUser.family_name
         user.prenom = reqUser.given_name
+        user.email = reqUser.email
       }
 
       req.auth = formatUser(user)
