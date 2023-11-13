@@ -6,7 +6,6 @@ import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
 import { userSuper } from '../database/user-super.js'
 import { entreprisesGet } from '../database/queries/entreprises.js'
 import { Fiscalite, fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
-import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types.js'
 import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
@@ -139,14 +138,14 @@ type Matrices = {
 }
 
 type Matrice1122 = {
-  "Numéro d'ordre de la matrice": number
-  'Désignation des concessionnaires': string
-  'Désignation des concessions': string | undefined
-  'Départements sur le territoire desquels fonctionnent les exploitations': string
-  'Communes sur le territoire desquels fonctionnent les exploitations': string | undefined
-  "Tonnages extraits ou cours de l'année précédente | par département": any
-  "Tonnages extraits ou cours de l'année précédente | par commune": any
-  Observations: string
+  numeroOrdreMatrice: number
+  designationDesConcessionnaires: string
+  designationDesConcessions: string | undefined
+  departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: string
+  communesSurLeTerritoireDesquelsFonctionnentLesExploitations: string | undefined
+  tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: any
+  tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: any
+  observations: string
 }
 
 const precisionGramme = (x: number): string => {
@@ -266,14 +265,14 @@ export const buildMatrices = (
 
   const matrice1122 = rawLines.map(line => {
     return {
-      "Numéro d'ordre de la matrice": line.index,
-      'Désignation des concessionnaires': titulaireToString(line.titulaire),
-      'Désignation des concessions': line.titreLabel,
-      'Départements sur le territoire desquels fonctionnent les exploitations': line.departementLabel,
-      'Communes sur le territoire desquels fonctionnent les exploitations': `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
-      "Tonnages extraits ou cours de l'année précédente | par département": line.quantiteOrExtrait,
-      "Tonnages extraits ou cours de l'année précédente | par commune": line.quantiteOrExtrait,
-      Observations: "production en kilogramme d'or",
+      numeroOrdreMatrice: line.index,
+      designationDesConcessionnaires: titulaireToString(line.titulaire),
+      designationDesConcessions: line.titreLabel,
+      departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: line.departementLabel,
+      communesSurLeTerritoireDesquelsFonctionnentLesExploitations: `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
+      tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: line.quantiteOrExtrait,
+      tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: line.quantiteOrExtrait,
+      observations: "production en kilogramme d'or",
     }
   })
 
@@ -480,9 +479,22 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
       )
     })
 
-    const worksheet1122 = xlsx.utils.json_to_sheet(matrice1122)
-    const csv1122 = xlsx.utils.sheet_to_csv(worksheet1122)
-    fs.writeFileSync(`1122_${annee}.csv`, csv1122)
+    await new Promise<void>(resolve => {
+      carbone.render(
+        'src/business/resources/matrice_1122-SD_2021.ods',
+        {
+          valeurs: matrice1122,
+          annee,
+        },
+        function (err, result) {
+          if (err) {
+            return console.error(err)
+          }
+          fs.writeFileSync(`1122_${annee}.ods`, result)
+          resolve()
+        }
+      )
+    })
 
     const total = matrice1403.reduce(
       (acc, cur) => {
