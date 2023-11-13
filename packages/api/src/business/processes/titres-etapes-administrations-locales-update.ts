@@ -4,7 +4,7 @@ import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { DepartementId, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import { getDepartementsBySecteurs, SecteursMaritimes } from 'camino-common/src/static/facades.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { AdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations.js'
 import { knex } from '../../knex.js'
 
@@ -15,7 +15,7 @@ interface ITitreEtapeAdministrationLocale {
 }
 
 // calcule tous les départements d'une étape
-const titreEtapeAdministrationsDepartementsBuild = (communes: ICommune[] | undefined | null, secteursMaritimes: SecteursMaritimes[] | undefined | null): DepartementId[] => {
+const titreEtapeAdministrationsDepartementsBuild = (communes: Pick<ICommune, 'id'>[] | undefined | null, secteursMaritimes: SecteursMaritimes[] | undefined | null): DepartementId[] => {
   if (!communes) {
     throw new Error('les communes ne sont pas chargées')
   }
@@ -29,8 +29,8 @@ const titreEtapeAdministrationsDepartementsBuild = (communes: ICommune[] | undef
   return departements.filter(onlyUnique)
 }
 
-const titreEtapeAdministrationsLocalesBuild = (titreEtape: ITitreEtape): AdministrationId[] => {
-  const titreDepartementsIds = titreEtapeAdministrationsDepartementsBuild(titreEtape.communes, titreEtape.secteursMaritime)
+export const getTitreEtapeAdministrationsLocales = (communes: Pick<ICommune, 'id'>[] | undefined | null, secteursMaritimes: SecteursMaritimes[] | undefined | null): AdministrationId[] => {
+  const titreDepartementsIds = titreEtapeAdministrationsDepartementsBuild(communes, secteursMaritimes)
   const titreRegionsIds = titreDepartementsIds.map(departementId => Departements[departementId].regionId).filter(onlyUnique)
 
   // calcule toutes les administrations qui couvrent ces départements et régions
@@ -39,7 +39,7 @@ const titreEtapeAdministrationsLocalesBuild = (titreEtape: ITitreEtape): Adminis
     const isAdministrationLocale =
       (administration.departementId && titreDepartementsIds.includes(administration.departementId)) || (administration.regionId && titreRegionsIds.includes(administration.regionId))
     // alors l'administration n'est pas rattachée à l'étape
-    if (!isAdministrationLocale) return titreEtapeAdministrations
+    if (isNullOrUndefined(isAdministrationLocale) || !isAdministrationLocale) return titreEtapeAdministrations
 
     titreEtapeAdministrations.push(administration.id)
 
@@ -49,7 +49,7 @@ const titreEtapeAdministrationsLocalesBuild = (titreEtape: ITitreEtape): Adminis
 
 const titresEtapesAdministrationsLocalesBuild = (etapes: ITitreEtape[]): ITitreEtapeAdministrationLocale[] =>
   etapes.reduce<ITitreEtapeAdministrationLocale[]>((titresEtapesAdministrationsLocales, titreEtape) => {
-    const titreEtapeAdministrationsLocales = titreEtapeAdministrationsLocalesBuild(titreEtape)
+    const titreEtapeAdministrationsLocales = getTitreEtapeAdministrationsLocales(titreEtape.communes, titreEtape.secteursMaritime)
 
     titresEtapesAdministrationsLocales.push({
       titreEtapeAdministrationsLocalesOld: titreEtape.administrationsLocales?.sort() ?? [],
@@ -70,7 +70,7 @@ export const titresEtapesAdministrationsLocalesUpdate = async (titresEtapesIds?:
     administrations: AdministrationId[]
   }[] = []
 
-  if (etapes) {
+  if (etapes.length > 0) {
     const titresEtapesAdministrationsLocales = titresEtapesAdministrationsLocalesBuild(etapes)
 
     for (const { titreEtapeId, titreEtapeAdministrationsLocales, titreEtapeAdministrationsLocalesOld } of titresEtapesAdministrationsLocales) {

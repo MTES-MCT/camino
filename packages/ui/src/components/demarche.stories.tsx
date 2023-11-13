@@ -11,7 +11,7 @@ import { Router } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { dateAddDays, toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { EtapeDocument } from 'camino-common/src/etape'
+import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { MapPattern } from './_map/pattern'
@@ -148,6 +148,8 @@ const demarche: DemarcheGet = {
   },
   etapes: [
     {
+      id: etapeIdValidator.parse('etapeId1'),
+      slug: etapeSlugValidator.parse('etape-slug-1'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       date,
@@ -188,6 +190,8 @@ const demarche: DemarcheGet = {
       entreprises_documents: entrepriseDocuments,
     },
     {
+      id: etapeIdValidator.parse('etapeId2'),
+      slug: etapeSlugValidator.parse('etape-slug-2'),
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date: dateAddDays(date, 10),
@@ -197,6 +201,8 @@ const demarche: DemarcheGet = {
       entreprises_documents: [],
     },
     {
+      id: etapeIdValidator.parse('etapeId3'),
+      slug: etapeSlugValidator.parse('etape-slug-3'),
       etape_type_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeStatutId,
       date: dateAddDays(date, 20),

@@ -2,6 +2,7 @@ import { FunctionalComponent, ButtonHTMLAttributes } from 'vue'
 import { DsfrIcon } from './dsfrIconSpriteType'
 import { UseLinkOptions } from 'vue-router'
 import { CaminoRouterLink } from '../../router/camino-router-link'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const buttonTypes = ['primary', 'secondary', 'tertiary', 'tertiary-no-outline'] as const
 type ButtonType = (typeof buttonTypes)[number]
@@ -25,7 +26,7 @@ export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButt
       aria-label={props.title}
       onClick={props.onClick}
     >
-      {props.label ? props.label : props.title}
+      {isNotNullNorUndefined(props.label) ? props.label : props.title}
     </button>
   )
 }
@@ -35,13 +36,13 @@ type DsfrButtonIconProps = DsfrButtonProps & { icon: DsfrIcon }
 export const DsfrButtonIcon: FunctionalComponent<DsfrButtonIconProps> = (props: DsfrButtonIconProps) => {
   return (
     <button
-      class={['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`, `fr-btn--${props.buttonSize ?? 'md'}`, props.icon, props.label ? 'fr-btn--icon-right' : null]}
+      class={['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`, `fr-btn--${props.buttonSize ?? 'md'}`, props.icon, isNotNullNorUndefined(props.label) ? 'fr-btn--icon-right' : null]}
       disabled={props.disabled ?? false}
       title={props.title}
       aria-label={props.title}
       onClick={props.onClick}
     >
-      {props.label ? props.label : null}
+      {isNotNullNorUndefined(props.label) ? props.label : null}
     </button>
   )
 }
@@ -56,10 +57,8 @@ interface DsfrLinkProps {
 }
 export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
   const iconClass = []
-  if (props.icon !== null) {
-    if (props.label !== null) {
-      iconClass.push(`fr-${props.buttonType ? 'btn' : 'link'}--icon-right`)
-    }
+  if (props.icon !== null && props.label !== null) {
+    iconClass.push(`fr-${props.buttonType ? 'btn' : 'link'}--icon-right`)
   }
 
   return (
@@ -69,7 +68,7 @@ export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
       title={props.title}
       to={props.to}
     >
-      {props.label ? props.label : props.title}
+      {isNotNullNorUndefined(props.label) ? props.label : props.title}
     </CaminoRouterLink>
   )
 }

@@ -23,11 +23,11 @@ import { caminoDateValidator } from 'camino-common/src/date.js'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts.js'
 import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
 import { getCommunes } from '../../database/queries/communes.queries.js'
-import { isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales.js'
 import { EtapesTypes, EtapeTypeId, EtapeTypeIdFondamentale, etapeTypeIdFondamentaleValidator, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import {
   getAmodiatairesByEtapeIdQuery,
   getDocumentsByEtapeId,
@@ -49,6 +49,9 @@ import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { User } from 'camino-common/src/roles.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { getTitreEtapeAdministrationsLocales } from '../../business/processes/titres-etapes-administrations-locales-update.js'
+import { canReadEtape } from './permissions/etapes.js'
+import { canReadDemarche } from './permissions/demarches.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -149,13 +152,9 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     throw new Error(`demarche ${id} introuvable`)
   }
 
-  // FIXME vérifier que l’utilisateur peut consulter la démarche
   const demarche = demarches[0]
 
   const phases = await dbQueryAndValidate(getDemarchesPhasesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesPhasesByTitreIdDbValidator)
-
-  // FIXME charger les étapes que  l’utilisateur a le droit de voir
-
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
   const latestFondamentaleEtape = etapes.find(({ etape_type_id }) => EtapesTypes[etape_type_id].fondamentale) ?? null
@@ -177,84 +176,98 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     amodiataires.push(...(await getAmodiatairesByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
     points.push(...(await getPointsByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
   }
+
+  const administrationsLocales = memoize(() => Promise.resolve(getTitreEtapeAdministrationsLocales(latestFondamentaleEtape?.communes, latestFondamentaleEtape?.secteurs_maritime)))
+  const entreprisesTitulairesOuAmodiataires = memoize(() => Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)]))
+  const titreTypeId = memoize(() => Promise.resolve(demarche.titre_type_id))
+
+  if (!(await canReadDemarche(demarche, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))) {
+    throw new Error('droit insuffisant')
+  }
+
   const formatedEtapes: DemarcheGet['etapes'] = []
   for (const etape of etapes) {
-    const sections = getSections(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
-      .map(section => ({ ...section, elements: section.elements.filter(element => !(etape.heritage_contenu?.[section.id]?.[element.id]?.actif ?? false)) }))
-      .filter(section => section.elements.length > 0)
+    const canRead: boolean = await canReadEtape(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etape.etape_type_id, demarche)
+    if (canRead) {
+      const sections = getSections(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
+        .map(section => ({ ...section, elements: section.elements.filter(element => !(etape.heritage_contenu?.[section.id]?.[element.id]?.actif ?? false)) }))
+        .filter(section => section.elements.length > 0)
 
-    const contenu: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
+      const contenu: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
 
-    const entrepriseDocuments = []
+      const entrepriseDocuments = []
 
-    const entrepriseDocumentsTypes = getEntrepriseDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
-    if (entrepriseDocumentsTypes.length > 0) {
-      entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user)))
-    }
+      const entrepriseDocumentsTypes = getEntrepriseDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
+      if (entrepriseDocumentsTypes.length > 0) {
+        entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user)))
+      }
 
-    const documents = []
-    const documentsTypes = getDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
-    if (documentsTypes.length > 0) {
-      documents.push(...(await getDocumentsByEtapeId(etape.id, pool, user)))
-    }
+      const documents = []
+      const documentsTypes = getDocuments(demarche.titre_type_id, demarche.demarche_type_id, etape.etape_type_id)
+      if (documentsTypes.length > 0) {
+        documents.push(...(await getDocumentsByEtapeId(etape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etape.etape_type_id, demarche)))
+      }
 
-    const etapeCommon: DemarcheEtapeCommon = {
-      date: etape.date,
-      etape_statut_id: etape.etape_statut_id,
-      sections_with_values: contenu,
-      entreprises_documents: entrepriseDocuments,
-      documents,
-    }
-    if (isFondamentale(etape.etape_type_id)) {
-      let geojsonMultiPolygon: FeatureMultiPolygon | null = null
-      if (!(etape.heritage_props?.points?.actif ?? false)) {
-        const etapePoints = await getPointsByEtapeIdQuery(etape.id, pool)
+      const etapeCommon: DemarcheEtapeCommon = {
+        date: etape.date,
+        id: etape.id,
+        slug: etape.slug,
+        etape_statut_id: etape.etape_statut_id,
+        sections_with_values: contenu,
+        entreprises_documents: entrepriseDocuments,
+        documents,
+      }
+      if (isFondamentale(etape.etape_type_id)) {
+        let geojsonMultiPolygon: FeatureMultiPolygon | null = null
+        if (!(etape.heritage_props?.points?.actif ?? false)) {
+          const etapePoints = await getPointsByEtapeIdQuery(etape.id, pool)
 
-        if (etapePoints.length > 0) {
-          geojsonMultiPolygon = geojsonFeatureMultiPolygon(etapePoints)
+          if (etapePoints.length > 0) {
+            geojsonMultiPolygon = geojsonFeatureMultiPolygon(etapePoints)
+          }
         }
-      }
 
-      let titulaires = null
-      if (!(etape.heritage_props?.titulaires?.actif ?? false)) {
-        const titulairesDb = await getTitulairesByEtapeIdQuery(etape.id, pool)
+        let titulaires = null
+        if (!(etape.heritage_props?.titulaires?.actif ?? false)) {
+          const titulairesDb = await getTitulairesByEtapeIdQuery(etape.id, pool)
 
-        if (titulairesDb.length > 0) {
-          titulaires = titulairesDb
+          if (titulairesDb.length > 0) {
+            titulaires = titulairesDb
+          }
         }
-      }
 
-      let amodiataires = null
-      if (!(etape.heritage_props?.amodiataires?.actif ?? false)) {
-        const amodiatairesDb = await getAmodiatairesByEtapeIdQuery(etape.id, pool)
+        let amodiataires = null
+        if (!(etape.heritage_props?.amodiataires?.actif ?? false)) {
+          const amodiatairesDb = await getAmodiatairesByEtapeIdQuery(etape.id, pool)
 
-        if (amodiatairesDb.length > 0) {
-          amodiataires = amodiatairesDb
+          if (amodiatairesDb.length > 0) {
+            amodiataires = amodiatairesDb
+          }
         }
+
+        const etapeFondamentale: DemarcheEtapeFondamentale = {
+          etape_type_id: etape.etape_type_id,
+          fondamentale: {
+            amodiataires,
+            titulaires,
+            date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.date_debut?.actif ?? false) ? etape.date_debut : null,
+            date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.date_fin?.actif ?? false) ? etape.date_fin : null,
+            duree: isNotNullNorUndefined(etape.duree) && !(etape.heritage_props?.duree?.actif ?? false) ? etape.duree : null,
+            substances: isNotNullNorUndefined(etape.substances) && !(etape.heritage_props?.substances?.actif ?? false) ? etape.substances : null,
+            surface: isNotNullNorUndefined(etape.surface) && !(etape.heritage_props?.surface?.actif ?? false) ? etape.surface : null,
+            geojsonMultiPolygon: isNotNullNorUndefined(geojsonMultiPolygon) ? geojsonMultiPolygon : null,
+          },
+        }
+
+        formatedEtapes.push({
+          ...etapeCommon,
+          ...etapeFondamentale,
+        })
+      } else {
+        const etapeNonFondamentale: DemarcheEtapeNonFondamentale = { etape_type_id: etape.etape_type_id }
+
+        formatedEtapes.push({ ...etapeCommon, ...etapeNonFondamentale })
       }
-
-      const etapeFondamentale: DemarcheEtapeFondamentale = {
-        etape_type_id: etape.etape_type_id,
-        fondamentale: {
-          amodiataires,
-          titulaires,
-          date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.date_debut?.actif ?? false) ? etape.date_debut : null,
-          date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.date_fin?.actif ?? false) ? etape.date_fin : null,
-          duree: isNotNullNorUndefined(etape.duree) && !(etape.heritage_props?.duree?.actif ?? false) ? etape.duree : null,
-          substances: isNotNullNorUndefined(etape.substances) && !(etape.heritage_props?.substances?.actif ?? false) ? etape.substances : null,
-          surface: isNotNullNorUndefined(etape.surface) && !(etape.heritage_props?.surface?.actif ?? false) ? etape.surface : null,
-          geojsonMultiPolygon: isNotNullNorUndefined(geojsonMultiPolygon) ? geojsonMultiPolygon : null,
-        },
-      }
-
-      formatedEtapes.push({
-        ...etapeCommon,
-        ...etapeFondamentale,
-      })
-    } else {
-      const etapeNonFondamentale: DemarcheEtapeNonFondamentale = { etape_type_id: etape.etape_type_id }
-
-      formatedEtapes.push({ ...etapeCommon, ...etapeNonFondamentale })
     }
   }
 
@@ -289,6 +302,9 @@ const getDemarcheQueryDbValidator = z.object({
   titre_nom: z.string(),
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  titre_public_lecture: z.boolean().default(false),
+  public_lecture: z.boolean().default(false),
+  entreprises_lecture: z.boolean().default(false),
 })
 type GetDemarcheQueryDb = z.infer<typeof getDemarcheQueryDbValidator>
 
@@ -301,7 +317,10 @@ select
     d.statut_id as demarche_statut_id,
     t.nom as titre_nom,
     t.slug as titre_slug,
-    t.type_id as titre_type_id
+    t.type_id as titre_type_id,
+    t.public_lecture as titre_public_lecture,
+    d.public_lecture,
+    d.entreprises_lecture
 from
     titres_demarches d
     left join titres t on t.id = d.titre_id
@@ -334,6 +353,7 @@ where
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
+  slug: etapeSlugValidator,
   date: caminoDateValidator,
   communes: z.array(communeValidator.pick({ id: true })),
   secteurs_maritime: z.array(secteurMaritimeValidator).nullable(),
@@ -364,11 +384,13 @@ select
     e.date_fin,
     e.duree,
     e.surface,
-    e.contenu
+    e.contenu,
+    e.slug
 from
     titres_etapes e
 where
     e.titre_demarche_id = $ demarcheId !
+    and e.archive is false
 order by
     date desc
 `

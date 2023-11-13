@@ -49,7 +49,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 
 const columns: Column<string>[] = [
   { id: 'polygone', name: 'Polygone', noSort: true },
-  { id: 'nom', name: 'Référentiel WGS 84', sort: () => -1, noSort: true },
+  { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
   { id: 'latitude', name: 'Latitude', noSort: true },
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
@@ -122,14 +122,14 @@ const TabCaminoMap = defineComponent<Props>(props => {
             if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
               const icon = leafletDivIconBuild({
                 className: 'fr-text--sm',
-                html: `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%" class="leaflet-marker-camino-dsfr">${index}</div>`,
+                html: `<div class="leaflet-marker-camino-dsfr">${index}</div>`,
                 iconSize: [32, 32],
               })
 
               const latLng: LatLngTuple = [y, x]
               const titreMarker = leafletMarkerBuild(latLng, icon, { interactive: true })
               titreMarker.bindPopup(
-                `<div><div>Latitude : <span class="fr-text--md" style="font-weight: 500">${y}</span></div><div>Longitude : <span class="fr-text--md" style="font-weight: 500">${x}</span></div></div>`,
+                `<div><div>Latitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${y}</span></div><div>Longitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${x}</span></div></div>`,
                 { closeButton: false }
               )
               markers.push(titreMarker)
@@ -200,6 +200,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
       mapUpdate={mapUpdate}
       geojsonLayers={geojsonLayers.value}
       markerLayers={markerLayers.value}
+      maxMarkers={maxRows}
       additionalOverlayLayers={additionalOverlayLayers.value}
       style={{ minHeight: '400px' }}
     />

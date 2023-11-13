@@ -27,7 +27,7 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
   const titresUpdated = [] as string[]
 
   for (const titre of titres) {
-    const { publicLecture, entreprisesLecture } = titrePublicFind(titre.titreStatutId, titre.typeId, titre.demarches || [])
+    const publicLecture = titrePublicFind(titre.titreStatutId, titre.typeId, titre.demarches || [])
 
     const patch = {} as ITitrePatch
 
@@ -35,8 +35,9 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
       patch.publicLecture = publicLecture
     }
 
-    if (titre.entreprisesLecture !== entreprisesLecture) {
-      patch.entreprisesLecture = entreprisesLecture
+    // TODO 2023-11-08 trouver le courage d'aller jusqu'à la BDD supprimer ce champ qui est toujours à true
+    if (titre.entreprisesLecture !== true) {
+      patch.entreprisesLecture = true
     }
 
     if (Object.keys(patch).length) {

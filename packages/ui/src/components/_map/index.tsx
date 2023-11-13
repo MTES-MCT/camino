@@ -6,6 +6,7 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { displayPerimeterZoomMaxLevel } from './util'
 
 import './leaflet'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   markerLayers: Layer[]
@@ -13,9 +14,10 @@ export interface Props {
   mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void
   additionalOverlayLayers?: Record<string, LayerGroup>
   loading: boolean
+  maxMarkers?: number
 }
 
-export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
+export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLayers', 'geojsonLayers', 'mapUpdate', 'additionalOverlayLayers', 'loading'], (props, { expose }) => {
   const map = ref<HTMLDivElement | null>(null)
   const leafletComponent = ref<Map | null>(null)
   const updateBboxOnly = ref<boolean>(false)
@@ -53,6 +55,12 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
     () => props.markerLayers,
     (layers: Layer[]) => {
       layers.forEach(l => l.addTo(markerLayer))
+      if ((isNotNullNorUndefined(props.maxMarkers) && layers.length <= props.maxMarkers) || isNullOrUndefined(props.maxMarkers)) {
+        const component = leafletComponent.value
+        if (isNotNullNorUndefined(component) && !component.hasLayer(markerLayer)) {
+          component.addLayer(markerLayer)
+        }
+      }
     },
     { immediate: true }
   )
@@ -186,14 +194,13 @@ export const CaminoMap = caminoDefineComponent<Props>(['markerLayers', 'geojsonL
           zoomAnimation: false,
           doubleClickZoom: false,
           minZoom: 1,
-          // @ts-ignore
           gestureHandling: true,
           center: [48.8588254, 2.2644635],
           zoom: 6,
           fullscreenControl: {
             pseudoFullscreen: true,
           },
-          layers: [osm, geojsonLayer, markerLayer, ...(props.additionalOverlayLayers ? Object.values(props.additionalOverlayLayers) : [])],
+          layers: [osm, geojsonLayer, ...(props.additionalOverlayLayers ? Object.values(props.additionalOverlayLayers) : [])],
         })
       )
       leafletComponent.value = leafletComponentOnMounted

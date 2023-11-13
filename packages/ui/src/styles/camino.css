@@ -25,6 +25,15 @@
   background-color: var(--blue-france-sun-113-625);
   color: white;
   border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-marker-camino-dsfr-popup {
+  font-weight: 500;
 }
 
 .leaflet-marker-camino::before {

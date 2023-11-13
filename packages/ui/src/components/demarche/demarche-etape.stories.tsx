@@ -8,7 +8,7 @@ import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeDocument } from 'camino-common/src/etape'
+import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -75,6 +75,8 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
     user={{ ...testBlankUser, role: 'super' }}
+    id={etapeIdValidator.parse('etapeId')}
+    slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId}
@@ -94,7 +96,22 @@ export const DemandeNoMap: StoryFn = () => (
       geojsonMultiPolygon: null,
       surface: null,
     }}
-    sections_with_values={[{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }]}
+    sections_with_values={[
+      { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
+      {
+        id: 'odlep',
+        elements: [
+          {
+            id: 'lien',
+            nom: 'Lien public externe',
+            type: 'url',
+            optionnel: true,
+            description: '',
+            value: 'https://beta.gouv.fr',
+          },
+        ],
+      },
+    ]}
     documents={documents}
     entreprises_documents={entrepriseDocuments}
   />
@@ -103,6 +120,8 @@ export const DemandeNoMap: StoryFn = () => (
 export const DemandeNoSnapshot: StoryFn = () => (
   <DemarcheEtape
     user={{ ...testBlankUser, role: 'super' }}
+    id={etapeIdValidator.parse('etapeId')}
+    slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId}
@@ -164,7 +183,9 @@ export const DemandeNoSnapshot: StoryFn = () => (
 
 export const Depot: StoryFn = () => (
   <DemarcheEtape
+    id={etapeIdValidator.parse('etapeId')}
     user={{ ...testBlankUser, role: 'super' }}
+    slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId}
@@ -178,7 +199,9 @@ export const Depot: StoryFn = () => (
 
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
+    id={etapeIdValidator.parse('etapeId')}
     user={{ ...testBlankUser, role: 'super' }}
+    slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
     etape_type_id={EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId}

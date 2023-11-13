@@ -12,13 +12,19 @@ import {
   IGetDocumentsByEtapeIdQueryQuery,
 } from './titres-etapes.queries.types.js'
 import { EtapeDocument, etapeDocumentValidator, EtapeId } from 'camino-common/src/etape.js'
-import { EntrepriseDocumentId, entrepriseDocumentValidator, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
 import { User } from 'camino-common/src/roles.js'
 import { canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
 import { z } from 'zod'
 import { entrepriseDocumentLargeObjectIdValidator } from '../../api/rest/entreprises.queries.js'
+import { canReadDocument } from '../../api/rest/permissions/documents.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
+import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -150,9 +156,25 @@ where
     d.titre_etape_id = $ titre_etape_id !
 `
 
-export const getDocumentsByEtapeId = async (titre_etape_id: EtapeId, pool: Pool, _user: User): Promise<EtapeDocument[]> => {
+export const getDocumentsByEtapeId = async (
+  titre_etape_id: EtapeId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeTypeId: EtapeTypeId,
+  demarche: CanReadDemarche
+): Promise<EtapeDocument[]> => {
   const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
 
-  // FIXME canSeeEtapeDocuments
-  return result
+  const filteredDocuments: EtapeDocument[] = []
+
+  for (const document of result) {
+    if (await canReadDocument(document, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+      filteredDocuments.push(document)
+    }
+  }
+
+  return filteredDocuments
 }

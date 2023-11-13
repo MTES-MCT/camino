@@ -1,5 +1,5 @@
 import { isNotNullNorUndefined, getKeys } from '../typescript-tools.js'
-import { DemarcheTypeId, isDemarcheTypeOctroi } from './demarchesTypes.js'
+import { DemarcheTypeId } from './demarchesTypes.js'
 import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
 import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes.js'
 
@@ -7,25 +7,23 @@ export const titrePublicFind = (
   titreStatutId: TitreStatutId | null | undefined,
   titreTypeId: TitreTypeId | undefined,
   titreDemarches: { typeId: DemarcheTypeId; publicLecture?: boolean | undefined | null }[]
-) => {
-  const entreprisesLecture = true
-  let publicLecture = false
+): boolean => {
   if (!titreStatutId || !titreTypeId) {
-    return { publicLecture, entreprisesLecture }
+    return false
   }
 
   // si le type de titre associé au domaine associé au statut du titre est public
-  // et la démarche d'octroi (virtuelle ou non) est publique
+  // et qu’une démarche est publique
   // alors le titre est public
   if (isTitrePublicLecture(titreTypeId, titreStatutId)) {
-    const titreDemarcheOctroi = titreDemarches.find(d => isDemarcheTypeOctroi(d.typeId) && d.publicLecture)
+    const titreDemarcheOctroi = titreDemarches.find(d => d.publicLecture)
 
     if (titreDemarcheOctroi) {
-      publicLecture = true
+      return true
     }
   }
 
-  return { publicLecture, entreprisesLecture }
+  return false
 }
 
 const isTitrePublicLecture = (titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
