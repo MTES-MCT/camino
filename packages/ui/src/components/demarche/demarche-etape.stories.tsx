@@ -8,7 +8,7 @@ import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeDocument, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -75,6 +75,7 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
 export const DemandeNoMap: StoryFn = () => (
   <DemarcheEtape
     user={{ ...testBlankUser, role: 'super' }}
+    id={etapeIdValidator.parse('etapeId')}
     slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
@@ -119,6 +120,7 @@ export const DemandeNoMap: StoryFn = () => (
 export const DemandeNoSnapshot: StoryFn = () => (
   <DemarcheEtape
     user={{ ...testBlankUser, role: 'super' }}
+    id={etapeIdValidator.parse('etapeId')}
     slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
     router={routerPushMock}
@@ -181,6 +183,7 @@ export const DemandeNoSnapshot: StoryFn = () => (
 
 export const Depot: StoryFn = () => (
   <DemarcheEtape
+    id={etapeIdValidator.parse('etapeId')}
     user={{ ...testBlankUser, role: 'super' }}
     slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}
@@ -196,6 +199,7 @@ export const Depot: StoryFn = () => (
 
 export const AvisDefavorable: StoryFn = () => (
   <DemarcheEtape
+    id={etapeIdValidator.parse('etapeId')}
     user={{ ...testBlankUser, role: 'super' }}
     slug={etapeSlugValidator.parse('etape-slug')}
     titreSlug={titreSlug}

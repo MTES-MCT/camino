@@ -22,7 +22,7 @@ describe("publicité d'un titre", () => {
   })
 
   test('un titre est public si une de ses démarches est publique', () => {
-    expect(titrePublicFind(TitresStatutIds.DemandeInitiale, TITRES_TYPES_IDS.CONCESSION_METAUX, [{ typeId: DEMARCHES_TYPES_IDS.Prolongation, publicLecture: true }])).toBe(false)
+    expect(titrePublicFind(TitresStatutIds.DemandeInitiale, TITRES_TYPES_IDS.CONCESSION_METAUX, [{ typeId: DEMARCHES_TYPES_IDS.Prolongation, publicLecture: true }])).toBe(true)
   })
 
   test("un titre dont l'autorisation pour son statut est mise à `true` et dont la démarche d'octroi est publique est public", () => {
