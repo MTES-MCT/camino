@@ -19,6 +19,7 @@ from
 where
     ta.type_id in ('gra', 'grx')
     and (ta.contenu -> 'substancesFiscales' -> $ substance)::int > 0
+    and ta.activite_statut_id = 'dep'
     and ta.annee > 2017
 group by
     ta.annee
