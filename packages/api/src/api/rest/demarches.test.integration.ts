@@ -4,15 +4,15 @@ import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { userSuper } from '../../database/user-super.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import type { Pool } from 'pg'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
 import { titreSlugValidator } from 'camino-common/src/titres.js'
 import { demarcheGetValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import { SUBSTANCES_LEGALES_IDS } from 'camino-common/src/static/substancesLegales.js'
+import TitresEtapes from '../../database/models/titres-etapes.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -64,24 +64,22 @@ describe('getDemarche', () => {
       demarcheDateFin: toCaminoDate('2025-01-01'),
     })
 
-    await titreEtapeCreate(
-      {
-        typeId: ETAPES_TYPES.demande,
-        statutId: ETAPES_STATUTS.DEPOSE,
-        date: toCaminoDate('2023-01-01'),
-        titreDemarcheId: titreDemarche.id,
-        contenu: {
-          arm: {
-            franchissements: 3,
-          },
+    const etapeId = newEtapeId('superEtapeId')
+    await TitresEtapes.query().insertAndFetch({
+      id: etapeId,
+      typeId: ETAPES_TYPES.demande,
+      statutId: ETAPES_STATUTS.DEPOSE,
+      date: toCaminoDate('2023-01-01'),
+      titreDemarcheId: titreDemarche.id,
+      contenu: {
+        arm: {
+          franchissements: 3,
         },
-        dateDebut: toCaminoDate('2023-01-01'),
-        duree: 5,
-        substances: [SUBSTANCES_LEGALES_IDS.or, SUBSTANCES_LEGALES_IDS.argent],
       },
-      userSuper,
-      titre.id
-    )
+      dateDebut: toCaminoDate('2023-01-01'),
+      duree: 5,
+      substances: [SUBSTANCES_LEGALES_IDS.or, SUBSTANCES_LEGALES_IDS.argent],
+    })
     const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: titreDemarche.id }, userSuper)
 
     expect(tested.statusCode).toBe(200)
@@ -116,6 +114,7 @@ describe('getDemarche', () => {
               "surface": null,
               "titulaires": null,
             },
+            "id": "superEtapeId",
             "sections_with_values": [
               {
                 "elements": [
@@ -139,6 +138,7 @@ describe('getDemarche', () => {
                 "nom": "Caractéristiques ARM",
               },
             ],
+            "slug": "superDemarcheId-mfr99",
           },
         ],
         "geojsonMultiPolygon": null,

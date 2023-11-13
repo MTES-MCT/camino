@@ -135,9 +135,9 @@ export interface IGetDocumentsByEtapeIdQueryParams {
 export interface IGetDocumentsByEtapeIdQueryResult {
   description: string;
   document_type_id: string;
-  entreprises_lecture: boolean | null;
+  entreprises_lecture: boolean;
   id: string;
-  public_lecture: boolean | null;
+  public_lecture: boolean;
 }
 
 /** 'GetDocumentsByEtapeIdQuery' query type */
