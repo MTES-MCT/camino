@@ -58,7 +58,7 @@ export const etapeTypeFormat = (etape: ITitreEtape, documentTypeData: DocumentTy
 }
 
 export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null): boolean => {
-  const etapeTypeDateFin = EtapesTypes[etapeTypeId].dateFin
+  const etapeTypeDateFin = EtapesTypes[etapeTypeId].date_fin
   if (!etapeTypeDateFin || !titreEtapes) return true
 
   const dateDemande = titreDemarcheDepotDemandeDateFind(titreEtapes)

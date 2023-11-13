@@ -11,7 +11,7 @@ import { entrepriseIdValidator, etapeEntrepriseDocumentValidator } from './entre
 import { etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator } from './static/etapesTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
-import { etapeDocumentValidator, etapeSlugValidator } from './etape.js'
+import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -70,6 +70,7 @@ export type DemarcheEtapeNonFondamentale = z.infer<typeof demarcheEtapeNonFondam
 const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
   date: caminoDateValidator,
+  id: etapeIdValidator,
   slug: etapeSlugValidator,
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),

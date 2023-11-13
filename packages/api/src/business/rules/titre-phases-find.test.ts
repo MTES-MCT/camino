@@ -10,6 +10,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { etapeSlugValidator } from 'camino-common/src/etape.js'
 const titresProd = require('./titre-phases-find.cas.json')
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]
@@ -694,7 +695,7 @@ describe("phases d'une démarche", () => {
             statutId: 'fav',
             ordre: 4,
             date: toCaminoDate('2020-06-30'),
-            slug: 'm-cx-pontaubert-1970-ren01-app01',
+            slug: etapeSlugValidator.parse('m-cx-pontaubert-1970-ren01-app01'),
           },
         ],
       },

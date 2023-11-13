@@ -210,6 +210,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
       const etapeCommon: DemarcheEtapeCommon = {
         date: etape.date,
+        id: etape.id,
         slug: etape.slug,
         etape_statut_id: etape.etape_statut_id,
         sections_with_values: contenu,

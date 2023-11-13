@@ -10,7 +10,7 @@ import { statSync, readFileSync, createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
+import { EtapeId } from 'camino-common/src/etape.js'
 import { DocumentId } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
@@ -24,7 +24,7 @@ export const DOWNLOADS_DIRECTORY = 'downloads'
 
 export const etapeTelecharger =
   (pool: Pool) =>
-  async ({ params: { etapeId } }: { params: { etapeId?: EtapeIdOrSlug } }, user: User) => {
+  async ({ params: { etapeId } }: { params: { etapeId?: EtapeId } }, user: User) => {
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }

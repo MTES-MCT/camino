@@ -10,6 +10,7 @@ import TitresPoints from './titres-points.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Journaux from './journaux.js'
+import { etapeSlugValidator } from 'camino-common/src/etape.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -132,7 +133,7 @@ class TitresEtapes extends Model {
     }
 
     if (!this.slug && this.titreDemarcheId && this.typeId) {
-      this.slug = `${this.titreDemarcheId}-${this.typeId}99`
+      this.slug = etapeSlugValidator.parse(`${this.titreDemarcheId}-${this.typeId}99`)
     }
 
     return super.$beforeInsert(context)

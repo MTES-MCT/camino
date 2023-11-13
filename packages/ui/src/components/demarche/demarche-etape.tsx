@@ -77,7 +77,7 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
                 class="fr-mr-1v"
                 downloadTitle="Télécharger l’ensemble de la demande dans un fichier .zip"
                 downloadRoute="/etape/zip/:etapeId"
-                params={{ etapeId: props.slug }}
+                params={{ etapeId: props.id }}
                 formats={['pdf']}
                 route={{ query: {} }}
               />
