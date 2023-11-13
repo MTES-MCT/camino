@@ -153,7 +153,7 @@ export const fichier =
       user
     )
 
-    if (isNullOrUndefined(document) || isNullOrUndefined(document.fichier)) {
+    if (isNullOrUndefined(document) || !(document.fichier ?? false)) {
       throw new Error('fichier inexistant')
     }
 
