@@ -51,6 +51,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
     },
     { immediate: true }
   )
+
   watch(
     () => props.markerLayers,
     (layers: Layer[]) => {
@@ -62,7 +63,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
         }
       }
     },
-    { immediate: true }
+    { immediate: true, deep: true }
   )
 
   const boundsGet = (): [number, number, number, number] | [] => {

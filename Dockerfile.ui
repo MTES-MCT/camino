@@ -15,6 +15,6 @@ RUN CI=true make install
 COPY ./ /app/
 RUN make build/ui
 
-FROM nginx:1.25.1
+FROM nginx:1.25.3
 ADD ui_nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=build-stage /app/packages/ui/dist /usr/share/nginx/html
