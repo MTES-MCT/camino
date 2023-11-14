@@ -51,19 +51,18 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
     },
     { immediate: true }
   )
-  watch(
-    () => props.markerLayers,
-    (layers: Layer[]) => {
-      layers.forEach(l => l.addTo(markerLayer))
-      if ((isNotNullNorUndefined(props.maxMarkers) && layers.length <= props.maxMarkers) || isNullOrUndefined(props.maxMarkers)) {
-        const component = leafletComponent.value
-        if (isNotNullNorUndefined(component) && !component.hasLayer(markerLayer)) {
-          component.addLayer(markerLayer)
-        }
+
+  const initMarkers = (layers: Layer[]) => {
+    layers.forEach(l => l.addTo(markerLayer))
+    if ((isNotNullNorUndefined(props.maxMarkers) && layers.length <= props.maxMarkers) || isNullOrUndefined(props.maxMarkers)) {
+      const component = leafletComponent.value
+      if (isNotNullNorUndefined(component) && !component.hasLayer(markerLayer)) {
+        component.addLayer(markerLayer)
       }
-    },
-    { immediate: true }
-  )
+    }
+  }
+
+  watch(() => props.markerLayers, initMarkers, { immediate: true })
 
   const boundsGet = (): [number, number, number, number] | [] => {
     if (leafletComponent.value !== null) {
@@ -204,6 +203,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
         })
       )
       leafletComponent.value = leafletComponentOnMounted
+      initMarkers(props.markerLayers)
 
       const controlLayers = L.control.layers(baseMaps, overlayMaps)
       controlLayers.addTo(leafletComponentOnMounted)
