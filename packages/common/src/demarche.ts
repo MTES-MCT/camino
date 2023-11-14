@@ -12,6 +12,7 @@ import { etapeTypeIdFondamentaleValidator, etapeTypeIdNonFondamentaleValidator }
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
 import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
+import { titreStatutIdValidator } from './static/titresStatuts.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -86,7 +87,7 @@ export type DemarcheEtape = z.infer<typeof demarcheEtapeValidator>
 export const demarcheGetValidator = z.object({
   id: demarcheIdValidator,
   slug: demarcheSlugValidator,
-  titre: z.object({ slug: titreSlugValidator, nom: z.string(), titre_type_id: titreTypeIdValidator, phases: z.array(demarchePhaseValidator) }),
+  titre: z.object({ slug: titreSlugValidator, nom: z.string(), titre_type_id: titreTypeIdValidator, titre_statut_id: titreStatutIdValidator, phases: z.array(demarchePhaseValidator) }),
   etapes: z.array(demarcheEtapeValidator),
   demarche_type_id: demarcheTypeIdValidator,
   demarche_statut_id: demarcheStatutIdValidator,

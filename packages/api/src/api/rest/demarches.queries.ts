@@ -49,9 +49,10 @@ import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { User } from 'camino-common/src/roles.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { getTitreEtapeAdministrationsLocales } from '../../business/processes/titres-etapes-administrations-locales-update.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { canReadDemarche } from './permissions/demarches.js'
+import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
+import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -177,7 +178,14 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     points.push(...(await getPointsByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
   }
 
-  const administrationsLocales = memoize(() => Promise.resolve(getTitreEtapeAdministrationsLocales(latestFondamentaleEtape?.communes, latestFondamentaleEtape?.secteurs_maritime)))
+  const administrationsLocales = memoize(() =>
+    Promise.resolve(
+      getAdministrationsLocales(
+        latestFondamentaleEtape?.communes.map(({ id }) => id),
+        latestFondamentaleEtape?.secteurs_maritime
+      )
+    )
+  )
   const entreprisesTitulairesOuAmodiataires = memoize(() => Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)]))
   const titreTypeId = memoize(() => Promise.resolve(demarche.titre_type_id))
 
@@ -281,6 +289,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
       nom: demarche.titre_nom,
       slug: demarche.titre_slug,
       titre_type_id: demarche.titre_type_id,
+      titre_statut_id: demarche.titre_statut_id,
     },
     contenu: getDemarcheContenu(etapes, demarche.titre_type_id, demarche.demarche_type_id),
     communes,
@@ -302,6 +311,7 @@ const getDemarcheQueryDbValidator = z.object({
   titre_nom: z.string(),
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  titre_statut_id: titreStatutIdValidator,
   titre_public_lecture: z.boolean().default(false),
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
@@ -318,6 +328,7 @@ select
     t.nom as titre_nom,
     t.slug as titre_slug,
     t.type_id as titre_type_id,
+    t.titre_statut_id,
     t.public_lecture as titre_public_lecture,
     d.public_lecture,
     d.entreprises_lecture

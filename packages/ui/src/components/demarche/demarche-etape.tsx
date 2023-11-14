@@ -23,10 +23,25 @@ import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
+import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
 type Props = CommonDemarcheEtape & {
+  demarche: {
+    titulaires: { id: EntrepriseId }[]
+    administrationsLocales: AdministrationId[]
+    demarche_type_id: DemarcheTypeId
+  }
+  titre: {
+    typeId: TitreTypeId
+    titreStatutId: TitreStatutId
+  }
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
   user: User
@@ -61,6 +76,17 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
   }
   const canDownloadZip: boolean = props.etape_type_id === ETAPES_TYPES.demande && (props.entreprises_documents.length > 0 || props.documents.length > 0)
 
+  const canEditOrDeleteEtape: boolean = canCreateOrEditEtape(
+    props.user,
+    props.etape_type_id,
+    props.etape_statut_id,
+    props.demarche.titulaires,
+    props.demarche.administrationsLocales,
+    props.demarche.demarche_type_id,
+    props.titre,
+    'modification'
+  )
+
   return (
     <div class="fr-pb-1w fr-pl-2w fr-pr-2w" style={{ border: '1px solid var(--grey-900-175)' }}>
       <div class={`${styles.sticky} fr-pt-1w`}>
@@ -70,8 +96,12 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
           </div>
 
           <div style={{ display: 'flex' }}>
-            <DsfrButtonIcon icon={'fr-icon-edit-fill'} class="fr-mr-1v" buttonType="secondary" title="Modifier l’étape" onClick={editEtapeButton} />
-            <DsfrButtonIcon icon={'fr-icon-delete-bin-fill'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={deleteEtapeButton} />
+            {canEditOrDeleteEtape ? (
+              <>
+                <DsfrButtonIcon icon={'fr-icon-edit-line'} class="fr-mr-1v" buttonType="secondary" title="Modifier l’étape" onClick={editEtapeButton} />
+                <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={deleteEtapeButton} />
+              </>
+            ) : null}
             {canDownloadZip ? (
               <PureDownloads
                 class="fr-mr-1v"

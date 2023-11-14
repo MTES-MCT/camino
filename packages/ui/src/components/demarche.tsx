@@ -21,6 +21,7 @@ import { DsfrPerimetre } from './_common/dsfr-perimetre'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { EtapePropEntreprisesItem, EtapePropItem } from './etape/etape-prop-item'
 import { DemarcheEtape } from './demarche/demarche-etape'
+import { getAdministrationsLocales } from 'camino-common/src/administrations'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -146,7 +147,21 @@ export const PureDemarche = defineComponent<Props>(props => {
             <div>
               {demarche.etapes.map(etape => (
                 <div class="fr-pb-1w">
-                  <DemarcheEtape {...etape} titreSlug={demarche.titre.slug} router={props.router} user={props.user} />
+                  <DemarcheEtape
+                    {...etape}
+                    titreSlug={demarche.titre.slug}
+                    router={props.router}
+                    user={props.user}
+                    titre={{ typeId: demarche.titre.titre_type_id, titreStatutId: demarche.titre.titre_statut_id }}
+                    demarche={{
+                      administrationsLocales: getAdministrationsLocales(
+                        demarche.communes.map(({ id }) => id),
+                        demarche.secteurs_maritimes
+                      ),
+                      demarche_type_id: demarche.demarche_type_id,
+                      titulaires: demarche.titulaires,
+                    }}
+                  />
                 </div>
               ))}
             </div>
