@@ -6,7 +6,6 @@ import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
 import { userSuper } from '../database/user-super.js'
 import { entreprisesGet } from '../database/queries/entreprises.js'
 import { Fiscalite, fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
-import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types.js'
 import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
@@ -97,24 +96,24 @@ type Matrice1404 = {
 }
 
 type Matrice1121 = {
-  "Numéro d'ordre de la matrice": number
-  "Commune du lieu principal d'exploitation": string | undefined
-  'Désignation et adresse des concessionnaires, titulaires de permis d’exploitation ou exploitants': string
-  'Nature des substances extraites': string
-  'Base des redevances | Nature': string
-  'Base des redevances | Quantités': any
-  'Redevance départementale | Tarifs': number
-  'Redevance départementale | Montant net': number
-  'Redevance communale | Tarifs': number
-  'Redevance communale | Montant net redevance des mines': number
-  'Total redevance des mines': number
-  "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les PME": number
-  "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les autres entreprises": number
-  "Taxe minière sur l'or de Guyane | Montant des investissements déduits": number
-  "Taxe minière sur l'or de Guyane | Montant net de taxe minière sur l'or de Guyane": number
-  'Frais de gestion de la fiscalité directe locale': number
-  'Service de la Direction générale des Finances publiques en charge du recouvrement': string
-  "Numéro de l'article du rôle": string | undefined
+  numeroOrdreMatrice: number
+  communeDuLieuPrincipalDExploitation: string | undefined
+  designationEtAdresseDesConcessionnaires: string
+  natureDesSubstancesExtraites: string
+  baseDesRedevancesNature: string
+  baseDesRedevancesQuantités: any
+  redevanceDepartementaleTarifs: number
+  redevanceDepartementaleMontantNet: number
+  redevanceCommunaleTarifs: number
+  redevanceCommunaleMontantNetRedevanceDesMines: number
+  totalRedevanceDesMines: number
+  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: number
+  taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: number
+  taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: number
+  taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: number
+  fraisDeGestionDeLaFiscaliteDirecteLocale: number
+  serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: string
+  numeroDeLArticleDuRole: string | undefined
 }
 
 type Titulaire = {
@@ -139,14 +138,14 @@ type Matrices = {
 }
 
 type Matrice1122 = {
-  "Numéro d'ordre de la matrice": number
-  'Désignation des concessionnaires': string
-  'Désignation des concessions': string | undefined
-  'Départements sur le territoire desquels fonctionnent les exploitations': string
-  'Communes sur le territoire desquels fonctionnent les exploitations': string | undefined
-  "Tonnages extraits ou cours de l'année précédente | par département": any
-  "Tonnages extraits ou cours de l'année précédente | par commune": any
-  Observations: string
+  numeroOrdreMatrice: number
+  designationDesConcessionnaires: string
+  designationDesConcessions: string | undefined
+  departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: string
+  communesSurLeTerritoireDesquelsFonctionnentLesExploitations: string | undefined
+  tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: any
+  tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: any
+  observations: string
 }
 
 const precisionGramme = (x: number): string => {
@@ -174,7 +173,7 @@ export const buildMatrices = (
   const anneePrecedente = annee - 1
   let count = 0
   const rawLines: Matrices[] = titres
-    .filter(titre => !!result.titres[titre.id])
+    .filter(titre => isNotNullNorUndefined(result.titres[titre.id]))
     .flatMap(titre => {
       const communePrincipaleId = result.titres[titre.id]?.commune_principale_exploitation?.[anneePrecedente]
       const communePrincipale = titre.communes?.find(({ id }) => id === communePrincipaleId)
@@ -243,37 +242,37 @@ export const buildMatrices = (
     const fiscalite = line.fiscalite
 
     return {
-      "Numéro d'ordre de la matrice": line.index,
-      "Commune du lieu principal d'exploitation": communes.find(({ id }) => id === line.communePrincipale.id)?.nom,
-      'Désignation et adresse des concessionnaires, titulaires de permis d’exploitation ou exploitants': titulaireToString(line.titulaire),
-      'Nature des substances extraites': 'Minerais aurifères',
-      'Base des redevances | Nature': "Kilogramme d'or contenu",
-      'Base des redevances | Quantités': line.quantiteOrExtrait,
-      'Redevance départementale | Tarifs': openfiscaConstants.substances.auru.tarifDepartemental,
-      'Redevance départementale | Montant net': fiscalite.redevanceDepartementale,
-      'Redevance communale | Tarifs': openfiscaConstants.substances.auru.tarifCommunal,
-      'Redevance communale | Montant net redevance des mines': fiscalite.redevanceCommunale,
-      'Total redevance des mines': fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale,
-      "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les PME": openfiscaConstants.tarifTaxeMinierePME,
-      "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les autres entreprises": 0,
-      "Taxe minière sur l'or de Guyane | Montant des investissements déduits": isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.totalInvestissementsDeduits : 0,
-      "Taxe minière sur l'or de Guyane | Montant net de taxe minière sur l'or de Guyane": isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0,
-      'Frais de gestion de la fiscalité directe locale': fraisGestion(fiscalite),
-      'Service de la Direction générale des Finances publiques en charge du recouvrement': 'Direction régionale des finances publiques (DRFIP) - Guyane',
-      "Numéro de l'article du rôle": line.titreLabel,
+      numeroOrdreMatrice: line.index,
+      communeDuLieuPrincipalDExploitation: communes.find(({ id }) => id === line.communePrincipale.id)?.nom,
+      designationEtAdresseDesConcessionnaires: titulaireToString(line.titulaire),
+      natureDesSubstancesExtraites: 'Minerais aurifères',
+      baseDesRedevancesNature: "Kilogramme d'or contenu",
+      baseDesRedevancesQuantités: line.quantiteOrExtrait,
+      redevanceDepartementaleTarifs: openfiscaConstants.substances.auru.tarifDepartemental,
+      redevanceDepartementaleMontantNet: fiscalite.redevanceDepartementale,
+      redevanceCommunaleTarifs: openfiscaConstants.substances.auru.tarifCommunal,
+      redevanceCommunaleMontantNetRedevanceDesMines: fiscalite.redevanceCommunale,
+      totalRedevanceDesMines: fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale,
+      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: openfiscaConstants.tarifTaxeMinierePME,
+      taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: 0,
+      taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.totalInvestissementsDeduits : 0,
+      taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0,
+      fraisDeGestionDeLaFiscaliteDirecteLocale: fraisGestion(fiscalite),
+      serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: 'Direction régionale des finances publiques (DRFIP) - Guyane',
+      numeroDeLArticleDuRole: line.titreLabel,
     }
   })
 
   const matrice1122 = rawLines.map(line => {
     return {
-      "Numéro d'ordre de la matrice": line.index,
-      'Désignation des concessionnaires': titulaireToString(line.titulaire),
-      'Désignation des concessions': line.titreLabel,
-      'Départements sur le territoire desquels fonctionnent les exploitations': line.departementLabel,
-      'Communes sur le territoire desquels fonctionnent les exploitations': `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
-      "Tonnages extraits ou cours de l'année précédente | par département": line.quantiteOrExtrait,
-      "Tonnages extraits ou cours de l'année précédente | par commune": line.quantiteOrExtrait,
-      Observations: "production en kilogramme d'or",
+      numeroOrdreMatrice: line.index,
+      designationDesConcessionnaires: titulaireToString(line.titulaire),
+      designationDesConcessions: line.titreLabel,
+      departementsSurLeTerritoireDesquelsFonctionnentLesExploitations: line.departementLabel,
+      communesSurLeTerritoireDesquelsFonctionnentLesExploitations: `${communes.find(({ id }) => id === line.commune.id)?.nom} (${line.surfaceCommunale / 1_000_000} km²)`,
+      tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement: line.quantiteOrExtrait,
+      tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune: line.quantiteOrExtrait,
+      observations: "production en kilogramme d'or",
     }
   })
 
@@ -463,13 +462,39 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
     const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes)
 
-    const worksheet1121 = xlsx.utils.json_to_sheet(matrice1121)
-    const csv1121 = xlsx.utils.sheet_to_csv(worksheet1121)
-    fs.writeFileSync(`1121_${annee}.csv`, csv1121)
+    await new Promise<void>(resolve => {
+      carbone.render(
+        'src/business/resources/matrice_1121-SD_2021.ods',
+        {
+          valeurs: matrice1121,
+          annee,
+        },
+        function (err, result) {
+          if (err) {
+            return console.error(err)
+          }
+          fs.writeFileSync(`1121_${annee}.ods`, result)
+          resolve()
+        }
+      )
+    })
 
-    const worksheet1122 = xlsx.utils.json_to_sheet(matrice1122)
-    const csv1122 = xlsx.utils.sheet_to_csv(worksheet1122)
-    fs.writeFileSync(`1122_${annee}.csv`, csv1122)
+    await new Promise<void>(resolve => {
+      carbone.render(
+        'src/business/resources/matrice_1122-SD_2021.ods',
+        {
+          valeurs: matrice1122,
+          annee,
+        },
+        function (err, result) {
+          if (err) {
+            return console.error(err)
+          }
+          fs.writeFileSync(`1122_${annee}.ods`, result)
+          resolve()
+        }
+      )
+    })
 
     const total = matrice1403.reduce(
       (acc, cur) => {

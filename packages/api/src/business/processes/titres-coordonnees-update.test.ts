@@ -1,61 +1,20 @@
-import { titreCoordonneesFind } from '../utils/titre-coordonnees-find.js'
-import { titresGet } from '../../database/queries/titres.js'
-import Titres from '../../database/models/titres.js'
-import { titresCoordonneesUpdate } from './titres-coordonnees-update.js'
-import { vi, describe, expect, test } from 'vitest'
-vi.mock('../../database/queries/titres', () => ({
-  titreUpdate: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn(),
-}))
-
-vi.mock('../utils/titre-coordonnees-find', () => ({
-  titreCoordonneesFind: vi.fn(),
-}))
-
-const titresGetMock = vi.mocked(titresGet, true)
-const titreCoordonneesFindMock = vi.mocked(titreCoordonneesFind, true)
-
-console.info = vi.fn()
+import { isTitreCoordonneesToUpdate } from './titres-coordonnees-update.js'
+import { describe, expect, test } from 'vitest'
 
 describe('coordoonnées des titres', () => {
-  test.each([{ x: 1, y: 1 }, { x: 1 }, { y: 1 }, undefined])("met à jour les coordonnees d'un titre", async coordonnees => {
-    titresGetMock.mockResolvedValue([{ id: 'titre-id', coordonnees }] as Titres[])
-    titreCoordonneesFindMock.mockReturnValue({ x: 1, y: 0.5 })
-
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate()
-
-    expect(titresCoordonneesUpdated.length).toEqual(1)
+  test.each([{ x: 1, y: 1 }, { x: 1 }, { y: 1 }, undefined])("met à jour les coordonnees d'un titre", coordonnees => {
+    expect(isTitreCoordonneesToUpdate(coordonnees, { x: 1, y: 0.5 })).toBe(true)
   })
 
-  test.each([null, { x: null, y: 1 }])("enlève les coordonnees d'un titre sans points", async coordonnees => {
-    titresGetMock.mockResolvedValue([{ id: 'titre-id', coordonnees: { x: 1, y: 1 } }] as Titres[])
-    titreCoordonneesFindMock.mockReturnValue(coordonnees)
-
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate()
-
-    expect(titresCoordonneesUpdated.length).toEqual(1)
+  test.each([null, { x: null, y: 1 }])("enlève les coordonnees d'un titre sans points", newCoordonnees => {
+    expect(isTitreCoordonneesToUpdate({ x: 1, y: 1 }, newCoordonnees)).toBe(true)
   })
 
   test("met à jour les coordonnees d'un titre", async () => {
-    titresGetMock.mockResolvedValue([{ id: 'titre-id', coordonnees: null }] as Titres[])
-    titreCoordonneesFindMock.mockReturnValue({ x: null, y: 1 })
-
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate()
-
-    expect(titresCoordonneesUpdated.length).toEqual(1)
+    expect(isTitreCoordonneesToUpdate(null, { x: null, y: 1 })).toBe(true)
   })
 
   test('ne met à jour aucun titre', async () => {
-    titresGetMock.mockResolvedValue([
-      {
-        id: 'titre-type-id',
-        coordonnees: { x: 1, y: 0.5 },
-      },
-    ] as Titres[])
-    titreCoordonneesFindMock.mockReturnValue({ x: 1, y: 0.5 })
-
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate()
-
-    expect(titresCoordonneesUpdated.length).toEqual(0)
+    expect(isTitreCoordonneesToUpdate({ x: 1, y: 0.5 }, { x: 1, y: 0.5 })).toBe(false)
   })
 })

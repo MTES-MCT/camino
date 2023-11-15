@@ -1,3 +1,4 @@
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreCoordonneesFind } from '../utils/titre-coordonnees-find.js'
@@ -13,7 +14,7 @@ export const titresCoordonneesUpdate = async (titresIds?: string[]) => {
   for (const titre of titres) {
     const coordonnees = titreCoordonneesFind(titre.points)
 
-    if ((coordonnees && titre.coordonnees && (coordonnees.x !== titre.coordonnees.x || coordonnees.y !== titre.coordonnees.y)) || !coordonnees !== !titre.coordonnees) {
+    if (isTitreCoordonneesToUpdate(titre.coordonnees, coordonnees)) {
       await titreUpdate(titre.id, { coordonnees })
 
       console.info('titre : coordonnées (mise à jour) ->', `${titre.id} : ${coordonnees?.x}, ${coordonnees?.y}`)
@@ -23,4 +24,13 @@ export const titresCoordonneesUpdate = async (titresIds?: string[]) => {
   }
 
   return titresCoordonneesUpdated
+}
+
+type Coordonnees = { x?: number | null; y?: number | null } | null
+// VISIBLE FOR TESTING
+export const isTitreCoordonneesToUpdate = (currentCoordonnees: Coordonnees | undefined, newCoordonnees: Coordonnees): boolean => {
+  return (
+    (isNotNullNorUndefined(newCoordonnees) && isNotNullNorUndefined(currentCoordonnees) && (newCoordonnees.x !== currentCoordonnees.x || newCoordonnees.y !== currentCoordonnees.y)) ||
+    !newCoordonnees !== !currentCoordonnees
+  )
 }
