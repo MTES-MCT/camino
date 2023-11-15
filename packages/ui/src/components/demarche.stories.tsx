@@ -26,14 +26,20 @@ export default meta
 
 const getDemarcheAction = action('getDemarcheAction')
 const deleteEtapeAction = action('deleteEtapeAction')
+const deposerEtapeAction = action('deposerEtapeAction')
 const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
 const routerPushAction = action('routerPushAction')
-
+const routerReplaceAction = action('routerReplaceAction')
 const date = toCaminoDate('2023-10-24')
 
-const routerPushMock: Pick<Router, 'push'> = {
+const routerPushMock: Pick<Router, 'push' | 'replace'> = {
   push: to => {
     routerPushAction(to)
+
+    return Promise.resolve()
+  },
+  replace: to => {
+    routerReplaceAction(to)
 
     return Promise.resolve()
   },
@@ -155,6 +161,8 @@ const demarche: DemarcheGet = {
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       date,
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -198,6 +206,8 @@ const demarche: DemarcheGet = {
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date: dateAddDays(date, 10),
 
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       sections_with_values: [],
       documents: [],
       entreprises_documents: [],
@@ -209,14 +219,17 @@ const demarche: DemarcheGet = {
       etape_statut_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeStatutId,
       date: dateAddDays(date, 20),
 
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       sections_with_values: [],
       documents: [],
       entreprises_documents: [],
     },
   ],
+  sdom_zones: [],
 }
 
-const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape'> = {
+const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape' | 'deposeEtape'> = {
   getTitresWithPerimetreForCarte: params => {
     getTitresWithPerimetreForCarteAction(params)
 
@@ -261,6 +274,12 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
 
   deleteEtape: etapeId => {
     deleteEtapeAction(etapeId)
+
+    return Promise.resolve()
+  },
+
+  deposeEtape: etapeId => {
+    deposerEtapeAction(etapeId)
 
     return Promise.resolve()
   },
@@ -335,6 +354,7 @@ export const FullSingularNoSnapshot: StoryFn = () => (
               ],
             },
           },
+          sdom_zones: [],
           etapes: [],
         })
       },
@@ -406,6 +426,7 @@ export const EmptyNoSnapshot: StoryFn = () => (
             },
           },
           etapes: [],
+          sdom_zones: [],
         })
       },
     }}

@@ -449,7 +449,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
   }
 }
 
-const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -583,10 +583,9 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
 
     await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreEtape.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
-    const fields = fieldsBuild(info)
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
+    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: {id: {}} }, user)
 
-    return titreFormat(titreUpdated!)
+    return {slug: titreUpdated.slug}
   } catch (e) {
     console.error(e)
 

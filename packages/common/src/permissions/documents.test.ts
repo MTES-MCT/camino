@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest'
 import { isDocumentsComplete } from './documents.js'
-import { toCaminoDate } from '../date.js'
 describe('teste isDocumentsComplete', () => {
   test('tous les documents sont optionnels', () => {
     const errors = isDocumentsComplete([], [{ id: 'arr', optionnel: true }])
@@ -25,7 +24,6 @@ describe('teste isDocumentsComplete', () => {
       [
         {
           typeId: 'arr',
-          date: toCaminoDate('2002-10-10'),
         },
       ],
       [{ id: 'arr', optionnel: false }]
@@ -47,7 +45,6 @@ describe('teste isDocumentsComplete', () => {
         {
           typeId: 'arr',
           fichier: true,
-          date: toCaminoDate('2002-10-10'),
         },
       ],
       [{ id: 'arr', optionnel: false }]

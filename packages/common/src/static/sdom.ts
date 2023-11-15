@@ -1,13 +1,14 @@
 import { Definition } from '../definition.js'
+import {z} from 'zod'
 
+const IDS = ['0', '0_potentielle', '1', '2'] as const
 export const SDOMZoneIds = {
   Zone0: '0',
   Zone0Potentielle: '0_potentielle',
   Zone1: '1',
   Zone2: '2',
-} as const
+} as const satisfies Record<string, typeof IDS[number]>
 
-export type SDOMZoneId = (typeof SDOMZoneIds)[keyof typeof SDOMZoneIds]
 
 export type SDOMZone<T = SDOMZoneId> = Pick<Definition<T>, 'id' | 'nom'>
 
@@ -29,3 +30,9 @@ export const SDOMZones: { [key in SDOMZoneId]: Pick<SDOMZone<key>, 'id' | 'nom'>
     nom: 'ZONE 2, activité minière autorisée sous contrainte',
   },
 }
+
+
+export const sdomZoneIdValidator = z.enum(IDS)
+
+export type SDOMZoneId = z.infer<typeof sdomZoneIdValidator>
+

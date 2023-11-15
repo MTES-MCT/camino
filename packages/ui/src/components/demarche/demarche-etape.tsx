@@ -11,7 +11,7 @@ import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
 import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche'
-import { DsfrPerimetre } from '../_common/dsfr-perimetre'
+import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
@@ -21,9 +21,9 @@ import { EntrepriseDocuments } from '../etape/entreprise-documents'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
-import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -31,6 +31,8 @@ import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { RemoveEtapePopup } from './remove-etape-popup'
 import { EtapeApiClient } from '../etape/etape-api-client'
+import { SDOMZoneId } from 'camino-common/src/static/sdom'
+import { DeposeEtapePopup } from './depose-etape-popup'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -40,6 +42,7 @@ type Props = {
     titulaires: { id: EntrepriseId }[]
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
+    sdom_zones: SDOMZoneId[]
   }
   titre: {
     typeId: TitreTypeId
@@ -47,9 +50,10 @@ type Props = {
     nom: string
     titreStatutId: TitreStatutId
   }
-  apiClient: Pick<EtapeApiClient, 'deleteEtape'>
+  apiClient: Pick<EtapeApiClient, 'deleteEtape' | 'deposeEtape'>
   router: Pick<Router, 'push'>
   user: User
+  initTab?: TabId
 }
 
 const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeStatutId): boolean => {
@@ -62,9 +66,13 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 }
 
 export const DemarcheEtape = defineComponent<Props>(props => {
-  const hasContent: boolean =
-    (fondamentalePropsName in props.etape && getValues(props.etape.fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0))) ||
-    props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
+  let hasContent = false
+  if (fondamentalePropsName in props.etape) {
+    const { geojsonMultiPolygon: _geojsonMultiPolygon, ...fondamentale } = props.etape.fondamentale
+    hasContent =
+      getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0)) ||
+      props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
+  }
 
   const removePopupVisible = ref<boolean>(false)
   const removePopupOpen = () => {
@@ -73,14 +81,22 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   const closeRemovePopup = () => {
     removePopupVisible.value = !removePopupVisible.value
   }
+  const deposePopupVisible = ref<boolean>(false)
+  const deposePopupOpen = () => {
+    deposePopupVisible.value = true
+  }
+  const closeDeposePopup = () => {
+    deposePopupVisible.value = !deposePopupVisible.value
+  }
   const editEtapeButton = () => {
     // FIXME ajouter matomo comme pour preview.vue ?
     // FIXME ajouter matomo au bouton download ?
-    // FIXME gérer les droits d'édition, suppression et dépôt
 
     props.router.push({
       name: 'etape-edition',
       params: { id: props.etape.slug },
+      force: true,
+      replace: true,
     })
   }
 
@@ -96,6 +112,29 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     props.titre
   )
 
+  const isDeposable =
+    fondamentalePropsName in props.etape
+      ? isEtapeDeposable(
+          props.user,
+          { typeId: props.titre.typeId, titreStatutId: props.titre.titreStatutId, titulaires: props.demarche.titulaires, administrationsLocales: props.demarche.administrationsLocales },
+          props.demarche.demarche_type_id,
+          {
+            statutId: props.etape.etape_statut_id,
+            typeId: props.etape.etape_type_id,
+            sectionsWithValue: props.etape.sections_with_values,
+            substances: props.etape.fondamentale.substances,
+            duree: props.etape.fondamentale.duree,
+            points: props.etape.fondamentale.geojsonMultiPolygon?.geometry.coordinates[0][0] ?? [],
+            decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
+            decisionsAnnexesSections: props.etape.decisions_annexes_sections,
+          },
+          // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
+          props.etape.documents.map(document => ({ typeId: document.document_type_id, fichier: true })),
+          props.etape.entreprises_documents,
+          props.demarche.sdom_zones
+        )
+      : false
+
   return () => (
     <div class="fr-pb-1w fr-pl-2w fr-pr-2w" style={{ border: '1px solid var(--grey-900-175)' }}>
       <div class={`${styles.sticky} fr-pt-1w`}>
@@ -107,6 +146,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <div style={{ display: 'flex' }}>
             {canEditOrDeleteEtape ? (
               <>
+                {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.etape_statut_id === ETAPES_STATUTS.EN_CONSTRUCTION ? (
+                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable} />
+                ) : null}
                 <DsfrButtonIcon icon={'fr-icon-edit-line'} class="fr-mr-1v" buttonType="secondary" title="Modifier l’étape" onClick={editEtapeButton} />
                 <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} />
               </>
@@ -123,26 +165,12 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             ) : null}
           </div>
         </div>
-        {/* FIXME ajouter le bouton déposer
-         <button
-          v-if="etapeIsDemandeEnConstruction"
-          class="btn btn-primary flex small rnd-0"
-          :disabled="!deposable"
-          :class="{ disabled: !deposable }"
-          title="Déposer l’étape"
-          aria-label="Déposer l’étape"
-          :aria-controls="etape.id"
-          @click="etapeDepot"
-        >
-          <span class="mt-xxs mb-xxs">Déposer…</span>
-        </button> */}
 
         {displayEtapeStatus(props.etape.etape_type_id, props.etape.etape_statut_id) ? <EtapeStatut etapeStatutId={props.etape.etape_statut_id} /> : null}
         <div class="fr-mt-1w">
           <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" /> {dateFormat(props.etape.date)}
         </div>
       </div>
-
       {hasContent ? (
         <>
           <DsfrSeparator />
@@ -210,7 +238,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       {fondamentalePropsName in props.etape && props.etape.fondamentale.geojsonMultiPolygon !== null ? (
         <>
           <DsfrSeparator />
-          <DsfrPerimetre titreSlug={props.titre.slug} apiClient={null} geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon} router={props.router} />
+          <DsfrPerimetre initTab={props.initTab} titreSlug={props.titre.slug} apiClient={null} geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon} router={props.router} />
         </>
       ) : null}
 
@@ -238,9 +266,20 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreNom={props.titre.nom}
         />
       ) : null}
+      {deposePopupVisible.value ? (
+        <DeposeEtapePopup
+          close={closeDeposePopup}
+          apiClient={props.apiClient}
+          demarcheTypeId={props.demarche.demarche_type_id}
+          etapeTypeId={props.etape.etape_type_id}
+          id={props.etape.id}
+          titreTypeId={props.titre.typeId}
+          titreNom={props.titre.nom}
+        />
+      ) : null}
     </div>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'etape', 'apiClient']
+DemarcheEtape.props = ['demarche', 'titre', 'router', 'user', 'etape', 'apiClient', 'initTab']

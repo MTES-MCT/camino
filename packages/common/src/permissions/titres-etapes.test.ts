@@ -9,7 +9,6 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { toCaminoDate } from '../date.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -225,10 +224,10 @@ const etapeComplete: IsEtapeCompleteEtape = {
 }
 
 const armDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'dom', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'for', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'jpa', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'car', fichier: true },
+  { typeId: 'dom', fichier: true },
+  { typeId: 'for', fichier: true },
+  { typeId: 'jpa', fichier: true },
 ]
 const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'cur' },
@@ -240,13 +239,13 @@ const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
 ]
 
 const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'lem', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'idm', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'mes', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'met', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'sch', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'prg', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'car', fichier: true },
+  { typeId: 'lem', fichier: true },
+  { typeId: 'idm', fichier: true },
+  { typeId: 'mes', fichier: true },
+  { typeId: 'met', fichier: true },
+  { typeId: 'sch', fichier: true },
+  { typeId: 'prg', fichier: true },
 ]
 
 const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [

@@ -226,7 +226,7 @@ type Mutation {
   etapeSupprimer(id: ID!): TitreSlug
 
   "Dépose une demande et met à jour le titre minier"
-  etapeDeposer(id: ID!): Titre
+  etapeDeposer(id: ID!): TitreSlug
 
   "Crée un document et met à jour le titre minier"
   documentCreer(document: InputDocumentCreation!): Document

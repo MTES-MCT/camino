@@ -15,13 +15,14 @@ import { Section, getSections } from '../static/titresTypes_demarchesTypes_etape
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined } from '../typescript-tools.js'
+import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
 import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
 import { CaminoDate } from '../date.js'
 import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { Contenu, contenuCompleteValidate } from './sections.js'
+import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
+import { SectionWithValue } from '../sections.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -141,7 +142,11 @@ const canCreateOrEditEtape = (
 
 export type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
+  /** 
+   @deprecated use sectionsWithValue
+  */
   contenu?: Contenu
+  sectionsWithValue?: SectionWithValue[]
   decisionsAnnexesSections?: DeepReadonly<Section[]> | null
   decisionsAnnexesContenu?: Contenu
   points?: null | unknown[]
@@ -152,17 +157,26 @@ export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; date: CaminoDate }[] | null | undefined,
+  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; }[] | null | undefined,
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
 
-  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
   const errors: string[] = []
+  const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
   // les éléments non optionnel des sections sont renseignés
-  if (sections.length) {
-    errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
+  const hasAtLeasOneSectionMandatory: boolean = sections.some(section => {
+    return section.elements.some(element => (element.optionnel ?? true) === false)
+  })
+  if (hasAtLeasOneSectionMandatory) {
+    if (isNotNullNorUndefined(titreEtape.contenu)) {
+      errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
+    } else if (isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
+      errors.push(...sectionsWithValueCompleteValidate(titreEtape.sectionsWithValue))
+    }else {
+      errors.push('les contenus ne sont pas présents dans l\étape alors que les sections ont des éléments obligatoires')
+    }
   }
 
   // les décisions annexes sont complètes
@@ -180,16 +194,13 @@ export const isEtapeComplete = (
 
   // les fichiers obligatoires sont tous renseignés et complets
   if (isNonEmptyArray(dts)) {
+    // FIXME sectionsWithValue ici + tests
     // ajoute des documents obligatoires pour les arm mécanisées
-    if (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm) {
+    if (titreTypeId === 'arm' && (titreEtape.contenu && titreEtape.contenu.arm && titreEtape.contenu?.arm?.mecanise === true) || (titreEtape.sectionsWithValue && titreEtape.sectionsWithValue.some(section => section.id === 'arm' && section.elements.some(element => element.id === 'mecanise' && element.type === 'radio' && (element.value ?? false))))) {
       dts
         .filter(dt => ['doe', 'dep'].includes(dt.id))
         .forEach(dt => {
-          if (titreEtape.contenu?.arm?.mecanise === true) {
             dt.optionnel = false
-          } else {
-            dt.optionnel = true
-          }
         })
     }
     const documentsErrors = isDocumentsComplete(documents ?? [], dts)
@@ -253,22 +264,12 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: {
-    typeId: EtapeTypeId
-    statutId: EtapeStatutId
-    contenu?: Contenu
-    decisionsAnnexesSections?: DeepReadonly<Section[]> | null
-    decisionsAnnexesContenu?: Contenu
-    points?: null | unknown[]
-    substances?: null | SubstanceLegaleId[]
-    duree?: number | null
-  },
+  titreEtape: IsEtapeCompleteEtape & {statutId: EtapeStatutId},
   documents:
     | {
         typeId: DocumentTypeId
         fichier?: unknown
         fichierNouveau?: unknown
-        date: CaminoDate
       }[]
     | null
     | undefined,

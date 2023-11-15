@@ -13,6 +13,8 @@ import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
 import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
 import { titreStatutIdValidator } from './static/titresStatuts.js'
+import { sdomZoneIdValidator } from './static/sdom.js'
+import { sectionValidator } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -47,6 +49,11 @@ const multiPolygonValidator = z.object({
 export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.null() })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
+/**
+ * @deprecated don't expose, don't use
+ */
+const contenuValidator = z.record(z.string(), z.record(z.string(), z.unknown().optional()).optional()).nullable()
+
 const demarcheEtapeFondamentaleValidator = z.object({
   etape_type_id: etapeTypeIdFondamentaleValidator,
   fondamentale: z.object({
@@ -76,6 +83,8 @@ const demarcheEtapeCommonValidator = z.object({
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),
   documents: z.array(etapeDocumentValidator),
+  decisions_annexes_contenu: contenuValidator,
+  decisions_annexes_sections: z.array(sectionValidator).nullable(),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
@@ -94,6 +103,7 @@ export const demarcheGetValidator = z.object({
   contenu: z.record(z.string(), z.string()),
   communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
   secteurs_maritimes: z.array(secteurMaritimeValidator),
+  sdom_zones: z.array(sdomZoneIdValidator),
   substances: z.array(substanceLegaleIdValidator),
   titulaires: z.array(entreprisesByEtapeIdValidator),
   amodiataires: z.array(entreprisesByEtapeIdValidator),

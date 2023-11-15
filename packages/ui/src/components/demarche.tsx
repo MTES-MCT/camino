@@ -46,8 +46,8 @@ export const Demarche = defineComponent(() => {
 interface Props {
   user: User
   demarcheId: DemarcheIdOrSlug | null
-  apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape'>
-  router: Pick<Router, 'push'>
+  apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape' | 'deposeEtape'>
+  router: Pick<Router, 'push' | 'replace'>
 }
 
 export const PureDemarche = defineComponent<Props>(props => {
@@ -86,11 +86,22 @@ export const PureDemarche = defineComponent<Props>(props => {
     await retrieveDemarche(props.demarcheId)
   })
 
-  const customApiClient: Pick<ApiClient, 'deleteEtape'> = {
+  const customApiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape'> = {
     deleteEtape: async titreEtapeId => {
       if (demarcheData.value.status === 'LOADED') {
+        const oldSlug = demarcheData.value.value.slug
         await props.apiClient.deleteEtape(titreEtapeId)
-        router.push({ name: 'demarche', params: { demarcheId: demarcheData.value.value.id } })
+        await updateDemarche(demarcheData.value.value.id)
+
+        if (demarcheData.value.value.slug !== oldSlug ) {
+          router.replace({name: 'demarche', params: {demarcheId: demarcheData.value.value.slug}})
+        }
+      }
+    },
+    deposeEtape: async titreEtapeId => {
+      if (demarcheData.value.status === 'LOADED') {
+        await props.apiClient.deposeEtape(titreEtapeId)
+        await updateDemarche(demarcheData.value.value.id)
       }
     },
   }
@@ -169,6 +180,7 @@ export const PureDemarche = defineComponent<Props>(props => {
                       ),
                       demarche_type_id: demarche.demarche_type_id,
                       titulaires: demarche.titulaires,
+                      sdom_zones: demarche.sdom_zones,
                     }}
                     apiClient={customApiClient}
                   />

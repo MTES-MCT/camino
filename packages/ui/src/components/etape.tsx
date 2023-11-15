@@ -9,6 +9,7 @@ import { User } from 'camino-common/src/roles'
 import { titreApiClient } from './titre/titre-api-client'
 import { etapeApiClient, EtapeGet } from './etape/etape-api-client'
 import { TitreGet } from 'camino-common/src/titres'
+import { etapeIdValidator } from 'camino-common/src/etape'
 
 export const Etape = defineComponent({
   setup() {
@@ -16,7 +17,7 @@ export const Etape = defineComponent({
     const route = useRoute()
     const store = useStore()
 
-    const etapeId = route.params.id
+    const etapeId = etapeIdValidator.parse(route.params.id)
     const data = ref<AsyncData<{ etape: EtapeGet; titre: TitreGet }>>({ status: 'LOADING' })
 
     const user = computed<User>(() => {
@@ -25,7 +26,7 @@ export const Etape = defineComponent({
 
     const loadEtape = async () => {
       try {
-        const etape = await etapeApiClient.getEtapeById(etapeId as string)
+        const etape = await etapeApiClient.getEtapeById(etapeId)
         const titre = await titreApiClient.getTitreById(etape.demarche.titre.id)
         data.value = { status: 'LOADED', value: { etape, titre } }
       } catch (e: any) {

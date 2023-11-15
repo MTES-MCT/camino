@@ -44,7 +44,7 @@ import { contenuValidator } from './activites.queries.js'
 import { numberFormat } from 'camino-common/src/number.js'
 import { UNITE_IDS, UniteId, uniteIdValidator, Unites } from 'camino-common/src/static/unites.js'
 import { capitalize } from 'camino-common/src/strings.js'
-import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections, getSectionsWithValue, sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { User } from 'camino-common/src/roles.js'
@@ -53,6 +53,7 @@ import { canReadEtape } from './permissions/etapes.js'
 import { canReadDemarche } from './permissions/demarches.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
+import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -224,6 +225,8 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
         sections_with_values: contenu,
         entreprises_documents: entrepriseDocuments,
         documents,
+        decisions_annexes_contenu: isNotNullNorUndefined(etape.decisions_annexes_contenu) ? etape.decisions_annexes_contenu : null,
+        decisions_annexes_sections: isNotNullNorUndefined(etape.decisions_annexes_sections) ? etape.decisions_annexes_sections : null,
       }
       if (isFondamentale(etape.etape_type_id)) {
         let geojsonMultiPolygon: FeatureMultiPolygon | null = null
@@ -284,6 +287,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     demarche_type_id: demarche.demarche_type_id,
     demarche_statut_id: demarche.demarche_statut_id,
     slug: demarche.slug,
+    sdom_zones: latestFondamentaleEtape?.sdom_zones ?? [],
     titre: {
       phases,
       nom: demarche.titre_nom,
@@ -378,6 +382,9 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   duree: z.number().nullable(),
   surface: z.number().nullable(),
   contenu: contenuValidator.nullable(),
+  sdom_zones: z.array(sdomZoneIdValidator).nullable(),
+  decisions_annexes_contenu: contenuValidator.nullable(),
+  decisions_annexes_sections: z.array(sectionValidator).nullable(),
 })
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
 const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
@@ -396,7 +403,10 @@ select
     e.duree,
     e.surface,
     e.contenu,
-    e.slug
+    e.slug,
+    e.sdom_zones,
+    e.decisions_annexes_contenu,
+    e.decisions_annexes_sections
 from
     titres_etapes e
 where

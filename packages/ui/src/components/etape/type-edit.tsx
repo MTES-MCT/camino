@@ -6,7 +6,7 @@ import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
 import { CaminoDate } from 'camino-common/src/date'
-import { EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
+import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
@@ -16,7 +16,7 @@ export type Props = {
   etape: {
     statutId: EtapeStatutId | null
     typeId: EtapeTypeId | null
-    id?: string | null
+    id?: EtapeId | null
   }
   etapeDate: CaminoDate
   demarcheId: DemarcheId
