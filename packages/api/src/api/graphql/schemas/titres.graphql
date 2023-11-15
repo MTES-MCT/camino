@@ -18,6 +18,10 @@ type Titres {
   total: Int
 }
 
+type TitreSlug {
+  slug: String
+}
+
 "Titre minier"
 type Titre {
   """

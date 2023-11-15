@@ -22,6 +22,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { EtapePropEntreprisesItem, EtapePropItem } from './etape/etape-prop-item'
 import { DemarcheEtape } from './demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
+import router from '@/router'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -45,7 +46,7 @@ export const Demarche = defineComponent(() => {
 interface Props {
   user: User
   demarcheId: DemarcheIdOrSlug | null
-  apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte'>
+  apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape'>
   router: Pick<Router, 'push'>
 }
 
@@ -84,6 +85,15 @@ export const PureDemarche = defineComponent<Props>(props => {
   onMounted(async () => {
     await retrieveDemarche(props.demarcheId)
   })
+
+  const customApiClient: Pick<ApiClient, 'deleteEtape'> = {
+    deleteEtape: async titreEtapeId => {
+      if (demarcheData.value.status === 'LOADED') {
+        await props.apiClient.deleteEtape(titreEtapeId)
+        router.push({ name: 'demarche', params: { demarcheId: demarcheData.value.value.id } })
+      }
+    },
+  }
 
   return () => (
     <div class="dsfr">
@@ -148,11 +158,10 @@ export const PureDemarche = defineComponent<Props>(props => {
               {demarche.etapes.map(etape => (
                 <div class="fr-pb-1w">
                   <DemarcheEtape
-                    {...etape}
-                    titreSlug={demarche.titre.slug}
+                    etape={etape}
                     router={props.router}
                     user={props.user}
-                    titre={{ typeId: demarche.titre.titre_type_id, titreStatutId: demarche.titre.titre_statut_id }}
+                    titre={{ typeId: demarche.titre.titre_type_id, titreStatutId: demarche.titre.titre_statut_id, slug: demarche.titre.slug, nom: demarche.titre.nom }}
                     demarche={{
                       administrationsLocales: getAdministrationsLocales(
                         demarche.communes.map(({ id }) => id),
@@ -161,6 +170,7 @@ export const PureDemarche = defineComponent<Props>(props => {
                       demarche_type_id: demarche.demarche_type_id,
                       titulaires: demarche.titulaires,
                     }}
+                    apiClient={customApiClient}
                   />
                 </div>
               ))}

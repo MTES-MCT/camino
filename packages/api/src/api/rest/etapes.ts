@@ -23,6 +23,7 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { Pool } from 'pg'
 import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -42,6 +43,23 @@ export const getEtapeEntrepriseDocuments =
       }
     }
   }
+
+export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const user = req.auth
+
+  const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
+  if (!etapeId.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      await etapeSupprimer({ id: etapeId.data }, { pool, user })
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    } catch (e) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      console.error(e)
+    }
+  }
+}
 
 export const getEtapesTypesEtapesStatusWithMainStep =
   (_pool: Pool) =>

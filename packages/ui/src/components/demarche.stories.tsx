@@ -25,6 +25,7 @@ const meta: Meta = {
 export default meta
 
 const getDemarcheAction = action('getDemarcheAction')
+const deleteEtapeAction = action('deleteEtapeAction')
 const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
 const routerPushAction = action('routerPushAction')
 
@@ -87,6 +88,7 @@ const demarche: DemarcheGet = {
     nom: 'Nom du titre',
     slug: titreSlugValidator.parse('slug-du-titre'),
     titre_type_id: 'arm',
+    titre_statut_id: 'val',
     phases: [
       { slug: demarcheSlugValidator.parse('slug-demarche'), demarche_type_id: 'oct', demarche_date_debut: null, demarche_date_fin: null },
       { slug: demarcheSlugValidator.parse('slug-demarche2'), demarche_type_id: 'amo', demarche_date_debut: null, demarche_date_fin: null },
@@ -214,7 +216,7 @@ const demarche: DemarcheGet = {
   ],
 }
 
-const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte'> = {
+const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape'> = {
   getTitresWithPerimetreForCarte: params => {
     getTitresWithPerimetreForCarteAction(params)
 
@@ -256,6 +258,12 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
 
     return Promise.resolve(demarche)
   },
+
+  deleteEtape: etapeId => {
+    deleteEtapeAction(etapeId)
+
+    return Promise.resolve()
+  },
 }
 
 export const FullNoSnapshot: StoryFn = () => (
@@ -281,6 +289,7 @@ export const FullSingularNoSnapshot: StoryFn = () => (
             nom: 'Nom du titre',
             slug: titreSlugValidator.parse('slug-du-titre'),
             titre_type_id: 'arm',
+            titre_statut_id: 'val',
             phases: [],
           },
           contenu: {},
@@ -350,6 +359,7 @@ export const EmptyNoSnapshot: StoryFn = () => (
             nom: 'Nom du titre',
             slug: titreSlugValidator.parse('slug-du-titre'),
             titre_type_id: 'arm',
+            titre_statut_id: 'val',
             phases: [],
           },
           contenu: {},

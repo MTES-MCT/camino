@@ -223,7 +223,7 @@ type Mutation {
   etapeModifier(etape: InputEtapeModification!): Etape
 
   "Supprime une étape et met à jour le titre minier"
-  etapeSupprimer(id: ID!): Titre
+  etapeSupprimer(id: ID!): TitreSlug
 
   "Dépose une demande et met à jour le titre minier"
   etapeDeposer(id: ID!): Titre

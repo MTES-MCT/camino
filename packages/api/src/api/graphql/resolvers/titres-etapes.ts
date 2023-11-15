@@ -594,10 +594,8 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
   }
 }
 
-const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
   try {
-    const fields = fieldsBuild(info)
-
     if (!user) {
       throw new Error("l'étape n'existe pas")
     }
@@ -656,9 +654,9 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, 
 
     await titreEtapeUpdateTask(pool, null, titreEtape.titreDemarcheId, user)
 
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
+    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
 
-    return titreFormat(titreUpdated!)
+    return { slug: titreUpdated?.slug }
   } catch (e) {
     console.error(e)
 
