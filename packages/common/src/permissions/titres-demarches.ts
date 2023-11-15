@@ -6,7 +6,7 @@ import { canAdministrationModifyDemarches } from '../static/administrationsTitre
 import { AdministrationId, Administrations } from '../static/administrations.js'
 import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canCreateOrEditEtape } from './titres-etapes.js'
+import { canCreateEtape } from './titres-etapes.js'
 
 export const canCreateDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[]): boolean => {
   if (isSuper(user)) {
@@ -46,5 +46,5 @@ export const canCreateEtapeByDemarche = (
 ): boolean => {
   const etapeTypeIds = getEtapesTDE(titreTypeId, demarcheTypeId)
 
-  return etapeTypeIds.some(etapeTypeId => canCreateOrEditEtape(user, etapeTypeId, null, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }, 'creation'))
+  return etapeTypeIds.some(etapeTypeId => canCreateEtape(user, etapeTypeId, null, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }))
 }

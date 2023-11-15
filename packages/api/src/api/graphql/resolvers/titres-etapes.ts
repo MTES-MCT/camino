@@ -28,11 +28,11 @@ import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
@@ -65,13 +65,13 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   try {
     const fields = fieldsBuild(info)
 
-    if (!fields.type) {
+    if (isNullOrUndefined(fields.type)) {
       fields.type = { id: {} }
     }
 
     const titreEtape = await titreEtapeGet(id, { fields, fetchHeritage: true }, user)
 
-    if (!titreEtape) {
+    if (isNullOrUndefined(titreEtape)) {
       throw new Error("l'étape n'existe pas")
     }
 
@@ -189,7 +189,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-    if (etape.points?.length) {
+    // FIXME c'est étrange cette condition, pourquoi ne pas la faire sur titreEtapePoints directement ?
+    if (isNotNullNorUndefinedNorEmpty(etape.points)) {
       const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
       const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
@@ -210,24 +211,16 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateOrEditEtape(
-        user,
-        etapeType.id,
-        etape.statutId,
-        titreDemarche.titre.titulaires ?? [],
-        titreDemarche.titre.administrationsLocales ?? [],
-        titreDemarche.typeId,
-        {
-          typeId: titreDemarche.titre.typeId,
-          titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
-        },
-        'creation'
-      )
+      !canCreateEtape(user, etapeType.id, etape.statutId, titreDemarche.titre.titulaires ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+        typeId: titreDemarche.titre.typeId,
+        titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
+      })
     ) {
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    if (titreEtapePoints) {
+    // FIXME on veut checker le norEmpty?
+    if (isNotNullNorUndefined(titreEtapePoints)) {
       etape.points = titreEtapePoints
     }
 
@@ -276,8 +269,8 @@ const validateAndGetEntrepriseDocuments = async (
 
   // si l’héritage est désactivé => on récupère les titulaires sur l’étape
   // sinon on les trouve sur le titre
-  const titulaires = !etape.heritageProps?.titulaires.actif ? etape.titulaires : titre.titulaires
-  const amodiataires = !etape.heritageProps?.amodiataires.actif ? etape.amodiataires : titre.amodiataires
+  const titulaires = !(etape.heritageProps?.titulaires.actif ?? false) ? etape.titulaires : titre.titulaires
+  const amodiataires = !(etape.heritageProps?.amodiataires.actif ?? false) ? etape.amodiataires : titre.amodiataires
   if (etape.entrepriseDocumentIds && isNonEmptyArray(etape.entrepriseDocumentIds)) {
     let entrepriseIds: EntrepriseId[] = []
     if (titulaires) {
@@ -320,7 +313,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       user
     )
 
-    if (!titreEtapeOld) throw new Error("l'étape n'existe pas")
+    if (isNullOrUndefined(titreEtapeOld)) throw new Error("l'étape n'existe pas")
     if (!titreEtapeOld.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
@@ -329,19 +322,10 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     }
 
     if (
-      !canCreateOrEditEtape(
-        user,
-        titreEtapeOld.typeId,
-        titreEtapeOld.statutId,
-        titreEtapeOld.titulaires,
-        titreEtapeOld.demarche.titre.administrationsLocales ?? [],
-        titreEtapeOld.demarche.typeId,
-        {
-          typeId: titreEtapeOld.demarche.titre.typeId,
-          titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
-        },
-        'modification'
-      )
+      !canEditEtape(user, titreEtapeOld.typeId, titreEtapeOld.statutId, titreEtapeOld.titulaires, titreEtapeOld.demarche.titre.administrationsLocales ?? [], titreEtapeOld.demarche.typeId, {
+        typeId: titreEtapeOld.demarche.titre.typeId,
+        titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
+      })
     )
       throw new Error('droits insuffisants')
 
@@ -385,7 +369,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-    if (etape.points?.length) {
+    // FIXME duplicated code, same question
+    if (isNotNullNorUndefinedNorEmpty(etape.points)) {
       const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
       const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
@@ -407,7 +392,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       throw new Error(rulesErrors.join(', '))
     }
 
-    if (titreEtapePoints) {
+    // FIXME same question norEmpty?
+    if (isNotNullNorUndefined(titreEtapePoints)) {
       etape.points = titreEtapePoints
     }
     await documentsLier(context, documentIds, etape.id, titreEtapeOld)
@@ -471,7 +457,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
 
     const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, points: { references: { id: {} } } } }, user)
 
-    if (!titreEtape) throw new Error("l'étape n'existe pas")
+    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
 
     const titreDemarche = await titreDemarcheGet(
@@ -549,11 +535,12 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context, in
           statutId: decisionContenu.statutId,
         }
 
-        const contenu = decisionAnnexesElements.filter((element): element is Required<SectionElement & { sectionId: string }> => element.type !== 'file' && !!element.sectionId) ?? []
+        const contenu =
+          decisionAnnexesElements.filter((element): element is Required<SectionElement & { sectionId: string }> => element.type !== 'file' && isNotNullNorUndefined(element.sectionId)) ?? []
 
-        if (contenu) {
+        if (isNotNullNorUndefined(contenu)) {
           etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {
-            if (!acc[e.sectionId]) {
+            if (isNullOrUndefined(acc[e.sectionId])) {
               acc[e.sectionId] = {}
             }
             acc[e.sectionId][e.id] = decisionContenu[e.id]
@@ -626,7 +613,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, 
       user
     )
 
-    if (!titreEtape) throw new Error("l'étape n'existe pas")
+    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
@@ -635,19 +622,10 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context, 
     }
 
     if (
-      !canCreateOrEditEtape(
-        user,
-        titreEtape.typeId,
-        titreEtape.statutId,
-        titreEtape.titulaires,
-        titreEtape.demarche.titre.administrationsLocales ?? [],
-        titreEtape.demarche.typeId,
-        {
-          typeId: titreEtape.demarche.titre.typeId,
-          titreStatutId: titreEtape.demarche.titre.titreStatutId,
-        },
-        'modification'
-      )
+      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaires, titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+        typeId: titreEtape.demarche.titre.typeId,
+        titreStatutId: titreEtape.demarche.titre.titreStatutId,
+      })
     )
       throw new Error('droits insuffisants')
 

@@ -23,7 +23,7 @@ import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
-import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
+import { canEditEtape } from 'camino-common/src/permissions/titres-etapes'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -76,15 +76,14 @@ export const DemarcheEtape: FunctionalComponent<Props> = props => {
   }
   const canDownloadZip: boolean = props.etape_type_id === ETAPES_TYPES.demande && (props.entreprises_documents.length > 0 || props.documents.length > 0)
 
-  const canEditOrDeleteEtape: boolean = canCreateOrEditEtape(
+  const canEditOrDeleteEtape: boolean = canEditEtape(
     props.user,
     props.etape_type_id,
     props.etape_statut_id,
     props.demarche.titulaires,
     props.demarche.administrationsLocales,
     props.demarche.demarche_type_id,
-    props.titre,
-    'modification'
+    props.titre
   )
 
   return (

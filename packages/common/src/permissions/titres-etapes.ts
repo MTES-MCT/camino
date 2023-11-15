@@ -85,7 +85,31 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
   return titreTypeId !== 'arm' || demarcheTypeId !== 'oct'
 }
 
-export const canCreateOrEditEtape = (
+export const canCreateEtape = (
+  user: User,
+  etapeTypeId: EtapeTypeId,
+  etapeStatutId: EtapeStatutId | null,
+  titulaires: { id: EntrepriseId }[],
+  titresAdministrationsLocales: AdministrationId[],
+  demarcheTypeId: DemarcheTypeId,
+  titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
+): boolean => {
+  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')
+}
+
+export const canEditEtape = (
+  user: User,
+  etapeTypeId: EtapeTypeId,
+  etapeStatutId: EtapeStatutId | null,
+  titulaires: { id: EntrepriseId }[],
+  titresAdministrationsLocales: AdministrationId[],
+  demarcheTypeId: DemarcheTypeId,
+  titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
+): boolean => {
+  return canCreateOrEditEtape(user, etapeTypeId, etapeStatutId, titulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'modification')
+}
+
+const canCreateOrEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
   etapeStatutId: EtapeStatutId | null,
