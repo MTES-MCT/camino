@@ -1,0 +1,49 @@
+.datesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.date {
+}
+
+.phasesContainer {
+  display: flex;
+  flex-direction: row;
+  column-gap: 4px;
+}
+.phase {
+  height: 8px;
+  flex: 1;
+  background-color: var(--background-action-low-blue-france);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.phase:hover {
+  background-color: var(--background-action-low-blue-france-hover);
+}
+
+.phase[aria-current] {
+  background-color: var(--background-action-high-blue-france);
+}
+
+.phase[aria-current]:hover {
+  background-color: var(--background-action-high-blue-france-hover);
+}
+
+.event {
+  width: 20px;
+  height: 20px;
+  background-color: var(--background-action-high-blue-cumulus);
+
+  border: 2px solid var(--background-action-low-blue-france);
+  border-radius: 50%;
+}
+
+.event:hover {
+  background-color: var(--background-action-high-blue-cumulus-hover);
+}
