@@ -14,7 +14,7 @@ import { Pool } from 'pg'
 import { getCommunes } from '../database/queries/communes.queries.js'
 import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { Commune } from 'camino-common/src/static/communes.js'
-import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear } from 'camino-common/src/date.js'
+import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee } from 'camino-common/src/date.js'
 
 const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
 
@@ -394,6 +394,10 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
   const anneeNumber = caminoAnneeToNumber(annee)
   const anneePrecedente = previousYear(annee)
 
+  if (annee !== getCurrentAnnee()) {
+    console.warn(`ATTENTION : Génération des matrices pour l’année de production ${anneePrecedente}`)
+  }
+
   const titres = await titresGet(
     {
       territoires: 'guyane',
@@ -670,7 +674,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
               titulaire: matriceLine.titulaire,
               titreLabel: matriceLine.titreLabel,
               annee,
-              anneeSuivante: annee + 1,
+              anneeSuivante: anneeSuivante(annee),
             },
             function (err, result) {
               if (err) {
