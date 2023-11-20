@@ -9,9 +9,10 @@ import { getCurrent } from 'camino-common/src/date.js'
 import { EmailTemplateId } from '../tools/api-mailjet/types.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
+export type JWTUser = { email?: string; family_name?: string; given_name?: string; sub: string | undefined }
 export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string; sub?: string }>, _res: express.Response, next: express.NextFunction) => {
   try {
-    const reqUser = req.auth
+    const reqUser: JWTUser | undefined = req.auth as JWTUser
     if (isNotNullNorUndefined(reqUser)) {
       let user = await userByKeycloakIdGet(reqUser.sub)
       if (!user) {
