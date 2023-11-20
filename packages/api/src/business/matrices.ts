@@ -148,10 +148,6 @@ type Matrice1122 = {
   observations: string
 }
 
-const precisionGramme = (x: number): string => {
-  return x.toFixed(3)
-}
-
 const titulaireToString = (titulaire: Titulaire): string => {
   return `${titulaire.nom} - ${titulaire.rue} - ${titulaire.siren} SIREN`
 }
@@ -220,7 +216,7 @@ export const buildMatrices = (
           communePrincipale: communes.find(({ id }) => id === communePrincipale.id) ?? communePrincipale,
           commune: communes.find(({ id }) => id === commune.id) ?? commune,
           fiscalite,
-          quantiteOrExtrait: precisionGramme(quantiteOrExtrait),
+          quantiteOrExtrait: `${quantiteOrExtrait}`,
           sip,
           index: count,
           titulaire: {
