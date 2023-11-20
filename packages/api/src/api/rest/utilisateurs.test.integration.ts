@@ -137,3 +137,18 @@ describe('generateQgisToken', () => {
     expect(tested.statusCode).toBe(200)
   })
 })
+
+describe('utilisateurCreer', () => {
+  test('ne peut pas créer un utilisateur sans keycloak_id', async () => {
+    expect(async () =>
+      knex('utilisateurs').insert({
+        id: 'userWithoutKeycloakId',
+        prenom: 'userWithoutKeycloak',
+        nom: 'test',
+        email: 'userWithoutKeycloakId@camino.local',
+        role: 'defaut',
+        dateCreation: '2022-05-12',
+      })
+    ).rejects.toThrowError(/check_keycloak_id_not_null/)
+  })
+})

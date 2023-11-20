@@ -80,6 +80,7 @@ describe('administrationsQueryModify', () => {
       id: idGenerate(),
       role: 'super',
       email: 'email' + idGenerate(),
+      keycloakId: 'keycloakId' + idGenerate(),
       dateCreation: '2022-05-12',
     }
 
