@@ -8,7 +8,7 @@ const meta: Meta = {
   title: 'Components/Demarche/Timeline',
   component: DemarcheTimeline,
   argTypes: {},
-  decorators: [vueRouter([{ name: 'demarche' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'demarche' }])],
 }
 export default meta
 
@@ -17,6 +17,7 @@ export const Default: StoryFn = () => (
     demarches={[
       { slug: demarcheSlugValidator.parse('slug-demarche2'), demarche_type_id: 'oct', demarche_date_debut: toCaminoDate('2019-01-01'), demarche_date_fin: toCaminoDate('2021-01-01') },
       { slug: demarcheSlugValidator.parse('slug-demarche3'), demarche_type_id: 'pro', demarche_date_debut: toCaminoDate('2021-01-01'), demarche_date_fin: null },
+      { slug: demarcheSlugValidator.parse('slug-demarche4'), demarche_type_id: 'mut', demarche_date_debut: null, demarche_date_fin: null },
     ]}
     currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
   />

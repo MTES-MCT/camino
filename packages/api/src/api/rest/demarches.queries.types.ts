@@ -30,23 +30,24 @@ export interface IGetDemarcheQueryDbQuery {
   result: IGetDemarcheQueryDbResult;
 }
 
-/** 'GetDemarchesPhasesByTitreIdDb' parameters type */
-export interface IGetDemarchesPhasesByTitreIdDbParams {
+/** 'GetDemarchesByTitreIdDb' parameters type */
+export interface IGetDemarchesByTitreIdDbParams {
   id: string;
 }
 
-/** 'GetDemarchesPhasesByTitreIdDb' return type */
-export interface IGetDemarchesPhasesByTitreIdDbResult {
+/** 'GetDemarchesByTitreIdDb' return type */
+export interface IGetDemarchesByTitreIdDbResult {
   demarche_date_debut: string | null;
   demarche_date_fin: string | null;
   demarche_type_id: string;
+  first_etape_date: string | null;
   slug: string | null;
 }
 
-/** 'GetDemarchesPhasesByTitreIdDb' query type */
-export interface IGetDemarchesPhasesByTitreIdDbQuery {
-  params: IGetDemarchesPhasesByTitreIdDbParams;
-  result: IGetDemarchesPhasesByTitreIdDbResult;
+/** 'GetDemarchesByTitreIdDb' query type */
+export interface IGetDemarchesByTitreIdDbQuery {
+  params: IGetDemarchesByTitreIdDbParams;
+  result: IGetDemarchesByTitreIdDbResult;
 }
 
 /** 'GetEtapesByDemarcheIdDb' parameters type */

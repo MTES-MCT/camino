@@ -1,3 +1,9 @@
+.timeline [href] {
+  background-image: none;
+  background-position: unset;
+  background-size: unset;
+}
+
 .datesContainer {
   display: flex;
   flex-direction: row;
@@ -5,6 +11,8 @@
 }
 
 .date {
+  color: var(--text-action-high-grey);
+  font-weight: 500;
 }
 
 .phasesContainer {
@@ -15,7 +23,7 @@
 .phase {
   height: 8px;
   flex: 1;
-  background-color: var(--background-action-low-blue-france);
+  background-color: var(--background-action-low-blue-france) !important;
 
   display: flex;
   flex-direction: row;
@@ -23,27 +31,26 @@
   align-items: center;
 }
 
-.phase:hover {
-  background-color: var(--background-action-low-blue-france-hover);
-}
-
-.phase[aria-current] {
-  background-color: var(--background-action-high-blue-france);
-}
-
-.phase[aria-current]:hover {
-  background-color: var(--background-action-high-blue-france-hover);
-}
-
 .event {
   width: 20px;
   height: 20px;
-  background-color: var(--background-action-high-blue-cumulus);
+  background-color: var(--background-action-low-blue-france) !important;
 
-  border: 2px solid var(--background-action-low-blue-france);
+  border: 2px solid var(--background-action-high-blue-france);
   border-radius: 50%;
 }
 
+.phaseHover,
 .event:hover {
-  background-color: var(--background-action-high-blue-cumulus-hover);
+  background-color: var(--background-action-low-blue-france-hover) !important;
+}
+
+.phase[aria-current],
+.event[aria-current] {
+  background-color: var(--background-action-high-blue-france) !important;
+}
+
+.phaseHover[aria-current],
+.event[aria-current]:hover {
+  background-color: var(--background-action-high-blue-france-hover) !important;
 }

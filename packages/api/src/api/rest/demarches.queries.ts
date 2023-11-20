@@ -13,7 +13,7 @@ import {
   FeatureMultiPolygon,
 } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetDemarcheQueryDbQuery, IGetDemarchesPhasesByTitreIdDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
+import { IGetDemarcheQueryDbQuery, IGetDemarchesByTitreIdDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { TitreId, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
@@ -156,7 +156,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
   const demarche = demarches[0]
 
-  const phases = await dbQueryAndValidate(getDemarchesPhasesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesPhasesByTitreIdDbValidator)
+  const titreDemarches = await dbQueryAndValidate(getDemarchesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesByTitreIdDbValidator)
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
   const latestFondamentaleEtape = etapes.find(({ etape_type_id }) => EtapesTypes[etape_type_id].fondamentale) ?? null
@@ -289,7 +289,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     slug: demarche.slug,
     sdom_zones: latestFondamentaleEtape?.sdom_zones ?? [],
     titre: {
-      phases,
+      demarches: titreDemarches,
       nom: demarche.titre_nom,
       slug: demarche.titre_slug,
       titre_type_id: demarche.titre_type_id,
@@ -345,25 +345,37 @@ and d.archive is false
 LIMIT 1
 `
 
-const getDemarchesPhasesByTitreIdDbValidator = z.object({
+const getDemarchesByTitreIdDbValidator = z.object({
   slug: demarcheSlugValidator,
   demarche_date_debut: caminoDateValidator.nullable(),
   demarche_date_fin: caminoDateValidator.nullable(),
   demarche_type_id: demarcheTypeIdValidator,
+  first_etape_date: caminoDateValidator.nullable(),
 })
-type GetDemarchesPhasesByTitreIdDb = z.infer<typeof getDemarchesPhasesByTitreIdDbValidator>
-const getDemarchesPhasesByTitreIdDb = sql<Redefine<IGetDemarchesPhasesByTitreIdDbQuery, { id: TitreId }, GetDemarchesPhasesByTitreIdDb>>`
+type GetDemarchesByTitreIdDb = z.infer<typeof getDemarchesByTitreIdDbValidator>
+const getDemarchesByTitreIdDb = sql<Redefine<IGetDemarchesByTitreIdDbQuery, { id: TitreId }, GetDemarchesByTitreIdDb>>`
 select
     d.slug,
     d.demarche_date_debut,
     d.demarche_date_fin,
-    d.type_id as demarche_type_id
+    d.type_id as demarche_type_id,
+    (
+        select
+            e.date
+        from
+            titres_etapes e
+        where
+            e.titre_demarche_id = d.id
+        order by
+            date asc
+        limit 1) as first_etape_date
 from
     titres_demarches d
 where
     d.titre_id = $ id !
-    and d.demarche_date_debut is not null
     and d.archive is false
+order by
+    demarche_date_debut asc
 `
 
 const getEtapesByDemarcheIdDbValidator = z.object({

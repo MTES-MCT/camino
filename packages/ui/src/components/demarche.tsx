@@ -11,7 +11,6 @@ import { TitresTypes } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { CaminoRouterLink } from '@/router/camino-router-link'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
-import { TitrePhasesTable } from './titre/titre-phases-table'
 import { DsfrSeparator } from './_ui/dsfr-separator'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
@@ -23,6 +22,7 @@ import { EtapePropEntreprisesItem, EtapePropItem } from './etape/etape-prop-item
 import { DemarcheEtape } from './demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import router from '@/router'
+import { DemarcheTimeline } from '@/components/demarche/demarche-timeline'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -93,8 +93,8 @@ export const PureDemarche = defineComponent<Props>(props => {
         await props.apiClient.deleteEtape(titreEtapeId)
         await updateDemarche(demarcheData.value.value.id)
 
-        if (demarcheData.value.value.slug !== oldSlug ) {
-          router.replace({name: 'demarche', params: {demarcheId: demarcheData.value.value.slug}})
+        if (demarcheData.value.value.slug !== oldSlug) {
+          router.replace({ name: 'demarche', params: { demarcheId: demarcheData.value.value.slug } })
         }
       }
     },
@@ -120,13 +120,15 @@ export const PureDemarche = defineComponent<Props>(props => {
               {capitalize(demarche.titre.nom)}
             </CaminoRouterLink>
 
+            <DemarcheTimeline class="fr-py-5w" demarches={demarche.titre.demarches} currentDemarcheSlug={demarche.slug} />
+
             <DsfrSeparator />
 
             <div>
               <h2>Résumé</h2>
               <div class="fr-grid-row">
                 <div
-                  class="fr-col-12 fr-col-md-6"
+                  class="fr-col-12"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -150,9 +152,6 @@ export const PureDemarche = defineComponent<Props>(props => {
                   {Object.entries(demarche.contenu).map(([label, value]) => (
                     <EtapePropItem title={label} text={value} />
                   ))}
-                </div>
-                <div class="fr-col-12 fr-col-md-6">
-                  <TitrePhasesTable phases={demarche.titre.phases} currentPhaseSlug={demarche.slug} />
                 </div>
               </div>
             </div>
