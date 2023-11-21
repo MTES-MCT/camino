@@ -157,6 +157,9 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
   const demarche = demarches[0]
 
   const titreDemarches = await dbQueryAndValidate(getDemarchesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesByTitreIdDbValidator)
+
+  // FIXME filtrer les démarches du titre par rapport aux permissions de l'utilisateur
+
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
   const latestFondamentaleEtape = etapes.find(({ etape_type_id }) => EtapesTypes[etape_type_id].fondamentale) ?? null
