@@ -28,7 +28,8 @@ export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteG
 
 export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0)
 
-export const fraisGestion = (fiscalite: Fiscalite): Decimal => new Decimal(fiscalite.redevanceDepartementale).add(fiscalite.redevanceCommunale).add(montantNetTaxeAurifere(fiscalite)).mul(0.08)
+export const fraisGestion = (fiscalite: Fiscalite): Decimal =>
+  new Decimal(fiscalite.redevanceDepartementale).add(fiscalite.redevanceCommunale).add(montantNetTaxeAurifere(fiscalite)).mul(0.08).toDecimalPlaces(2)
 
 export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId | undefined, titres: Partial<Pick<CommonRestTitre, 'type_id'>>[]): boolean => {
   return fiscaliteVisibleByDomaines(

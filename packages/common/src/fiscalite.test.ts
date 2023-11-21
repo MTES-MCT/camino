@@ -19,7 +19,7 @@ test('fraisGestion', () => {
     })
   ).toEqual(new Decimal(16))
 
-  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toEqual(new Decimal(2.056))
+  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toEqual(new Decimal(2.06))
 })
 const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom' }
 

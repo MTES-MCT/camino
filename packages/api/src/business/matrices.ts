@@ -347,8 +347,8 @@ export const buildMatrices = (
       if (toAdd === null) {
         throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
       } else {
-        const redevanceCommunalePremiereFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.35)
-        const redevanceCommunaleDeuxiemeFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.1)
+        const redevanceCommunalePremiereFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.35).toDecimalPlaces(2)
+        const redevanceCommunaleDeuxiemeFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.1).toDecimalPlaces(2)
         toAdd.push({
           circonscriptionDe: sip?.nom ?? '',
           articlesDeRoles: line.index,
@@ -364,7 +364,7 @@ export const buildMatrices = (
           redevanceCommunale_produitNetDeLaRedevance: line.fiscalite.redevanceCommunale,
           redevanceCommunale_repartition_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_repartition_2emeFraction: redevanceCommunaleDeuxiemeFraction,
-          redevanceCommunale_repartition_3emeFraction: new Decimal(line.fiscalite.redevanceCommunale).mul(0.55),
+          redevanceCommunale_repartition_3emeFraction: new Decimal(line.fiscalite.redevanceCommunale).sub(redevanceCommunalePremiereFraction).sub(redevanceCommunaleDeuxiemeFraction),
           redevanceCommunale_revenantAuxCommunes_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_revenantAuxCommunes_2emeFraction: redevanceCommunaleDeuxiemeFraction,
           redevanceCommunale_revenantAuxCommunes_total: new Decimal(redevanceCommunalePremiereFraction).add(redevanceCommunaleDeuxiemeFraction),
