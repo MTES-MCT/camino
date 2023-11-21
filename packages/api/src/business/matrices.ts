@@ -462,12 +462,36 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
     const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes)
 
+    const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
+      totalRedevanceDesMines: Decimal
+      totalMontantNetTaxeMiniereOrGuyane: Decimal
+      fraisGestionFiscaliteDirecteLocale: Decimal
+    }>(
+      (acc, value) => {
+        acc.totalRedevanceDesMines = acc.totalRedevanceDesMines.add(value.totalRedevanceDesMines)
+        acc.totalMontantNetTaxeMiniereOrGuyane = acc.totalMontantNetTaxeMiniereOrGuyane.add(value.taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane)
+        acc.fraisGestionFiscaliteDirecteLocale = acc.fraisGestionFiscaliteDirecteLocale.add(value.fraisDeGestionDeLaFiscaliteDirecteLocale)
+
+        return acc
+      },
+      {
+        totalRedevanceDesMines: new Decimal(0),
+        totalMontantNetTaxeMiniereOrGuyane: new Decimal(0),
+        fraisGestionFiscaliteDirecteLocale: new Decimal(0),
+      }
+    )
+
+    const totalTotal = totalRedevanceDesMines.add(totalMontantNetTaxeMiniereOrGuyane).add(fraisGestionFiscaliteDirecteLocale)
     await new Promise<void>(resolve => {
       carbone.render(
         'src/business/resources/matrice_1121-SD_2021.ods',
         {
           valeurs: matrice1121,
           annee,
+          totalTotal,
+          totalRedevanceDesMines,
+          totalMontantNetTaxeMiniereOrGuyane,
+          fraisGestionFiscaliteDirecteLocale,
         },
         function (err, result) {
           if (err) {
