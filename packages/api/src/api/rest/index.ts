@@ -37,7 +37,7 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -350,7 +350,7 @@ export const activites =
         exhaustiveCheck(params.format)
     }
 
-    return contenu
+    return isNotNullNorUndefined(contenu)
       ? {
           nom: fileNameCreate(`activites-${titresActivites.length}`, params.format),
           format: params.format,
