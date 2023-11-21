@@ -16,7 +16,7 @@ import { isNonEmptyArray, isNotNullNorUndefined, onlyUnique } from 'camino-commo
 import { Commune } from 'camino-common/src/static/communes.js'
 import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee } from 'camino-common/src/date.js'
 
-const pleaseRound = (value: number): number => Number.parseFloat(value.toFixed(2))
+import { Decimal } from 'decimal.js'
 
 const sips = {
   cayenne: {
@@ -61,15 +61,15 @@ type Sips = keyof typeof sips
 const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
 type Matrice1403 = {
   circonscriptionDe: string
-  redevanceDepartementale: number
-  redevanceCommunale: number
-  taxeMiniereSurLOrDeGuyane: number
-  sommesRevenantALaRegionDeGuyane: number
-  sommesRevenantAuConservatoireDeBioDiversite: number
-  sommesRevenantALEtatFraisAssietteEtRecouvrement: number
-  sommesRevenantALEtatDegrevementsEtNonValeurs: number
-  sommesRevenantALEtatTotal: number
-  totalColonnes: number
+  redevanceDepartementale: Decimal
+  redevanceCommunale: Decimal
+  taxeMiniereSurLOrDeGuyane: Decimal
+  sommesRevenantALaRegionDeGuyane: Decimal
+  sommesRevenantAuConservatoireDeBioDiversite: Decimal
+  sommesRevenantALEtatFraisAssietteEtRecouvrement: Decimal
+  sommesRevenantALEtatDegrevementsEtNonValeurs: Decimal
+  sommesRevenantALEtatTotal: Decimal
+  totalColonnes: Decimal
   nombreDArticlesDesRoles: number
 }
 
@@ -84,12 +84,12 @@ type Matrice1404 = {
   redevanceDepartementale_produitNetDeLaRedevance: number
   redevanceDepartementale_sommesRevenantAuxDepartements: number
   redevanceCommunale_produitNetDeLaRedevance: number
-  redevanceCommunale_repartition_1ereFraction: number
-  redevanceCommunale_repartition_2emeFraction: number
-  redevanceCommunale_repartition_3emeFraction: number
-  redevanceCommunale_revenantAuxCommunes_1ereFraction: number
-  redevanceCommunale_revenantAuxCommunes_2emeFraction: number
-  redevanceCommunale_revenantAuxCommunes_total: number
+  redevanceCommunale_repartition_1ereFraction: Decimal
+  redevanceCommunale_repartition_2emeFraction: Decimal
+  redevanceCommunale_repartition_3emeFraction: Decimal
+  redevanceCommunale_revenantAuxCommunes_1ereFraction: Decimal
+  redevanceCommunale_revenantAuxCommunes_2emeFraction: Decimal
+  redevanceCommunale_revenantAuxCommunes_total: Decimal
   taxeMiniereSurLOrDeGuyane_produitNet: number
   taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: number
   taxeMiniereSurLOrDeGuyane_repartition_conservatoire: number
@@ -106,12 +106,12 @@ type Matrice1121 = {
   redevanceDepartementaleMontantNet: number
   redevanceCommunaleTarifs: number
   redevanceCommunaleMontantNetRedevanceDesMines: number
-  totalRedevanceDesMines: number
+  totalRedevanceDesMines: Decimal
   taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: number
   taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: number
   taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: number
   taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: number
-  fraisDeGestionDeLaFiscaliteDirecteLocale: number
+  fraisDeGestionDeLaFiscaliteDirecteLocale: Decimal
   serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: string
   numeroDeLArticleDuRole: string | undefined
 }
@@ -190,7 +190,7 @@ export const buildMatrices = (
 
         const surfaceCommunaleProportionnee = result.articles[articleKey]?.surface_communale_proportionnee?.[anneePrecedente] ?? 1
         const surfaceCommunale = result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0
-        const quantiteOrExtrait = (result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0) * surfaceCommunaleProportionnee
+        const quantiteOrExtrait = new Decimal(result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0).mul(surfaceCommunaleProportionnee)
 
         const fiscalite = toFiscalite(result, articleKey, annee)
 
@@ -248,7 +248,7 @@ export const buildMatrices = (
       redevanceDepartementaleMontantNet: fiscalite.redevanceDepartementale,
       redevanceCommunaleTarifs: openfiscaConstants.substances.auru.tarifCommunal,
       redevanceCommunaleMontantNetRedevanceDesMines: fiscalite.redevanceCommunale,
-      totalRedevanceDesMines: fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale,
+      totalRedevanceDesMines: new Decimal(fiscalite.redevanceCommunale).add(new Decimal(fiscalite.redevanceDepartementale)),
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: openfiscaConstants.tarifTaxeMinierePME,
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: 0,
       taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.totalInvestissementsDeduits : 0,
@@ -281,15 +281,15 @@ export const buildMatrices = (
           throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
         } else {
           const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0
-          toAdd.redevanceDepartementale = pleaseRound(line.fiscalite.redevanceDepartementale + toAdd.redevanceDepartementale)
-          toAdd.redevanceCommunale = pleaseRound(line.fiscalite.redevanceCommunale + toAdd.redevanceCommunale)
-          toAdd.taxeMiniereSurLOrDeGuyane = pleaseRound(taxeMiniereSurLOrDeGuyane + toAdd.taxeMiniereSurLOrDeGuyane)
-          toAdd.sommesRevenantALaRegionDeGuyane = pleaseRound(taxeMiniereSurLOrDeGuyane + toAdd.sommesRevenantALaRegionDeGuyane)
-          toAdd.sommesRevenantAuConservatoireDeBioDiversite = pleaseRound(0 + toAdd.sommesRevenantAuConservatoireDeBioDiversite)
-          toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement = pleaseRound(fraisGestion(line.fiscalite) + toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement)
-          toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs = pleaseRound(0 + toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs)
-          toAdd.sommesRevenantALEtatTotal = pleaseRound(fraisGestion(line.fiscalite) + toAdd.sommesRevenantALEtatTotal)
-          toAdd.totalColonnes = pleaseRound(toAdd.redevanceDepartementale + toAdd.redevanceCommunale + toAdd.taxeMiniereSurLOrDeGuyane + toAdd.sommesRevenantALEtatTotal)
+          toAdd.redevanceDepartementale = new Decimal(line.fiscalite.redevanceDepartementale).add(toAdd.redevanceDepartementale)
+          toAdd.redevanceCommunale = new Decimal(line.fiscalite.redevanceCommunale).add(toAdd.redevanceCommunale)
+          toAdd.taxeMiniereSurLOrDeGuyane = new Decimal(taxeMiniereSurLOrDeGuyane).add(toAdd.taxeMiniereSurLOrDeGuyane)
+          toAdd.sommesRevenantALaRegionDeGuyane = new Decimal(taxeMiniereSurLOrDeGuyane).add(toAdd.sommesRevenantALaRegionDeGuyane)
+          toAdd.sommesRevenantAuConservatoireDeBioDiversite = new Decimal(0).add(toAdd.sommesRevenantAuConservatoireDeBioDiversite)
+          toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement = new Decimal(fraisGestion(line.fiscalite)).add(toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement)
+          toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs = new Decimal(0).add(toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs)
+          toAdd.sommesRevenantALEtatTotal = new Decimal(fraisGestion(line.fiscalite)).add(toAdd.sommesRevenantALEtatTotal)
+          toAdd.totalColonnes = new Decimal(toAdd.redevanceDepartementale).add(toAdd.redevanceCommunale).add(toAdd.taxeMiniereSurLOrDeGuyane).add(toAdd.sommesRevenantALEtatTotal)
           toAdd.nombreDArticlesDesRoles++
         }
 
@@ -298,41 +298,41 @@ export const buildMatrices = (
       {
         cayenne: {
           circonscriptionDe: sips.cayenne.nom,
-          redevanceDepartementale: 0,
-          redevanceCommunale: 0,
-          taxeMiniereSurLOrDeGuyane: 0,
-          sommesRevenantALaRegionDeGuyane: 0,
-          sommesRevenantAuConservatoireDeBioDiversite: 0,
-          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
-          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
-          sommesRevenantALEtatTotal: 0,
-          totalColonnes: 0,
+          redevanceDepartementale: new Decimal(0),
+          redevanceCommunale: new Decimal(0),
+          taxeMiniereSurLOrDeGuyane: new Decimal(0),
+          sommesRevenantALaRegionDeGuyane: new Decimal(0),
+          sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
+          sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
+          sommesRevenantALEtatTotal: new Decimal(0),
+          totalColonnes: new Decimal(0),
           nombreDArticlesDesRoles: 0,
         },
         kourou: {
           circonscriptionDe: sips.kourou.nom,
-          redevanceDepartementale: 0,
-          redevanceCommunale: 0,
-          taxeMiniereSurLOrDeGuyane: 0,
-          sommesRevenantALaRegionDeGuyane: 0,
-          sommesRevenantAuConservatoireDeBioDiversite: 0,
-          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
-          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
-          sommesRevenantALEtatTotal: 0,
-          totalColonnes: 0,
+          redevanceDepartementale: new Decimal(0),
+          redevanceCommunale: new Decimal(0),
+          taxeMiniereSurLOrDeGuyane: new Decimal(0),
+          sommesRevenantALaRegionDeGuyane: new Decimal(0),
+          sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
+          sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
+          sommesRevenantALEtatTotal: new Decimal(0),
+          totalColonnes: new Decimal(0),
           nombreDArticlesDesRoles: 0,
         },
         saintLaurentDuMaroni: {
           circonscriptionDe: sips.saintLaurentDuMaroni.nom,
-          redevanceDepartementale: 0,
-          redevanceCommunale: 0,
-          taxeMiniereSurLOrDeGuyane: 0,
-          sommesRevenantALaRegionDeGuyane: 0,
-          sommesRevenantAuConservatoireDeBioDiversite: 0,
-          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
-          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
-          sommesRevenantALEtatTotal: 0,
-          totalColonnes: 0,
+          redevanceDepartementale: new Decimal(0),
+          redevanceCommunale: new Decimal(0),
+          taxeMiniereSurLOrDeGuyane: new Decimal(0),
+          sommesRevenantALaRegionDeGuyane: new Decimal(0),
+          sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
+          sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
+          sommesRevenantALEtatTotal: new Decimal(0),
+          totalColonnes: new Decimal(0),
           nombreDArticlesDesRoles: 0,
         },
       }
@@ -347,8 +347,8 @@ export const buildMatrices = (
       if (toAdd === null) {
         throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
       } else {
-        const redevanceCommunalePremiereFraction = pleaseRound(line.fiscalite.redevanceCommunale * 0.35)
-        const redevanceCommunaleDeuxiemeFraction = pleaseRound(line.fiscalite.redevanceCommunale * 0.1)
+        const redevanceCommunalePremiereFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.35).toDecimalPlaces(2)
+        const redevanceCommunaleDeuxiemeFraction = new Decimal(line.fiscalite.redevanceCommunale).mul(0.1).toDecimalPlaces(2)
         toAdd.push({
           circonscriptionDe: sip?.nom ?? '',
           articlesDeRoles: line.index,
@@ -364,10 +364,10 @@ export const buildMatrices = (
           redevanceCommunale_produitNetDeLaRedevance: line.fiscalite.redevanceCommunale,
           redevanceCommunale_repartition_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_repartition_2emeFraction: redevanceCommunaleDeuxiemeFraction,
-          redevanceCommunale_repartition_3emeFraction: pleaseRound(line.fiscalite.redevanceCommunale * 0.55),
+          redevanceCommunale_repartition_3emeFraction: new Decimal(line.fiscalite.redevanceCommunale).sub(redevanceCommunalePremiereFraction).sub(redevanceCommunaleDeuxiemeFraction),
           redevanceCommunale_revenantAuxCommunes_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_revenantAuxCommunes_2emeFraction: redevanceCommunaleDeuxiemeFraction,
-          redevanceCommunale_revenantAuxCommunes_total: pleaseRound(redevanceCommunalePremiereFraction + redevanceCommunaleDeuxiemeFraction),
+          redevanceCommunale_revenantAuxCommunes_total: new Decimal(redevanceCommunalePremiereFraction).add(redevanceCommunaleDeuxiemeFraction),
           taxeMiniereSurLOrDeGuyane_produitNet: isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0,
           taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0,
           taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0,
@@ -462,12 +462,36 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
     const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } = buildMatrices(result, titres, anneeNumber, openfiscaConstants, communes)
 
+    const { totalRedevanceDesMines, totalMontantNetTaxeMiniereOrGuyane, fraisGestionFiscaliteDirecteLocale } = matrice1121.reduce<{
+      totalRedevanceDesMines: Decimal
+      totalMontantNetTaxeMiniereOrGuyane: Decimal
+      fraisGestionFiscaliteDirecteLocale: Decimal
+    }>(
+      (acc, value) => {
+        acc.totalRedevanceDesMines = acc.totalRedevanceDesMines.add(value.totalRedevanceDesMines)
+        acc.totalMontantNetTaxeMiniereOrGuyane = acc.totalMontantNetTaxeMiniereOrGuyane.add(value.taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane)
+        acc.fraisGestionFiscaliteDirecteLocale = acc.fraisGestionFiscaliteDirecteLocale.add(value.fraisDeGestionDeLaFiscaliteDirecteLocale)
+
+        return acc
+      },
+      {
+        totalRedevanceDesMines: new Decimal(0),
+        totalMontantNetTaxeMiniereOrGuyane: new Decimal(0),
+        fraisGestionFiscaliteDirecteLocale: new Decimal(0),
+      }
+    )
+
+    const totalTotal = totalRedevanceDesMines.add(totalMontantNetTaxeMiniereOrGuyane).add(fraisGestionFiscaliteDirecteLocale)
     await new Promise<void>(resolve => {
       carbone.render(
         'src/business/resources/matrice_1121-SD_2021.ods',
         {
           valeurs: matrice1121,
           annee,
+          totalTotal,
+          totalRedevanceDesMines,
+          totalMontantNetTaxeMiniereOrGuyane,
+          fraisGestionFiscaliteDirecteLocale,
         },
         function (err, result) {
           if (err) {
@@ -479,12 +503,26 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
       )
     })
 
+    const { totalParDepartement, totalParCommune } = matrice1122.reduce<{ totalParDepartement: Decimal; totalParCommune: Decimal }>(
+      (acc, value) => {
+        acc.totalParCommune = acc.totalParCommune.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune)
+        acc.totalParDepartement = acc.totalParDepartement.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement)
+
+        return acc
+      },
+      {
+        totalParDepartement: new Decimal(0),
+        totalParCommune: new Decimal(0),
+      }
+    )
     await new Promise<void>(resolve => {
       carbone.render(
         'src/business/resources/matrice_1122-SD_2021.ods',
         {
           valeurs: matrice1122,
           annee,
+          totalParDepartement,
+          totalParCommune,
         },
         function (err, result) {
           if (err) {
@@ -498,30 +536,30 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
     const total = matrice1403.reduce(
       (acc, cur) => {
-        acc.redevanceDepartementale = pleaseRound(acc.redevanceDepartementale + cur.redevanceDepartementale)
-        acc.redevanceCommunale = pleaseRound(acc.redevanceCommunale + cur.redevanceCommunale)
-        acc.taxeMiniereSurLOrDeGuyane = pleaseRound(acc.taxeMiniereSurLOrDeGuyane + cur.taxeMiniereSurLOrDeGuyane)
-        acc.sommesRevenantALaRegionDeGuyane = pleaseRound(acc.sommesRevenantALaRegionDeGuyane + cur.sommesRevenantALaRegionDeGuyane)
-        acc.sommesRevenantAuConservatoireDeBioDiversite = pleaseRound(acc.sommesRevenantAuConservatoireDeBioDiversite + cur.sommesRevenantAuConservatoireDeBioDiversite)
-        acc.sommesRevenantALEtatFraisAssietteEtRecouvrement = pleaseRound(acc.sommesRevenantALEtatFraisAssietteEtRecouvrement + cur.sommesRevenantALEtatFraisAssietteEtRecouvrement)
-        acc.sommesRevenantALEtatDegrevementsEtNonValeurs = pleaseRound(acc.sommesRevenantALEtatDegrevementsEtNonValeurs + cur.sommesRevenantALEtatDegrevementsEtNonValeurs)
-        acc.sommesRevenantALEtatTotal = pleaseRound(acc.sommesRevenantALEtatTotal + cur.sommesRevenantALEtatTotal)
-        acc.totalColonnes = pleaseRound(acc.totalColonnes + cur.totalColonnes)
-        acc.nombreDArticlesDesRoles = pleaseRound(acc.nombreDArticlesDesRoles + cur.nombreDArticlesDesRoles)
+        acc.redevanceDepartementale = new Decimal(acc.redevanceDepartementale).add(cur.redevanceDepartementale)
+        acc.redevanceCommunale = new Decimal(acc.redevanceCommunale).add(cur.redevanceCommunale)
+        acc.taxeMiniereSurLOrDeGuyane = new Decimal(acc.taxeMiniereSurLOrDeGuyane).add(cur.taxeMiniereSurLOrDeGuyane)
+        acc.sommesRevenantALaRegionDeGuyane = new Decimal(acc.sommesRevenantALaRegionDeGuyane).add(cur.sommesRevenantALaRegionDeGuyane)
+        acc.sommesRevenantAuConservatoireDeBioDiversite = new Decimal(acc.sommesRevenantAuConservatoireDeBioDiversite).add(cur.sommesRevenantAuConservatoireDeBioDiversite)
+        acc.sommesRevenantALEtatFraisAssietteEtRecouvrement = new Decimal(acc.sommesRevenantALEtatFraisAssietteEtRecouvrement).add(cur.sommesRevenantALEtatFraisAssietteEtRecouvrement)
+        acc.sommesRevenantALEtatDegrevementsEtNonValeurs = new Decimal(acc.sommesRevenantALEtatDegrevementsEtNonValeurs).add(cur.sommesRevenantALEtatDegrevementsEtNonValeurs)
+        acc.sommesRevenantALEtatTotal = new Decimal(acc.sommesRevenantALEtatTotal).add(cur.sommesRevenantALEtatTotal)
+        acc.totalColonnes = new Decimal(acc.totalColonnes).add(cur.totalColonnes)
+        acc.nombreDArticlesDesRoles = new Decimal(acc.nombreDArticlesDesRoles).add(cur.nombreDArticlesDesRoles)
 
         return acc
       },
       {
-        redevanceDepartementale: 0,
-        redevanceCommunale: 0,
-        taxeMiniereSurLOrDeGuyane: 0,
-        sommesRevenantALaRegionDeGuyane: 0,
-        sommesRevenantAuConservatoireDeBioDiversite: 0,
-        sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
-        sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
-        sommesRevenantALEtatTotal: 0,
-        totalColonnes: 0,
-        nombreDArticlesDesRoles: 0,
+        redevanceDepartementale: new Decimal(0),
+        redevanceCommunale: new Decimal(0),
+        taxeMiniereSurLOrDeGuyane: new Decimal(0),
+        sommesRevenantALaRegionDeGuyane: new Decimal(0),
+        sommesRevenantAuConservatoireDeBioDiversite: new Decimal(0),
+        sommesRevenantALEtatFraisAssietteEtRecouvrement: new Decimal(0),
+        sommesRevenantALEtatDegrevementsEtNonValeurs: new Decimal(0),
+        sommesRevenantALEtatTotal: new Decimal(0),
+        totalColonnes: new Decimal(0),
+        nombreDArticlesDesRoles: new Decimal(0),
       }
     )
     await new Promise<void>(resolve => {
@@ -548,46 +586,46 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
         (acc, sip) => {
           acc[sip] = matrice1404[sip].reduce(
             (accLine, line) => {
-              accLine.elementsDeBase_tonnagesExtraits = pleaseRound(accLine.elementsDeBase_tonnagesExtraits + Number.parseFloat(line.elementsDeBase_tonnagesExtraits))
-              accLine.redevanceDepartementale_produitNetDeLaRedevance = pleaseRound(accLine.redevanceDepartementale_produitNetDeLaRedevance + line.redevanceDepartementale_produitNetDeLaRedevance)
-              accLine.redevanceDepartementale_sommesRevenantAuxDepartements = pleaseRound(
-                accLine.redevanceDepartementale_sommesRevenantAuxDepartements + line.redevanceDepartementale_sommesRevenantAuxDepartements
+              accLine.elementsDeBase_tonnagesExtraits = new Decimal(accLine.elementsDeBase_tonnagesExtraits).add(Number.parseFloat(line.elementsDeBase_tonnagesExtraits))
+              accLine.redevanceDepartementale_produitNetDeLaRedevance = new Decimal(accLine.redevanceDepartementale_produitNetDeLaRedevance).add(line.redevanceDepartementale_produitNetDeLaRedevance)
+              accLine.redevanceDepartementale_sommesRevenantAuxDepartements = new Decimal(accLine.redevanceDepartementale_sommesRevenantAuxDepartements).add(
+                line.redevanceDepartementale_sommesRevenantAuxDepartements
               )
-              accLine.redevanceCommunale_produitNetDeLaRedevance = pleaseRound(accLine.redevanceCommunale_produitNetDeLaRedevance + line.redevanceCommunale_produitNetDeLaRedevance)
-              accLine.redevanceCommunale_repartition_1ereFraction = pleaseRound(accLine.redevanceCommunale_repartition_1ereFraction + line.redevanceCommunale_repartition_1ereFraction)
-              accLine.redevanceCommunale_repartition_2emeFraction = pleaseRound(accLine.redevanceCommunale_repartition_2emeFraction + line.redevanceCommunale_repartition_2emeFraction)
-              accLine.redevanceCommunale_repartition_3emeFraction = pleaseRound(accLine.redevanceCommunale_repartition_3emeFraction + line.redevanceCommunale_repartition_3emeFraction)
-              accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction = pleaseRound(
-                accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction + line.redevanceCommunale_revenantAuxCommunes_1ereFraction
+              accLine.redevanceCommunale_produitNetDeLaRedevance = new Decimal(accLine.redevanceCommunale_produitNetDeLaRedevance).add(line.redevanceCommunale_produitNetDeLaRedevance)
+              accLine.redevanceCommunale_repartition_1ereFraction = new Decimal(accLine.redevanceCommunale_repartition_1ereFraction).add(line.redevanceCommunale_repartition_1ereFraction)
+              accLine.redevanceCommunale_repartition_2emeFraction = new Decimal(accLine.redevanceCommunale_repartition_2emeFraction).add(line.redevanceCommunale_repartition_2emeFraction)
+              accLine.redevanceCommunale_repartition_3emeFraction = new Decimal(accLine.redevanceCommunale_repartition_3emeFraction).add(line.redevanceCommunale_repartition_3emeFraction)
+              accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction).add(
+                line.redevanceCommunale_revenantAuxCommunes_1ereFraction
               )
-              accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction = pleaseRound(
-                accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction + line.redevanceCommunale_revenantAuxCommunes_2emeFraction
+              accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction).add(
+                line.redevanceCommunale_revenantAuxCommunes_2emeFraction
               )
-              accLine.redevanceCommunale_revenantAuxCommunes_total = pleaseRound(accLine.redevanceCommunale_revenantAuxCommunes_total + line.redevanceCommunale_revenantAuxCommunes_total)
-              accLine.taxeMiniereSurLOrDeGuyane_produitNet = pleaseRound(accLine.taxeMiniereSurLOrDeGuyane_produitNet + line.taxeMiniereSurLOrDeGuyane_produitNet)
-              accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane = pleaseRound(
-                accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane + line.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane
+              accLine.redevanceCommunale_revenantAuxCommunes_total = new Decimal(accLine.redevanceCommunale_revenantAuxCommunes_total).add(line.redevanceCommunale_revenantAuxCommunes_total)
+              accLine.taxeMiniereSurLOrDeGuyane_produitNet = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_produitNet).add(line.taxeMiniereSurLOrDeGuyane_produitNet)
+              accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane).add(
+                line.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane
               )
-              accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire = pleaseRound(
-                accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire + line.taxeMiniereSurLOrDeGuyane_repartition_conservatoire
+              accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire = new Decimal(accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire).add(
+                line.taxeMiniereSurLOrDeGuyane_repartition_conservatoire
               )
 
               return accLine
             },
             {
-              elementsDeBase_tonnagesExtraits: 0,
-              redevanceDepartementale_produitNetDeLaRedevance: 0,
-              redevanceDepartementale_sommesRevenantAuxDepartements: 0,
-              redevanceCommunale_produitNetDeLaRedevance: 0,
-              redevanceCommunale_repartition_1ereFraction: 0,
-              redevanceCommunale_repartition_2emeFraction: 0,
-              redevanceCommunale_repartition_3emeFraction: 0,
-              redevanceCommunale_revenantAuxCommunes_1ereFraction: 0,
-              redevanceCommunale_revenantAuxCommunes_2emeFraction: 0,
-              redevanceCommunale_revenantAuxCommunes_total: 0,
-              taxeMiniereSurLOrDeGuyane_produitNet: 0,
-              taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: 0,
-              taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0,
+              elementsDeBase_tonnagesExtraits: new Decimal(0),
+              redevanceDepartementale_produitNetDeLaRedevance: new Decimal(0),
+              redevanceDepartementale_sommesRevenantAuxDepartements: new Decimal(0),
+              redevanceCommunale_produitNetDeLaRedevance: new Decimal(0),
+              redevanceCommunale_repartition_1ereFraction: new Decimal(0),
+              redevanceCommunale_repartition_2emeFraction: new Decimal(0),
+              redevanceCommunale_repartition_3emeFraction: new Decimal(0),
+              redevanceCommunale_revenantAuxCommunes_1ereFraction: new Decimal(0),
+              redevanceCommunale_revenantAuxCommunes_2emeFraction: new Decimal(0),
+              redevanceCommunale_revenantAuxCommunes_total: new Decimal(0),
+              taxeMiniereSurLOrDeGuyane_produitNet: new Decimal(0),
+              taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: new Decimal(0),
+              taxeMiniereSurLOrDeGuyane_repartition_conservatoire: new Decimal(0),
             }
           )
 
@@ -631,9 +669,9 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
         taxeMiniereOr: number
         montantInvestissements: number
         montantNetTaxeMiniereOr: number
-        totalCotisations: number
-        fraisGestion: number
-        total: number
+        totalCotisations: Decimal
+        fraisGestion: Decimal
+        total: Decimal
       }[]
     > = { kourou: [], saintLaurentDuMaroni: [], cayenne: [] }
     for (const matriceLine of rawLines) {
@@ -654,9 +692,9 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
           taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
           montantInvestissements: fiscaliteLine.guyane.totalInvestissementsDeduits,
           montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
-          totalCotisations: pleaseRound(matriceLine.fiscalite.redevanceCommunale + matriceLine.fiscalite.redevanceDepartementale + fiscaliteLine.guyane.taxeAurifere),
+          totalCotisations: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere),
           fraisGestion: fraisGestion(fiscaliteLine),
-          total: pleaseRound(matriceLine.fiscalite.redevanceCommunale + matriceLine.fiscalite.redevanceDepartementale + fiscaliteLine.guyane.taxeAurifere + fraisGestion(fiscaliteLine)),
+          total: new Decimal(matriceLine.fiscalite.redevanceCommunale).add(matriceLine.fiscalite.redevanceDepartementale).add(fiscaliteLine.guyane.taxeAurifere).add(fraisGestion(fiscaliteLine)),
         }
         matrice1401[matriceLine.sip].push(matrice)
         await new Promise<void>(resolve => {
@@ -687,20 +725,20 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
     for (const sip of Object.keys(sips)) {
       if (isSip(sip)) {
         await new Promise<void>(resolve => {
-          const montantTotalSommeALEtat = pleaseRound(matrice1401[sip].reduce((acc, cur) => acc + cur.fraisGestion, 0))
-          const fraisAssietteEtRecouvrement = pleaseRound((montantTotalSommeALEtat * 4.4) / 8)
+          const montantTotalSommeALEtat = matrice1401[sip].reduce((acc, cur) => acc.add(cur.fraisGestion), new Decimal(0))
+          const fraisAssietteEtRecouvrement = montantTotalSommeALEtat.mul(4.4).div(8)
           carbone.render(
             'src/business/resources/matrice_1401-SD_2022.ods',
             {
               valeurs: matrice1401[sip],
               nombreArticles: matrice1401[sip].length,
-              total: pleaseRound(matrice1401[sip].reduce((acc, cur) => acc + cur.total, 0)),
+              total: matrice1401[sip].reduce((acc, cur) => acc.add(cur.total), new Decimal(0)),
               montantTotalSommeALEtat,
               fraisAssietteEtRecouvrement,
-              fraisDegrevement: pleaseRound(montantTotalSommeALEtat - fraisAssietteEtRecouvrement),
-              redevanceDepartementale: pleaseRound(matrice1401[sip].reduce((acc, cur) => acc + cur.redevanceDepartementale, 0)),
-              redevanceCommunale: pleaseRound(matrice1401[sip].reduce((acc, cur) => acc + cur.redevanceCommunale, 0)),
-              montantNetTaxeMiniereOr: pleaseRound(matrice1401[sip].reduce((acc, cur) => acc + cur.montantNetTaxeMiniereOr, 0)),
+              fraisDegrevement: montantTotalSommeALEtat.sub(fraisAssietteEtRecouvrement),
+              redevanceDepartementale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceDepartementale), new Decimal(0)),
+              redevanceCommunale: matrice1401[sip].reduce((acc, cur) => acc.add(cur.redevanceCommunale), new Decimal(0)),
+              montantNetTaxeMiniereOr: matrice1401[sip].reduce((acc, cur) => acc.add(cur.montantNetTaxeMiniereOr), new Decimal(0)),
               annee,
               anneePrecedente,
             },

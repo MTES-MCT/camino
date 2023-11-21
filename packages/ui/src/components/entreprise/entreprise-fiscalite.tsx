@@ -40,7 +40,7 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
     }
   }
 
-  const sommeAPayer = (fiscalite: Fiscalite) => fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale + montantNetTaxeAurifere(fiscalite) + fraisGestion(fiscalite)
+  const sommeAPayer = (fiscalite: Fiscalite) => fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale + montantNetTaxeAurifere(fiscalite) + fraisGestion(fiscalite).toNumber()
 
   const currencyFormat = (number: number) =>
     Intl.NumberFormat('FR-fr', {
@@ -83,7 +83,7 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
           </>
         ) : null}
         <div>f. Frais de gestion de fiscalité directe locale (a+b{data.value.status === 'LOADED' && isFiscaliteGuyane(data.value.value) ? '+e' : ''})X 8%</div>
-        <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(fraisGestion(item))}</>} />
+        <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(fraisGestion(item).toNumber())}</>} />
         <div>Somme à payer auprès du comptable (2)</div>
         <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(sommeAPayer(item))}</>} />
       </div>

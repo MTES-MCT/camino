@@ -3,9 +3,10 @@ import { UserNotNull, toUtilisateurId } from './roles.js'
 import { CommonRestTitre } from './titres.js'
 import { test, expect } from 'vitest'
 import { newEntrepriseId } from './entreprise.js'
+import { Decimal } from 'decimal.js'
 
 test('fraisGestion', () => {
-  expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toBe(8)
+  expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toEqual(new Decimal(8))
   expect(
     fraisGestion({
       redevanceDepartementale: 50,
@@ -16,9 +17,9 @@ test('fraisGestion', () => {
         totalInvestissementsDeduits: 0,
       },
     })
-  ).toBe(16)
+  ).toEqual(new Decimal(16))
 
-  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toBe(2.06)
+  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toEqual(new Decimal(2.06))
 })
 const roleLessUser: Omit<UserNotNull, 'role'> = { id: toUtilisateurId('id'), nom: 'nom', email: 'email', prenom: 'prenom' }
 

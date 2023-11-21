@@ -70,6 +70,7 @@
     }
   },
   "dependencies": {
+    "decimal.js": "^10.4.3",
     "zod": "^3.21.4"
   }
 }
