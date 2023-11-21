@@ -503,12 +503,26 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
       )
     })
 
+    const { totalParDepartement, totalParCommune } = matrice1122.reduce<{ totalParDepartement: Decimal; totalParCommune: Decimal }>(
+      (acc, value) => {
+        acc.totalParCommune = acc.totalParCommune.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParCommune)
+        acc.totalParDepartement = acc.totalParDepartement.add(value.tonnagesExtraitsAuCoursDeLAnneePrecedenteParDepartement)
+
+        return acc
+      },
+      {
+        totalParDepartement: new Decimal(0),
+        totalParCommune: new Decimal(0),
+      }
+    )
     await new Promise<void>(resolve => {
       carbone.render(
         'src/business/resources/matrice_1122-SD_2021.ods',
         {
           valeurs: matrice1122,
           annee,
+          totalParDepartement,
+          totalParCommune,
         },
         function (err, result) {
           if (err) {
