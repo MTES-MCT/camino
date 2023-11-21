@@ -6,6 +6,8 @@ import bcrypt from 'bcryptjs'
 
 import { emailCheck } from '../tools/email-check.js'
 import { userByEmailGet } from '../database/queries/utilisateurs.js'
+import { JWTUser } from './user-loader'
+import { isNullOrUndefined, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   email = email.toLowerCase()
@@ -23,7 +25,7 @@ const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
     throw new Error(`Erreur technique : ${e.message}, email ${email} invalide`)
   }
 
-  if (!user.qgisToken) return null
+  if (isNullOrUndefined(user.qgisToken)) return null
   const valid = bcrypt.compareSync(qgisToken, user.qgisToken)
 
   return valid ? user : null
@@ -33,8 +35,8 @@ export const authBasic = async (req: Request, res: express.Response, next: expre
   try {
     // basic auth est activé que pour la route titres_qgis
     if (req.url.includes('titres_qgis')) {
-      const credentials = req.headers.authorization ? basicAuth.parse(req.headers.authorization) : null
-      if (!credentials) {
+      const credentials = isNotNullNorUndefined(req.headers.authorization) ? basicAuth.parse(req.headers.authorization) : null
+      if (isNullOrUndefined(credentials)) {
         res.setHeader('WWW-Authenticate', 'Basic realm="Authentication Required"')
         res.status(401)
         res.send('Authentication Required')
@@ -53,7 +55,8 @@ export const authBasic = async (req: Request, res: express.Response, next: expre
       }
 
       // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
-      req.auth = { email: user.email, family_name: user.nom, given_name: user.prenom }
+      const jwtUser: JWTUser = { email: user.email ?? undefined, family_name: user.nom ?? undefined, given_name: user.prenom ?? undefined, sub: user.keycloakId ?? undefined }
+      req.auth = jwtUser
       next()
 
       return
