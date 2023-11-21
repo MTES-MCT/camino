@@ -11,7 +11,7 @@ type Phase = DemarcheGet['titre']['demarches'][number]
 type Props = {
   demarches: DemarcheGet['titre']['demarches']
   currentDemarcheSlug: DemarcheSlug | null
-  class: HTMLAttributes['class']
+  class?: HTMLAttributes['class']
 }
 
 type PhaseWithDateDebut = Omit<Phase, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: Pick<Phase, 'slug' | 'demarche_type_id'>[] }

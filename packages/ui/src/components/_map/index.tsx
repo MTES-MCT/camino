@@ -3,7 +3,7 @@ import type { LatLngBoundsExpression, LatLngExpression, Layer, LayersControlEven
 import { ref, onMounted, markRaw, watch } from 'vue'
 import { FeatureGroup, LayerGroup, layerGroup } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { displayMarkersZoomMaxLevel, displayPerimeterZoomMaxLevel } from './util'
+import { displayPerimeterZoomMaxLevel } from './util'
 
 import './leaflet'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'

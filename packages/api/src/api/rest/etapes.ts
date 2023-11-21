@@ -61,7 +61,6 @@ export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
   }
 }
 
-
 export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 

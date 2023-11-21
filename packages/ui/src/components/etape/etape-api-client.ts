@@ -28,7 +28,6 @@ export const etapeApiClient: EtapeApiClient = {
     await deleteWithJson('/rest/etapes/:etapeId', { etapeId })
   },
   deposeEtape: async etapeId => {
-    await putWithJson('/rest/etapes/:etapeId/depot', {etapeId}, undefined)
+    await putWithJson('/rest/etapes/:etapeId/depot', { etapeId }, undefined)
   },
-
 }

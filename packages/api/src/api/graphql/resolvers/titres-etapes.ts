@@ -2,8 +2,6 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import { Context, IContenu, IDecisionAnnexeContenu, IDocument, ITitre, ITitreEtape } from '../../../types.js'
 
-import { titreFormat } from '../../_format/titres.js'
-
 import { titreEtapeCreate, titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { titreGet } from '../../../database/queries/titres.js'
@@ -583,9 +581,9 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
     await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreEtape.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: {id: {}} }, user)
+    const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
 
-    return {slug: titreUpdated.slug}
+    return { slug: titreUpdated.slug }
   } catch (e) {
     console.error(e)
 
