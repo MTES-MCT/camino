@@ -583,7 +583,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
     const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
 
-    return { slug: titreUpdated.slug }
+    return { slug: titreUpdated?.slug }
   } catch (e) {
     console.error(e)
 

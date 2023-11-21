@@ -23,6 +23,7 @@ import { DemarcheEtape } from './demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import router from '@/router'
 import { DemarcheTimeline } from '@/components/demarche/demarche-timeline'
+import { DsfrIcon } from '@/components/_ui/icon'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -117,6 +118,7 @@ export const PureDemarche = defineComponent<Props>(props => {
               <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.demarche_statut_id} />
             </div>
             <CaminoRouterLink class="fr-link" title={demarche.titre.nom} to={{ name: 'titre', params: { id: demarche.titre.slug } }}>
+              <DsfrIcon name={'fr-icon-arrow-left-line'} />
               {capitalize(demarche.titre.nom)}
             </CaminoRouterLink>
 
