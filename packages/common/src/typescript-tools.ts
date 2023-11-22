@@ -13,6 +13,14 @@ export const isNotNullNorUndefinedNorEmpty = <U>(value: U[] | null | undefined):
   return false
 }
 
+export const isNullOrUndefinedOrEmpty = <U>(value: U[] | null | undefined): value is null | undefined => {
+  if (isNullOrUndefined(value)) {
+    return true
+  }
+
+  return Array.isArray(value) && value.length === 0
+}
+
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
   return value === null || value === undefined
 }

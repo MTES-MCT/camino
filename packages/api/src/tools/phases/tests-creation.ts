@@ -12,12 +12,14 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-phases-find.js'
+import { TitreId } from 'camino-common/src/titres.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const writePhasesForTest = async () => {
   const demarches: {
     rows: {
       id: DemarcheId
-      titre_id: string
+      titre_id: TitreId
       ordre: number
       statut_id: DemarcheStatutId
       demarche_type_id: DemarcheTypeId
@@ -53,7 +55,7 @@ const writePhasesForTest = async () => {
       demarches: TitreDemarchePhaseFind[]
     }
   }>((acc, row) => {
-    if (!acc[row.titre_id]) {
+    if (isNullOrUndefined(acc[row.titre_id])) {
       acc[row.titre_id] = {
         titreTypeId: row.titre_type_id,
         demarches: [],

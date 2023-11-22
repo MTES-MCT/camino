@@ -11,6 +11,7 @@ import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { isDemarcheStatutNonStatue } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -26,7 +27,7 @@ const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =
 
 const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId, isEtapeDateEnough: boolean): CaminoDate | null => {
   let dateDebut = null
-  if (!demarche.etapes?.length) {
+  if (isNullOrUndefinedOrEmpty(demarche.etapes)) {
     return dateDebut
   }
 
@@ -65,12 +66,15 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
   })
 
   const titreDemarcheAnnulation = titreDemarcheAnnulationFind(titreDemarches)
-  const titreDemarcheAnnulationDate = titreDemarcheAnnulation?.etapes?.length ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
+  const titreDemarcheAnnulationDate =
+    isNotNullNorUndefined(titreDemarcheAnnulation) && isNotNullNorUndefinedNorEmpty(titreDemarcheAnnulation.etapes) ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
-  const filteredDemarches = sortedDemarches.filter(demarche => demarche.etapes?.length && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree)))
+  const filteredDemarches = sortedDemarches.filter(
+    demarche => isNotNullNorUndefinedNorEmpty(demarche.etapes) && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
+  )
 
   const phases = filteredDemarches.reduce<IntermediateTitrePhase[]>((acc, demarche) => {
-    if (!demarche.etapes?.length) {
+    if (isNullOrUndefinedOrEmpty(demarche.etapes)) {
       return acc
     }
     const isFirstPhase = acc.length === 0
@@ -166,12 +170,10 @@ export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' |
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
-  const decisionRejetee = titreEtapesSorted.find(
-    ({ typeId, statutId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId) && statutId === ETAPES_STATUTS.REJETE
-  )
+  const derniereDecision = titreEtapesSorted.find(({ typeId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLadministration].includes(typeId))
 
-  if (decisionRejetee) {
-    return { dateFin: decisionRejetee.date, duree: 0 }
+  if (isNotNullNorUndefined(derniereDecision) && derniereDecision.statutId === ETAPES_STATUTS.REJETE) {
+    return { dateFin: derniereDecision.date, duree: 0 }
   }
 
   const desistementDemandeur = titreEtapesSorted.find(({ typeId }) => ETAPES_TYPES.desistementDuDemandeur === typeId)
