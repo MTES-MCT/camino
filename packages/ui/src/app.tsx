@@ -1,6 +1,5 @@
 import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
-import '@gouvfr/dsfr/dist/component/modal/modal.module'
 import '@gouvfr/dsfr/dist/component/header/header.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
@@ -15,6 +14,7 @@ import { CaminoError } from './components/error'
 import { useStore } from 'vuex'
 import { RouterView, useRoute } from 'vue-router'
 import { TrackEventFunction } from '@/utils/matomo'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export const App = defineComponent({
   setup: () => {
     const store = useStore()
@@ -59,7 +59,7 @@ export const App = defineComponent({
         <Header user={user.value} currentMenuSection={currentMenuSection.value} trackEvent={trackEvent} routePath={route.fullPath} />
 
         <main class="main" role="main">
-          <div class="container">{error.value ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
+          <div class="container">{isNotNullNorUndefined(error.value) ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
         </main>
 
         <Footer />
@@ -68,15 +68,15 @@ export const App = defineComponent({
           <Messages messages={messages.value} />
         </div>
 
-        <Transition name="fade">{popup.value.component ? <div class="absolute full bg-inverse-alpha" style="z-index: 600" /> : null}</Transition>
+        <Transition name="fade">{isNotNullNorUndefined(popup.value.component) ? <div class="absolute full bg-inverse-alpha" style="z-index: 600" /> : null}</Transition>
 
-        <Transition name="slide-top">{popup.value.component ? <popup.value.component {...popup.value.props} /> : null}</Transition>
+        <Transition name="slide-top">{isNotNullNorUndefined(popup.value.component) ? <popup.value.component {...popup.value.props} /> : null}</Transition>
 
         <Transition name="fade">
-          {loading.value || fileLoading.value.total ? (
+          {loading.value || (isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0) ? (
             <div class="loaders fixed p">
               {loading.value ? <div class="loader" /> : null}
-              {fileLoading.value.total ? (
+              {isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0 ? (
                 <div>
                   <div class="relative loader-file">
                     <div
