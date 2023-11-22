@@ -1,6 +1,5 @@
 import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
-import '@gouvfr/dsfr/dist/component/header/header.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
 import { defineComponent, Transition, computed, inject } from 'vue'

@@ -58,14 +58,10 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
 
   onMounted(async () => {
     document.addEventListener('keyup', keyUp)
-    document.body.style.overflow = "hidden";
-    document.body.style.height = "100%";
   })
 
   onBeforeUnmount(() => {
     document.removeEventListener('keyup', keyUp)
-    document.body.style.overflow = "auto";
-    document.body.style.height = "auto";
   })
 
   const stopPropagation = (e: Event) => {

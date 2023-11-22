@@ -1,4 +1,4 @@
-import { computed, FunctionalComponent, onMounted } from 'vue'
+import { computed, FunctionalComponent, onMounted, ref } from 'vue'
 import { Role, User } from 'camino-common/src/roles'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
@@ -95,10 +95,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
 
   const linkClick = (path: Link['path']) => {
     // On ferme la modale
-    const navigationModalElement = document.getElementById(navigationModalId)
-    if (navigationModalElement) {
-      dsfr(navigationModalElement).modal.conceal()
-    }
+    modalMenuOpened.value = false
     if (path !== 'journaux') {
       props.trackEvent('menu-sections', 'menu-section', path)
     }
@@ -115,14 +112,6 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     }
     linkClick(path)
   }
-  const closeSearchModal = () => {
-    // On ferme la modale de recherche
-    const searchModalElement = document.getElementById(searchModalId)
-    if (searchModalElement) {
-      dsfr(searchModalElement).modal.conceal()
-    }
-  }
-
   const linksByRole = computed<Record<Role, (Link | LinkList)[]>>(() => {
     const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
 
@@ -137,6 +126,21 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     }
   })
 
+  const modalMenuOpened = ref<boolean>(false)
+  const modalSearchOpened = ref<boolean>(false)
+
+  const closeModals = () => {
+    modalMenuOpened.value = false
+    modalSearchOpened.value = false
+  }
+
+  const openModalMenu = () => {
+    modalMenuOpened.value = true
+  }
+
+  const openModalSearch = () => {
+    modalSearchOpened.value = true
+  }
   return () => (
     <div class="dsfr" style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
@@ -153,10 +157,10 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                     </p>
                   </div>
                   <nav class="fr-header__navbar" role="navigation">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
+                    <button class="fr-btn--search fr-btn" data-fr-opened="false" onClick={openModalSearch} aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" onClick={openModalMenu} aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
                       Menu
                     </button>
                   </nav>
@@ -172,30 +176,30 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                 <div class="fr-header__tools-links">
                   <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
                 </div>
-                <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
+                <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
                     <DsfrButtonIcon
                       icon="fr-icon-close-line"
                       buttonType="tertiary-no-outline"
-                      onClick={() => {}}
+                      onClick={closeModals}
                       aria-controls={searchModalId}
                       title="Fermer la fenêtre de dialogue"
                       label="Fermer"
                       class="fr-btn--close"
                     />
-                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeSearchModal} />
+                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeModals} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
+        <div class={`fr-header__menu fr-modal ${modalMenuOpened.value ? 'fr-modal--opened' : ''}`} id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
             <DsfrButtonIcon
               icon="fr-icon-close-line"
               buttonType="tertiary-no-outline"
-              onClick={() => {}}
+              onClick={closeModals}
               aria-controls={searchModalId}
               title="Fermer la fenêtre de dialogue"
               label="Fermer"
