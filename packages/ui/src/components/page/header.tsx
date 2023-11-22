@@ -5,6 +5,7 @@ import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   user: User
@@ -33,7 +34,7 @@ const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.h
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
 
-const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'>> = props => {
+const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'> & { userLinkClicked: () => void }> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
   const logoutUrl = '/apiUrl/deconnecter'
 
@@ -50,7 +51,7 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'rout
       {props.user ? (
         <>
           <div>
-            <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`}>
+            <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`} onClick={props.userLinkClicked}>
               {`${props.user.nom} ${props.user.prenom}`}
             </router-link>
           </div>
@@ -106,7 +107,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     const navigationElement = document.getElementById(navigationId)
     if (navigationElement) {
       const members = dsfr(navigationElement).navigation.members
-      if (members && members.length) {
+      if (isNotNullNorUndefinedNorEmpty(members)) {
         members[0].conceal()
       }
     }
@@ -141,6 +142,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
   const openModalSearch = () => {
     modalSearchOpened.value = true
   }
+
   return () => (
     <div class="dsfr" style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
@@ -174,7 +176,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               </div>
               <div class="fr-header__tools">
                 <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
+                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
                 </div>
                 <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
@@ -206,7 +208,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               class="fr-btn--close"
             />
             <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
+              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
             </div>
             <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
