@@ -94,7 +94,6 @@ export const Perimetre = defineComponent<Props>((props: Props) => {
           titreId={props.titreId}
           points={props.points}
           titreTypeId={props.titreTypeId}
-          isMain={props.isMain}
           loading={props.loading}
         />
       ) : null}

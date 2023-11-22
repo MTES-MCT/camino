@@ -9,7 +9,6 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { layersBuild, TitreWithPoint } from '@/components/titres/mapUtil'
 import { useRouter } from 'vue-router'
-import { ButtonIcon } from '../_ui/button-icon'
 import { titreApiClient } from '../titre/titre-api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
@@ -17,19 +16,16 @@ export interface Props {
   geojson: GeoJsonObject
   points?: { nom: string; coordonnees: { x: number; y: number } }[]
   titreTypeId: TitreTypeId
-  isMain?: boolean
   titreId?: string
   loading: boolean
 }
 
-export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'isMain', 'titreId', 'loading'], props => {
+export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points', 'titreTypeId', 'titreId', 'loading'], props => {
   const map = ref<typeof CaminoMap | null>(null)
   const markersVisible = ref<boolean>(true)
   const patternVisible = ref<boolean>(true)
 
   const router = useRouter()
-
-  const isMain = computed(() => props.isMain ?? false)
 
   const points = computed(() => props.points ?? [])
 
@@ -153,38 +149,8 @@ export const CaminoCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
         geojsonLayers={geojsonLayers.value}
         markerLayers={markerLayers.value}
         additionalOverlayLayers={additionalOverlayLayers.value}
-        class="map map-detail mb-s"
+        class="map map-detail"
       />
-      <div class={`${isMain.value ? 'container' : ''}`}>
-        <div class="tablet-blobs">
-          <div class={`${!isMain.value ? 'px-s' : ''} tablet-blob-1-2`}>
-            <div class="flex mb-s">
-              <button class="btn-border pill px-m py-s" onClick={() => centrer()}>
-                Centrer
-              </button>
-            </div>
-          </div>
-          <div class="desktop-blob-1-2 desktop-flex">
-            <div class={`${markersVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <ButtonIcon
-                class="btn-border p-s rnd-s"
-                title={`${markersVisible.value ? 'Masque' : 'Affiche'} les marqueurs`}
-                onClick={() => (markersVisible.value = !markersVisible.value)}
-                icon="marker-ungrouped"
-              />
-            </div>
-
-            <div class={`${patternVisible.value ? 'active' : ''} mb-s mr-xs`}>
-              <ButtonIcon
-                class="btn-border p-s rnd-s"
-                title={`${patternVisible.value ? 'Masque' : 'Affiche'} la trame`}
-                onClick={() => (patternVisible.value = !patternVisible.value)}
-                icon="pattern"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 })
