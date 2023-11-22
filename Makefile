@@ -179,8 +179,8 @@ deploy/prod:
 	$(MAKE) DEPLOY_URL=camino.beta.gouv.fr _deploy
 
 dsfr/generate_keycloak:
-	wget https://github.com/GouvernementFR/dsfr/releases/download/v1.10.1/dsfr-v1.10.1.zip
-	unzip dsfr-v1.10.1.zip -d dsfr
+	wget https://github.com/GouvernementFR/dsfr/releases/download/v1.10.2/dsfr-v1.10.2.zip
+	unzip dsfr-v1.10.2.zip -d dsfr
 	rm -rf infra/roles/camino/files/keycloak_theme/login/resources/css/
 	mkdir -p infra/roles/camino/files/keycloak_theme/login/resources/css/utility
 	mv dsfr/dist/dsfr.min.css infra/roles/camino/files/keycloak_theme/login/resources/css/dsfr.min.css
@@ -188,11 +188,11 @@ dsfr/generate_keycloak:
 	mv dsfr/dist/icons infra/roles/camino/files/keycloak_theme/login/resources/css/
 	mv dsfr/dist/fonts infra/roles/camino/files/keycloak_theme/login/resources/css/
 	rm -rf dsfr
-	rm dsfr-v1.10.1.zip
+	rm dsfr-v1.10.2.zip
 dsfr/generate:
 	mkdir tmp
-	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
-	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
+	cp packages/ui/node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
+	cp packages/ui/node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
 	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss
 	sed -n "/\@font-face {/,/}/p" tmp/_dsfr.scss > tmp/font-face.scss
 	sed -i "/\@font-face {/,/}/d" tmp/_dsfr.scss
@@ -201,8 +201,8 @@ dsfr/generate:
 	rm -r tmp
 	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
 	sed -i 's/.dsfr body/body/g' packages/ui/src/styles/dsfr/dsfr.css
-	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
-	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
+	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
+	cp -r packages/ui/node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
 	$(MAKE) icons/generate
 	$(MAKE) dsfr/generate_keycloak
 
