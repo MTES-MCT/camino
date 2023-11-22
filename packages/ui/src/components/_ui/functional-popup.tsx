@@ -1,6 +1,6 @@
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, nextTick, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 
 interface Props {
@@ -50,20 +50,28 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
     }
   }
 
-  nextTick(() => {
-    const dialogElement = document.getElementById(id)
-    if (dialogElement && dsfr) {
-      dsfr(dialogElement).modal.disclose()
-      dialogElement.addEventListener('dsfr.conceal', () => {
-        props.close()
-      })
+  const keyUp = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      props.close()
     }
+  }
+
+  onMounted(async () => {
+    document.addEventListener('keyup', keyUp)
   })
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('keyup', keyUp)
+  })
+
+  const stopPropagation = (e: Event) => {
+    e.stopPropagation()
+  }
 
   return () => (
     <div class="dsfr">
-      <dialog id={id} class="fr-modal" role="dialog" aria-labelledby={`${id}-title`}>
-        <div class="fr-container fr-container--fluid fr-container-md">
+      <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close}>
+        <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
           <div class="fr-grid-row fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
               <div class="fr-modal__body">

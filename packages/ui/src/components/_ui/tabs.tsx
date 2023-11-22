@@ -1,31 +1,43 @@
-import { Ref, defineComponent, nextTick, ref } from 'vue'
+import { Ref, defineComponent, nextTick, onBeforeUnmount, ref } from 'vue'
 
 import { DsfrIcon } from './dsfrIconSpriteType'
 import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { random } from '../../utils/vue-tsx-utils'
 
-export type Tab<TabId> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
+export type Tab<TabId extends string> = { icon: DsfrIcon; title: string; id: TabId; renderContent: () => JSX.Element }
 
-type Props<TabId> = {
+type Props<TabId extends string> = {
   tabsTitle: string
   tabs: Readonly<NonEmptyArray<Tab<TabId>>>
   initTab: TabId
   tabClicked: (tabId: TabId) => void
 }
 
-export const Tabs = defineComponent(<TabId,>(props: Props<TabId>) => {
+export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) => {
   const currentTab = ref<TabId>(props.initTab) as Ref<TabId>
 
+  const events = ref<{ [key in TabId]?: () => void }>({}) as Ref<{ [key in TabId]?: () => void }>
   const idSuffix = `${(random() * 1000).toFixed()}`
 
+  // TODO 2023-11-22 il faudrait supprimer le js du DSFR et utiliser le notre, avec la 1.10.2 on se retrouvait avec un bug sur les statistiques, tous les tabs étaient cliquées quand on unmountait le composant. Pas très future-proof
   nextTick(() => {
     props.tabs.forEach(tab => {
       const tabElement = document.getElementById(`tabpanel-${tab.id}-${idSuffix}-panel`)
       if (tabElement) {
-        tabElement.addEventListener('dsfr.disclose', () => {
+        events.value[tab.id] = () => {
           currentTab.value = tab.id
           props.tabClicked(tab.id)
-        })
+        }
+        tabElement.addEventListener('dsfr.disclose', events.value[tab.id] ?? (() => {}))
+      }
+    })
+  })
+
+  onBeforeUnmount(() => {
+    props.tabs.forEach(tab => {
+      const tabElement = document.getElementById(`tabpanel-${tab.id}-${idSuffix}-panel`)
+      if (tabElement) {
+        tabElement.removeEventListener('dsfr.disclose', events.value[tab.id] ?? (() => {}))
       }
     })
   })

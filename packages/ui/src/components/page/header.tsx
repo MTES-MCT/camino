@@ -1,10 +1,11 @@
-import { computed, FunctionalComponent, onMounted } from 'vue'
+import { computed, FunctionalComponent, onMounted, ref } from 'vue'
 import { Role, User } from 'camino-common/src/roles'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   user: User
@@ -33,7 +34,7 @@ const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.h
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
 
-const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'>> = props => {
+const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'> & { userLinkClicked: () => void }> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
   const logoutUrl = '/apiUrl/deconnecter'
 
@@ -50,7 +51,7 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'rout
       {props.user ? (
         <>
           <div>
-            <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`}>
+            <router-link class="fr-btn fr-icon-account-fill" to={`/utilisateurs/${props.user.id}`} onClick={props.userLinkClicked}>
               {`${props.user.nom} ${props.user.prenom}`}
             </router-link>
           </div>
@@ -95,10 +96,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
 
   const linkClick = (path: Link['path']) => {
     // On ferme la modale
-    const navigationModalElement = document.getElementById(navigationModalId)
-    if (navigationModalElement) {
-      dsfr(navigationModalElement).modal.conceal()
-    }
+    modalMenuOpened.value = false
     if (path !== 'journaux') {
       props.trackEvent('menu-sections', 'menu-section', path)
     }
@@ -109,20 +107,12 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
     const navigationElement = document.getElementById(navigationId)
     if (navigationElement) {
       const members = dsfr(navigationElement).navigation.members
-      if (members && members.length) {
+      if (isNotNullNorUndefinedNorEmpty(members)) {
         members[0].conceal()
       }
     }
     linkClick(path)
   }
-  const closeSearchModal = () => {
-    // On ferme la modale de recherche
-    const searchModalElement = document.getElementById(searchModalId)
-    if (searchModalElement) {
-      dsfr(searchModalElement).modal.conceal()
-    }
-  }
-
   const linksByRole = computed<Record<Role, (Link | LinkList)[]>>(() => {
     const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
 
@@ -136,6 +126,22 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
       defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, links.STATISTIQUES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
     }
   })
+
+  const modalMenuOpened = ref<boolean>(false)
+  const modalSearchOpened = ref<boolean>(false)
+
+  const closeModals = () => {
+    modalMenuOpened.value = false
+    modalSearchOpened.value = false
+  }
+
+  const openModalMenu = () => {
+    modalMenuOpened.value = true
+  }
+
+  const openModalSearch = () => {
+    modalSearchOpened.value = true
+  }
 
   return () => (
     <div class="dsfr" style={{ paddingBottom: '20px' }}>
@@ -153,10 +159,10 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                     </p>
                   </div>
                   <nav class="fr-header__navbar" role="navigation">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
+                    <button class="fr-btn--search fr-btn" data-fr-opened="false" onClick={openModalSearch} aria-controls={searchModalId} aria-haspopup="dialog" id="button-search" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" onClick={openModalMenu} aria-controls={navigationModalId} aria-haspopup="dialog" id="button-menu" title="Menu">
                       Menu
                     </button>
                   </nav>
@@ -170,39 +176,39 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               </div>
               <div class="fr-header__tools">
                 <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
+                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
                 </div>
-                <div class="fr-header__search fr-modal" id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
+                <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
                     <DsfrButtonIcon
                       icon="fr-icon-close-line"
                       buttonType="tertiary-no-outline"
-                      onClick={() => {}}
+                      onClick={closeModals}
                       aria-controls={searchModalId}
                       title="Fermer la fenêtre de dialogue"
                       label="Fermer"
                       class="fr-btn--close"
                     />
-                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeSearchModal} />
+                    <QuickAccessTitre id="search-473-input" onSelectTitre={closeModals} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
+        <div class={`fr-header__menu fr-modal ${modalMenuOpened.value ? 'fr-modal--opened' : ''}`} id={navigationModalId} aria-labelledby="button-menu" aria-label="Connexion et menu de navigation">
           <div class="fr-container">
             <DsfrButtonIcon
               icon="fr-icon-close-line"
               buttonType="tertiary-no-outline"
-              onClick={() => {}}
+              onClick={closeModals}
               aria-controls={searchModalId}
               title="Fermer la fenêtre de dialogue"
               label="Fermer"
               class="fr-btn--close"
             />
             <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} />
+              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
             </div>
             <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
