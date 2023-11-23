@@ -58,7 +58,6 @@ export const EntrepriseDocuments: FunctionalComponent<EntrepriseDocumentsProps> 
       {' '}
       {props.etapeEntrepriseDocuments.length > 0 ? (
         <div class="dsfr">
-          <div class="fr-container">
             <div class=" fr-table">
               <table style={{ display: 'table' }}>
                 <caption>Documents d'entreprise</caption>
@@ -82,7 +81,6 @@ export const EntrepriseDocuments: FunctionalComponent<EntrepriseDocumentsProps> 
                 </tbody>
               </table>
             </div>
-          </div>
         </div>
       ) : null}
     </>

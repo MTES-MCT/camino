@@ -1,4 +1,4 @@
-import { FunctionalComponent, Ref, computed, defineComponent, ref, watch } from 'vue'
+import { FunctionalComponent, Ref, computed, defineComponent, ref, watch, HTMLAttributes } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { CaminoMap } from '../_map/index'
 import { leafletDivIconBuild, leafletGeojsonBuild, leafletMarkerBuild } from '../_map/leaflet'
@@ -19,6 +19,7 @@ export interface Props {
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
   initTab?: TabId
+  class?: HTMLAttributes['class']
 }
 
 const maxRows = 20

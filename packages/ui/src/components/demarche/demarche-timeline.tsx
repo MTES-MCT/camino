@@ -125,7 +125,7 @@ const DemarcheEvent: FunctionalComponent<{
         anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
       />
       {/* FIXME les infos bulles sont dans la dernière version du DSFR */}
-      {/* <span class="fr-tooltip fr-placement" id={tooltipId} role="tooltip" aria-hidden="true">COUCOU</span> */}
+      {/* <span class="fr-tooltip fr-placement fr-placement--top fr-tooltip--shown" id={tooltipId} role="tooltip" aria-hidden="true">COUCOU</span> */}
     </>
   )
 }

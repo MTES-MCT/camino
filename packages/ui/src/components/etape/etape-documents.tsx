@@ -25,9 +25,8 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   return (
     <>
       {props.etapeDocuments.length > 0 ? (
-        <div class="fr-container">
-          <div class=" fr-table">
-            <table style={{ display: 'table' }}>
+          <div class=" fr-table fr-m-0" >
+            <table style={{ display: 'table' }} class='fr-table--no-caption fr-m-0'>
               <caption>Documents</caption>
               <thead>
                 <tr>
@@ -48,7 +47,6 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
                 ))}
               </tbody>
             </table>
-          </div>
         </div>
       ) : null}
     </>

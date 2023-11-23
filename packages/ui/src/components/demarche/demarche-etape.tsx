@@ -136,7 +136,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       : false
 
   return () => (
-    <div class="fr-pb-1w fr-pl-2w fr-pr-2w" style={{ border: '1px solid var(--grey-900-175)' }}>
+    <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
       <div class={`${styles.sticky} fr-pt-1w`}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div class="fr-text--lg fr-mb-0" style={{ color: 'var(--text-title-blue-france)', fontWeight: '500' }}>
@@ -179,7 +179,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
               alignContent: 'flex-start',
-              columnGap: '10px',
+              columnGap: '16px',
               rowGap: '8px',
             }}
           >
@@ -236,24 +236,15 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       ) : null}
 
       {fondamentalePropsName in props.etape && props.etape.fondamentale.geojsonMultiPolygon !== null ? (
-        <>
-          <DsfrSeparator />
-          <DsfrPerimetre initTab={props.initTab} titreSlug={props.titre.slug} apiClient={null} geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon} router={props.router} />
-        </>
+          <DsfrPerimetre class='fr-pt-2w' initTab={props.initTab} titreSlug={props.titre.slug} apiClient={null} geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon} router={props.router} />
       ) : null}
 
       {props.etape.entreprises_documents.length > 0 ? (
-        <>
-          <DsfrSeparator />
           <EntrepriseDocuments etapeEntrepriseDocuments={props.etape.entreprises_documents} />
-        </>
       ) : null}
 
       {props.etape.documents.length > 0 ? (
-        <>
-          <DsfrSeparator />
           <EtapeDocuments etapeDocuments={props.etape.documents} user={props.user} />
-        </>
       ) : null}
       {removePopupVisible.value ? (
         <RemoveEtapePopup

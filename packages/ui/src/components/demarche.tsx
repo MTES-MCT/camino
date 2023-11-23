@@ -24,6 +24,7 @@ import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import router from '@/router'
 import { DemarcheTimeline } from '@/components/demarche/demarche-timeline'
 import { DsfrIcon } from '@/components/_ui/icon'
+import { Domaine } from '@/components/_common/domaine'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -107,6 +108,15 @@ export const PureDemarche = defineComponent<Props>(props => {
     },
   }
 
+  // FIXME Timeline, bouger les dates
+  // FIXME Timeline, rendre les noms des démarches cliquables
+  // FIXME périmètre, changer de référentiel
+  // FIXME périmètre, pouvoir télécharger geojon sur carte
+  // FIXME périmètre, pouvoir télécharger csv sur tableau
+  // FIXME étapes, bouton d'ajout d'étape
+  // FIXME étapes, fusion les docs dans un seul tableau
+  // FIXME storybook d'une démarche avec tableau par défaut (virer NoStoryshot)
+
   return () => (
     <div class="dsfr">
       <LoadingElement
@@ -135,11 +145,14 @@ export const PureDemarche = defineComponent<Props>(props => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                     alignContent: 'flex-start',
-                    columnGap: '10px',
+                    columnGap: '16px',
                     rowGap: '8px',
                   }}
                 >
-                  <EtapePropItem title="Domaine" text={capitalize(Domaines[TitresTypes[demarche.titre.titre_type_id].domaineId].nom)} />
+                  <EtapePropItem title="Domaine" item={<>
+                    {capitalize(Domaines[TitresTypes[demarche.titre.titre_type_id].domaineId].nom)}
+                    <Domaine class='fr-ml-1w' domaineId={TitresTypes[demarche.titre.titre_type_id].domaineId} />
+                  </>} />
                   {demarche.substances.length > 0 ? (
                     <EtapePropItem
                       title={`Substance${demarche.substances.length > 1 ? 's' : ''}`}
@@ -150,18 +163,17 @@ export const PureDemarche = defineComponent<Props>(props => {
                   <EtapePropEntreprisesItem title="Titulaire" entreprises={demarche.titulaires} />
                   <EtapePropEntreprisesItem title="Amodiataire" entreprises={demarche.amodiataires} />
 
-                  <DisplayLocalisation communes={demarche.communes} secteurs_maritimes={demarche.secteurs_maritimes} />
                   {Object.entries(demarche.contenu).map(([label, value]) => (
                     <EtapePropItem title={label} text={value} />
                   ))}
+                  <DisplayLocalisation communes={demarche.communes} secteurs_maritimes={demarche.secteurs_maritimes} />
+
                 </div>
               </div>
             </div>
 
-            <DsfrSeparator />
-
             {demarche.geojsonMultiPolygon !== null ? (
-              <DsfrPerimetre titreSlug={demarche.titre.slug} apiClient={props.apiClient} geojsonMultiPolygon={demarche.geojsonMultiPolygon} router={props.router} />
+              <DsfrPerimetre class="fr-pt-3w" titreSlug={demarche.titre.slug} apiClient={props.apiClient} geojsonMultiPolygon={demarche.geojsonMultiPolygon} router={props.router} />
             ) : null}
 
             <h2 class="fr-pt-3w">Étapes</h2>
@@ -212,13 +224,13 @@ const DisplayLocalisation: FunctionalComponent<Pick<DemarcheGet, 'communes' | 's
     <>
       {isNonEmptyArray(regions) ? <EtapePropItem title={`Région${regions.length > 1 ? 's' : ''}`} text={regions.join(', ')} /> : null}
       {isNonEmptyArray(departements) ? <EtapePropItem title={`Département${departements.length > 1 ? 's' : ''}`} text={departements.join(', ')} /> : null}
+      {isNonEmptyArray(facades) ? <EtapePropItem title={`Facade${facades.length > 1 ? 's' : ''}`} text={facades.map(({ facade }) => facade).join(', ')} /> : null}
       {isNonEmptyArray(communes) ? (
-        <EtapePropItem
-          title={communes.length > 3 ? 'Nombre de communes' : `Commune${communes.length > 1 ? 's' : ''}`}
-          text={communes.length > 3 ? `${communes.length}` : communes.map(({ nom }) => nom).join(', ')}
+        <EtapePropItem style={{gridColumn: communes.length > 3 ? '1 / -1': 'unset'}}
+          title={`Commune${communes.length > 1 ? 's' : ''}`}
+          text={communes.map(({ nom }) => nom).join(', ')}
         />
       ) : null}
-      {isNonEmptyArray(facades) ? <EtapePropItem title={`Facade${facades.length > 1 ? 's' : ''}`} text={facades.map(({ facade }) => facade).join(', ')} /> : null}
     </>
   )
 }

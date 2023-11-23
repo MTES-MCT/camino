@@ -1,5 +1,5 @@
 import { capitalize } from 'camino-common/src/strings'
-import { FunctionalComponent } from 'vue'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 
@@ -13,6 +13,7 @@ type TextProp = {
 }
 type Props = (TextProp | ItemProp) & {
   title: string
+  style?: HTMLAttributes['style']
 }
 export const EtapePropItem: FunctionalComponent<Props> = props => {
   return (
