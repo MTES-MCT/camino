@@ -5,7 +5,7 @@ exports[`construit le corps de la requête pour openFisca > avec activités 1`] 
   "articles": {
     "titre2-auru-97310": {
       "quantite_aurifere_kg": {
-        "2021": 39.715,
+        "2021": "39.715",
       },
       "redevance_communale_des_mines_aurifere": {
         "2022": null,
@@ -31,7 +31,7 @@ exports[`construit le corps de la requête pour openFisca > avec activités 1`] 
     },
     "titre5-auru-97311": {
       "quantite_aurifere_kg": {
-        "2021": 8.91,
+        "2021": "8.91",
       },
       "redevance_communale_des_mines_aurifere": {
         "2022": null,

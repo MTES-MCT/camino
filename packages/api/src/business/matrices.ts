@@ -190,7 +190,7 @@ export const buildMatrices = (
 
         const surfaceCommunaleProportionnee = result.articles[articleKey]?.surface_communale_proportionnee?.[anneePrecedente] ?? 1
         const surfaceCommunale = result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0
-        const quantiteOrExtrait = new Decimal(result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0).mul(surfaceCommunaleProportionnee)
+        const quantiteOrExtrait = new Decimal(result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ?? 0).mul(surfaceCommunaleProportionnee).toDecimalPlaces(3)
 
         const fiscalite = toFiscalite(result, articleKey, annee)
 

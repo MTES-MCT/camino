@@ -1,5 +1,6 @@
 import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales.js'
 import { Unite, Unites } from 'camino-common/src/static/unites.js'
+import Decimal from 'decimal.js'
 type Attribute = 'surface_communale' | 'surface_communale_proportionnee' | 'taxe_guyane_brute' | 'taxe_guyane_deduction' | 'taxe_guyane' | string
 
 const openfiscaSubstanceFiscaleNom = (substanceFiscale: SubstanceFiscale): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
@@ -30,7 +31,7 @@ export const redevanceDepartementale = (substanceFiscale: SubstanceFiscale): str
   return `redevance_departementale_des_mines_${nom}`
 }
 
-type Article = Record<Attribute, { [annee: string]: number | null }>
+type Article = Record<Attribute, { [annee: string]: number | Decimal | null }>
 
 export interface OpenfiscaRequest extends OpenfiscaCommon {
   articles: {
