@@ -126,21 +126,21 @@ const entrepriseDocumentsDemande: EtapeEntrepriseDocument[] = [
 const documents: EtapeDocument[] = [
   {
     id: documentIdValidator.parse('id'),
-    document_type_id: 'atf',
+    document_type_id: 'aac',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'bil',
+    document_type_id: 'acg',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'bil',
+    document_type_id: 'acm',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
@@ -152,73 +152,30 @@ const entrepriseDocuments: EtapeEntrepriseDocument[] = [
     id: entrepriseDocumentIdValidator.parse('id'),
     date: toCaminoDate('2023-01-01'),
     entreprise_document_type_id: 'atf',
-    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    entreprise_id: entrepriseIdValidator.parse('titulaire1'),
     description: null,
   },
   {
     id: entrepriseDocumentIdValidator.parse('id2'),
     date: toCaminoDate('2023-03-01'),
     entreprise_document_type_id: 'bil',
-    entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+    entreprise_id: entrepriseIdValidator.parse('titulaire1'),
     description: 'Une description',
   },
 ]
 
-export const DemandeNoMap: StoryFn = () => (
-  <DemarcheEtape
-    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
-    user={{ ...testBlankUser, role: 'super' }}
-    router={routerPushMock}
-    apiClient={apiClient}
-    etape={{
-      id: etapeIdValidator.parse('etapeId'),
-      slug: etapeSlugValidator.parse('etape-slug'),
-      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
-      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
-      date,
-      fondamentale: {
-        date_debut: toCaminoDate('2023-10-25'),
-        duree: 12,
-        date_fin: null,
-        substances: ['auru', 'arge'],
-        titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
-          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
-        ],
-
-        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: null,
-        surface: null,
-      },
-      sections_with_values: [
-        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
-        {
-          id: 'odlep',
-          elements: [
-            {
-              id: 'lien',
-              nom: 'Lien public externe',
-              type: 'url',
-              optionnel: true,
-              description: '',
-              value: 'https://beta.gouv.fr',
-            },
-          ],
-        },
-      ],
-      documents,
-      entreprises_documents: entrepriseDocuments,
-    }}
-  />
-)
-
 export const NoSnapshotDemande: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    demarche={{
+      demarche_type_id: 'oct',
+      titulaires: [
+        { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' },
+        { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2' },
+      ],
+      administrationsLocales: [],
+      sdom_zones: [],
+    }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -285,6 +242,132 @@ export const NoSnapshotDemande: StoryFn = () => (
   />
 )
 
+export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{
+      demarche_type_id: 'oct',
+      titulaires: [
+        { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' },
+        { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2' },
+      ],
+      administrationsLocales: [],
+      sdom_zones: [],
+    }}
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
+      date,
+      fondamentale: {
+        date_debut: toCaminoDate('2023-10-25'),
+        duree: 12,
+        date_fin: null,
+        substances: ['auru', 'arge'],
+        titulaires: [
+          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
+        ],
+
+        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        geojsonMultiPolygon: null,
+        surface: null,
+      },
+      sections_with_values: [
+        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
+        {
+          id: 'odlep',
+          elements: [
+            {
+              id: 'lien',
+              nom: 'Lien public externe',
+              type: 'url',
+              optionnel: true,
+              description: '',
+              value: 'https://beta.gouv.fr',
+            },
+          ],
+        },
+      ],
+      documents,
+      entreprises_documents: [
+        ...entrepriseDocuments,
+        {
+          id: entrepriseDocumentIdValidator.parse('id3'),
+          date: toCaminoDate('2023-02-01'),
+          entreprise_document_type_id: 'atf',
+          entreprise_id: entrepriseIdValidator.parse('titulaire2'),
+          description: null,
+        },
+        {
+          id: entrepriseDocumentIdValidator.parse('id4'),
+          date: toCaminoDate('2023-03-01'),
+          entreprise_document_type_id: 'bil',
+          entreprise_id: entrepriseIdValidator.parse('titulaire2'),
+          description: 'Une description',
+        },
+      ],
+    }}
+  />
+)
+
+export const DemandeNoMap: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [] }}
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
+      date,
+      fondamentale: {
+        date_debut: toCaminoDate('2023-10-25'),
+        duree: 12,
+        date_fin: null,
+        substances: ['auru', 'arge'],
+        titulaires: [
+          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+          { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
+        ],
+
+        amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
+        geojsonMultiPolygon: null,
+        surface: null,
+      },
+      sections_with_values: [
+        { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
+        {
+          id: 'odlep',
+          elements: [
+            {
+              id: 'lien',
+              nom: 'Lien public externe',
+              type: 'url',
+              optionnel: true,
+              description: '',
+              value: 'https://beta.gouv.fr',
+            },
+          ],
+        },
+      ],
+      documents,
+      entreprises_documents: entrepriseDocuments,
+    }}
+  />
+)
+
 export const DemandeNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
@@ -323,7 +406,7 @@ export const DemandeNonDeposable: StoryFn = () => (
 export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -394,7 +477,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
 export const DemandeArmMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -469,7 +552,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
 export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [] }}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={apiClient}
@@ -540,7 +623,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
 export const Depot: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [{ id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1' }], administrationsLocales: [], sdom_zones: [] }}
     router={routerPushMock}
     user={{ ...testBlankUser, role: 'super' }}
     etape={{

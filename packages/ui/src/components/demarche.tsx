@@ -15,13 +15,12 @@ import { DsfrSeparator } from './_ui/dsfr-separator'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { territoiresFind } from 'camino-common/src/territoires'
-import { isNonEmptyArray } from 'camino-common/src/typescript-tools'
-import { DsfrPerimetre } from './_common/dsfr-perimetre'
+import { isNonEmptyArray, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { DsfrPerimetre, TabId } from './_common/dsfr-perimetre'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { EtapePropEntreprisesItem, EtapePropItem } from './etape/etape-prop-item'
 import { DemarcheEtape } from './demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
-import router from '@/router'
 import { DemarcheTimeline } from '@/components/demarche/demarche-timeline'
 import { DsfrIcon } from '@/components/_ui/icon'
 import { Domaine } from '@/components/_common/domaine'
@@ -50,6 +49,7 @@ interface Props {
   demarcheId: DemarcheIdOrSlug | null
   apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape' | 'deposeEtape'>
   router: Pick<Router, 'push' | 'replace'>
+  initTab?: TabId
 }
 
 export const PureDemarche = defineComponent<Props>(props => {
@@ -96,7 +96,7 @@ export const PureDemarche = defineComponent<Props>(props => {
         await updateDemarche(demarcheData.value.value.id)
 
         if (demarcheData.value.value.slug !== oldSlug) {
-          router.replace({ name: 'demarche', params: { demarcheId: demarcheData.value.value.slug } })
+          props.router.replace({ name: 'demarche', params: { demarcheId: demarcheData.value.value.slug } })
         }
       }
     },
@@ -114,8 +114,6 @@ export const PureDemarche = defineComponent<Props>(props => {
   // FIXME périmètre, pouvoir télécharger geojon sur carte
   // FIXME périmètre, pouvoir télécharger csv sur tableau
   // FIXME étapes, bouton d'ajout d'étape
-  // FIXME étapes, fusion les docs dans un seul tableau
-  // FIXME storybook d'une démarche avec tableau par défaut (virer NoStoryshot)
 
   return () => (
     <div class="dsfr">
@@ -149,10 +147,15 @@ export const PureDemarche = defineComponent<Props>(props => {
                     rowGap: '8px',
                   }}
                 >
-                  <EtapePropItem title="Domaine" item={<>
-                    {capitalize(Domaines[TitresTypes[demarche.titre.titre_type_id].domaineId].nom)}
-                    <Domaine class='fr-ml-1w' domaineId={TitresTypes[demarche.titre.titre_type_id].domaineId} />
-                  </>} />
+                  <EtapePropItem
+                    title="Domaine"
+                    item={
+                      <>
+                        {capitalize(Domaines[TitresTypes[demarche.titre.titre_type_id].domaineId].nom)}
+                        <Domaine class="fr-ml-1w" domaineId={TitresTypes[demarche.titre.titre_type_id].domaineId} />
+                      </>
+                    }
+                  />
                   {demarche.substances.length > 0 ? (
                     <EtapePropItem
                       title={`Substance${demarche.substances.length > 1 ? 's' : ''}`}
@@ -167,39 +170,50 @@ export const PureDemarche = defineComponent<Props>(props => {
                     <EtapePropItem title={label} text={value} />
                   ))}
                   <DisplayLocalisation communes={demarche.communes} secteurs_maritimes={demarche.secteurs_maritimes} />
-
                 </div>
               </div>
             </div>
 
             {demarche.geojsonMultiPolygon !== null ? (
-              <DsfrPerimetre class="fr-pt-3w" titreSlug={demarche.titre.slug} apiClient={props.apiClient} geojsonMultiPolygon={demarche.geojsonMultiPolygon} router={props.router} />
+              <DsfrPerimetre
+                class="fr-pt-3w"
+                initTab={props.initTab}
+                titreSlug={demarche.titre.slug}
+                apiClient={props.apiClient}
+                geojsonMultiPolygon={demarche.geojsonMultiPolygon}
+                router={props.router}
+              />
             ) : null}
 
-            <h2 class="fr-pt-3w">Étapes</h2>
+            {isNotNullNorUndefinedNorEmpty(demarche.etapes) ? (
+              <>
+                <h2 class="fr-pt-3w">Étapes</h2>
 
-            <div>
-              {demarche.etapes.map(etape => (
-                <div class="fr-pb-1w">
-                  <DemarcheEtape
-                    etape={etape}
-                    router={props.router}
-                    user={props.user}
-                    titre={{ typeId: demarche.titre.titre_type_id, titreStatutId: demarche.titre.titre_statut_id, slug: demarche.titre.slug, nom: demarche.titre.nom }}
-                    demarche={{
-                      administrationsLocales: getAdministrationsLocales(
-                        demarche.communes.map(({ id }) => id),
-                        demarche.secteurs_maritimes
-                      ),
-                      demarche_type_id: demarche.demarche_type_id,
-                      titulaires: demarche.titulaires,
-                      sdom_zones: demarche.sdom_zones,
-                    }}
-                    apiClient={customApiClient}
-                  />
+                <div>
+                  {demarche.etapes.map(etape => (
+                    <div class="fr-pb-1w">
+                      <DemarcheEtape
+                        etape={etape}
+                        router={props.router}
+                        user={props.user}
+                        titre={{ typeId: demarche.titre.titre_type_id, titreStatutId: demarche.titre.titre_statut_id, slug: demarche.titre.slug, nom: demarche.titre.nom }}
+                        demarche={{
+                          administrationsLocales: getAdministrationsLocales(
+                            demarche.communes.map(({ id }) => id),
+                            demarche.secteurs_maritimes
+                          ),
+                          demarche_type_id: demarche.demarche_type_id,
+                          titulaires: demarche.titulaires,
+                          sdom_zones: demarche.sdom_zones,
+                        }}
+                        apiClient={customApiClient}
+                        initTab={props.initTab}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : null}
           </div>
         )}
       />
@@ -226,14 +240,11 @@ const DisplayLocalisation: FunctionalComponent<Pick<DemarcheGet, 'communes' | 's
       {isNonEmptyArray(departements) ? <EtapePropItem title={`Département${departements.length > 1 ? 's' : ''}`} text={departements.join(', ')} /> : null}
       {isNonEmptyArray(facades) ? <EtapePropItem title={`Facade${facades.length > 1 ? 's' : ''}`} text={facades.map(({ facade }) => facade).join(', ')} /> : null}
       {isNonEmptyArray(communes) ? (
-        <EtapePropItem style={{gridColumn: communes.length > 3 ? '1 / -1': 'unset'}}
-          title={`Commune${communes.length > 1 ? 's' : ''}`}
-          text={communes.map(({ nom }) => nom).join(', ')}
-        />
+        <EtapePropItem style={{ gridColumn: communes.length > 3 ? '1 / -1' : 'unset' }} title={`Commune${communes.length > 1 ? 's' : ''}`} text={communes.map(({ nom }) => nom).join(', ')} />
       ) : null}
     </>
   )
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureDemarche.props = ['user', 'demarcheId', 'apiClient', 'router']
+PureDemarche.props = ['user', 'demarcheId', 'apiClient', 'router', 'initTab']

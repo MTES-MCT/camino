@@ -11,6 +11,7 @@ import { User } from 'camino-common/src/roles'
 import { RemoveEntrepriseDocumentPopup } from './remove-entreprise-document-popup'
 import { ApiClient } from '@/api/api-client'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'creerEntrepriseDocument' | 'deleteEntrepriseDocument' | 'uploadTempDocument'>
@@ -136,15 +137,13 @@ export const EntrepriseDocuments = caminoDefineComponent<Props>(['apiClient', 'e
   )
 })
 
-type EntrepriseDocumentLinkProps = { documentId: EntrepriseDocumentId; documentTypeId: DocumentTypeId }
+type EntrepriseDocumentLinkProps = { documentId: EntrepriseDocumentId; documentTypeId: DocumentTypeId; label?: string }
 export const EntrepriseDocumentLink: FunctionalComponent<EntrepriseDocumentLinkProps> = (props: EntrepriseDocumentLinkProps) => {
+  const label = isNotNullNorUndefined(props.label) ? props.label : DocumentsTypes[props.documentTypeId].nom
+
   return (
-    <a
-      href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: props.documentId })}
-      title={`Télécharger le document ${DocumentsTypes[props.documentTypeId].nom} - nouvelle fenêtre`}
-      target="_blank"
-    >
-      {DocumentsTypes[props.documentTypeId].nom}
+    <a href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: props.documentId })} title={`Télécharger le document ${label} - nouvelle fenêtre`} target="_blank">
+      {label}
     </a>
   )
 }

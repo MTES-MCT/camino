@@ -10,21 +10,19 @@ import { EtapeStatut } from '../_common/etape-statut'
 import { PropDuree } from '../etape/prop-duree'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
-import { DemarcheEtape as CommonDemarcheEtape } from 'camino-common/src/demarche'
+import { DemarcheEtape as CommonDemarcheEtape, EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { isNumberElement, valeurFind } from 'camino-common/src/sections'
-import { EntrepriseDocuments } from '../etape/entreprise-documents'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
 import { canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
-import { EntrepriseId } from 'camino-common/src/entreprise'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
@@ -39,7 +37,7 @@ const fondamentalePropsName = 'fondamentale'
 type Props = {
   etape: CommonDemarcheEtape
   demarche: {
-    titulaires: { id: EntrepriseId }[]
+    titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[]
     administrationsLocales: AdministrationId[]
     demarche_type_id: DemarcheTypeId
     sdom_zones: SDOMZoneId[]
@@ -236,15 +234,18 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       ) : null}
 
       {fondamentalePropsName in props.etape && props.etape.fondamentale.geojsonMultiPolygon !== null ? (
-          <DsfrPerimetre class='fr-pt-2w' initTab={props.initTab} titreSlug={props.titre.slug} apiClient={null} geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon} router={props.router} />
-      ) : null}
-
-      {props.etape.entreprises_documents.length > 0 ? (
-          <EntrepriseDocuments etapeEntrepriseDocuments={props.etape.entreprises_documents} />
+        <DsfrPerimetre
+          class="fr-pt-2w"
+          initTab={props.initTab}
+          titreSlug={props.titre.slug}
+          apiClient={null}
+          geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon}
+          router={props.router}
+        />
       ) : null}
 
       {props.etape.documents.length > 0 ? (
-          <EtapeDocuments etapeDocuments={props.etape.documents} user={props.user} />
+        <EtapeDocuments etapeDocuments={props.etape.documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
       ) : null}
       {removePopupVisible.value ? (
         <RemoveEtapePopup

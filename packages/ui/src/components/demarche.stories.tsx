@@ -17,7 +17,7 @@ import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { MapPattern } from './_map/pattern'
 
 const meta: Meta = {
-  title: 'Components/DemarcheNoStoryshots',
+  title: 'Components/Demarche',
   // @ts-ignore en attente du support par @storybook/vue3
   component: PureDemarche,
   decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }])],
@@ -116,7 +116,7 @@ const demarche: DemarcheGet = {
   secteurs_maritimes: ['Baie de Seine', 'Balagne'],
   substances: ['auru', 'arge'],
   titulaires: [
-    { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+    { id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1', operateur: false },
     { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
   ],
 
@@ -176,7 +176,7 @@ const demarche: DemarcheGet = {
         date_fin: null,
         substances: ['auru', 'arge'],
         titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+          { id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1', operateur: false },
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
 
@@ -292,14 +292,21 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
   },
 }
 
-export const FullNoSnapshot: StoryFn = () => (
+export const FullWithMapNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <PureDemarche user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
   </>
 )
-export const FullSingularNoSnapshot: StoryFn = () => (
+export const Full: StoryFn = () => (
+  <>
+    <MapPattern />
+    <PureDemarche initTab="points" user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
+  </>
+)
+export const FullSingular: StoryFn = () => (
   <PureDemarche
+    initTab="points"
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={{
@@ -369,7 +376,7 @@ export const FullSingularNoSnapshot: StoryFn = () => (
     demarcheId={demarche.id}
   />
 )
-export const EmptyNoSnapshot: StoryFn = () => (
+export const Empty: StoryFn = () => (
   <PureDemarche
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
@@ -396,42 +403,7 @@ export const EmptyNoSnapshot: StoryFn = () => (
           substances: [],
           titulaires: [],
           amodiataires: [],
-          geojsonMultiPolygon: {
-            properties: null,
-            type: 'Feature',
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [-53.58181013905019, 3.8309654861273],
-                    [-53.58178306390299, 3.8219278216269807],
-                    [-53.572785590706495, 3.82195493825841],
-                    [-53.57281257175149, 3.8309926670647294],
-                    [-53.58181013905019, 3.8309654861273],
-                  ],
-                ],
-                [
-                  [
-                    [-53.60031408473134, 3.8224780986447566],
-                    [-53.59891645305842, 3.8181831495446303],
-                    [-53.58181205656814, 3.82379854768971],
-                    [-53.58320964990986, 3.828093576227541],
-                    [-53.60031408473134, 3.8224780986447566],
-                  ],
-                ],
-                [
-                  [
-                    [-53.583861926103765, 3.8502114455117433],
-                    [-53.592379712320195, 3.834289122043602],
-                    [-53.588417035915334, 3.8321501920354253],
-                    [-53.57989914401643, 3.8480725119510217],
-                    [-53.583861926103765, 3.8502114455117433],
-                  ],
-                ],
-              ],
-            },
-          },
+          geojsonMultiPolygon: null,
           etapes: [],
           sdom_zones: [],
         })
