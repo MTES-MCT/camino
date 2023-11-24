@@ -33,21 +33,35 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
 
   if (!isNonEmptyArray(phases)) return null
 
-  const datePhases: (CaminoDateFormated | '-')[] = [
+  const datePhases: (CaminoDateFormated | 'xx-xx-xxxx')[] = [
     dateFormat(phases[0].demarche_date_debut),
-    ...phases.map(phase => (isNotNullNorUndefined(phase.demarche_date_fin) ? dateFormat(phase.demarche_date_fin) : '-')),
+    ...phases.map(phase => (isNotNullNorUndefined(phase.demarche_date_fin) ? dateFormat(phase.demarche_date_fin) : 'xx-xx-xxxx')),
   ]
 
   return (
-    <div class={style.timeline}>
-      <div class={style.datesContainer}>
+    <div class="fr-mx-4w">
+      <div class={`${style.datesContainer}`}>
         {datePhases.map((datePhase, index) => (
-          <div class={`${style.date} fr-text--md fr-mb-1w`} key={index}>
-            {datePhase}
+          <div
+            class={`${style.date} fr-text--md fr-mb-1w`}
+            style={{
+              justifyContent: index === 0 ? 'start' : index === datePhases.length - 1 ? 'end' : 'center',
+              flex: index === 0 || index === datePhases.length - 1 ? 1 : 2,
+            }}
+            key={index}
+          >
+            <span
+              style={{
+                marginLeft: index === 0 ? '-32px' : 0,
+                marginRight: index === datePhases.length - 1 ? '-32px' : 0,
+              }}
+            >
+              {datePhase}
+            </span>
           </div>
         ))}
       </div>
-      <div class={style.phasesContainer}>
+      <div class={`${style.phasesContainer}`}>
         {phases.map(phase => (
           <Fragment key={phase.slug}>
             <DemarchePhase phase={phase} currentDemarcheSlug={props.currentDemarcheSlug} />
@@ -56,8 +70,10 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
       </div>
       <div class={`${style.datesContainer} fr-pt-1w`}>
         {phases.map(phase => (
-          <div key={phase.slug} style={{ flex: 1 }} class="fr-text--lg fr-m-0">
-            {capitalize(DemarchesTypes[phase.demarche_type_id].nom)}
+          <div style={{ flex: 1 }}>
+            <CaminoRouterLink key={phase.slug} to={{ name: 'demarche', params: { demarcheId: phase.slug } }} title={capitalize(DemarchesTypes[phase.demarche_type_id].nom)} class="fr-link">
+              {capitalize(DemarchesTypes[phase.demarche_type_id].nom)}
+            </CaminoRouterLink>
           </div>
         ))}
       </div>

@@ -1,18 +1,16 @@
-.timeline [href] {
-  background-image: none;
-  background-position: unset;
-  background-size: unset;
-}
-
 .datesContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: stretch;
 }
 
 .date {
   color: var(--text-action-high-grey);
   font-weight: 500;
+  flex: 1;
+
+  display: flex;
+  flex-direction: row;
 }
 
 .phasesContainer {
@@ -20,6 +18,13 @@
   flex-direction: row;
   column-gap: 4px;
 }
+
+.phasesContainer [href] {
+  background-image: none;
+  background-position: unset;
+  background-size: unset;
+}
+
 .phase {
   height: 8px;
   flex: 1;
