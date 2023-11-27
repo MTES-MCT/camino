@@ -129,7 +129,9 @@ export const Preview = defineComponent<Props>(props => {
 
               {documentRows.length > 0 ? (
                 <div class="border-b-s px-m pt-m">
-                  <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} />
+                  <div class='dsfr'>
+                    <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} />
+                  </div>
                 </div>
               ) : null}
             </div>

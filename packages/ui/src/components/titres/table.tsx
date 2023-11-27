@@ -18,5 +18,5 @@ export const TitresTable: FunctionalComponent<Props> = props => {
 
   const lignes = titresLignesBuild(props.titres, accessActivites)
 
-  return <TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" />
+  return <div class='dsfr'><TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" /></div>
 }

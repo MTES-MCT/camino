@@ -20,7 +20,7 @@ const meta: Meta = {
   title: 'Components/Demarche',
   // @ts-ignore en attente du support par @storybook/vue3
   component: PureDemarche,
-  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }])],
+  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }, {name: 'etape-creation'}])],
 }
 export default meta
 

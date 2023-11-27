@@ -24,6 +24,7 @@ import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { DemarcheTimeline } from '@/components/demarche/demarche-timeline'
 import { DsfrIcon } from '@/components/_ui/icon'
 import { Domaine } from '@/components/_common/domaine'
+import { DsfrLink } from './_ui/dsfr-button'
 
 export const Demarche = defineComponent(() => {
   const router = useRouter()
@@ -108,12 +109,9 @@ export const PureDemarche = defineComponent<Props>(props => {
     },
   }
 
-  // FIXME Timeline, bouger les dates
-  // FIXME Timeline, rendre les noms des démarches cliquables
   // FIXME périmètre, changer de référentiel
   // FIXME périmètre, pouvoir télécharger geojon sur carte
   // FIXME périmètre, pouvoir télécharger csv sur tableau
-  // FIXME étapes, bouton d'ajout d'étape
 
   return () => (
     <div class="dsfr">
@@ -187,8 +185,10 @@ export const PureDemarche = defineComponent<Props>(props => {
 
             {isNotNullNorUndefinedNorEmpty(demarche.etapes) ? (
               <>
-                <h2 class="fr-pt-3w">Étapes</h2>
-
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <h2 class="fr-pt-3w">Étapes</h2>
+                  <DsfrLink icon={null} buttonType='primary' disabled={false} to={{name: 'etape-creation'}} title='Ajouter une étape' />
+                </div>
                 <div>
                   {demarche.etapes.map(etape => (
                     <div class="fr-pb-1w">

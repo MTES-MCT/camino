@@ -69,7 +69,6 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
   }
 
   return () => (
-    <div class="dsfr">
       <div class="fr-table">
         <table style={{ display: 'table' }}>
           <caption>{props.caption}</caption>
@@ -126,6 +125,5 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
           </tbody>
         </table>
       </div>
-    </div>
   )
 })

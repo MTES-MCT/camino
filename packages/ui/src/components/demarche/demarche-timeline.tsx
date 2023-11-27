@@ -71,7 +71,9 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
       <div class={`${style.datesContainer} fr-pt-1w`}>
         {phases.map(phase => (
           <div style={{ flex: 1 }}>
-            <CaminoRouterLink key={phase.slug} to={{ name: 'demarche', params: { demarcheId: phase.slug } }} title={capitalize(DemarchesTypes[phase.demarche_type_id].nom)} class="fr-link">
+            <CaminoRouterLink
+          {...getAriaCurrent(phase.slug, props.currentDemarcheSlug)}
+            key={phase.slug} to={{ name: 'demarche', params: { demarcheId: phase.slug } }} title={capitalize(DemarchesTypes[phase.demarche_type_id].nom)} class="fr-link">
               {capitalize(DemarchesTypes[phase.demarche_type_id].nom)}
             </CaminoRouterLink>
           </div>

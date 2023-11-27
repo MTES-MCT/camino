@@ -12,6 +12,7 @@ import { Column, TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DsfrLink } from '../_ui/dsfr-button'
 export type TabId = 'carte' | 'points'
 export interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
@@ -24,7 +25,6 @@ export interface Props {
 
 const maxRows = 20
 
-// TODO 2023-10-18 --> question à Sarah pour le tableau -> pouvoir changer le référentiel
 /**
  * Attention, lors de l'import de ce composant, réfléchir si il faut l'importer en async ou pas pour ne pas l'embarquer dans le bundle principal
  *
@@ -41,7 +41,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable geojsonMultiPolygon={props.geojsonMultiPolygon} />,
+      renderContent: () => <TabCaminoTable geojsonMultiPolygon={props.geojsonMultiPolygon} titreSlug={props.titreSlug} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 
@@ -54,8 +54,7 @@ const columns: Column<string>[] = [
   { id: 'latitude', name: 'Latitude', noSort: true },
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
-const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon'>> = props => {
-  const rows = computed<TableRow<string>[]>(() => {
+const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug'>> = props => {
     let index = 1
     const currentRows: TableRow<string>[] = []
     props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
@@ -78,15 +77,19 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon'>> = 
         })
       )
     )
+
+    const csvContent = encodeURI(`${columns.map(c => c.name).join(';')}\n${currentRows.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`)
+
     if (index > maxRows + 1) {
       currentRows.splice(maxRows, index)
       currentRows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
     }
 
-    return currentRows
-  })
+  return <div style={{display: 'flex', flexDirection: 'column'}}>
+      <TableAuto caption="" class='fr-mb-1w' columns={columns} rows={currentRows} initialSort={{ column: 'nom', order: 'asc' }} />
 
-  return <TableAuto caption="" columns={columns} rows={rows.value} initialSort={{ column: 'nom', order: 'asc' }} />
+      <DsfrLink style={{alignSelf: 'end'}}  href={`data:text/csv;charset=utf-8,${csvContent}`} download={`points-${props.titreSlug}.csv`} icon='fr-icon-download-line' buttonType='secondary'  title='Télécharge les points au format csv' label='.csv'/>
+    </div>
 }
 
 const TabCaminoMap = defineComponent<Props>(props => {
