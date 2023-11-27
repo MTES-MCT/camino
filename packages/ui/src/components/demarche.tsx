@@ -109,16 +109,13 @@ export const PureDemarche = defineComponent<Props>(props => {
     },
   }
 
-  // FIXME périmètre, changer de référentiel
-  // FIXME périmètre, pouvoir télécharger geojon sur carte
-  // FIXME périmètre, pouvoir télécharger csv sur tableau
-
   return () => (
     <div class="dsfr">
       <LoadingElement
         data={demarcheData.value}
         renderItem={demarche => (
           <div>
+            <DemarcheTimeline class="fr-pb-4w" demarches={demarche.titre.demarches} currentDemarcheSlug={demarche.slug} />
             <div class="fr-grid-row fr-grid-row--middle">
               <h1 style={{ margin: 0 }}>{`${capitalize(TitresTypesTypes[TitresTypes[demarche.titre.titre_type_id].typeId].nom)} - ${capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}`}</h1>
               <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.demarche_statut_id} />
@@ -127,8 +124,6 @@ export const PureDemarche = defineComponent<Props>(props => {
               <DsfrIcon name={'fr-icon-arrow-left-line'} />
               {capitalize(demarche.titre.nom)}
             </CaminoRouterLink>
-
-            <DemarcheTimeline class="fr-py-5w" demarches={demarche.titre.demarches} currentDemarcheSlug={demarche.slug} />
 
             <DsfrSeparator />
 
@@ -185,9 +180,9 @@ export const PureDemarche = defineComponent<Props>(props => {
 
             {isNotNullNorUndefinedNorEmpty(demarche.etapes) ? (
               <>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h2 class="fr-pt-3w">Étapes</h2>
-                  <DsfrLink icon={null} buttonType='primary' disabled={false} to={{name: 'etape-creation'}} title='Ajouter une étape' />
+                  <DsfrLink icon={null} buttonType="primary" disabled={false} to={{ name: 'etape-creation' }} title="Ajouter une étape" />
                 </div>
                 <div>
                   {demarche.etapes.map(etape => (

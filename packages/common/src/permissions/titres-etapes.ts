@@ -19,7 +19,6 @@ import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, is
 import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
-import { CaminoDate } from '../date.js'
 import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { SectionWithValue } from '../sections.js'
@@ -157,7 +156,7 @@ export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown; }[] | null | undefined,
+  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown }[] | null | undefined,
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
@@ -174,8 +173,8 @@ export const isEtapeComplete = (
       errors.push(...contenuCompleteValidate(sections, titreEtape.contenu))
     } else if (isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)) {
       errors.push(...sectionsWithValueCompleteValidate(titreEtape.sectionsWithValue))
-    }else {
-      errors.push('les contenus ne sont pas présents dans l\étape alors que les sections ont des éléments obligatoires')
+    } else {
+      errors.push('les contenus ne sont pas présents dans l’étape alors que les sections ont des éléments obligatoires')
     }
   }
 
@@ -194,13 +193,16 @@ export const isEtapeComplete = (
 
   // les fichiers obligatoires sont tous renseignés et complets
   if (isNonEmptyArray(dts)) {
-    // FIXME sectionsWithValue ici + tests
     // ajoute des documents obligatoires pour les arm mécanisées
-    if (titreTypeId === 'arm' && (titreEtape.contenu && titreEtape.contenu.arm && titreEtape.contenu?.arm?.mecanise === true) || (titreEtape.sectionsWithValue && titreEtape.sectionsWithValue.some(section => section.id === 'arm' && section.elements.some(element => element.id === 'mecanise' && element.type === 'radio' && (element.value ?? false))))) {
+    if (
+      (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm && titreEtape.contenu?.arm?.mecanise === true) ||
+      (titreEtape.sectionsWithValue &&
+        titreEtape.sectionsWithValue.some(section => section.id === 'arm' && section.elements.some(element => element.id === 'mecanise' && element.type === 'radio' && (element.value ?? false))))
+    ) {
       dts
         .filter(dt => ['doe', 'dep'].includes(dt.id))
         .forEach(dt => {
-            dt.optionnel = false
+          dt.optionnel = false
         })
     }
     const documentsErrors = isDocumentsComplete(documents ?? [], dts)
@@ -264,7 +266,7 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: IsEtapeCompleteEtape & {statutId: EtapeStatutId},
+  titreEtape: IsEtapeCompleteEtape & { statutId: EtapeStatutId },
   documents:
     | {
         typeId: DocumentTypeId

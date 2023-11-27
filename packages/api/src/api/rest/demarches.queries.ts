@@ -156,10 +156,6 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
   const demarche = demarches[0]
 
-  const titreDemarches = await dbQueryAndValidate(getDemarchesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesByTitreIdDbValidator)
-
-  // FIXME filtrer les démarches du titre par rapport aux permissions de l'utilisateur
-
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
   const latestFondamentaleEtape = etapes.find(({ etape_type_id }) => EtapesTypes[etape_type_id].fondamentale) ?? null
@@ -195,6 +191,14 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
   if (!(await canReadDemarche(demarche, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))) {
     throw new Error('droit insuffisant')
+  }
+
+  const titreDemarches = await dbQueryAndValidate(getDemarchesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesByTitreIdDbValidator)
+  const titreDemarchesFiltered = []
+  for (const titreDemarche of titreDemarches) {
+    if (await canReadDemarche({ ...titreDemarche, titre_public_lecture: demarche.titre_public_lecture }, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)) {
+      titreDemarchesFiltered.push(titreDemarche)
+    }
   }
 
   const formatedEtapes: DemarcheGet['etapes'] = []
@@ -292,7 +296,7 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     slug: demarche.slug,
     sdom_zones: latestFondamentaleEtape?.sdom_zones ?? [],
     titre: {
-      demarches: titreDemarches,
+      demarches: titreDemarchesFiltered,
       nom: demarche.titre_nom,
       slug: demarche.titre_slug,
       titre_type_id: demarche.titre_type_id,
@@ -354,6 +358,8 @@ const getDemarchesByTitreIdDbValidator = z.object({
   demarche_date_fin: caminoDateValidator.nullable(),
   demarche_type_id: demarcheTypeIdValidator,
   first_etape_date: caminoDateValidator.nullable(),
+  public_lecture: z.boolean().default(false),
+  entreprises_lecture: z.boolean().default(false),
 })
 type GetDemarchesByTitreIdDb = z.infer<typeof getDemarchesByTitreIdDbValidator>
 const getDemarchesByTitreIdDb = sql<Redefine<IGetDemarchesByTitreIdDbQuery, { id: TitreId }, GetDemarchesByTitreIdDb>>`
@@ -362,6 +368,8 @@ select
     d.demarche_date_debut,
     d.demarche_date_fin,
     d.type_id as demarche_type_id,
+    d.public_lecture,
+    d.entreprises_lecture,
     (
         select
             e.date

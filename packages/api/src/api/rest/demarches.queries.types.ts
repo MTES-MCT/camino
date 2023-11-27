@@ -40,7 +40,9 @@ export interface IGetDemarchesByTitreIdDbResult {
   demarche_date_debut: string | null;
   demarche_date_fin: string | null;
   demarche_type_id: string;
+  entreprises_lecture: boolean;
   first_etape_date: string | null;
+  public_lecture: boolean;
   slug: string | null;
 }
 

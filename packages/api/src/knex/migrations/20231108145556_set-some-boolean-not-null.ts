@@ -26,7 +26,6 @@ export const up = async (knex: Knex) => {
   await knex.raw('ALTER TABLE titres ALTER COLUMN entreprises_lecture SET NOT NULL')
 
   // FIXME ancre sur les étapes -> Pas de solution élégante car nous sommes dans une SPA et peut-être que le composant n'est pas encore chargé
-  // FIXME impossible d'éditer une étape avec de l'héritage --> http://localhost:4180/etapes/w-cx-chassiron-d-2002-pro01-epu01/edition -> Pas vu de bug
 }
 
 export const down = () => ({})

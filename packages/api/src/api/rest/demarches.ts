@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import type { Pool } from 'pg'
-import { DemarcheGet, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
+import { DemarcheGet, demarcheGetValidator, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { getDemarcheQuery } from './demarches.queries.js'
 
 export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<DemarcheGet>) => {
@@ -11,9 +11,9 @@ export const getDemarche = (pool: Pool) => async (req: CaminoRequest, res: Custo
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const demarche = await getDemarcheQuery(pool, demarcheId.data, user)
+      const demarche: DemarcheGet = await getDemarcheQuery(pool, demarcheId.data, user)
 
-      res.json(demarche)
+      res.json(demarcheGetValidator.parse(demarche))
     } catch (e) {
       console.error(e)
 

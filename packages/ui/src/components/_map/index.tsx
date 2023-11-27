@@ -223,7 +223,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
           leafletComponentOnMounted.addLayer(geojsonLayer)
           hasGeojsonLayer = true
         }
-        // FIXME Pierre-Olivier souhaite ça mais ça casse la home page,
+        // TODO 2023-11-27 Pierre-Olivier souhaite ça mais ça casse la home page,
         // exemple http://localhost:4180/demarches/m-ar-abattis-kotika-2006-oct01
         // on le fait ou pas ? Nouvelle map ? Maplibre ?
         // if (leafletComponentOnMounted.getZoom() <= displayMarkersZoomMaxLevel) {

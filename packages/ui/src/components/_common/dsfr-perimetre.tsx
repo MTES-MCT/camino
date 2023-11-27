@@ -13,6 +13,7 @@ import { TableRow } from '../_ui/table'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
+import { contentTypes } from 'camino-common/src/rest'
 export type TabId = 'carte' | 'points'
 export interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
@@ -55,41 +56,53 @@ const columns: Column<string>[] = [
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
 const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug'>> = props => {
-    let index = 1
-    const currentRows: TableRow<string>[] = []
-    props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-      topLevel.forEach((secondLevel, secondLevelIndex) =>
-        secondLevel.forEach(([y, x], currentLevelIndex) => {
-          // On ne rajoute pas le dernier point qui est égal au premier du contour...
-          if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-            currentRows.push({
-              id: `${index}`,
-              link: null,
-              columns: {
-                polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
-                nom: { value: `${index}` },
-                latitude: { value: `${y}` },
-                longitude: { value: `${x}` },
-              },
-            })
-            index++
-          }
-        })
-      )
+  let index = 1
+  const currentRows: TableRow<string>[] = []
+  props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+    topLevel.forEach((secondLevel, secondLevelIndex) =>
+      secondLevel.forEach(([y, x], currentLevelIndex) => {
+        // On ne rajoute pas le dernier point qui est égal au premier du contour...
+        if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+          currentRows.push({
+            id: `${index}`,
+            link: null,
+            columns: {
+              polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
+              nom: { value: `${index}` },
+              latitude: { value: `${y}` },
+              longitude: { value: `${x}` },
+            },
+          })
+          index++
+        }
+      })
     )
+  )
 
-    const csvContent = encodeURI(`${columns.map(c => c.name).join(';')}\n${currentRows.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`)
+  const csvContent = encodeURI(
+    `${columns.map(c => c.name).join(';')}\n${currentRows.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`
+  )
 
-    if (index > maxRows + 1) {
-      currentRows.splice(maxRows, index)
-      currentRows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
-    }
+  if (index > maxRows + 1) {
+    currentRows.splice(maxRows, index)
+    currentRows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
+  }
 
-  return <div style={{display: 'flex', flexDirection: 'column'}}>
-      <TableAuto caption="" class='fr-mb-1w' columns={columns} rows={currentRows} initialSort={{ column: 'nom', order: 'asc' }} />
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={currentRows} initialSort={{ column: 'nom', order: 'asc' }} />
 
-      <DsfrLink style={{alignSelf: 'end'}}  href={`data:text/csv;charset=utf-8,${csvContent}`} download={`points-${props.titreSlug}.csv`} icon='fr-icon-download-line' buttonType='secondary'  title='Télécharge les points au format csv' label='.csv'/>
+      <DsfrLink
+        style={{ alignSelf: 'end' }}
+        href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
+        download={`points-${props.titreSlug}.csv`}
+        icon="fr-icon-download-line"
+        buttonType="secondary"
+        title="Télécharge les points au format csv"
+        label=".csv"
+      />
     </div>
+  )
 }
 
 const TabCaminoMap = defineComponent<Props>(props => {
@@ -198,16 +211,28 @@ const TabCaminoMap = defineComponent<Props>(props => {
   })
 
   return () => (
-    <CaminoMap
-      ref={map}
-      loading={loading.value}
-      mapUpdate={mapUpdate}
-      geojsonLayers={geojsonLayers.value}
-      markerLayers={markerLayers.value}
-      maxMarkers={maxRows}
-      additionalOverlayLayers={additionalOverlayLayers.value}
-      style={{ minHeight: '400px' }}
-    />
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <CaminoMap
+        ref={map}
+        loading={loading.value}
+        mapUpdate={mapUpdate}
+        geojsonLayers={geojsonLayers.value}
+        markerLayers={markerLayers.value}
+        maxMarkers={maxRows}
+        additionalOverlayLayers={additionalOverlayLayers.value}
+        style={{ minHeight: '400px' }}
+        class="fr-mb-1w"
+      />
+      <DsfrLink
+        style={{ alignSelf: 'end' }}
+        href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(props.geojsonMultiPolygon))}`}
+        download={`points-${props.titreSlug}.geojson`}
+        icon="fr-icon-download-line"
+        buttonType="secondary"
+        title="Télécharge le périmètre au format geojson"
+        label=".geojson"
+      />
+    </div>
   )
 })
 

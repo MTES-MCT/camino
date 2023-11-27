@@ -20,7 +20,7 @@ const meta: Meta = {
   title: 'Components/Demarche',
   // @ts-ignore en attente du support par @storybook/vue3
   component: PureDemarche,
-  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }, {name: 'etape-creation'}])],
+  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }, { name: 'etape-creation' }])],
 }
 export default meta
 
@@ -97,13 +97,13 @@ const demarche: DemarcheGet = {
     titre_statut_id: 'val',
     demarches: [
       {
-        slug: demarcheSlugValidator.parse('slug-demarche2'),
+        slug: demarcheSlugValidator.parse('slug-demarche'),
         demarche_type_id: 'oct',
         demarche_date_debut: toCaminoDate('2019-01-01'),
         demarche_date_fin: toCaminoDate('2021-01-01'),
         first_etape_date: null,
       },
-      { slug: demarcheSlugValidator.parse('slug-demarche'), demarche_type_id: 'pro', demarche_date_debut: toCaminoDate('2021-01-01'), demarche_date_fin: null, first_etape_date: null },
+      { slug: demarcheSlugValidator.parse('slug-demarche2'), demarche_type_id: 'pro', demarche_date_debut: toCaminoDate('2021-01-01'), demarche_date_fin: null, first_etape_date: null },
       { slug: demarcheSlugValidator.parse('slug-demarche4'), demarche_type_id: 'mut', demarche_date_debut: null, demarche_date_fin: null, first_etape_date: toCaminoDate('2022-01-01') },
     ],
   },

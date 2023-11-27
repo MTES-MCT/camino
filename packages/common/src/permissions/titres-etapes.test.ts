@@ -322,8 +322,28 @@ test.each<[unknown[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplet
   }
 })
 
-test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+test('[DEPRECATED] une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
   const errors = isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: true } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])
+  expect(errors).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document \\"dep\\" est obligatoire",
+        "le document \\"doe\\" est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+})
+
+test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+  const errors = isEtapeComplete(
+    { ...etapeComplete, sectionsWithValue: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true }] }] },
+    'arm',
+    'oct',
+    armDocuments,
+    armEntrepriseDocuments,
+    []
+  )
   expect(errors).toMatchInlineSnapshot(`
     {
       "errors": [

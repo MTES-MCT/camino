@@ -187,7 +187,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-    // FIXME c'est étrange cette condition, pourquoi ne pas la faire sur titreEtapePoints directement ?
     if (isNotNullNorUndefinedNorEmpty(etape.points)) {
       const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
@@ -217,7 +216,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    // FIXME on veut checker le norEmpty?
     if (isNotNullNorUndefined(titreEtapePoints)) {
       etape.points = titreEtapePoints
     }
@@ -367,7 +365,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
 
-    // FIXME duplicated code, same question
     if (isNotNullNorUndefinedNorEmpty(etape.points)) {
       const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
 
@@ -390,7 +387,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       throw new Error(rulesErrors.join(', '))
     }
 
-    // FIXME same question norEmpty?
     if (isNotNullNorUndefined(titreEtapePoints)) {
       etape.points = titreEtapePoints
     }
