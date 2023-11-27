@@ -60,8 +60,7 @@ export default {
     complete() {
       return this.documents.every(d => {
         const documentType = this.documentsTypes.find(dt => dt.id === d.typeId)
-
-        return !documentType || documentType.optionnel || !!((d.fichier || d.fichierNouveau || this.userIsAdmin) && d.date)
+        return !documentType || documentType.optionnel || !!((d.fichier || d.fichierNouveau) && d.date)
       })
     },
 

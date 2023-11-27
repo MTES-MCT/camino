@@ -10,19 +10,20 @@ import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { etapeTypeDateFinCheck } from '../_format/etapes-types.js'
 import { User } from 'camino-common/src/roles.js'
-import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Pool } from 'pg'
 import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { etapeDeposer, etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -42,6 +43,40 @@ export const getEtapeEntrepriseDocuments =
       }
     }
   }
+
+export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const user = req.auth
+
+  const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
+  if (!etapeId.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      await etapeSupprimer({ id: etapeId.data }, { pool, user })
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    } catch (e) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      console.error(e)
+    }
+  }
+}
+
+export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const user = req.auth
+
+  const etapeId = etapeIdValidator.safeParse(req.params.etapeId)
+  if (!etapeId.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      await etapeDeposer({ id: etapeId.data }, { pool, user })
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+    } catch (e) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      console.error(e)
+    }
+  }
+}
 
 export const getEtapesTypesEtapesStatusWithMainStep =
   (_pool: Pool) =>
@@ -121,7 +156,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   }
 
   return etapesTypes.filter(({ etapeTypeId }) =>
-    canCreateOrEditEtape(
+    canCreateEtape(
       user,
       etapeTypeId,
       titreEtapeId && etapeTypeId === titreEtape?.typeId ? titreEtape?.statutId ?? null : null,
@@ -131,8 +166,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
       {
         typeId: titre.typeId,
         titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine,
-      },
-      'creation'
+      }
     )
   )
 }
@@ -147,7 +181,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
-  if (titreEtapeId) {
+  if (isNotNullNorUndefined(titreEtapeId)) {
     const index = sortedEtapes.findIndex(etape => etape.id === titreEtapeId)
     etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(index + 1)))

@@ -115,7 +115,7 @@ import { onMounted } from 'vue'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { canCreateOrEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
+import { canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { AsyncEntrepriseDocuments } from './entreprise-documents'
@@ -245,16 +245,10 @@ export default {
       return null
     },
     canEdit() {
-      return canCreateOrEditEtape(
-        this.user,
-        this.etape.typeId,
-        this.etape.statutId,
-        this.etape.titulaires,
-        this.titreAdministrations,
-        this.demarcheType.id,
-        { typeId: this.titreTypeId, titreStatutId: this.titreStatutId },
-        'modification'
-      )
+      return canEditEtape(this.user, this.etape.typeId, this.etape.statutId, this.etape.titulaires, this.titreAdministrations, this.demarcheType.id, {
+        typeId: this.titreTypeId,
+        titreStatutId: this.titreStatutId,
+      })
     },
 
     sections() {

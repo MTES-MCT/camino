@@ -1,7 +1,7 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { IsEtapeCompleteEtape, canCreateOrEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
+import { IsEtapeCompleteEtape, canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
@@ -9,7 +9,6 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { toCaminoDate } from '../date.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -196,7 +195,7 @@ test.each<{
 ])(
   'canCreateEtape $user | $etapeTypeId | $etapeStatutId | $titreTitulaires | $titresAdministrationsLocales | $demarcheTypeId | $titre | $canCreate',
   ({ user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
-    expect(canCreateOrEditEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')).toEqual(canCreate)
+    expect(canCreateEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre)).toEqual(canCreate)
   }
 )
 
@@ -214,7 +213,7 @@ test.each<{
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
-  expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' }, 'modification')).toBe(canEdit)
+  expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
 const etapeComplete: IsEtapeCompleteEtape = {
@@ -225,10 +224,10 @@ const etapeComplete: IsEtapeCompleteEtape = {
 }
 
 const armDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'dom', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'for', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'jpa', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'car', fichier: true },
+  { typeId: 'dom', fichier: true },
+  { typeId: 'for', fichier: true },
+  { typeId: 'jpa', fichier: true },
 ]
 const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'cur' },
@@ -240,13 +239,13 @@ const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
 ]
 
 const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'lem', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'idm', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'mes', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'met', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'sch', date: toCaminoDate('2023-01-01'), fichier: true },
-  { typeId: 'prg', date: toCaminoDate('2023-01-01'), fichier: true },
+  { typeId: 'car', fichier: true },
+  { typeId: 'lem', fichier: true },
+  { typeId: 'idm', fichier: true },
+  { typeId: 'mes', fichier: true },
+  { typeId: 'met', fichier: true },
+  { typeId: 'sch', fichier: true },
+  { typeId: 'prg', fichier: true },
 ]
 
 const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
@@ -323,8 +322,28 @@ test.each<[unknown[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplet
   }
 })
 
-test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+test('[DEPRECATED] une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
   const errors = isEtapeComplete({ ...etapeComplete, contenu: { arm: { mecanise: true } } }, 'arm', 'oct', armDocuments, armEntrepriseDocuments, [])
+  expect(errors).toMatchInlineSnapshot(`
+    {
+      "errors": [
+        "le document \\"dep\\" est obligatoire",
+        "le document \\"doe\\" est obligatoire",
+      ],
+      "valid": false,
+    }
+  `)
+})
+
+test('une demande d’ARM mécanisée a des documents obligatoires supplémentaires', () => {
+  const errors = isEtapeComplete(
+    { ...etapeComplete, sectionsWithValue: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true }] }] },
+    'arm',
+    'oct',
+    armDocuments,
+    armEntrepriseDocuments,
+    []
+  )
   expect(errors).toMatchInlineSnapshot(`
     {
       "errors": [

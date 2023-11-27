@@ -246,7 +246,7 @@ export const Titres = defineComponent({
                   }
                   if (matomo) {
                     // @ts-ignore
-                    matomo.trackEvent('titres-vue', 'titres-vueId', tabId)
+                    matomo.trackEvent('titres-vue', 'titres-vueId', tabId.value)
                   }
                 }
               }}

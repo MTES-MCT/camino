@@ -51,12 +51,13 @@ import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/co
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
-import { getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
+import { deleteEtape, deposeEtape, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite, deleteActivite } from '../api/rest/activites.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 interface IRestResolverResult {
   nom: string
@@ -146,6 +147,8 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
+  '/rest/etapes/:etapeId': { delete: deleteEtape },
+  '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
@@ -160,33 +163,31 @@ export const restWithPool = (dbPool: Pool) => {
     .filter(isCaminoRestRoute)
     .forEach(route => {
       const maRoute = restRouteImplementations[route]
-      if (maRoute) {
-        if ('get' in maRoute) {
-          rest.get(route, restCatcher(maRoute.get(dbPool)))
-        }
-        if ('post' in maRoute) {
-          rest.post(route, restCatcher(maRoute.post(dbPool)))
-        }
-        if ('put' in maRoute) {
-          rest.put(route, restCatcher(maRoute.put(dbPool)))
-        }
+      if ('get' in maRoute) {
+        rest.get(route, restCatcher(maRoute.get(dbPool)))
+      }
+      if ('post' in maRoute) {
+        rest.post(route, restCatcher(maRoute.post(dbPool)))
+      }
+      if ('put' in maRoute) {
+        rest.put(route, restCatcher(maRoute.put(dbPool)))
+      }
 
-        if ('delete' in maRoute) {
-          rest.delete(route, restCatcher(maRoute.delete(dbPool)))
-        }
+      if ('delete' in maRoute) {
+        rest.delete(route, restCatcher(maRoute.delete(dbPool)))
+      }
 
-        if ('download' in maRoute) {
-          rest.get(route, restDownload(maRoute.download(dbPool)))
-        }
+      if ('download' in maRoute) {
+        rest.get(route, restDownload(maRoute.download(dbPool)))
+      }
 
-        if ('newDownload' in maRoute) {
-          rest.get(route, restNewDownload(dbPool, maRoute.newDownload))
-        }
+      if ('newDownload' in maRoute) {
+        rest.get(route, restNewDownload(dbPool, maRoute.newDownload))
       }
     })
 
-  rest.use((err: Error, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
-    if (err) {
+  rest.use((err: Error | null, _req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
+    if (isNotNullNorUndefined(err)) {
       res.status(500)
       res.send({ error: err.message })
 
@@ -239,7 +240,7 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
     res.header('Content-disposition', `inline; filename=${encodeURIComponent(nom)}`)
     res.header('Content-Type', contentTypes[format])
 
-    if (filePath || buffer) {
+    if (isNotNullNorUndefined(filePath) || isNotNullNorUndefined(buffer)) {
       res.header('x-sent', 'true')
       res.header('x-timestamp', Date.now().toString())
       const options: SendFileOptions = {
@@ -247,9 +248,11 @@ const restDownload = (resolver: IRestResolver) => async (req: CaminoRequest, res
         root: join(process.cwd(), 'files'),
       }
 
-      if (filePath) {
+      if (isNotNullNorUndefined(filePath)) {
         res.sendFile(filePath, options, err => {
-          if (err) console.error(`erreur de téléchargement ${err}`)
+          if (isNotNullNorUndefined(err)) {
+            console.error(`erreur de téléchargement ${err}`)
+          }
           res.status(404).end()
         })
       }

@@ -17,22 +17,29 @@ import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { MapPattern } from './_map/pattern'
 
 const meta: Meta = {
-  title: 'Components/DemarcheNoStoryshots',
+  title: 'Components/Demarche',
   // @ts-ignore en attente du support par @storybook/vue3
   component: PureDemarche,
-  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }])],
+  decorators: [vueRouter([{ name: 'titre' }, { name: 'demarche' }, { name: 'entreprise' }, { name: 'etape-creation' }])],
 }
 export default meta
 
 const getDemarcheAction = action('getDemarcheAction')
+const deleteEtapeAction = action('deleteEtapeAction')
+const deposerEtapeAction = action('deposerEtapeAction')
 const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
 const routerPushAction = action('routerPushAction')
-
+const routerReplaceAction = action('routerReplaceAction')
 const date = toCaminoDate('2023-10-24')
 
-const routerPushMock: Pick<Router, 'push'> = {
+const routerPushMock: Pick<Router, 'push' | 'replace'> = {
   push: to => {
     routerPushAction(to)
+
+    return Promise.resolve()
+  },
+  replace: to => {
+    routerReplaceAction(to)
 
     return Promise.resolve()
   },
@@ -87,9 +94,17 @@ const demarche: DemarcheGet = {
     nom: 'Nom du titre',
     slug: titreSlugValidator.parse('slug-du-titre'),
     titre_type_id: 'arm',
-    phases: [
-      { slug: demarcheSlugValidator.parse('slug-demarche'), demarche_type_id: 'oct', demarche_date_debut: null, demarche_date_fin: null },
-      { slug: demarcheSlugValidator.parse('slug-demarche2'), demarche_type_id: 'amo', demarche_date_debut: null, demarche_date_fin: null },
+    titre_statut_id: 'val',
+    demarches: [
+      {
+        slug: demarcheSlugValidator.parse('slug-demarche'),
+        demarche_type_id: 'oct',
+        demarche_date_debut: toCaminoDate('2019-01-01'),
+        demarche_date_fin: toCaminoDate('2021-01-01'),
+        first_etape_date: null,
+      },
+      { slug: demarcheSlugValidator.parse('slug-demarche2'), demarche_type_id: 'pro', demarche_date_debut: toCaminoDate('2021-01-01'), demarche_date_fin: null, first_etape_date: null },
+      { slug: demarcheSlugValidator.parse('slug-demarche4'), demarche_type_id: 'mut', demarche_date_debut: null, demarche_date_fin: null, first_etape_date: toCaminoDate('2022-01-01') },
     ],
   },
   contenu: { mécanisation: 'oui' },
@@ -101,7 +116,7 @@ const demarche: DemarcheGet = {
   secteurs_maritimes: ['Baie de Seine', 'Balagne'],
   substances: ['auru', 'arge'],
   titulaires: [
-    { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+    { id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1', operateur: false },
     { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
   ],
 
@@ -153,13 +168,15 @@ const demarche: DemarcheGet = {
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       date,
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
         date_fin: null,
         substances: ['auru', 'arge'],
         titulaires: [
-          { id: entrepriseIdValidator.parse('titulaire1'), nom: 'titulaire1', operateur: false },
+          { id: entrepriseIdValidator.parse('entrepriseId'), nom: 'titulaire1', operateur: false },
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
 
@@ -196,6 +213,8 @@ const demarche: DemarcheGet = {
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date: dateAddDays(date, 10),
 
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       sections_with_values: [],
       documents: [],
       entreprises_documents: [],
@@ -207,14 +226,17 @@ const demarche: DemarcheGet = {
       etape_statut_id: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE.etapeStatutId,
       date: dateAddDays(date, 20),
 
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
       sections_with_values: [],
       documents: [],
       entreprises_documents: [],
     },
   ],
+  sdom_zones: [],
 }
 
-const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte'> = {
+const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte' | 'deleteEtape' | 'deposeEtape'> = {
   getTitresWithPerimetreForCarte: params => {
     getTitresWithPerimetreForCarteAction(params)
 
@@ -256,16 +278,35 @@ const apiClient: Pick<ApiClient, 'getDemarche' | 'getTitresWithPerimetreForCarte
 
     return Promise.resolve(demarche)
   },
+
+  deleteEtape: etapeId => {
+    deleteEtapeAction(etapeId)
+
+    return Promise.resolve()
+  },
+
+  deposeEtape: etapeId => {
+    deposerEtapeAction(etapeId)
+
+    return Promise.resolve()
+  },
 }
 
-export const FullNoSnapshot: StoryFn = () => (
+export const FullWithMapNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <PureDemarche user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
   </>
 )
-export const FullSingularNoSnapshot: StoryFn = () => (
+export const Full: StoryFn = () => (
+  <>
+    <MapPattern />
+    <PureDemarche initTab="points" user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} demarcheId={demarche.id} />
+  </>
+)
+export const FullSingular: StoryFn = () => (
   <PureDemarche
+    initTab="points"
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
     apiClient={{
@@ -281,7 +322,8 @@ export const FullSingularNoSnapshot: StoryFn = () => (
             nom: 'Nom du titre',
             slug: titreSlugValidator.parse('slug-du-titre'),
             titre_type_id: 'arm',
-            phases: [],
+            titre_statut_id: 'val',
+            demarches: [],
           },
           contenu: {},
           slug: demarcheSlugValidator.parse('slug-demarche'),
@@ -326,6 +368,7 @@ export const FullSingularNoSnapshot: StoryFn = () => (
               ],
             },
           },
+          sdom_zones: [],
           etapes: [],
         })
       },
@@ -333,7 +376,7 @@ export const FullSingularNoSnapshot: StoryFn = () => (
     demarcheId={demarche.id}
   />
 )
-export const EmptyNoSnapshot: StoryFn = () => (
+export const Empty: StoryFn = () => (
   <PureDemarche
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
@@ -350,7 +393,8 @@ export const EmptyNoSnapshot: StoryFn = () => (
             nom: 'Nom du titre',
             slug: titreSlugValidator.parse('slug-du-titre'),
             titre_type_id: 'arm',
-            phases: [],
+            titre_statut_id: 'val',
+            demarches: [],
           },
           contenu: {},
           slug: demarcheSlugValidator.parse('slug-demarche'),
@@ -359,43 +403,9 @@ export const EmptyNoSnapshot: StoryFn = () => (
           substances: [],
           titulaires: [],
           amodiataires: [],
-          geojsonMultiPolygon: {
-            properties: null,
-            type: 'Feature',
-            geometry: {
-              type: 'MultiPolygon',
-              coordinates: [
-                [
-                  [
-                    [-53.58181013905019, 3.8309654861273],
-                    [-53.58178306390299, 3.8219278216269807],
-                    [-53.572785590706495, 3.82195493825841],
-                    [-53.57281257175149, 3.8309926670647294],
-                    [-53.58181013905019, 3.8309654861273],
-                  ],
-                ],
-                [
-                  [
-                    [-53.60031408473134, 3.8224780986447566],
-                    [-53.59891645305842, 3.8181831495446303],
-                    [-53.58181205656814, 3.82379854768971],
-                    [-53.58320964990986, 3.828093576227541],
-                    [-53.60031408473134, 3.8224780986447566],
-                  ],
-                ],
-                [
-                  [
-                    [-53.583861926103765, 3.8502114455117433],
-                    [-53.592379712320195, 3.834289122043602],
-                    [-53.588417035915334, 3.8321501920354253],
-                    [-53.57989914401643, 3.8480725119510217],
-                    [-53.583861926103765, 3.8502114455117433],
-                  ],
-                ],
-              ],
-            },
-          },
+          geojsonMultiPolygon: null,
           etapes: [],
+          sdom_zones: [],
         })
       },
     }}

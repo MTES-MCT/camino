@@ -58,30 +58,28 @@ export const EntrepriseDocuments: FunctionalComponent<EntrepriseDocumentsProps> 
       {' '}
       {props.etapeEntrepriseDocuments.length > 0 ? (
         <div class="dsfr">
-          <div class="fr-container">
-            <div class=" fr-table">
-              <table style={{ display: 'table' }}>
-                <caption>Documents d'entreprise</caption>
-                <thead>
+          <div class=" fr-table">
+            <table style={{ display: 'table' }}>
+              <caption>Documents d'entreprise</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.etapeEntrepriseDocuments.map(item => (
                   <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Description</th>
+                    <td>
+                      <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
+                    </td>
+                    <td>{dateFormat(item.date)}</td>
+                    <td>{item.description}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {props.etapeEntrepriseDocuments.map(item => (
-                    <tr>
-                      <td>
-                        <EntrepriseDocumentLink documentId={item.id} documentTypeId={item.entreprise_document_type_id} />
-                      </td>
-                      <td>{dateFormat(item.date)}</td>
-                      <td>{item.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       ) : null}

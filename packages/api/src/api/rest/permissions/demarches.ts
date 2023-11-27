@@ -7,7 +7,6 @@ import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 
 export type CanReadDemarche = { public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
 
-// FIXME test
 export const canReadDemarche = async (
   demarche: CanReadDemarche,
   user: User,

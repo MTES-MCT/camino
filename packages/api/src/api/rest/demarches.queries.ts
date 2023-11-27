@@ -13,7 +13,7 @@ import {
   FeatureMultiPolygon,
 } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetDemarcheQueryDbQuery, IGetDemarchesPhasesByTitreIdDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
+import { IGetDemarcheQueryDbQuery, IGetDemarchesByTitreIdDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { TitreId, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
@@ -44,14 +44,16 @@ import { contenuValidator } from './activites.queries.js'
 import { numberFormat } from 'camino-common/src/number.js'
 import { UNITE_IDS, UniteId, uniteIdValidator, Unites } from 'camino-common/src/static/unites.js'
 import { capitalize } from 'camino-common/src/strings.js'
-import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections, getSectionsWithValue, sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { User } from 'camino-common/src/roles.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { getTitreEtapeAdministrationsLocales } from '../../business/processes/titres-etapes-administrations-locales-update.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { canReadDemarche } from './permissions/demarches.js'
+import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
+import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
+import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 
 const isFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
   return etapeTypeIdFondamentaleValidator.safeParse(e).success
@@ -154,7 +156,6 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
 
   const demarche = demarches[0]
 
-  const phases = await dbQueryAndValidate(getDemarchesPhasesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesPhasesByTitreIdDbValidator)
   const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
 
   const latestFondamentaleEtape = etapes.find(({ etape_type_id }) => EtapesTypes[etape_type_id].fondamentale) ?? null
@@ -177,12 +178,27 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     points.push(...(await getPointsByEtapeIdQuery(latestFondamentaleEtape.id, pool)))
   }
 
-  const administrationsLocales = memoize(() => Promise.resolve(getTitreEtapeAdministrationsLocales(latestFondamentaleEtape?.communes, latestFondamentaleEtape?.secteurs_maritime)))
+  const administrationsLocales = memoize(() =>
+    Promise.resolve(
+      getAdministrationsLocales(
+        latestFondamentaleEtape?.communes.map(({ id }) => id),
+        latestFondamentaleEtape?.secteurs_maritime
+      )
+    )
+  )
   const entreprisesTitulairesOuAmodiataires = memoize(() => Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)]))
   const titreTypeId = memoize(() => Promise.resolve(demarche.titre_type_id))
 
   if (!(await canReadDemarche(demarche, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))) {
     throw new Error('droit insuffisant')
+  }
+
+  const titreDemarches = await dbQueryAndValidate(getDemarchesByTitreIdDb, { id: demarche.titre_id }, pool, getDemarchesByTitreIdDbValidator)
+  const titreDemarchesFiltered = []
+  for (const titreDemarche of titreDemarches) {
+    if (await canReadDemarche({ ...titreDemarche, titre_public_lecture: demarche.titre_public_lecture }, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)) {
+      titreDemarchesFiltered.push(titreDemarche)
+    }
   }
 
   const formatedEtapes: DemarcheGet['etapes'] = []
@@ -216,6 +232,8 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
         sections_with_values: contenu,
         entreprises_documents: entrepriseDocuments,
         documents,
+        decisions_annexes_contenu: isNotNullNorUndefined(etape.decisions_annexes_contenu) ? etape.decisions_annexes_contenu : null,
+        decisions_annexes_sections: isNotNullNorUndefined(etape.decisions_annexes_sections) ? etape.decisions_annexes_sections : null,
       }
       if (isFondamentale(etape.etape_type_id)) {
         let geojsonMultiPolygon: FeatureMultiPolygon | null = null
@@ -276,11 +294,13 @@ export const getDemarcheQuery = async (pool: Pool, id: DemarcheIdOrSlug, user: U
     demarche_type_id: demarche.demarche_type_id,
     demarche_statut_id: demarche.demarche_statut_id,
     slug: demarche.slug,
+    sdom_zones: latestFondamentaleEtape?.sdom_zones ?? [],
     titre: {
-      phases,
+      demarches: titreDemarchesFiltered,
       nom: demarche.titre_nom,
       slug: demarche.titre_slug,
       titre_type_id: demarche.titre_type_id,
+      titre_statut_id: demarche.titre_statut_id,
     },
     contenu: getDemarcheContenu(etapes, demarche.titre_type_id, demarche.demarche_type_id),
     communes,
@@ -302,6 +322,7 @@ const getDemarcheQueryDbValidator = z.object({
   titre_nom: z.string(),
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  titre_statut_id: titreStatutIdValidator,
   titre_public_lecture: z.boolean().default(false),
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
@@ -318,6 +339,7 @@ select
     t.nom as titre_nom,
     t.slug as titre_slug,
     t.type_id as titre_type_id,
+    t.titre_statut_id,
     t.public_lecture as titre_public_lecture,
     d.public_lecture,
     d.entreprises_lecture
@@ -330,25 +352,41 @@ and d.archive is false
 LIMIT 1
 `
 
-const getDemarchesPhasesByTitreIdDbValidator = z.object({
+const getDemarchesByTitreIdDbValidator = z.object({
   slug: demarcheSlugValidator,
   demarche_date_debut: caminoDateValidator.nullable(),
   demarche_date_fin: caminoDateValidator.nullable(),
   demarche_type_id: demarcheTypeIdValidator,
+  first_etape_date: caminoDateValidator.nullable(),
+  public_lecture: z.boolean().default(false),
+  entreprises_lecture: z.boolean().default(false),
 })
-type GetDemarchesPhasesByTitreIdDb = z.infer<typeof getDemarchesPhasesByTitreIdDbValidator>
-const getDemarchesPhasesByTitreIdDb = sql<Redefine<IGetDemarchesPhasesByTitreIdDbQuery, { id: TitreId }, GetDemarchesPhasesByTitreIdDb>>`
+type GetDemarchesByTitreIdDb = z.infer<typeof getDemarchesByTitreIdDbValidator>
+const getDemarchesByTitreIdDb = sql<Redefine<IGetDemarchesByTitreIdDbQuery, { id: TitreId }, GetDemarchesByTitreIdDb>>`
 select
     d.slug,
     d.demarche_date_debut,
     d.demarche_date_fin,
-    d.type_id as demarche_type_id
+    d.type_id as demarche_type_id,
+    d.public_lecture,
+    d.entreprises_lecture,
+    (
+        select
+            e.date
+        from
+            titres_etapes e
+        where
+            e.titre_demarche_id = d.id
+        order by
+            date asc
+        limit 1) as first_etape_date
 from
     titres_demarches d
 where
     d.titre_id = $ id !
-    and d.demarche_date_debut is not null
     and d.archive is false
+order by
+    demarche_date_debut asc
 `
 
 const getEtapesByDemarcheIdDbValidator = z.object({
@@ -367,6 +405,9 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   duree: z.number().nullable(),
   surface: z.number().nullable(),
   contenu: contenuValidator.nullable(),
+  sdom_zones: z.array(sdomZoneIdValidator).nullable(),
+  decisions_annexes_contenu: contenuValidator.nullable(),
+  decisions_annexes_sections: z.array(sectionValidator).nullable(),
 })
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
 const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
@@ -385,7 +426,10 @@ select
     e.duree,
     e.surface,
     e.contenu,
-    e.slug
+    e.slug,
+    e.sdom_zones,
+    e.decisions_annexes_contenu,
+    e.decisions_annexes_sections
 from
     titres_etapes e
 where

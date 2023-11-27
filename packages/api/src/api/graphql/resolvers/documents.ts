@@ -19,9 +19,10 @@ import { documentUpdationValidate } from '../../../business/validations/document
 import { userSuper } from '../../../database/user-super.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
-import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import { EtapeId } from 'camino-common/src/etape.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = documentFilePathFind(document, true)
@@ -45,7 +46,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
       user
     )
 
-    if (!titreEtape) throw new Error("l’étape n'existe pas")
+    if (isNullOrUndefined(titreEtape)) throw new Error("l’étape n'existe pas")
 
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
@@ -55,19 +56,10 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
     }
 
     if (
-      !canCreateOrEditEtape(
-        user,
-        titreEtape.typeId,
-        titreEtape.statutId,
-        titreEtape.titulaires,
-        titreEtape.demarche.titre.administrationsLocales ?? [],
-        titreEtape.demarche.typeId,
-        {
-          typeId: titreEtape.demarche.titre.typeId,
-          titreStatutId: titreEtape.demarche.titre.titreStatutId,
-        },
-        'modification'
-      )
+      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaires, titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+        typeId: titreEtape.demarche.titre.typeId,
+        titreStatutId: titreEtape.demarche.titre.titreStatutId,
+      })
     ) {
       throw new Error('droits insuffisants')
     }
@@ -105,7 +97,7 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
     if (document.fichierNouveau) {
       document.fichier = true
       await documentFileCreate(document, document.fichierNouveau.file)
-    } else if (document.nomTemporaire) {
+    } else if (isNotNullNorUndefined(document.nomTemporaire)) {
       // - arrivé via UI
       const pathFrom = `/files/tmp/${document.nomTemporaire}`
       const pathTo = await documentFilePathFind(document, true)
@@ -113,7 +105,7 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
       await fileRename(pathFrom, pathTo)
     }
 
-    if (document.publicLecture || isEntreprise(user) || isBureauDEtudes(user)) {
+    if ((document.publicLecture ?? false) || isEntreprise(user) || isBureauDEtudes(user)) {
       document.entreprisesLecture = true
     }
 
@@ -150,7 +142,7 @@ export const documentModifier = async ({ document }: { document: IDocument }, { 
       throw new Error(e.join(', '))
     }
 
-    if (document.publicLecture || isEntreprise(user) || isBureauDEtudes(user)) {
+    if ((document.publicLecture ?? false) || isEntreprise(user) || isBureauDEtudes(user)) {
       document.entreprisesLecture = true
     }
 
@@ -161,8 +153,8 @@ export const documentModifier = async ({ document }: { document: IDocument }, { 
     const documentUpdated = await documentUpdate(document.id, document)
 
     // supprime de l'ancien fichier
-    if ((documentFichierNouveau || !documentUpdated.fichier) && documentOld.fichier) {
-      const documentOldFilePath = await documentFilePathFind(documentOld)
+    if ((isNotNullNorUndefined(documentFichierNouveau) || !(documentUpdated.fichier ?? false)) && (documentOld.fichier ?? false)) {
+      const documentOldFilePath = documentFilePathFind(documentOld)
 
       try {
         await fileDelete(join(process.cwd(), documentOldFilePath))
@@ -177,9 +169,9 @@ export const documentModifier = async ({ document }: { document: IDocument }, { 
       await documentFileCreate(documentUpdated, documentFichierNouveau.file)
     } else {
       // - arrivé via UI
-      if (document.nomTemporaire) {
+      if (isNotNullNorUndefined(document.nomTemporaire)) {
         const pathFrom = `/files/tmp/${document.nomTemporaire}`
-        const pathTo = await documentFilePathFind(document, true)
+        const pathTo = documentFilePathFind(document, true)
 
         await fileRename(pathFrom, pathTo)
       }
@@ -213,14 +205,14 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
       throw new Error('aucun document avec cette id')
     }
 
-    if (!documentOld.suppression) {
+    if (!(documentOld.suppression ?? false)) {
       throw new Error('droits insuffisants')
     }
 
     await documentPermissionsCheck(documentOld, user)
 
-    if (documentOld.fichier) {
-      const documentOldFilePath = await documentFilePathFind(documentOld)
+    if (documentOld.fichier ?? false) {
+      const documentOldFilePath = documentFilePathFind(documentOld)
 
       try {
         await fileDelete(join(process.cwd(), documentOldFilePath))
@@ -240,13 +232,13 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
 }
 
 export const documentsLier = async (context: Context, documentIds: string[], etapeId: EtapeId, oldParent?: { documents?: IDocument[] | null }) => {
-  if (oldParent?.documents?.length) {
+  if (isNotNullNorUndefined(oldParent) && isNotNullNorUndefinedNorEmpty(oldParent.documents)) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
     for (const oldDocumentId of oldDocumentsIds) {
       const documentId = documentIds.find(id => id === oldDocumentId)
 
-      if (!documentId) {
+      if (isNullOrUndefined(documentId)) {
         await documentSupprimer({ id: oldDocumentId }, context)
       }
     }
@@ -260,7 +252,7 @@ export const documentsLier = async (context: Context, documentIds: string[], eta
       if (!document.titreEtapeId) {
         await documentUpdate(document.id, { titreEtapeId: etapeId })
 
-        if (document.fichier) {
+        if (document.fichier ?? false) {
           const documentPath = documentFilePathFind(document)
           document.titreEtapeId = etapeId
           const newDocumentPath = documentFilePathFind(document, true)
