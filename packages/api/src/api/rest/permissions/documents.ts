@@ -8,7 +8,6 @@ import { CanReadDemarche } from './demarches.js'
 import { canReadEtape } from './etapes.js'
 import { EtapeDocument } from 'camino-common/src/etape.js'
 
-// FIXME test
 export const canReadDocument = async (
   document: Pick<EtapeDocument, 'public_lecture' | 'entreprises_lecture'>,
   user: User,

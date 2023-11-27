@@ -7,7 +7,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche, canReadDemarche } from './demarches.js'
 
-// FIXME test
 export const canReadEtape = async (
   user: User,
   titreTypeId: SimplePromiseFn<TitreTypeId>,
