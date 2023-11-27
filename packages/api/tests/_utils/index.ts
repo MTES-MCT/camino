@@ -15,6 +15,7 @@ import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRe
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 import { idUserKeycloakRecognised } from '../keycloak.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const queryImport = (nom: string) =>
   fs
@@ -23,7 +24,7 @@ export const queryImport = (nom: string) =>
     .toString()
 
 export const tokenCreate = (user: Partial<IUtilisateur>) => {
-  if (process.env.JWT_SECRET) {
+  if (isNotNullNorUndefined(process.env.JWT_SECRET)) {
     return jwt.sign(JSON.stringify(user), process.env.JWT_SECRET)
   }
   throw new Error('La variable d’environnement JWT_SECRET est manquante')
@@ -74,7 +75,9 @@ export const restPutCall = async <Route extends PutRestRoutes>(
   user: TestUser | undefined,
   body: z.infer<(typeof CaminoRestRoutes)[Route]['put']['input']>
 ): Promise<request.Test> => {
-  const req = request(app(pool)).put(getRestRoute(path, params)).send(body)
+  const req = request(app(pool))
+    .put(getRestRoute(path, params))
+    .send(body ?? undefined)
 
   return jwtSet(req, user)
 }
@@ -91,7 +94,7 @@ const jwtSet = async (req: request.Test, user: TestUser | undefined): Promise<re
     token = await userTokenGenerate(user)
   }
 
-  if (token) {
+  if (isNotNullNorUndefined(token)) {
     req.set('x-forwarded-access-token', token)
     req.set('authorization', 'falseauthorizationtoken')
   }

@@ -30,7 +30,7 @@ describe('getDemarche', () => {
   test('ne peut pas récupérer une démarche (utilisateur non super)', async () => {
     const tested = await restCall(dbPool, '/rest/demarches/:demarcheId', { demarcheId: newDemarcheId('not existing') }, undefined)
 
-    expect(tested.statusCode).toBe(403)
+    expect(tested.statusCode).toBe(404)
   })
 
   test('ne peut pas récupérer une démarche inexistante', async () => {
@@ -97,6 +97,8 @@ describe('getDemarche', () => {
         "etapes": [
           {
             "date": "2023-01-01",
+            "decisions_annexes_contenu": null,
+            "decisions_annexes_sections": null,
             "documents": [],
             "entreprises_documents": [],
             "etape_statut_id": "dep",
@@ -143,6 +145,7 @@ describe('getDemarche', () => {
         ],
         "geojsonMultiPolygon": null,
         "id": "superDemarcheId",
+        "sdom_zones": [],
         "secteurs_maritimes": [],
         "slug": "demarche-slug",
         "substances": [
@@ -150,16 +153,18 @@ describe('getDemarche', () => {
           "arge",
         ],
         "titre": {
-          "nom": "nom-titre",
-          "phases": [
+          "demarches": [
             {
               "demarche_date_debut": "2023-01-01",
               "demarche_date_fin": "2025-01-01",
               "demarche_type_id": "oct",
+              "first_etape_date": "2023-01-01",
               "slug": "demarche-slug",
             },
           ],
+          "nom": "nom-titre",
           "slug": "arm-slug",
+          "titre_statut_id": "ind",
           "titre_type_id": "arm",
         },
         "titulaires": [],

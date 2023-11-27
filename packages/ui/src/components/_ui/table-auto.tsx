@@ -69,61 +69,61 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
   }
 
   return () => (
-      <div class="fr-table">
-        <table style={{ display: 'table' }}>
-          <caption>{props.caption}</caption>
-          <thead>
-            <tr>
-              {props.columns.map(col => (
-                <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
-                  {col.noSort !== undefined && col.noSort ? (
-                    <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
-                  ) : sort.column === col.id ? (
-                    <a
-                      class={['fr-link', 'fr-link--icon-right', sort.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                      onClick={() => handleChange({ column: sort.column, order: sort.order === 'asc' ? 'desc' : 'asc' })}
-                      title={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                      aria-label={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                      href="#!"
-                    >
-                      {col.name}
-                    </a>
+    <div class="fr-table">
+      <table style={{ display: 'table' }}>
+        <caption>{props.caption}</caption>
+        <thead>
+          <tr>
+            {props.columns.map(col => (
+              <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
+                {col.noSort !== undefined && col.noSort ? (
+                  <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
+                ) : sort.column === col.id ? (
+                  <a
+                    class={['fr-link', 'fr-link--icon-right', sort.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                    onClick={() => handleChange({ column: sort.column, order: sort.order === 'asc' ? 'desc' : 'asc' })}
+                    title={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                    aria-label={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                    href="#!"
+                  >
+                    {col.name}
+                  </a>
+                ) : (
+                  <a
+                    class={['fr-link']}
+                    onClick={event => {
+                      event.stopPropagation()
+                      handleChange({ column: col.id, order: sort.order })
+                    }}
+                    title={`Trier par la colonne ${col.name}`}
+                    aria-label={`Trier par la colonne ${col.name}`}
+                    href="#!"
+                  >
+                    {col.name === '' ? '-' : col.name}
+                  </a>
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {myRows.map(row => (
+            <tr key={row.id} class={row.class}>
+              {props.columns.map((col, index) => (
+                <td key={col.id} class={[...(col.class ?? [])]}>
+                  {index === 0 && row.link !== null ? (
+                    <router-link class="fr-link" to={row.link}>
+                      <DisplayColumn data={row.columns[col.id]} />
+                    </router-link>
                   ) : (
-                    <a
-                      class={['fr-link']}
-                      onClick={event => {
-                        event.stopPropagation()
-                        handleChange({ column: col.id, order: sort.order })
-                      }}
-                      title={`Trier par la colonne ${col.name}`}
-                      aria-label={`Trier par la colonne ${col.name}`}
-                      href="#!"
-                    >
-                      {col.name === '' ? '-' : col.name}
-                    </a>
+                    <DisplayColumn data={row.columns[col.id]} />
                   )}
-                </th>
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {myRows.map(row => (
-              <tr key={row.id} class={row.class}>
-                {props.columns.map((col, index) => (
-                  <td key={col.id} class={[...(col.class ?? [])]}>
-                    {index === 0 && row.link !== null ? (
-                      <router-link class="fr-link" to={row.link}>
-                        <DisplayColumn data={row.columns[col.id]} />
-                      </router-link>
-                    ) : (
-                      <DisplayColumn data={row.columns[col.id]} />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 })

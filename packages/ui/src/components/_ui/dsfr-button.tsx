@@ -47,35 +47,42 @@ export const DsfrButtonIcon: FunctionalComponent<DsfrButtonIconProps> = (props: 
   )
 }
 
-type  DsfrLinkProps = {
+type DsfrLinkProps = {
   title: string
   label?: string | null
   buttonType?: ButtonType
   icon: DsfrIcon | null
   style?: HTMLAttributes['style']
-} & ({to: UseLinkOptions['to'],
-disabled: boolean} | {href: HTMLAnchorElement['href'], download?: HTMLAnchorElement['download']})
+} & ({ to: UseLinkOptions['to']; disabled: boolean } | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download'] })
 export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
   const iconClass = []
   if (props.icon !== null && props.label !== null) {
     iconClass.push(`fr-${props.buttonType ? 'btn' : 'link'}--icon-right`)
   }
 
-  return ( <>{ 'to' in props ?
-    <CaminoRouterLink
-      class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
-      isDisabled={props.disabled}
-      title={props.title}
-      to={props.to}
-      style={props.style}
-    >
-      {isNotNullNorUndefined(props.label) ? props.label : props.title}
-    </CaminoRouterLink>
-  : <a
-  class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
-  title={props.title}
-  href={props.href}
-  download={props.download}
-      style={props.style}
-  >{isNotNullNorUndefined(props.label) ? props.label : props.title}</a> }</>)
+  return (
+    <>
+      {'to' in props ? (
+        <CaminoRouterLink
+          class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
+          isDisabled={props.disabled}
+          title={props.title}
+          to={props.to}
+          style={props.style}
+        >
+          {isNotNullNorUndefined(props.label) ? props.label : props.title}
+        </CaminoRouterLink>
+      ) : (
+        <a
+          class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
+          title={props.title}
+          href={props.href}
+          download={props.download}
+          style={props.style}
+        >
+          {isNotNullNorUndefined(props.label) ? props.label : props.title}
+        </a>
+      )}
+    </>
+  )
 }
