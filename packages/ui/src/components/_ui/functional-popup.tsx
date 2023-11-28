@@ -1,6 +1,6 @@
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { Teleport, computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { LoadingElement } from './functional-loader'
 
 interface Props {
@@ -69,56 +69,59 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
   }
 
   return () => (
-    <div class="dsfr">
-      <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close}>
-        <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
-          <div class="fr-grid-row fr-grid-row--center">
-            <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-              <div class="fr-modal__body">
-                <div class="fr-modal__header">
-                  <button class="fr-btn--close fr-btn" aria-controls={id} title="Fermer" onClick={() => props.close()}>
-                    Fermer
-                  </button>
-                </div>
-                <div class="fr-modal__content">
-                  <h1 id={`${id}-title`} class="fr-modal__title">
-                    <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
-                    {props.title}
-                  </h1>
-                  <div class="fr-container">{props.content()}</div>
-                </div>
-                <div class="fr-modal__footer">
-                  <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                    <li>
-                      <LoadingElement
-                        data={validateProcess.value}
-                        renderItem={() => (
-                          <button
-                            class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
-                            disabled={!canValidate.value}
-                            onClick={e => {
-                              e.stopPropagation()
+    // TODO 2023-11-28 ici on interdit le teleport dans le cas de vitest pour que les snapshots soient présentes. On a pas trouvé mieux à cette date
+    <Teleport to="body" disabled={process.env.VITEST === 'true'}>
+      <div class="dsfr">
+        <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close}>
+          <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                <div class="fr-modal__body">
+                  <div class="fr-modal__header">
+                    <button class="fr-btn--close fr-btn" aria-controls={id} title="Fermer" onClick={() => props.close()}>
+                      Fermer
+                    </button>
+                  </div>
+                  <div class="fr-modal__content">
+                    <h1 id={`${id}-title`} class="fr-modal__title">
+                      <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
+                      {props.title}
+                    </h1>
+                    <div class="fr-container">{props.content()}</div>
+                  </div>
+                  <div class="fr-modal__footer">
+                    <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                      <li>
+                        <LoadingElement
+                          data={validateProcess.value}
+                          renderItem={() => (
+                            <button
+                              class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
+                              disabled={!canValidate.value}
+                              onClick={e => {
+                                e.stopPropagation()
 
-                              return validate()
-                            }}
-                          >
-                            {text}
-                          </button>
-                        )}
-                      />
-                    </li>
-                    <li>
-                      <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
-                        Annuler
-                      </button>
-                    </li>
-                  </ul>
+                                return validate()
+                              }}
+                            >
+                              {text}
+                            </button>
+                          )}
+                        />
+                      </li>
+                      <li>
+                        <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
+                          Annuler
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </dialog>
-    </div>
+        </dialog>
+      </div>
+    </Teleport>
   )
 })

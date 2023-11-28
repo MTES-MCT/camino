@@ -42,3 +42,18 @@ export const Default: StoryFn = () => (
     currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
   />
 )
+
+export const OneDemarcheNoPhase: StoryFn = () => (
+  <DemarcheTimeline
+    demarches={[
+      {
+        slug: demarcheSlugValidator.parse('slug-demarche2'),
+        demarche_type_id: 'oct',
+        demarche_date_debut: null,
+        demarche_date_fin: null,
+        first_etape_date: toCaminoDate('2021-01-01'),
+      },
+    ]}
+    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+  />
+)

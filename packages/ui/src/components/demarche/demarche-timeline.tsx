@@ -21,6 +21,8 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
     .filter((demarche): demarche is PhaseWithDateDebut => isNotNullNorUndefined(demarche.demarche_date_debut))
     .map(phase => ({ ...phase, events: [] }))
 
+  if (!isNonEmptyArray(phases)) return null
+
   props.demarches.forEach(demarche => {
     if (demarche.first_etape_date === null) return
 
@@ -30,8 +32,6 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
       phase.events.push({ slug: demarche.slug, demarche_type_id: demarche.demarche_type_id })
     }
   })
-
-  if (!isNonEmptyArray(phases)) return null
 
   const datePhases: (CaminoDateFormated | 'xx-xx-xxxx')[] = [
     dateFormat(phases[0].demarche_date_debut),
