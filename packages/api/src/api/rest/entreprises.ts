@@ -20,7 +20,7 @@ import Titres from '../../database/models/titres.js'
 import { CustomResponse } from './express-type.js'
 import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, toDepartementId } from 'camino-common/src/static/departement.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
 import {
@@ -81,17 +81,17 @@ export const bodyBuilder = (
     const titre = titres.find(({ id }) => id === activite.titreId)
     const activiteTrimestresTitre = activitesTrimestrielles.filter(({ titreId }) => titreId === activite.titreId)
 
-    if (!titre) {
+    if (isNullOrUndefined(titre)) {
       throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
     }
 
-    if (!titre.communes?.length) {
+    if (isNullOrUndefined(titre.communes)) {
       throw new Error(`les communes du titre ${activite.titreId} ne sont pas chargées`)
     }
-    if (!titre.titulaires?.length) {
+    if (isNullOrUndefined(titre.titulaires)) {
       throw new Error(`les titulaires du titre ${activite.titreId} ne sont pas chargées`)
     }
-    if (!titre.amodiataires) {
+    if (isNullOrUndefined(titre.amodiataires)) {
       throw new Error(`les amodiataires du titre ${activite.titreId} ne sont pas chargés`)
     }
 
@@ -138,10 +138,6 @@ export const bodyBuilder = (
           const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
 
           if (production > 0) {
-            if (!titre.communes) {
-              throw new Error(`les communes du titre ${titre.id} ne sont pas chargées`)
-            }
-
             const surfaceTotale = titre.communes.reduce((value, commune) => value + (commune.surface ?? 0), 0)
 
             let communePrincipale: ICommune | null = null
@@ -308,12 +304,12 @@ export const modifierEntreprise = (_pool: Pool) => async (req: JWTRequest<User>,
       } else {
         const errors = []
 
-        if (entreprise.data.email && !emailCheck(entreprise.data.email)) {
+        if (isNotNullNorUndefined(entreprise.data.email) && !emailCheck(entreprise.data.email)) {
           errors.push('adresse email invalide')
         }
 
         const entrepriseOld = await entrepriseGet(entreprise.data.id, { fields: { id: {} } }, user)
-        if (!entrepriseOld) {
+        if (isNullOrUndefined(entrepriseOld)) {
           errors.push('entreprise inconnue')
         }
 
@@ -601,10 +597,8 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
         )
 
         const body = bodyBuilder(activites, activitesTrimestrielles, titres, caminoAnneeToNumber(caminoAnnee), [entreprise])
-        console.info('body', JSON.stringify(body))
         if (Object.keys(body.articles).length > 0) {
           const result = await apiOpenfiscaCalculate(body)
-          console.info('result', JSON.stringify(result))
 
           const redevances = responseExtractor(result, caminoAnneeToNumber(caminoAnnee))
 
