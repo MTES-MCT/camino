@@ -192,5 +192,8 @@
   },
   "browserslist": [
     "supports es6-module"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
 }
