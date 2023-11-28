@@ -2,7 +2,7 @@
 // supprime les parenthèses
 // retourne un tableau
 
-export const stringSplit = (string: string) =>
+export const stringSplit = (string: string): string[] =>
   //             [                ]  |  matche les caractères qui sont...
   //              a-z                |  ...ou bien une lettre minuscule
   //                 A-Z             |  ...ou bien une lettre majuscule
@@ -49,4 +49,4 @@ export const stringSplit = (string: string) =>
         //          *                 |     0 ou n fois
         .replace(/(.*)-$/, '$1')
     )
-    .filter(e => e) as string[]
+    .filter(e => e)

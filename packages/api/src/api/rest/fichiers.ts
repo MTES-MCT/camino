@@ -103,7 +103,7 @@ const bufferSize = 16384
 
 export const streamLargeObjectInResponse = async (pool: Pool, res: express.Response, largeObjectId: number | null, documentName: string) => {
   if (largeObjectId === null) {
-    throw new Error('fichier inexistant')
+    throw new Error(`fichier inexistant (largeObjectId null) - ${documentName}`)
   }
   const client = await pool.connect()
   try {
@@ -154,7 +154,7 @@ export const fichier =
     )
 
     if (isNullOrUndefined(document) || !(document.fichier ?? false)) {
-      throw new Error('fichier inexistant')
+      throw new Error(`fichier inexistant ${documentId}`)
     }
 
     const format = DOWNLOAD_FORMATS.PDF
@@ -214,7 +214,7 @@ export const etapeFichier =
     const etape = await titreEtapeGet(etapeId, { fields: {} }, user)
 
     if (isNullOrUndefined(etape)) {
-      throw new Error('fichier inexistant')
+      throw new Error(`étape ${etapeId} non trouvée, impossible de récupérer les documents associés`)
     }
 
     let etapeIdPath
@@ -233,7 +233,7 @@ export const etapeFichier =
     }
 
     if (isNullOrUndefined(etapeIdPath)) {
-      throw new Error('fichier inexistant')
+      throw new Error(`fichier inexistant pour l'étape ${etapeId}`)
     }
     const repertoire = 'demarches' as IDocumentRepertoire
 

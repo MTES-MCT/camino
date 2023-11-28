@@ -32,6 +32,7 @@ import {
   entrepriseDocumentInputValidator,
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
+  newEntrepriseId,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -348,7 +349,7 @@ export const creerEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, re
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else {
       try {
-        const entrepriseOld = await entrepriseGet(`fr-${siren.data}`, { fields: { id: {} } }, user)
+        const entrepriseOld = await entrepriseGet(newEntrepriseId(`fr-${siren.data}`), { fields: { id: {} } }, user)
 
         if (entrepriseOld) {
           console.warn(`l'entreprise ${entrepriseOld.nom} existe déjà dans Camino`)
@@ -373,16 +374,16 @@ export const creerEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, re
 export const getEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res: CustomResponse<EntrepriseType>) => {
   const user = req.auth
 
-  const entrepriseId = req.params.entrepriseId
+  const parsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
 
-  if (!entrepriseId) {
+  if (!parsed.success) {
     console.warn(`l'entrepriseId est obligatoire`)
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
     try {
       // TODO 2023-05-15: utiliser pg-typed
       const entreprise = await entrepriseGet(
-        entrepriseId,
+        parsed.data,
         {
           fields: {
             etablissements: { id: {} },
@@ -533,24 +534,25 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
   if (!user) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else {
-    const entrepriseId = req.params.entrepriseId
     const caminoAnnee = req.params.annee
 
-    if (!entrepriseId) {
+    const parsed = entrepriseIdValidator.safeParse(req.params.entrepriseId)
+
+    if (!parsed.success) {
       console.warn(`l'entrepriseId est obligatoire`)
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
       console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
-      const entreprise = await entrepriseGet(entrepriseId, { fields: { id: {} } }, user)
+      const entreprise = await entrepriseGet(parsed.data, { fields: { id: {} } }, user)
       if (!entreprise) {
-        throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
+        throw new Error(`l’entreprise ${parsed.data} est inconnue`)
       }
       const anneeMoins1 = anneePrecedente(caminoAnnee)
 
       const titres = await titresGet(
-        { entreprisesIds: [entrepriseId] },
+        { entreprisesIds: [parsed.data] },
         {
           fields: {
             titulaires: { id: {} },
@@ -566,11 +568,11 @@ export const fiscalite = (_pool: Pool) => async (req: JWTRequest<User>, res: Cus
       if (
         !fiscaliteVisible(
           user,
-          entrepriseIdValidator.parse(entrepriseId),
+          parsed.data,
           titres.map(({ typeId }) => ({ type_id: typeId }))
         )
       ) {
-        console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`)
+        console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${parsed.data}`)
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
       } else {
         const activites = await titresActivitesGet(
