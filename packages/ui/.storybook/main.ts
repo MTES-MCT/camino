@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/vue3-vite'
 import { mergeConfig } from 'vite'
-const appConfig = require('../vite.config.js')
+import appConfig from '../vite.config'
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-actions', '@storybook/addon-controls'],
