@@ -13,6 +13,7 @@ describe('canReadDocument', () => {
         public_lecture: false,
         entreprises_lecture: false,
         titre_public_lecture: false,
+        demarche_type_id: 'oct',
       })
     ).toBe(true)
   })
@@ -27,7 +28,7 @@ describe('canReadDocument', () => {
           () => Promise.resolve(['dea-guyane-01']),
           shouldNotBeCalled,
           'mfr',
-          { public_lecture: false, entreprises_lecture: false, titre_public_lecture: false }
+          { public_lecture: false, entreprises_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' }
         )
       ).toBe(true)
     }
@@ -45,6 +46,7 @@ describe('canReadDocument', () => {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
+          demarche_type_id: 'oct',
         })
       ).toBe(true)
     }
@@ -61,6 +63,7 @@ describe('canReadDocument', () => {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
+          demarche_type_id: 'oct',
         })
       ).toBe(false)
       expect(
@@ -68,6 +71,7 @@ describe('canReadDocument', () => {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
+          demarche_type_id: 'oct',
         })
       ).toBe(true)
     }
@@ -79,6 +83,7 @@ describe('canReadDocument', () => {
         public_lecture: true,
         entreprises_lecture: false,
         titre_public_lecture: true,
+        demarche_type_id: 'oct',
       })
     ).toBe(true)
     expect(
@@ -86,6 +91,7 @@ describe('canReadDocument', () => {
         public_lecture: true,
         entreprises_lecture: false,
         titre_public_lecture: true,
+        demarche_type_id: 'oct',
       })
     ).toBe(false)
   })

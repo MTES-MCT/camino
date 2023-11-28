@@ -3,7 +3,7 @@ import { DemarcheGet, DemarcheSlug } from 'camino-common/src/demarche'
 import style from './demarche-timeline.module.css'
 import { CaminoRouterLink } from '@/router/camino-router-link'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, NotNullableKeys } from 'camino-common/src/typescript-tools'
 import { CaminoDate, CaminoDateFormated, dateFormat } from 'camino-common/src/date'
 import { HTMLAttributes } from 'vue/dist/vue'
 
@@ -14,7 +14,7 @@ type Props = {
   class?: HTMLAttributes['class']
 }
 
-type PhaseWithDateDebut = Omit<Phase, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: Pick<Phase, 'slug' | 'demarche_type_id'>[] }
+type PhaseWithDateDebut = Omit<Phase, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: NotNullableKeys<Pick<Phase, 'slug' | 'demarche_type_id' | 'first_etape_date'>>[] }
 
 export const DemarcheTimeline: FunctionalComponent<Props> = props => {
   const phases: PhaseWithDateDebut[] = props.demarches
@@ -29,10 +29,13 @@ export const DemarcheTimeline: FunctionalComponent<Props> = props => {
     const date = demarche.first_etape_date
     if (demarche.demarche_date_debut === null) {
       const phase = phases.find(p => p.demarche_date_debut < date && (isNullOrUndefined(p.demarche_date_fin) || p.demarche_date_fin > date)) ?? phases[0]
-      phase.events.push({ slug: demarche.slug, demarche_type_id: demarche.demarche_type_id })
+      phase.events.push({ slug: demarche.slug, demarche_type_id: demarche.demarche_type_id, first_etape_date: demarche.first_etape_date })
     }
   })
 
+  phases.forEach(phase => {
+    phase.events.sort((a, b) => a.first_etape_date.localeCompare(b.first_etape_date))
+  })
   const datePhases: (CaminoDateFormated | 'xx-xx-xxxx')[] = [
     dateFormat(phases[0].demarche_date_debut),
     ...phases.map(phase => (isNotNullNorUndefined(phase.demarche_date_fin) ? dateFormat(phase.demarche_date_fin) : 'xx-xx-xxxx')),
