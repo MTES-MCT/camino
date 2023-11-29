@@ -14,6 +14,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
+import { DemarcheMap } from '../demarche/demarche-map'
 export type TabId = 'carte' | 'points'
 export interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
@@ -106,120 +107,42 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
 }
 
 const TabCaminoMap = defineComponent<Props>(props => {
-  const map = ref<typeof CaminoMap | null>(null)
 
-  const geojsonLayers = ref<Layer[]>([]) as Ref<Layer[]>
-  const markerLayers = ref<Layer[]>([]) as Ref<Layer[]>
-  watch(
-    () => [props.geojsonMultiPolygon, map.value],
-    () => {
-      map.value?.clearAllLayers()
 
-      const geojsonLayer = leafletGeojsonBuild(props.geojsonMultiPolygon, {
-        style: { fillOpacity: 0.2, weight: 3, color: 'var(--blue-france-sun-113-625)' },
-        interactive: false,
-      })
-      const bounds = isNotNullNorUndefined(geojsonLayer)
-        ? geojsonLayer.getBounds()
-        : [
-            [0, 0],
-            [0, 0],
-          ]
+  // const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
+  //   if (isNotNullNorUndefined(props.apiClient)) {
+  //     loading.value = true
 
-      map.value?.boundsFit(bounds)
+  //     try {
+  //       const res: { elements: TitreWithPoint[] } = await props.apiClient.getTitresWithPerimetreForCarte({
+  //         statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
+  //         perimetre: data.bbox,
+  //         communes: '',
+  //         departements: [],
+  //         domainesIds: [],
+  //         entreprisesIds: [],
+  //         facadesMaritimes: [],
+  //         references: '',
+  //         regions: [],
+  //         substancesIds: [],
+  //         titresIds: [],
+  //         typesIds: [],
+  //       })
+  //       titresValidesGeojson.value = res.elements.filter(({ slug }) => slug !== props.titreSlug)
+  //     } catch (e) {
+  //       console.error(e)
+  //     }
+  //     loading.value = false
+  //   }
+  // }
 
-      geojsonLayers.value = [geojsonLayer]
 
-      let index = 1
-      const markers: Marker<any>[] = []
-      props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-        topLevel.forEach((secondLevel, secondLevelIndex) =>
-          secondLevel.forEach(([x, y], currentLevelIndex) => {
-            // On ne rajoute pas le dernier point qui est égal au premier du contour...
-            if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-              const icon = leafletDivIconBuild({
-                className: 'fr-text--sm',
-                html: `<div class="leaflet-marker-camino-dsfr">${index}</div>`,
-                iconSize: [32, 32],
-              })
 
-              const latLng: LatLngTuple = [y, x]
-              const titreMarker = leafletMarkerBuild(latLng, icon, { interactive: true })
-              titreMarker.bindPopup(
-                `<div><div>Latitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${y}</span></div><div>Longitude : <span class="fr-text--md leaflet-marker-camino-dsfr-popup">${x}</span></div></div>`,
-                { closeButton: false }
-              )
-              markers.push(titreMarker)
-              index++
-            }
-          })
-        )
-      )
-
-      markerLayers.value = markers
-    },
-    { immediate: true }
-  )
-
-  const loading = ref(false)
-
-  const titresValidesGeojson = ref<TitreWithPoint[]>([])
-
-  const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
-    if (isNotNullNorUndefined(props.apiClient)) {
-      loading.value = true
-
-      try {
-        const res: { elements: TitreWithPoint[] } = await props.apiClient.getTitresWithPerimetreForCarte({
-          statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-          perimetre: data.bbox,
-          communes: '',
-          departements: [],
-          domainesIds: [],
-          entreprisesIds: [],
-          facadesMaritimes: [],
-          references: '',
-          regions: [],
-          substancesIds: [],
-          titresIds: [],
-          typesIds: [],
-        })
-        titresValidesGeojson.value = res.elements.filter(({ slug }) => slug !== props.titreSlug)
-      } catch (e) {
-        console.error(e)
-      }
-      loading.value = false
-    }
-  }
-
-  const titresValidesLayer = ref<LayerGroup>(layerGroup([])) as Ref<LayerGroup>
-
-  const additionalOverlayLayers = computed<Record<string, LayerGroup> | undefined>(() => {
-    if (isNotNullNorUndefined(props.apiClient)) {
-      titresValidesLayer.value.clearLayers()
-
-      const { geojsons, markers } = layersBuild(titresValidesGeojson.value, props.router)
-      Object.values(geojsons).forEach(g => titresValidesLayer.value.addLayer(g))
-      markers.forEach(q => q.marker.addTo(titresValidesLayer.value))
-
-      return {
-        'Titres valides': titresValidesLayer.value,
-      }
-    }
-
-    return undefined
-  })
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <CaminoMap
-        ref={map}
-        loading={loading.value}
-        mapUpdate={mapUpdate}
-        geojsonLayers={geojsonLayers.value}
-        markerLayers={markerLayers.value}
-        maxMarkers={maxRows}
-        additionalOverlayLayers={additionalOverlayLayers.value}
+      <DemarcheMap
+        geojsonMultiPolygon={props.geojsonMultiPolygon}
         style={{ minHeight: '400px' }}
         class="fr-mb-1w"
       />
