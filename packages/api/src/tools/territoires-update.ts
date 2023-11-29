@@ -7,7 +7,7 @@ import { Readable } from 'node:stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
-import { ForetId, ForetIds, Forets } from 'camino-common/src/static/forets.js'
+import { ForetId, ForetIds, Forets, foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { insertCommune } from '../database/queries/communes.queries.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
@@ -110,20 +110,24 @@ const foretsUpdate = async () => {
     try {
       const result = await knex.raw(`select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(foret.geometry)}'), 4326)) as result`)
 
-      const id: ForetId = foret.properties.code_for
-      ids.push(id)
-      if (foretsPostgisIdsKnown.includes(id)) {
-        await knex('forets_postgis').where('id', id).update({
-          geometry: result.rows[0].result,
-        })
+      const idParsed = foretIdValidator.safeParse(foret.properties.code_for)
+      if (idParsed.success) {
+        ids.push(idParsed.data)
+        if (foretsPostgisIdsKnown.includes(idParsed.data)) {
+          await knex('forets_postgis').where('id', idParsed.data).update({
+            geometry: result.rows[0].result,
+          })
+        } else {
+          await knex('forets_postgis').insert({
+            id: idParsed.data,
+            geometry: result.rows[0].result,
+          })
+        }
+        if (Forets[idParsed.data].nom !== foret.properties.foret) {
+          console.error(`Le nom de la forêt ${idParsed.data} a changé '${Forets[idParsed.data].nom}' --> ${foret.properties.foret}`)
+        }
       } else {
-        await knex('forets_postgis').insert({
-          id,
-          geometry: result.rows[0].result,
-        })
-      }
-      if (Forets[id] && Forets[id].nom !== foret.properties.foret) {
-        console.error(`Le nom de la forêt ${id} a changé '${Forets[id].nom}' --> ${foret.properties.foret}`)
+        console.error(`une nouvelle forêt est apparue avec l'id '${foret.properties.code_for}' et le nom '${foret.properties.foret}', il faut la rajouter dans le common`)
       }
     } catch (e) {
       console.error(foret.properties.nom, e)
