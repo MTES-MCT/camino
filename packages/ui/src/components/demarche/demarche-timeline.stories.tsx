@@ -42,3 +42,36 @@ export const Default: StoryFn = () => (
     currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
   />
 )
+
+export const MultipleUnorderedDemarchesWithoutPhase: StoryFn = () => (
+  <DemarcheTimeline
+    demarches={[
+      {
+        slug: demarcheSlugValidator.parse('slug-demarche2'),
+        demarche_type_id: 'oct',
+        demarche_date_debut: toCaminoDate('2019-01-01'),
+        demarche_date_fin: toCaminoDate('2021-01-01'),
+        first_etape_date: null,
+      },
+      { slug: demarcheSlugValidator.parse('slug-demarche6'), demarche_type_id: 'pr2', first_etape_date: toCaminoDate('2020-01-02'), demarche_date_fin: null, demarche_date_debut: null },
+      { slug: demarcheSlugValidator.parse('slug-demarche5'), demarche_type_id: 'pro', first_etape_date: toCaminoDate('2019-02-01'), demarche_date_fin: null, demarche_date_debut: null },
+      { slug: demarcheSlugValidator.parse('slug-demarche6'), demarche_type_id: 'pr1', first_etape_date: toCaminoDate('2020-01-01'), demarche_date_fin: null, demarche_date_debut: null },
+    ]}
+    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+  />
+)
+
+export const OneDemarcheNoPhase: StoryFn = () => (
+  <DemarcheTimeline
+    demarches={[
+      {
+        slug: demarcheSlugValidator.parse('slug-demarche2'),
+        demarche_type_id: 'oct',
+        demarche_date_debut: null,
+        demarche_date_fin: null,
+        first_etape_date: toCaminoDate('2021-01-01'),
+      },
+    ]}
+    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+  />
+)

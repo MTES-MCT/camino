@@ -8,7 +8,7 @@ import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
 
 // On part du principe que le canReadDemarche est déjà testé
-const demarche: CanReadDemarche = { public_lecture: true, entreprises_lecture: true, titre_public_lecture: true }
+const demarche: CanReadDemarche = { public_lecture: true, entreprises_lecture: true, titre_public_lecture: true, demarche_type_id: 'oct' }
 describe('canReadEtape', () => {
   test('en tant que super je peux lire toutes les démarches', async () => {
     expect(await canReadEtape({ ...testBlankUser, role: 'super' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', demarche)).toBe(true)

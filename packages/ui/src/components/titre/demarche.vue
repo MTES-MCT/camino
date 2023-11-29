@@ -4,10 +4,9 @@
       <div class="tablet-blob-1-2">
         <div class="flex mb-s flex-center">
           <h2 class="cap-first">
-            <CaminoRouterLink v-if="isSuperUser" :title="demarcheType.nom" :to="routeToDemarche">
+            <CaminoRouterLink :title="demarcheType.nom" :to="routeToDemarche">
               {{ demarcheType.nom }}
             </CaminoRouterLink>
-            <template v-else>{{ demarcheType.nom }}</template>
           </h2>
           <h3 v-if="demarche.description" class="ml-s">({{ demarche.description }})</h3>
         </div>
@@ -92,7 +91,6 @@ import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { canCreateEtapeByDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { demarcheApiClient } from './demarche-api-client'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import { isSuper } from 'camino-common/src/roles'
 import { CaminoRouterLink } from '@/router/camino-router-link'
 
 export default {
@@ -124,9 +122,6 @@ export default {
   computed: {
     routeToDemarche() {
       return { name: 'demarche', params: { demarcheId: this.demarche.slug } }
-    },
-    isSuperUser() {
-      return isSuper(this.user)
     },
     apiClient() {
       return demarcheApiClient

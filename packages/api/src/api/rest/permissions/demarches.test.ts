@@ -10,7 +10,7 @@ describe('canReadDemarche', () => {
   test('en tant que super je peux lire toutes les démarches', async () => {
     expect(
       await canReadDemarche(
-        { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+        { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
         { ...testBlankUser, role: 'super' },
         shouldNotBeCalled,
         shouldNotBeCalled,
@@ -19,8 +19,22 @@ describe('canReadDemarche', () => {
     ).toBe(true)
   })
 
+  test('en tant que super je ne peux pas lire un travaux', async () => {
+    expect(
+      await canReadDemarche(
+        { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'aom' },
+        { ...testBlankUser, role: 'super' },
+        shouldNotBeCalled,
+        shouldNotBeCalled,
+        shouldNotBeCalled
+      )
+    ).toBe(false)
+  })
+
   test('si la démarche est en lecture publique et que son titre est en lecture publique, tout le monde y a accès', async () => {
-    expect(await canReadDemarche({ entreprises_lecture: false, public_lecture: true, titre_public_lecture: true }, null, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled)).toBe(true)
+    expect(
+      await canReadDemarche({ entreprises_lecture: false, public_lecture: true, titre_public_lecture: true, demarche_type_id: 'oct' }, null, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled)
+    ).toBe(true)
   })
 
   describe("pour les utilisateurs administrations, on peut lire une démarche si l'utilisateur fait partie d'une administration gestionnaire, associé ou locale", () => {
@@ -31,7 +45,7 @@ describe('canReadDemarche', () => {
       expect(isAssociee(adminId, titreTypeId)).toBe(false)
       expect(
         await canReadDemarche(
-          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'admin', administrationId: adminId },
           () => Promise.resolve(titreTypeId),
           () => Promise.resolve([]),
@@ -46,7 +60,7 @@ describe('canReadDemarche', () => {
       expect(isAssociee(adminId, titreTypeId)).toBe(true)
       expect(
         await canReadDemarche(
-          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'admin', administrationId: adminId },
           () => Promise.resolve(titreTypeId),
           () => Promise.resolve([]),
@@ -61,7 +75,7 @@ describe('canReadDemarche', () => {
       expect(isAssociee(adminId, titreTypeId)).toBe(false)
       expect(
         await canReadDemarche(
-          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'admin', administrationId: adminId },
           () => Promise.resolve(titreTypeId),
           () => Promise.resolve([adminId]),
@@ -77,7 +91,7 @@ describe('canReadDemarche', () => {
       expect(isAssociee(adminId, titreTypeId)).toBe(false)
       expect(
         await canReadDemarche(
-          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'admin', administrationId: adminId },
           () => Promise.resolve(titreTypeId),
           () => Promise.resolve([]),
@@ -91,7 +105,7 @@ describe('canReadDemarche', () => {
     test('pas lisible par une entreprise', async () => {
       expect(
         await canReadDemarche(
-          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'entreprise', entreprises: [] },
           shouldNotBeCalled,
           shouldNotBeCalled,
@@ -104,7 +118,7 @@ describe('canReadDemarche', () => {
       const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
       expect(
         await canReadDemarche(
-          { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] },
           shouldNotBeCalled,
           shouldNotBeCalled,
@@ -118,7 +132,7 @@ describe('canReadDemarche', () => {
       const entrepriseIdNonTitulaire = entrepriseIdValidator.parse('entrepriseIdNonTitulaire')
       expect(
         await canReadDemarche(
-          { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false },
+          { entreprises_lecture: true, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
           { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire }] },
           shouldNotBeCalled,
           shouldNotBeCalled,

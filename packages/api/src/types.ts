@@ -360,7 +360,7 @@ interface ITitreActivite {
   dateSaisie?: CaminoDate
   contenu?: IContenu | null
   sections: DeepReadonly<Section[]>
-  suppression?: boolean | null
+  suppression?: boolean
 }
 
 interface ITitreDemarche {

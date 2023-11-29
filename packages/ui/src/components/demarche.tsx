@@ -182,11 +182,11 @@ export const PureDemarche = defineComponent<Props>(props => {
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h2 class="fr-pt-3w">Étapes</h2>
-                  <DsfrLink icon={null} buttonType="primary" disabled={false} to={{ name: 'etape-creation' }} title="Ajouter une étape" />
+                  <DsfrLink icon={null} buttonType="primary" disabled={false} to={{ name: 'etape-creation', query: { 'demarche-id': demarche.slug } }} title="Ajouter une étape" />
                 </div>
                 <div>
                   {demarche.etapes.map(etape => (
-                    <div class="fr-pb-1w">
+                    <div class="fr-pb-2w">
                       <DemarcheEtape
                         etape={etape}
                         router={props.router}

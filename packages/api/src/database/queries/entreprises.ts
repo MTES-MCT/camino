@@ -12,6 +12,8 @@ import { entreprisesQueryModify } from './permissions/entreprises.js'
 import { utilisateurGet } from './utilisateurs.js'
 import { isSuper, isEntreprise, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, User } from 'camino-common/src/roles.js'
 import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -23,10 +25,10 @@ const entreprisesFiltersQueryModify = (
   },
   q: QueryBuilder<Entreprises, Entreprises[]>
 ) => {
-  if (noms) {
+  if (isNotNullNorUndefined(noms)) {
     const nomsArray = stringSplit(noms)
 
-    if (nomsArray) {
+    if (isNotNullNorUndefinedNorEmpty(nomsArray)) {
       const fields = ['entreprises.id', 'entreprises.nom', 'etablissements.nom', 'etablissements.legalSiret']
 
       q.leftJoinRelated('etablissements')
@@ -71,12 +73,11 @@ const entreprisesCount = async (
   const q = entreprisesQueryBuild({ fields }, user)
 
   entreprisesFiltersQueryModify({ noms, archive }, q)
-  if (!q) return 0
 
   return q.resultSize()
 }
 
-const entrepriseGet = async (id: string, { fields }: { fields?: IFields }, user: User) => {
+const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: IFields }, user: User): Promise<IEntreprise | undefined> => {
   const q = entreprisesQueryBuild({ fields }, user)
 
   return (await q.findById(id)) as IEntreprise
@@ -105,10 +106,8 @@ const entreprisesGet = async (
 
   entreprisesFiltersQueryModify({ noms, archive }, q)
 
-  if (!q) return []
-
   // le tri sur la colonne 'siren' s'effectue sur le legal_siren ET le legal_etranger
-  if (colonne && colonne === 'siren') {
+  if (isNotNullNorUndefined(colonne) && colonne === 'siren') {
     q.orderBy(
       raw(`CONCAT(
         "entreprises"."legal_siren",
@@ -120,11 +119,11 @@ const entreprisesGet = async (
     q.orderBy('entreprises.nom', ordre || 'asc')
   }
 
-  if (page && intervalle) {
+  if (isNotNullNorUndefined(page) && isNotNullNorUndefined(intervalle) && page > 0 && intervalle > 0) {
     q.offset((page - 1) * intervalle)
   }
 
-  if (intervalle) {
+  if (isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.limit(intervalle)
   }
 
