@@ -57,7 +57,7 @@ const columns: Column<string>[] = [
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
 const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug'>> = props => {
-  let index = 1
+  let index = 0
   const currentRows: TableRow<string>[] = []
   props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
     topLevel.forEach((secondLevel, secondLevelIndex) =>

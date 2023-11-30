@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import {z} from 'zod'
@@ -29,7 +29,7 @@ const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
 //FIXME Pierre-Olivier souhaite que les points s’affichent à partir d’un niveau de zoom
 
 
-const overlayLayers = ['SDOM', 'Facades', 'RedevanceArcheologiePreventive', contourLayerName, 'ContoursFill', 'Points'] as const
+const overlayLayers = ['SDOM', 'Facades', 'RedevanceArcheologiePreventive', contourLayerName, 'ContoursFill', 'ContoursPoints', 'ContoursPointLabels'] as const
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
@@ -42,7 +42,7 @@ const overlayMapNames = {
   'Façades maritimes': ['Facades'],
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
   Contours: [contourLayerName, 'ContoursFill'],
-  Points: ['Points'],
+  Points: ['ContoursPoints', 'ContoursPointLabels'],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
 const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
@@ -77,7 +77,7 @@ const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
     maxzoom: 16
   },
 }
-const staticOverlayLayersSourceSpecification: Record<Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'Points'>, SourceSpecification> = {SDOM: {
+const staticOverlayLayersSourceSpecification: Record<Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'ContoursPoints' | 'ContoursPointLabels'>, SourceSpecification> = {SDOM: {
   type: 'raster',
   tiles: ['https://datacarto.geoguyane.fr/wms/SDOM_GUYANE?service=WMS&request=GetMap&layers=ZONE2activiteminiereautoriseesouscontrainte%2CZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes%2CZONE0activiteminiereinterdite%2CZone0potentielle&styles=&format=image/png&transparent=false&version=1.1.1&width=256&height=256&srs=EPSG%3A3857&bbox={bbox-epsg-3857}'],
   attribution: 'GéoGuyane'
@@ -100,11 +100,6 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     type: 'raster',
     source: 'Facades',
   },
-  Points: {
-    id: 'Points',
-    type: 'raster',
-    source: 'Points',
-  },
   RedevanceArcheologiePreventive: {
     id: 'RedevanceArcheologiePreventive',
     type: 'raster',
@@ -125,16 +120,42 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     "line-width": 2
   }
 },
+
 ContoursFill: {
   id: 'ContoursFill',
-  type: 'circle',
+  type: 'fill',
   source: 'Contours',
+
+  paint: {
+    "fill-color": '#000091',
+    "fill-opacity": 0.2
+  }
+},
+ContoursPoints: {
+  id: 'ContoursPoints',
+  type: 'circle',
+  source: 'Points',
 
   paint: {
     'circle-color': '#000091',
     "circle-radius": 10,
-    
   }
+},
+ContoursPointLabels: {
+  id: 'ContoursPointLabels',
+  type: 'symbol',
+  source: 'Points',
+  layout: {
+    // get the year from the source's "year" property
+    'text-field': ['get', 'point'],
+    'text-font': [
+        'Open Sans Semibold',
+        'Arial Unicode MS Bold'
+    ],
+    'text-offset': [0, 1.25],
+    'text-anchor': 'top'
+}
+
 }}
 
 export const DemarcheMap = defineComponent<Props>(props => {
@@ -143,16 +164,52 @@ export const DemarcheMap = defineComponent<Props>(props => {
   const map = ref<Map | null>(null) as Ref<Map | null>
 
 
+  const points = computed(() => {
+    const currentPoints = []
+    let index = 0
+    props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+  topLevel.forEach((secondLevel, secondLevelIndex) =>
+    secondLevel.forEach(([y, x], currentLevelIndex) => {
+      // On ne rajoute pas le dernier point qui est égal au premier du contour...
+      if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+        currentPoints.push({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [y, x]
+          },
+          properties: {
+            point: index
+          }
+
+        })
+        index++
+      }
+    })
+  )
+)
+
+return {
+  'type': 'FeatureCollection',
+  'features': currentPoints}
+}
+)
+
 
   onMounted(() => {
     const style: StyleSpecification = {
       version: 8,
+      "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
       sources: {
         ...layersSourceSpecifications,
         ...staticOverlayLayersSourceSpecification,
         Contours: {
           type: 'geojson',
-          data: props.geojsonMultiPolygon
+          data: props.geojsonMultiPolygon,
+        },
+        Points: {
+          type: 'geojson',
+          data: points.value,
         }
 
       },
@@ -163,7 +220,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
           source: 'osm',
         },
         overlayConfigs.ContoursFill,
-        overlayConfigs.ContoursLine
+        overlayConfigs.ContoursLine,
+        overlayConfigs.ContoursPoints,
+        overlayConfigs.ContoursPointLabels,
       ],
     }
 
