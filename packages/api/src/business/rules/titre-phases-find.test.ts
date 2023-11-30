@@ -1614,6 +1614,60 @@ describe("phases d'une démarche", () => {
     `)
   })
 
+  test('un titre qui a une publication au jorf rejetée puis une publication au jorf acceptée a une phase', () => {
+    expect(
+      titrePhasesFind(
+        [
+          {
+            titreId: newTitreId('titreId'),
+            statutId: 'acc',
+            ordre: 1,
+            typeId: 'oct',
+            id: newDemarcheId('demarcheIdOctroi'),
+            etapes: [
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 3,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2033-11-23'),
+                dateDebut: toCaminoDate('2003-11-23'),
+                date: toCaminoDate('2003-11-23'),
+                statutId: 'acc',
+                points: [],
+              },
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 2,
+                typeId: 'dpu',
+                dateFin: toCaminoDate('2033-11-22'),
+                dateDebut: toCaminoDate('2003-11-22'),
+                date: toCaminoDate('2003-11-22'),
+                statutId: 'rej',
+                points: [],
+              },
+              {
+                titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
+                ordre: 1,
+                typeId: 'dex',
+                date: toCaminoDate('2003-04-26'),
+                statutId: 'acc',
+                points: [],
+              },
+            ],
+          },
+        ],
+        'prm'
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "demarcheIdOctroi": {
+          "dateDebut": "2003-11-23",
+          "dateFin": "2033-11-23",
+        },
+      }
+    `)
+  })
+
   test('cas réels', () => {
     const phasesReels = titresProd as TitrePhasesTest[]
     phasesReels.forEach(([titreTypeId, demarches], index) => {
