@@ -34,8 +34,10 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
   // on trie les étapes de façon ascendante pour le cas où
   // il existe une étape de publication et une étape rectificative,
   // on prend alors en compte l'originale
-  const etapePublicationFirst = titreEtapesSortAscByOrdre(demarche.etapes).find(etape => titreEtapePublicationCheck(etape.typeId, titreTypeId))
-  if (etapePublicationFirst && [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT].includes(etapePublicationFirst.statutId)) {
+  const etapePublicationFirst = titreEtapesSortAscByOrdre(demarche.etapes).find(
+    etape => titreEtapePublicationCheck(etape.typeId, titreTypeId) && [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT].includes(etape.statutId)
+  )
+  if (etapePublicationFirst) {
     // retourne l’étape de publication la plus récente avec une date de début spécifiée
     const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(demarche.etapes).find(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && titreEtape.dateDebut)
 
