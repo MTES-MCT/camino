@@ -1,4 +1,4 @@
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { EtapeType, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { InputDate } from '../_ui/input-date'
 import { Icon } from '@/components/_ui/icon'
 import { ButtonIcon } from '@/components/_ui/button-icon'
@@ -9,6 +9,8 @@ import { EtapeCaminoFiltres } from '../_ui/filters/camino-filtres'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { TypeAhead } from '../_ui/typeahead'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export type FilterEtapeValue = {
   typeId: EtapeTypeId | ''
@@ -81,15 +83,15 @@ export const FiltresEtapes = defineComponent<Props>(props => {
       {clonedValues.value.map((value, n) => (
         <div key={n}>
           <div class="flex mb-s">
-            <select v-model={value.typeId} class="p-s mr-s" onChange={() => valueReset(n)}>
-              <option value="">–</option>
-              {Object.values(EtapesTypes).map(type => (
-                <option key={type.id} value={type.id}>
-                  {type.nom}
-                </option>
-              ))}
-            </select>
-
+            <EtapeTypeSearch
+              class="p-s mr-s"
+              index={n}
+              initialEtapeTypeId={value.typeId !== '' ? value.typeId : null}
+              selectedEtapeType={etapeType => {
+                value.typeId = etapeType
+                valueReset(n)
+              }}
+            />
             <ButtonIcon class="btn py-s px-m rnd-xs" onClick={() => valueRemove(n)} icon="minus" title="Supprime la valeur" aria-label="Supprime la valeur" />
           </div>
           {value.typeId ? (
@@ -145,5 +147,54 @@ export const FiltresEtapes = defineComponent<Props>(props => {
   )
 })
 
+type EtapeTypeSearchProps = {
+  index: number
+  initialEtapeTypeId: EtapeTypeId | null
+  selectedEtapeType: (etapeTypeId: EtapeTypeId) => void
+  class?: HTMLAttributes['class']
+}
+const EtapeTypeSearch = defineComponent<EtapeTypeSearchProps>(props => {
+  const overrideItems = computed(() => (props.initialEtapeTypeId !== null ? [EtapesTypes[props.initialEtapeTypeId]] : []))
+  const etapeTypeSearch = ref<string>('')
+
+  const onInputSearchEtapeType = (searchTerm: string) => {
+    etapeTypeSearch.value = searchTerm
+  }
+
+  const onSelectItem = (type: EtapeType | undefined) => {
+    etapeTypeSearch.value = ''
+    if (isNotNullNorUndefined(type)) {
+      props.selectedEtapeType(type.id)
+    }
+  }
+
+  const items = computed<EtapeType[]>(() => {
+    return Object.values(EtapesTypes)
+      .sort((a, b) => a.nom.localeCompare(b.nom))
+      .filter(({ nom }) => {
+        return nom.toLowerCase().includes(etapeTypeSearch.value)
+      })
+  })
+
+  return () => (
+    <TypeAhead
+      overrideItems={overrideItems.value}
+      props={{
+        id: `select-etape-type-${props.index}`,
+        type: 'single',
+        placeholder: "Type d'étape",
+        items: items.value,
+        minInputLength: 0,
+        itemKey: 'id',
+        itemChipLabel: item => item.nom,
+        onSelectItem,
+        onInput: onInputSearchEtapeType,
+      }}
+    />
+  )
+})
+
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 FiltresEtapes.props = ['filter', 'initialValues', 'valuesSelected', 'class']
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EtapeTypeSearch.props = ['initialEtapeTypeId', 'selectedEtapeType', 'index']
