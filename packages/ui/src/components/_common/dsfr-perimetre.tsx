@@ -145,6 +145,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
         geojsonMultiPolygon={props.geojsonMultiPolygon}
         style={{ minHeight: '400px' }}
         class="fr-mb-1w"
+        maxMarkers={maxRows}
       />
       <DsfrLink
         style={{ alignSelf: 'end' }}

@@ -1,5 +1,5 @@
 import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed } from 'vue'
-import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification } from 'maplibre-gl'
+import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
@@ -7,8 +7,14 @@ import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { random } from '@/utils/vue-tsx-utils'
 
 
-const contourLayerName = 'ContoursLine'
-type Props = { geojsonMultiPolygon: FeatureMultiPolygon }
+const contoursLineName = 'ContoursLine'
+const contourPointsName = 'ContoursPoints'
+
+type Props = {
+  geojsonMultiPolygon: FeatureMultiPolygon,
+  maxMarkers: number,
+  style?: HTMLAttributes['style'],
+  class?: HTMLAttributes['class'] }
 
 const baseMapNames = {
   'OSM / fr': 'osm',
@@ -25,11 +31,8 @@ type LayerId = z.infer<typeof layerIdValidator>
 const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
 
 //FIXME les titres voisins
-//FIXME Pierre-Olivier souhaite que les points s’affichent à partir d’un niveau de zoom
-//FIXME si on enlève les points et qu'on les remet, ils sont en dessous des contours...
 
-
-const overlayLayers = ['SDOM', 'Facades', 'RedevanceArcheologiePreventive', contourLayerName, 'ContoursFill', 'ContoursPoints', 'ContoursPointLabels'] as const
+const overlayLayers = ['SDOM', 'Facades', 'RedevanceArcheologiePreventive',  'ContoursFill', contoursLineName,contourPointsName, 'ContoursPointLabels'] as const
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
@@ -41,8 +44,8 @@ const overlayMapNames = {
   [sdomOverlayName]: ['SDOM'],
   'Façades maritimes': ['Facades'],
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
-  Contours: [contourLayerName, 'ContoursFill'],
-  Points: ['ContoursPoints', 'ContoursPointLabels'],
+  Contours: [contoursLineName, 'ContoursFill'],
+  Points: [contourPointsName, 'ContoursPointLabels'],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
 const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
@@ -112,8 +115,8 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     type: 'raster',
     source: 'SDOM',
   },
-  [contourLayerName]: {
-    id: contourLayerName,
+  [contoursLineName]: {
+    id: contoursLineName,
     type: 'line',
     source: 'Contours',
 
@@ -133,25 +136,27 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
       "fill-opacity": 0.2
     }
   },
-  ContoursPoints: {
-    id: 'ContoursPoints',
+[contourPointsName]: {
+    id: contourPointsName,
     type: 'circle',
     source: 'Points',
+    minzoom: 12,
 
     paint: {
       'circle-color': '#000091',
-      "circle-radius": 10,
+      "circle-radius": 16,
     }
   },
   ContoursPointLabels: {
     id: 'ContoursPointLabels',
     'type': 'symbol',
     'source': 'Points',
+    minzoom: 12,
     paint: {
       'text-color': '#ffffff'
     },
     'layout': {
-        'text-field': ['get', 'plop'],
+        'text-field': ['get', 'pointNumber'],
         'text-allow-overlap': false,
         'text-font': [
             'Open Sans Semibold',
@@ -167,8 +172,15 @@ export const DemarcheMap = defineComponent<Props>(props => {
   const layersControlVisible = ref<boolean>(false)
   const map = ref<Map | null>(null) as Ref<Map | null>
 
+  const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points'>[]>(() =>{
+    if(props.maxMarkers > points.value.features.length){
+      return ['Contours', 'Points']
+    }
+    return ['Contours']
+  })
+
   const points = computed(() => {
-    const currentPoints = []
+    const currentPoints: {type: 'Feature', geometry: {type: 'Point', coordinates: [number, number]}, properties: {pointNumber: string} }[] = []
     let index = 0
     props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
       topLevel.forEach((secondLevel, secondLevelIndex) =>
@@ -182,7 +194,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
                 coordinates: [y, x]
               },
               properties: {
-                plop: `${index}`
+                pointNumber: `${index}`
               }
 
             })
@@ -224,10 +236,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           type: 'raster',
           source: 'osm',
         },
-        overlayConfigs.ContoursFill,
-        overlayConfigs.ContoursLine,
-        overlayConfigs.ContoursPoints,
-        overlayConfigs.ContoursPointLabels,
+        ...defaultOverlayLayer.value.flatMap(overlay => overlayMapNames[overlay].map(o => overlayConfigs[o] )),
       ],
     }
 
@@ -272,6 +281,13 @@ export const DemarcheMap = defineComponent<Props>(props => {
     })
 
     mapLibre.fitBounds(bounds, { padding: 50 })
+
+    mapLibre.on('click', contourPointsName, (e) => {
+      new Popup({closeButton: false, maxWidth: '500'})
+        .setLngLat(e.lngLat)
+        .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
+        .addTo(mapLibre);
+    })
   })
 
   const selectLayer = (layer: LayerId) => {
@@ -288,24 +304,40 @@ export const DemarcheMap = defineComponent<Props>(props => {
         source: layer
       })
 
+
+      let backgroundLayer: OverlayLayerId | LayerId = layer
+
     overlayLayers.forEach(overlayLayer => {
+
       if (map.value?.getLayer(overlayLayer)) {
-        map.value?.moveLayer(layer, overlayLayer)
+        map.value?.moveLayer(backgroundLayer, overlayLayer)
+
+        backgroundLayer = overlayLayer
       }
     })
   }
 
 
-  const toggleOverlayLayer = (overlayLayers: Readonly<OverlayLayerId[]>) => {
+  const toggleOverlayLayer = (overlayLayersToToggle: Readonly<OverlayLayerId[]>) => {
 
-    overlayLayers.forEach(overlayLayer => {
+
+    overlayLayersToToggle.forEach(overlayLayer => {
       if (map.value?.getLayer(overlayLayer)) {
         map.value?.removeLayer(overlayLayer)
       } else {
         map.value?.addLayer(overlayConfigs[overlayLayer])
       }
 
-      map.value?.moveLayer(overlayLayer, contourLayerName)
+    })
+
+    let backgroundLayer: OverlayLayerId | null = null
+    overlayLayers.forEach(overlayLayer => {
+      if (map.value?.getLayer(overlayLayer)) {
+        if (backgroundLayer !== null) {
+          map.value?.moveLayer(backgroundLayer, overlayLayer)
+        }
+        backgroundLayer = overlayLayer
+      }
     })
 
   }
@@ -314,18 +346,20 @@ export const DemarcheMap = defineComponent<Props>(props => {
     layersControlVisible.value = false
   }
 
-  return () => <><div id={mapId} style={{ minHeight: '400px' }}>
+  return () => <div id={mapId} class={props.class} style={{ minHeight: '400px' }}>
     <LayersControl
       style={{ display: layersControlVisible.value ? 'block' : 'none', zIndex: 3 }}
       onMouseleave={layerControlOnMouseleave}
       setLayer={selectLayer}
       toggleOverlayLayer={toggleOverlayLayer}
+      defaultOverlayLayer={defaultOverlayLayer.value}
+
     />
-  </div></>
+  </div>
 })
 
 
-const LayersControl: FunctionalComponent<{ onMouseleave: HTMLAttributes['onMouseleave'], style: HTMLAttributes['style'], setLayer: (layer: LayerId) => void, toggleOverlayLayer: (overlay: Readonly<OverlayLayerId[]>) => void }> = (props) => {
+const LayersControl: FunctionalComponent<{ onMouseleave: HTMLAttributes['onMouseleave'], style: HTMLAttributes['style'], setLayer: (layer: LayerId) => void, toggleOverlayLayer: (overlay: Readonly<OverlayLayerId[]>) => void, defaultOverlayLayer: OverlayName[] }> = (props) => {
 
   const selectLayer = (layer: LayerId) => {
     return () => props.setLayer(layer)
@@ -336,7 +370,6 @@ const LayersControl: FunctionalComponent<{ onMouseleave: HTMLAttributes['onMouse
   }
 
   const defaultLayer = 'osm'
-  const defaultOverlayLayer: OverlayName[] = ['Contours', 'Points']
 
   return <div class='maplibregl-ctrl-top-right'>
     <div class='maplibregl-ctrl maplibregl-ctrl-group fr-p-2w' style={{ zIndex: 3 }}>
@@ -354,7 +387,7 @@ const LayersControl: FunctionalComponent<{ onMouseleave: HTMLAttributes['onMouse
       {
         overlayNames.map((name, index) => <div key={index} class="fr-fieldset__element fr-mb-1v">
           <div class="fr-checkbox-group fr-checkbox-group--sm">
-            <input type="checkbox" id={`checkbox-hint-${index}`} onClick={toggleOverlayLayer(name)} checked={defaultOverlayLayer.includes(name)} />
+            <input type="checkbox" id={`checkbox-hint-${index}`} onClick={toggleOverlayLayer(name)} checked={props.defaultOverlayLayer.includes(name)} />
             <label class="fr-label" for={`checkbox-hint-${index}`}>
               {name}
             </label>
@@ -366,4 +399,4 @@ const LayersControl: FunctionalComponent<{ onMouseleave: HTMLAttributes['onMouse
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['geojsonMultiPolygon']
+DemarcheMap.props = ['geojsonMultiPolygon', 'class', 'style', 'maxMarkers']
