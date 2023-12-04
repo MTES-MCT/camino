@@ -21,7 +21,6 @@
   --color-domaine-w: #1ea88c;
 }
 
-
 .leaflet-marker-camino::before {
   display: block;
   position: absolute;

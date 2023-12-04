@@ -1,17 +1,12 @@
-import { FunctionalComponent, Ref, computed, defineComponent, ref, watch, HTMLAttributes } from 'vue'
+import { FunctionalComponent, defineComponent, HTMLAttributes } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
-import { CaminoMap } from '../_map/index'
-import { leafletDivIconBuild, leafletGeojsonBuild, leafletMarkerBuild } from '../_map/leaflet'
-import { LatLngTuple, Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
-import { TitreWithPoint, layersBuild } from '../titres/mapUtil'
 import { TitreApiClient } from '../titre/titre-api-client'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { Column, TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { DemarcheMap } from '../demarche/demarche-map'
@@ -107,46 +102,11 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
 }
 
 const TabCaminoMap = defineComponent<Props>(props => {
-
-
-  // const mapUpdate = async (data: { center?: number[]; zoom?: number; bbox?: [number, number, number, number] }) => {
-  //   if (isNotNullNorUndefined(props.apiClient)) {
-  //     loading.value = true
-
-  //     try {
-  //       const res: { elements: TitreWithPoint[] } = await props.apiClient.getTitresWithPerimetreForCarte({
-  //         statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-  //         perimetre: data.bbox,
-  //         communes: '',
-  //         departements: [],
-  //         domainesIds: [],
-  //         entreprisesIds: [],
-  //         facadesMaritimes: [],
-  //         references: '',
-  //         regions: [],
-  //         substancesIds: [],
-  //         titresIds: [],
-  //         typesIds: [],
-  //       })
-  //       titresValidesGeojson.value = res.elements.filter(({ slug }) => slug !== props.titreSlug)
-  //     } catch (e) {
-  //       console.error(e)
-  //     }
-  //     loading.value = false
-  //   }
-  // }
-
-
-
+  const neighbours = isNullOrUndefined(props.apiClient) ? null : { apiClient: props.apiClient, titreSlug: props.titreSlug }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap
-        geojsonMultiPolygon={props.geojsonMultiPolygon}
-        style={{ minHeight: '400px' }}
-        class="fr-mb-1w"
-        maxMarkers={maxRows}
-      />
+      <DemarcheMap geojsonMultiPolygon={props.geojsonMultiPolygon} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} router={props.router} />
       <DsfrLink
         style={{ alignSelf: 'end' }}
         href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(props.geojsonMultiPolygon))}`}
