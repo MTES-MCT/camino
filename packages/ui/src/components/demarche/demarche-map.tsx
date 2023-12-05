@@ -1,10 +1,5 @@
 import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch } from 'vue'
-import type { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
-
-// @ts-ignore
-import maplibreGl from "maplibre-gl/dist/maplibre-gl-csp";
-maplibreGl.workerUrl = '/js/webworker.js';
-
+import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
@@ -281,7 +276,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
   watch(
     () => props.geojsonMultiPolygon,
     () => {
-      const bounds = new maplibreGl.LngLatBounds()
+      const bounds = new LngLatBounds()
       props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
         top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
       })
@@ -291,7 +286,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   )
   onMounted(() => {
-    const bounds = new maplibreGl.LngLatBounds()
+    const bounds = new LngLatBounds()
     props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
       top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
     })
@@ -325,7 +320,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       ],
     }
 
-    const mapLibre: Map = new maplibreGl.Map({
+    const mapLibre: Map = new Map({
       container: mapId,
       style,
       center: bounds.getCenter().toArray(),
@@ -334,8 +329,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
     map.value = mapLibre
 
-    mapLibre.addControl(new maplibreGl.NavigationControl({ showCompass: false }), 'top-left')
-    mapLibre.addControl(new maplibreGl.FullscreenControl(), 'top-left')
+    mapLibre.addControl(new NavigationControl({ showCompass: false }), 'top-left')
+    mapLibre.addControl(new FullscreenControl(), 'top-left')
 
     const layersControlId = 'layers-control'
     mapLibre.addControl(
@@ -411,13 +406,13 @@ export const DemarcheMap = defineComponent<Props>(props => {
     })
 
     mapLibre.on('click', contourPointsName, e => {
-      new maplibreGl.Popup({ closeButton: false, maxWidth: '500' })
+      new Popup({ closeButton: false, maxWidth: '500' })
         .setLngLat(e.lngLat)
         .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
         .addTo(mapLibre)
     })
 
-    const popup: Popup = new maplibreGl.Popup({
+    const popup = new Popup({
       closeButton: false,
       maxWidth: '500',
     })
