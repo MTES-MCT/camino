@@ -224,7 +224,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
 }
 
 export const DemarcheMap = defineComponent<Props>(props => {
-  const mapId = `map${random()}`
+  const mapRef = ref<HTMLElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
   const map = ref<Map | null>(null) as Ref<Map | null>
 
@@ -321,7 +321,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
 
     const mapLibre: Map = new Map({
-      container: mapId,
+      container: mapRef.value,
       style,
       center: bounds.getCenter().toArray(),
       zoom: 16,
@@ -332,7 +332,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     mapLibre.addControl(new NavigationControl({ showCompass: false }), 'top-left')
     mapLibre.addControl(new FullscreenControl(), 'top-left')
 
-    const layersControlId = 'layers-control'
+    const layersControlId = `layers-control-${random()}`
     mapLibre.addControl(
       {
         onAdd: function () {
@@ -351,7 +351,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           return div
         },
         onRemove: function () {
-          const div = document.getElementById('layers-control')
+          const div = document.getElementById(layersControlId)
           if (div !== null) {
             document.removeChild(div)
           }
@@ -477,9 +477,12 @@ export const DemarcheMap = defineComponent<Props>(props => {
     layersControlVisible.value = false
   }
 
+  const id = `${random()}`
+
   return () => (
-    <div id={mapId} class={props.class} style={{ minHeight: '400px' }}>
+    <div ref={mapRef} class={props.class} style={{ minHeight: '400px' }}>
       <LayersControl
+        id={id}
         style={{ display: layersControlVisible.value ? 'block' : 'none', zIndex: 3 }}
         onMouseleave={layerControlOnMouseleave}
         setLayer={selectLayer}
@@ -492,6 +495,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
 })
 
 const LayersControl: FunctionalComponent<{
+  id: string
   onMouseleave: HTMLAttributes['onMouseleave']
   style: HTMLAttributes['style']
   setLayer: (layer: LayerId) => void
@@ -510,13 +514,13 @@ const LayersControl: FunctionalComponent<{
   const defaultLayer = 'osm'
 
   return (
-    <div class="maplibregl-ctrl-top-right">
+    <div class="maplibregl-ctrl-top-right" id={props.id}>
       <div class="maplibregl-ctrl maplibregl-ctrl-group fr-p-2w" style={{ zIndex: 3 }}>
         {Object.entries(baseMapNames).map(([name, layer]) => (
-          <div key={layer} class="fr-fieldset__element fr-mb-1v">
+          <div key={`${layer}-${props.id}`} class="fr-fieldset__element fr-mb-1v">
             <div class="fr-radio-group fr-radio-group--sm">
-              <input type="radio" id={`radio-hint-${layer}`} name="radio-layers" onClick={selectLayer(layer)} checked={layer === defaultLayer} />
-              <label class="fr-label" for={`radio-hint-${layer}`}>
+              <input type="radio" id={`radio-hint-${layer}-${props.id}`} name={`radio-layers-${props.id}`} onClick={selectLayer(layer)} checked={layer === defaultLayer} />
+              <label class="fr-label" for={`radio-hint-${layer}-${props.id}`}>
                 {name}
               </label>
             </div>
@@ -526,8 +530,8 @@ const LayersControl: FunctionalComponent<{
         {props.overlays.map((name, index) => (
           <div key={index} class="fr-fieldset__element fr-mb-1v">
             <div class="fr-checkbox-group fr-checkbox-group--sm">
-              <input type="checkbox" id={`checkbox-hint-${index}`} onClick={toggleOverlayLayer(name)} checked={props.defaultOverlayLayer.includes(name)} />
-              <label class="fr-label" for={`checkbox-hint-${index}`}>
+              <input type="checkbox" id={`checkbox-hint-${index}-${props.id}`} onClick={toggleOverlayLayer(name)} checked={props.defaultOverlayLayer.includes(name)} />
+              <label class="fr-label" for={`checkbox-hint-${index}-${props.id}`}>
                 {name}
               </label>
             </div>
