@@ -160,5 +160,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Push Docker image to the Docker Hub
-        if: github.ref == 'refs/heads/feat-map-libre'
+        if: github.ref == 'refs/heads/master'
         run: docker push caminofr/camino-api:${GITHUB_SHA}
