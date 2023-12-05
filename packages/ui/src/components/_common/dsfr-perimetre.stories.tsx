@@ -34,13 +34,16 @@ const geojsonMultiPolygon: FeatureMultiPolygon = {
 }
 
 const pushAction = action('push')
+const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
 export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
       geojsonMultiPolygon={geojsonMultiPolygon}
       apiClient={{
-        getTitresWithPerimetreForCarte: _params => {
+        getTitresWithPerimetreForCarte: params => {
+          getTitresWithPerimetreForCarteAction(params)
+
           return Promise.resolve({
             elements: [
               {
@@ -49,7 +52,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
                 references: [],
                 slug: titreSlugValidator.parse('slug-du-titre'),
                 titreStatutId: TitresStatutIds.Echu,
-                typeId: TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES,
+                typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN,
                 titulaires: [],
                 geojsonMultiPolygon: {
                   type: 'Feature',

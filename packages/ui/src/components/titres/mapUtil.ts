@@ -6,7 +6,7 @@ import { Router } from 'vue-router'
 import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
 import { createVNode } from 'vue'
-import { couleurParDomaine } from '../_common/domaine'
+import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 
 const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
@@ -106,7 +106,14 @@ export const clustersBuild = () =>
   }, {})
 
 export interface TitreWithPoint extends CommonTitre {
-  geojsonMultiPolygon?: GeoJsonObject
+  geojsonMultiPolygon?: {
+    type: 'Feature'
+    properties: Record<string, unknown>
+    geometry: {
+      type: 'MultiPolygon'
+      coordinates: [number, number][][][]
+    }
+  }
   geojsonCentre?: { geometry: { coordinates: [number, number] } }
 }
 export type CaminoMarker = {
@@ -119,7 +126,7 @@ export const svgDomaineAnchor = (domaineId: DomaineId): string => {
   return `
     <svg width="33" height="39" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.5 23C1 25 10.0563 32.5564 16.5 39C22.9437 32.5564 30 26 32 23C32.5 22 33 22 33 16C33 5.5 23.8967 0 17 0C10.1033 0 5.17674e-05 4 0 16C-1.16842e-05 18.7406 0 21 0.5 23Z" fill="var(--${
-    couleurParDomaine[domaineId]
+    dsfrVariableCouleurParDomaine[domaineId]
   })"/>
 <text x="12" y="22" class="mono" fill="#161616">${capitalize(domaineId)}</text>
 </svg>

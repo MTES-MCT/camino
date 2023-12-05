@@ -72,6 +72,7 @@
     "leaflet-fullscreen": "^1.0.2",
     "leaflet-gesture-handling": "^1.2.2",
     "leaflet.markercluster": "^1.5.3",
+    "maplibre-gl": "^3.6.2",
     "postcss": "^8.4.24",
     "postcss-preset-env": "^8.5.0",
     "prettier": "^2.8.8",
