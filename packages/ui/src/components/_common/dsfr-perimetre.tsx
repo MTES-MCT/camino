@@ -1,4 +1,4 @@
-import { FunctionalComponent, defineComponent, HTMLAttributes } from 'vue'
+import { FunctionalComponent, defineComponent, HTMLAttributes, defineAsyncComponent } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreSlug } from 'camino-common/src/titres'
@@ -9,7 +9,6 @@ import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
-import { DemarcheMap } from '../demarche/demarche-map'
 export type TabId = 'carte' | 'points'
 export interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
@@ -103,6 +102,12 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
 
 const TabCaminoMap = defineComponent<Props>(props => {
   const neighbours = isNullOrUndefined(props.apiClient) ? null : { apiClient: props.apiClient, titreSlug: props.titreSlug }
+
+  const DemarcheMap = defineAsyncComponent(async () => {
+    const { DemarcheMap } = await import('../demarche/demarche-map')
+
+    return DemarcheMap
+  })
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
