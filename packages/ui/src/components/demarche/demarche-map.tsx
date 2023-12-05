@@ -224,7 +224,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
 }
 
 export const DemarcheMap = defineComponent<Props>(props => {
-  const mapRef = ref<HTMLElement | null>(null)
+  const mapRef = ref<HTMLDivElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
   const map = ref<Map | null>(null) as Ref<Map | null>
 
@@ -320,121 +320,125 @@ export const DemarcheMap = defineComponent<Props>(props => {
       ],
     }
 
-    const mapLibre: Map = new Map({
-      container: mapRef.value,
-      style,
-      center: bounds.getCenter().toArray(),
-      zoom: 16,
-    })
+    if (mapRef.value === null) {
+      console.error("la carte ne peut pas être chargée à cause d'un problème technique, contactez l'équipe Camion")
+    } else {
+      const mapLibre: Map = new Map({
+        container: mapRef.value,
+        style,
+        center: bounds.getCenter().toArray(),
+        zoom: 16,
+      })
 
-    map.value = mapLibre
+      map.value = mapLibre
 
-    mapLibre.addControl(new NavigationControl({ showCompass: false }), 'top-left')
-    mapLibre.addControl(new FullscreenControl(), 'top-left')
+      mapLibre.addControl(new NavigationControl({ showCompass: false }), 'top-left')
+      mapLibre.addControl(new FullscreenControl(), 'top-left')
 
-    const layersControlId = `layers-control-${random()}`
-    mapLibre.addControl(
-      {
-        onAdd: function () {
-          const div = document.createElement('div')
-          div.id = layersControlId
-          div.className = 'maplibregl-ctrl maplibregl-ctrl-group'
-          div.innerHTML = `<button class="maplibregl-ctrl-icon" type="button" aria-label="Change le fond de carte" title="Change le fond de carte">
+      const layersControlId = `layers-control-${random()}`
+      mapLibre.addControl(
+        {
+          onAdd: function () {
+            const div = document.createElement('div')
+            div.id = layersControlId
+            div.className = 'maplibregl-ctrl maplibregl-ctrl-group'
+            div.innerHTML = `<button class="maplibregl-ctrl-icon" type="button" aria-label="Change le fond de carte" title="Change le fond de carte">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%" fill="currentColor">
           <path d="m24 41.5-18-14 2.5-1.85L24 37.7l15.5-12.05L42 27.5Zm0-7.6-18-14 18-14 18 14Zm0-15.05Zm0 11.25 13.1-10.2L24 9.7 10.9 19.9Z"/>
         </svg>
           </button>`
-          div.onmouseenter = function () {
-            layersControlVisible.value = true
-          }
+            div.onmouseenter = function () {
+              layersControlVisible.value = true
+            }
 
-          return div
+            return div
+          },
+          onRemove: function () {
+            const div = document.getElementById(layersControlId)
+            if (div !== null) {
+              document.removeChild(div)
+            }
+          },
         },
-        onRemove: function () {
-          const div = document.getElementById(layersControlId)
-          if (div !== null) {
-            document.removeChild(div)
+        'top-right'
+      )
+
+      mapLibre.fitBounds(bounds, { padding: 50 })
+      mapLibre.on('moveend', async () => {
+        if (props.neighbours !== null) {
+          const bounds = mapLibre.getBounds()
+
+          try {
+            const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
+              statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
+              perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
+              communes: '',
+              departements: [],
+              domainesIds: [],
+              entreprisesIds: [],
+              facadesMaritimes: [],
+              references: '',
+              regions: [],
+              substancesIds: [],
+              titresIds: [],
+              typesIds: [],
+            })
+
+            ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
+              type: 'FeatureCollection',
+              features: res.elements
+                .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
+                .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
+                .map(titreValide => {
+                  const properties: TitreValideProperties = {
+                    slug: titreValide.slug,
+                    nom: titreValide.nom,
+                    typeId: titreValide.typeId,
+                    titreStatutId: titreValide.titreStatutId,
+                    domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
+                  }
+
+                  // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
+                  return { ...titreValide.geojsonMultiPolygon!, properties }
+                }),
+            })
+          } catch (e) {
+            console.error(e)
           }
-        },
-      },
-      'top-right'
-    )
-
-    mapLibre.fitBounds(bounds, { padding: 50 })
-    mapLibre.on('moveend', async () => {
-      if (props.neighbours !== null) {
-        const bounds = mapLibre.getBounds()
-
-        try {
-          const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
-            statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-            perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
-            communes: '',
-            departements: [],
-            domainesIds: [],
-            entreprisesIds: [],
-            facadesMaritimes: [],
-            references: '',
-            regions: [],
-            substancesIds: [],
-            titresIds: [],
-            typesIds: [],
-          })
-
-          ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
-            type: 'FeatureCollection',
-            features: res.elements
-              .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-              .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
-              .map(titreValide => {
-                const properties: TitreValideProperties = {
-                  slug: titreValide.slug,
-                  nom: titreValide.nom,
-                  typeId: titreValide.typeId,
-                  titreStatutId: titreValide.titreStatutId,
-                  domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
-                }
-
-                // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-                return { ...titreValide.geojsonMultiPolygon!, properties }
-              }),
-          })
-        } catch (e) {
-          console.error(e)
         }
-      }
-    })
+      })
 
-    mapLibre.on('click', contourPointsName, e => {
-      new Popup({ closeButton: false, maxWidth: '500' })
-        .setLngLat(e.lngLat)
-        .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
-        .addTo(mapLibre)
-    })
+      mapLibre.on('click', contourPointsName, e => {
+        new Popup({ closeButton: false, maxWidth: '500' })
+          .setLngLat(e.lngLat)
+          .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
+          .addTo(mapLibre)
+      })
 
-    const popup = new Popup({
-      closeButton: false,
-      maxWidth: '500',
-    })
+      const popup = new Popup({
+        closeButton: false,
+        maxWidth: '500',
+      })
 
-    mapLibre.on('mouseenter', titresValidesFillName, e => {
-      if (isNotNullNorUndefinedNorEmpty(e.features)) {
-        const titreProperties = e.features[0].properties as TitreValideProperties
+      mapLibre.on('mouseenter', titresValidesFillName, e => {
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          const titreProperties = e.features[0].properties as TitreValideProperties
 
-        popup.setLngLat(e.lngLat).setHTML(`<div class="fr-text--lg fr-m-0">${titreProperties.nom}</div>`).addTo(mapLibre)
-      }
-    })
+          popup.setLngLat(e.lngLat).setHTML(`<div class="fr-text--lg fr-m-0">${titreProperties.nom}</div>`).addTo(mapLibre)
+        }
+      })
 
-    mapLibre.on('mouseleave', titresValidesFillName, () => {
-      popup.remove()
-    })
+      mapLibre.on('mouseleave', titresValidesFillName, () => {
+        popup.remove()
+      })
 
-    mapLibre.on('click', titresValidesFillName, e => {
-      if (isNotNullNorUndefinedNorEmpty(e.features)) {
-        const titreProperties = e.features[0].properties as TitreValideProperties
-        props.router.push({ name: 'titre', params: { id: titreProperties.slug } })
-      }
-    })
+      mapLibre.on('click', titresValidesFillName, e => {
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          const titreProperties = e.features[0].properties as TitreValideProperties
+          props.router.push({ name: 'titre', params: { id: titreProperties.slug } })
+        }
+      })
+    }
   })
 
   const selectLayer = (layer: LayerId) => {
