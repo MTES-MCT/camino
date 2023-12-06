@@ -1,49 +1,31 @@
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheTypeId, isDemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTypesDemarchesTypes'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
-import { useStore } from 'vuex'
-import { DemarcheId } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
 import { DsfrInput } from '../_ui/dsfr-input'
+import { TitreId } from 'camino-common/src/titres'
 
 export interface Props {
   demarche: {
-    titreId: string
+    titreId: TitreId
     id?: DemarcheId
     typeId?: DemarcheTypeId
-    description?: string
+    description?: string | null
   }
   titreNom: string
   titreTypeId: TitreTypeId
-  tabId: string
+  tabId: 'travaux' | 'demarches'
   apiClient: Pick<DemarcheApiClient, 'updateDemarche' | 'createDemarche'>
   close: () => void
-  reload: () => void
-  displayMessage: () => void
+  reload: (demarcheSlug: DemarcheSlug) => void
 }
 
-export const DemarcheEditPopup = caminoDefineComponent<Omit<Props, 'reload' | 'displayMessage'>>(['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close'], props => {
-  const store = useStore()
-
-  return () => (
-    <PureDemarcheEditPopup
-      apiClient={props.apiClient}
-      close={props.close}
-      demarche={props.demarche}
-      titreTypeId={props.titreTypeId}
-      titreNom={props.titreNom}
-      tabId={props.tabId}
-      reload={() => store.dispatch('titre/get', props.demarche.titreId, { root: true })}
-      displayMessage={() => store.dispatch('messageAdd', { value: `le titre a été mis à jour`, type: 'success' }, { root: true })}
-    />
-  )
-})
-
-export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload', 'displayMessage'], props => {
-  const matomo = inject('matomo', null)
+// TODO 2023-12-19: question POH, pour ajouter des travaux, on propose de mettre un radio bouton dans cette popup. Est-ce encore d'actualité ?
+export const DemarcheEditPopup = caminoDefineComponent<Props>(['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload'], props => {
   const typeId = ref<DemarcheTypeId | null>(props.demarche.typeId ?? null)
   const description = ref<string>(props.demarche.description ?? '')
 
@@ -99,20 +81,16 @@ export const PureDemarcheEditPopup = caminoDefineComponent<Props>(['demarche', '
         typeId: typeId.value,
         description: description.value,
       }
+      let demarcheSlug = null
       if (props.demarche.id) {
-        await props.apiClient.updateDemarche({
+        demarcheSlug = await props.apiClient.updateDemarche({
           ...demarche,
           id: props.demarche.id,
         })
       } else {
-        await props.apiClient.createDemarche(demarche)
+        demarcheSlug = await props.apiClient.createDemarche(demarche)
       }
-      props.displayMessage()
-      props.reload()
-    }
-    if (matomo) {
-      // @ts-ignore
-      matomo.trackEvent('titre-sections', `titre-${props.tabId}-enregistrer`, props.demarche.id)
+      props.reload(demarcheSlug)
     }
   }
 

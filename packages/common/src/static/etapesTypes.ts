@@ -189,6 +189,10 @@ export const etapeTypeIdValidator = z.enum(IDS)
 export const etapeTypeIdFondamentaleValidator = z.enum(FONDAMENTALES_IDS)
 export const etapeTypeIdNonFondamentaleValidator = z.enum(NON_FONDAMENTALES_IDS)
 
+export const isEtapeTypeIdFondamentale = (e: EtapeTypeId): e is EtapeTypeIdFondamentale => {
+  return etapeTypeIdFondamentaleValidator.safeParse(e).success
+}
+
 export type EtapeTypeId = z.infer<typeof etapeTypeIdValidator>
 
 export type EtapeType<T = EtapeTypeId> = Definition<T> & { unique: boolean; fondamentale: boolean; date_fin: CaminoDate | null; public_lecture: boolean; entreprises_lecture: boolean }
@@ -1896,3 +1900,7 @@ export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId =
 export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeKey => {
   return etapeTypeKey in ETAPES_TYPES
 }
+
+const ETAPES_DECISIONS_IDS = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco'] as const satisfies Readonly<EtapeTypeId[]>
+
+export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)

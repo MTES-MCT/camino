@@ -4,7 +4,6 @@ import type { MenuSection } from '@/utils/matomo'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
-import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
 import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
@@ -31,9 +30,9 @@ const Travaux = async () => {
   return Travaux
 }
 
-const Demarche = async () => {
-  const { Demarche } = await import('../components/demarche')
-  return Demarche
+const Titre = async () => {
+  const { Titre } = await import('../components/titre')
+  return Titre
 }
 
 const Etape = async () => {
@@ -189,15 +188,6 @@ const routes = [
     meta: {
       title: 'Liste des travaux',
       menuSection: 'travaux',
-    },
-  },
-  {
-    path: '/demarches/:demarcheId',
-    name: 'demarche',
-    component: Demarche,
-    meta: {
-      title: "Détail d'une démarche",
-      menuSection: 'demarches',
     },
   },
   {
@@ -465,8 +455,14 @@ const router = createRouter({
   linkExactActiveClass: 'exact-active',
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(savedPosition)
+        }, 500)
+      })
     } else if (to.name === 'titres' && 'vueId' in to.query && !Array.isArray(to.query.vueId) && to.query.vueId === 'carte') {
+      return false
+    } else if (to.name === 'titre' && from.name === 'titre') {
       return false
     } else {
       return { top: 0 }

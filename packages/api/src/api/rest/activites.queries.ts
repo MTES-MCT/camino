@@ -29,9 +29,9 @@ import { Pool } from 'pg'
 import { canDeleteActiviteDocument, canEditActivite, canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 import { User, UserSuper, isSuper, utilisateurIdValidator } from 'camino-common/src/roles.js'
 import { z } from 'zod'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
 import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
@@ -39,7 +39,6 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { titreTypeIdObjectValidator, administrationsLocalesValidator, entrepriseIdObjectValidator } from './titres.queries.js'
 
 export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreActivite, { activiteId }, pool, entrepriseIdObjectValidator)
@@ -223,6 +222,7 @@ export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, p
   )
 }
 
+const administrationsLocalesValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
 const getAdministrationsLocalesByActiviteId = sql<Redefine<IGetAdministrationsLocalesByActiviteIdQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof administrationsLocalesValidator>>>`
 select
     te.administrations_locales
@@ -235,6 +235,7 @@ where
     or ta.slug = $ activiteId !
 `
 
+const titreTypeIdObjectValidator = z.object({ titre_type_id: titreTypeIdValidator })
 const getTitreTypeIdByActiviteId = sql<Redefine<IGetTitreTypeIdByActiviteIdQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof titreTypeIdObjectValidator>>>`
 select
     t.type_id as titre_type_id
@@ -246,6 +247,7 @@ where
     or ta.slug = $ activiteId !
 `
 
+const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
 const getTitulairesAmodiatairesTitreActivite = sql<Redefine<IGetTitulairesAmodiatairesTitreActiviteQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof entrepriseIdObjectValidator>>>`
 select distinct
     e.id

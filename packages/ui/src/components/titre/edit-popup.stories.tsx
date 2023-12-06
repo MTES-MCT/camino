@@ -10,37 +10,49 @@ const meta: Meta = {
 }
 export default meta
 
-const editTitre = action('editTitre')
+const editTitreAction = action('editTitre')
 const close = action('close')
+const reloadAction = action('reload')
+const reload = () => {
+  reloadAction('close')
+
+  return Promise.resolve()
+}
 
 export const DefaultNoReference: StoryFn = () => (
   <EditPopup
+    reload={reload}
     titre={{
       id: titreIdValidator.parse('id'),
       nom: 'Nom du titre',
       references: [],
     }}
     close={close}
-    editTitre={(...params) => {
-      editTitre(params)
+    apiClient={{
+      editTitre: (...params) => {
+        editTitreAction(params)
 
-      return Promise.resolve()
+        return Promise.resolve()
+      },
     }}
   />
 )
 
 export const OneReference: StoryFn = () => (
   <EditPopup
+    reload={reload}
     titre={{
       id: titreIdValidator.parse('id'),
       nom: 'Nom du titre',
-      references: [{ nom: 'RefValue', referenceTypeId: 'brg' }],
+      references: [{ nom: 'Valeur', referenceTypeId: 'brg' }],
     }}
     close={close}
-    editTitre={(...params) => {
-      editTitre(params)
+    apiClient={{
+      editTitre: (...params) => {
+        editTitreAction(params)
 
-      return Promise.resolve()
+        return Promise.resolve()
+      },
     }}
   />
 )

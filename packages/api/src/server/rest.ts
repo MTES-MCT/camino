@@ -20,6 +20,7 @@ import {
   getTitre,
   getTitreDate,
   getTitreCommunes,
+  getUtilisateurTitreAbonner,
 } from '../api/rest/titres.js'
 import {
   creerEntreprise,
@@ -52,7 +53,6 @@ import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { deleteEtape, deposeEtape, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
-import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
@@ -125,13 +125,13 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
   '/rest/titres/:id/communes': { get: getTitreCommunes },
+  // FIXME à supprimer
   '/rest/titres/:titreId/activites': { get: getActivitesByTitreId },
   '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
-  '/rest/demarches/:demarcheId': { get: getDemarche },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
   '/rest/titres/:titreId/date': { get: getTitreDate },
-  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner },
+  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
   '/rest/titresONF': { get: titresONF },
   '/rest/titresAdministrations': { get: titresAdministrations },
   '/rest/statistiques/minerauxMetauxMetropole': { get: getMinerauxMetauxMetropolesStats }, // UNTESTED YET

@@ -20,7 +20,7 @@ export const DeposeEtapePopup: FunctionalComponent<Props> = props => {
   const deposeEtape = async () => {
     await props.apiClient.deposeEtape(props.id)
   }
-  const content = () => <Alert type="warning" title="Attention : cette opération est définitive et ne peut pas être annulée." description={() => <>Souhaitez vous effectuer le dépôt ?</>} />
+  const content = () => <Alert type="warning" title="Attention : cette opération est définitive et ne peut pas être annulée." description="Souhaitez vous effectuer le dépôt ?" />
 
-  return <FunctionalPopup title={`Dépôt`} content={content} close={props.close} validate={{ action: deposeEtape, text: 'Déposer' }} canValidate={true} />
+  return <FunctionalPopup title="Dépôt" content={content} close={props.close} validate={{ action: deposeEtape, text: 'Déposer' }} canValidate={true} />
 }

@@ -1,7 +1,7 @@
 import { ITitreActivite } from '../../types.js'
 
 import { titresActivitesUpdate } from './titres-activites-update.js'
-import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check.js'
+import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres.js'
 import { anneesBuild } from '../../tools/annees-build.js'
 import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
 import { titresGet } from '../../database/queries/titres.js'
@@ -37,6 +37,11 @@ vi.mock('../rules/titre-activites-build', () => ({
   titreActivitesBuild: vi.fn().mockResolvedValue(true),
 }))
 
+vi.mock('camino-common/src/permissions/titres.js', () => ({
+  __esModule: true,
+  canHaveActiviteTypeId: vi.fn().mockResolvedValue(true),
+}))
+
 vi.mock('../../tools/api-mailjet/emails', () => ({
   __esModule: true,
   emailsSend: vi.fn().mockImplementation(a => a),
@@ -52,11 +57,13 @@ const titresToutesActivites = [
       { annee: 2018, periodeId: 3 },
       { annee: 2018, periodeId: 4 },
     ],
+    communes: [],
+    demarches: [],
   },
-] as Titres[]
+] as unknown as Titres[]
 
 const titresGetMock = vi.mocked(titresGet, true)
-const titreActiviteTypeCheckMock = vi.mocked(titreActiviteTypeCheck, true)
+const titreActiviteTypeCheckMock = vi.mocked(canHaveActiviteTypeId, true)
 const anneesBuildMock = vi.mocked(anneesBuild, true)
 const titreActivitesBuildMock = vi.mocked(titreActivitesBuild, true)
 const emailsSendMock = vi.mocked(emailsSend, true)
@@ -72,6 +79,8 @@ describe("activités d'un titre", () => {
       id: newTitreId('h-cx-courdemanges-1988'),
       activites: [],
       titulaires: [{ utilisateurs: [{ email: 'email' }] }],
+      communes: [],
+      demarches: [],
     },
   ] as unknown as Titres[]
 
@@ -85,7 +94,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(8)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
+    expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titresActivitesUpsert).toHaveBeenCalled()
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(emailsWithTemplateSendMock).toHaveBeenCalledWith(['email'], EmailTemplateId.ACTIVITES_NOUVELLES, expect.any(Object))
@@ -101,7 +110,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(0)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
+    expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
     expect(emailsSendMock).not.toHaveBeenCalled()
@@ -116,7 +125,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(0)
 
-    expect(titreActiviteTypeCheck).toHaveBeenCalledTimes(8)
+    expect(canHaveActiviteTypeId).toHaveBeenCalledTimes(8)
     expect(titreActivitesBuild).not.toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
   })
@@ -130,7 +139,7 @@ describe("activités d'un titre", () => {
 
     expect(titresActivitesNew.length).toEqual(0)
 
-    expect(titreActiviteTypeCheck).not.toHaveBeenCalled()
+    expect(canHaveActiviteTypeId).not.toHaveBeenCalled()
     expect(titreActivitesBuild).not.toHaveBeenCalled()
     expect(titresActivitesUpsert).not.toHaveBeenCalled()
   })

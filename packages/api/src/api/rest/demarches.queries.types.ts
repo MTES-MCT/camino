@@ -3,55 +3,6 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 
 export type JsonArray = (Json)[];
 
-/** 'GetDemarcheQueryDb' parameters type */
-export interface IGetDemarcheQueryDbParams {
-  id: string;
-}
-
-/** 'GetDemarcheQueryDb' return type */
-export interface IGetDemarcheQueryDbResult {
-  demarche_statut_id: string;
-  demarche_type_id: string;
-  entreprises_lecture: boolean;
-  id: string;
-  public_lecture: boolean;
-  slug: string | null;
-  titre_id: string;
-  titre_nom: string;
-  titre_public_lecture: boolean;
-  titre_slug: string;
-  titre_statut_id: string;
-  titre_type_id: string;
-}
-
-/** 'GetDemarcheQueryDb' query type */
-export interface IGetDemarcheQueryDbQuery {
-  params: IGetDemarcheQueryDbParams;
-  result: IGetDemarcheQueryDbResult;
-}
-
-/** 'GetDemarchesByTitreIdDb' parameters type */
-export interface IGetDemarchesByTitreIdDbParams {
-  id: string;
-}
-
-/** 'GetDemarchesByTitreIdDb' return type */
-export interface IGetDemarchesByTitreIdDbResult {
-  demarche_date_debut: string | null;
-  demarche_date_fin: string | null;
-  demarche_type_id: string;
-  entreprises_lecture: boolean;
-  first_etape_date: string | null;
-  public_lecture: boolean;
-  slug: string | null;
-}
-
-/** 'GetDemarchesByTitreIdDb' query type */
-export interface IGetDemarchesByTitreIdDbQuery {
-  params: IGetDemarchesByTitreIdDbParams;
-  result: IGetDemarchesByTitreIdDbResult;
-}
-
 /** 'GetEtapesByDemarcheIdDb' parameters type */
 export interface IGetEtapesByDemarcheIdDbParams {
   demarcheId: string;
@@ -69,6 +20,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   duree: number | null;
   etape_statut_id: string;
   etape_type_id: string;
+  forets: Json;
   heritage_contenu: Json | null;
   heritage_props: Json | null;
   id: string;

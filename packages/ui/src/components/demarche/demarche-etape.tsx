@@ -20,7 +20,7 @@ import { isNumberElement, valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
 import styles from './demarche-etape.module.css'
-import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { PureDownloads } from '../_common/downloads'
 import { canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
@@ -66,7 +66,7 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 export const DemarcheEtape = defineComponent<Props>(props => {
   let hasContent = false
   if (fondamentalePropsName in props.etape) {
-    const { geojsonMultiPolygon: _geojsonMultiPolygon, ...fondamentale } = props.etape.fondamentale
+    const { perimetre: _perimetre, ...fondamentale } = props.etape.fondamentale
     hasContent =
       getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0)) ||
       props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
@@ -86,16 +86,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   const closeDeposePopup = () => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
-  const editEtapeButton = () => {
+  const _editEtapeButton = () => {
     // FIXME ajouter matomo comme pour preview.vue ?
     // FIXME ajouter matomo au bouton download ?
-
-    props.router.push({
-      name: 'etape-edition',
-      params: { id: props.etape.slug },
-      force: true,
-      replace: true,
-    })
   }
 
   const canDownloadZip: boolean = props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0)
@@ -122,13 +115,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             sectionsWithValue: props.etape.sections_with_values,
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
-            points: props.etape.fondamentale.geojsonMultiPolygon?.geometry.coordinates[0][0] ?? [],
+            points: props.etape.fondamentale.perimetre?.geojsonMultiPolygon?.geometry.coordinates[0][0] ?? [],
             decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
             decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
           // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
           props.etape.documents.map(document => ({ typeId: document.document_type_id, fichier: true })),
           props.etape.entreprises_documents,
+          // FIXME from démarche ou from étape ?
           props.demarche.sdom_zones
         )
       : false
@@ -147,7 +141,15 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                 {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.etape_statut_id === ETAPES_STATUTS.EN_CONSTRUCTION ? (
                   <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable} />
                 ) : null}
-                <DsfrButtonIcon icon={'fr-icon-edit-line'} class="fr-mr-1v" buttonType="secondary" title="Modifier l’étape" onClick={editEtapeButton} />
+                <DsfrLink
+                  icon={'fr-icon-edit-line'}
+                  disabled={false}
+                  to={{ name: 'etape-edition', params: { id: props.etape.slug } }}
+                  class="fr-mr-1v"
+                  buttonType="secondary"
+                  title="Modifier l’étape"
+                  label={null}
+                />
                 <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} />
               </>
             ) : null}
@@ -191,7 +193,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                 ) : null}
                 <EtapePropEntreprisesItem title="Titulaire" entreprises={props.etape.fondamentale.titulaires} />
                 <EtapePropEntreprisesItem title="Amodiataire" entreprises={props.etape.fondamentale.amodiataires} />
-                {props.etape.fondamentale.surface !== null ? <EtapePropItem title="Surface" text={`${numberFormat(props.etape.fondamentale.surface)} km² environ`} /> : null}
+                {isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.surface) ? (
+                  <EtapePropItem title="Surface" text={`${numberFormat(props.etape.fondamentale.perimetre.surface)} km² environ`} />
+                ) : null}
               </>
             ) : null}
             {props.etape.sections_with_values.map(section => (
@@ -233,13 +237,13 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         </>
       ) : null}
 
-      {fondamentalePropsName in props.etape && props.etape.fondamentale.geojsonMultiPolygon !== null ? (
+      {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojsonMultiPolygon) ? (
         <DsfrPerimetre
           class="fr-pt-2w"
           initTab={props.initTab}
           titreSlug={props.titre.slug}
           apiClient={null}
-          geojsonMultiPolygon={props.etape.fondamentale.geojsonMultiPolygon}
+          geojsonMultiPolygon={props.etape.fondamentale.perimetre.geojsonMultiPolygon}
           router={props.router}
         />
       ) : null}

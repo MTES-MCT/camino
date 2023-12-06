@@ -1,0 +1,218 @@
+import { capitalize, defineComponent, Fragment, FunctionalComponent, ref } from 'vue'
+import { DemarcheSlug } from 'camino-common/src/demarche'
+import style from './titre-timeline.module.css'
+import { CaminoRouterLink } from '@/router/camino-router-link'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { CaminoDate, CaminoDateFormated, dateFormat } from 'camino-common/src/date'
+import { HTMLAttributes } from 'vue/dist/vue'
+import { TitreGetDemarche, TitreSlug } from 'camino-common/src/titres'
+import { DsfrSeparator } from '../_ui/dsfr-separator'
+
+type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
+type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]
+type TitreTimelineEvents = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { first_etape_date: CaminoDate | null }
+type Props = {
+  titreSlug: TitreSlug
+  phasesWithAlterations: Phase | NoPhase
+  currentDemarcheSlug: DemarcheSlug
+  class?: HTMLAttributes['class']
+}
+
+type PhaseWithDateDebut = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id' | 'demarche_date_fin'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }
+
+type DemarcheAlteration = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
+
+const isNoPhase = (phase: Phase | NoPhase): phase is NoPhase => {
+  return phase.length === 1 && phase[0].length === 1 && phase[0][0].demarche_date_debut === null
+}
+
+export const TitreTimeline: FunctionalComponent<Props> = props => {
+  if (props.phasesWithAlterations.length === 0 || isNoPhase(props.phasesWithAlterations)) {
+    return null
+  }
+  props.phasesWithAlterations.forEach(phaseWithAlteration => {
+    phaseWithAlteration.forEach(phase => phase.events.sort((a, b) => (a.first_etape_date ?? '').localeCompare(b.first_etape_date ?? '')))
+  })
+
+  const lastPhaseWithDateFin = props.phasesWithAlterations[props.phasesWithAlterations.length - 1][0]
+  const dateFin = isNotNullNorUndefined(lastPhaseWithDateFin.demarche_date_fin) ? dateFormat(lastPhaseWithDateFin.demarche_date_fin) : 'xx-xx-xxxx'
+  const datePhasesWithAlterations: (CaminoDateFormated | 'xx-xx-xxxx')[][] = [
+    ...props.phasesWithAlterations.map(phaseWithAlterations => {
+      return phaseWithAlterations.map(stuff => {
+        if ('date_etape_decision_ok' in stuff) {
+          return dateFormat(stuff.date_etape_decision_ok)
+        } else {
+          return dateFormat(stuff.demarche_date_debut)
+        }
+      })
+    }),
+  ]
+
+  return (
+    <>
+      <h2>Phases</h2>
+      <div class="fr-mx-4w">
+        <div style={{ display: 'flex', gap: '5px' }}>
+          {datePhasesWithAlterations.map((datePhases, i) => (
+            <div key={i} style={{ flex: 1 }} class={`${style.datesContainer}`}>
+              {datePhases.map((datePhase, index) => (
+                <div
+                  class={`${style.date} fr-text--md fr-mb-1w`}
+                  style={{
+                    flex: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 2 : 1,
+                    justifyContent: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 'center' : 'start',
+                  }}
+                  key={index}
+                >
+                  <span
+                    style={{
+                      marginLeft: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 0 : '-32px',
+                    }}
+                  >
+                    {datePhase}
+                  </span>
+                </div>
+              ))}
+
+              {i === datePhasesWithAlterations.length - 1 ? (
+                <div
+                  class={`${style.date} fr-text--md fr-mb-1w`}
+                  style={{
+                    justifyContent: 'end',
+                    flex: 1,
+                  }}
+                >
+                  <span
+                    style={{
+                      marginRight: '-32px',
+                    }}
+                  >
+                    {dateFin}
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: '5px' }}>
+          {props.phasesWithAlterations.map((phaseWithAlterations, index) => (
+            <Fragment key={index}>
+              <div class={`${style.phasesContainer}`} style={{ flex: 1, border: phaseWithAlterations.length > 1 ? '2px solid black' : '2px solid white' }}>
+                {phaseWithAlterations.map(demarche => (
+                  <Fragment key={demarche.slug}>
+                    <DemarchePhase titreSlug={props.titreSlug} phase={demarche} currentDemarcheSlug={props.currentDemarcheSlug} />
+                  </Fragment>
+                ))}
+              </div>
+              {index === props.phasesWithAlterations.length - 1 ? (
+                <div
+                  style={{
+                    border: 'solid var(--background-action-high-blue-france)',
+                    borderWidth: '0 4px 4px 0',
+                    padding: '8px',
+                    display: 'inline-block',
+                    transform: 'translate(-100%) rotate(-45deg)',
+                  }}
+                ></div>
+              ) : null}
+            </Fragment>
+          ))}
+        </div>
+        <div class="fr-pt-1w" style={{ display: 'flex' }}>
+          {props.phasesWithAlterations.map(phaseWithAlterations => (
+            <div style={{ flex: 1 }} class={`${style.datesContainer}`}>
+              {phaseWithAlterations.map(demarche => (
+                <div style={{ flex: 1 }}>
+                  <CaminoRouterLink
+                    {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
+                    key={demarche.slug}
+                    to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
+                    title={capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                    class="fr-link"
+                  >
+                    {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                  </CaminoRouterLink>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <DsfrSeparator />
+    </>
+  )
+}
+
+const getAriaCurrent = (slug: DemarcheSlug, currentPhaseSlug: DemarcheSlug | null): { 'aria-current'?: 'page' } => {
+  return slug === currentPhaseSlug ? { 'aria-current': 'page' } : {}
+}
+
+const DemarchePhase = defineComponent<{ titreSlug: TitreSlug; phase: PhaseWithDateDebut | DemarcheAlteration; currentDemarcheSlug: DemarcheSlug }>(props => {
+  // Impossible d’utiliser du css pour gérer le hover, obliger d’utiliser du javascript
+  const isOntoRootElement = ref<boolean>(false)
+  const isOntoChildElement = ref<boolean>(false)
+
+  const onMouseenter = () => {
+    isOntoRootElement.value = true
+  }
+  const onMouseleave = () => {
+    isOntoRootElement.value = false
+  }
+
+  const demarcheEventMouseenter = () => {
+    isOntoChildElement.value = true
+  }
+  const demarcheEventMouseleave = () => {
+    isOntoChildElement.value = false
+  }
+
+  return () => (
+    <CaminoRouterLink
+      {...getAriaCurrent(props.phase.slug, props.currentDemarcheSlug)}
+      to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.phase.slug } }}
+      title={capitalize(DemarchesTypes[props.phase.demarche_type_id].nom)}
+      class={`${style.phase} ${isOntoRootElement.value && !isOntoChildElement.value ? style.phaseHover : ''}`}
+      anchorHTMLAttributes={{ onMouseenter, onMouseleave }}
+    >
+      {props.phase.events.map((event, index) => (
+        <DemarcheEvent
+          titreSlug={props.titreSlug}
+          onMouseenter={demarcheEventMouseenter}
+          onMouseleave={demarcheEventMouseleave}
+          demarche={event}
+          currentDemarcheSlug={props.currentDemarcheSlug}
+          key={index}
+        />
+      ))}
+    </CaminoRouterLink>
+  )
+})
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+DemarchePhase.props = ['phase', 'currentDemarcheSlug', 'titreSlug']
+
+const DemarcheEvent: FunctionalComponent<{
+  titreSlug: TitreSlug
+  demarche: Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'>
+  onMouseenter: () => void
+  onMouseleave: () => void
+  currentDemarcheSlug: DemarcheSlug | null
+}> = props => {
+  const tooltipId = 'timeline-event-' + props.demarche.slug
+
+  return (
+    <>
+      <CaminoRouterLink
+        aria-describedby={tooltipId}
+        {...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug)}
+        to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } }}
+        title={capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom)}
+        class={style.event}
+        anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
+      />
+      {/* FIXME les infos bulles sont dans la dernière version du DSFR */}
+      {/* <span class="fr-tooltip fr-placement fr-placement--top fr-tooltip--shown" id={tooltipId} role="tooltip" aria-hidden="true">COUCOU</span> */}
+    </>
+  )
+}

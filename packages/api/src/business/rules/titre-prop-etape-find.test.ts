@@ -362,7 +362,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
     ).toEqual('h-cx-courdemanges-1983-oct01-mfr01')
   })
 
-  test("trouve l'id de la dernière étape de dpu d'une démarche de prolongation ou de demande de titre en instruction car l'étape contient un périmètre et le titre a le statut 'modification en instance' et aucune phase n'est valide", () => {
+  test("ne trouve pas la dernière étape de dpu d'une démarche de prolongation ou de demande de titre en instruction car l'étape contient un périmètre et le titre a le statut 'modification en instance' et aucune phase n'est valide", () => {
     expect(
       titrePropTitreEtapeFind(
         currentDate,
@@ -401,8 +401,8 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
           },
         ],
         TitresStatutIds.ModificationEnInstance
-      )?.id
-    ).toEqual('h-cx-courdemanges-1981-pro01-dpu01')
+      )
+    ).toEqual(null)
   })
 
   test("ne trouve pas l'id de la dernière étape de dpu d'une démarche de prolongation ou de demande de titre en instruction car l'étape contient un périmètre et le titre a le statut 'modification en instance' mais la phase est encore valide", () => {
@@ -541,7 +541,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
           ],
           TitresStatutIds.ModificationEnInstance
         )?.id
-      ).toEqual('h-cx-courdemanges-1981-pro01-dpu01')
+      ).toEqual('h-cx-courdemanges-1981-oct01-dpu01')
     }
   )
 
@@ -761,15 +761,9 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
 
 describe("id de l'étape qui a un contenu", () => {
   test("retourne null si aucune étape n'est trouvé", () => {
-    const etape1 = titreContenuTitreEtapeFind(
-      currentDate,
-      { sectionId: 'arm', elementId: 'mecanisee' },
-      [{ id: newDemarcheId('demarche-id'), etapes: [{ id: newEtapeId('etape-id') }] }] as ITitreDemarche[],
-      'val'
-    )
+    const etape1 = titreContenuTitreEtapeFind({ sectionId: 'arm', elementId: 'mecanisee' }, [{ id: newDemarcheId('demarche-id'), etapes: [{ id: newEtapeId('etape-id') }] }] as ITitreDemarche[], 'val')
 
     const etape2 = titreContenuTitreEtapeFind(
-      currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
@@ -781,10 +775,7 @@ describe("id de l'étape qui a un contenu", () => {
       'val'
     )
 
-    const newDate = toCaminoDate('2020-01-02')
-
     const etape3 = titreContenuTitreEtapeFind(
-      newDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
@@ -815,7 +806,6 @@ describe("id de l'étape qui a un contenu", () => {
 
   test("retourne l'id de l'étape si elle existe", () => {
     const etape1 = titreContenuTitreEtapeFind(
-      currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
@@ -850,15 +840,16 @@ describe("id de l'étape qui a un contenu", () => {
       ],
       'val'
     )
+    expect(etape1?.id).toEqual('etape-id')
 
     const etape2 = titreContenuTitreEtapeFind(
-      currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
           id: newDemarcheId('demarche-id'),
           titreId: newTitreId('titre-id'),
           typeId: 'pro',
+          statutId: 'acc',
           etapes: [
             {
               id: newEtapeId('etape-id'),
@@ -874,13 +865,11 @@ describe("id de l'étape qui a un contenu", () => {
       'mod'
     )
 
-    expect(etape1?.id).toEqual('etape-id')
     expect(etape2?.id).toEqual('etape-id')
   })
 
   test("ne retourne pas l'id de la demande si le titre n’est pas en dmi", () => {
     const etape = titreContenuTitreEtapeFind(
-      currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
@@ -906,7 +895,6 @@ describe("id de l'étape qui a un contenu", () => {
 
   test("retourne l'id de la demande si le titre est en dmi", () => {
     const etape = titreContenuTitreEtapeFind(
-      currentDate,
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {

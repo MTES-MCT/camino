@@ -15,6 +15,8 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 
+export const activitesColonneIdAnnee = 'annee'
+
 const activitesColonnes = [
   {
     id: 'titre',
@@ -25,7 +27,7 @@ const activitesColonnes = [
     name: 'Titulaires',
   },
   {
-    id: 'annee',
+    id: activitesColonneIdAnnee,
     name: 'Année',
   },
   {

@@ -11,13 +11,14 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
 } from './entreprise.js'
-import { demarcheGetValidator, demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
+import { demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
   activitesByTitreValidator,
   editableTitreValidator,
   titreAdministrationValidator,
   titreGetValidator,
+  titreIdOrSlugValidator,
   titreIdValidator,
   titreLinksValidator,
   titreOnfValidator,
@@ -53,7 +54,6 @@ const IDS = [
   '/rest/statistiques/guyane',
   '/rest/statistiques/granulatsMarins',
   '/rest/titreSections/:titreId',
-  '/rest/demarches/:demarcheId',
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/date',
   '/rest/titres/:titreId/abonne',
@@ -96,7 +96,6 @@ const IDS = [
 ] as const
 
 export type CaminoRestRoute = (typeof IDS)[number]
-export type CaminoRestRouteIds = typeof IDS
 
 export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
@@ -109,9 +108,8 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionWithValueValidator) } },
-  '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: demarcheGetValidator } },
-  '/rest/titres/:titreId': { params: { titreId: titreIdValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
-  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
+  '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
+  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { get: { output: z.array(titreAdministrationValidator) } },

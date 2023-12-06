@@ -72,3 +72,16 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
       'La démarche engagée unilatéralement par l’administration qui a fait l’objet d’une décision de l’administration. Celle-ci n’a pas fait l’objet d’une demande de la part du titulaire du titre ou de l’autorisation.\n',
   },
 }
+
+const ETAPES_STATUTS_OK_IDS = [
+  ETAPES_STATUTS.ACCEPTE,
+  ETAPES_STATUTS.FAIT,
+  ETAPES_STATUTS.DEPOSE,
+  ETAPES_STATUTS.COMPLETE,
+  ETAPES_STATUTS.FAVORABLE,
+  ETAPES_STATUTS.FAVORABLE_AVEC_RESERVE,
+  ETAPES_STATUTS.TERMINE,
+  ETAPES_STATUTS.EXEMPTE,
+] as const satisfies Readonly<EtapeStatutId[]>
+
+export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_OK_IDS.includes(etapeStatutId)

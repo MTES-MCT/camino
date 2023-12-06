@@ -11,9 +11,9 @@ import { administrationsTitresTypesTitresStatutsModify, administrationsTitresQue
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import AdministrationsModel from '../../models/administrations.js'
-import UtilisateursTitres from '../../models/utilisateurs--titres.js'
 import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const titresDemarchesAdministrationsModificationQuery = (administrationId: AdministrationId, demarcheTypeAlias: string) => {
   const administrationQuery = administrationsTitresQuery(administrationId, 'titres_modification', {
@@ -114,7 +114,7 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
           c.where(d => d.modify(titresVisibleByEntrepriseQuery, entreprisesIds))
 
           // ou si le titre est une ARM en cours de demande
-          if (demandeEnCours) {
+          if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {
             c.orWhere(d => d.modify(titresArmEnDemandeQuery))
           }
         })
@@ -140,19 +140,8 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
 
   q.select(titresModificationSelectQuery(q, user).as('modification'))
 
-  if (user) {
-    q.select(
-      UtilisateursTitres.query()
-        .select(raw('true'))
-        .where(raw('?? = ??', ['titreId', 'titres.id']))
-        .where('utilisateurId', user.id)
-        .first()
-        .as('abonnement')
-    )
-  }
-
-  if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
-    if (demandeEnCours) {
+  if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entreprises)) {
+    if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {
       q.modify(
         titresConfidentielSelect,
         user.entreprises.map(e => e.id)

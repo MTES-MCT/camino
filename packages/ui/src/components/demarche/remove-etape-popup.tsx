@@ -25,7 +25,7 @@ export const RemoveEtapePopup: FunctionalComponent<Props> = props => {
     <Alert
       type="warning"
       title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={() => (
+      description={
         <>
           Souhaitez vous supprimer l'étape <span class="fr-text--bold">{EtapesTypes[props.etapeTypeId].nom}</span> de la démarche{' '}
           <span class="fr-text--bold">{DemarchesTypes[props.demarcheTypeId].nom}</span> du titre{' '}
@@ -34,7 +34,7 @@ export const RemoveEtapePopup: FunctionalComponent<Props> = props => {
           </span>{' '}
           ?
         </>
-      )}
+      }
     />
   )
 

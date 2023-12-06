@@ -6,6 +6,7 @@ import { ApiClient } from '@/api/api-client'
 import { vueRouter } from 'storybook-vue3-router'
 import { filtres as demarchesFiltres } from '../demarches'
 import { filtres as travauxFiltres } from '../travaux'
+import { demarcheSlugValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Demarches/Page',
@@ -15,7 +16,7 @@ const meta: Meta = {
 }
 export default meta
 
-const getDemarchesAction = action('getDemarchesA')
+const getDemarchesAction = action('getDemarches')
 const getEntreprisesAction = action('getEntreprises')
 const pushRouteAction = action('pushRoute')
 
@@ -35,6 +36,7 @@ const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'get
       total: 1200,
       elements: [...Array(10).keys()].map(value => ({
         id: `id${value}`,
+        slug: demarcheSlugValidator.parse(`slug${value}`),
         typeId: value % 2 === 0 ? 'dam' : 'amo',
         statutId: value % 2 === 0 ? 'fpm' : 'des',
         titre: {

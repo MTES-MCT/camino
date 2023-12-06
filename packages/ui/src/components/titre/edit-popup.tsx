@@ -5,18 +5,21 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DsfrInput } from '../_ui/dsfr-input'
+import { TitreApiClient } from './titre-api-client'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   titre: EditableTitre
   close: () => void
-  editTitre: (titre: EditableTitre) => Promise<void>
+  apiClient: Pick<TitreApiClient, 'editTitre'>
+  reload: () => Promise<void>
 }
 
 type EditableTitreReference = TitreReference | { referenceTypeId: ''; nom: '' }
 const isTitreReference = (value: EditableTitreReference): value is TitreReference => {
   return value.nom !== '' && value.referenceTypeId !== ''
 }
-export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTitre'], props => {
+export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'apiClient', 'reload'], props => {
   const nom = ref(props.titre.nom)
   const references = ref<EditableTitreReference[]>([...props.titre.references])
   const referenceAdd = () => {
@@ -50,7 +53,7 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
             <button class="fr-btn fr-icon-delete-line fr-btn--icon fr-btn--tertiary fr-ml-2v" type="button" onClick={() => referenceRemove(index)} />
           </div>
         ))}
-        {references.value && !references.value.find(r => !r.referenceTypeId || !r.nom) ? (
+        {isNullOrUndefined(references.value.find(r => !r.referenceTypeId || !r.nom)) ? (
           <button class="fr-btn fr-icon-add-line fr-btn--icon-right fr-btn--tertiary" id="references" onClick={referenceAdd}>
             Ajouter une référence
           </button>
@@ -65,12 +68,14 @@ export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'editTi
       content={content}
       close={props.close}
       validate={{
-        action: async () =>
-          props.editTitre({
+        action: async () => {
+          await props.apiClient.editTitre({
             id: props.titre.id,
             nom: nom.value,
             references: references.value.filter(isTitreReference),
-          }),
+          })
+          props.reload()
+        },
         text: 'Enregistrer',
       }}
       canValidate={nom.value !== ''}

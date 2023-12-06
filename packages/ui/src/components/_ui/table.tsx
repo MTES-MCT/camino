@@ -8,13 +8,14 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 type SortOrder = 'asc' | 'desc'
 
 export interface TableSortEvent {
-  column: string
-  order: SortOrder
+  colonne: string
+  ordre: SortOrder
 }
 
+// TODO 2023-12-06 merge with TableSortEvent
 export interface InitialSort {
-  column: string
-  order: SortOrder
+  colonne: string
+  ordre: SortOrder
 }
 
 export interface ComponentColumnData {

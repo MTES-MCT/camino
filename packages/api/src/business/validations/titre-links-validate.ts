@@ -1,10 +1,14 @@
 import { TitreId } from 'camino-common/src/titres.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
 import { getLinkConfig } from 'camino-common/src/permissions/titres.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const checkTitreLinks = (titre: Pick<ITitre, 'typeId'>, titreFromIds: TitreId[], titresFrom: ITitre[], demarches: ITitreDemarche[]) => {
-  const linkConfig = getLinkConfig(titre.typeId, demarches)
-  if (!linkConfig) {
+  const linkConfig = getLinkConfig(
+    titre.typeId,
+    demarches.map(({ typeId }) => ({ demarche_type_id: typeId }))
+  )
+  if (isNullOrUndefined(linkConfig)) {
     throw new Error('ce titre ne peut pas être lié à d’autres titres')
   }
 
@@ -16,9 +20,7 @@ export const checkTitreLinks = (titre: Pick<ITitre, 'typeId'>, titreFromIds: Tit
     throw new Error('droit insuffisant')
   }
 
-  if (linkConfig) {
-    if (titresFrom.some(({ typeId }) => typeId !== linkConfig.typeId)) {
-      throw new Error(`un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${linkConfig.typeId}`)
-    }
+  if (titresFrom.some(({ typeId }) => typeId !== linkConfig.typeId)) {
+    throw new Error(`un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${linkConfig.typeId}`)
   }
 }

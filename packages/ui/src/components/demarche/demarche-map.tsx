@@ -15,6 +15,7 @@ import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 
 const contoursSourceName = 'Contours'
+const pointsSourceName = 'Points'
 const contoursLineName = 'ContoursLine'
 const contourPointsName = 'ContoursPoints'
 const titresValidesFillName = 'TitresValidesFill'
@@ -62,7 +63,7 @@ const overlayLayers = [
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
-const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, 'Points', 'Titres valides'] as const
+const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, 'Titres valides'] as const
 const overlayNameValidator = z.enum(overlayNames)
 type OverlayName = z.infer<typeof overlayNameValidator>
 
@@ -71,7 +72,7 @@ const overlayMapNames = {
   'Façades maritimes': ['Facades'],
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
   [contoursSourceName]: [contoursLineName, 'ContoursFill'],
-  Points: [contourPointsName, 'ContoursPointLabels'],
+  [pointsSourceName]: [contourPointsName, 'ContoursPointLabels'],
   'Titres valides': [titresValidesLineName, titresValidesFillName],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
@@ -180,7 +181,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   [contourPointsName]: {
     id: contourPointsName,
     type: 'circle',
-    source: 'Points',
+    source: pointsSourceName,
     minzoom: 12,
 
     paint: {
@@ -191,7 +192,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   ContoursPointLabels: {
     id: 'ContoursPointLabels',
     type: 'symbol',
-    source: 'Points',
+    source: pointsSourceName,
     minzoom: 12,
     paint: {
       'text-color': '#ffffff',
@@ -241,8 +242,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  const points = computed(() => {
-    const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string } }[] = []
+  const points = computed<{
+    type: 'FeatureCollection'
+    features: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[]
+  }>(() => {
+    const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[] = []
     let index = 0
     props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
       topLevel.forEach((secondLevel, secondLevelIndex) =>
@@ -257,6 +261,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
               },
               properties: {
                 pointNumber: `${index}`,
+                latitude: `${y}`,
+                longitude: `${x}`,
               },
             })
             index++
@@ -265,12 +271,10 @@ export const DemarcheMap = defineComponent<Props>(props => {
       )
     )
 
-    const value = {
+    return {
       type: 'FeatureCollection',
       features: currentPoints,
     }
-
-    return value
   })
 
   watch(
@@ -281,6 +285,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
         top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
       })
       ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.geojsonMultiPolygon)
+      ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
 
       map.value?.fitBounds(bounds, { padding: 50 })
     }
@@ -301,7 +306,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           type: 'geojson',
           data: props.geojsonMultiPolygon,
         },
-        Points: {
+        [pointsSourceName]: {
           type: 'geojson',
           data: points.value,
         },
@@ -409,10 +414,12 @@ export const DemarcheMap = defineComponent<Props>(props => {
       })
 
       mapLibre.on('click', contourPointsName, e => {
-        new Popup({ closeButton: false, maxWidth: '500' })
-          .setLngLat(e.lngLat)
-          .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
-          .addTo(mapLibre)
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          new Popup({ closeButton: false, maxWidth: '500' })
+            .setLngLat(e.lngLat)
+            .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div></div>`)
+            .addTo(mapLibre)
+        }
       })
 
       const popup = new Popup({

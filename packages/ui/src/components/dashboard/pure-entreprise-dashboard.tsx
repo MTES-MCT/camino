@@ -64,7 +64,7 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                 <Alert
                   type="info"
                   title="Découvrez l'estimation de votre fiscalité minière."
-                  description={() => (
+                  description={
                     <>
                       {props.entreprises.length === 1 ? (
                         <>
@@ -99,10 +99,10 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
                         </>
                       )}
                     </>
-                  )}
+                  }
                 />
               ) : null}
-              <TableAuto caption={`Vos titres`} columns={columns} rows={entrepriseTitres(item)} initialSort={{ column: 'statut', order: 'asc' }} class="width-full-p" />
+              <TableAuto caption={`Vos titres`} columns={columns} rows={entrepriseTitres(item)} initialSort={{ colonne: 'statut', ordre: 'asc' }} class="width-full-p" />
             </>
           )
         }}

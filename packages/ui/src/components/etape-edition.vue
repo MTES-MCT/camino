@@ -212,6 +212,7 @@ export default {
       await this.$router.push({
         name: 'titre',
         params: { id: this.titre.id },
+        query: { demarcheSlug: this.demarche.slug },
         hash: `#${titreEtapeId}`,
       })
     },

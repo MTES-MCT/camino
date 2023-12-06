@@ -188,7 +188,7 @@ export const Infos: FunctionalComponent<Props> = ({ titre, user, apiClient, curr
             id: titre.id,
             typeId: titre.typeId,
             administrations: titre.administrations,
-            demarches: titre.demarches.map(d => ({ typeId: d.typeId })),
+            demarches: titre.demarches.map(d => ({ demarche_type_id: d.typeId })),
           }}
           apiClient={apiClient}
         />

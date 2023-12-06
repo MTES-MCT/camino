@@ -58,13 +58,21 @@ export const AllDsfrIcons: StoryFn = () => (
     <table>
       <tr>
         <th>Name</th>
-        <th>Component</th>
+        <th>SM</th>
+        <th>MD</th>
+        <th>LG</th>
       </tr>
       {dsfrIcons.map(iconName => (
         <tr>
           <td>{iconName}</td>
           <td>
-            <DsfrIcon name={`fr-icon-${iconName}`} />
+            <DsfrIcon name={`fr-icon-${iconName}`} size="sm" />
+          </td>
+          <td>
+            <DsfrIcon name={`fr-icon-${iconName}`} size="md" />
+          </td>
+          <td>
+            <DsfrIcon name={`fr-icon-${iconName}`} size="lg" />
           </td>
         </tr>
       ))}

@@ -54,7 +54,10 @@ type DsfrLinkProps = {
   icon: DsfrIcon | null
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
-} & ({ to: UseLinkOptions['to']; disabled: boolean } | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download'] })
+} & (
+  | { to: UseLinkOptions['to']; disabled: boolean }
+  | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download']; target?: HTMLAnchorElement['target']; rel?: HTMLAnchorElement['rel'] }
+)
 export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
   const iconClass = []
   if (props.icon !== null && props.label !== null) {
@@ -79,7 +82,9 @@ export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
           title={props.title}
           href={props.href}
           download={props.download}
+          target={props.target}
           style={props.style}
+          rel={props.rel}
         >
           {isNotNullNorUndefined(props.label) ? props.label : props.title}
         </a>

@@ -28,7 +28,7 @@ export type LinkableTitre = TitreLink & {
 export interface TitresLinkFormApiClient {
   linkTitres: (titreId: TitreId, titreFromIds: TitreId[]) => Promise<TitreLinks>
   loadTitreLinks: (titreId: TitreId) => Promise<TitreLinks>
-  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => () => Promise<LinkableTitre[]>
+  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]) => () => Promise<LinkableTitre[]>
 }
 
 export const titresLinkFormApiClient: TitresLinkFormApiClient = {
@@ -40,7 +40,7 @@ export const titresLinkFormApiClient: TitresLinkFormApiClient = {
     return await getWithJson('/rest/titres/:id/titreLiaisons', { id: titreId })
   },
 
-  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => async () => {
+  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]) => async () => {
     const linkConfig = getLinkConfig(titreTypeId, demarches)
 
     if (linkConfig) {

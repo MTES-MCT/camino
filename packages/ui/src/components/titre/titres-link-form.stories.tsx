@@ -4,11 +4,13 @@ import { TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titre
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
+import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLinkForm',
   component: TitresLinkForm,
   argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'titre' }])],
 }
 export default meta
 
@@ -68,9 +70,20 @@ export const FusionWithAlreadySelectedTitre: StoryFn = () => (
       typeId: 'cxm',
       administrations: [],
       id: titreIdValidator.parse('titreId'),
-      demarches: [{ typeId: 'fus' }],
+      demarches: [{ demarche_type_id: 'fus' }],
     }}
-    apiClient={apiClient}
+    apiClient={{
+      ...apiClient,
+      loadTitreLinks: () => {
+        return Promise.resolve({
+          aval: [
+            { id: titreIdValidator.parse('id10'), nom: 'Titre fils' },
+            { id: titreIdValidator.parse('id11'), nom: 'Titre fils 2' },
+          ],
+          amont: titresFrom,
+        })
+      },
+    }}
   />
 )
 

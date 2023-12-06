@@ -13,6 +13,7 @@ import { SectionsEdit } from './_common/new-sections-edit'
 import { DsfrButton, DsfrLink } from './_ui/dsfr-button'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const ActiviteEdition = defineComponent(() => {
   const matomo = inject('matomo', null)
@@ -28,7 +29,7 @@ export const ActiviteEdition = defineComponent(() => {
         ...apiClient,
         updateActivite: async (activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments) => {
           await apiClient.updateActivite(activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments)
-          if (matomo) {
+          if (isNotNullNorUndefined(matomo)) {
             // @ts-ignore
             matomo.trackEvent('activite', 'activite-enregistrer', ActivitesTypes[activiteTypeId].nom)
           }
@@ -161,7 +162,7 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
                   type="info"
                   title="Besoin d'aide pour remplir ce rapport ?"
                   class="fr-mb-2w"
-                  description={() => (
+                  description={
                     <>
                       <div>Tous les champs doivent être remplis même s’il n’y a pas eu d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer.</div>
                       <div>
@@ -171,10 +172,10 @@ export const PureActiviteEdition = defineComponent<Props>(props => {
                         </a>
                       </div>
                     </>
-                  )}
+                  }
                 />
 
-                {ActivitesTypes[activite.type_id].description ? <div class="h6" v-html={ActivitesTypes[activite.type_id].description} /> : null}
+                {ActivitesTypes[activite.type_id].description !== undefined ? <div class="h6" v-html={ActivitesTypes[activite.type_id].description} /> : null}
 
                 <SectionsEdit sectionsWithValue={activite.sections_with_value} completeUpdate={sectionsUpdate} />
 

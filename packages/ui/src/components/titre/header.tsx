@@ -7,13 +7,10 @@ import { EditableTitre, TitreId } from 'camino-common/src/titres'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { EditPopup } from './edit-popup'
-import { RemovePopup } from './remove-popup'
 import { titreApiClient, TitreApiClient } from './titre-api-client'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoDate, dateFormat } from 'camino-common/src/date'
 import { LoadingElement } from '../_ui/functional-loader'
-import { ButtonIcon } from '../_ui/button-icon'
 import { Button } from '../_ui/button'
 
 interface Props {
@@ -104,8 +101,6 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
   const suppression = computed(() => {
     return canDeleteTitre(props.user)
   })
-  const removePopup = ref<boolean>(false)
-  const editPopup = ref<boolean>(false)
 
   const lastModifiedDate = ref<AsyncData<CaminoDate | null>>({ status: 'LOADING' })
 
@@ -156,28 +151,6 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
                   title="Signaler une erreur"
                   render={() => <span class="mt-xs nowrap">Signaler une erreur…</span>}
                 />
-
-                {props.titre.modification ? (
-                  <ButtonIcon
-                    class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`}
-                    onClick={() => {
-                      editPopup.value = true
-                    }}
-                    icon="pencil"
-                    title="Modifier le titre"
-                  />
-                ) : null}
-
-                {suppression.value ? (
-                  <ButtonIcon
-                    class="btn rnd-r-xs py-s px-m"
-                    onClick={() => {
-                      removePopup.value = true
-                    }}
-                    icon="delete"
-                    title="Supprimer le titre"
-                  />
-                ) : null}
               </div>
             </div>
           </div>
@@ -185,27 +158,6 @@ export const PureHeader = caminoDefineComponent<Omit<PureProps, 'titreEventTrack
           <div class="line width-full" />
         </div>
       </div>
-      {removePopup.value ? (
-        <RemovePopup
-          close={() => (removePopup.value = !removePopup.value)}
-          titreId={props.titre.id}
-          titreNom={props.titre.nom}
-          titreTypeId={props.titre.typeId}
-          deleteTitre={async () => {
-            await props.apiClient.removeTitre(props.titre.id)
-          }}
-        />
-      ) : null}
-
-      {editPopup.value ? (
-        <EditPopup
-          close={() => (editPopup.value = !editPopup.value)}
-          titre={props.titre}
-          editTitre={async titre => {
-            await props.apiClient.editTitre(titre)
-          }}
-        />
-      ) : null}
     </>
   )
 })

@@ -15,13 +15,13 @@ export const ActiviteRemovePopup = caminoDefineComponent<Props>(['close', 'apiCl
     <Alert
       type="warning"
       title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={() => (
+      description={
         <>
           {' '}
           Souhaitez-vous supprimer ce <span class="fr-text--bold"> {ActivitesTypes[props.activite.type_id].nom}</span> du titre
           <span class="fr-text--bold"> {props.activite.titre.nom}</span> ?{' '}
         </>
-      )}
+      }
     />
   )
 

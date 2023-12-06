@@ -3,20 +3,27 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { FunctionalComponent } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { Alert } from '@/components/_ui/alert'
+import { TitreApiClient } from './titre-api-client'
+import { TitreId } from 'camino-common/src/titres'
 interface Props {
-  titreId: string
+  titreId: TitreId
   titreNom: string
   titreTypeId: TitreTypeId
   close: () => void
-  deleteTitre: () => Promise<void>
+  apiClient: Pick<TitreApiClient, 'removeTitre'>
+  reload: () => void
 }
 
 export const RemovePopup: FunctionalComponent<Props> = props => {
+  const removeTitre = async () => {
+    await props.apiClient.removeTitre(props.titreId)
+    props.reload()
+  }
   const content = () => (
     <Alert
       type="warning"
       title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={() => (
+      description={
         <>
           Souhaitez-vous supprimer le titre{' '}
           <span class="fr-text--bold">
@@ -24,9 +31,9 @@ export const RemovePopup: FunctionalComponent<Props> = props => {
           </span>
           ) ?
         </>
-      )}
+      }
     />
   )
 
-  return <FunctionalPopup title="Suppression du titre" content={content} close={props.close} validate={{ action: props.deleteTitre, text: 'Supprimer' }} canValidate={true} />
+  return <FunctionalPopup title="Suppression du titre" content={content} close={props.close} validate={{ action: removeTitre, text: 'Supprimer' }} canValidate={true} />
 }

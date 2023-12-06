@@ -2,17 +2,17 @@ import { Administration, AdministrationId, sortedAdministrations } from './stati
 import { CommuneId } from './static/communes.js'
 import { DepartementId, Departements, toDepartementId } from './static/departement.js'
 import { SecteursMaritimes, getDepartementsBySecteurs } from './static/facades.js'
-import { onlyUnique, isNullOrUndefined } from './typescript-tools.js'
+import { onlyUnique, isNullOrUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
 
 // calcule tous les départements d'une étape
 const titreEtapeAdministrationsDepartementsBuild = (communes: CommuneId[] | undefined | null, secteursMaritimes: SecteursMaritimes[] | undefined | null): DepartementId[] => {
-  if (!communes) {
+  if (isNullOrUndefined(communes)) {
     throw new Error('les communes ne sont pas chargées')
   }
 
   const departements = communes.map(id => toDepartementId(id))
 
-  if (secteursMaritimes) {
+  if (isNotNullNorUndefinedNorEmpty(secteursMaritimes)) {
     departements.push(...getDepartementsBySecteurs(secteursMaritimes))
   }
 
