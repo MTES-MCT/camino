@@ -1,17 +1,19 @@
-const { nodeResolve } = require('@rollup/plugin-node-resolve')
-const dotenv = require('dotenv')
-const path = require('path')
-const { defineConfig } = require('vite')
-const vue = require('@vitejs/plugin-vue')
-const vueJsx = require('@vitejs/plugin-vue-jsx')
-const inject = require('@rollup/plugin-inject')
-const { visualizer } = require('rollup-plugin-visualizer')
+/// <reference types="vitest" />
+import { defineConfig } from 'vite'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import dotenv from 'dotenv'
+import path from 'path'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import inject from '@rollup/plugin-inject'
+import { visualizer } from 'rollup-plugin-visualizer'
+import { execSync } from 'node:child_process'
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
-const commitHash = process.env.GIT_SHA ? process.env.GIT_SHA : require('child_process').execSync('git rev-parse --short HEAD').toString()
+const commitHash = process.env.GIT_SHA ? process.env.GIT_SHA : execSync('git rev-parse --short HEAD').toString()
 
-module.exports = defineConfig({
+export default defineConfig({
   plugins: [vue(), vueJsx(), visualizer()],
   root: 'src',
   resolve: {
@@ -19,10 +21,11 @@ module.exports = defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+
   test: {
     setupFiles: ['./__mocks__/setupVitest.js'],
-    transformMode: {
-      web: [/\.[jt]sx$/],
+    testTransformMode: {
+      web: ['*.tsx'],
     },
     // async cjs module issue from https://github.com/vitest-dev/vitest/issues/2742
     alias: [
@@ -67,13 +70,15 @@ module.exports = defineConfig({
       '/stream/version': {
         target: process.env.API_URL,
         changeOrigin: true,
-        // fix https://github.com/http-party/node-http-proxy/issues/1520
-        onProxyRes: (proxyRes, req, res) => {
-          res.on('close', () => {
-            if (!res.finished) {
-              console.info('client closed http con, close proxy con')
-              proxyRes.destroy()
-            }
+        configure: (proxy, options) => {
+          // fix https://github.com/http-party/node-http-proxy/issues/1520
+          proxy.on('proxyRes', (proxyRes, _req, res) => {
+            res.on('close', () => {
+              if (!res.finished) {
+                console.info('client closed http con, close proxy con')
+                proxyRes.destroy()
+              }
+            })
           })
         },
       },
