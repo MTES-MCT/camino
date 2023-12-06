@@ -1,12 +1,8 @@
-import { defineComponent, defineAsyncComponent, computed, onMounted, inject, FunctionalComponent, ref } from 'vue'
-import { Icon } from '@/components/_ui/icon'
-import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
-import { canCreateTitre } from 'camino-common/src/permissions/titres'
+import { defineComponent, defineAsyncComponent, computed, onMounted, inject, ref } from 'vue'
 import { useStore } from 'vuex'
 import { User, isAdministration } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import type { TitreCarteParams } from './titres/map'
-import { Navigation } from './_ui/navigation'
 import { Tab, Tabs } from './_ui/tabs'
 import { PageContentHeader } from './_common/page-header-content'
 import { titreApiClient } from './titre/titre-api-client'
@@ -22,31 +18,13 @@ import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { DemandeTitreButton } from './_common/demande-titre-button'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
   typesIds: ['ar', 'pr', 'ax', 'px', 'cx'],
   statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-}
-
-const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
-  if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
-    return (
-      <Navigation
-        class="fr-btn fr-ml-1w"
-        to="/titres/creation"
-        title="Demander un nouveau titre"
-        render={() => (
-          <>
-            <span class="mt-xxs">Demander un titre…</span>
-            <Icon name="plus" size="M" class="flex-right" color="white" aria-hidden="true" />
-          </>
-        )}
-      />
-    )
-  }
-
-  return null
 }
 
 const tabs = ['carte', 'table'] as const
@@ -244,7 +222,7 @@ export const Titres = defineComponent({
                     paramsForCarte.value = null
                     reloadTitres(newTabId)
                   }
-                  if (matomo) {
+                  if (isNotNullNorUndefined(matomo)) {
                     // @ts-ignore
                     matomo.trackEvent('titres-vue', 'titres-vueId', tabId.value)
                   }

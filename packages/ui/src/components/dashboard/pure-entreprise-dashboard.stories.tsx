@@ -13,6 +13,7 @@ const meta: Meta = {
     vueRouter([
       { name: 'titre', params: { id: 'fourth-slug' } },
       { name: 'Stats DGTM', params: {} },
+      { name: 'titre-creation', params: {} },
     ]),
   ],
 }

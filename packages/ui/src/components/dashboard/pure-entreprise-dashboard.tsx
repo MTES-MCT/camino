@@ -3,14 +3,16 @@ import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { Entreprise, EntrepriseId, TitreEntreprise } from 'camino-common/src/entreprise'
 import { titresColonnes, titresLignesBuild } from '@/components/titres/table-utils'
-import { Icon } from '@/components/_ui/icon'
-import { useRouter } from 'vue-router'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
+import { PageContentHeader } from '../_common/page-header-content'
+import { DemandeTitreButton } from '../_common/demande-titre-button'
+import { Alert } from '../_ui/alert'
+import { DsfrLink } from '../_ui/dsfr-button'
 
 export interface Props {
   user: User
@@ -38,12 +40,6 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
 
   const columns = titresColonnes.filter(({ id }) => (props.displayActivites ? true : id !== 'activites'))
 
-  const router = useRouter()
-
-  const titreDemandeOpen = () => {
-    router.push({ name: 'titre-creation' })
-  }
-
   onMounted(async () => {
     try {
       const entreprises = await props.apiClient.getEntreprisesTitres(props.entreprises.map(({ id }) => id))
@@ -57,54 +53,54 @@ export const PureEntrepriseDashboard = caminoDefineComponent<Props>(['user', 'en
   })
 
   return () => (
-    <div>
-      <div class="desktop-blobs">
-        <div class="desktop-blob-2-3">
-          <h1 class="mt-xs mb-m">Mes Titres</h1>
-        </div>
-
-        <div class="desktop-blob-1-3">
-          <button class="btn btn-primary small flex" onClick={titreDemandeOpen} title="Demander un titre" aria-label="Demander un titre">
-            <span class="mt-xxs">Demander un titre…</span>
-            <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-
+    <div class="dsfr">
+      <PageContentHeader nom="Mes Titres" download={null} renderButton={() => <DemandeTitreButton user={props.user} />} />
       <LoadingElement
         data={data.value}
         renderItem={item => {
           return (
             <>
               {fiscaliteVisibleForAtLeastOneEntreprise(props.user, props.entreprises, item) ? (
-                <div class="p-s bg-info color-bg mb">
-                  Découvrez l'estimation de votre fiscalité minière pour
-                  {props.entreprises.length === 1 ? (
+                <Alert
+                  type="info"
+                  title="Découvrez l'estimation de votre fiscalité minière."
+                  description={() => (
                     <>
-                      <router-link to={entrepriseUrl(props.entreprises[0].id)} class="p-s color-bg mb" title={`Page de l’entreprise ${props.entreprises[0].nom}`}>
-                        {props.entreprises[0].nom}
-                      </router-link>
-                    </>
-                  ) : (
-                    <>
-                      {' '}
-                      vos entreprises :
-                      {props.entreprises
-                        .filter(entreprise =>
-                          fiscaliteVisible(
-                            props.user,
-                            entreprise.id,
-                            item.map(({ typeId }) => ({ type_id: typeId }))
-                          )
-                        )
-                        .map(entreprise => (
-                          <router-link to={entrepriseUrl(entreprise.id)} class="p-s color-bg mb" title={`Page de l’entreprise ${entreprise.nom}`}>
-                            {entreprise.nom}
-                          </router-link>
-                        ))}
+                      {props.entreprises.length === 1 ? (
+                        <>
+                          <DsfrLink
+                            disabled={false}
+                            icon={null}
+                            to={entrepriseUrl(props.entreprises[0].id)}
+                            label={props.entreprises[0].nom}
+                            title={`Page de l’entreprise ${props.entreprises[0].nom}`}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {props.entreprises
+                            .filter(entreprise =>
+                              fiscaliteVisible(
+                                props.user,
+                                entreprise.id,
+                                item.map(({ typeId }) => ({ type_id: typeId }))
+                              )
+                            )
+                            .map(entreprise => (
+                              <DsfrLink
+                                disabled={false}
+                                class="fr-mr-1w"
+                                icon={null}
+                                to={entrepriseUrl(entreprise.id)}
+                                label={entreprise.nom}
+                                title={`Page de l’entreprise ${props.entreprises[0].nom}`}
+                              />
+                            ))}
+                        </>
+                      )}
                     </>
                   )}
-                </div>
+                />
               ) : null}
               <TableAuto caption={`Vos titres`} columns={columns} rows={entrepriseTitres(item)} initialSort={{ column: 'statut', order: 'asc' }} class="width-full-p" />
             </>

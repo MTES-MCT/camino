@@ -53,6 +53,7 @@ type DsfrLinkProps = {
   buttonType?: ButtonType
   icon: DsfrIcon | null
   style?: HTMLAttributes['style']
+  class?: HTMLAttributes['class']
 } & ({ to: UseLinkOptions['to']; disabled: boolean } | { href: HTMLAnchorElement['href']; download?: HTMLAnchorElement['download'] })
 export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
   const iconClass = []
@@ -64,7 +65,7 @@ export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
     <>
       {'to' in props ? (
         <CaminoRouterLink
-          class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
+          class={[props.class, props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
           isDisabled={props.disabled}
           title={props.title}
           to={props.to}
@@ -74,7 +75,7 @@ export const DsfrLink: FunctionalComponent<DsfrLinkProps> = props => {
         </CaminoRouterLink>
       ) : (
         <a
-          class={[props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
+          class={[props.class, props.buttonType ? ['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`] : 'fr-link', iconClass, props.icon]}
           title={props.title}
           href={props.href}
           download={props.download}
