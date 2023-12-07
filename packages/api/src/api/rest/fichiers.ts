@@ -18,6 +18,8 @@ import { LargeObjectManager } from 'pg-large-object'
 import express from 'express'
 import { join } from 'node:path'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
+import { slugify } from 'camino-common/src/strings.js'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
@@ -51,12 +53,12 @@ export const etapeTelecharger =
 
     const zip = new JSZip()
 
-    for (let i = 0; i < documents.length; i++) {
-      const path = documentFilePathFind(documents[i])
-      const filename = path.split('/').pop()
+    for (const document of documents) {
+      const path = documentFilePathFind(document)
+      const fileName = slugify(`${document.id}-${DocumentsTypes[document.typeId].nom}`)
 
       if (statSync(path).isFile()) {
-        zip.file(filename!, readFileSync(path))
+        zip.file(`${fileName}.pdf`, readFileSync(path))
       }
     }
     const client = await pool.connect()
@@ -69,9 +71,10 @@ export const etapeTelecharger =
 
         const entrepriseDocument = entrepriseDocuments[i]
         const [_size, stream] = await man.openAndReadableStreamAsync(entrepriseDocument.largeobject_id, bufferSize)
-        zip.file(`${entrepriseDocument.id}.pdf`, stream)
+        const fileName = slugify(`${entrepriseDocument.id}-${DocumentsTypes[entrepriseDocument.entreprise_document_type_id].nom}`)
+        zip.file(`${fileName}.pdf`, stream)
       }
-      const nom = `documents-${titreEtape.id}.zip`
+      const nom = `documents-${titreEtape.slug}.zip`
 
       const filePath = `/${DOWNLOADS_DIRECTORY}/${nom}`
       await new Promise<void>(resolve =>
