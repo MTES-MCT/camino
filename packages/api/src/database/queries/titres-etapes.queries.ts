@@ -60,14 +60,17 @@ export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator.pick({ id: true, entreprise_id: true }).extend({ largeobject_id: entrepriseDocumentLargeObjectIdValidator })
+export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
+  .pick({ id: true, entreprise_id: true, entreprise_document_type_id: true })
+  .extend({ largeobject_id: entrepriseDocumentLargeObjectIdValidator })
 export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>
 
 const getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery = sql<Redefine<IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EntrepriseDocumentLargeObjectId>>`
 select
     ed.id,
     ed.entreprise_id,
-    ed.largeobject_id
+    ed.largeobject_id,
+    ed.entreprise_document_type_id
 from
     titres_etapes_entreprises_documents teed
     join entreprises_documents ed on ed.id = teed.entreprise_document_id
