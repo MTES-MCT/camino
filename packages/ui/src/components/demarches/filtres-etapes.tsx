@@ -9,8 +9,8 @@ import { EtapeCaminoFiltres } from '../_ui/filters/camino-filtres'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-import { TypeAhead } from '../_ui/typeahead'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 export type FilterEtapeValue = {
   typeId: EtapeTypeId | ''
@@ -177,11 +177,10 @@ const EtapeTypeSearch = defineComponent<EtapeTypeSearchProps>(props => {
   })
 
   return () => (
-    <TypeAhead
+    <TypeAheadSingle
       overrideItems={overrideItems.value}
       props={{
         id: `select-etape-type-${props.index}`,
-        type: 'single',
         placeholder: "Type d'étape",
         items: items.value,
         minInputLength: 0,

@@ -125,14 +125,6 @@ select:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 0 white inset;
 }
 
-/* remove round corner on iOs */
-
-input:not([type='radio']):not([type='checkbox']):not([class^='.rnd']),
-select {
-  -webkit-appearance: none;
-  border-radius: 0;
-}
-
 /* https://github.com/necolas/normalize.css/pull/697/commits/c3762f068feca8e218e69f54daf397cd0f33176d */
 button,
 html [type='button'],

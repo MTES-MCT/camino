@@ -1,11 +1,12 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { TypeAhead } from '@/components/_ui/typeahead'
 import { computed, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { TitreLink } from 'camino-common/src/titres'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { TitreStatut } from '../_common/titre-statut'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
 
 interface Props {
   config: TitresLinkConfig
@@ -47,9 +48,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
 
       if (titreIds.length) {
         const selectedTitreList = data.value.value.filter(({ id }) => titreIds.includes(id))
-        if (selectedTitreList) {
-          selectedTitres.value.push(...selectedTitreList)
-        }
+        selectedTitres.value.push(...selectedTitreList)
       }
     } catch (e: any) {
       data.value = {
@@ -93,22 +92,39 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     <LoadingElement
       data={data.value}
       renderItem={_item => (
-        <TypeAhead
-          overrideItems={selectedTitres.value}
-          props={{
-            id: 'titre-link-typeahead',
-            itemKey: 'id',
-            placeholder: props.config.type === 'single' ? 'Lier un titre' : 'Lier plusieurs titres',
-            type: props.config.type,
-            items: titresFiltered.value,
-            itemChipLabel: item => item.nom,
-            minInputLength: 1,
-            onSelectItem: props.onSelectTitre,
-            onSelectItems: props.onSelectTitres,
-            onInput: onSearch,
-            displayItemInList: display,
-          }}
-        />
+        <>
+          {props.config.type === 'single' ? (
+            <TypeAheadSingle
+              overrideItems={selectedTitres.value}
+              props={{
+                id: 'titre-link-typeahead',
+                itemKey: 'id',
+                placeholder: 'Lier un titre',
+                items: titresFiltered.value,
+                itemChipLabel: item => item.nom,
+                minInputLength: 1,
+                onSelectItem: props.onSelectTitre,
+                onInput: onSearch,
+                displayItemInList: display,
+              }}
+            />
+          ) : (
+            <TypeAheadMultiple
+              overrideItems={selectedTitres.value}
+              props={{
+                id: 'titre-link-typeahead',
+                itemKey: 'id',
+                placeholder: 'Lier plusieurs titres',
+                items: titresFiltered.value,
+                itemChipLabel: item => item.nom,
+                minInputLength: 1,
+                onSelectItems: props.onSelectTitres,
+                onInput: onSearch,
+                displayItemInList: display,
+              }}
+            />
+          )}
+        </>
       )}
     />
   )

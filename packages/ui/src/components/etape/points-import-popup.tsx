@@ -1,9 +1,9 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { TypeAhead } from '../_ui/typeahead'
 import { GeoSysteme, GeoSystemeId, GeoSystemes, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { DeepReadonly, computed, ref } from 'vue'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 interface Props {
   // TODO 2023-10-23 utiliser l'api client et supprimer l'appel au store en interne
@@ -53,7 +53,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['pointsImport', '
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <TypeAhead
+            <TypeAheadSingle
               overrideItems={overrideItems}
               props={{
                 id: 'geographic-system',
@@ -62,7 +62,6 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['pointsImport', '
                 items: geoSystemesToDisplay.value,
                 minInputLength: 1,
                 placeholder: '',
-                type: 'single',
                 onSelectItem: onSelectGeographicSystem,
                 onInput: searchReduceGeoSystem,
               }}
