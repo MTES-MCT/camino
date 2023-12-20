@@ -5,6 +5,7 @@ const journauxQueryParamsValidator = z.object({
   page: z.number(),
   recherche: z.string().nullable(),
   titreId: titreIdValidator.nullable(),
+  titresIds: z.array(titreIdValidator).optional(),
 })
 
 export type JournauxQueryParams = z.infer<typeof journauxQueryParamsValidator>

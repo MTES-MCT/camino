@@ -11,6 +11,7 @@ import { TitreId } from 'camino-common/src/titres.js'
 import { JournauxQueryParams } from 'camino-common/src/journaux.js'
 import TitresEtapes from '../models/titres-etapes.js'
 import { EtapeId } from 'camino-common/src/etape.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 
 const diffPatcher = create({
   // on filtre certaines proprietés qu’on ne souhaite pas voir apparaitre dans les journaux
@@ -23,13 +24,16 @@ export const journauxGet = async (params: JournauxQueryParams, { fields }: { fie
   const q = Journaux.query().withGraphFetched(graph)
   q.modify(journauxQueryModify, user)
 
-  if (params.recherche) {
+  if (isNotNullNorUndefined(params.recherche)) {
     q.leftJoinRelated('titre as titreRecherche')
     q.whereRaw(`lower(??) like ?`, ['titreRecherche.nom', `%${params.recherche.toLowerCase()}%`])
   }
 
   if (params.titreId) {
     q.where('titreId', params.titreId)
+  }
+  if (isNotNullNorUndefinedNorEmpty(params.titresIds)) {
+    q.whereIn('titreId', params.titresIds)
   }
 
   q.orderBy('date', 'desc')
@@ -83,7 +87,7 @@ export const upsertJournalCreate = async (
   userId: string,
   titreId: TitreId
 ): Promise<ITitreEtape> => {
-  const oldValue = id ? await TitresEtapes.query().findById(id).withGraphFetched(relations).returning('*') : undefined
+  const oldValue = isNotNullNorUndefined(id) ? await TitresEtapes.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 
   // on ne peut pas utiliser returning('*'),
   // car certains attributs de entity restent présents alors qu’ils sont enlevés avant l’enregistrement
@@ -98,7 +102,7 @@ export const upsertJournalCreate = async (
     differences = diffPatcher.diff(oldValue, newValue)
 
     // si il n’y a pas de différences, alors on ne journal plus cette modification
-    if (!differences || !Object.keys(differences).length) {
+    if (isNullOrUndefined(differences) || isNullOrUndefinedOrEmpty(Object.keys(differences))) {
       return newValue
     }
     operation = 'update'
