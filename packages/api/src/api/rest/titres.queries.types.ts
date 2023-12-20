@@ -9,6 +9,7 @@ export interface IGetTitreInternalParams {
 /** 'GetTitreInternal' return type */
 export interface IGetTitreInternalResult {
   id: string;
+  nb_activites_to_do: string | null;
   nom: string;
   public_lecture: boolean;
   references: Json;

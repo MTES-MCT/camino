@@ -44,15 +44,15 @@ import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.
 import { getCommunes } from '../../database/queries/communes.queries.js'
 import { EtapeDocument } from 'camino-common/src/etape.js'
 import { getDateLastJournal } from './journal.queries.js'
+import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
+import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
 
 export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug): Promise<TitreGet | null> => {
   const titres = await dbQueryAndValidate(getTitreInternal, { id: idOrSlug }, pool, getTitreInternalValidator)
-
-  // FIXME droit de voir le titre
-  if (titres.length !== 1) {
+  if (titres.length !== 1 || !canReadTitre(user, titres[0])) {
     return null
   } else {
     const titre = titres[0]
@@ -175,8 +175,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
+    const perimetre = getMostRecentValidValueProp('perimetre', superDemarches)
     const administrationsLocales = memoize(() => {
-      const perimetre = getMostRecentValidValueProp('perimetre', superDemarches)
 
       return Promise.resolve(
         getAdministrationsLocales(
@@ -222,7 +222,19 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         })
       }
     }
+    let nb_activites_to_do: number | null = null
+
+    if (canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches }) &&
+          (await canReadTitreActivites(
+            user,
+            titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires
+          ))
+    ) {
+      nb_activites_to_do = titre.nb_activites_to_do
+    }
+
     const titreFinal: TitreGet = {
+      nb_activites_to_do,
       id: titre.id,
       nom: titre.nom,
       slug: titre.slug,
@@ -248,6 +260,7 @@ const getTitreInternalValidator = z.object({
   titre_doublon_nom: z.string().nullable(),
   public_lecture: z.boolean().default(false),
   references: z.array(titreReferenceValidator),
+  nb_activites_to_do: z.coerce.number()
 })
 
 type GetTitreInternalValidator = z.infer<typeof getTitreInternalValidator>
@@ -262,7 +275,8 @@ select
     t_doublon.id as titre_doublon_id,
     t_doublon.nom as titre_doublon_nom,
     t.references,
-    t.public_lecture
+    t.public_lecture,
+    (select count(a.id) from titres_activites a where a.titre_id = t.id and a.activite_statut_id in ('abs', 'enc')) as nb_activites_to_do
 from
     titres t
     left join titres t_doublon on t_doublon.id = t.doublon_titre_id

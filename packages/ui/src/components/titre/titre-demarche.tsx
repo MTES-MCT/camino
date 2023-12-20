@@ -146,8 +146,9 @@ export const TitreDemarche = defineComponent<Props>(props => {
             <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.value.demarche_statut_id} />
             {canCreateOrEditDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value) ? (
               <>
-                <DsfrButton style={{ marginLeft: 'auto' }} buttonType="secondary" title="Modifier la description" onClick={openEditDemarchePopup} />
-                <DsfrButton style={{ marginRight: 0 }} class="fr-ml-2w" buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} />
+                <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} />
+                <DsfrButtonIcon icon='fr-icon-pencil-line' style={{ marginRight: 0 }} class="fr-ml-2w" buttonType="secondary" title="Modifier la description" onClick={openEditDemarchePopup} />
+                
               </>
             ) : null}
             {canDeleteDemarche(props.user, props.titre.titre_type_id, props.titre.titre_statut_id, administrations.value, demarche.value) ? (

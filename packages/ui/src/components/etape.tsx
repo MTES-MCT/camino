@@ -7,6 +7,7 @@ import { User } from 'camino-common/src/roles'
 import { etapeIdValidator } from 'camino-common/src/etape'
 
 // FIXME étape solo
+// FIXME chemin /demarche/:demarcheId qui redirige vers le titre
 export const Etape = defineComponent(() => {
   const route = useRoute()
   const store = useStore()

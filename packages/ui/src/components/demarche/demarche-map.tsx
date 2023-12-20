@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onBeforeUnmount } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
@@ -290,6 +290,51 @@ export const DemarcheMap = defineComponent<Props>(props => {
       map.value?.fitBounds(bounds, { padding: 50 })
     }
   )
+
+  const moveend = async () => {
+    if (props.neighbours !== null && isNotNullNorUndefined(map.value)) {
+      const bounds = map.value.getBounds()
+
+      try {
+        const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
+          statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
+          perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
+          communes: '',
+          departements: [],
+          domainesIds: [],
+          entreprisesIds: [],
+          facadesMaritimes: [],
+          references: '',
+          regions: [],
+          substancesIds: [],
+          titresIds: [],
+          typesIds: [],
+        })
+
+        ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
+          type: 'FeatureCollection',
+          features: res.elements
+            .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
+            .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
+            .map(titreValide => {
+              const properties: TitreValideProperties = {
+                slug: titreValide.slug,
+                nom: titreValide.nom,
+                typeId: titreValide.typeId,
+                titreStatutId: titreValide.titreStatutId,
+                domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
+              }
+
+              // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
+              return { ...titreValide.geojsonMultiPolygon!, properties }
+            }),
+        })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
   onMounted(() => {
     const bounds = new LngLatBounds()
     props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
@@ -369,49 +414,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
       )
 
       mapLibre.fitBounds(bounds, { padding: 50 })
-      mapLibre.on('moveend', async () => {
-        if (props.neighbours !== null) {
-          const bounds = mapLibre.getBounds()
 
-          try {
-            const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
-              statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-              perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
-              communes: '',
-              departements: [],
-              domainesIds: [],
-              entreprisesIds: [],
-              facadesMaritimes: [],
-              references: '',
-              regions: [],
-              substancesIds: [],
-              titresIds: [],
-              typesIds: [],
-            })
-
-            ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
-              type: 'FeatureCollection',
-              features: res.elements
-                .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-                .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
-                .map(titreValide => {
-                  const properties: TitreValideProperties = {
-                    slug: titreValide.slug,
-                    nom: titreValide.nom,
-                    typeId: titreValide.typeId,
-                    titreStatutId: titreValide.titreStatutId,
-                    domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
-                  }
-
-                  // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-                  return { ...titreValide.geojsonMultiPolygon!, properties }
-                }),
-            })
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      })
+      
+      mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
         if (isNotNullNorUndefinedNorEmpty(e.features)) {
@@ -446,6 +451,12 @@ export const DemarcheMap = defineComponent<Props>(props => {
         }
       })
     }
+  })
+
+  
+  onBeforeUnmount(() => {
+    
+    map.value?.off('moveend', moveend)
   })
 
   const selectLayer = (layer: LayerId) => {

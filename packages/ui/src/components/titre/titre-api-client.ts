@@ -109,7 +109,7 @@ export interface TitreApiClient {
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPoint[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
-  getTitresByIds: (titreIds: TitreId[]) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
+  getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -155,7 +155,7 @@ export const titreApiClient: TitreApiClient = {
   getTitresForTable: async params => {
     const { elements, total } = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresForTable(
           $page: Int
           $colonne: String
           $ordre: String
@@ -225,7 +225,7 @@ export const titreApiClient: TitreApiClient = {
     // TODO 2023-07-20 si zoom > 7 alors autre appel
     const result = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresForCarte(
           $titresIds: [ID!]
           $typesIds: [ID!]
           $domainesIds: [ID!]
@@ -285,7 +285,7 @@ export const titreApiClient: TitreApiClient = {
   getTitresWithPerimetreForCarte: async params => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresWithPerimetreForCarte(
           $titresIds: [ID!]
           $typesIds: [ID!]
           $domainesIds: [ID!]
@@ -352,7 +352,7 @@ export const titreApiClient: TitreApiClient = {
   titresRechercherByNom: async noms => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres($noms: String) {
+        query TitresRechercherByNom($noms: String) {
           titres(intervalle: 20, noms: $noms) {
             elements {
               id
@@ -369,10 +369,10 @@ export const titreApiClient: TitreApiClient = {
     return result
   },
 
-  getTitresByIds: async titresIds => {
+  getTitresByIds: async (titresIds, cacheKey) => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres($titresIds: [ID!]) {
+        query TitresById($titresIds: [ID!]) {
           titres(ids: $titresIds) {
             elements {
               id
@@ -381,7 +381,7 @@ export const titreApiClient: TitreApiClient = {
           }
         }
       `
-    )({ titresIds })
+    ,cacheKey)({ titresIds })
     return result
   },
 }

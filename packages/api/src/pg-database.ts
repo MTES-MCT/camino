@@ -19,6 +19,5 @@ export const dbQueryAndValidate = async <Params, Result, T extends ZodType<Resul
 ): Promise<Result[]> => {
   // eslint-disable-next-line no-restricted-syntax
   const result = await query.run(params, pool)
-
   return z.array(validator).parse(result)
 }

@@ -201,9 +201,7 @@ const DemarcheEvent: FunctionalComponent<{
 }> = props => {
   const tooltipId = 'timeline-event-' + props.demarche.slug
 
-  return (
-    <>
-      <CaminoRouterLink
+  return (<CaminoRouterLink
         aria-describedby={tooltipId}
         {...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug)}
         to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } }}
@@ -211,8 +209,5 @@ const DemarcheEvent: FunctionalComponent<{
         class={style.event}
         anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
       />
-      {/* FIXME les infos bulles sont dans la dernière version du DSFR */}
-      {/* <span class="fr-tooltip fr-placement fr-placement--top fr-tooltip--shown" id={tooltipId} role="tooltip" aria-hidden="true">COUCOU</span> */}
-    </>
   )
 }

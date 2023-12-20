@@ -61,6 +61,13 @@ export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boo
   return false
 }
 
+export const canReadTitre = (user: User, titre: {public_lecture: boolean}): boolean => {
+  if (isSuper(user)) {
+    return true
+  } 
+  return titre.public_lecture
+}
+
 export const canEditTitre = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   if (isSuper(user)) {
     return true
@@ -75,6 +82,7 @@ export const canDeleteTitre = (user: User): boolean => isSuper(user)
 
 interface TitreReduced {
   titreTypeId: TitreTypeId
+  // FIXME 2023-12-20 il faudrait ajouter les façades maritimes (impact sur le daily ?)
   communes: { id: CommuneId }[]
   demarches: unknown[]
 }

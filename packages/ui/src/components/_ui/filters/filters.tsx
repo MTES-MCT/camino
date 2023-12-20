@@ -28,6 +28,7 @@ import { CaminoRouterLink, routerQueryToString, routerQueryToStringArray } from 
 import { ApiClient } from '../../../api/api-client'
 import { AsyncData } from '../../../api/client-rest'
 import { LoadingElement } from '../functional-loader'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -241,7 +242,7 @@ export const Filters = defineComponent((props: Props) => {
 
       if (nonValidatedValues.value.titresIds?.length > 0) {
         loading.value = { status: 'LOADING' }
-        titresIds = await props.apiClient.getTitresByIds(nonValidatedValues.value.titresIds)
+        titresIds = await props.apiClient.getTitresByIds(nonValidatedValues.value.titresIds, 'filters')
       }
       loading.value = { status: 'LOADED', value: true }
     } catch (e: any) {
@@ -253,10 +254,10 @@ export const Filters = defineComponent((props: Props) => {
     }
     labels.value = props.filters.flatMap<FormatedLabel>(filter => {
       const filterType = caminoFiltres[filter]
-      if (filterType.type === 'input' && nonValidatedValues.value[filter]) {
+      if (filterType.type === 'input' && isNotNullNorUndefined(nonValidatedValues.value[filter])) {
         return [{ id: filterType.id, name: filterType.name, value: nonValidatedValues.value[filter] }]
       }
-      if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && nonValidatedValues.value[filter]) {
+      if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && isNotNullNorUndefined(nonValidatedValues.value[filter])) {
         return nonValidatedValues.value[filterType.id].map<FormatedLabel>(v => {
           let elements: { id: string; nom: string }[] = []
           if (filterType.id === 'titresIds') {
@@ -275,7 +276,7 @@ export const Filters = defineComponent((props: Props) => {
             valueName: element && element.nom,
           }
         })
-      } else if (filterType.type === 'etape' && nonValidatedValues.value[filter]) {
+      } else if (filterType.type === 'etape' && isNotNullNorUndefined(nonValidatedValues.value[filter])) {
         return etapesLabelFormat(filterType.id, nonValidatedValues.value[filter])
       }
 
@@ -296,7 +297,7 @@ export const Filters = defineComponent((props: Props) => {
         title: () => (
           <div style="display: flex; align-items: center">
             <div>Filtres</div>
-            {props.subtitle ? <div class="pl-s small">{props.subtitle}</div> : null}
+            {isNotNullNorUndefined(props.subtitle) ? <div class="pl-s small">{props.subtitle}</div> : null}
           </div>
         ),
         sub: () => (

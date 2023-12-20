@@ -76,6 +76,7 @@ export const titreGetValidator = z.object({
   references: z.array(titreReferenceValidator),
   titre_last_modified_date: caminoDateValidator.nullable(),
   demarches: z.array(demarcheGetValidator),
+  nb_activites_to_do: z.number().nullable()
 })
 
 export type TitreGet = z.infer<typeof titreGetValidator>

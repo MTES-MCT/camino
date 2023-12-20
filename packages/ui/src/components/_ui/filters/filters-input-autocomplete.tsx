@@ -55,7 +55,7 @@ export const InputAutocomplete = defineComponent<Props>(props => {
       const filterTitresIds = filterFull as Filter<TitreId>
       if (filterTitresIds.lazy) {
         filterTitresIds.search = (value: string) => props.apiClient.titresRechercherByNom(value)
-        filterTitresIds.load = (value: TitreId[]) => props.apiClient.getTitresByIds(value)
+        filterTitresIds.load = (value: TitreId[]) => props.apiClient.getTitresByIds(value, 'filter-input-autocomplete')
       }
     }
 

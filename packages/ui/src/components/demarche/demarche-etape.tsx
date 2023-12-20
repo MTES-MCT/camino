@@ -86,10 +86,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   const closeDeposePopup = () => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
-  const _editEtapeButton = () => {
-    // FIXME ajouter matomo comme pour preview.vue ?
-    // FIXME ajouter matomo au bouton download ?
-  }
 
   const canDownloadZip: boolean = props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0)
 
@@ -122,7 +118,6 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
           props.etape.documents.map(document => ({ typeId: document.document_type_id, fichier: true })),
           props.etape.entreprises_documents,
-          // FIXME from démarche ou from étape ?
           props.demarche.sdom_zones
         )
       : false
@@ -142,7 +137,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable} />
                 ) : null}
                 <DsfrLink
-                  icon={'fr-icon-edit-line'}
+                  icon={'fr-icon-pencil-line'}
                   disabled={false}
                   to={{ name: 'etape-edition', params: { id: props.etape.slug } }}
                   class="fr-mr-1v"
