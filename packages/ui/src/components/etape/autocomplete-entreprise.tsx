@@ -1,9 +1,10 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { TypeAhead, TypeAheadType } from '@/components/_ui/typeahead'
 import { computed, ref, watch } from 'vue'
 import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 import { ButtonIcon } from '../_ui/button-icon'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   nonSelectableEntities?: EntrepriseId[]
@@ -28,7 +29,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
 
   const selectableEntities = computed(() =>
     props.allEntities
-      .filter(entity => !props.nonSelectableEntities?.some(id => id === entity.id))
+      .filter(entity => isNotNullNorUndefinedNorEmpty(props.nonSelectableEntities) && !props.nonSelectableEntities.some(id => id === entity.id))
       .filter(entity => !mySelectedEntities.value.some(mySelectedEntitiy => mySelectedEntitiy.id === entity.id))
       .filter(entity => entity.nom.toLowerCase().includes(inputValue.value.toLowerCase()))
   )
@@ -55,12 +56,10 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
   const getEntrepriseNom = (entity: EtapeEntreprise) => props.allEntities.find(({ id }) => id === entity.id)?.nom ?? ''
 
   const itemKey: keyof Entreprise = 'id'
-  const type: TypeAheadType = 'single'
   const typeAheadProps = computed(() => ({
     id: 'autocomplete_entreprise',
     itemKey,
     placeholder: props.placeholder,
-    type,
     items: selectableEntities.value,
     minInputLength: 2,
     itemChipLabel: (item: Entreprise) => item.nom,
@@ -87,7 +86,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
         </div>
       ))}
 
-      <TypeAhead props={typeAheadProps.value} overrideItems={overrideItems.value} />
+      <TypeAheadSingle props={typeAheadProps.value} overrideItems={overrideItems.value} />
     </div>
   )
 })

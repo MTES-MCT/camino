@@ -1,7 +1,8 @@
 import { onMounted, ref, watch, Ref, defineComponent } from 'vue'
-import { TypeAhead } from '@/components/_ui/typeahead'
+
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { levenshtein } from 'camino-common/src/strings'
+import { TypeAheadMultiple } from './typeahead-multiple'
 
 export type Element<T extends string> = { id: T; nom: string }
 
@@ -34,11 +35,9 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
   watch(
     () => props.filter.value,
     newValues => {
-      if (newValues) {
-        overrideItems.value = newValues.map(id => allKnownItems.value[id]).filter(isNotNullNorUndefined) ?? []
+      overrideItems.value = newValues.map(id => allKnownItems.value[id]).filter(isNotNullNorUndefined) ?? []
 
-        selectedItems.value = overrideItems.value
-      }
+      selectedItems.value = overrideItems.value
     },
     { deep: true }
   )
@@ -105,13 +104,12 @@ export const TypeAheadSmartMultiple = defineComponent(<ID extends string>(props:
   }
 
   return () => (
-    <TypeAhead
+    <TypeAheadMultiple
       overrideItems={overrideItems.value}
       props={{
         id: 'filters_autocomplete_' + props.filter.name,
         itemKey: 'id',
         placeholder: props.filter.name,
-        type: 'multiple',
         items: items.value,
         minInputLength: props.filter.lazy ? 3 : 0,
         itemChipLabel: item => item.nom,

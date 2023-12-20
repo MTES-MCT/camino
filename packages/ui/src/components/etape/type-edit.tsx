@@ -1,7 +1,6 @@
 import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { computed, ref, FunctionalComponent, watch } from 'vue'
-import { TypeAhead } from '../_ui/typeahead'
 import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -11,6 +10,7 @@ import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 export type Props = {
   etape: {
@@ -105,11 +105,10 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                   <h5>Type</h5>
                 </div>
                 <div class="mb tablet-blob-2-3">
-                  <TypeAhead
+                  <TypeAheadSingle
                     overrideItems={etapeTypeExistante.value}
                     props={{
                       id: 'select-etape-type',
-                      type: 'single',
                       placeholder: '',
                       items: [...items]
                         .sort((a, _b) => (a.mainStep ? -1 : 1))

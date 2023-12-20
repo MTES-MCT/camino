@@ -1,4 +1,3 @@
-import { TypeAhead } from '@/components/_ui/typeahead'
 import { Domaine } from '@/components/_common/domaine'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -10,6 +9,7 @@ import { titreApiClient, TitreForTitresRerchercherByNom } from '../titre/titre-a
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoAnnee, getAnnee } from 'camino-common/src/date'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
 
 export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitre: () => void }>(['id', 'onSelectTitre'], props => {
   const router = useRouter()
@@ -32,7 +32,7 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
 
   const onSelectedTitre = (titre: TitreForTitresRerchercherByNom | undefined) => {
     if (titre) {
-      if (matomo) {
+      if (isNotNullNorUndefined(matomo)) {
         // @ts-ignore
         matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
       }
@@ -103,13 +103,12 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
       <label class="fr-label" for="search-473-input">
         Rechercher
       </label>
-      <TypeAhead
+      <TypeAheadSingle
         overrideItems={overrideItems.value}
         props={{
           id: props.id,
           itemKey: 'id',
           placeholder: 'Rechercher un titre',
-          type: 'single',
           items: props.titres,
           minInputLength: 3,
           itemChipLabel: item => item.nom,
