@@ -3,14 +3,17 @@ import { Journaux as JournauxData } from 'camino-common/src/journaux'
 import { TitreId } from 'camino-common/src/titres'
 import { markRaw } from 'vue'
 import { Differences } from './differences'
-import { JournauxApiClient } from './journaux-api-client'
 import { Column, TableRow } from '../_ui/table'
 import { useRouter } from 'vue-router'
 import { Liste, Params } from '../_common/liste'
+import { CaminoFiltre } from 'camino-common/src/filters'
+import { ApiClient } from '@/api/api-client'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
+  // TODO 2023-12-20 supprimer cette propriété dès que la nouvelle page des démarches est mergée
   titreId: TitreId | null
-  apiClient: Pick<JournauxApiClient, 'getJournaux'>
+  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds' | 'getJournaux'>
 }
 
 const colonnesData = [
@@ -34,7 +37,7 @@ const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
         value: journal.titre?.nom,
       },
       utilisateur: {
-        value: journal.utilisateur ? `${journal.utilisateur.nom} ${journal.utilisateur.prenom}` : 'Système',
+        value: isNotNullNorUndefined(journal.utilisateur) ? `${journal.utilisateur.nom} ${journal.utilisateur.prenom}` : 'Système',
       },
       operation: {
         value: journal.operation,
@@ -56,6 +59,8 @@ const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   })
 }
 
+export const filtres = ['titresIds'] as const satisfies readonly CaminoFiltre[]
+
 export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], props => {
   const router = useRouter()
   const colonnes = (): Readonly<Column<ColonneId>[]> => {
@@ -67,10 +72,30 @@ export const Journaux = caminoDefineComponent<Props>(['titreId', 'apiClient'], p
   }
 
   const getData = async (event: Params<string>) => {
-    const values = await props.apiClient.getJournaux({ page: event.page ?? 1, recherche: null, titreId: props.titreId })
+    const values = await props.apiClient.getJournaux({ page: event.page ?? 1, recherche: null, titreId: props.titreId, ...event.filtres })
 
     return { total: values.total, values: lignes(values) }
   }
 
-  return () => <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={router.currentRoute.value} getData={getData} nom="Journaux" />
+  return () => (
+    <>
+      {props.titreId !== null ? (
+        <Liste listeFiltre={null} renderButton={null} download={null} colonnes={colonnes()} route={router.currentRoute.value} getData={getData} nom="Journaux" />
+      ) : (
+        <Liste
+          listeFiltre={{
+            filtres,
+            apiClient: props.apiClient,
+            updateUrlQuery: router,
+          }}
+          renderButton={null}
+          download={null}
+          colonnes={colonnes()}
+          route={router.currentRoute.value}
+          getData={getData}
+          nom="Journaux"
+        />
+      )}
+    </>
+  )
 })

@@ -189,7 +189,7 @@ type Query {
   "Calcule les informations relatives au périmètre d’une étape existante"
   titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
-  journaux(page: Int!, recherche: String, titreId: String): Journaux
+  journaux(page: Int!, recherche: String, titreId: String, titresIds: [String]): Journaux
 }
 
 """
