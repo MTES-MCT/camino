@@ -414,6 +414,7 @@ describe('getTitre', () => {
       {
         "demarches": [],
         "id": "other-titre-id",
+        "nb_activites_to_do": null,
         "nom": "mon nouveau titre",
         "references": [],
         "slug": "arm-slug",
@@ -517,6 +518,7 @@ describe('getTitre', () => {
           },
         ],
         "id": "titre-id",
+        "nb_activites_to_do": null,
         "nom": "mon titre",
         "references": [],
         "slug": "slug",
