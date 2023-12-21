@@ -13,7 +13,6 @@ export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreI
 
   const titresDemarchesUpdated: string[] = []
 
-
   for (const titreDemarche of Object.values(titresDemarches)) {
     const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 

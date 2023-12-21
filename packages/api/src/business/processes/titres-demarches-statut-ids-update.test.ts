@@ -5,7 +5,7 @@ import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_fo
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { Pool } from 'pg'
 
-vi.mock('./titres-etapes-heritage-contenu-update', () => ({
+vi.mock('./titres-etapes-heritage-contenu-update.queries', () => ({
   getDemarches: vi.fn().mockResolvedValue(true),
 }))
 

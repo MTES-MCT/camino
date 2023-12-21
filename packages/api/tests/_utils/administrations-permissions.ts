@@ -130,12 +130,11 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 
     const result = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
 
-    
     expect(result.body.errors).toBe(undefined)
 
     const slug = result.body.data.demarcheCreer.slug
-  
-    const demarche = await TitresDemarches.query().findOne({slug})
+
+    const demarche = await TitresDemarches.query().findOne({ slug })
 
     const etapeTypeId = 'mfr'
     const etapeType = (await etapeTypeGet(etapeTypeId, {
@@ -177,7 +176,6 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
 
       return acc
     }, {} as any)
-
 
     const documentTypesIds = getDocuments(titreTypeId, demarche?.typeId, etapeTypeId)
       .filter(({ optionnel }) => !optionnel)

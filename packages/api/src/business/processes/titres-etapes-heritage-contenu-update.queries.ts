@@ -35,10 +35,22 @@ const getEtapesByDemarcheValidator = z.object({
 })
 
 export const getDemarches = async (
-    pool: Pool,
-    demarcheId?: DemarcheId,
-    titreId?: TitreId
-  ): Promise<{
+  pool: Pool,
+  demarcheId?: DemarcheId,
+  titreId?: TitreId
+): Promise<{
+  [key: DemarcheId]: {
+    etapes: TitreEtapeForMachine[]
+    id: DemarcheId
+    typeId: DemarcheTypeId
+    titreTypeId: TitreTypeId
+    titreId: TitreId
+    statutId: DemarcheStatutId
+  }
+}> => {
+  const etapes = await dbQueryAndValidate(getEtapesByDemarcheInternal, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
+
+  return etapes.reduce<{
     [key: DemarcheId]: {
       etapes: TitreEtapeForMachine[]
       id: DemarcheId
@@ -47,31 +59,19 @@ export const getDemarches = async (
       titreId: TitreId
       statutId: DemarcheStatutId
     }
-  }> => {
-    const etapes = await dbQueryAndValidate(getEtapesByDemarcheInternal, {demarcheId, titreId}, pool, getEtapesByDemarcheValidator)
-  
-    return etapes.reduce<{
-      [key: DemarcheId]: {
-        etapes: TitreEtapeForMachine[]
-        id: DemarcheId
-        typeId: DemarcheTypeId
-        titreTypeId: TitreTypeId
-        titreId: TitreId
-        statutId: DemarcheStatutId
+  }>((acc, row) => {
+    if (!acc[row.demarche_id]) {
+      acc[row.demarche_id] = {
+        etapes: [],
+        id: row.demarche_id,
+        titreId: row.titre_id,
+        titreTypeId: row.titre_type_id,
+        typeId: row.demarche_type_id,
+        statutId: row.demarche_statut_id,
       }
-    }>((acc, row) => {
-      if (!acc[row.demarche_id]) {
-        acc[row.demarche_id] = {
-          etapes: [],
-          id: row.demarche_id,
-          titreId: row.titre_id,
-          titreTypeId: row.titre_type_id,
-          typeId: row.demarche_type_id,
-          statutId: row.demarche_statut_id,
-        }
-      }
-  
-      if (isNotNullNorUndefined(row.id) && isNotNullNorUndefined(row.ordre) &&isNotNullNorUndefined(row.type_id) &&isNotNullNorUndefined(row.statut_id) &&isNotNullNorUndefined(row.date)) {
+    }
+
+    if (isNotNullNorUndefined(row.id) && isNotNullNorUndefined(row.ordre) && isNotNullNorUndefined(row.type_id) && isNotNullNorUndefined(row.statut_id) && isNotNullNorUndefined(row.date)) {
       acc[row.demarche_id].etapes.push({
         id: row.id,
         ordre: row.ordre,
@@ -84,12 +84,11 @@ export const getDemarches = async (
         surface: row.surface,
       })
     }
-  
-      return acc
-    }, {})
-  }
 
-  
+    return acc
+  }, {})
+}
+
 const getEtapesByDemarcheInternal = sql<Redefine<IGetEtapesByDemarcheInternalQuery, { demarcheId?: DemarcheId; titreId?: TitreId }, z.infer<typeof getEtapesByDemarcheValidator>>>`
 SELECT
     titre.id as titre_id,
@@ -108,7 +107,8 @@ SELECT
     etape.communes as communes
 from
     titres_demarches demarche
-    left join titres_etapes etape on (etape.titre_demarche_id = demarche.id and etape.archive is false)
+    left join titres_etapes etape on (etape.titre_demarche_id = demarche.id
+            and etape.archive is false)
     join titres titre on demarche.titre_id = titre.id
 where
     demarche.archive = false

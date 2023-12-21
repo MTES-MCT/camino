@@ -286,7 +286,6 @@ describe('demarcheSupprimer', () => {
   test('peut supprimer une démarche (utilisateur super)', async () => {
     const { demarcheId } = await demarcheCreate()
 
-
     let demarche = await TitresDemarches.query().findById(demarcheId)
     expect(demarche?.archive).toBe(false)
 
@@ -310,9 +309,7 @@ const demarcheCreate = async () => {
     {}
   )
 
-
   const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
-
 
   return {
     titreId: titre.id,
