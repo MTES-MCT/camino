@@ -155,7 +155,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
             ) : null}
           </div>
 
-          {demarche.value.description !== null ? <div class="fr-grid-row fr-mt-3w">{demarche.value.description} </div> : null}
+          {demarche.value.description !== null && demarche.value.description !== '' ? <div class="fr-grid-row fr-mt-3w">{demarche.value.description} </div> : null}
 
           <h4 class="fr-mt-3w fr-mb-0">Résumé</h4>
 

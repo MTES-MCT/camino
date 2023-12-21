@@ -11,7 +11,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { TabId } from './_common/dsfr-perimetre'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { Domaine } from '@/components/_common/domaine'
-import { DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
+import { DsfrButton, DsfrButtonIcon, DsfrLink } from './_ui/dsfr-button'
 import { TitreStatut } from './_common/titre-statut'
 import { caminoFiltres } from 'camino-common/src/filters'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
@@ -38,6 +38,7 @@ import { RemovePopup } from './titre/remove-popup'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
+import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -343,15 +344,30 @@ export const PureTitre = defineComponent<Props>(props => {
     supprimerTitrePopup.value = false
   }
 
+  const hasNoPhases = computed<boolean>(() => {
+    return phases.value.length === 0
+  })
+
+  const addDemarchePopup = ref<boolean>(false)
+
+  const openAddDemarchePopup = () => {
+    addDemarchePopup.value = true
+  }
+  const closeAddDemarchePopup = () => {
+    addDemarchePopup.value = false
+  }
+
   return () => (
     <div class="dsfr">
       <LoadingElement
         data={titreData.value}
         renderItem={titre => (
           <div>
-            <div class="fr-grid-row fr-grid-row--middle">
-              <h1 class="fr-m-0">{capitalize(titre.nom)}</h1>
-              <TitreStatut class="fr-ml-2w" titreStatutId={titre.titre_statut_id} />
+            <div class="fr-grid-row fr-grid-row--top">
+              <h1 style={{ maxWidth: '400px' }} class="fr-m-0">
+                {capitalize(titre.nom)}
+              </h1>
+              <TitreStatut class="fr-ml-2w" titreStatutId={titre.titre_statut_id} style={{ alignSelf: 'center' }} />
 
               <div class="fr-m-0" style={{ marginLeft: 'auto !important', display: 'flex' }}>
                 <DsfrLink
@@ -376,8 +392,11 @@ export const PureTitre = defineComponent<Props>(props => {
               {/*
                 // STYLES
                 FIXME les références
-                FIXME bouton ajouter démarche
                 FIXME lien vers les activités
+
+                FIXME références + territoires dans les filtres
+                FIXME quand on vire la dernière étape d’une démarche, ça fait n’imp
+                FIXME pas possible de lier un titre
               */}
             </div>
             <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
@@ -460,6 +479,7 @@ export const PureTitre = defineComponent<Props>(props => {
 
             <DsfrSeparator />
 
+            {hasNoPhases.value ? <DsfrButton style={{ marginLeft: 'auto' }} buttonType="primary" title="Ajouter une démarche" onClick={openAddDemarchePopup} /> : null}
             {props.currentDemarcheSlug !== null ? (
               <>
                 <TitreTimeline class="fr-pt-4w fr-pb-4w" phasesWithAlterations={phases.value} currentDemarcheSlug={props.currentDemarcheSlug} titreSlug={titre.slug} />
@@ -479,6 +499,17 @@ export const PureTitre = defineComponent<Props>(props => {
             {editerTitrePopup.value ? <EditPopup close={closeEditPopup} apiClient={props.apiClient} titre={titre} reload={retrieveTitre} /> : null}
             {supprimerTitrePopup.value ? (
               <RemovePopup apiClient={props.apiClient} close={closeDeletePopup} titreId={titre.id} titreNom={titre.nom} titreTypeId={titre.titre_type_id} reload={reloadAfterRemoveTitre} />
+            ) : null}
+            {addDemarchePopup.value ? (
+              <DemarcheEditPopup
+                apiClient={props.apiClient}
+                close={closeAddDemarchePopup}
+                titreNom={titre.nom}
+                titreTypeId={titre.titre_type_id}
+                demarche={{ titreId: titre.id }}
+                tabId="demarches"
+                reload={demarcheCreatedOrUpdated}
+              />
             ) : null}
           </div>
         )}
