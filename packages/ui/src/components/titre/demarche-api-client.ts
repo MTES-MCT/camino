@@ -1,16 +1,17 @@
 import { apiGraphQLFetch } from '@/api/_client'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheIdOrSlug, DemarcheSlug } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
-import { TitreId } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlugValidator, TitreId } from 'camino-common/src/titres'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { getWithJson } from '../../api/client-rest'
 
 export interface InputDemarcheCreation {
   titreId: string
@@ -56,6 +57,7 @@ export interface DemarcheApiClient {
   createDemarche: (demarche: InputDemarcheCreation) => Promise<DemarcheSlug>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlugValidator>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 
@@ -93,6 +95,10 @@ export const demarcheApiClient: DemarcheApiClient = {
         demarcheSupprimer(id: $id)
       }
     `)({ id: demarcheId })
+  },
+
+  getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {
+    return getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
   },
   getDemarches: async (params: GetDemarchesParams) => {
     const data = await apiGraphQLFetch(gql`

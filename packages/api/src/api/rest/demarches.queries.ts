@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { Redefine } from '../../pg-database.js'
-import { IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
+import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
+import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { communeValidator } from 'camino-common/src/static/communes.js'
@@ -15,6 +15,8 @@ import { contenuValidator } from './activites.queries.js'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
+import { Pool } from 'pg'
+import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 
 export const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -66,4 +68,19 @@ where
     and e.archive is false
 order by
     date desc
+`
+
+export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSlug): Promise<z.infer<typeof getDemarcheByIdOrSlugValidator>> => {
+  return (await dbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator))[0]
+}
+
+const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
+select
+    slug as demarche_slug,
+    titre_id
+from
+    titres_demarches
+where (id = $ idOrSlug !
+    or slug = $ idOrSlug !)
+and archive is false
 `

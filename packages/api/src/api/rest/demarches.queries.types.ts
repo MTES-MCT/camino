@@ -37,3 +37,20 @@ export interface IGetEtapesByDemarcheIdDbQuery {
   result: IGetEtapesByDemarcheIdDbResult;
 }
 
+/** 'GetDemarcheByIdOrSlugDb' parameters type */
+export interface IGetDemarcheByIdOrSlugDbParams {
+  idOrSlug: string;
+}
+
+/** 'GetDemarcheByIdOrSlugDb' return type */
+export interface IGetDemarcheByIdOrSlugDbResult {
+  demarche_slug: string | null;
+  titre_id: string;
+}
+
+/** 'GetDemarcheByIdOrSlugDb' query type */
+export interface IGetDemarcheByIdOrSlugDbQuery {
+  params: IGetDemarcheByIdOrSlugDbParams;
+  result: IGetDemarcheByIdOrSlugDbResult;
+}
+

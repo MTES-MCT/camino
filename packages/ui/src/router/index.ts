@@ -25,6 +25,10 @@ const Demarches = async () => {
   const { Demarches } = await import('../components/demarches')
   return Demarches
 }
+const Demarche = async () => {
+  const { Demarche } = await import('../components/demarche')
+  return Demarche
+}
 const Travaux = async () => {
   const { Travaux } = await import('../components/travaux')
   return Travaux
@@ -33,11 +37,6 @@ const Travaux = async () => {
 const Titre = async () => {
   const { Titre } = await import('../components/titre')
   return Titre
-}
-
-const Etape = async () => {
-  const { Etape } = await import('../components/etape')
-  return Etape
 }
 
 const Utilisateur = async () => {
@@ -182,6 +181,11 @@ const routes = [
     },
   },
   {
+    path: '/demarches/:demarcheId',
+    name: 'demarche',
+    component: Demarche,
+  },
+  {
     path: '/travaux',
     name: 'travaux',
     component: Travaux,
@@ -193,10 +197,8 @@ const routes = [
   {
     path: '/etapes/:id',
     name: 'etape',
-    component: Etape,
-    meta: {
-      title: "Détail d'une étape",
-      menuSection: 'titres',
+    redirect: to => {
+      return { name: 'etape-edition', params: { id: to.params.id } }
     },
   },
   {

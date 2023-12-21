@@ -58,6 +58,7 @@ import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 
 interface IRestResolverResult {
   nom: string
@@ -138,6 +139,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/guyane': { get: getGuyaneStats },
   '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
   '/rest/statistiques/dgtm': { get: getDGTMStats },
+  '/rest/demarches/:demarcheIdOrSlug': { get: getDemarcheByIdOrSlug },
   '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
   '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },
   '/rest/utilisateurs/:id/delete': { get: deleteUtilisateur },

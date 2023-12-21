@@ -169,3 +169,7 @@ export const getMostRecentValidValueProp = <P extends 'titulaires' | 'amodiatair
 
   return null
 }
+
+export const getDemarcheByIdOrSlugValidator = z.object({ demarche_slug: demarcheSlugValidator, titre_id: titreIdValidator })
+
+export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
