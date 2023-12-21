@@ -254,7 +254,7 @@ export const Filters = defineComponent((props: Props) => {
     }
     labels.value = props.filters.flatMap<FormatedLabel>(filter => {
       const filterType = caminoFiltres[filter]
-      if (filterType.type === 'input' && isNotNullNorUndefined(nonValidatedValues.value[filter])) {
+      if (filterType.type === 'input' && isNotNullNorUndefined(nonValidatedValues.value[filter]) && nonValidatedValues.value[filter] !== '') {
         return [{ id: filterType.id, name: filterType.name, value: nonValidatedValues.value[filter] }]
       }
       if ((filterType.type === 'autocomplete' || filterType.type === 'checkboxes') && isNotNullNorUndefined(nonValidatedValues.value[filter])) {

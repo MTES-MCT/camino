@@ -394,8 +394,6 @@ export const PureTitre = defineComponent<Props>(props => {
                 FIXME les références
                 FIXME lien vers les activités
 
-                FIXME références + territoires dans les filtres
-                FIXME quand on vire la dernière étape d’une démarche, ça fait n’imp
                 FIXME pas possible de lier un titre
               */}
             </div>

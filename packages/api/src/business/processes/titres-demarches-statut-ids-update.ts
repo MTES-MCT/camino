@@ -2,19 +2,17 @@ import { TitreId } from 'camino-common/src/titres.js'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
-import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
 import { Pool } from 'pg'
 
-// met à jour le statut des démarches d'un titre
-export const titresDemarchesStatutIdUpdate = async (pool: Pool, titresId?: TitreId) => {
+export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreId) => {
   console.info()
   console.info('statut des démarches…')
 
-  const titresDemarches = await getDemarches(pool, undefined, titresId)
+  const titresDemarches = await getDemarches(pool, undefined, titreId)
 
-  // TODO: forcer la présence des démarches sur le titre
-  // https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist/49725198#49725198
   const titresDemarchesUpdated: string[] = []
+
 
   for (const titreDemarche of Object.values(titresDemarches)) {
     const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
