@@ -35,12 +35,10 @@ import { isAdministration, User } from 'camino-common/src/roles.js'
 import { canCreateOrEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getTitre as getTitreDb, getTitreCommunes as getTitreCommunesQuery } from './titres.queries.js'
+import { getTitre as getTitreDb } from './titres.queries.js'
 import type { Pool } from 'pg'
-import { Commune } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { getDateLastJournal } from './journal.queries.js'
 import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries.js'
 
 const etapesAMasquer = [
@@ -394,25 +392,6 @@ export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res:
   }
 }
 
-export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Commune[]>) => {
-  const user = req.auth
-
-  const titreId = req.params.id
-
-  if (!titreId) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    const titre = await titreGet(titreId, { fields: { id: {} } }, user)
-    if (!titre) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-    } else {
-      const communes = await getTitreCommunesQuery(pool, { id: titreIdValidator.parse(titreId) })
-
-      res.json(communes)
-    }
-  }
-}
-
 const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Promise<TitreLink[]> => {
   const titresTitres = await TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId)
   const titreIds = titresTitres.map(r => r[link])
@@ -558,27 +537,6 @@ export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomRe
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
         res.json(titre)
-      }
-    } catch (e) {
-      console.error(e)
-
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-    }
-  }
-}
-
-export const getTitreDate = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CaminoDate | null>) => {
-  const titreId: string | undefined = req.params.titreId
-  if (!titreId) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    try {
-      const date = await getDateLastJournal(pool, titreIdValidator.parse(titreId))
-
-      if (date === null) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
-      } else {
-        res.json(date)
       }
     } catch (e) {
       console.error(e)

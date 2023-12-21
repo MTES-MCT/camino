@@ -13,21 +13,18 @@ import {
   insertActiviteDocument,
   titreTypeIdByActiviteId,
   updateActiviteQuery,
-  getActivitesByTitreId as getActivitesByTitreIdQuery,
   DbActivite,
   activiteDeleteQuery,
 } from './activites.queries.js'
 import { NewDownload } from './fichiers.js'
 import { DeepReadonly, SimplePromiseFn, isNonEmptyArray, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { canEditActivite, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
-import { ActivitesByTitre, titreIdValidator } from 'camino-common/src/titres.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { Section, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { createLargeObject } from './entreprises.js'
 import { newActiviteDocumentId } from '../../database/models/_format/id-create.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { Unites } from 'camino-common/src/static/unites.js'
-import { getAdministrationsLocalesByTitreIdQuery, getTitreTypeIdByTitreIdQuery, getTitulairesAmodiatairesByTitreIdQuery } from './titres.queries.js'
 import { User } from 'camino-common/src/roles.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
@@ -46,7 +43,7 @@ const extractContenuFromSectionWithValue = (sections: DeepReadonly<Section[]>, s
           let value = newElement.value
           if (section.id === 'substancesFiscales' && 'uniteId' in element && element.uniteId !== undefined && newElement.value !== null) {
             const ratio = Unites[element.uniteId].referenceUniteRatio
-            if (ratio) {
+            if (ratio !== null) {
               value = (newElement.value as number) * ratio
             }
           }
@@ -216,47 +213,6 @@ export const deleteActivite =
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
       } else {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
-      }
-    }
-  }
-
-export const getActivitesByTitreId =
-  (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<ActivitesByTitre>): Promise<void> => {
-    const titreIdParsed = titreIdValidator.safeParse(req.params.titreId)
-    const user = req.auth
-
-    if (!titreIdParsed.success) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-    } else {
-      try {
-        const titreTypeId = memoize(() => getTitreTypeIdByTitreIdQuery(titreIdParsed.data, pool))
-        const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreIdQuery(titreIdParsed.data, pool))
-        const entreprisesTitulairesOuAmodiataires = memoize(() => getTitulairesAmodiatairesByTitreIdQuery(titreIdParsed.data, pool))
-
-        const result = await getActivitesByTitreIdQuery(titreIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
-
-        if (result !== null) {
-          const activites: ActivitesByTitre = []
-          for (const activite of result) {
-            const activiteByAnnee = activites.find(({ annee }) => annee === activite.annee)
-
-            const activiteFormated = await formatActivite(activite, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires)
-
-            if (isNullOrUndefined(activiteByAnnee)) {
-              activites.push({ annee: activite.annee, activites: [activiteFormated] })
-            } else {
-              activiteByAnnee.activites.push(activiteFormated)
-            }
-          }
-
-          res.json(activites.sort((a, b) => b.annee.localeCompare(a.annee)))
-        } else {
-          res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
-        }
-      } catch (e) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        console.error(e)
       }
     }
   }

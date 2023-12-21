@@ -8,16 +8,15 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { entreprisesUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
-import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
-import { createJournalCreate } from '../../database/queries/journaux.js'
-import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import { TitreId, titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import TitresEtapes from '../../database/models/titres-etapes.js'
 import Titres from '../../database/models/titres.js'
@@ -27,7 +26,6 @@ console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
-let titreId1: TitreId | null = null
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
@@ -45,7 +43,7 @@ beforeAll(async () => {
     {}
   )
 
-  titreId1 = await createTitreWithEtapes(
+  await createTitreWithEtapes(
     'titre1',
     [
       {
@@ -531,28 +529,6 @@ describe('getTitre', () => {
   })
 })
 
-test('getTitreDate', async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon autre titre',
-      typeId: 'arm',
-      slug: titreSlugValidator.parse('slug'),
-      titreStatutId: 'val',
-      propsTitreEtapesIds: {},
-    },
-    {}
-  )
-
-  let tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
-
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
-  await createJournalCreate(idGenerate(), userSuper.id, titre.id)
-
-  tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
-
-  expect(tested.body).toBe(getCurrent())
-})
-
 test('utilisateurTitreAbonner', async () => {
   const titre = await titreCreate(
     {
@@ -568,15 +544,4 @@ test('utilisateurTitreAbonner', async () => {
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
-})
-
-test('peut récupérer les communes d’un titre', async () => {
-  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, userSuper)
-
-  expect(tested.statusCode).toBe(200)
-  expect(tested.body).toEqual([{ id: '97300', nom: 'Une ville en Guyane' }])
-
-  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, undefined)
-
-  expect(tested.statusCode).toBe(403)
 })

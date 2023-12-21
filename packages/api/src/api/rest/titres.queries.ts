@@ -5,14 +5,13 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IGetAdministrationsLocalesByTitreIdDbQuery,
   IGetDemarchesByTitreIdQueryDbQuery,
-  IGetTitreCommunesInternalQuery,
   IGetTitreInternalQuery,
   IGetTitreTypeIdByTitreIdDbQuery,
   IGetTitulairesAmodiatairesByTitreIdDbQuery,
 } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
-import { Commune, communeValidator } from 'camino-common/src/static/communes.js'
+import { Commune } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { administrationIdValidator } from 'camino-common/src/static/administrations.js'
@@ -288,21 +287,6 @@ where
     t.id = $ id !
     or t.slug = $ id !
 LIMIT 1
-`
-
-export const getTitreCommunes = async (pool: Pool, params: { id: TitreId }) => dbQueryAndValidate(getTitreCommunesInternal, params, pool, communeValidator)
-
-const getTitreCommunesInternal = sql<Redefine<IGetTitreCommunesInternalQuery, { id: TitreId }, Commune>>`
-select
-    c.id,
-    c.nom
-from
-    titres t
-    join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
-    join jsonb_array_elements(te.communes) as etapes_communes on true
-    join communes c on c.id = etapes_communes ->> 'id'
-where
-    t.id = $ id
 `
 
 export const getTitreTypeIdByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {

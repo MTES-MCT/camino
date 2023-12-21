@@ -1,11 +1,10 @@
 import { TitreStatutId, titreStatutIdValidator } from './static/titresStatuts.js'
 import { TitreReference, titreReferenceValidator } from './titres-references.js'
 import { etapeTypeIdValidator } from './static/etapesTypes.js'
-import { caminoAnneeValidator, caminoDateValidator } from './date.js'
+import { caminoDateValidator } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
-import { activiteValidator } from './activite.js'
 import { DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheEtapeValidator, demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
 import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { DemarcheTypeId, canImpactTitre, demarcheTypeIdValidator, isDemarcheTypeOctroi } from './static/demarchesTypes.js'
@@ -114,9 +113,6 @@ export const titreLinksValidator = z.object({
 export type TitreLinks = z.infer<typeof titreLinksValidator>
 
 export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
-
-export const activitesByTitreValidator = z.array(z.object({ annee: caminoAnneeValidator, activites: z.array(activiteValidator) }))
-export type ActivitesByTitre = z.infer<typeof activitesByTitreValidator>
 
 /**
  * Trouve l'id de l'étape de référence pour une propriété

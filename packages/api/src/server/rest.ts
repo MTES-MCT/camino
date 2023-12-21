@@ -9,19 +9,7 @@ import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
 import { NewDownload, etapeFichier, etapeTelecharger, fichier, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
-import {
-  getTitreLiaisons,
-  postTitreLiaisons,
-  removeTitre,
-  titresAdministrations,
-  titresONF,
-  updateTitre,
-  utilisateurTitreAbonner,
-  getTitre,
-  getTitreDate,
-  getTitreCommunes,
-  getUtilisateurTitreAbonner,
-} from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
   fiscalite,
@@ -56,7 +44,7 @@ import { deleteEtape, deposeEtape, getEtapeEntrepriseDocuments, getEtapesTypesEt
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
-import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite, deleteActivite } from '../api/rest/activites.js'
+import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 
@@ -125,13 +113,10 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
-  '/rest/titres/:id/communes': { get: getTitreCommunes },
   // FIXME à supprimer
-  '/rest/titres/:titreId/activites': { get: getActivitesByTitreId },
   '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
-  '/rest/titres/:titreId/date': { get: getTitreDate },
   '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
   '/rest/titresONF': { get: titresONF },
   '/rest/titresAdministrations': { get: titresAdministrations },

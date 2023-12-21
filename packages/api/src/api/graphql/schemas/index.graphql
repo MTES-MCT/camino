@@ -34,9 +34,6 @@ type Query {
   "Version de l'API"
   version: String
 
-  "Titre minier en fonction de son id"
-  titre(id: ID!): Titre
-
   "Liste de titres miniers, en fonction d'arguments (optionnels)"
   titres(
     intervalle: Int
@@ -189,7 +186,7 @@ type Query {
   "Calcule les informations relatives au périmètre d’une étape existante"
   titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
-  journaux(page: Int!, recherche: String, titreId: String, titresIds: [String]): Journaux
+  journaux(page: Int!, recherche: String, titresIds: [String]): Journaux
 }
 
 """

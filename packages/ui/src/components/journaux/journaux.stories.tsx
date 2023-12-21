@@ -46,13 +46,12 @@ const apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercher
   },
 }
 
-export const Loading: StoryFn = () => <Journaux titreId={null} apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
-export const WithError: StoryFn = () => <Journaux titreId={null} apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
-export const Default: StoryFn = () => <Journaux titreId={null} apiClient={apiClient} />
+export const Loading: StoryFn = () => <Journaux apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
+export const WithError: StoryFn = () => <Journaux apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
+export const Default: StoryFn = () => <Journaux apiClient={apiClient} />
 
 export const AvecPagination: StoryFn = () => (
   <Journaux
-    titreId={null}
     apiClient={{
       ...apiClient,
       getJournaux: async () => {

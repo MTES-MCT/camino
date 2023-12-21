@@ -1,6 +1,6 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
 import { getMostRecentValidValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
-import { DemarcheEtapeFondamentale, DemarcheSlug, getDemarcheContenu } from 'camino-common/src/demarche'
+import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -8,7 +8,6 @@ import { DemarcheEtape } from '@/components/demarche/demarche-etape'
 import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { Router } from 'vue-router'
 import { User } from 'camino-common/src/roles'
-import { Entreprise } from '@/components/titre/infos'
 import { DsfrPerimetre, TabId } from '@/components/_common/dsfr-perimetre'
 import { EtapePropAdministrationsItem, EtapePropEntreprisesItem, EtapePropItem } from '@/components/etape/etape-prop-item'
 import { AdministrationId } from 'camino-common/src/static/administrations'
@@ -99,11 +98,11 @@ export const TitreDemarche = defineComponent<Props>(props => {
     return [...administrationLocales, ...administrationGestionnaires].filter(onlyUnique)
   })
 
-  const titulaires = computed<Entreprise[] | null>(() => {
+  const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
     return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('titulaires', phaseDemarchesAsc.value) : null
   })
 
-  const amodiataires = computed<Entreprise[] | null>(() => {
+  const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
     return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('amodiataires', phaseDemarchesAsc.value) : null
   })
 

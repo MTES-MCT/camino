@@ -26,23 +26,6 @@ export interface IGetTitreInternalQuery {
   result: IGetTitreInternalResult;
 }
 
-/** 'GetTitreCommunesInternal' parameters type */
-export interface IGetTitreCommunesInternalParams {
-  id?: string | null | void;
-}
-
-/** 'GetTitreCommunesInternal' return type */
-export interface IGetTitreCommunesInternalResult {
-  id: string;
-  nom: string;
-}
-
-/** 'GetTitreCommunesInternal' query type */
-export interface IGetTitreCommunesInternalQuery {
-  params: IGetTitreCommunesInternalParams;
-  result: IGetTitreCommunesInternalResult;
-}
-
 /** 'GetTitreTypeIdByTitreIdDb' parameters type */
 export interface IGetTitreTypeIdByTitreIdDbParams {
   titreId: string;

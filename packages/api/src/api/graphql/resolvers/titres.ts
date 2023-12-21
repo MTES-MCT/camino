@@ -14,22 +14,6 @@ import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
-const titre = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    const titre = await titreGet(id, { fields, fetchHeritage: true }, user)
-
-    if (!titre) return null
-
-    return titreFormat(titre, fields)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 const titres = async (
   {
     intervalle,
@@ -131,7 +115,7 @@ const titres = async (
       ),
     ])
 
-    const titresFormatted = titres && titresFormat(titres, fields)
+    const titresFormatted = titresFormat(titres, fields)
 
     return {
       elements: titresFormatted,
@@ -173,4 +157,4 @@ const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info:
   }
 }
 
-export { titre, titres, titreCreer }
+export { titres, titreCreer }

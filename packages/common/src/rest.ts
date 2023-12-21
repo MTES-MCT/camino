@@ -14,7 +14,6 @@ import {
 import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
-  activitesByTitreValidator,
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
   titreAdministrationValidator,
@@ -56,13 +55,10 @@ const IDS = [
   '/rest/statistiques/granulatsMarins',
   '/rest/titreSections/:titreId',
   '/rest/titres/:titreId',
-  '/rest/titres/:titreId/date',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
   '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
-  '/rest/titres/:id/communes',
-  '/rest/titres/:titreId/activites',
   '/rest/demarches/:demarcheIdOrSlug',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
@@ -112,12 +108,9 @@ export const CaminoRestRoutes = {
   '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionWithValueValidator) } },
   '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
-  '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/titres/:id/communes': { params: { id: titreIdValidator }, get: { output: z.array(communeValidator) } },
-  '/rest/titres/:titreId/activites': { params: { titreId: titreIdValidator }, get: { output: activitesByTitreValidator } },
   '/rest/demarches/:demarcheIdOrSlug': { params: { demarcheIdOrSlug: demarcheIdOrSlugValidator }, get: { output: getDemarcheByIdOrSlugValidator } },
 
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },

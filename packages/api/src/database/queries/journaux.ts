@@ -29,9 +29,6 @@ export const journauxGet = async (params: JournauxQueryParams, { fields }: { fie
     q.whereRaw(`lower(??) like ?`, ['titreRecherche.nom', `%${params.recherche.toLowerCase()}%`])
   }
 
-  if (params.titreId) {
-    q.where('titreId', params.titreId)
-  }
   if (isNotNullNorUndefinedNorEmpty(params.titresIds)) {
     q.whereIn('titreId', params.titresIds)
   }

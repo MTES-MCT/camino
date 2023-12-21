@@ -104,8 +104,6 @@ export type DemarcheEtape = z.infer<typeof demarcheEtapeValidator>
 
 // TODO 2023-10-26 : ceci est la traduction de la colonne contenu_ids de la table titres_types
 export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_with_values'> & { etape_type_id: EtapeTypeId })[], titreTypeId: TitreTypeId): Record<string, string> => {
-  console.log(JSON.stringify(etapes.map(({ sections_with_values, etape_type_id }) => ({ sections_with_values, etape_type_id }))))
-  console.log('titreTypeId', titreTypeId)
   if (getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES) {
     let engagement: number | null = null
     let engagementDeviseId: DeviseId | null = null

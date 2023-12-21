@@ -52,8 +52,6 @@ export interface TitreApiClient {
   getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean>
   editTitre: (titre: EditableTitre) => Promise<void>
   getTitreById: (titreId: TitreIdOrSlug) => Promise<TitreGet>
-  getLastModifiedDate: (titreId: TitreId) => Promise<CaminoDate | null>
-  getTitreCommunes: (titreId: TitreId) => Promise<Commune[]>
   getTitresMetas: () => Promise<Pick<Entreprise, 'id' | 'nom'>[]>
   getTitresForTable: (params: {
     page?: number
@@ -130,12 +128,6 @@ export const titreApiClient: TitreApiClient = {
   },
   getTitreById: (titreId: TitreIdOrSlug): Promise<TitreGet> => {
     return getWithJson('/rest/titres/:titreId', { titreId })
-  },
-  getLastModifiedDate: (titreId: TitreId): Promise<CaminoDate | null> => {
-    return getWithJson('/rest/titres/:titreId/date', { titreId })
-  },
-  getTitreCommunes: (id: TitreId): Promise<Commune[]> => {
-    return getWithJson('/rest/titres/:id/communes', { id })
   },
   getTitresMetas: async () => {
     const { elements } = await apiGraphQLFetch(
