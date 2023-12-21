@@ -393,8 +393,6 @@ export const PureTitre = defineComponent<Props>(props => {
                 // STYLES
                 FIXME les références
                 FIXME lien vers les activités
-
-                FIXME pas possible de lier un titre
               */}
             </div>
             <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
