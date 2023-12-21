@@ -40,6 +40,64 @@ jobs:
         run: make install
       - name: Lint
         run: make lint/api
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9'
+          cache: 'npm'
+      - name: Install
+        run: make install
+      - name: Unit tests
+        run: make test/api-unit
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-unit, api
+  integration-test:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgis/postgis:15-3.3
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: camino_tests
+            PGUSER: postgres
+            PGPASSWORD: password
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '20.9'
+            cache: 'npm'
+        - name: Npm install
+          run: make install
+        - name: Integration tests
+          run: make test/api-integration
+          env:
+            PGHOST: localhost
+            PGPORT: 5432
+            PGUSER: postgres
+            PGPASSWORD: password
+        - uses: codecov/codecov-action@v3
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            flags: api-integration, api
   check-queries:
       runs-on: ubuntu-latest
       services:
@@ -88,7 +146,7 @@ jobs:
             PGPASSWORD: password  
             PGDATABASE: camino   
   build:
-    needs: [lint, type, check-queries]
+    needs: [unit-test, integration-test, lint, type, check-queries]
     runs-on: ubuntu-latest
 
     steps:
