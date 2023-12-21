@@ -1,6 +1,6 @@
 import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update.js'
 import { vi, describe, expect, test } from 'vitest'
-import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { Pool } from 'pg'
