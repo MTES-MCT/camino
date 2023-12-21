@@ -201,13 +201,14 @@ const DemarcheEvent: FunctionalComponent<{
 }> = props => {
   const tooltipId = 'timeline-event-' + props.demarche.slug
 
-  return (<CaminoRouterLink
-        aria-describedby={tooltipId}
-        {...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug)}
-        to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } }}
-        title={capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom)}
-        class={style.event}
-        anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
-      />
+  return (
+    <CaminoRouterLink
+      aria-describedby={tooltipId}
+      {...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug)}
+      to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } }}
+      title={capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom)}
+      class={style.event}
+      anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
+    />
   )
 }

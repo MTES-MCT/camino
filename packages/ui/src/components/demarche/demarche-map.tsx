@@ -415,7 +415,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
       mapLibre.fitBounds(bounds, { padding: 50 })
 
-      
       mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
@@ -453,9 +452,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
-  
   onBeforeUnmount(() => {
-    
     map.value?.off('moveend', moveend)
   })
 

@@ -61,10 +61,11 @@ export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boo
   return false
 }
 
-export const canReadTitre = (user: User, titre: {public_lecture: boolean}): boolean => {
+export const canReadTitre = (user: User, titre: { public_lecture: boolean }): boolean => {
   if (isSuper(user)) {
     return true
-  } 
+  }
+
   return titre.public_lecture
 }
 

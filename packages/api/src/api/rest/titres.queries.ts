@@ -177,7 +177,6 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
     const perimetre = getMostRecentValidValueProp('perimetre', superDemarches)
     const administrationsLocales = memoize(() => {
-
       return Promise.resolve(
         getAdministrationsLocales(
           perimetre?.communes.map(({ id }) => id),
@@ -224,11 +223,9 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     }
     let nb_activites_to_do: number | null = null
 
-    if (canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches }) &&
-          (await canReadTitreActivites(
-            user,
-            titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires
-          ))
+    if (
+      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches }) &&
+      (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
       nb_activites_to_do = titre.nb_activites_to_do
     }
@@ -260,7 +257,7 @@ const getTitreInternalValidator = z.object({
   titre_doublon_nom: z.string().nullable(),
   public_lecture: z.boolean().default(false),
   references: z.array(titreReferenceValidator),
-  nb_activites_to_do: z.coerce.number()
+  nb_activites_to_do: z.coerce.number(),
 })
 
 type GetTitreInternalValidator = z.infer<typeof getTitreInternalValidator>
@@ -276,7 +273,14 @@ select
     t_doublon.nom as titre_doublon_nom,
     t.references,
     t.public_lecture,
-    (select count(a.id) from titres_activites a where a.titre_id = t.id and a.activite_statut_id in ('abs', 'enc')) as nb_activites_to_do
+    (
+        select
+            count(a.id)
+        from
+            titres_activites a
+        where
+            a.titre_id = t.id
+            and a.activite_statut_id in ('abs', 'enc')) as nb_activites_to_do
 from
     titres t
     left join titres t_doublon on t_doublon.id = t.doublon_titre_id

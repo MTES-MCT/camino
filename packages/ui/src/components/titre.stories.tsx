@@ -191,7 +191,6 @@ const titre: TitreGet = {
           sections_with_values: [],
           documents: [],
           entreprises_documents: [],
-          
         },
       ],
     },
@@ -341,7 +340,7 @@ export const ChantepieOctroiAsEntreprise: StoryFn = () => (
   <PureTitre
     currentDemarcheSlug={demarcheSlugValidator.parse('m-cx-chantepie-1988-oct01')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('fr-409160132')}] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-409160132') }] }}
     router={routerPushMock}
     apiClient={chantePieApiClient}
     titreIdOrSlug={titre.id}
@@ -549,7 +548,6 @@ export const WithLinkableTitres: StoryFn = () => (
     titreIdOrSlug={titre.id}
   />
 )
-
 
 export const WithActivitesToDo: StoryFn = () => (
   <PureTitre

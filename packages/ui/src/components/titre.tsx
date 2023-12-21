@@ -428,7 +428,7 @@ export const PureTitre = defineComponent<Props>(props => {
                 <Alert
                   small={true}
                   type="warning"
-                  class='fr-mt-2w'
+                  class="fr-mt-2w"
                   title={
                     <>
                       Le titre est en doublon avec : <DsfrLink disabled={false} icon={null} title={titre.titre_doublon?.nom ?? ''} to={{ name: 'titre', params: { id: titre.titre_doublon?.id } }} />.
@@ -438,17 +438,18 @@ export const PureTitre = defineComponent<Props>(props => {
               ) : null}
               {showActivitesLink.value && (titre.nb_activites_to_do ?? 0) > 0 ? (
                 <Alert
-                  class='fr-mt-2w'
+                  class="fr-mt-2w"
                   small={true}
-                  type={ isEntrepriseOrBureauDEtude(props.user) ? "warning" : "info"}
+                  type={isEntrepriseOrBureauDEtude(props.user) ? 'warning' : 'info'}
                   title={
                     <>
-                      Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? 'rapports d\'activités': 'rapport d\'activité'}.{' '}<DsfrLink
-                  disabled={false}
-                  icon={null}
-                  title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? 'les rapports d\'activités': 'le rapport d\'activité'}`}
-                  to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                />
+                      Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? "rapports d'activités" : "rapport d'activité"}.{' '}
+                      <DsfrLink
+                        disabled={false}
+                        icon={null}
+                        title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
+                        to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                      />
                     </>
                   }
                 />

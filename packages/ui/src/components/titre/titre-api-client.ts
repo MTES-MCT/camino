@@ -380,8 +380,9 @@ export const titreApiClient: TitreApiClient = {
             }
           }
         }
-      `
-    ,cacheKey)({ titresIds })
+      `,
+      cacheKey
+    )({ titresIds })
     return result
   },
 }
