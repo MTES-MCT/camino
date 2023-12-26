@@ -420,7 +420,7 @@ export const BonEspoirOctroi: StoryFn = () => (
   <PureTitre
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-oct01')}
     initTab="points"
-    user={{ ...testBlankUser, role: 'defaut' }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
     router={routerPushMock}
     apiClient={bonEspoirApiClient}
     titreIdOrSlug={titre.id}

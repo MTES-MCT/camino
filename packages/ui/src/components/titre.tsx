@@ -391,26 +391,24 @@ export const PureTitre = defineComponent<Props>(props => {
 
               {/*
                 // STYLES
-                FIXME les références
-                FIXME lien vers les activités
-
                 FIXME mettre les travaux
               */}
             </div>
             <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
               <h3 class="fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</h3>
               <Domaine class="fr-ml-2w" domaineId={TitresTypes[titre.titre_type_id].domaineId} />
-              {showActivitesLink.value && titre.nb_activites_to_do === 0 ? (
-                <DsfrLink
-                  style={{ marginLeft: 'auto' }}
-                  disabled={false}
-                  icon={null}
-                  title="Activités du titre"
-                  label="Activités du titre"
-                  to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                />
-              ) : null}
             </div>
+            {titre.references.length > 0 ? (
+              <div class="fr-mt-2w">
+                Références
+                {titre.references.map(reference => (
+                  <div key={reference.nom} style={{ fontWeight: 500 }}>
+                    {ReferencesTypes[reference.referenceTypeId].nom} : {reference.nom}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
             <div class="fr-grid-row fr-grid-row--middle fr-mt-4w">
               {titre.titre_last_modified_date !== null ? (
                 <div>
@@ -431,16 +429,6 @@ export const PureTitre = defineComponent<Props>(props => {
               ) : null}
             </div>
             <div>
-              {titre.references.length > 0 ? (
-                <>
-                  {titre.references.map(reference => (
-                    <div key={reference.nom}>
-                      {ReferencesTypes[reference.referenceTypeId].nom}: {reference.nom}
-                    </div>
-                  ))}
-                </>
-              ) : null}
-
               {titre.titre_doublon !== null ? (
                 <Alert
                   small={true}
@@ -453,25 +441,38 @@ export const PureTitre = defineComponent<Props>(props => {
                   }
                 />
               ) : null}
-              {showActivitesLink.value && (titre.nb_activites_to_do ?? 0) > 0 ? (
-                <Alert
-                  class="fr-mt-2w"
-                  small={true}
-                  type={isEntrepriseOrBureauDEtude(props.user) ? 'warning' : 'info'}
-                  title={
-                    <>
-                      Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? "rapports d'activités" : "rapport d'activité"}.{' '}
-                      <DsfrLink
-                        disabled={false}
-                        icon={null}
-                        title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
-                        to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                      />
-                    </>
-                  }
-                />
+              {showActivitesLink.value && isNotNullNorUndefined(titre.nb_activites_to_do) ? (
+                <>
+                  {titre.nb_activites_to_do === 0 ? (
+                    <DsfrLink
+                      disabled={false}
+                      icon={null}
+                      class="fr-mt-2w"
+                      title="Consulter les rapports d'activités"
+                      label="Consulter les rapports d'activités"
+                      buttonType="secondary"
+                      to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                    />
+                  ) : (
+                    <Alert
+                      class="fr-mt-2w"
+                      small={true}
+                      type={isEntrepriseOrBureauDEtude(props.user) ? 'warning' : 'info'}
+                      title={
+                        <>
+                          Il manque {titre.nb_activites_to_do} {(titre.nb_activites_to_do ?? 0) > 1 ? "rapports d'activités" : "rapport d'activité"}.{' '}
+                          <DsfrLink
+                            disabled={false}
+                            icon={null}
+                            title={`Remplir ${(titre.nb_activites_to_do ?? 0) > 1 ? "les rapports d'activités" : "le rapport d'activité"}`}
+                            to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                          />
+                        </>
+                      }
+                    />
+                  )}
+                </>
               ) : null}
-
               {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} /> : null}
             </div>
 
