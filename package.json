@@ -24,7 +24,8 @@
   "scripts": {
     "prepare": "husky install",
     "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces"
+    "lint": "npm run lint --workspaces",
+    "knip": "npx knip"
   },
   "lint-staged": {
     "packages/ui/**/*.{js,ts,vue,tsx}": [
@@ -54,12 +55,12 @@
     "vue": "3.3.4"
   },
   "devDependencies": {
-    "vue": "3.3.4",
     "@types/react": "file:stub/types__react",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "semantic-release": "^21.0.5",
-    "semantic-release-mattermost": "^1.1.1"
+    "semantic-release-mattermost": "^1.1.1",
+    "vue": "3.3.4"
   },
   "release": {
     "branches": [
