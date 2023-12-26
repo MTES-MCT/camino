@@ -1,8 +1,7 @@
 import { EditableTitre, TitreGet, TitreId, TitreIdOrSlug } from 'camino-common/src/titres'
-import { SectionWithValue } from 'camino-common/src/sections'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
-import { Commune, CommuneId } from 'camino-common/src/static/communes'
+import { CommuneId } from 'camino-common/src/static/communes'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
@@ -46,7 +45,6 @@ export type TitreForTitresRerchercherByNom = {
   demarches: { demarcheDateDebut: CaminoDate | null }[]
 }
 export interface TitreApiClient {
-  loadTitreSections: (titreId: TitreId) => Promise<SectionWithValue[]>
   removeTitre: (titreId: TitreId) => Promise<void>
   titreUtilisateurAbonne: (titreId: TitreId, abonne: boolean) => Promise<void>
   getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean>
@@ -111,9 +109,6 @@ export interface TitreApiClient {
 }
 
 export const titreApiClient: TitreApiClient = {
-  loadTitreSections: async (titreId: TitreId): Promise<SectionWithValue[]> => {
-    return getWithJson('/rest/titreSections/:titreId', { titreId })
-  },
   removeTitre: async (titreId: TitreId): Promise<void> => {
     return deleteWithJson('/rest/titres/:titreId', { titreId })
   },

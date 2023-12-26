@@ -39,7 +39,6 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
-import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { deleteEtape, deposeEtape, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
@@ -113,8 +112,6 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
-  // FIXME à supprimer
-  '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
   '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },

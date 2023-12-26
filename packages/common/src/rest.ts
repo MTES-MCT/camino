@@ -24,7 +24,6 @@ import {
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
-import { sectionWithValueValidator } from './sections.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
@@ -53,7 +52,6 @@ const IDS = [
   '/rest/statistiques/minerauxMetauxMetropole',
   '/rest/statistiques/guyane',
   '/rest/statistiques/granulatsMarins',
-  '/rest/titreSections/:titreId',
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
@@ -105,7 +103,6 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionWithValueValidator) } },
   '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },

@@ -1,56 +1,9 @@
-import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
-import { titreGet } from '../../database/queries/titres.js'
+import type { ITitre, ITitreEtape } from '../../types.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
-import { CaminoRequest, CustomResponse } from './express-type.js'
 import { getElementValeurs, getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
-import { Pool } from 'pg'
 
-/**
- * @deprecated utiliser titreSectionsGet
- */
-export const contenuFormat = ({
-  demarches,
-  contenusTitreEtapesIds,
-}: {
-  demarches: {
-    etapes?: Pick<ITitreEtape, 'id' | 'contenu'>[] | undefined | null
-  }[]
-  contenusTitreEtapesIds: NonNullable<Required<ITitre['contenusTitreEtapesIds']>>
-}): IContenu => {
-  if (!demarches?.length) return {}
-
-  const etapesIndex: Record<string, Pick<ITitreEtape, 'id' | 'contenu'>> = {}
-
-  demarches.forEach(titreDemarche => {
-    if (titreDemarche.etapes) {
-      titreDemarche.etapes.forEach(etape => {
-        etapesIndex[etape.id] = etape
-      })
-    }
-  })
-
-  const contenu: IContenu = {}
-
-  Object.keys(contenusTitreEtapesIds).forEach((sectionId: string) => {
-    Object.keys(contenusTitreEtapesIds[sectionId]).forEach(propId => {
-      const etapeId = contenusTitreEtapesIds[sectionId][propId]
-
-      const etape = etapesIndex[etapeId]
-
-      if (etape?.contenu && etape.contenu[sectionId] && etape.contenu[sectionId][propId] !== undefined) {
-        if (!contenu[sectionId]) {
-          contenu[sectionId] = {}
-        }
-
-        contenu[sectionId][propId] = etape.contenu[sectionId][propId]
-      }
-    })
-  })
-
-  return contenu
-}
 export const titreSectionsGet = ({
   typeId,
   demarches,
@@ -143,42 +96,3 @@ export const titreSectionsGet = ({
 
   return sections
 }
-
-export const getTitresSections =
-  (_pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<SectionWithValue[]>): Promise<void> => {
-    try {
-      const titreId: string | undefined = req.params.titreId
-      if (!titreId) {
-        throw new Error('le paramètre titreId est obligatoire')
-      }
-
-      const user = req.auth
-
-      let result: SectionWithValue[] = []
-      const titre = await titreGet(
-        titreId,
-        {
-          fields: {
-            demarches: {
-              type: { etapesTypes: { id: {} } },
-              etapes: {
-                type: { id: {} },
-              },
-            },
-          },
-        },
-        user
-      )
-
-      if (titre) {
-        result = titreSectionsGet(titre)
-      }
-
-      res.json(result)
-    } catch (e) {
-      console.error(e)
-
-      throw e
-    }
-  }
