@@ -7,6 +7,7 @@ export const titreEtapeMetas = apiGraphQLFetch(
     query TitreEtapeMetas($titreDemarcheId: ID!, $id: ID) {
       demarche(id: $titreDemarcheId) {
         id
+        slug
         description
         typeId
         titre {
