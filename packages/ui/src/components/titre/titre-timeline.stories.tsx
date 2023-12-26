@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { toCaminoDate } from 'camino-common/src/date'
 import { vueRouter } from 'storybook-vue3-router'
-import { TitreTimeline } from './titre-timeline'
+import { Phase, TitreTimeline } from './titre-timeline'
 import { titreSlugValidator } from 'camino-common/src/titres'
 
 const meta: Meta = {
@@ -11,47 +11,54 @@ const meta: Meta = {
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'titre' }])],
 }
 export default meta
-
+const defaultPhasesWithAlterations: Phase = [
+  [
+    {
+      slug: demarcheSlugValidator.parse('slug-demarche2'),
+      demarche_type_id: 'oct',
+      demarche_date_debut: toCaminoDate('2019-01-01'),
+      demarche_date_fin: toCaminoDate('2021-01-01'),
+      events: [],
+    },
+  ],
+  [
+    {
+      slug: demarcheSlugValidator.parse('slug-demarche3'),
+      demarche_type_id: 'pro',
+      demarche_date_debut: toCaminoDate('2021-01-01'),
+      demarche_date_fin: toCaminoDate('2024-01-01'),
+      events: [
+        {
+          slug: demarcheSlugValidator.parse('slug-demarche4'),
+          demarche_type_id: 'mut',
+          first_etape_date: toCaminoDate('2022-01-01'),
+        },
+        {
+          slug: demarcheSlugValidator.parse('slug-travaux1'),
+          demarche_type_id: 'aom',
+          first_etape_date: toCaminoDate('2022-01-01'),
+        },
+      ],
+    },
+  ],
+  [
+    {
+      slug: demarcheSlugValidator.parse('slug-demarche5'),
+      demarche_type_id: 'pr2',
+      demarche_date_debut: toCaminoDate('2024-01-01'),
+      demarche_date_fin: toCaminoDate('2027-01-01'),
+      events: [],
+    },
+  ],
+]
 export const Default: StoryFn = () => (
-  <TitreTimeline
-    titreSlug={titreSlugValidator.parse('slug-titre')}
-    phasesWithAlterations={[
-      [
-        {
-          slug: demarcheSlugValidator.parse('slug-demarche2'),
-          demarche_type_id: 'oct',
-          demarche_date_debut: toCaminoDate('2019-01-01'),
-          demarche_date_fin: toCaminoDate('2021-01-01'),
-          events: [],
-        },
-      ],
-      [
-        {
-          slug: demarcheSlugValidator.parse('slug-demarche3'),
-          demarche_type_id: 'pro',
-          demarche_date_debut: toCaminoDate('2021-01-01'),
-          demarche_date_fin: toCaminoDate('2024-01-01'),
-          events: [
-            {
-              slug: demarcheSlugValidator.parse('slug-demarche4'),
-              demarche_type_id: 'mut',
-              first_etape_date: toCaminoDate('2022-01-01'),
-            },
-          ],
-        },
-      ],
-      [
-        {
-          slug: demarcheSlugValidator.parse('slug-demarche5'),
-          demarche_type_id: 'pr2',
-          demarche_date_debut: toCaminoDate('2024-01-01'),
-          demarche_date_fin: toCaminoDate('2027-01-01'),
-          events: [],
-        },
-      ],
-    ]}
-    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
-  />
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+)
+export const DefaultWithEventSelected: StoryFn = () => (
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche4')} />
+)
+export const DefaultWithTravauxSelected: StoryFn = () => (
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-travaux1')} />
 )
 
 export const MultipleUnorderedDemarchesWithoutPhase: StoryFn = () => (
@@ -152,7 +159,13 @@ export const BigExample: StoryFn = () => (
           slug: demarcheSlugValidator.parse('slug-demarche4'),
           demarche_type_id: 'mut',
           date_etape_decision_ok: toCaminoDate('2021-06-01'),
-          events: [],
+          events: [
+            {
+              slug: demarcheSlugValidator.parse('slug-travaux1'),
+              demarche_type_id: 'aom',
+              first_etape_date: toCaminoDate('2021-06-02'),
+            },
+          ],
         },
       ],
       [

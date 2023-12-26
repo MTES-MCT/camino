@@ -2,15 +2,16 @@ import { capitalize, defineComponent, Fragment, FunctionalComponent, ref } from 
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import style from './titre-timeline.module.css'
 import { CaminoRouterLink } from '@/router/camino-router-link'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoDate, CaminoDateFormated, dateFormat } from 'camino-common/src/date'
 import { HTMLAttributes } from 'vue/dist/vue'
 import { TitreGetDemarche, TitreSlug } from 'camino-common/src/titres'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
+import { TravauxIcone } from './travaux-icone'
 
-type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
-type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]
+export type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
+export type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]
 type TitreTimelineEvents = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { first_etape_date: CaminoDate | null }
 type Props = {
   titreSlug: TitreSlug
@@ -201,14 +202,23 @@ const DemarcheEvent: FunctionalComponent<{
 }> = props => {
   const tooltipId = 'timeline-event-' + props.demarche.slug
 
+  const commonProps = {
+    'aria-describedby': tooltipId,
+    ...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug),
+    to: { name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } },
+    title: capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom),
+    anchorHTMLAttributes: { onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave },
+  }
+
   return (
-    <CaminoRouterLink
-      aria-describedby={tooltipId}
-      {...getAriaCurrent(props.demarche.slug, props.currentDemarcheSlug)}
-      to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.demarche.slug } }}
-      title={capitalize(DemarchesTypes[props.demarche.demarche_type_id].nom)}
-      class={style.event}
-      anchorHTMLAttributes={{ onMouseenter: props.onMouseenter, onMouseleave: props.onMouseleave }}
-    />
+    <>
+      {isTravaux(props.demarche.demarche_type_id) ? (
+        <CaminoRouterLink {...commonProps}>
+          <TravauxIcone selected={props.demarche.slug === props.currentDemarcheSlug} />
+        </CaminoRouterLink>
+      ) : (
+        <CaminoRouterLink {...commonProps} class={style.event} />
+      )}
+    </>
   )
 }
