@@ -13,7 +13,7 @@ import { EtapePropAdministrationsItem, EtapePropEntreprisesItem, EtapePropItem }
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 import { ApiClient } from '@/api/api-client'
-import type { DemarcheAlteration, PhaseWithAlterations, PhaseWithDateDebut, TitreTimelineEvents } from '../titre'
+import type { DemarcheAlteration, PhaseWithAlterations, PhaseWithDateDebut, TitreTimelineEvents } from './phase'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { territoiresFind } from 'camino-common/src/territoires'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'

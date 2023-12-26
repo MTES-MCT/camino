@@ -1901,6 +1901,16 @@ export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeK
   return etapeTypeKey in ETAPES_TYPES
 }
 
-const ETAPES_DECISIONS_IDS = ['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco'] as const satisfies Readonly<EtapeTypeId[]>
+const ETAPES_DECISIONS_IDS = [
+  ETAPES_TYPES.publicationDeDecisionAuJORF,
+  ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
+  ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  ETAPES_TYPES.decisionDeLadministration,
+  ETAPES_TYPES.decisionAdministrative,
+  ETAPES_TYPES.decisionImplicite,
+  ETAPES_TYPES.decisionDeLOfficeNationalDesForets,
+  ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere,
+  ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,
+] as const satisfies Readonly<EtapeTypeId[]>
 
 export const isEtapeDecision = (etapeTypeId: EtapeTypeId): boolean => ETAPES_DECISIONS_IDS.includes(etapeTypeId)

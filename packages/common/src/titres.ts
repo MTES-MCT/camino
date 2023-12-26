@@ -47,7 +47,7 @@ export interface CommonTitre {
 
 export type CommonRestTitre = z.infer<typeof commonTitreValidator>
 
-const demarcheGetValidator = z.object({
+export const demarcheGetValidator = z.object({
   id: demarcheIdValidator,
   slug: demarcheSlugValidator,
   description: z.string().nullable(),
