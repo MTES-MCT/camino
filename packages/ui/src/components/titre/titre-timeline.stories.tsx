@@ -141,6 +141,11 @@ export const BigExample: StoryFn = () => (
               demarche_type_id: 'pr2',
               first_etape_date: toCaminoDate('2020-01-02'),
             },
+            {
+              slug: demarcheSlugValidator.parse('slug-travaux2'),
+              demarche_type_id: 'aom',
+              first_etape_date: toCaminoDate('2020-01-03'),
+            },
           ],
         },
         {

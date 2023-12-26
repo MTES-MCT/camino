@@ -390,8 +390,6 @@ export const PureTitre = defineComponent<Props>(props => {
               </div>
 
               {/*
-                // STYLES
-                FIXME mettre les travaux
                 FIXME la timeline sur mobile scroll mettre horizontal
               */}
             </div>
