@@ -1,5 +1,5 @@
 import { ETAPES_TYPES, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { capitalize } from 'camino-common/src/strings'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
@@ -64,13 +64,18 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 }
 
 export const DemarcheEtape = defineComponent<Props>(props => {
-  let hasContent = false
-  if (fondamentalePropsName in props.etape) {
-    const { perimetre: _perimetre, ...fondamentale } = props.etape.fondamentale
-    hasContent =
-      getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0)) ||
-      props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
-  }
+  const hasContent = computed<boolean>(() => {
+    if (fondamentalePropsName in props.etape) {
+      const { perimetre: _perimetre, ...fondamentale } = props.etape.fondamentale
+
+      return (
+        getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0)) ||
+        props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
+      )
+    }
+
+    return false
+  })
 
   const removePopupVisible = ref<boolean>(false)
   const removePopupOpen = () => {
@@ -87,19 +92,13 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
 
-  const canDownloadZip: boolean = props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0)
+  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0))
 
-  const canEditOrDeleteEtape: boolean = canEditEtape(
-    props.user,
-    props.etape.etape_type_id,
-    props.etape.etape_statut_id,
-    props.demarche.titulaires,
-    props.demarche.administrationsLocales,
-    props.demarche.demarche_type_id,
-    props.titre
+  const canEditOrDeleteEtape = computed<boolean>(() =>
+    canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaires, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
   )
 
-  const isDeposable =
+  const isDeposable = computed<boolean>(() =>
     fondamentalePropsName in props.etape
       ? isEtapeDeposable(
           props.user,
@@ -121,6 +120,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           props.demarche.sdom_zones
         )
       : false
+  )
 
   return () => (
     <div class="fr-pb-2w fr-pl-2w fr-pr-2w fr-tile--shadow" style={{ border: '1px solid var(--grey-900-175)' }}>
@@ -131,10 +131,10 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           </div>
 
           <div style={{ display: 'flex' }}>
-            {canEditOrDeleteEtape ? (
+            {canEditOrDeleteEtape.value ? (
               <>
                 {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.etape_statut_id === ETAPES_STATUTS.EN_CONSTRUCTION ? (
-                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable} />
+                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
                 ) : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
@@ -148,7 +148,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                 <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} class="fr-mr-1v" buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} />
               </>
             ) : null}
-            {canDownloadZip ? (
+            {canDownloadZip.value ? (
               <PureDownloads
                 class="fr-mr-1v"
                 downloadTitle="Télécharger l’ensemble de la demande dans un fichier .zip"
@@ -166,7 +166,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           <DsfrIcon name="fr-icon-calendar-line" color="text-title-blue-france" /> {dateFormat(props.etape.date)}
         </div>
       </div>
-      {hasContent ? (
+      {hasContent.value ? (
         <>
           <DsfrSeparator />
           <div
