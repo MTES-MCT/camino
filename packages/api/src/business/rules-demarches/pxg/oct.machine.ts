@@ -4,7 +4,7 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 
-export type PXGOctXStateEvent =
+type PXGOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }

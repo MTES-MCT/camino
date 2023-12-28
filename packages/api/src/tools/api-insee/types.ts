@@ -18,13 +18,13 @@ export interface IApiSirenUnionUniteLegaleEtablissmentUnite {
   sigleUniteLegale: string | null
 }
 
-export interface IApiSirenEtablissementUnite extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {
+interface IApiSirenEtablissementUnite extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {
   categorieEntreprise: string
   categorieJuridiqueUniteLegale: string
   dateCreationUniteLegale: Date | null
 }
 
-export interface IApiSirenEtablissementAdresse {
+interface IApiSirenEtablissementAdresse {
   codeCedexEtablissement: string | null
   codePaysEtrangerEtablissement: string | null
   numeroVoieEtablissement: string | null
@@ -47,7 +47,7 @@ export interface IApiSirenUniteLegale extends IApiSirenUnionUniteLegaleEtablissm
   periodesUniteLegale: IApiSirenUniteLegalePeriode[]
 }
 
-export interface IApiSirenQuery {
+interface IApiSirenQuery {
   fault?: {
     code: number
     description: string

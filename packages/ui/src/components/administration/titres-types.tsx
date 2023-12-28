@@ -7,7 +7,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
 import { Icon } from '@/components/_ui/icon'
 
-export interface Props {
+interface Props {
   administrationId: AdministrationId
 }
 

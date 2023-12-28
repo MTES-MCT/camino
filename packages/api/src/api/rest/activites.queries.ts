@@ -294,7 +294,7 @@ RETURNING
 `
 
 const activiteDocumentLargeObjectIdValidator = z.number().brand('ActiviteDocumentLargeObjectId')
-export type ActiviteDocumentLargeObjectId = z.infer<typeof activiteDocumentLargeObjectIdValidator>
+type ActiviteDocumentLargeObjectId = z.infer<typeof activiteDocumentLargeObjectIdValidator>
 const loidByActiviteDocumentIdValidator = z.object({ largeobject_id: activiteDocumentLargeObjectIdValidator, activite_id: activiteIdValidator })
 
 export const getLargeobjectIdByActiviteDocumentId = async (activiteDocumentId: ActiviteDocumentId, pool: Pool, user: User): Promise<ActiviteDocumentLargeObjectId | null> => {

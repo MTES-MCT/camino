@@ -16,7 +16,7 @@ export const DOMAINES_IDS = {
   GRANULATS_MARINS: 'w',
 } as const satisfies Record<string, DomaineId>
 
-export type Domaine<T = DomaineId> = Definition<T>
+type Domaine<T = DomaineId> = Definition<T>
 export const Domaines: { [key in DomaineId]: Domaine<key> } = {
   c: {
     id: 'c',

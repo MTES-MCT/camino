@@ -6,7 +6,7 @@ import { Icon } from '@/components/_ui/icon'
 import { computed, ref } from 'vue'
 import { Entreprise as CaminoEntreprise, EntrepriseEtablissement } from 'camino-common/src/entreprise'
 
-export interface TitreEntreprise extends CaminoEntreprise {
+interface TitreEntreprise extends CaminoEntreprise {
   legalForme?: string
   adresse?: string
   codePostal?: string

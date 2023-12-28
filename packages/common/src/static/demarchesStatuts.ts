@@ -20,7 +20,7 @@ export const DemarchesStatutsIds = {
 export const demarcheStatutIdValidator = z.enum(IDS)
 export type DemarcheStatutId = z.infer<typeof demarcheStatutIdValidator>
 
-export type DemarcheStatut<T = DemarcheStatutId> = Definition<T> & { couleur: Couleur }
+type DemarcheStatut<T = DemarcheStatutId> = Definition<T> & { couleur: Couleur }
 
 // TODO 2023-10-24 utiliser les couleurs de Sarah
 // Attention, impact dans titre/demarche.vue

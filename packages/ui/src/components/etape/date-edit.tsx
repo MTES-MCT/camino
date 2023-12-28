@@ -3,7 +3,7 @@ import { FunctionalComponent } from 'vue'
 import { InputDate } from '../_ui/input-date'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
-export type Props = {
+type Props = {
   incertitude?: boolean
   date?: CaminoDate
   onDateChanged: (date: CaminoDate | null) => void

@@ -16,7 +16,7 @@ import { PageContentHeader } from '../_common/page-header-content'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 
-export interface Props {
+interface Props {
   apiClient: Pick<DashboardApiClient, 'getAdministrationTitres' | 'getDgtmStats'>
   user: AdminUserNotNull
 }

@@ -16,7 +16,7 @@ type RendreAvisDreal = {
   type: 'RENDRE_AVIS_DREAL'
 }
 
-export type AXMProXStateEvent =
+type AXMProXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }

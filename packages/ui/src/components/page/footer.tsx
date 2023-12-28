@@ -18,7 +18,7 @@ export const Footer = defineComponent({
   },
 })
 
-export interface Props {
+interface Props {
   version: string
   displayNewsletter: boolean
 }

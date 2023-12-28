@@ -16,7 +16,7 @@ type RendreAvisDreal = {
   type: 'RENDRE_AVIS_DREAL'
 }
 
-export type AXMOctXStateEvent =
+type AXMOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'RENDRE_DAE_EXEMPTEE' }

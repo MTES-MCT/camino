@@ -114,7 +114,7 @@ export interface TitreWithPoint extends CommonTitre {
   }
   geojsonCentre?: { geometry: { coordinates: [number, number] } }
 }
-export type CaminoMarker = {
+type CaminoMarker = {
   marker: Marker
   id: TitreId
   domaineId: DomaineId

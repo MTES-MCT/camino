@@ -6,7 +6,7 @@ import { DsfrTag } from './tag'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
 
-export type Props<T extends TypeAheadRecord, K extends keyof T> = {
+type Props<T extends TypeAheadRecord, K extends keyof T> = {
   overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
   props: {
     id?: string

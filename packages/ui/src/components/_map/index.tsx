@@ -8,7 +8,7 @@ import { displayPerimeterZoomMaxLevel } from './util'
 import './leaflet'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
-export interface Props {
+interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
   mapUpdate: (data: { center?: [number, number]; zoom?: number; bbox?: [number, number, number, number] }) => void

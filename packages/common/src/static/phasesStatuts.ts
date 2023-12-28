@@ -7,7 +7,7 @@ const PHASES_STATUTS_IDS = {
   Valide: 'val',
 } as const
 
-export type PhaseStatutId = (typeof PHASES_STATUTS_IDS)[keyof typeof PHASES_STATUTS_IDS]
+type PhaseStatutId = (typeof PHASES_STATUTS_IDS)[keyof typeof PHASES_STATUTS_IDS]
 
 interface PhaseDefinition<T> extends Omit<Definition<T>, 'description'> {
   couleur: Couleur

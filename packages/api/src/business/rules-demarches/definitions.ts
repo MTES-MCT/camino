@@ -19,7 +19,7 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
-export interface DemarcheDefinition extends DemarcheDefinitionCommon {
+interface DemarcheDefinition extends DemarcheDefinitionCommon {
   machine: CaminoMachines
 }
 

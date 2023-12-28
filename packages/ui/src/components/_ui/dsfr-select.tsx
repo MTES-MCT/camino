@@ -3,7 +3,7 @@ import { isEventWithTarget, random } from '../../utils/vue-tsx-utils'
 import { HTMLAttributes } from 'vue'
 
 export type Item<T> = { id: T; label: string }
-export type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
+type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
   id?: string
   items: Items
   legend: { main: string; visible?: boolean; description?: string; placeholder?: string }

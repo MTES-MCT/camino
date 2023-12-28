@@ -14,7 +14,7 @@ import {
 } from './dgtm-stats'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
-export interface Props {
+interface Props {
   getDgtmStats?: () => Promise<StatistiquesDGTM>
 }
 export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], props => {

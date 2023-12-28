@@ -30,7 +30,7 @@ export interface TextColumnData {
   class?: string[]
 }
 
-export type TableRouterLink = {
+type TableRouterLink = {
   name: string
   params?: {
     id?: string

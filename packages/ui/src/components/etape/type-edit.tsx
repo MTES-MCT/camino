@@ -12,7 +12,7 @@ import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 
-export type Props = {
+type Props = {
   etape: {
     statutId: EtapeStatutId | null
     typeId: EtapeTypeId | null

@@ -21,7 +21,7 @@ export type Filter<T extends string> = {
   elements: Element<T>[]
   name: string
 } & (LocalFilter | RemoteFilter<T>)
-export type Props<T extends string> = {
+type Props<T extends string> = {
   filter: Filter<T>
   onSelectItems: (e: Element<T>[]) => void
 }

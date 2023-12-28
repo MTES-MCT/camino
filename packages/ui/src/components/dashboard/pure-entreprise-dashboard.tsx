@@ -14,7 +14,7 @@ import { DemandeTitreButton } from '../_common/demande-titre-button'
 import { Alert } from '../_ui/alert'
 import { DsfrLink } from '../_ui/dsfr-button'
 
-export interface Props {
+interface Props {
   user: User
   entreprises: Pick<Entreprise, 'id' | 'nom'>[]
   // TODO 2022-03-22: type the graphql

@@ -5,7 +5,7 @@ export const referenceTypeIdValidator = z.enum(IDS)
 
 export type ReferenceTypeId = z.infer<typeof referenceTypeIdValidator>
 
-export type ReferenceType<T = ReferenceTypeId> = {
+type ReferenceType<T = ReferenceTypeId> = {
   id: T
   nom: string
 }

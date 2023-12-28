@@ -88,7 +88,7 @@ interface IColonne<T> {
 }
 
 export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
-export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
+type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 

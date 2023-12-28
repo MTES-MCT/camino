@@ -37,7 +37,7 @@ type FaireDemande = {
   surface: number
 }
 
-export type XStateEvent =
+type XStateEvent =
   | FaireDemande
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'FAIRE_SAISINE_PREFET' }
@@ -88,7 +88,7 @@ export type XStateEvent =
   | { type: 'DEMANDER_INFORMATIONS' }
   | { type: 'RECEVOIR_INFORMATIONS' }
 
-export type Event = XStateEvent['type']
+type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },

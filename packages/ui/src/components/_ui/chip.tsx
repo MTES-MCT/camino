@@ -2,7 +2,7 @@ import { Couleur } from 'camino-common/src/static/couleurs'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import styles from './chip.module.css'
 
-export type Props = {
+type Props = {
   color?: `bg-${Couleur}`
   nom: string
   onDeleteClicked: () => void

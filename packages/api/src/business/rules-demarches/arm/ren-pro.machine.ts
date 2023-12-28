@@ -4,7 +4,7 @@ import { CaminoMachine } from '../machine-helper.js'
 import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 
-export type XStateEvent =
+type XStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
@@ -26,7 +26,7 @@ export type XStateEvent =
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE' }
 
-export type Event = XStateEvent['type']
+type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },

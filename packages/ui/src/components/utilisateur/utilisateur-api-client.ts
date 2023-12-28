@@ -3,7 +3,7 @@ import { Entreprise, EntrepriseId, Utilisateur } from 'camino-common/src/entrepr
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
-import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
+import { getWithJson, postWithJson } from '../../api/client-rest'
 import { Role } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 
@@ -19,7 +19,7 @@ export interface UtilisateurApiClient {
   getUtilisateurs: (params: UtilisateursParams) => Promise<{ elements: Utilisateur[]; total: number }>
 }
 
-export type UtilisateursParams = {
+type UtilisateursParams = {
   page?: number
   colonne?: string
   ordre?: 'asc' | 'desc'

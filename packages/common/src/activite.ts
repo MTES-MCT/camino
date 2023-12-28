@@ -7,7 +7,6 @@ import { activiteTypeIdValidator } from './static/activitesTypes.js'
 import { tempDocumentNameValidator } from './document.js'
 
 export const activiteSlugValidator = z.string().brand<'ActiviteSlug'>()
-export type ActiviteSlug = z.infer<typeof activiteSlugValidator>
 
 export const activiteIdValidator = z.string().brand<'ActiviteId'>()
 export type ActiviteId = z.infer<typeof activiteIdValidator>

@@ -21,12 +21,10 @@ const baseUserNotNullValidator = z.object({ id: utilisateurIdValidator, email: z
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
 const superRoleValidator = z.literal('super')
-export type SuperRole = z.infer<typeof superRoleValidator>
 const superUserNotNullValidator = baseUserNotNullValidator.extend({ role: superRoleValidator })
 export type UserSuper = z.infer<typeof superUserNotNullValidator>
 
 const defautRoleValidator = z.literal('defaut')
-export type defautRole = z.infer<typeof defautRoleValidator>
 const defautUserNotNullValidator = baseUserNotNullValidator.extend({ role: defautRoleValidator })
 export type UserDefaut = z.infer<typeof defautUserNotNullValidator>
 
@@ -39,7 +37,7 @@ export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
-export type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
+type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
 const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(z.object({ id: entrepriseIdValidator })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>

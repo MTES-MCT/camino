@@ -18,7 +18,7 @@ import { Fiscalite } from 'camino-common/src/fiscalite'
 import gql from 'graphql-tag'
 import { z } from 'zod'
 
-export type GetEntreprisesParams = {
+type GetEntreprisesParams = {
   page: number
   colonne: string
   ordre: 'asc' | 'desc'

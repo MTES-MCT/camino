@@ -5,7 +5,7 @@ import { AsyncData } from '@/api/client-rest'
 import { defineAsyncComponent } from 'vue'
 import { ButtonIcon } from '../_ui/button-icon'
 
-export interface Props<T> {
+interface Props<T> {
   data: AsyncData<T>
   getConfiguration: (data: T) => ChartConfiguration
 }

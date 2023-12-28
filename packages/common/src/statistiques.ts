@@ -41,7 +41,6 @@ export const substancesFiscalesStats = [
 ] as const satisfies readonly SubstanceFiscaleId[]
 
 const substancesFiscalesStatsValidator = z.enum(substancesFiscalesStats)
-export type SubstancesFiscalesStats = z.infer<typeof substancesFiscalesStatsValidator>
 
 export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
 const titreTypeIdDelaisValidator = z.enum(titreTypeIdDelais)

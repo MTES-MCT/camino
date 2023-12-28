@@ -5,7 +5,7 @@ import { CaminoRouterLink, routerQueryToNumber } from '@/router/camino-router-li
 import { AsyncData } from '../../api/client-rest'
 import { LoadingElement } from './functional-loader'
 
-export interface Props<ColumnId> {
+interface Props<ColumnId> {
   columns: readonly Column<ColumnId>[]
   data: AsyncData<{
     rows: TableRow[]

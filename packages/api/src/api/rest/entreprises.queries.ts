@@ -60,7 +60,7 @@ AND ('dummy' in $$ entrepriseIds
 `
 
 export const entrepriseDocumentLargeObjectIdValidator = z.number().brand('EntrepriseDocumentLargeObjectId')
-export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdValidator>
+type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdValidator>
 const loidByEntrepriseDocumentIdValidator = z.object({ largeobject_id: entrepriseDocumentLargeObjectIdValidator, entreprise_id: entrepriseIdValidator })
 
 export const getLargeobjectIdByEntrepriseDocumentId = async (entrepriseDocumentId: EntrepriseDocumentId, pool: Pool, user: User): Promise<EntrepriseDocumentLargeObjectId | null> => {

@@ -4,8 +4,8 @@ import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 
-export type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
-export interface Props {
+type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
+interface Props {
   filters: readonly CaminoFiltre[]
   route: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>

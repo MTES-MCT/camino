@@ -10,7 +10,7 @@ import { TitreGetDemarche, TitreSlug } from 'camino-common/src/titres'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { TravauxIcone } from './travaux-icone'
 
-export type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
+type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
 export type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]
 type TitreTimelineEvents = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { first_etape_date: CaminoDate | null }
 type Props = {

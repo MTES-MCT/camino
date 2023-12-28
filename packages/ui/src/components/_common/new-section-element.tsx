@@ -4,7 +4,7 @@ import { FunctionalComponent } from 'vue'
 import { ButtonIcon } from '../_ui/button-icon'
 import { numberFormat } from 'camino-common/src/number'
 
-export interface Props {
+interface Props {
   element: ElementWithValue
   fileDownload: (file: string) => void
 }

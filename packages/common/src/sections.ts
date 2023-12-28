@@ -15,34 +15,26 @@ import { z } from 'zod'
 import { isNotNullNorUndefined } from './typescript-tools.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
-export type DateElementWithValue = z.infer<typeof dateElementWithValueValidator>
 
 const fileElementWithValueValidator = fileElementValidator.extend({ value: z.string().nullable() })
-export type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
+type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
 
 const textElementWithValueValidator = textElementValidator.extend({ value: z.string().nullable() })
-export type TextElementWithValue = z.infer<typeof textElementWithValueValidator>
 
 const urlElementWithValueValidator = urlElementValidator.extend({ value: z.string().nullable() })
-export type UrlElementWithValue = z.infer<typeof urlElementWithValueValidator>
 
 const numberElementWithValueValidator = numberElementValidator.extend({ value: z.number().nullable() })
-export type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
+type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
 const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().nullable() })
-export type RadioElementWithValue = z.infer<typeof radioElementWithValueValidator>
 
 const checkboxElementWithValueValidator = checkboxElementValidator.extend({ value: z.boolean().nullable() })
-export type CheckboxElementWithValue = z.infer<typeof checkboxElementWithValueValidator>
 
 const checkboxesElementWithValueValidator = checkboxesElementValidator.extend({ value: z.array(z.string()) })
-export type CheckboxesElementWithValue = z.infer<typeof checkboxesElementWithValueValidator>
 
 const selectElementWithValueValidator = selectElementWithOptionsValidator.extend({
   value: z.string().nullable(),
 })
-
-export type SelectElementWithValue = z.infer<typeof selectElementWithValueValidator>
 
 const elementWithValueValidator = z.union([
   fileElementWithValueValidator,
