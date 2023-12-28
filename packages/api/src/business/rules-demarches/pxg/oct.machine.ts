@@ -100,7 +100,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 // basé sur https://cacoo.com/diagrams/QDCLi7jxd3EUOOba/249D0
 export class PxgOctMachine extends CaminoMachine<PxgContext, PXGOctXStateEvent> {

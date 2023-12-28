@@ -2,8 +2,6 @@ import { CaminoAnnee } from 'camino-common/src/date.js'
 
 export const titreUrlGet = (titreId: string) => `${process.env.OAUTH_URL}/titres/${titreId}`
 
-export const activiteUrlGet = (activiteId: string) => `${process.env.OAUTH_URL}/activites/${activiteId}`
-
 export const activitesUrlGet = (params?: { typesIds?: string[]; statutsIds?: string[]; annees?: CaminoAnnee[] }): string => {
   const url = new URL(`${process.env.OAUTH_URL ?? 'https://camino.beta.gouv.fr'}/activites`)
 

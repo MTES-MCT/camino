@@ -154,7 +154,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 

@@ -25,7 +25,7 @@
     "prepare": "husky install",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
-    "knip": "npx knip"
+    "knip": "npx --yes knip"
   },
   "lint-staged": {
     "packages/ui/**/*.{js,ts,vue,tsx}": [

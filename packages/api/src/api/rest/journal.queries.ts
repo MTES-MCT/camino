@@ -7,7 +7,7 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 
-export const lastJournalGetValidator = z.object({ date: caminoDateValidator })
+const lastJournalGetValidator = z.object({ date: caminoDateValidator })
 type LastJournalGet = z.infer<typeof lastJournalGetValidator>
 
 export const getDateLastJournal = async (pool: Pool, titreId: TitreId): Promise<CaminoDate | null> => {

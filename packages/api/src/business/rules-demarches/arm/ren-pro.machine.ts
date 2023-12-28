@@ -62,7 +62,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 export class ArmRenProMachine extends CaminoMachine<CaminoCommonContext, XStateEvent> {
   constructor() {

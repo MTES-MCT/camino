@@ -65,7 +65,7 @@ export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean 
   return false
 }
 
-export const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) => {
+const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) => {
   let titreEtapeDepot = {
     titreDemarcheId: titreDemarche.id,
     typeId: 'mdp',

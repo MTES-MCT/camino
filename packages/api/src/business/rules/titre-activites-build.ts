@@ -34,8 +34,7 @@ const titreActiviteSectionElementsFormat = (elements: DeepReadonly<ActiviteSecti
  * @param titreDemarches - démarches du titre
  * @param titreTypeId - le type id du titre
  */
-
-export const titreActiviteSectionsBuild = (
+const titreActiviteSectionsBuild = (
   activiteTypeId: string,
   sections: DeepReadonly<ActiviteSection[]>,
   periodeId: number,

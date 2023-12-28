@@ -146,7 +146,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 // basé sur TODO 2023-04-17 mettre le lien vers le bon cacoo
 // TODO 2023-04-17 mettre à jour le cacoo quand on a de nouveau accès avec :

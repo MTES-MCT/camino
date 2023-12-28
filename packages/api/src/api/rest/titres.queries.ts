@@ -3,19 +3,14 @@ import { sql } from '@pgtyped/runtime'
 import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValidValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
-  IGetAdministrationsLocalesByTitreIdDbQuery,
   IGetDemarchesByTitreIdQueryDbQuery,
   IGetTitreInternalQuery,
-  IGetTitreTypeIdByTitreIdDbQuery,
-  IGetTitulairesAmodiatairesByTitreIdDbQuery,
 } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
 import { Commune } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
-import { administrationIdValidator } from 'camino-common/src/static/administrations.js'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { User } from 'camino-common/src/roles.js'
 import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 import { titreReferenceValidator } from 'camino-common/src/titres-references.js'
@@ -287,70 +282,6 @@ where
     t.id = $ id !
     or t.slug = $ id !
 LIMIT 1
-`
-
-export const getTitreTypeIdByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-  const typeIds = await dbQueryAndValidate(getTitreTypeIdByTitreIdDb, { titreId }, pool, titreTypeIdObjectValidator)
-  if (typeIds.length === 0) {
-    throw new Error(`Pas de type de titre trouvé pour le titre '${titreId}'`)
-  }
-
-  return typeIds[0].titre_type_id
-}
-
-const titreTypeIdObjectValidator = z.object({ titre_type_id: titreTypeIdValidator })
-const getTitreTypeIdByTitreIdDb = sql<Redefine<IGetTitreTypeIdByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof titreTypeIdObjectValidator>>>`
-select
-    t.type_id as titre_type_id
-from
-    titres t
-where
-    t.id = $ titreId !
-`
-
-export const getAdministrationsLocalesByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-  const admins = await dbQueryAndValidate(getAdministrationsLocalesByTitreIdDb, { titreId }, pool, administrationsLocalesValidator)
-  if (admins.length > 1) {
-    throw new Error(`Trop d'administrations locales trouvées pour l'activité ${titreId}`)
-  }
-  if (admins.length === 0) {
-    return []
-  }
-
-  return admins[0].administrations_locales
-}
-
-const administrationsLocalesValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
-
-const getAdministrationsLocalesByTitreIdDb = sql<Redefine<IGetAdministrationsLocalesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof administrationsLocalesValidator>>>`
-select
-    te.administrations_locales
-from
-    titres t
-    left join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
-where
-    t.id = $ titreId !
-`
-
-export const getTitulairesAmodiatairesByTitreIdQuery = async (titreId: TitreId, pool: Pool) => {
-  const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesByTitreIdDb, { titreId }, pool, entrepriseIdObjectValidator)
-
-  return entreprises.map(({ id }) => id)
-}
-
-const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
-const getTitulairesAmodiatairesByTitreIdDb = sql<Redefine<IGetTitulairesAmodiatairesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof entrepriseIdObjectValidator>>>`
-select distinct
-    e.id
-from
-    entreprises e,
-    titres t
-    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
-    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
-where
-    t.id = $ titreId !
-    and (tt.entreprise_id = e.id
-        or tta.entreprise_id = e.id)
 `
 
 const getDemarchesByTitreIdQueryDbValidator = z.object({

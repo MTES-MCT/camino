@@ -26,7 +26,7 @@ where
     titres_activites.contenu -> 'substancesFiscales' ? $ substanceFiscale
 `
 
-export const substancesByAnneeByCommuneValidator = z.object({
+const substancesByAnneeByCommuneValidator = z.object({
   annee: caminoAnneeValidator,
   communes: z.array(z.object({ id: communeIdValidator })),
   substances: z.record(substanceFiscaleIdValidator, z.coerce.number()),
@@ -58,7 +58,7 @@ order by
     "titres"."slug" asc
 `
 
-export const substancesByEntrepriseCategoryByAnneeValidator = z.object({
+const substancesByEntrepriseCategoryByAnneeValidator = z.object({
   annee: caminoAnneeValidator,
   categorie: z.enum(['pme', 'autre']),
   aloh: z.coerce.number(),
