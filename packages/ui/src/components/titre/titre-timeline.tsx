@@ -114,7 +114,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                     borderWidth: '0 4px 4px 0',
                     padding: '8px',
                     display: 'inline-block',
-                    transform: 'translate(-27px) rotate(-45deg)',
+                    transform: 'translate(-26px) rotate(-45deg)',
                   }}
                 ></div>
               ) : null}
