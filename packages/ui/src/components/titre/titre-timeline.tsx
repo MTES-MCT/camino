@@ -99,13 +99,14 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
         <div style={{ display: 'flex', gap: '5px' }}>
           {props.phasesWithAlterations.map((phaseWithAlterations, index) => (
             <Fragment key={index}>
-              <div class={`${style.phasesContainer}`} style={{ flex: 1, border: phaseWithAlterations.length > 1 ? '2px solid black' : '2px solid white' }}>
+              <div class={`${style.phasesContainer}`} style={{ flex: 1 }}>
                 {phaseWithAlterations.map(demarche => (
                   <Fragment key={demarche.slug}>
                     <DemarchePhase titreSlug={props.titreSlug} phase={demarche} currentDemarcheSlug={props.currentDemarcheSlug} />
                   </Fragment>
                 ))}
               </div>
+              {index !== props.phasesWithAlterations.length - 1 ? <div style={{ border: '2px solid black' }}></div> : null}
               {index === props.phasesWithAlterations.length - 1 ? (
                 <div
                   style={{

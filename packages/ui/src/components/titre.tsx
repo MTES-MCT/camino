@@ -313,10 +313,6 @@ export const PureTitre = defineComponent<Props>(props => {
                 ) : null}
                 <TitreAbonnerButton class="fr-ml-2w" titreId={titre.id} user={props.user} apiClient={props.apiClient} />
               </div>
-
-              {/*
-                FIXME la timeline sur mobile scroll mettre horizontal
-              */}
             </div>
             <div class="fr-grid-row fr-grid-row--middle fr-mt-1w">
               <h3 class="fr-m-0">{capitalize(TitresTypesTypes[TitresTypes[titre.titre_type_id].typeId].nom)}</h3>
