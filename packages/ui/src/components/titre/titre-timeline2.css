@@ -1,0 +1,65 @@
+.my-container {
+  overflow-x: auto;
+  display: grid;
+  grid-template-columns: 0.2fr repeat(3, minmax(50px, 1fr)) 0fr repeat(3, minmax(50px, 1fr)) 0.2fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 5px;
+  grid-template-areas:
+    'DateStart DateStart . DateMiddle DateMiddle DateMiddle . DateEnd DateEnd'
+    '. Timeline Timeline Timeline Separation Timeline2 Timeline2 Timeline2 Arrow'
+    '. TextTimeline TextTimeline TextTimeline . TextTimeline2 TextTimeline2 TextTimeline2 .';
+}
+
+.timeline-common {
+  background-color: var(--background-action-high-blue-france);
+  height: 8px;
+  align-self: center;
+}
+
+.Timeline {
+  grid-area: Timeline;
+}
+
+.Separation {
+  grid-area: Separation;
+  border: 2px solid black;
+}
+
+.Timeline2 {
+  grid-area: Timeline2;
+}
+
+.DateMiddle {
+  grid-area: DateMiddle;
+  text-align: center;
+}
+
+.DateStart {
+  grid-area: DateStart;
+  text-align: left;
+}
+
+.DateEnd {
+  grid-area: DateEnd;
+  text-align: right;
+}
+
+.TextTimeline {
+  grid-area: TextTimeline;
+}
+
+.TextTimeline2 {
+  grid-area: TextTimeline2;
+}
+
+.Arrow {
+  grid-area: Arrow;
+  transform: translate(-25px) rotate(-45deg);
+  border: solid var(--background-action-high-blue-france);
+  border-width: 0 4px 4px 0;
+  padding: 8px;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  align-self: center;
+}

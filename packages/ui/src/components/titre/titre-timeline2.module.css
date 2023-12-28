@@ -1,0 +1,25 @@
+.timeline-common {
+  background-color: var(--background-action-high-blue-france);
+  height: 8px;
+  align-self: center;
+}
+
+.separation {
+  border: 2px solid black;
+}
+
+.datemiddle-common {
+  text-align: center;
+}
+
+.arrow {
+  grid-area: arrow;
+  transform: translate(-25px) rotate(-45deg);
+  border: solid var(--background-action-high-blue-france);
+  border-width: 0 4px 4px 0;
+  padding: 8px;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  align-self: center;
+}
