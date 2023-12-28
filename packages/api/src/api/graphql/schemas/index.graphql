@@ -34,6 +34,9 @@ type Query {
   "Version de l'API"
   version: String
 
+  "DEPRECATED Utilisé uniquement par les tests unitaires"
+  titre(id: ID!): Titre
+
   "Liste de titres miniers, en fonction d'arguments (optionnels)"
   titres(
     intervalle: Int

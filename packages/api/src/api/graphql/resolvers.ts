@@ -1,7 +1,7 @@
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLUpload } from 'graphql-upload'
 
-import { titres, titreCreer } from './resolvers/titres.js'
+import { titres, titreCreer, titre } from './resolvers/titres.js'
 
 import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer } from './resolvers/titres-etapes.js'
 
@@ -72,6 +72,7 @@ export default {
   titresTypes,
   unites,
   version,
+  titre,
   titres,
   substances,
   entreprises,

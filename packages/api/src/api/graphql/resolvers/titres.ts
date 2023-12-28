@@ -14,7 +14,27 @@ import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
-const titres = async (
+/**
+ * TODO 2022-07-12 enlever cette fonction et nettoyer les tests d'intégration
+ * @deprecated Not used by frontend anymore, only by integration tests
+ */
+export const titre = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+  try {
+    const fields = fieldsBuild(info)
+
+    const titre = await titreGet(id, { fields, fetchHeritage: true }, user)
+
+    if (!titre) return null
+
+    return titreFormat(titre, fields)
+  } catch (e) {
+    console.error(e)
+
+    throw e
+  }
+}
+
+export const titres = async (
   {
     intervalle,
     page,
@@ -136,7 +156,7 @@ const titres = async (
  * TODO 2022-07-12 enlever cette fonction et nettoyer l'ui
  * @deprecated Not used by frontend, titreDemandeCreer is used instead
  */
-const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info: GraphQLResolveInfo) => {
+export const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     assertsCanCreateTitre(user, titre.typeId)
 
@@ -156,5 +176,3 @@ const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info:
     throw e
   }
 }
-
-export { titres, titreCreer }

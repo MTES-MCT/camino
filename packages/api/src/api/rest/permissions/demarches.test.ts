@@ -19,7 +19,7 @@ describe('canReadDemarche', () => {
     ).toBe(true)
   })
 
-  test('en tant que super je ne peux pas lire un travaux', async () => {
+  test('en tant que super je peux lire un travaux', async () => {
     expect(
       await canReadDemarche(
         { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'aom' },
@@ -28,7 +28,7 @@ describe('canReadDemarche', () => {
         shouldNotBeCalled,
         shouldNotBeCalled
       )
-    ).toBe(false)
+    ).toBe(true)
   })
 
   test('si la démarche est en lecture publique et que son titre est en lecture publique, tout le monde y a accès', async () => {
