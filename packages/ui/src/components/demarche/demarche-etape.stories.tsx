@@ -197,43 +197,49 @@ export const NoSnapshotDemande: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: {
-          properties: null,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
                 [
-                  [-53.58181013905019, 3.8309654861273],
-                  [-53.58178306390299, 3.8219278216269807],
-                  [-53.572785590706495, 3.82195493825841],
-                  [-53.57281257175149, 3.8309926670647294],
-                  [-53.58181013905019, 3.8309654861273],
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
+                ],
+                [
+                  [
+                    [-53.60031408473134, 3.8224780986447566],
+                    [-53.59891645305842, 3.8181831495446303],
+                    [-53.58181205656814, 3.82379854768971],
+                    [-53.58320964990986, 3.828093576227541],
+                    [-53.60031408473134, 3.8224780986447566],
+                  ],
+                ],
+                [
+                  [
+                    [-53.583861926103765, 3.8502114455117433],
+                    [-53.592379712320195, 3.834289122043602],
+                    [-53.588417035915334, 3.8321501920354253],
+                    [-53.57989914401643, 3.8480725119510217],
+                    [-53.583861926103765, 3.8502114455117433],
+                  ],
                 ],
               ],
-              [
-                [
-                  [-53.60031408473134, 3.8224780986447566],
-                  [-53.59891645305842, 3.8181831495446303],
-                  [-53.58181205656814, 3.82379854768971],
-                  [-53.58320964990986, 3.828093576227541],
-                  [-53.60031408473134, 3.8224780986447566],
-                ],
-              ],
-              [
-                [
-                  [-53.583861926103765, 3.8502114455117433],
-                  [-53.592379712320195, 3.834289122043602],
-                  [-53.588417035915334, 3.8321501920354253],
-                  [-53.57989914401643, 3.8480725119510217],
-                  [-53.583861926103765, 3.8502114455117433],
-                ],
-              ],
-            ],
+            },
           },
+          surface: 10,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
         },
-        surface: 10,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: [],
@@ -276,8 +282,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
         ],
 
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: null,
-        surface: null,
+        perimetre: null,
       },
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
@@ -343,8 +348,7 @@ export const DemandeNoMap: StoryFn = () => (
         ],
 
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: null,
-        surface: null,
+        perimetre: null,
       },
       sections_with_values: [
         { id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' },
@@ -393,8 +397,7 @@ export const DemandeNonDeposable: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: null,
-        surface: 10,
+        perimetre: null,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: [],
@@ -429,43 +432,49 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: {
-          properties: null,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
                 [
-                  [-53.58181013905019, 3.8309654861273],
-                  [-53.58178306390299, 3.8219278216269807],
-                  [-53.572785590706495, 3.82195493825841],
-                  [-53.57281257175149, 3.8309926670647294],
-                  [-53.58181013905019, 3.8309654861273],
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
+                ],
+                [
+                  [
+                    [-53.60031408473134, 3.8224780986447566],
+                    [-53.59891645305842, 3.8181831495446303],
+                    [-53.58181205656814, 3.82379854768971],
+                    [-53.58320964990986, 3.828093576227541],
+                    [-53.60031408473134, 3.8224780986447566],
+                  ],
+                ],
+                [
+                  [
+                    [-53.583861926103765, 3.8502114455117433],
+                    [-53.592379712320195, 3.834289122043602],
+                    [-53.588417035915334, 3.8321501920354253],
+                    [-53.57989914401643, 3.8480725119510217],
+                    [-53.583861926103765, 3.8502114455117433],
+                  ],
                 ],
               ],
-              [
-                [
-                  [-53.60031408473134, 3.8224780986447566],
-                  [-53.59891645305842, 3.8181831495446303],
-                  [-53.58181205656814, 3.82379854768971],
-                  [-53.58320964990986, 3.828093576227541],
-                  [-53.60031408473134, 3.8224780986447566],
-                ],
-              ],
-              [
-                [
-                  [-53.583861926103765, 3.8502114455117433],
-                  [-53.592379712320195, 3.834289122043602],
-                  [-53.588417035915334, 3.8321501920354253],
-                  [-53.57989914401643, 3.8480725119510217],
-                  [-53.583861926103765, 3.8502114455117433],
-                ],
-              ],
-            ],
+            },
           },
+          surface: 10,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
         },
-        surface: 10,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: documentsDemande,
@@ -500,43 +509,49 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: {
-          properties: null,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
                 [
-                  [-53.58181013905019, 3.8309654861273],
-                  [-53.58178306390299, 3.8219278216269807],
-                  [-53.572785590706495, 3.82195493825841],
-                  [-53.57281257175149, 3.8309926670647294],
-                  [-53.58181013905019, 3.8309654861273],
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
+                ],
+                [
+                  [
+                    [-53.60031408473134, 3.8224780986447566],
+                    [-53.59891645305842, 3.8181831495446303],
+                    [-53.58181205656814, 3.82379854768971],
+                    [-53.58320964990986, 3.828093576227541],
+                    [-53.60031408473134, 3.8224780986447566],
+                  ],
+                ],
+                [
+                  [
+                    [-53.583861926103765, 3.8502114455117433],
+                    [-53.592379712320195, 3.834289122043602],
+                    [-53.588417035915334, 3.8321501920354253],
+                    [-53.57989914401643, 3.8480725119510217],
+                    [-53.583861926103765, 3.8502114455117433],
+                  ],
                 ],
               ],
-              [
-                [
-                  [-53.60031408473134, 3.8224780986447566],
-                  [-53.59891645305842, 3.8181831495446303],
-                  [-53.58181205656814, 3.82379854768971],
-                  [-53.58320964990986, 3.828093576227541],
-                  [-53.60031408473134, 3.8224780986447566],
-                ],
-              ],
-              [
-                [
-                  [-53.583861926103765, 3.8502114455117433],
-                  [-53.592379712320195, 3.834289122043602],
-                  [-53.588417035915334, 3.8321501920354253],
-                  [-53.57989914401643, 3.8480725119510217],
-                  [-53.583861926103765, 3.8502114455117433],
-                ],
-              ],
-            ],
+            },
           },
+          surface: 10,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
         },
-        surface: 10,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: [
@@ -575,43 +590,49 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        geojsonMultiPolygon: {
-          properties: null,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
                 [
-                  [-53.58181013905019, 3.8309654861273],
-                  [-53.58178306390299, 3.8219278216269807],
-                  [-53.572785590706495, 3.82195493825841],
-                  [-53.57281257175149, 3.8309926670647294],
-                  [-53.58181013905019, 3.8309654861273],
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
+                ],
+                [
+                  [
+                    [-53.60031408473134, 3.8224780986447566],
+                    [-53.59891645305842, 3.8181831495446303],
+                    [-53.58181205656814, 3.82379854768971],
+                    [-53.58320964990986, 3.828093576227541],
+                    [-53.60031408473134, 3.8224780986447566],
+                  ],
+                ],
+                [
+                  [
+                    [-53.583861926103765, 3.8502114455117433],
+                    [-53.592379712320195, 3.834289122043602],
+                    [-53.588417035915334, 3.8321501920354253],
+                    [-53.57989914401643, 3.8480725119510217],
+                    [-53.583861926103765, 3.8502114455117433],
+                  ],
                 ],
               ],
-              [
-                [
-                  [-53.60031408473134, 3.8224780986447566],
-                  [-53.59891645305842, 3.8181831495446303],
-                  [-53.58181205656814, 3.82379854768971],
-                  [-53.58320964990986, 3.828093576227541],
-                  [-53.60031408473134, 3.8224780986447566],
-                ],
-              ],
-              [
-                [
-                  [-53.583861926103765, 3.8502114455117433],
-                  [-53.592379712320195, 3.834289122043602],
-                  [-53.588417035915334, 3.8321501920354253],
-                  [-53.57989914401643, 3.8480725119510217],
-                  [-53.583861926103765, 3.8502114455117433],
-                ],
-              ],
-            ],
+            },
           },
+          surface: 10,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
         },
-        surface: 10,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: documentsDemande,
@@ -687,25 +708,31 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         substances: [],
         titulaires: [],
         amodiataires: [],
-        geojsonMultiPolygon: {
-          properties: null,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
                 [
-                  [-53.58181013905019, 3.8309654861273],
-                  [-53.58178306390299, 3.8219278216269807],
-                  [-53.572785590706495, 3.82195493825841],
-                  [-53.57281257175149, 3.8309926670647294],
-                  [-53.58181013905019, 3.8309654861273],
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
                 ],
               ],
-            ],
+            },
           },
+          surface: null,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
         },
-        surface: null,
       },
       sections_with_values: [],
       documents: [],

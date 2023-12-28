@@ -126,7 +126,7 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
                 caption="Titres en attente de votre administration"
                 columns={columnsEnAttente}
                 rows={item.administrationTitresBloques}
-                initialSort={{ column: initialColumnId, order: 'asc' }}
+                initialSort={{ colonne: initialColumnId, ordre: 'asc' }}
               />
             )
           }
@@ -136,7 +136,7 @@ export const PureAdministrationDashboard = caminoDefineComponent<Props>(['apiCli
       />
       <LoadingElement
         data={data.value}
-        renderItem={item => <TableAuto caption="Titres en cours d’instruction" columns={columns} rows={item.administrationTitres} initialSort={{ column: initialColumnId, order: 'asc' }} />}
+        renderItem={item => <TableAuto caption="Titres en cours d’instruction" columns={columns} rows={item.administrationTitres} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />}
       />
     </div>
   )

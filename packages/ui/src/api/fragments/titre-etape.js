@@ -97,70 +97,6 @@ const fragmentHeritageProps = gql`
   ${fragmentHeritageEtape}
 `
 
-const fragmentTitreEtape = gql`
-  fragment titreEtape on Etape {
-    id
-    slug
-    ordre
-    date
-    dateDebut
-    dateFin
-    duree
-    surface
-    typeId
-    type {
-      id
-      nom
-      documentsTypes {
-        ...documentType
-      }
-    }
-    statutId
-    titulaires {
-      ...titreEntreprises
-    }
-    amodiataires {
-      ...titreEntreprises
-    }
-    points {
-      ...point
-    }
-    geojsonMultiPolygon {
-      ...geojsonMultiPolygon
-    }
-    substances
-
-    documents {
-      ...document
-    }
-    incertitudes {
-      ...incertitudes
-    }
-    heritageProps {
-      ...heritageProps
-    }
-    contenu
-    heritageContenu
-    decisionsAnnexesSections
-    decisionsAnnexesContenu
-    sdomZones
-  }
-
-  ${fragmentTitreEntreprises}
-
-  ${fragmentPoint}
-
-  ${fragmentGeojsonMultiPolygon}
-
-  ${fragmentDocument}
-
-  ${fragmentHeritageProps}
-
-  ${fragmentIncertitudes}
-
-  ${fragmentDocumentType}
-`
-
 const fragmentEtapeHeritage = gql`
   fragment etapeHeritage on EtapeHeritage {
     dateDebut
@@ -280,4 +216,4 @@ const fragmentEtape = gql`
   ${fragmentDocumentType}
 `
 
-export { fragmentTitreEtape, fragmentEtapeHeritage, fragmentEtape }
+export { fragmentEtapeHeritage, fragmentEtape }

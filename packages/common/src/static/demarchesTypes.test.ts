@@ -1,4 +1,5 @@
-import { DemarchesTypesIds, DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from './demarchesTypes.js'
+import { sortedDemarchesStatuts } from './demarchesStatuts.js'
+import { DemarchesTypesIds, DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase, canImpactTitre } from './demarchesTypes.js'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {
@@ -27,4 +28,13 @@ test('isDemarcheTypeWithPhase', () => {
 
     expect(isDemarcheTypeWithPhase(demarcheType)).toBe(expected)
   }
+})
+
+test('canImpactTitre', () => {
+  const result = DemarchesTypesIds.flatMap(demarcheType => {
+    return sortedDemarchesStatuts.map(demarcheStatus => {
+      return `${demarcheType} - ${demarcheStatus.id} -> ${canImpactTitre(demarcheType, demarcheStatus.id)}`
+    })
+  })
+  expect(result).toMatchSnapshot()
 })

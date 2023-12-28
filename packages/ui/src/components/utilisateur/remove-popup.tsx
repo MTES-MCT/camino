@@ -12,7 +12,7 @@ export const RemovePopup: FunctionalComponent<Props> = props => {
     <Alert
       type="warning"
       title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={() => (
+      description={
         <>
           Souhaitez vous supprimer le compte de{' '}
           <span class="fr-text--bold">
@@ -20,7 +20,7 @@ export const RemovePopup: FunctionalComponent<Props> = props => {
           </span>{' '}
           ?
         </>
-      )}
+      }
     />
   )
 

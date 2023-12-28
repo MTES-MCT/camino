@@ -85,7 +85,7 @@ const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
 
     return {
       id: demarche.id,
-      link: { name: 'titre', params: { id: demarche.titre.slug } },
+      link: { name: 'titre', params: { id: demarche.titre.slug }, query: { demarcheSlug: demarche.slug } },
       columns,
     }
   })

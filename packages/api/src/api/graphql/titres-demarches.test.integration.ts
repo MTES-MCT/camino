@@ -9,6 +9,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { newEtapeId } from '../../database/models/_format/id-create.js'
+import TitresDemarches from '../../database/models/titres-demarches.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -175,7 +176,8 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(dbPool, demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, userSuper)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
+    const demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.typeId).toBe('pro')
   })
 
   test('ne peut pas modifier une démarche avec un titre inexistant (utilisateur super)', async () => {
@@ -198,7 +200,9 @@ describe('demarcheModifier', () => {
     )
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.demarcheModifier.demarches[0].typeId).toBe('pro')
+
+    const demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.typeId).toBe('pro')
   })
 
   test('ne peut pas modifier une démarche d’un titre ARM en DEA (utilisateur admin)', async () => {
@@ -281,10 +285,16 @@ describe('demarcheSupprimer', () => {
 
   test('peut supprimer une démarche (utilisateur super)', async () => {
     const { demarcheId } = await demarcheCreate()
+
+    let demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(false)
+
     const res = await graphQLCall(dbPool, demarcheSupprimerQuery, { id: demarcheId }, userSuper)
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.demarcheSupprimer.demarches.length).toBe(0)
+
+    demarche = await TitresDemarches.query().findById(demarcheId)
+    expect(demarche?.archive).toBe(true)
   })
 })
 
@@ -299,12 +309,10 @@ const demarcheCreate = async () => {
     {}
   )
 
-  const resDemarchesCreer = await graphQLCall(dbPool, queryImport('titre-demarche-creer'), { demarche: { titreId: titre.id, typeId: 'oct' } }, userSuper)
-
-  expect(resDemarchesCreer.body.errors).toBe(undefined)
+  const titreDemarche = await TitresDemarches.query().insertAndFetch({ titreId: titre.id, typeId: 'oct' })
 
   return {
-    titreId: resDemarchesCreer.body.data.demarcheCreer.id,
-    demarcheId: resDemarchesCreer.body.data.demarcheCreer.demarches[0].id,
+    titreId: titre.id,
+    demarcheId: titreDemarche.id,
   }
 }

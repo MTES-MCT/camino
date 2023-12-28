@@ -1,19 +1,22 @@
-import { PureDemarcheRemovePopup, Props } from './demarche-remove-popup'
+import { DemarcheRemovePopup, Props } from './demarche-remove-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheRemovePopup',
-  component: PureDemarcheRemovePopup,
+  component: DemarcheRemovePopup,
 }
 export default meta
 
 const deleteAction = action('delete')
 const close = action('close')
 
-const reload = action('reload')
-const displayMessage = action('displayMessage')
+const reload = () => {
+  action('reload')
+
+  return Promise.resolve()
+}
 
 const apiClient: Props['apiClient'] = {
   deleteDemarche: demarcheId => {
@@ -24,14 +27,5 @@ const apiClient: Props['apiClient'] = {
 }
 
 export const Main: StoryFn = () => (
-  <PureDemarcheRemovePopup
-    reload={reload}
-    displayMessage={displayMessage}
-    apiClient={apiClient}
-    close={close}
-    demarcheId={demarcheIdValidator.parse('demarcheId')}
-    titreTypeId={'apc'}
-    titreNom="Nom du titre"
-    demarcheTypeId={'oct'}
-  />
+  <DemarcheRemovePopup reload={reload} apiClient={apiClient} close={close} demarcheId={demarcheIdValidator.parse('demarcheId')} titreTypeId={'apc'} titreNom="Nom du titre" demarcheTypeId={'oct'} />
 )

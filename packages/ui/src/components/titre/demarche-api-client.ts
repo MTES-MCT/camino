@@ -1,17 +1,17 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { getWithJson } from '@/api/client-rest'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheGet, DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheIdOrSlug, DemarcheSlug } from 'camino-common/src/demarche'
 import gql from 'graphql-tag'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
-import { TitreId } from 'camino-common/src/titres'
+import { GetDemarcheByIdOrSlugValidator, TitreId } from 'camino-common/src/titres'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { getWithJson } from '../../api/client-rest'
 
 export interface InputDemarcheCreation {
   titreId: string
@@ -42,6 +42,7 @@ export interface GetDemarchesParams {
 
 export interface GetDemarchesDemarche {
   id: DemarcheId | string
+  slug: DemarcheSlug
   typeId: DemarcheTypeId
   statutId: DemarcheStatutId
   titre: {
@@ -53,16 +54,16 @@ export interface GetDemarchesDemarche {
   }
 }
 export interface DemarcheApiClient {
-  createDemarche: (demarche: InputDemarcheCreation) => Promise<void>
-  updateDemarche: (demarche: InputDemarcheUpdation) => Promise<void>
+  createDemarche: (demarche: InputDemarcheCreation) => Promise<DemarcheSlug>
+  updateDemarche: (demarche: InputDemarcheUpdation) => Promise<DemarcheSlug>
   deleteDemarche: (demarcheId: DemarcheId) => Promise<void>
-  getDemarche: (demarcheId: DemarcheIdOrSlug) => Promise<DemarcheGet>
+  getDemarcheByIdOrSlug: (demarcheIdOrSlug: DemarcheIdOrSlug) => Promise<GetDemarcheByIdOrSlugValidator>
   getDemarches: (params: GetDemarchesParams) => Promise<{ elements: GetDemarchesDemarche[]; total: number }>
 }
 
 export const demarcheApiClient: DemarcheApiClient = {
-  createDemarche: async (demarche): Promise<void> => {
-    await apiGraphQLFetch(gql`
+  createDemarche: async (demarche): Promise<DemarcheSlug> => {
+    const value = await apiGraphQLFetch(gql`
       mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
         demarcheCreer(demarche: $demarche) {
           slug
@@ -71,10 +72,11 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({
       demarche,
     })
+    return value.slug
   },
 
-  updateDemarche: async (demarche): Promise<void> => {
-    await apiGraphQLFetch(gql`
+  updateDemarche: async (demarche): Promise<DemarcheSlug> => {
+    const value = await apiGraphQLFetch(gql`
       mutation DemarcheModifier($demarche: InputDemarcheModification!) {
         demarcheModifier(demarche: $demarche) {
           slug
@@ -83,19 +85,20 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({
       demarche,
     })
+
+    return value.slug
   },
 
   deleteDemarche: async (demarcheId: string): Promise<void> => {
     await apiGraphQLFetch(gql`
       mutation DemarcheSupprimer($id: ID!) {
-        demarcheSupprimer(id: $id) {
-          slug
-        }
+        demarcheSupprimer(id: $id)
       }
     `)({ id: demarcheId })
   },
-  getDemarche: (demarcheId: DemarcheIdOrSlug): Promise<DemarcheGet> => {
-    return getWithJson('/rest/demarches/:demarcheId', { demarcheId })
+
+  getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {
+    return getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
   },
   getDemarches: async (params: GetDemarchesParams) => {
     const data = await apiGraphQLFetch(gql`
@@ -140,6 +143,7 @@ export const demarcheApiClient: DemarcheApiClient = {
         ) {
           elements {
             id
+            slug
             typeId
             statutId
             titre {

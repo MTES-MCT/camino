@@ -15,11 +15,12 @@ import {
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
   titreIdValidator,
+  titreIdOrSlugValidator,
 } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
-import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { NotNullableKeys, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
 import { canDeleteTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
@@ -30,15 +31,15 @@ import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
-import { isAdministration, isSuper, User } from 'camino-common/src/roles.js'
-import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
+import { isAdministration, User } from 'camino-common/src/roles.js'
+import { canCreateOrEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 import titreUpdateTask from '../../business/titre-update.js'
-import { getLastJournal, getTitre as getTitreDb, getTitreCommunes as getTitreCommunesQuery } from './titres.queries.js'
+import { getTitre as getTitreDb } from './titres.queries.js'
 import type { Pool } from 'pg'
-import { Commune } from 'camino-common/src/static/communes.js'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -213,7 +214,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
 
           return (
             (titre.modification ?? false) ||
-            canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
+            canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
             canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
           )
         })
@@ -259,14 +260,14 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
             throw new Error('les démarches ne sont pas chargées')
           }
 
-          const demarcheLaPlusRecente = titre.demarches.sort(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches?.length - 1]
+          const demarcheLaPlusRecente = titre.demarches.length > 0 ? titre.demarches.sort(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches.length - 1] : null
           let enAttenteDeAdministration = false
           const prochainesEtapes: EtapeTypeId[] = []
           let derniereEtape: {
             etapeTypeId: EtapeTypeId
             date: CaminoDate
           } | null = null
-          if (demarcheLaPlusRecente) {
+          if (demarcheLaPlusRecente !== null) {
             if (!demarcheLaPlusRecente.etapes) {
               throw new Error('les étapes ne sont pas chargées')
             }
@@ -391,25 +392,6 @@ export const getTitreLiaisons = (_pool: Pool) => async (req: CaminoRequest, res:
   }
 }
 
-export const getTitreCommunes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<Commune[]>) => {
-  const user = req.auth
-
-  const titreId = req.params.id
-
-  if (!titreId) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    const titre = await titreGet(titreId, { fields: { id: {} } }, user)
-    if (!titre) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-    } else {
-      const communes = await getTitreCommunesQuery(pool, { id: titreIdValidator.parse(titreId) })
-
-      res.json(communes)
-    }
-  }
-}
-
 const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Promise<TitreLink[]> => {
   const titresTitres = await TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId)
   const titreIds = titresTitres.map(r => r[link])
@@ -486,6 +468,26 @@ export const utilisateurTitreAbonner = (_pool: Pool) => async (req: CaminoReques
   }
 }
 
+export const getUtilisateurTitreAbonner = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
+  const user = req.auth
+  const parsedTitreId = titreIdValidator.safeParse(req.params.titreId)
+  if (!parsedTitreId.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      if (!user) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+      } else {
+        res.send(await getTitreUtilisateur(pool, parsedTitreId.data, user.id))
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
 export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const titreId: string | undefined = req.params.titreId
   const user = req.auth
@@ -500,10 +502,10 @@ export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
     try {
       const titreOld = await titreGet(titreId, { fields: {} }, user)
 
-      if (!titreOld) {
+      if (isNullOrUndefined(titreOld)) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
-        if (!titreOld.modification) {
+        if (isNullOrUndefined(titreOld.modification) || !titreOld.modification) {
           res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
         } else {
           // on doit utiliser upsert (plutôt qu'un simple update)
@@ -525,40 +527,16 @@ export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
 export const getTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<TitreGet>) => {
   const titreId: string | undefined = req.params.titreId
   const user = req.auth
-  // TODO  2023-04-25 Route actuellement réservée au super, car il faut réfléchir comment vérifier toutes les permissions
-  if (!isSuper(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-  } else if (!titreId) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    try {
-      const titres = await getTitreDb(pool, { id: titreIdValidator.parse(titreId) })
-
-      if (titres.length !== 1) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
-      } else {
-        res.json(titres[0])
-      }
-    } catch (e) {
-      console.error(e)
-
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-    }
-  }
-}
-
-export const getTitreDate = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<CaminoDate | null>) => {
-  const titreId: string | undefined = req.params.titreId
   if (!titreId) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      const journaux = await getLastJournal(pool, { titreId: titreIdValidator.parse(titreId) })
+      const titre = await getTitreDb(pool, user, titreIdOrSlugValidator.parse(titreId))
 
-      if (journaux.length !== 1) {
-        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
+      if (titre === null) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
-        res.json(journaux[0].date)
+        res.json(titre)
       }
     } catch (e) {
       console.error(e)

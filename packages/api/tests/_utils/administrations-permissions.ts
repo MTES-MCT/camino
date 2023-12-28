@@ -1,9 +1,8 @@
-import { IDemarcheType, IEtapeType, ITitre } from '../../src/types.js'
+import { IEtapeType, ITitre } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
-import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
 import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
@@ -20,6 +19,7 @@ import { TestUser } from 'camino-common/src/tests-utils.js'
 import type { Pool } from 'pg'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreId } from 'camino-common/src/titres.js'
+import TitresDemarches from '../../src/database/models/titres-demarches.js'
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -128,18 +128,20 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
   } else if (cible === 'etapes') {
     const titreCreated = await titreCreerSuper(pool, administrationId, titreTypeId)
 
-    const demarcheCreated = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
+    const result = await demarcheCreerProfil(pool, titreCreated.body.data.titreCreer.id, { role: 'super' })
 
-    expect(demarcheCreated.body.errors).toBe(undefined)
+    expect(result.body.errors).toBe(undefined)
+
+    const slug = result.body.data.demarcheCreer.slug
+
+    const demarche = await TitresDemarches.query().findOne({ slug })
 
     const etapeTypeId = 'mfr'
     const etapeType = (await etapeTypeGet(etapeTypeId, {
       fields: {},
     })) as IEtapeType
 
-    const demarcheType = (await DemarchesTypes.query().withGraphFetched(options.demarchesTypes.graph).findById(demarcheCreated.body.data.demarcheCreer.demarches[0].typeId)) as IDemarcheType
-
-    const sections = getSections(titreTypeId, demarcheType.id, etapeType.id)
+    const sections = getSections(titreTypeId, demarche?.typeId, etapeType.id)
 
     const heritageContenu = sections.reduce((acc, section) => {
       if (!acc[section.id]) {
@@ -175,9 +177,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
       return acc
     }, {} as any)
 
-    const titreDemarcheId = demarcheCreated.body.data.demarcheCreer.demarches[0].id
-
-    const documentTypesIds = getDocuments(titreTypeId, demarcheType.id, etapeTypeId)
+    const documentTypesIds = getDocuments(titreTypeId, demarche?.typeId, etapeTypeId)
       .filter(({ optionnel }) => !optionnel)
       .map(({ id }) => id)
     const documentIds = []
@@ -199,7 +199,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
         etape: {
           typeId: etapeTypeId,
           statutId: 'fai',
-          titreDemarcheId,
+          titreDemarcheId: demarche?.id,
           date: '2022-01-01',
           duree: 10,
           heritageProps: titreEtapePropsIds.reduce(

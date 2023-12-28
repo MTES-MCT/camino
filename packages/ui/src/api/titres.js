@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentTitre, fragmentTitres } from './fragments/titre'
+import { fragmentTitres } from './fragments/titre'
 
-const titresMetas = apiGraphQLFetch(
+export const titresMetas = apiGraphQLFetch(
   gql`
     query TitresMetas {
       entreprises {
@@ -16,19 +16,7 @@ const titresMetas = apiGraphQLFetch(
   `
 )
 
-const titre = apiGraphQLFetch(
-  gql`
-    query Titre($id: ID!) {
-      titre(id: $id) {
-        ...titre
-      }
-    }
-
-    ${fragmentTitre}
-  `
-)
-
-const titres = apiGraphQLFetch(
+export const titres = apiGraphQLFetch(
   gql`
     query Titres(
       $intervalle: Int
@@ -92,12 +80,10 @@ export const titresRechercherByReferences = apiGraphQLFetch(
   'titresRechercherByReferences'
 )
 
-const titreCreer = apiGraphQLFetch(gql`
+export const titreCreer = apiGraphQLFetch(gql`
   mutation TitreCreer($titre: InputTitreCreation!) {
     titreCreer(titre: $titre) {
       slug
     }
   }
 `)
-
-export { titresMetas, titre, titres, titreCreer }

@@ -49,6 +49,10 @@ type Demarche {
   suppression: Boolean
 }
 
+type DemarcheSlug {
+  slug: String
+}
+
 input InputDemarcheCreation {
   typeId: ID!
   titreId: ID!

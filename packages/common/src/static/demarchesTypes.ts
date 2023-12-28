@@ -1,5 +1,6 @@
 import { Definition } from '../definition.js'
 import { z } from 'zod'
+import { DemarcheStatutId, DemarchesStatutsIds } from './demarchesStatuts.js'
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires: boolean
   renouvelable: boolean
@@ -302,3 +303,9 @@ export const sortedDemarchesTypes = Object.values(DemarchesTypes).sort((a, b) =>
 export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
   return DemarchesTypes[demarcheTypeId].travaux
 }
+
+/**
+ *  La démarche a un impact potentiel sur le titre (statut, visibilité administrations…)
+ */
+export const canImpactTitre = (titreDemarcheTypeId: DemarcheTypeId, titreDemarcheStatutId: DemarcheStatutId): boolean =>
+  [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(titreDemarcheStatutId) || isDemarcheTypeOctroi(titreDemarcheTypeId)

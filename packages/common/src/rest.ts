@@ -11,19 +11,19 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
 } from './entreprise.js'
-import { demarcheGetValidator, demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
+import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
-  activitesByTitreValidator,
   editableTitreValidator,
+  getDemarcheByIdOrSlugValidator,
   titreAdministrationValidator,
   titreGetValidator,
+  titreIdOrSlugValidator,
   titreIdValidator,
   titreLinksValidator,
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
-import { sectionWithValueValidator } from './sections.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
@@ -52,16 +52,12 @@ const IDS = [
   '/rest/statistiques/minerauxMetauxMetropole',
   '/rest/statistiques/guyane',
   '/rest/statistiques/granulatsMarins',
-  '/rest/titreSections/:titreId',
-  '/rest/demarches/:demarcheId',
   '/rest/titres/:titreId',
-  '/rest/titres/:titreId/date',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
   '/rest/titresAdministrations',
   '/rest/titres/:id/titreLiaisons',
-  '/rest/titres/:id/communes',
-  '/rest/titres/:titreId/activites',
+  '/rest/demarches/:demarcheIdOrSlug',
   '/rest/statistiques/dgtm',
   '/rest/entreprises/:entrepriseId/fiscalite/:annee',
   '/rest/entreprises',
@@ -96,7 +92,6 @@ const IDS = [
 ] as const
 
 export type CaminoRestRoute = (typeof IDS)[number]
-export type CaminoRestRouteIds = typeof IDS
 
 export const CaminoRestRoutes = {
   '/config': { get: { output: caminoConfigValidator } },
@@ -108,16 +103,13 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/minerauxMetauxMetropole': { get: { output: statistiquesMinerauxMetauxMetropoleValidator } },
   '/rest/statistiques/guyane': { get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
-  '/rest/titreSections/:titreId': { params: { titreId: titreIdValidator }, get: { output: z.array(sectionWithValueValidator) } },
-  '/rest/demarches/:demarcheId': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: demarcheGetValidator } },
-  '/rest/titres/:titreId': { params: { titreId: titreIdValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
-  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() } },
-  '/rest/titres/:titreId/date': { params: { titreId: titreIdValidator }, get: { output: caminoDateValidator.nullable() } },
+  '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
+  '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
   '/rest/titresAdministrations': { get: { output: z.array(titreAdministrationValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: { id: titreIdValidator }, get: { output: titreLinksValidator }, post: { input: z.array(z.string()), output: titreLinksValidator } },
-  '/rest/titres/:id/communes': { params: { id: titreIdValidator }, get: { output: z.array(communeValidator) } },
-  '/rest/titres/:titreId/activites': { params: { titreId: titreIdValidator }, get: { output: activitesByTitreValidator } },
+  '/rest/demarches/:demarcheIdOrSlug': { params: { demarcheIdOrSlug: demarcheIdOrSlugValidator }, get: { output: getDemarcheByIdOrSlugValidator } },
+
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },

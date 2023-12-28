@@ -64,8 +64,8 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
             columns: {
               polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
               nom: { value: `${index}` },
-              latitude: { value: `${y}` },
-              longitude: { value: `${x}` },
+              latitude: { value: `${x}` },
+              longitude: { value: `${y}` },
             },
           })
           index++
@@ -85,7 +85,7 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={currentRows} initialSort={{ column: 'nom', order: 'asc' }} />
+      <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={currentRows} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}

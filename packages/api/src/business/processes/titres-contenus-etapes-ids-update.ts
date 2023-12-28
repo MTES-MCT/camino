@@ -2,7 +2,7 @@ import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
 import { objectsDiffer } from '../../tools/index.js'
 import { userSuper } from '../../database/user-super.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -12,15 +12,14 @@ export const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
 
   const titresUpdated = []
 
-  const currentDate = getCurrent()
   for (const titre of titres) {
-    const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(currentDate, titre.titreStatutId!, titre.demarches!, titre.type!.contenuIds)
+    const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(titre.titreStatutId!, titre.demarches!, titre.type!.contenuIds)
 
     // si une prop du titre est mise à jour
-    const hasChanged =
-      (!titre.contenusTitreEtapesIds && contenusTitreEtapesIds) ||
-      (titre.contenusTitreEtapesIds && !contenusTitreEtapesIds) ||
-      (titre.contenusTitreEtapesIds && contenusTitreEtapesIds && objectsDiffer(titre.contenusTitreEtapesIds, contenusTitreEtapesIds))
+    const hasChanged: boolean =
+      (isNullOrUndefined(titre.contenusTitreEtapesIds) && isNotNullNorUndefined(contenusTitreEtapesIds)) ||
+      (isNotNullNorUndefined(titre.contenusTitreEtapesIds) && isNullOrUndefined(contenusTitreEtapesIds)) ||
+      (isNotNullNorUndefined(titre.contenusTitreEtapesIds) && isNotNullNorUndefined(contenusTitreEtapesIds) && objectsDiffer(titre.contenusTitreEtapesIds, contenusTitreEtapesIds))
 
     if (hasChanged) {
       await titreUpdate(titre.id, { contenusTitreEtapesIds })

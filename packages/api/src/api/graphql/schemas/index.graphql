@@ -34,7 +34,7 @@ type Query {
   "Version de l'API"
   version: String
 
-  "Titre minier en fonction de son id"
+  "DEPRECATED Utilisé uniquement par les tests unitaires"
   titre(id: ID!): Titre
 
   "Liste de titres miniers, en fonction d'arguments (optionnels)"
@@ -189,7 +189,7 @@ type Query {
   "Calcule les informations relatives au périmètre d’une étape existante"
   titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
-  journaux(page: Int!, recherche: String, titreId: String, titresIds: [String]): Journaux
+  journaux(page: Int!, recherche: String, titresIds: [String]): Journaux
 }
 
 """
@@ -208,13 +208,13 @@ type Mutation {
   titreCreer(titre: InputTitreCreation!): Titre
 
   "Crée une démarche et met à jour le titre minier"
-  demarcheCreer(demarche: InputDemarcheCreation!): Titre
+  demarcheCreer(demarche: InputDemarcheCreation!): DemarcheSlug
 
   "Modifie une démarche et met à jour le titre minier"
-  demarcheModifier(demarche: InputDemarcheModification!): Titre
+  demarcheModifier(demarche: InputDemarcheModification!): DemarcheSlug
 
   "Supprime une démarche et met à jour le titre minier"
-  demarcheSupprimer(id: ID!): Titre
+  demarcheSupprimer(id: ID!): ID
 
   "Crée une étape et met à jour le titre minier"
   etapeCreer(etape: InputEtapeCreation!): Etape

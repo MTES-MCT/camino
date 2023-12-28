@@ -3,8 +3,7 @@
 // pour laquelle la propriété existe
 
 import { CaminoDate } from 'camino-common/src/date.js'
-import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { canImpactTitre, DemarcheTypeId, isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { isDemarchePhaseValide } from 'camino-common/src/static/phasesStatuts.js'
 import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types.js'
@@ -12,6 +11,8 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types.js
 import { propValueFind } from '../utils/prop-value-find.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
+import { isEtapeDecision } from 'camino-common/src/static/etapesTypes.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)
@@ -40,12 +41,10 @@ const etapeValideCheck = (titreEtape: ITitreEtape, titreDemarcheTypeId: Demarche
     return false
   }
 
-  // si la démarche est un octroi, une demande de titre d'exploitation ou une mutation partielle
   if (isDemarcheTypeOctroi(titreDemarcheTypeId)) {
     return true
   }
-  // si il s'agit d'une étape de décision
-  if (['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco'].includes(titreEtape.typeId)) {
+  if (isEtapeDecision(titreEtape.typeId)) {
     return true
   }
 
@@ -89,31 +88,10 @@ const titreDemarcheContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId
     titreEtape =>
       etapeValideCheck(titreEtape, titreDemarcheTypeId, titreStatutId) &&
       // détermine si l'étape contient la section et l'élément
-      titreEtape.contenu &&
-      titreEtape.contenu[sectionId] &&
+      isNotNullNorUndefined(titreEtape.contenu) &&
+      isNotNullNorUndefined(titreEtape.contenu[sectionId]) &&
       titreEtape.contenu[sectionId][elementId] !== undefined
   ) || null
-
-// si
-// - la démarches est acceptée, terminée
-// - ou la démarche est un octroi
-// - ou le titre a le statut modification en instance
-//   - et la démarche est une prolongation ou une demande de titre
-//   - et la démarche n'a aucune phase valide
-const demarcheEligibleCheck = (
-  date: CaminoDate,
-  titreDemarcheStatutId: DemarcheStatutId,
-  titreDemarcheTypeId: DemarcheTypeId,
-  titreStatutId: TitreStatutId,
-  titreDemarches: { demarcheDateDebut?: CaminoDate | null; demarcheDateFin?: CaminoDate | null }[]
-) =>
-  [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(titreDemarcheStatutId) ||
-  isDemarcheTypeOctroi(titreDemarcheTypeId) ||
-  (titreStatutId === TitresStatutIds.ModificationEnInstance &&
-    [DEMARCHES_TYPES_IDS.Prolongation, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.Prorogation, DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation].includes(
-      titreDemarcheTypeId
-    ) &&
-    !titreDemarches.find(td => isDemarchePhaseValide(date, td)))
 
 /**
  * Trouve l'id de l'étape de référence pour une propriété
@@ -135,8 +113,7 @@ export const titrePropTitreEtapeFind = (
     // si une étape a déjà été trouvée
     if (etape) return etape
 
-    // si la démarche n'est pas éligible
-    if (!demarcheEligibleCheck(date, titreDemarche.statutId!, titreDemarche.typeId, titreStatutId, titreDemarches)) {
+    if (!canImpactTitre(titreDemarche.typeId, titreDemarche.statutId!)) {
       return null
     }
 
@@ -154,14 +131,14 @@ export const titrePropTitreEtapeFind = (
  * @returns une étape ou null
  */
 
-export const titreContenuTitreEtapeFind = (date: CaminoDate, { sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
+export const titreContenuTitreEtapeFind = ({ sectionId, elementId }: IContenuId, titreDemarches: ITitreDemarche[], titreStatutId: TitreStatutId) => {
   const titreDemarchesSorted = titreDemarcheSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce((etape: ITitreEtape | null, titreDemarche: ITitreDemarche) => {
     // si une étape a déjà été trouvée
     if (etape) return etape
 
-    if (!demarcheEligibleCheck(date, titreDemarche.statutId!, titreDemarche.typeId, titreStatutId, titreDemarches)) {
+    if (!canImpactTitre(titreDemarche.typeId, titreDemarche.statutId!)) {
       return null
     }
 

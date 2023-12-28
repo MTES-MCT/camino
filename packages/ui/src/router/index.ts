@@ -4,7 +4,6 @@ import type { MenuSection } from '@/utils/matomo'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
-import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
 import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
@@ -26,19 +25,18 @@ const Demarches = async () => {
   const { Demarches } = await import('../components/demarches')
   return Demarches
 }
+const Demarche = async () => {
+  const { Demarche } = await import('../components/demarche')
+  return Demarche
+}
 const Travaux = async () => {
   const { Travaux } = await import('../components/travaux')
   return Travaux
 }
 
-const Demarche = async () => {
-  const { Demarche } = await import('../components/demarche')
-  return Demarche
-}
-
-const Etape = async () => {
-  const { Etape } = await import('../components/etape')
-  return Etape
+const Titre = async () => {
+  const { Titre } = await import('../components/titre')
+  return Titre
 }
 
 const Utilisateur = async () => {
@@ -183,6 +181,11 @@ const routes = [
     },
   },
   {
+    path: '/demarches/:demarcheId',
+    name: 'demarche',
+    component: Demarche,
+  },
+  {
     path: '/travaux',
     name: 'travaux',
     component: Travaux,
@@ -192,21 +195,10 @@ const routes = [
     },
   },
   {
-    path: '/demarches/:demarcheId',
-    name: 'demarche',
-    component: Demarche,
-    meta: {
-      title: "Détail d'une démarche",
-      menuSection: 'demarches',
-    },
-  },
-  {
     path: '/etapes/:id',
     name: 'etape',
-    component: Etape,
-    meta: {
-      title: "Détail d'une étape",
-      menuSection: 'titres',
+    redirect: to => {
+      return { name: 'etape-edition', params: { id: to.params.id } }
     },
   },
   {
@@ -465,8 +457,14 @@ const router = createRouter({
   linkExactActiveClass: 'exact-active',
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(savedPosition)
+        }, 500)
+      })
     } else if (to.name === 'titres' && 'vueId' in to.query && !Array.isArray(to.query.vueId) && to.query.vueId === 'carte') {
+      return false
+    } else if (to.name === 'titre' && from.name === 'titre') {
       return false
     } else {
       return { top: 0 }

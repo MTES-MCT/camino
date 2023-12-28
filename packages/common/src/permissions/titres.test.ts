@@ -1,19 +1,25 @@
-import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canLinkTitres, getLinkConfig } from './titres.js'
+import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, getLinkConfig } from './titres.js'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
-import { test, expect } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { testBlankUser, TestUser } from '../tests-utils.js'
 import { User } from '../roles.js'
 import { newEntrepriseId } from '../entreprise.js'
+import { ACTIVITES_TYPES_IDS } from '../static/activitesTypes.js'
+import { toCommuneId } from '../static/communes.js'
+import { TitreStatutId, titresStatutsArray } from '../static/titresStatuts.js'
 
 test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
     [key in TitreTypeId]?: {
       count: 'single' | 'multiple'
       typeId: TitreTypeId
-    } | null
+    }
   }>((acc, titreTypeId) => {
-    acc[titreTypeId] = getLinkConfig(titreTypeId, [])
+    const linkConfig = getLinkConfig(titreTypeId, [])
+    if (linkConfig !== null) {
+      acc[titreTypeId] = linkConfig
+    }
 
     return acc
   }, {})
@@ -24,9 +30,12 @@ test('getTitreFromTypeId fusions', () => {
     [key in TitreTypeId]?: {
       count: 'single' | 'multiple'
       typeId: TitreTypeId
-    } | null
+    }
   }>((acc, titreTypeId) => {
-    acc[titreTypeId] = getLinkConfig(titreTypeId, [{ typeId: 'fus' }])
+    const fusion = getLinkConfig(titreTypeId, [{ demarche_type_id: 'fus' }])
+    if (fusion !== null) {
+      acc[titreTypeId] = fusion
+    }
 
     return acc
   }, {})
@@ -42,45 +51,92 @@ test.each<[TestUser, AdministrationId[], boolean]>([
   expect(canLinkTitres({ ...user, ...testBlankUser }, administrationIds)).toBe(can)
 })
 
-test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise peut créer un titre de type %p', titreTypeId => {
-  const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
-  const actual = canCreateTitre(user, titreTypeId)
-  expect(actual).toMatchSnapshot()
-  if (actual) {
-    assertsCanCreateTitre(user, titreTypeId)
-  } else {
-    expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
-  }
-})
-test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
-  const user: User = { role: 'super', ...testBlankUser }
-  expect(canCreateTitre(user, titreTypeId)).toBe(true)
-  expect(() => assertsCanCreateTitre(user, titreTypeId)).not.toThrowError()
-})
+describe('canCreateTitre', () => {
+  test('vérifie si une entreprise peut créer un titre de type', () => {
+    const result: { [key in TitreTypeId]?: true } = {}
 
-test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas créer de titre de type %p', titreTypeId => {
-  const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'], ...testBlankUser }
-  expect(canCreateTitre(user, titreTypeId)).toBe(false)
-  expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
-})
-
-test('vérifie si un utilisateur administrateur admin peut créer des titres', () => {
-  const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
-
-  Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
-    const user: User = { role: 'admin', administrationId, ...testBlankUser }
+    const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
     for (const titreTypeid of TitresTypesIds) {
       const itCan = canCreateTitre(user, titreTypeid)
-      ;(result[administrationId] ??= {})[titreTypeid] = itCan
       if (itCan) {
+        result[titreTypeid] = itCan
         assertsCanCreateTitre(user, titreTypeid)
       } else {
         expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
       }
     }
+    expect(result).toMatchSnapshot()
+  })
+  test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
+    const user: User = { role: 'super', ...testBlankUser }
+    expect(canCreateTitre(user, titreTypeId)).toBe(true)
+    expect(() => assertsCanCreateTitre(user, titreTypeId)).not.toThrowError()
   })
 
-  expect(result).toMatchSnapshot()
+  test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas créer de titre de type %p', titreTypeId => {
+    const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'], ...testBlankUser }
+    expect(canCreateTitre(user, titreTypeId)).toBe(false)
+    expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
+  })
+
+  test('vérifie si un utilisateur administrateur admin peut créer des titres', () => {
+    const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: true } } = {}
+
+    Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+      const user: User = { role: 'admin', administrationId, ...testBlankUser }
+      for (const titreTypeid of TitresTypesIds) {
+        const itCan = canCreateTitre(user, titreTypeid)
+        if (itCan) {
+          ;(result[administrationId] ??= {})[titreTypeid] = itCan
+          assertsCanCreateTitre(user, titreTypeid)
+        } else {
+          expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
+        }
+      }
+    })
+
+    expect(result).toMatchSnapshot()
+  })
+})
+
+describe('canEditTitre', () => {
+  test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise ne peut pas modifier un titre de type %p', titreTypeId => {
+    const user: User = { role: 'entreprise', entreprises: [], ...testBlankUser }
+    titresStatutsArray.forEach(titreStatut => {
+      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(false)
+    })
+  })
+  test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
+    const user: User = { role: 'super', ...testBlankUser }
+    titresStatutsArray.forEach(titreStatut => {
+      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(true)
+    })
+  })
+
+  test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas modifier de titre de type %p', titreTypeId => {
+    const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'], ...testBlankUser }
+    titresStatutsArray.forEach(titreStatut => {
+      expect(canEditTitre(user, titreTypeId, titreStatut.id)).toBe(false)
+    })
+  })
+
+  test('vérifie si un utilisateur administrateur admin peut modifier des titres', () => {
+    const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: { [key in TitreStatutId]?: true } } } = {}
+
+    Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+      const user: User = { role: 'admin', administrationId, ...testBlankUser }
+      for (const titreTypeid of TitresTypesIds) {
+        for (const titreStatutId of titresStatutsArray) {
+          const itCan = canEditTitre(user, titreTypeid, titreStatutId.id)
+          if (itCan) {
+            ;((result[administrationId] ??= {})[titreTypeid] ??= {})[titreStatutId.id] = itCan
+          }
+        }
+      }
+    })
+
+    expect(result).toMatchSnapshot()
+  })
 })
 
 test('canDeleteTitre', () => {
@@ -91,4 +147,73 @@ test('canDeleteTitre', () => {
   expect(canDeleteTitre({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'defaut', ...testBlankUser })).toEqual(false)
+})
+
+describe('canHaveActivites', () => {
+  describe("vérifie si un titre a des activités d'un certain type", () => {
+    test("ne retourne aucun type d'activité relié à un pays sur un titre sans pays", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], {
+          titreTypeId: 'axm',
+          demarches: [{}],
+          communes: [],
+        })
+      ).toEqual(false)
+    })
+
+    test("retourne un type d'activité sur un titre AXM de Guyane", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], {
+          titreTypeId: 'axm',
+          demarches: [{}],
+          communes: [{ id: toCommuneId('97300') }],
+        })
+      ).toEqual(true)
+    })
+
+    test("ne retourne aucun type d'activité sur un titre AXM de métropole", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], { titreTypeId: 'axm', demarches: [{}], communes: [{ id: toCommuneId('72000') }] })
+      ).toEqual(false)
+    })
+
+    test("retourne un type d'activité sur un titre AXM de métropole", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'], {
+          titreTypeId: 'prm',
+          demarches: [{}],
+          communes: [{ id: toCommuneId('72000') }],
+        })
+      ).toEqual(true)
+    })
+
+    test("ne retourne aucun type d'activité de titre AXM Guyane sur un titre PRM de métropole", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], {
+          titreTypeId: 'prm',
+          demarches: [{}],
+          communes: [{ id: toCommuneId('72000') }],
+        })
+      ).toEqual(false)
+    })
+
+    test("retourne un type d'activité de titre  qui n'a pas de pays et qui est liée à un type de titre", () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], {
+          titreTypeId: 'pxw',
+          demarches: [{}],
+          communes: [],
+        })
+      ).toEqual(true)
+    })
+    test('un titre sans démarche ne peut pas avoir d’activité', () => {
+      expect(
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport d'exploitation (permis et concessions W)"], {
+          titreTypeId: 'pxw',
+          demarches: [],
+          communes: [],
+        })
+      ).toEqual(false)
+    })
+  })
 })

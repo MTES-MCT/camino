@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onBeforeUnmount } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
@@ -15,6 +15,7 @@ import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 
 const contoursSourceName = 'Contours'
+const pointsSourceName = 'Points'
 const contoursLineName = 'ContoursLine'
 const contourPointsName = 'ContoursPoints'
 const titresValidesFillName = 'TitresValidesFill'
@@ -62,7 +63,7 @@ const overlayLayers = [
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
-const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, 'Points', 'Titres valides'] as const
+const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, 'Titres valides'] as const
 const overlayNameValidator = z.enum(overlayNames)
 type OverlayName = z.infer<typeof overlayNameValidator>
 
@@ -71,7 +72,7 @@ const overlayMapNames = {
   'Façades maritimes': ['Facades'],
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
   [contoursSourceName]: [contoursLineName, 'ContoursFill'],
-  Points: [contourPointsName, 'ContoursPointLabels'],
+  [pointsSourceName]: [contourPointsName, 'ContoursPointLabels'],
   'Titres valides': [titresValidesLineName, titresValidesFillName],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
@@ -180,7 +181,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   [contourPointsName]: {
     id: contourPointsName,
     type: 'circle',
-    source: 'Points',
+    source: pointsSourceName,
     minzoom: 12,
 
     paint: {
@@ -191,7 +192,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   ContoursPointLabels: {
     id: 'ContoursPointLabels',
     type: 'symbol',
-    source: 'Points',
+    source: pointsSourceName,
     minzoom: 12,
     paint: {
       'text-color': '#ffffff',
@@ -241,8 +242,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  const points = computed(() => {
-    const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string } }[] = []
+  const points = computed<{
+    type: 'FeatureCollection'
+    features: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[]
+  }>(() => {
+    const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[] = []
     let index = 0
     props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
       topLevel.forEach((secondLevel, secondLevelIndex) =>
@@ -257,6 +261,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
               },
               properties: {
                 pointNumber: `${index}`,
+                latitude: `${y}`,
+                longitude: `${x}`,
               },
             })
             index++
@@ -265,12 +271,10 @@ export const DemarcheMap = defineComponent<Props>(props => {
       )
     )
 
-    const value = {
+    return {
       type: 'FeatureCollection',
       features: currentPoints,
     }
-
-    return value
   })
 
   watch(
@@ -281,10 +285,56 @@ export const DemarcheMap = defineComponent<Props>(props => {
         top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
       })
       ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.geojsonMultiPolygon)
+      ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
 
       map.value?.fitBounds(bounds, { padding: 50 })
     }
   )
+
+  const moveend = async () => {
+    if (props.neighbours !== null && isNotNullNorUndefined(map.value)) {
+      const bounds = map.value.getBounds()
+
+      try {
+        const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
+          statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
+          perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
+          communes: '',
+          departements: [],
+          domainesIds: [],
+          entreprisesIds: [],
+          facadesMaritimes: [],
+          references: '',
+          regions: [],
+          substancesIds: [],
+          titresIds: [],
+          typesIds: [],
+        })
+
+        ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
+          type: 'FeatureCollection',
+          features: res.elements
+            .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
+            .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
+            .map(titreValide => {
+              const properties: TitreValideProperties = {
+                slug: titreValide.slug,
+                nom: titreValide.nom,
+                typeId: titreValide.typeId,
+                titreStatutId: titreValide.titreStatutId,
+                domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
+              }
+
+              // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
+              return { ...titreValide.geojsonMultiPolygon!, properties }
+            }),
+        })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
   onMounted(() => {
     const bounds = new LngLatBounds()
     props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
@@ -301,7 +351,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           type: 'geojson',
           data: props.geojsonMultiPolygon,
         },
-        Points: {
+        [pointsSourceName]: {
           type: 'geojson',
           data: points.value,
         },
@@ -364,55 +414,16 @@ export const DemarcheMap = defineComponent<Props>(props => {
       )
 
       mapLibre.fitBounds(bounds, { padding: 50 })
-      mapLibre.on('moveend', async () => {
-        if (props.neighbours !== null) {
-          const bounds = mapLibre.getBounds()
 
-          try {
-            const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
-              statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
-              perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
-              communes: '',
-              departements: [],
-              domainesIds: [],
-              entreprisesIds: [],
-              facadesMaritimes: [],
-              references: '',
-              regions: [],
-              substancesIds: [],
-              titresIds: [],
-              typesIds: [],
-            })
-
-            ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
-              type: 'FeatureCollection',
-              features: res.elements
-                .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-                .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
-                .map(titreValide => {
-                  const properties: TitreValideProperties = {
-                    slug: titreValide.slug,
-                    nom: titreValide.nom,
-                    typeId: titreValide.typeId,
-                    titreStatutId: titreValide.titreStatutId,
-                    domaineColor: couleurParDomaine[getDomaineId(titreValide.typeId)],
-                  }
-
-                  // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-                  return { ...titreValide.geojsonMultiPolygon!, properties }
-                }),
-            })
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      })
+      mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
-        new Popup({ closeButton: false, maxWidth: '500' })
-          .setLngLat(e.lngLat)
-          .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.lngLat.lat}</b></div><div>Longitude : <b>${e.lngLat.lng}</b></div></div>`)
-          .addTo(mapLibre)
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          new Popup({ closeButton: false, maxWidth: '500' })
+            .setLngLat(e.lngLat)
+            .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div></div>`)
+            .addTo(mapLibre)
+        }
       })
 
       const popup = new Popup({
@@ -439,6 +450,10 @@ export const DemarcheMap = defineComponent<Props>(props => {
         }
       })
     }
+  })
+
+  onBeforeUnmount(() => {
+    map.value?.off('moveend', moveend)
   })
 
   const selectLayer = (layer: LayerId) => {

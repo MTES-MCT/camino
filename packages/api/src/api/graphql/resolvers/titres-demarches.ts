@@ -4,8 +4,6 @@ import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, Context } f
 
 import { fieldsBuild } from './_fields-build.js'
 
-import { titreFormat } from '../../_format/titres.js'
-
 import { titreDemarcheFormat } from '../../_format/titres-demarches.js'
 
 import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheArchive } from '../../../database/queries/titres-demarches.js'
@@ -15,9 +13,10 @@ import { titreGet } from '../../../database/queries/titres.js'
 import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
-import { canCreateTravaux, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches.js'
+import { canCreateTravaux, canCreateOrEditDemarche } from 'camino-common/src/permissions/titres-demarches.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
-const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
+export const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -35,7 +34,7 @@ const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQL
   }
 }
 
-const demarches = async (
+export const demarches = async (
   {
     page,
     intervalle,
@@ -81,11 +80,11 @@ const demarches = async (
   try {
     const fields = fieldsBuild(info)
 
-    if (!intervalle) {
+    if (isNullOrUndefined(intervalle)) {
       intervalle = 200
     }
 
-    if (!page) {
+    if (isNullOrUndefined(page)) {
       page = 1
     }
 
@@ -151,7 +150,7 @@ const demarches = async (
   }
 }
 
-const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+export const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context) => {
   try {
     const titre = await titreGet(demarche.titreId, { fields: { pointsEtape: { id: {} } } }, user)
 
@@ -170,7 +169,7 @@ const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user,
     if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])) {
       throw new Error('droits insuffisants')
     }
-    if (!isTravaux(demarche.typeId) && !canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [])) {
+    if (!isTravaux(demarche.typeId) && !canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [])) {
       throw new Error('droits insuffisants')
     }
 
@@ -178,11 +177,9 @@ const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user,
 
     await titreDemarcheUpdateTask(pool, demarcheCreated.id, demarcheCreated.titreId)
 
-    const fields = fieldsBuild(info)
+    const demarcheUpdate = await titreDemarcheGet(demarcheCreated.id, { fields: { id: {} } }, user)
 
-    const titreUpdated = await titreGet(demarcheCreated.titreId, { fields }, user)
-
-    return titreUpdated && titreFormat(titreUpdated)
+    return { slug: demarcheUpdate?.slug }
   } catch (e) {
     console.error(e)
 
@@ -190,9 +187,9 @@ const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user,
   }
 }
 
-const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user, pool }: Context) => {
   try {
-    if (!user) throw new Error('droits insuffisants')
+    if (isNullOrUndefined(user)) throw new Error('droits insuffisants')
 
     const demarcheOld = await titreDemarcheGet(
       demarche.id,
@@ -202,11 +199,11 @@ const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { us
       user
     )
 
-    if (!demarcheOld) throw new Error('la démarche n’existe pas')
+    if (isNullOrUndefined(demarcheOld)) throw new Error('la démarche n’existe pas')
     const titre = await titreGet(demarcheOld.titreId, { fields: {} }, user)
-    if (!titre) throw new Error("le titre n'existe pas")
+    if (isNullOrUndefined(titre)) throw new Error("le titre n'existe pas")
 
-    if (!demarcheOld.modification) throw new Error('droits insuffisants')
+    if (isNullOrUndefined(demarcheOld.modification) || !demarcheOld.modification) throw new Error('droits insuffisants')
 
     if (demarcheOld.titreId !== demarche.titreId) throw new Error('le titre n’existe pas')
 
@@ -220,11 +217,9 @@ const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { us
 
     await titreDemarcheUpdateTask(pool, demarche.id, demarche.titreId)
 
-    const fields = fieldsBuild(info)
+    const demarcheUpdate = await titreDemarcheGet(demarche.id, { fields: { id: {} } }, user)
 
-    const titreUpdated = await titreGet(demarche.titreId, { fields }, user)
-
-    return titreUpdated && titreFormat(titreUpdated)
+    return { slug: demarcheUpdate?.slug }
   } catch (e) {
     console.error(e)
 
@@ -232,28 +227,22 @@ const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { us
   }
 }
 
-const demarcheSupprimer = async ({ id }: { id: string }, { user, pool }: Context, info: GraphQLResolveInfo) => {
+export const demarcheSupprimer = async ({ id }: { id: string }, { user, pool }: Context) => {
   try {
     const demarcheOld = await titreDemarcheGet(id, { fields: { etapes: { id: {} } } }, user)
 
-    if (!demarcheOld) throw new Error("la démarche n'existe pas")
+    if (isNullOrUndefined(demarcheOld)) throw new Error("la démarche n'existe pas")
 
-    if (!demarcheOld.suppression) throw new Error('droits insuffisants')
+    if (isNullOrUndefined(demarcheOld.suppression) || !demarcheOld.suppression) throw new Error('droits insuffisants')
 
     await titreDemarcheArchive(id)
 
     await titreDemarcheUpdateTask(pool, null, demarcheOld.titreId)
 
-    const fields = fieldsBuild(info)
-
-    const titreUpdated = await titreGet(demarcheOld.titreId, { fields }, user)
-
-    return titreUpdated && titreFormat(titreUpdated)
+    return id
   } catch (e) {
     console.error(e)
 
     throw e
   }
 }
-
-export { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer }

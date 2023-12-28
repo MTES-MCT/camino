@@ -1,8 +1,7 @@
-import { EditableTitre, TitreGet, TitreId } from 'camino-common/src/titres'
-import { SectionWithValue } from 'camino-common/src/sections'
+import { EditableTitre, TitreGet, TitreId, TitreIdOrSlug } from 'camino-common/src/titres'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
-import { Commune, CommuneId } from 'camino-common/src/static/communes'
+import { CommuneId } from 'camino-common/src/static/communes'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
@@ -46,13 +45,11 @@ export type TitreForTitresRerchercherByNom = {
   demarches: { demarcheDateDebut: CaminoDate | null }[]
 }
 export interface TitreApiClient {
-  loadTitreSections: (titreId: TitreId) => Promise<SectionWithValue[]>
   removeTitre: (titreId: TitreId) => Promise<void>
   titreUtilisateurAbonne: (titreId: TitreId, abonne: boolean) => Promise<void>
+  getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean>
   editTitre: (titre: EditableTitre) => Promise<void>
-  getTitreById: (titreId: TitreId) => Promise<TitreGet>
-  getLastModifiedDate: (titreId: TitreId) => Promise<CaminoDate | null>
-  getTitreCommunes: (titreId: TitreId) => Promise<Commune[]>
+  getTitreById: (titreId: TitreIdOrSlug) => Promise<TitreGet>
   getTitresMetas: () => Promise<Pick<Entreprise, 'id' | 'nom'>[]>
   getTitresForTable: (params: {
     page?: number
@@ -108,30 +105,24 @@ export interface TitreApiClient {
     perimetre?: [number, number, number, number]
   }) => Promise<{ elements: TitreWithPoint[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
-  getTitresByIds: (titreIds: TitreId[]) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
+  getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
 }
 
 export const titreApiClient: TitreApiClient = {
-  loadTitreSections: async (titreId: TitreId): Promise<SectionWithValue[]> => {
-    return getWithJson('/rest/titreSections/:titreId', { titreId })
-  },
   removeTitre: async (titreId: TitreId): Promise<void> => {
     return deleteWithJson('/rest/titres/:titreId', { titreId })
   },
   titreUtilisateurAbonne: async (titreId: TitreId, abonne: boolean): Promise<void> => {
     return postWithJson('/rest/titres/:titreId/abonne', { titreId }, { abonne })
   },
+  getTitreUtilisateurAbonne: async (titreId: TitreId): Promise<boolean> => {
+    return getWithJson('/rest/titres/:titreId/abonne', { titreId })
+  },
   editTitre: (titre: EditableTitre): Promise<void> => {
     return postWithJson('/rest/titres/:titreId', { titreId: titre.id }, titre)
   },
-  getTitreById: (titreId: TitreId): Promise<TitreGet> => {
+  getTitreById: (titreId: TitreIdOrSlug): Promise<TitreGet> => {
     return getWithJson('/rest/titres/:titreId', { titreId })
-  },
-  getLastModifiedDate: (titreId: TitreId): Promise<CaminoDate | null> => {
-    return getWithJson('/rest/titres/:titreId/date', { titreId })
-  },
-  getTitreCommunes: (id: TitreId): Promise<Commune[]> => {
-    return getWithJson('/rest/titres/:id/communes', { id })
   },
   getTitresMetas: async () => {
     const { elements } = await apiGraphQLFetch(
@@ -151,7 +142,7 @@ export const titreApiClient: TitreApiClient = {
   getTitresForTable: async params => {
     const { elements, total } = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresForTable(
           $page: Int
           $colonne: String
           $ordre: String
@@ -221,7 +212,7 @@ export const titreApiClient: TitreApiClient = {
     // TODO 2023-07-20 si zoom > 7 alors autre appel
     const result = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresForCarte(
           $titresIds: [ID!]
           $typesIds: [ID!]
           $domainesIds: [ID!]
@@ -281,7 +272,7 @@ export const titreApiClient: TitreApiClient = {
   getTitresWithPerimetreForCarte: async params => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres(
+        query TitresWithPerimetreForCarte(
           $titresIds: [ID!]
           $typesIds: [ID!]
           $domainesIds: [ID!]
@@ -348,7 +339,7 @@ export const titreApiClient: TitreApiClient = {
   titresRechercherByNom: async noms => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres($noms: String) {
+        query TitresRechercherByNom($noms: String) {
           titres(intervalle: 20, noms: $noms) {
             elements {
               id
@@ -365,10 +356,10 @@ export const titreApiClient: TitreApiClient = {
     return result
   },
 
-  getTitresByIds: async titresIds => {
+  getTitresByIds: async (titresIds, cacheKey) => {
     const result = await apiGraphQLFetch(
       gql`
-        query Titres($titresIds: [ID!]) {
+        query TitresById($titresIds: [ID!]) {
           titres(ids: $titresIds) {
             elements {
               id
@@ -376,7 +367,8 @@ export const titreApiClient: TitreApiClient = {
             }
           }
         }
-      `
+      `,
+      cacheKey
     )({ titresIds })
     return result
   },

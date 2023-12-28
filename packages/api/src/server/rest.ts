@@ -9,18 +9,7 @@ import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
 import { NewDownload, etapeFichier, etapeTelecharger, fichier, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
-import {
-  getTitreLiaisons,
-  postTitreLiaisons,
-  removeTitre,
-  titresAdministrations,
-  titresONF,
-  updateTitre,
-  utilisateurTitreAbonner,
-  getTitre,
-  getTitreDate,
-  getTitreCommunes,
-} from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
   fiscalite,
@@ -50,14 +39,13 @@ import {
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
 import { User } from 'camino-common/src/roles.js'
-import { getTitresSections } from '../api/rest/titre-contenu.js'
 import { deleteEtape, deposeEtape, getEtapeEntrepriseDocuments, getEtapesTypesEtapesStatusWithMainStep } from '../api/rest/etapes.js'
-import { getDemarche } from '../api/rest/demarches.js'
 import { z } from 'zod'
 import { getCommunes } from '../api/rest/communes.js'
 import { SendFileOptions } from 'express-serve-static-core'
-import { activiteDocumentDownload, getActivite, getActivitesByTitreId, updateActivite, deleteActivite } from '../api/rest/activites.js'
+import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 
 interface IRestResolverResult {
   nom: string
@@ -124,20 +112,16 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/moi': { get: moi },
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
-  '/rest/titres/:id/communes': { get: getTitreCommunes },
-  '/rest/titres/:titreId/activites': { get: getActivitesByTitreId },
-  '/rest/titreSections/:titreId': { get: getTitresSections },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
-  '/rest/demarches/:demarcheId': { get: getDemarche },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
-  '/rest/titres/:titreId/date': { get: getTitreDate },
-  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner },
+  '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
   '/rest/titresONF': { get: titresONF },
   '/rest/titresAdministrations': { get: titresAdministrations },
   '/rest/statistiques/minerauxMetauxMetropole': { get: getMinerauxMetauxMetropolesStats }, // UNTESTED YET
   '/rest/statistiques/guyane': { get: getGuyaneStats },
   '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
   '/rest/statistiques/dgtm': { get: getDGTMStats },
+  '/rest/demarches/:demarcheIdOrSlug': { get: getDemarcheByIdOrSlug },
   '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
   '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },
   '/rest/utilisateurs/:id/delete': { get: deleteUtilisateur },

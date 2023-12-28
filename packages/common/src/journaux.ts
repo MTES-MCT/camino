@@ -4,7 +4,6 @@ import { titreIdValidator } from './titres'
 const journauxQueryParamsValidator = z.object({
   page: z.number(),
   recherche: z.string().nullable(),
-  titreId: titreIdValidator.nullable(),
   titresIds: z.array(titreIdValidator).optional(),
 })
 

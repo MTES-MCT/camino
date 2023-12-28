@@ -8,13 +8,27 @@ import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/i
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
 import { canCreateEtape } from './titres-etapes.js'
 
-export const canCreateDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[]): boolean => {
+export const canCreateOrEditDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[]): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     if (administrations.includes(user.administrationId) || isGestionnaire(user.administrationId, titreTypeId)) {
       if (canAdministrationModifyDemarches(user.administrationId, titreTypeId, titreStatutId)) {
         return true
+      }
+    }
+  }
+
+  return false
+}
+
+export const canDeleteDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[], demarche: { etapes: unknown[] }): boolean => {
+  if (isSuper(user)) {
+    return true
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    if (administrations.includes(user.administrationId) || isGestionnaire(user.administrationId, titreTypeId)) {
+      if (canAdministrationModifyDemarches(user.administrationId, titreTypeId, titreStatutId)) {
+        return demarche.etapes.length === 0
       }
     }
   }

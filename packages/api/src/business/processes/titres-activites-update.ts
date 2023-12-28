@@ -1,6 +1,5 @@
 import { ITitreActivite } from '../../types.js'
 
-import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check.js'
 import { anneesBuild } from '../../tools/annees-build.js'
 import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
 import { titreActivitesBuild } from '../rules/titre-activites-build.js'
@@ -11,6 +10,8 @@ import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { canHaveActiviteTypeId } from 'camino-common/src/permissions/titres.js'
 
 export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: CaminoDate = getCurrent()) => {
   console.info()
@@ -31,15 +32,22 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
     userSuper
   )
 
-  const activitesTypes = sortedActivitesTypes
-
-  const titresActivitesCreated = activitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
+  const titresActivitesCreated = sortedActivitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
     const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
     if (!annees.length) return acc
 
     acc.push(
       ...titres.reduce((acc: ITitreActivite[], titre) => {
-        if (!titreActiviteTypeCheck(activiteType.id, titre)) return acc
+        if (isNullOrUndefined(titre.demarches)) {
+          throw new Error('les démarches du titre ne sont pas chargées')
+        }
+
+        if (isNullOrUndefined(titre.communes)) {
+          throw new Error('les communes du titre ne sont pas chargées')
+        }
+
+        // si le type d'activité est relié au type de titre
+        if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, demarches: titre.demarches })) return acc
 
         acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 
@@ -63,7 +71,7 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
       }
       titre.titulaires?.forEach(titulaire =>
         titulaire.utilisateurs?.forEach(({ email }) => {
-          if (email) {
+          if (isNotNullNorUndefined(email)) {
             emails.add(email)
           }
         })

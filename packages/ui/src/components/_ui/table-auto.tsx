@@ -18,8 +18,8 @@ interface Props {
 }
 export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'columns', 'initialSort'], props => {
   const sort = reactive<TableSortEvent>({
-    column: props?.initialSort?.column ?? props.columns[0].id,
-    order: props?.initialSort?.order ?? 'asc',
+    colonne: props?.initialSort?.colonne ?? props.columns[0].id,
+    ordre: props?.initialSort?.ordre ?? 'asc',
   })
 
   const myRows = reactive<TableRow[]>([...props.rows])
@@ -33,25 +33,25 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
     { deep: true }
   )
   function handleChange(event: TableSortEvent) {
-    const column = props.columns.find(column => column.id === event.column)
+    const column = props.columns.find(column => column.id === event.colonne)
     let sortFunction = (row1: TableRow, row2: TableRow): number => {
-      const value1 = row1.columns[event.column].value
-      const value2 = row2.columns[event.column].value
+      const value1 = row1.columns[event.colonne].value
+      const value2 = row2.columns[event.colonne].value
       if (value1 !== undefined && value2 !== undefined) {
         if (value1 < value2) {
-          return event.order === 'asc' ? -1 : 1
+          return event.ordre === 'asc' ? -1 : 1
         }
         if (value1 > value2) {
-          return event.order === 'asc' ? 1 : -1
+          return event.ordre === 'asc' ? 1 : -1
         }
       }
 
       if (value1 !== undefined) {
-        return event.order === 'asc' ? -1 : 1
+        return event.ordre === 'asc' ? -1 : 1
       }
 
       if (value2 !== undefined) {
-        return event.order === 'asc' ? 1 : -1
+        return event.ordre === 'asc' ? 1 : -1
       }
 
       return 0
@@ -60,12 +60,12 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
       sortFunction = (row1: TableRow, row2: TableRow) => {
         const sorted = column?.sort?.(row1, row2) ?? 0
 
-        return event.order === 'asc' ? sorted : -sorted
+        return event.ordre === 'asc' ? sorted : -sorted
       }
     }
     myRows.sort(sortFunction)
-    sort.column = event.column
-    sort.order = event.order
+    sort.colonne = event.colonne
+    sort.ordre = event.ordre
   }
 
   return () => (
@@ -78,12 +78,12 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
               <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                 {col.noSort !== undefined && col.noSort ? (
                   <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
-                ) : sort.column === col.id ? (
+                ) : sort.colonne === col.id ? (
                   <a
-                    class={['fr-link', 'fr-link--icon-right', sort.order === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                    onClick={() => handleChange({ column: sort.column, order: sort.order === 'asc' ? 'desc' : 'asc' })}
-                    title={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                    aria-label={sort.order === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                    class={['fr-link', 'fr-link--icon-right', sort.ordre === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                    onClick={() => handleChange({ colonne: sort.colonne, ordre: sort.ordre === 'asc' ? 'desc' : 'asc' })}
+                    title={sort.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                    aria-label={sort.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
                     href="#!"
                   >
                     {col.name}
@@ -93,7 +93,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
                     class={['fr-link']}
                     onClick={event => {
                       event.stopPropagation()
-                      handleChange({ column: col.id, order: sort.order })
+                      handleChange({ colonne: col.id, ordre: sort.ordre })
                     }}
                     title={`Trier par la colonne ${col.name}`}
                     aria-label={`Trier par la colonne ${col.name}`}

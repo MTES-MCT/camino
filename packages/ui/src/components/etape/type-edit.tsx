@@ -157,7 +157,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
             <div class="dsfr tablet-blobs">
               <div class="tablet-blob-1-3"></div>
               <div class="mb tablet-blob-2-3">
-                <Alert type="warning" title="Il n’y a aucune étape possible à cette date." description={() => <>Veuillez modifier la date pour pouvoir choisir une étape.</>} small={true} />
+                <Alert type="warning" title="Il n’y a aucune étape possible à cette date." description="Veuillez modifier la date pour pouvoir choisir une étape." />
               </div>
             </div>
           )}

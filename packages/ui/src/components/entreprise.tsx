@@ -21,6 +21,7 @@ import { LoadingElement } from './_ui/functional-loader'
 import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const Entreprise = defineComponent({
   setup() {
@@ -32,7 +33,7 @@ export const Entreprise = defineComponent({
     watch(
       () => vueRoute.params.id,
       newRoute => {
-        if (vueRoute.name === 'entreprise' && newRoute) {
+        if (vueRoute.name === 'entreprise' && isNotNullNorUndefined(newRoute)) {
           const newEid = newEntrepriseId(vueRoute.params.id.toString())
           if (entrepriseId.value !== newEid) {
             entrepriseId.value = newEid
@@ -45,15 +46,7 @@ export const Entreprise = defineComponent({
     const apiClientRef = ref<
       Pick<
         ApiClient,
-        | 'getEtapeEntrepriseDocuments'
-        | 'getEntreprise'
-        | 'deleteEntrepriseDocument'
-        | 'getEntrepriseDocuments'
-        | 'getFiscaliteEntreprise'
-        | 'modifierEntreprise'
-        | 'creerEntreprise'
-        | 'creerEntrepriseDocument'
-        | 'uploadTempDocument'
+        'getEntreprise' | 'deleteEntrepriseDocument' | 'getEntrepriseDocuments' | 'getFiscaliteEntreprise' | 'modifierEntreprise' | 'creerEntreprise' | 'creerEntrepriseDocument' | 'uploadTempDocument'
       >
     >({
       ...apiClient,
@@ -98,15 +91,7 @@ interface Props {
   entrepriseId: EntrepriseId
   apiClient: Pick<
     ApiClient,
-    | 'getEtapeEntrepriseDocuments'
-    | 'getEntreprise'
-    | 'deleteEntrepriseDocument'
-    | 'getEntrepriseDocuments'
-    | 'getFiscaliteEntreprise'
-    | 'modifierEntreprise'
-    | 'creerEntreprise'
-    | 'creerEntrepriseDocument'
-    | 'uploadTempDocument'
+    'getEntreprise' | 'deleteEntrepriseDocument' | 'getEntrepriseDocuments' | 'getFiscaliteEntreprise' | 'modifierEntreprise' | 'creerEntreprise' | 'creerEntrepriseDocument' | 'uploadTempDocument'
   >
   user: User
   currentYear: CaminoAnnee
@@ -301,7 +286,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
               <h3>Fiscalité</h3>
               <EntrepriseFiscalite
                 getFiscaliteEntreprise={async (annee: CaminoAnnee) => {
-                  if (item.id) {
+                  if (isNotNullNorUndefined(item.id)) {
                     return props.apiClient.getFiscaliteEntreprise(annee, item.id)
                   }
 

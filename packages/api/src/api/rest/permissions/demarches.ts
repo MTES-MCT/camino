@@ -3,7 +3,7 @@ import { isSuper, isAdministration, isEntrepriseOrBureauDEtude, User } from 'cam
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { isGestionnaire, isAssociee } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId, DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 
 export type CanReadDemarche = { public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean; demarche_type_id: DemarcheTypeId }
@@ -15,10 +15,6 @@ export const canReadDemarche = async (
   titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
   entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>
 ): Promise<boolean> => {
-  if (DemarchesTypes[demarche.demarche_type_id].travaux) {
-    return false
-  }
-
   if (isSuper(user)) {
     return true
   }

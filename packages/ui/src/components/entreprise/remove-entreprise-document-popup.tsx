@@ -15,11 +15,11 @@ export const RemoveEntrepriseDocumentPopup: FunctionalComponent<Props> = props =
     <Alert
       type="warning"
       title="Attention : cette opération est définitive et ne peut pas être annulée."
-      description={() => (
+      description={
         <>
           Souhaitez vous supprimer le document <span class="fr-text--bold">{props.entrepriseDocument.nom}</span> ?
         </>
-      )}
+      }
     />
   )
 

@@ -1,0 +1,14 @@
+.travaux-icone:not(.selected) {
+  fill: var(--background-action-low-blue-france);
+}
+
+.travaux-icone:not(.selected):hover {
+  fill: var(--background-action-low-blue-france-hover) !important;
+}
+
+.selected {
+  fill: var(--background-action-high-blue-france);
+}
+.selected:hover {
+  fill: var(--background-action-high-blue-france-hover) !important;
+}

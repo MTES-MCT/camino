@@ -11,8 +11,10 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreId, TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { ApiClient } from '@/api/api-client'
 import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
-import { ButtonIcon } from '../_ui/button-icon'
-import { Button } from '../_ui/button'
+import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
+import { DsfrIcon } from '../_ui/icon'
+import { DsfrTag } from '../_ui/tag'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   user: User
@@ -20,7 +22,7 @@ export interface Props {
     id: TitreId
     typeId: TitreTypeId
     administrations: AdministrationId[]
-    demarches: { typeId: DemarcheTypeId }[]
+    demarches: { demarche_type_id: DemarcheTypeId }[]
   }
   apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'>
 }
@@ -87,6 +89,9 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
   const onSelectedTitres = (titres: TitreLink[]) => {
     selectedTitres.value = titres
   }
+  const onSelectedTitre = (titre: TitreLink | undefined) => {
+    selectedTitres.value = isNotNullNorUndefined(titre) ? [titre] : []
+  }
 
   const saveLink = async () => {
     titresLinks.value = { status: 'LOADING' }
@@ -108,6 +113,8 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
     }
   }
 
+  const closeForm = () => (mode.value = 'read')
+
   return () => (
     <div>
       <LoadingElement
@@ -115,55 +122,44 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
         renderItem={item => (
           <>
             {item.amont.length || canLink.value ? (
-              <div>
-                <h5>Titre{linkConfig.value && linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de ce titre</h5>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" />
+                Titre{item.amont.length > 1 ? 's' : ''} à l’origine de ce titre :
                 {mode.value === 'edit' ? (
-                  <div>
+                  <>
                     {titreLinkConfig.value ? (
                       <TitresLink
                         config={titreLinkConfig.value}
                         loadLinkableTitres={props.apiClient.loadLinkableTitres(props.titre.typeId, props.titre.demarches)}
-                        onSelectTitre={() => {}}
+                        onSelectTitre={onSelectedTitre}
                         onSelectTitres={onSelectedTitres}
                       />
                     ) : null}
-
-                    <div class="flex mt-m" style="flex-direction: row-reverse">
-                      <Button class="btn-primary ml-s" style="flex: 0 1 min-content" onClick={saveLink} render={() => <>Enregistrer</>} title="Enregistrer" />
-                      <Button class="btn-secondary" style="flex: 0 1 min-content" onClick={() => (mode.value = 'read')} render={() => <>Annuler</>} title="Annuler" />
-                    </div>
-                  </div>
+                    <>
+                      <DsfrButton buttonType="primary" title="Enregistrer" onClick={saveLink} />
+                      <DsfrButton buttonType="secondary" title="Annuler" onClick={closeForm} />
+                    </>
+                  </>
                 ) : (
-                  <div class="flex flex-center">
-                    <ul class="list-inline" style="margin-bottom: 0">
-                      {item.amont.map(titreFrom => (
-                        <li key={titreFrom.id} class="mr-xs">
-                          <router-link to={{ name: 'titre', params: { id: titreFrom.id } }} class="btn-border small p-s rnd-xs mr-xs">
-                            <span class="mr-xs">{titreFrom.nom}</span>
-                          </router-link>
-                        </li>
-                      ))}
-                    </ul>
+                  <div class="flex flex-center" style={{ gap: '0.5rem' }}>
+                    {item.amont.map(titreFrom => (
+                      <DsfrTag key={titreFrom.id} tagSize="sm" to={{ name: 'titre', params: { id: titreFrom.id } }} ariaLabel={titreFrom.nom} />
+                    ))}
 
-                    {canLink.value ? <ButtonIcon class="btn-alt p-xs rnd-s" title="modifier les titres liés" onClick={() => (mode.value = 'edit')} icon="pencil" /> : null}
+                    {canLink.value ? <DsfrButtonIcon buttonType="tertiary-no-outline" title="modifier les titres liés" onClick={() => (mode.value = 'edit')} icon="fr-icon-pencil-line" /> : null}
                   </div>
                 )}
               </div>
             ) : null}
 
             {item.aval.length ? (
-              <div>
-                <h5>Titre{item.aval.length > 1 ? 's' : ''} issu de ce titre</h5>
-                <div class="flex flex-center">
-                  <ul class="list-inline" style="margin-bottom: 0">
-                    {item.aval.map(titreTo => (
-                      <li key={titreTo.id} class="mr-xs">
-                        <router-link to={{ name: 'titre', params: { id: titreTo.id } }} class="btn-border small p-s rnd-xs mr-xs">
-                          <span class="mr-xs">{titreTo.nom}</span>
-                        </router-link>
-                      </li>
-                    ))}
-                  </ul>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <DsfrIcon name="fr-icon-link" size="sm" color="text-title-blue-france" />
+                Titre{item.aval.length > 1 ? 's' : ''} issu de ce titre :
+                <div class="flex flex-center" style={{ gap: '0.5rem' }}>
+                  {item.aval.map(titreTo => (
+                    <DsfrTag key={titreTo.id} tagSize="sm" to={{ name: 'titre', params: { id: titreTo.id } }} ariaLabel={titreTo.nom} />
+                  ))}
                 </div>
               </div>
             ) : null}

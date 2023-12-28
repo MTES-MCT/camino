@@ -30,7 +30,6 @@ const getEntrepriseDocumentsAction = action('getEntrepriseDocuments')
 const getEntrepriseAction = action('getEntreprise')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const deleteEntrepriseDocumentAction = action('deleteEntrepriseDocument')
-const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
 
 const annee = toCaminoAnnee('2023')
@@ -73,21 +72,8 @@ const entreprise: EntrepriseType = {
 
 const apiClient: Pick<
   ApiClient,
-  | 'getEtapeEntrepriseDocuments'
-  | 'getEntreprise'
-  | 'deleteEntrepriseDocument'
-  | 'getEntrepriseDocuments'
-  | 'getFiscaliteEntreprise'
-  | 'modifierEntreprise'
-  | 'creerEntreprise'
-  | 'creerEntrepriseDocument'
-  | 'uploadTempDocument'
+  'getEntreprise' | 'deleteEntrepriseDocument' | 'getEntrepriseDocuments' | 'getFiscaliteEntreprise' | 'modifierEntreprise' | 'creerEntreprise' | 'creerEntrepriseDocument' | 'uploadTempDocument'
 > = {
-  getEtapeEntrepriseDocuments: etapeId => {
-    getEtapeEntrepriseDocumentsAction(etapeId)
-
-    return Promise.resolve(entrepriseDocuments)
-  },
   getEntreprise: entrepriseId => {
     getEntrepriseAction(entrepriseId)
 

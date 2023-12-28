@@ -34,9 +34,12 @@ export const Icon: FunctionalComponent<Props> = (props: Props): JSX.Element => {
 
 export type DsfrIconProps = {
   name: DsfrIconType
+  size?: 'sm' | 'md' | 'lg'
   color?: 'text-title-blue-france'
-}
+} & Pick<HTMLAttributes, 'class'>
 
 export const DsfrIcon: FunctionalComponent<DsfrIconProps> = (props): JSX.Element => {
-  return <span class={props.name} aria-hidden="true" style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
+  const iconClass = props.size ? `fr-icon--${props.size}` : null
+
+  return <span class={[props.name, iconClass]} aria-hidden="true" style={{ color: isNotNullNorUndefined(props.color) ? `var(--${props.color})` : '' }} />
 }

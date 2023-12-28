@@ -9,6 +9,9 @@ export const canAdministrationModifyEtapes = (administrationId: AdministrationId
 export const canAdministrationModifyDemarches = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   return !restrictions(administrationId, titreTypeId, titreStatutId).demarchesModificationInterdit
 }
+export const canAdministrationModifyTitres = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
+  return !restrictions(administrationId, titreTypeId, titreStatutId).titresModificationInterdit
+}
 
 const restrictions = (
   administrationId: AdministrationId,

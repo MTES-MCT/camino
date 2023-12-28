@@ -8,23 +8,24 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { entreprisesUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
-import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import type { Pool } from 'pg'
-import { createJournalCreate } from '../../database/queries/journaux.js'
-import { idGenerate, newTitreId } from '../../database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import { TitreId, titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
+import TitresDemarches from '../../database/models/titres-demarches.js'
+import TitresEtapes from '../../database/models/titres-etapes.js'
+import Titres from '../../database/models/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 let dbPool: Pool
-let titreId1: TitreId | null = null
 beforeAll(async () => {
   const { knex: knexInstance, pool } = await dbManager.populateDb()
   dbPool = pool
@@ -42,7 +43,7 @@ beforeAll(async () => {
     {}
   )
 
-  titreId1 = await createTitreWithEtapes(
+  await createTitreWithEtapes(
     'titre1',
     [
       {
@@ -387,12 +388,6 @@ describe('titreSupprimer', () => {
 })
 
 describe('getTitre', () => {
-  test('ne peut pas récupérer un titre (utilisateur non super)', async () => {
-    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: newTitreId('not existing') }, undefined)
-
-    expect(tested.statusCode).toBe(403)
-  })
-
   test('ne peut pas récupérer un titre inexistant', async () => {
     const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: newTitreId('not existing') }, userSuper)
 
@@ -400,92 +395,138 @@ describe('getTitre', () => {
   })
 
   test('peut récupérer un titre', async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon nouveau titre',
-        typeId: 'arm',
-        titreStatutId: 'ind',
-        slug: titreSlugValidator.parse('arm-slug'),
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
+    const titreId = newTitreId('other-titre-id')
+    await Titres.query().insert({
+      id: titreId,
+      nom: 'mon nouveau titre',
+      typeId: 'arm',
+      titreStatutId: 'ind',
+      slug: titreSlugValidator.parse('arm-slug'),
+      propsTitreEtapesIds: {},
+    })
 
-    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, userSuper)
+    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId }, userSuper)
 
     expect(tested.statusCode).toBe(200)
-    expect(tested.body).toEqual({
-      id: titre.id,
-      type_id: 'arm',
-      slug: titreSlugValidator.parse('arm-slug'),
-      nom: 'mon nouveau titre',
-      titre_statut_id: 'ind',
-      administrations_locales: [],
-    })
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "demarches": [],
+        "id": "other-titre-id",
+        "nb_activites_to_do": null,
+        "nom": "mon nouveau titre",
+        "references": [],
+        "slug": "arm-slug",
+        "titre_doublon": null,
+        "titre_last_modified_date": null,
+        "titre_statut_id": "ind",
+        "titre_type_id": "arm",
+      }
+    `)
   })
   test('peut récupérer un titre avec des administrations locales', async () => {
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        typeId: 'arm',
-        slug: titreSlugValidator.parse('slug'),
-        titreStatutId: 'val',
-        propsTitreEtapesIds: {},
-      },
-      {}
-    )
-
-    const titreDemarche = await titreDemarcheCreate({
-      titreId: titre.id,
-      typeId: 'oct',
-    })
-
-    const etapesCrees = await titreEtapesCreate(titreDemarche, [
-      {
-        typeId: 'mfr',
-        statutId: 'fai',
-        date: toCaminoDate('2022-01-01'),
-        ordre: 0,
-        administrationsLocales: ['aut-97300-01', 'aut-mrae-guyane-01'],
-      },
-    ])
-
-    await titreUpdate(titre.id, { propsTitreEtapesIds: { points: etapesCrees[0].id } })
-
-    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId: titre.id }, userSuper)
-
-    expect(tested.statusCode).toBe(200)
-    expect(tested.body).toEqual({
-      id: titre.id,
-      type_id: 'arm',
-      slug: titreSlugValidator.parse('slug'),
+    const titreId = newTitreId('titre-id')
+    await Titres.query().insert({
+      id: titreId,
       nom: 'mon titre',
-      titre_statut_id: 'val',
-      administrations_locales: ['aut-97300-01', 'aut-mrae-guyane-01'],
-    })
-  })
-})
-
-test('getTitreDate', async () => {
-  const titre = await titreCreate(
-    {
-      nom: 'mon autre titre',
       typeId: 'arm',
       slug: titreSlugValidator.parse('slug'),
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
-    },
-    {}
-  )
+    })
 
-  let tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
+    const demarcheId = newDemarcheId('demarche-id')
+    await TitresDemarches.query().insert({
+      id: demarcheId,
+      titreId,
+      typeId: 'oct',
+    })
 
-  expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
-  await createJournalCreate(idGenerate(), userSuper.id, titre.id)
+    const etapeId = newEtapeId('titre-etape-id')
+    await TitresEtapes.query().insert({
+      id: etapeId,
+      titreDemarcheId: demarcheId,
+      typeId: 'mfr',
+      statutId: 'fai',
+      date: toCaminoDate('2022-01-01'),
+      ordre: 0,
+      administrationsLocales: ['aut-97300-01', 'aut-mrae-guyane-01'],
+    })
 
-  tested = await restCall(dbPool, '/rest/titres/:titreId/date', { titreId: titre.id }, userSuper)
+    await titreUpdate(titreId, { propsTitreEtapesIds: { points: etapeId } })
 
-  expect(tested.body).toBe(getCurrent())
+    const tested = await restCall(dbPool, '/rest/titres/:titreId', { titreId }, userSuper)
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "demarches": [
+          {
+            "demarche_date_debut": null,
+            "demarche_date_fin": null,
+            "demarche_statut_id": "ind",
+            "demarche_type_id": "oct",
+            "description": null,
+            "etapes": [
+              {
+                "date": "2022-01-01",
+                "decisions_annexes_contenu": null,
+                "decisions_annexes_sections": null,
+                "documents": [],
+                "entreprises_documents": [],
+                "etape_statut_id": "fai",
+                "etape_type_id": "mfr",
+                "fondamentale": {
+                  "amodiataires": null,
+                  "date_debut": null,
+                  "date_fin": null,
+                  "duree": null,
+                  "perimetre": null,
+                  "substances": [],
+                  "titulaires": null,
+                },
+                "id": "titre-etape-id",
+                "sections_with_values": [
+                  {
+                    "elements": [
+                      {
+                        "description": "",
+                        "id": "mecanise",
+                        "nom": "Prospection mécanisée",
+                        "type": "radio",
+                        "value": null,
+                      },
+                      {
+                        "description": "Nombre de franchissements de cours d'eau",
+                        "id": "franchissements",
+                        "nom": "Franchissements de cours d'eau",
+                        "optionnel": true,
+                        "type": "integer",
+                        "value": null,
+                      },
+                    ],
+                    "id": "arm",
+                    "nom": "Caractéristiques ARM",
+                  },
+                ],
+                "slug": "demarche-id-mfr99",
+              },
+            ],
+            "id": "demarche-id",
+            "slug": "titre-id-oct99",
+          },
+        ],
+        "id": "titre-id",
+        "nb_activites_to_do": null,
+        "nom": "mon titre",
+        "references": [],
+        "slug": "slug",
+        "titre_doublon": null,
+        "titre_last_modified_date": null,
+        "titre_statut_id": "val",
+        "titre_type_id": "arm",
+      }
+    `)
+  })
 })
 
 test('utilisateurTitreAbonner', async () => {
@@ -503,15 +544,4 @@ test('utilisateurTitreAbonner', async () => {
   const tested = await restPostCall(dbPool, '/rest/titres/:titreId/abonne', { titreId: titre.id }, userSuper, { abonne: true })
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
-})
-
-test('peut récupérer les communes d’un titre', async () => {
-  let tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, userSuper)
-
-  expect(tested.statusCode).toBe(200)
-  expect(tested.body).toEqual([{ id: '97300', nom: 'Une ville en Guyane' }])
-
-  tested = await restCall(dbPool, '/rest/titres/:id/communes', { id: newTitreId(titreId1 ?? '') }, undefined)
-
-  expect(tested.statusCode).toBe(403)
 })

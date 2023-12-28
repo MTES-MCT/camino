@@ -125,11 +125,11 @@ export const PureONFDashboard = caminoDefineComponent<Props>(['apiClient'], prop
           {onfTitresBloques.value.length > 0 ? (
             <>
               <div class="line-neutral width-full mb-l"></div>
-              <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ column: initialColumnId, order: 'asc' }} />
+              <TableAuto caption="ARM en attente" class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} />
             </>
           ) : null}
           <div class="line-neutral width-full mb-l"></div>
-          <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={onfTitres.value} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+          <TableAuto caption="ARM en cours d’instruction" columns={columns} rows={onfTitres.value} initialSort={{ colonne: initialColumnId, ordre: 'asc' }} class="width-full-p" />
         </div>
       ) : null}
 

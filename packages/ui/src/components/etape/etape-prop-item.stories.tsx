@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapePropEntreprisesItem, EtapePropItem } from './etape-prop-item'
+import { EtapePropEntreprisesItem, EtapePropItem, EtapePropAdministrationsItem } from './etape-prop-item'
 import { Domaine } from '../_common/domaine'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { vueRouter } from 'storybook-vue3-router'
@@ -7,7 +7,7 @@ import { vueRouter } from 'storybook-vue3-router'
 const meta: Meta = {
   title: 'Components/Etape/PropItem',
   component: EtapePropItem,
-  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'entreprise' }])],
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'entreprise' }, { name: 'administration' }])],
 }
 export default meta
 
@@ -29,3 +29,8 @@ export const WithMultipleEntreprises: StoryFn = () => (
   />
 )
 export const WithNoEntreprise: StoryFn = () => <EtapePropEntreprisesItem title="Titulaire" entreprises={[]} />
+
+export const WithOneAdministration: StoryFn = () => <EtapePropAdministrationsItem administrations={['aut-mrae-guyane-01']} />
+
+export const WithMultipleAdministrations: StoryFn = () => <EtapePropAdministrationsItem administrations={['aut-97300-01', 'aut-mrae-guyane-01']} />
+export const WithNoAdministration: StoryFn = () => <EtapePropAdministrationsItem administrations={[]} />
