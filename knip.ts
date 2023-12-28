@@ -2,6 +2,24 @@ const compiler = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
 
 const config = {
   "ignore": ["babel.config.js", ".history", "packages/api/knexfile.ts", "**/knex/migrations/*", "packages/api/src/knex/migration-stub.ts", "packages/api/src/knex/seeding.ts", "packages/api/src/knex/seeds/**", "packages/common/src/**/*.test.ts", "packages/api/src/tools/phases/tests-creation.ts", "packages/ui/src/__mocks__/setupVitest.js"],
+  "ignoreBinaries": [
+  "eslint",
+  "prettier",
+  "createdb",
+  "dropdb",
+  "npm-check-updates",
+  "pg_dump",
+  "pg_restore",
+  "pgtyped-config.ci.json",
+  "pgtyped-config.json",
+  "scp",
+  "ssh",
+  "tar",
+  "eslint",
+  "npm-check-updates",
+  "ts-node",
+  ],
+
   "workspaces": {
     ".": {
       ignoreDependencies: [
@@ -16,7 +34,7 @@ const config = {
       ignoreDependencies: [
         // TODO 2023-12-28 ces dépendances semblent être "shadow" par les définitions bourrines .d.ts qu'on a mise
         "geojson-rewind", "graphql-fields", "graphql-scalars", "html-to-text", "matomo-tracker",
-        "@vitest/coverage-v8"
+        "@vitest/coverage-v8", "@pgtyped/cli"
       ]
     },
     "packages/common": {

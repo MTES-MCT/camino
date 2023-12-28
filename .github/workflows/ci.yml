@@ -8,6 +8,20 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 jobs:
+  deadcode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9'
+          cache: 'npm'
+      - name: Install
+        run:  make install
+      - name: Lint
+        run: make lint/detect-dead-code
   ui:
     uses: ./.github/workflows/ui.yml
     secrets:
