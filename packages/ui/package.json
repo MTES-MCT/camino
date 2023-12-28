@@ -25,6 +25,7 @@
     "@gouvfr/dsfr": "^1.10.2",
     "@rollup/plugin-inject": "^5.0.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@sentry/browser": "^7.56.0",
     "@sentry/tracing": "^7.56.0",
     "@sentry/vue": "^7.56.0",
     "@storybook/addon-actions": "^7.0.22",
@@ -52,6 +53,7 @@
     "babel-loader": "^9.1.2",
     "babel-plugin-graphql-tag": "^3.3.0",
     "babel-preset-vite": "^1.1.0",
+    "camino-common": "1.0.0",
     "chart.js": "^4.3.0",
     "core-js": "^3.31.0",
     "dotenv": "^16.3.1",
@@ -75,6 +77,7 @@
     "leaflet.markercluster": "^1.5.3",
     "maplibre-gl": "^3.6.2",
     "postcss": "^8.4.24",
+    "postcss-custom-media": "^9.1.4",
     "postcss-preset-env": "^8.5.0",
     "prettier": "^2.8.8",
     "rollup-plugin-visualizer": "^5.9.3",
@@ -86,8 +89,6 @@
     "vitest": "^0.34.6",
     "vitest-fetch-mock": "^0.2.2",
     "vue": "^3.3.4",
-    "vue-loader": "^17.2.2",
-    "vue-meta": "^2.4.0",
     "vue-router": "^4.2.2",
     "vue-tsc": "^1.8.1",
     "vuex": "^4.1.0",
@@ -113,7 +114,9 @@
       "standard",
       "prettier"
     ],
-    "ignorePatterns": ["!.storybook"],
+    "ignorePatterns": [
+      "!.storybook"
+    ],
     "rules": {
       "camelcase": 0,
       "vue/no-mutating-props": 0,
