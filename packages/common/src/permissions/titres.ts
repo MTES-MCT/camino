@@ -6,11 +6,12 @@ import { isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { CommuneId } from '../static/communes.js'
 import { ActivitesTypesId, sortedActivitesTypes } from '../static/activitesTypes.js'
 import { activitesTypesTitresTypes } from '../static/activitesTypesTitresTypes.js'
-import { Departements, toDepartementId } from '../static/departement.js'
-import { Regions } from '../static/region.js'
 import { activitesTypesPays } from '../static/activitesTypesPays.js'
 import { canAdministrationModifyTitres } from '../static/administrationsTitresTypesTitresStatuts.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
+import { territoiresIdFind } from '../territoires.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from '../typescript-tools.js'
+import { SecteursMaritimes } from '../static/facades.js'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {
@@ -83,8 +84,8 @@ export const canDeleteTitre = (user: User): boolean => isSuper(user)
 
 interface TitreReduced {
   titreTypeId: TitreTypeId
-  // FIXME 2023-12-20 il faudrait ajouter les façades maritimes (impact sur le daily ?)
   communes: { id: CommuneId }[]
+  secteursMaritime: SecteursMaritimes[]
   demarches: unknown[]
 }
 /**
@@ -110,17 +111,13 @@ export const canHaveActiviteTypeId = (activiteTypeId: ActivitesTypesId, titre: T
   }
 
   if (activitesTypesTitresTypes[activiteTypeId].some(titreTypeId => titreTypeId === titre.titreTypeId)) {
-    const titrePaysIds = titre.communes
-      ?.map(({ id }) => toDepartementId(id))
-      .map(departementId => Departements[departementId].regionId)
-      .map(regionId => Regions[regionId].paysId)
-
+    const territoires = territoiresIdFind(titre.communes, titre.secteursMaritime)
     const pays = activitesTypesPays[activiteTypeId]
 
     return (
       // et que le type d'activité n'est relié à aucun pays
       // ou que le type d'activite est relié à l'un des pays du titre
-      !pays.length || (!!titrePaysIds?.length && pays.some(paysId => titrePaysIds.some(titrePaysId => paysId === titrePaysId)))
+      isNullOrUndefinedOrEmpty(pays) || (isNotNullNorUndefinedNorEmpty(territoires.pays) && pays.some(paysId => territoires.pays.some(titrePaysId => paysId === titrePaysId)))
     )
   }
 

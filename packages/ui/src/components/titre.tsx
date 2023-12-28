@@ -37,6 +37,7 @@ import { getAdministrationsLocales } from 'camino-common/src/administrations'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
+import { SecteursMaritimes } from 'camino-common/src/static/facades'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -161,7 +162,7 @@ export const PureTitre = defineComponent<Props>(props => {
         const titre = titreData.value.value
 
         showActivitesLink.value =
-          canHaveActivites({ titreTypeId: titreData.value.value.titre_type_id, communes: communes.value, demarches: titreData.value.value.demarches }) &&
+          canHaveActivites({ titreTypeId: titreData.value.value.titre_type_id, communes: communes.value, secteursMaritime: secteursMaritime.value, demarches: titreData.value.value.demarches }) &&
           (await canReadTitreActivites(
             props.user,
             () => Promise.resolve(titre.titre_type_id),
@@ -231,6 +232,14 @@ export const PureTitre = defineComponent<Props>(props => {
   const communes = computed<{ id: CommuneId }[]>(() => {
     if (perimetre.value !== null) {
       return perimetre.value.communes
+    }
+
+    return []
+  })
+
+  const secteursMaritime = computed<SecteursMaritimes[]>(() => {
+    if (perimetre.value !== null) {
+      return perimetre.value.secteurs_maritimes
     }
 
     return []

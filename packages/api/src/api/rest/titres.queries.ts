@@ -223,7 +223,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     let nb_activites_to_do: number | null = null
 
     if (
-      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches }) &&
+      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches, secteursMaritime: perimetre?.secteurs_maritimes ?? [] }) &&
       (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
       nb_activites_to_do = titre.nb_activites_to_do

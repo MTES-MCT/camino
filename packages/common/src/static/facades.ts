@@ -145,7 +145,7 @@ export const getFacadesComputed = (secteursMaritime: SecteursMaritimes[]): Facad
   }, [])
 }
 
-const getFacade = (secteurMaritime: SecteursMaritimes): FacadesMaritimes => {
+export const getFacade = (secteurMaritime: SecteursMaritimes): FacadesMaritimes => {
   const facade = getKeys(facades, isFacade).find(facade => Object.keys(facades[facade]).includes(secteurMaritime))
   assertsFacade(facade)
 
