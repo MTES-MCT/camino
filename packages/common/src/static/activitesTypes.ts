@@ -4,9 +4,9 @@ import { Section, SectionElement } from './titresTypes_demarchesTypes_etapesType
 import { DeepReadonly } from '../typescript-tools.js'
 import { z } from 'zod'
 
-export const ActivitesTypesIds = ['gra', 'grp', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp'] as const
+const IDS = ['gra', 'grp', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp'] as const
 
-export const activiteTypeIdValidator = z.enum(ActivitesTypesIds)
+export const activiteTypeIdValidator = z.enum(IDS)
 
 export type ActivitesTypesId = z.infer<typeof activiteTypeIdValidator>
 

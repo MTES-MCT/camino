@@ -223,20 +223,6 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
           leafletComponentOnMounted.addLayer(geojsonLayer)
           hasGeojsonLayer = true
         }
-        // TODO 2023-11-27 Pierre-Olivier souhaite ça mais ça casse la home page,
-        // exemple http://localhost:4180/demarches/m-ar-abattis-kotika-2006-oct01
-        // on le fait ou pas ? Nouvelle map ? Maplibre ?
-        // if (leafletComponentOnMounted.getZoom() <= displayMarkersZoomMaxLevel) {
-        //   if (hasMarkersLayer) {
-        //     controlLayers.removeLayer(markerLayer)
-        //     leafletComponentOnMounted.removeLayer(markerLayer)
-        //     hasMarkersLayer = false
-        //   }
-        // } else if (!hasMarkersLayer) {
-        //   controlLayers.addOverlay(markerLayer, 'Points')
-        //   leafletComponentOnMounted.addLayer(markerLayer)
-        //   hasMarkersLayer = true
-        // }
       })
       leafletComponentOnMounted.on('moveend', () => {
         if (updateBboxOnly.value) {

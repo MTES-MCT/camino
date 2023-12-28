@@ -121,10 +121,6 @@ export const newEntrepriseId = (value: string): EntrepriseId => {
   return entrepriseIdValidator.parse(value)
 }
 
-export const toDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId, hash: string): DocumentId => {
-  return documentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
-}
-
 export const toEntrepriseDocumentId = (date: CaminoDate, documentTypeId: DocumentTypeId, hash: string): EntrepriseDocumentId => {
   return entrepriseDocumentIdValidator.parse(`${date}-${documentTypeId}-${hash}`)
 }

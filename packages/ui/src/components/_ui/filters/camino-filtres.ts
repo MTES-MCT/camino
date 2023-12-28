@@ -1,7 +1,7 @@
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 
 const caminoEtapesFiltresArrayIds = ['etapesInclues', 'etapesExclues'] as const
-export const caminoEtapesFiltres = [caminoFiltres.etapesInclues, caminoFiltres.etapesExclues] as const satisfies readonly { type: 'etape' }[]
+const caminoEtapesFiltres = [caminoFiltres.etapesInclues, caminoFiltres.etapesExclues] as const satisfies readonly { type: 'etape' }[]
 export type EtapeCaminoFiltres = (typeof caminoEtapesFiltres)[number]['id']
 export const isEtapeCaminoFiltre = (value: CaminoFiltre): value is EtapeCaminoFiltres => caminoEtapesFiltresArrayIds.includes(value)
 

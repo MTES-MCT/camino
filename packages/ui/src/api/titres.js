@@ -3,19 +3,6 @@ import { apiGraphQLFetch } from './_client'
 
 import { fragmentTitres } from './fragments/titre'
 
-export const titresMetas = apiGraphQLFetch(
-  gql`
-    query TitresMetas {
-      entreprises {
-        elements {
-          id
-          nom
-        }
-      }
-    }
-  `
-)
-
 export const titres = apiGraphQLFetch(
   gql`
     query Titres(
@@ -79,11 +66,3 @@ export const titresRechercherByReferences = apiGraphQLFetch(
   `,
   'titresRechercherByReferences'
 )
-
-export const titreCreer = apiGraphQLFetch(gql`
-  mutation TitreCreer($titre: InputTitreCreation!) {
-    titreCreer(titre: $titre) {
-      slug
-    }
-  }
-`)

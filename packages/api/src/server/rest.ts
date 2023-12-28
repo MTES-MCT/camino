@@ -79,7 +79,7 @@ type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route>
   (Route extends NewDownloadRestRoutes ? { newDownload: NewDownload } : {}) &
   (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
-export const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
+const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
   const config: CaminoConfig = {
     sentryDsn: process.env.SENTRY_DSN,
     caminoStage: process.env.CAMINO_STAGE,

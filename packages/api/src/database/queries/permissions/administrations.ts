@@ -12,7 +12,7 @@ import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/stati
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getAdministrationTitresTypesTitresStatuts } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts.js'
 
-const administrationsQueryModify = (
+export const administrationsQueryModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
   user: User
 ): QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]> => {
@@ -33,7 +33,7 @@ const administrationsLocalesModify = (q: QueryBuilder<AdministrationsModel, Admi
   q.joinRaw(`left join titres_etapes as t_e on t_e.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`)
 }
 
-const administrationsTitresQuery = (
+export const administrationsTitresQuery = (
   administrationId: AdministrationId,
   titreAlias: string,
   { isGestionnaire, isAssociee, isLocale }: { isGestionnaire?: boolean; isAssociee?: boolean; isLocale?: boolean } = {}
@@ -74,7 +74,7 @@ const administrationsTitresQuery = (
   return q
 }
 
-const administrationsTitresTypesTitresStatutsModify = (
+export const administrationsTitresTypesTitresStatutsModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
   type: 'titres' | 'demarches' | 'etapes',
   titreAlias: string,
@@ -97,7 +97,7 @@ const administrationsTitresTypesTitresStatutsModify = (
 
 // l'utilisateur est dans au moins une administration
 // qui n'a pas de restriction 'creationInterdit' sur ce type d'étape / type de titre
-const administrationsTitresTypesEtapesTypesModify = (
+export const administrationsTitresTypesEtapesTypesModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
   type: 'lecture' | 'modification' | 'creation',
   titreTypeIdColumn: string,
@@ -110,5 +110,3 @@ const administrationsTitresTypesEtapesTypesModify = (
     q.whereNot(b => restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', [titreTypeIdColumn, r.titreTypeId])).where(knex.raw('?? = ?', [etapeTypeIdColumn, r.etapeTypeId])))))
   }
 }
-
-export { administrationsQueryModify, administrationsLocalesModify, administrationsTitresTypesTitresStatutsModify, administrationsTitresTypesEtapesTypesModify, administrationsTitresQuery }

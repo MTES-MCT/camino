@@ -1,4 +1,4 @@
-import { Transaction, QueryBuilder, RawBuilder, raw } from 'objection'
+import { QueryBuilder, RawBuilder, raw } from 'objection'
 
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, IFields, Index } from '../../types.js'
@@ -141,7 +141,7 @@ const titresDemarchesQueryBuild = ({ fields }: { fields?: IFields }, user: User)
   return q
 }
 
-const titresDemarchesCount = async (
+export const titresDemarchesCount = async (
   {
     typesIds,
     statutsIds,
@@ -213,7 +213,7 @@ const titresDemarchesColonnes = {
   statut: { id: 'titresDemarches.statutId' },
 } as Index<IColonne<string | RawBuilder>>
 
-const titresDemarchesGet = async (
+export const titresDemarchesGet = async (
   {
     intervalle,
     page,
@@ -313,7 +313,7 @@ const titresDemarchesGet = async (
   return q
 }
 
-const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: IFields }, user: User) => {
+export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: IFields }, user: User) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   return q
@@ -329,16 +329,11 @@ const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: 
  * @param titreDemarche - démarche à créer
  * @returns la nouvelle démarche
  */
-const titreDemarcheCreate = async (titreDemarche: Omit<ITitreDemarche, 'id'>): Promise<ITitreDemarche> => TitresDemarches.query().insertAndFetch(titreDemarche)
+export const titreDemarcheCreate = async (titreDemarche: Omit<ITitreDemarche, 'id'>): Promise<ITitreDemarche> => TitresDemarches.query().insertAndFetch(titreDemarche)
 
-const titreDemarcheDelete = async (id: string, trx?: Transaction) => TitresDemarches.query(trx).deleteById(id).withGraphFetched(options.titresDemarches.graph).returning('*')
-
-const titreDemarcheUpdate = async (id: DemarcheId, titreDemarche: Partial<DBTitresDemarches>): Promise<TitresDemarches> => {
+export const titreDemarcheUpdate = async (id: DemarcheId, titreDemarche: Partial<DBTitresDemarches>): Promise<TitresDemarches> => {
   return TitresDemarches.query().patchAndFetchById(id, { ...titreDemarche, id })
 }
-
-const titreDemarcheUpsert = async (titreDemarche: ITitreDemarche, trx?: Transaction) =>
-  TitresDemarches.query(trx).upsertGraph(titreDemarche, options.titresDemarches.update).withGraphFetched(options.titresDemarches.graph).returning('*')
 
 export const titreDemarcheArchive = async (id: string) => {
   // archive la démarche
@@ -347,5 +342,3 @@ export const titreDemarcheArchive = async (id: string) => {
   // archive les étapes de la démarche
   await TitresEtapes.query().patch({ archive: true }).whereIn('titreDemarcheId', TitresDemarches.query().select('id').where('id', id))
 }
-
-export { titresDemarchesGet, titresDemarchesCount, titreDemarcheGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheUpsert, titreDemarcheDelete }

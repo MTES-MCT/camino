@@ -7,7 +7,7 @@ export const FREQUENCES_IDS = {
   TRIMESTRIEL: 'tri',
 } as const satisfies Record<string, (typeof IDS)[number]>
 
-export const frequenceIdValidator = z.enum(IDS)
+const frequenceIdValidator = z.enum(IDS)
 export type FrequenceId = z.infer<typeof frequenceIdValidator>
 
 interface Definition<T> {

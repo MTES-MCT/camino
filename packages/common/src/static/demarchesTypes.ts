@@ -24,7 +24,7 @@ const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof D
 }
 
 // prettier-ignore
-export const DemarchesTypesIds = ['amo', 'aom', 'ces', 'con', 'dam', 'dec', 'dep', 'dot', 'exp', 'exs', 'fus', 'mut', 'oct', 'pr1', 'pr2', 'pre', 'pro', 'prr', 'ren', 'res', 'ret', 'vct', 'vut',] as const
+const IDS = ['amo', 'aom', 'ces', 'con', 'dam', 'dec', 'dep', 'dot', 'exp', 'exs', 'fus', 'mut', 'oct', 'pr1', 'pr2', 'pre', 'pro', 'prr', 'ren', 'res', 'ret', 'vct', 'vut',] as const
 
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
@@ -50,9 +50,9 @@ export const DEMARCHES_TYPES_IDS = {
   Retrait: 'ret',
   DemandeDeTitreDExploitation: 'vct',
   MutationPartielle: 'vut',
-} as const satisfies Record<string, (typeof DemarchesTypesIds)[number]>
+} as const satisfies Record<string, (typeof IDS)[number]>
 
-export const demarcheTypeIdValidator = z.enum(DemarchesTypesIds)
+export const demarcheTypeIdValidator = z.enum(IDS)
 export type DemarcheTypeId = z.infer<typeof demarcheTypeIdValidator>
 
 export const DemarchesTypes = {
@@ -276,7 +276,7 @@ type FilterSettings<S extends (typeof DemarchesTypes)[keyof typeof DemarchesType
 
 export type TravauxIds = FilterSettings
 
-export const isDemarcheTypeId = (demarcheTypeId: string | undefined | null): demarcheTypeId is DemarcheTypeId => DemarchesTypesIds.includes(demarcheTypeId)
+export const isDemarcheTypeId = (demarcheTypeId: string | undefined | null): demarcheTypeId is DemarcheTypeId => IDS.includes(demarcheTypeId)
 
 export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean => {
   const demarchesTypesOctroi: DemarcheTypeId[] = [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.MutationPartielle, DEMARCHES_TYPES_IDS.Fusion, DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]
@@ -284,7 +284,7 @@ export const isDemarcheTypeOctroi = (demarcheTypeId: DemarcheTypeId): boolean =>
   return demarchesTypesOctroi.includes(demarcheTypeId)
 }
 
-export const demarchesTypesWithPhasesAndWithoutDateFin: DemarcheTypeId[] = [
+const demarchesTypesWithPhasesAndWithoutDateFin: DemarcheTypeId[] = [
   DEMARCHES_TYPES_IDS.Prolongation,
   DEMARCHES_TYPES_IDS.Prolongation1,
   DEMARCHES_TYPES_IDS.Prolongation2,

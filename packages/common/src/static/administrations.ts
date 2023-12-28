@@ -18,8 +18,6 @@ export const administrationTypeIdValidator = z.enum(ADMINISTRATION_TYPE_IDS_ARRA
 
 export type AdministrationTypeId = z.infer<typeof administrationTypeIdValidator>
 
-export const isAdministrationTypeId = (value: string): value is AdministrationTypeId => administrationTypeIdValidator.safeParse(value).success
-
 export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, 'description'>
 export const ADMINISTRATION_TYPES: {
   [key in AdministrationTypeId]: AdministrationType<key>

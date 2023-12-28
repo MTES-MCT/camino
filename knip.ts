@@ -42,7 +42,7 @@ const config = {
     },
     "packages/ui": {
       "entry": "src/index.ts",
-      "project": ["src/**/*.ts(x)", "src/**/*.js"],
+      "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js"],
       ignoreDependencies: ["@vitest/coverage-v8",
       "@babel/eslint-parser",
       "@babel/preset-env",
@@ -50,9 +50,6 @@ const config = {
       "@storybook/addon-styling",
       "@storybook/builder-vite",
       "@storybook/testing-library",
-      "@types/leaflet.markercluster",
-      "@uppy/core",
-      "@uppy/tus",
       "@vue/eslint-config-prettier",
       "@vue/eslint-config-standard",
       "babel-core",
@@ -61,9 +58,6 @@ const config = {
       "babel-preset-vite",
       "core-js",
       "eslint-plugin-node",
-      "leaflet-fullscreen",
-      "leaflet-gesture-handling",
-      "leaflet.markercluster",
       "vitest-fetch-mock",
       "node"
     ]

@@ -15,7 +15,7 @@ export type EtapeId = z.infer<typeof etapeIdValidator>
 export const etapeSlugValidator = z.string().brand<'EtapeSlug'>()
 export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 
-export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
+const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
 export type HeritageProp<T> =

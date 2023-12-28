@@ -117,16 +117,6 @@ export const TDEEntrepriseDocumentsTypesMetas = Object.keys(TDEEntrepriseDocumen
     })
   })
 
-export const toEntrepriseDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: EntrepriseDocumentTypeId; optionnel: boolean; description: string | null }[] => {
-  return Object.entries(EtapesTypesEntrepriseDocumentsTypes).flatMap(([key, values]) => {
-    if (isEtapeTypeId(key)) {
-      return values.map(value => ({ etapeTypeId: key, documentTypeId: value, description: null, optionnel: true }))
-    } else {
-      return []
-    }
-  })
-}
-
 export const getEntrepriseDocuments = (titreTypeId?: TitreTypeId, demarcheTypeId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): EntrepriseDocumentType[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheTypeId) && isNotNullNorUndefined(etapeTypeId)) {
     const documentsIds: EntrepriseDocumentTypeId[] = []

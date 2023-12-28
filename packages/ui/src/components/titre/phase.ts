@@ -5,9 +5,8 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { isEtapeStatusOk } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, OmitDistributive, onlyUnique } from 'camino-common/src/typescript-tools'
-import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
+import { DemarcheSlug } from 'camino-common/src/demarche'
 import { isTravaux } from 'camino-common/src/static/demarchesTypes'
-import { ErrorTypes } from 'vue-router'
 
 export type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
 export type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }

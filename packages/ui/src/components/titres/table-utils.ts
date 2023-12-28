@@ -45,7 +45,7 @@ export const nomColumn: Column<'nom'> = {
   id: 'nom',
   name: 'Nom',
 }
-export const domaineColumn: Column<'domaine'> = {
+const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
   name: '',
 }
@@ -54,25 +54,13 @@ export const typeColumn: Column<'type'> = {
   name: 'Type',
 }
 
-export const activiteColumn: Column<'activites'> = {
+const activiteColumn: Column<'activites'> = {
   id: 'activites',
   name: 'Activités',
   noSort: true,
 }
 
-export const activiteAutoColumn: AutoColumn<'activites'> = {
-  ...activiteColumn,
-  sort: (statut1: TableRow, statut2: TableRow) => {
-    const row1Statut = statut1.columns.activites.value
-    const row2Statut = statut2.columns.activites.value
-    if (typeof row1Statut === 'number' && typeof row2Statut === 'number') {
-      return row1Statut - row2Statut
-    }
-    return 0
-  },
-}
-
-export const statutColumn: Column<'statut'> = {
+const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
 }
@@ -159,7 +147,7 @@ export const titulairesCell = (titre: { titulaires?: { nom?: string }[] }) => ({
   class: 'mb--xs',
   value: titre.titulaires?.map(({ nom }) => nom ?? '').join(', '),
 })
-export const domaineCell = (titre: { domaineId: DomaineId }) => ({
+const domaineCell = (titre: { domaineId: DomaineId }) => ({
   component: markRaw(CaminoDomaine),
   props: { domaineId: titre.domaineId },
   value: titre.domaineId,
@@ -172,7 +160,7 @@ export const typeCell = (typeId: TitreTypeId) => {
     value: typeId,
   }
 }
-export const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }) => ({
+const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }) => ({
   component: markRaw(ActivitesPills),
   props: {
     activitesAbsentes: titre.activitesAbsentes,

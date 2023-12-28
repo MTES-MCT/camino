@@ -43,7 +43,7 @@ export type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidato
 const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(z.object({ id: entrepriseIdValidator })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
-export const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
+const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
 export const userValidator = userNotNullValidator.nullable().optional()
 
 export const isSuper = (user: User): user is UserSuper => userPermissionCheck(user, 'super')
@@ -68,7 +68,6 @@ export type User = z.infer<typeof userValidator>
 export type UserNotNull = z.infer<typeof userNotNullValidator>
 
 export const isAdministrationRole = (role: Role): role is AdministrationRole => administrationRoleValidator.safeParse(role).success
-export const isAdministrationAdminRole = (role: Role): role is 'admin' => role === 'admin'
 export const isSuperRole = (role: Role): role is 'super' => role === 'super'
 export const isDefautRole = (role: Role): role is 'defaut' => role === 'defaut'
 

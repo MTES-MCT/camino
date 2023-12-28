@@ -21,12 +21,6 @@ interface Definition<T> {
 
 export type FileUploadType = 'pdf' | 'doc' | 'docx' | 'geojson' | 'shp'
 
-export const FICHIERS_TYPES = {
-  Pdf: 'pdf',
-  Doc: 'doc',
-  Docx: 'docx',
-} as const satisfies Record<string, FileUploadType>
-
 // prettier-ignore
 const IDS = ['aac','acc','acd','acg','acm','acr','adr','aep','aot','apd','apf','apm','apu','are','arm','arp','arr','atf','avc','ave','avi','bil','cam','car','cco','cdc','cnr','cnt','cod','con','cou','csp','cur','dcl','deb','dec','dei','dep','doe','dom','dos','erd','fac','fic','fip','for','idm','jac','jcf','jct','jeg','jid','jpa','kbi','lac','lce','lcg','lcm','lem','let','lis','lpf','mes','met','mot','nas','ndc','ndd','nip','nir','nis','noi','not','ocd','odr','ord','prg','pro','pub','pvr','rac','rad','rap','rce','rcr','rdr','rdt','rec','ree','ref','rfe','rgr','rie','rse','sch','sir' ] as const
 
@@ -161,7 +155,6 @@ export const ActiviteDocumentTypeIds = [
 
 export const activiteDocumentTypeIdValidator = z.enum(ActiviteDocumentTypeIds)
 export type ActiviteDocumentTypeId = z.infer<typeof activiteDocumentTypeIdValidator>
-export const isActiviteDocumentTypeId = (id: string): id is ActiviteDocumentTypeId => activiteDocumentTypeIdValidator.safeParse(id).success
 
 export const documentTypeIdValidator = z.enum(IDS)
 export type DocumentTypeId = z.infer<typeof documentTypeIdValidator>

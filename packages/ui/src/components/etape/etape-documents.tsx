@@ -71,7 +71,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
 }
 
 type EtapeDocumentLinkProps = { documentId: DocumentId; documentTypeId: DocumentTypeId }
-export const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {
+const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {
   return (
     <a
       href={getDownloadRestRoute('/download/fichiers/:documentId', { documentId: props.documentId })}

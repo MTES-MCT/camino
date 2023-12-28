@@ -21,7 +21,6 @@ vi.mock('../api/titres-etapes', () => ({
   titreEtapeMetas: vi.fn(),
   etapeCreer: vi.fn(),
   etapeModifier: vi.fn(),
-  etapeSupprimer: vi.fn(),
 }))
 
 console.info = vi.fn()

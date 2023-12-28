@@ -1,8 +1,6 @@
 import gql from 'graphql-tag'
 
-import { fragmentPointReference } from './point'
-
-const fragmentGeojsonMultiPolygon = gql`
+export const fragmentGeojsonMultiPolygon = gql`
   fragment geojsonMultiPolygon on GeojsonMultiPolygon {
     type
     geometry {
@@ -12,40 +10,14 @@ const fragmentGeojsonMultiPolygon = gql`
   }
 `
 
-const fragmentGeojsonPoints = gql`
-  fragment geojsonPoints on GeojsonPoints {
-    type
-    features {
-      type
-      properties {
-        id
-        groupe
-        contour
-        point
-        nom
-        description
-        references {
-          ...pointReference
-        }
-      }
-      geometry {
-        type
-        coordinates
-      }
-    }
-  }
-
-  ${fragmentPointReference}
-`
-
-const fragmentPerimetreAlerte = gql`
+export const fragmentPerimetreAlerte = gql`
   fragment perimetreAlerte on PerimetreAlerte {
     message
     url
   }
 `
 
-const fragmentPerimetreInformations = gql`
+export const fragmentPerimetreInformations = gql`
   fragment perimetreInformations on PerimetreInformations {
     surface
     documentTypeIds
@@ -56,5 +28,3 @@ const fragmentPerimetreInformations = gql`
 
   ${fragmentPerimetreAlerte}
 `
-
-export { fragmentGeojsonPoints, fragmentGeojsonMultiPolygon, fragmentPerimetreInformations, fragmentPerimetreAlerte }

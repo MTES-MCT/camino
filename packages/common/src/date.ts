@@ -134,13 +134,6 @@ export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
   return toCaminoDate(new Date(+y, +m - 1 + months, +d))
 }
 
-export const monthsBetween = (dateDebut: string, dateFin: string) => {
-  const [yDebut, mDebut] = dateDebut.split('-')
-  const [yFin, mFin] = dateFin.split('-')
-
-  return +yFin * 12 + +mFin - (+yDebut * 12 + +mDebut)
-}
-
 export function setDayInMonth(date: CaminoDate, day: number): CaminoDate {
   const [y, m] = date.split('-')
 

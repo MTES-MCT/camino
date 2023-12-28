@@ -7,7 +7,6 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
   etapeDeposer: vi.fn(),
-  etapeSupprimer: vi.fn(),
 }))
 
 console.info = vi.fn()

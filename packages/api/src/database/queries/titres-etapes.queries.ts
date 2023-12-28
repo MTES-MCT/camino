@@ -60,7 +60,7 @@ export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
+const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
   .pick({ id: true, entreprise_id: true, entreprise_document_type_id: true })
   .extend({ largeobject_id: entrepriseDocumentLargeObjectIdValidator })
 export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>

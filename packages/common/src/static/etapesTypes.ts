@@ -1897,9 +1897,6 @@ export type EtapeTypeIdNonFondamentale = Exclude<EtapeTypeId, EtapeTypeIdFondame
 export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId => {
   return etapeTypeIdValidator.safeParse(etapeTypeId).success
 }
-export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeKey => {
-  return etapeTypeKey in ETAPES_TYPES
-}
 
 const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.publicationDeDecisionAuJORF,

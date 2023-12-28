@@ -91,16 +91,6 @@ const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as Secteurs
 type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
 export type SecteursMaritimesIds = sect['ids'][number]
 
-export const getDepartementsByIds = (ids: SecteursMaritimesIds[]): DepartementId[] => {
-  return Object.values(facades)
-    .flatMap(f =>
-      Object.values(f)
-        .filter(s => s.ids.some((id: SecteursMaritimesIds) => ids.includes(id)))
-        .flatMap(s => s.departementIds ?? [])
-    )
-    .filter(onlyUnique)
-}
-
 export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): DepartementId[] => {
   return Object.values(facades)
     .flatMap(f =>
@@ -157,8 +147,8 @@ export const getSecteurs = (facadeMaritime: FacadesMaritimes): SecteursMaritimes
   return Object.keys(facades[facadeMaritime]) as SecteursMaritimes[]
 }
 
-export const isFacade = (facade: unknown): facade is FacadesMaritimes => FACADES.includes(facade)
-export const isSecteurMaritime = (secteurMaritime: unknown): secteurMaritime is SecteursMaritimes => SECTEURS.includes(secteurMaritime)
+const isFacade = (facade: unknown): facade is FacadesMaritimes => FACADES.includes(facade)
+const isSecteurMaritime = (secteurMaritime: unknown): secteurMaritime is SecteursMaritimes => SECTEURS.includes(secteurMaritime)
 
 export function assertsFacade(facade: unknown): asserts facade is FacadesMaritimes {
   if (!FACADES.includes(facade)) {

@@ -38,7 +38,7 @@ export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId | undefi
     titres.filter((titre): titre is Pick<CommonRestTitre, 'type_id'> => !!titre.type_id).map(({ type_id }) => getDomaineId(type_id))
   )
 }
-export const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId | undefined, domaineIds: DomaineId[]): boolean => {
+const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId | undefined, domaineIds: DomaineId[]): boolean => {
   if (user && domaineIds.length > 0) {
     if (
       domaineIds.every(domaineId => {

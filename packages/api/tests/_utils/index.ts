@@ -23,7 +23,7 @@ export const queryImport = (nom: string) =>
     // important pour transformer le buffer en string
     .toString()
 
-export const tokenCreate = (user: Partial<IUtilisateur>) => {
+const tokenCreate = (user: Partial<IUtilisateur>) => {
   if (isNotNullNorUndefined(process.env.JWT_SECRET)) {
     return jwt.sign(JSON.stringify(user), process.env.JWT_SECRET)
   }
@@ -32,12 +32,6 @@ export const tokenCreate = (user: Partial<IUtilisateur>) => {
 
 export const graphQLCall = async (pool: Pool, query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {
   const req = request(app(pool)).post('/').send({ query, variables })
-
-  return jwtSet(req, user)
-}
-
-export const restUploadCall = async (pool: Pool, user: TestUser) => {
-  const req = request(app(pool)).post('/televersement')
 
   return jwtSet(req, user)
 }
@@ -135,7 +129,7 @@ export const userGenerate = async (user: TestUser): Promise<UserNotNull> => {
   // TODO 2023-05-24: pg-typed utilisateurCreate and utilisateurGet
   return userInDb as UserNotNull
 }
-export const userTokenGenerate = async (user: TestUser) => {
+const userTokenGenerate = async (user: TestUser) => {
   const userInDb = await userGenerate(user)
 
   return tokenCreate(userInDb)

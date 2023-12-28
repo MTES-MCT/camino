@@ -1,22 +1,9 @@
 import { z } from 'zod'
-export const REFERENCES_TYPES_KEYS = ['brg', 'dea', 'deb', 'dge', 'ifr', 'irs', 'nus', 'onf', 'ptm', 'rnt'] as const
+const IDS = ['brg', 'dea', 'deb', 'dge', 'ifr', 'irs', 'nus', 'onf', 'ptm', 'rnt'] as const
 
-export const referenceTypeIdValidator = z.enum(REFERENCES_TYPES_KEYS)
+export const referenceTypeIdValidator = z.enum(IDS)
 
 export type ReferenceTypeId = z.infer<typeof referenceTypeIdValidator>
-
-export const REFERENCES_TYPES_IDS = {
-  BRGM: 'brg',
-  DEAL: 'dea',
-  DEB: 'deb',
-  DGEC: 'dge',
-  Ifremer: 'ifr',
-  IRSN: 'irs',
-  NomDUsage: 'nus',
-  ONF: 'onf',
-  PTMG: 'ptm',
-  RNTM: 'rnt',
-} as const satisfies Record<string, ReferenceTypeId>
 
 export type ReferenceType<T = ReferenceTypeId> = {
   id: T

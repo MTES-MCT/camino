@@ -1,8 +1,23 @@
 import { canEditEmails, canReadActivitesTypesEmails } from './administrations.js'
-import { AdministrationRole, Role, User } from '../roles.js'
-import { ADMINISTRATION_IDS } from '../static/administrations.js'
+import { AdministrationRole, Role, User, UserNotNull } from '../roles.js'
+import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect } from 'vitest'
-import { getTestUser, testBlankUser } from '../tests-utils'
+import { testBlankUser } from '../tests-utils'
+
+const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | 'bureau d’études' } | { role: AdministrationRole; administrationId: AdministrationId }): UserNotNull => {
+  switch (param.role) {
+    case 'super':
+    case 'defaut':
+      return { ...testBlankUser, role: param.role }
+    case 'admin':
+    case 'lecteur':
+    case 'editeur':
+      return { ...testBlankUser, ...param }
+    case 'entreprise':
+    case 'bureau d’études':
+      return { ...testBlankUser, ...param, entreprises: [] }
+  }
+}
 
 test.each<[User, boolean]>([
   [{ ...testBlankUser, role: 'super' }, true],

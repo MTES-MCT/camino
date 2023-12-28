@@ -2,10 +2,7 @@
 import { sql } from '@pgtyped/runtime'
 import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValidValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import {
-  IGetDemarchesByTitreIdQueryDbQuery,
-  IGetTitreInternalQuery,
-} from './titres.queries.types.js'
+import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
 import { Commune } from 'camino-common/src/static/communes.js'

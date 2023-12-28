@@ -62,32 +62,8 @@ export const isFileElement = (element: ElementWithValue): element is FileElement
   return element.type === 'file'
 }
 
-export const isUrlElement = (element: ElementWithValue): element is UrlElementWithValue => {
-  return element.type === 'url'
-}
-
-export const isDateElement = (element: ElementWithValue): element is DateElementWithValue => {
-  return element.type === 'date'
-}
-
 export const isNumberElement = (element: ElementWithValue): element is NumberElementWithValue => {
   return element.type === 'number' || element.type === 'integer'
-}
-
-export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
-  return element.type === 'radio'
-}
-
-export const isCheckboxesElement = (element: ElementWithValue): element is CheckboxesElementWithValue => {
-  return element.type === 'checkboxes'
-}
-
-export const isCheckboxElement = (element: ElementWithValue): element is CheckboxElementWithValue => {
-  return element.type === 'checkbox'
-}
-
-export const isSelectElement = (element: ElementWithValue): element is SelectElementWithValue => {
-  return element.type === 'select'
 }
 
 export const sectionWithValueValidator = z.object({ id: z.string(), nom: z.string().optional(), elements: z.array(elementWithValueValidator) })

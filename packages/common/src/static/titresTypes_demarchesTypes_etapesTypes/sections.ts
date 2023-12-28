@@ -952,10 +952,10 @@ type SelectElementWithMetas = z.infer<typeof selectElementWithMetasValidator>
 export const selectElementWithOptionsValidator = basicElementValidator.extend({ type: z.literal('select'), options: z.array(z.object({ id: z.string(), nom: z.string() })).nonempty() })
 type SelectElementWithOptions = z.infer<typeof selectElementWithOptionsValidator>
 
-export const selectElementValidator = z.union([selectElementWithMetasValidator, selectElementWithOptionsValidator])
+const selectElementValidator = z.union([selectElementWithMetasValidator, selectElementWithOptionsValidator])
 export type SelectElement = z.infer<typeof selectElementValidator>
 
-export const sectionsElementValidator = z.union([
+const sectionsElementValidator = z.union([
   fileElementValidator,
   dateElementValidator,
   textElementValidator,

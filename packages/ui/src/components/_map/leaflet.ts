@@ -1,5 +1,5 @@
 import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, MarkerOptions } from 'leaflet'
-import { GeoJsonObject } from 'geojson'
+import type { GeoJsonObject } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
 import 'leaflet-fullscreen'

@@ -23,12 +23,6 @@ export const updateFromEvent = (e: Event, myRef: Ref<string | null>) => {
   }
 }
 
-export const updateFromCheckboxEvent = (e: Event, myRef: Ref<boolean>) => {
-  if (isEventWithTarget(e)) {
-    myRef.value = e.target.checked
-  }
-}
-
 let seed = Math.random()
 // USED Only for testing
 export const setSeed = (value: number): void => {

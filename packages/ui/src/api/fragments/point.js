@@ -12,7 +12,7 @@ const fragmentPointReference = gql`
   }
 `
 
-const fragmentPoint = gql`
+export const fragmentPoint = gql`
   fragment point on Point {
     id
     coordonnees {
@@ -33,5 +33,3 @@ const fragmentPoint = gql`
 
   ${fragmentPointReference}
 `
-
-export { fragmentPoint, fragmentPointReference }
