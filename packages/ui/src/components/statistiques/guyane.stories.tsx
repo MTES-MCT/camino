@@ -437,8 +437,8 @@ const data: Promise<StatistiquesGuyane> = Promise.resolve({
   },
 })
 
-export const DefaultNoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} />
+export const DefaultNoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2023-08-30')} />
 export const DateSetTo20220830NoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-08-30')} />
 export const DateSetTo20220902NoSnapshot: StoryFn = () => <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-09-02')} />
-export const Loading: StoryFn = () => <PureGuyane getStats={() => new Promise<any>(_resolve => {})} />
-export const WithError: StoryFn = () => <PureGuyane getStats={() => Promise.reject(new Error('because reasons'))} />
+export const Loading: StoryFn = () => <PureGuyane getStats={() => new Promise<any>(_resolve => {})} currentDate={toCaminoDate('2023-09-30')} />
+export const WithError: StoryFn = () => <PureGuyane getStats={() => Promise.reject(new Error('because reasons'))} currentDate={toCaminoDate('2023-09-30')} />

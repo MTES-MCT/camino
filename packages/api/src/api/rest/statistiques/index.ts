@@ -8,6 +8,7 @@ import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
 import { isAdministration } from 'camino-common/src/roles.js'
 import { statistiquesGranulatsMarins } from './granulats-marins.js'
+import { caminoAnneeValidator, getCurrentAnnee } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
 
 export const getDGTMStats = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>) => {
@@ -38,9 +39,10 @@ export const getMinerauxMetauxMetropolesStats =
 
 export const getGuyaneStats =
   (pool: Pool) =>
-  async (_req: CaminoRequest, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
     try {
-      res.json(await getGuyaneStatsInside(pool))
+      const annee = caminoAnneeValidator.optional().nullable().parse(req.params.annee)
+      res.json(await getGuyaneStatsInside(pool, annee ?? getCurrentAnnee()))
     } catch (e) {
       console.error(e)
 
@@ -50,9 +52,10 @@ export const getGuyaneStats =
 
 export const getGranulatsMarinsStats =
   (_pool: Pool) =>
-  async (_req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
     try {
-      res.json(await statistiquesGranulatsMarins())
+      const annee = caminoAnneeValidator.optional().nullable().parse(req.params.annee)
+      res.json(await statistiquesGranulatsMarins(annee ?? getCurrentAnnee()))
     } catch (e) {
       console.error(e)
 

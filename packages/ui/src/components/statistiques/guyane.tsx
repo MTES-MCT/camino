@@ -25,7 +25,7 @@ const getStats = async (): Promise<StatistiquesGuyane> => {
   }
 }
 
-export const Guyane: FunctionalComponent = () => <PureGuyane getStats={getStats} />
+export const Guyane: FunctionalComponent = () => <PureGuyane getStats={getStats} currentDate={getCurrent()} />
 
 // Demandé par le router car utilisé dans un import asynchrone /shrug
 Guyane.displayName = 'Guyane'
@@ -220,10 +220,10 @@ const cxmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
 
 export interface Props {
   getStats: () => Promise<StatistiquesGuyane>
-  currentDate?: CaminoDate
+  currentDate: CaminoDate
 }
 export const PureGuyane = caminoDefineComponent<Props>(['getStats', 'currentDate'], props => {
-  const currentDate = props.currentDate ?? getCurrent()
+  const currentDate = props.currentDate
   const data = ref<AsyncData<StatistiquesGuyane>>({
     status: 'LOADING',
   })

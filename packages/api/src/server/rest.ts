@@ -119,7 +119,9 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/titresAdministrations': { get: titresAdministrations },
   '/rest/statistiques/minerauxMetauxMetropole': { get: getMinerauxMetauxMetropolesStats }, // UNTESTED YET
   '/rest/statistiques/guyane': { get: getGuyaneStats },
+  '/rest/statistiques/guyane/:annee': { get: getGuyaneStats },
   '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
+  '/rest/statistiques/granulatsMarins/:annee': { get: getGranulatsMarinsStats },
   '/rest/statistiques/dgtm': { get: getDGTMStats },
   '/rest/demarches/:demarcheIdOrSlug': { get: getDemarcheByIdOrSlug },
   '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },

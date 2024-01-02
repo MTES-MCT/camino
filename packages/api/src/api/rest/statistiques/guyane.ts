@@ -9,7 +9,7 @@ import { titresActivitesGet } from '../../../database/queries/titres-activites.j
 import { userSuper } from '../../../database/user-super.js'
 import { titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { CaminoAnnee, caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
+import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import type { Pool } from 'pg'
 import { capitalize } from 'camino-common/src/strings.js'
@@ -144,9 +144,8 @@ const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreA
   }
 }
 
-export const statistiquesGuyane = async () => {
+export const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
   try {
-    const anneeCurrent = getCurrentAnnee()
     const anneeMoins5 = caminoAnneeToNumber(anneeCurrent) - 5
     // un tableau avec les 5 dernières années
     const annees = intervalleAnnees(toCaminoAnnee(anneeMoins5), anneeCurrent)
@@ -187,14 +186,14 @@ export const statistiquesGuyane = async () => {
   }
 }
 
-export const getGuyaneStatsInside = async (pool: Pool): Promise<StatistiquesGuyaneData> => {
+export const getGuyaneStatsInside = async (pool: Pool, anneeCurrent: CaminoAnnee): Promise<StatistiquesGuyaneData> => {
   const guyane = [DEPARTEMENT_IDS.Guyane]
-  const armData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE, guyane)
-  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, guyane)
-  const axmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, guyane)
-  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, guyane)
+  const armData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE, guyane, anneeCurrent)
+  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, guyane, anneeCurrent)
+  const axmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, guyane, anneeCurrent)
+  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, guyane, anneeCurrent)
 
-  const fromObjection = await statistiquesGuyane()
+  const fromObjection = await statistiquesGuyane(anneeCurrent)
 
   return {
     arm: armData,

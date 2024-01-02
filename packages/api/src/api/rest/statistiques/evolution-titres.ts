@@ -11,8 +11,8 @@ import { AnneeCountStatistique, EvolutionTitres } from 'camino-common/src/statis
 import { getDepot, getEtapesTypesDecisionRefus, getOctroi, getSurface } from './evolution-titres.queries.js'
 import type { Pool } from 'pg'
 
-export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeTypeId, departements: DepartementId[], anneeDepart = 2017): Promise<EvolutionTitres> => {
-  let currentYear = new Date().getFullYear()
+export const evolutionTitres = async (pool: Pool, titreTypeTypeId: TitreTypeTypeId, departements: DepartementId[], anneeCurrent: CaminoAnnee, anneeDepart = 2017): Promise<EvolutionTitres> => {
+  let currentYear = Number.parseInt(anneeCurrent)
   const annee: Record<CaminoAnnee, number> = {}
   while (currentYear >= anneeDepart) {
     annee[toCaminoAnnee(currentYear)] = 0

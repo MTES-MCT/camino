@@ -7,7 +7,7 @@ import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { capitalize } from 'camino-common/src/strings.js'
-import { caminoAnneeToNumber, getCurrentAnnee, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
+import { CaminoAnnee, caminoAnneeToNumber, intervalleAnnees, toCaminoAnnee } from 'camino-common/src/date.js'
 import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
@@ -126,10 +126,10 @@ const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites
   }
 }
 
-export const statistiquesGranulatsMarins = async (): Promise<StatistiquesGranulatsMarins> => {
+export const statistiquesGranulatsMarins = async (annee: CaminoAnnee): Promise<StatistiquesGranulatsMarins> => {
   try {
     // un tableau avec les années depuis 2006
-    const annees = intervalleAnnees(toCaminoAnnee('2006'), getCurrentAnnee())
+    const annees = intervalleAnnees(toCaminoAnnee('2006'), annee)
     const titres = await titresGet(
       {
         domainesIds: ['w'],

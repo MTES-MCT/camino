@@ -1,5 +1,5 @@
 import { FiscaliteParSubstanceParAnnee, StatistiquesMinerauxMetauxMetropole, StatistiquesMinerauxMetauxMetropoleSels, substancesFiscalesStats } from 'camino-common/src/statistiques.js'
-import { CaminoAnnee, anneeSuivante, toCaminoAnnee } from 'camino-common/src/date.js'
+import { CaminoAnnee, anneeSuivante, toCaminoAnnee, getCurrentAnnee } from 'camino-common/src/date.js'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titresGet } from '../../../database/queries/titres.js'
@@ -18,8 +18,8 @@ export const getMinerauxMetauxMetropolesStatsInside = async (pool: Pool): Promis
   const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
   const substances = await buildSubstances(pool)
   const fiscaliteParSubstanceParAnnee = await fiscaliteDetail(pool)
-  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, departementsMetropole)
-  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole)
+  const prmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, departementsMetropole, getCurrentAnnee())
+  const cxmData = await evolutionTitres(pool, TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole, getCurrentAnnee())
 
   return {
     ...result,
