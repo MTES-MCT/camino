@@ -61,6 +61,51 @@ export const DefaultWithTravauxSelected: StoryFn = () => (
   <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-travaux1')} />
 )
 
+export const SimpleOnePhase: StoryFn = () => (
+  <TitreTimeline
+    titreSlug={titreSlugValidator.parse('slug-titre')}
+    phasesWithAlterations={[
+      [
+        {
+          slug: demarcheSlugValidator.parse('slug-demarche2'),
+          demarche_type_id: 'oct',
+          demarche_date_debut: toCaminoDate('2019-01-01'),
+          demarche_date_fin: toCaminoDate('2021-01-01'),
+          events: [],
+        },
+      ],
+    ]}
+    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+  />
+)
+
+export const TwoPhases: StoryFn = () => (
+  <TitreTimeline
+    titreSlug={titreSlugValidator.parse('slug-titre')}
+    phasesWithAlterations={[
+      [
+        {
+          slug: demarcheSlugValidator.parse('slug-demarche2'),
+          demarche_type_id: 'oct',
+          demarche_date_debut: toCaminoDate('2019-01-01'),
+          demarche_date_fin: toCaminoDate('2021-01-01'),
+          events: [],
+        },
+      ],
+      [
+        {
+          slug: demarcheSlugValidator.parse('slug-demarche3'),
+          demarche_type_id: 'oct',
+          demarche_date_debut: toCaminoDate('2021-01-01'),
+          demarche_date_fin: toCaminoDate('2022-01-01'),
+          events: [],
+        },
+      ],
+    ]}
+    currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+  />
+)
+
 export const MultipleUnorderedDemarchesWithoutPhase: StoryFn = () => (
   <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}

@@ -2,13 +2,13 @@
   display: flex;
   flex-direction: row;
   justify-content: stretch;
+  column-gap: 4px;
 }
 
 .date {
   color: var(--text-action-high-grey);
   font-weight: 500;
   flex: 1;
-
   display: flex;
   flex-direction: row;
 }
@@ -35,6 +35,7 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  min-width: 200px;
 }
 
 .event {

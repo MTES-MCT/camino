@@ -20,9 +20,15 @@ type Props = {
   class?: HTMLAttributes['class']
 }
 
-type PhaseWithDateDebut = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id' | 'demarche_date_fin'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }
+type PhaseWithDateDebut = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id' | 'demarche_date_fin'> & {
+  demarche_date_debut: CaminoDate
+  events: TitreTimelineEvents[]
+}
 
-type DemarcheAlteration = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
+type DemarcheAlteration = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & {
+  date_etape_decision_ok: CaminoDate
+  events: TitreTimelineEvents[]
+}
 
 const isNoPhase = (phase: Phase | NoPhase): phase is NoPhase => {
   return phase.length === 1 && phase[0].length === 1 && phase[0][0].demarche_date_debut === null
@@ -53,92 +59,98 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
   return (
     <>
       <h2>Phases</h2>
-      <div class="fr-mx-4w">
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {datePhasesWithAlterations.map((datePhases, i) => (
-            <div key={i} style={{ flex: 1 }} class={`${style.datesContainer}`}>
-              {datePhases.map((datePhase, index) => (
-                <div
-                  class={`${style.date} fr-text--md fr-mb-1w`}
-                  style={{
-                    flex: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 2 : 1,
-                    justifyContent: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 'center' : 'start',
-                  }}
-                  key={index}
-                >
-                  <span
+      <div style={{ overflowX: 'auto' }}>
+        <div class="fr-mx-4w">
+          <div style={{ display: 'flex', gap: '14px' }}>
+            {datePhasesWithAlterations.map((datePhases, i) => (
+              <div key={i} style={{ flex: 1, minWidth: datePhases.length * 202 + 1 + 'px' }} class={`${style.datesContainer}`}>
+                {datePhases.map((datePhase, index) => (
+                  <div
+                    class={`${style.date} fr-text--md fr-mb-1w`}
                     style={{
-                      marginLeft: i === datePhasesWithAlterations.length - 1 && index !== 0 ? 0 : '-32px',
+                      flex: index !== 0 ? 2 : 1,
+                      justifyContent: index !== 0 ? 'center' : 'start',
                     }}
+                    key={index}
                   >
-                    {datePhase}
-                  </span>
-                </div>
-              ))}
+                    <span
+                      style={{
+                        marginLeft: index !== 0 ? 0 : i === 0 ? '-32px' : '-40px',
+                      }}
+                    >
+                      {datePhase}
+                    </span>
+                  </div>
+                ))}
 
-              {i === datePhasesWithAlterations.length - 1 ? (
-                <div
-                  class={`${style.date} fr-text--md fr-mb-1w`}
-                  style={{
-                    justifyContent: 'end',
-                    flex: 1,
-                  }}
-                >
-                  <span
+                {i === datePhasesWithAlterations.length - 1 ? (
+                  <div
+                    class={`${style.date} fr-text--md fr-mb-1w`}
                     style={{
-                      marginRight: '-32px',
+                      justifyContent: 'end',
+                      flex: 1,
+                      minWidth: '100px',
                     }}
                   >
-                    {dateFin}
-                  </span>
-                </div>
-              ) : null}
+                    <span
+                      style={{
+                        marginRight: '-32px',
+                      }}
+                    >
+                      {dateFin}
+                    </span>
+                  </div>
+                ) : (
+                  <div style={{ flex: 1 }}></div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'flex', width: '100%' }}>
+            <div style={{ display: 'flex', gap: '5px', position: 'relative', height: '20px', flex: 1 }}>
+              {props.phasesWithAlterations.map((phaseWithAlterations, index) => (
+                <Fragment key={index}>
+                  <div class={`${style.phasesContainer}`} style={{ flex: 1 }}>
+                    {phaseWithAlterations.map(demarche => (
+                      <Fragment key={demarche.slug}>
+                        <DemarchePhase titreSlug={props.titreSlug} phase={demarche} currentDemarcheSlug={props.currentDemarcheSlug} />
+                      </Fragment>
+                    ))}
+                  </div>
+                  {index !== props.phasesWithAlterations.length - 1 ? <div style={{ border: '2px solid black' }}></div> : null}
+                </Fragment>
+              ))}
             </div>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {props.phasesWithAlterations.map((phaseWithAlterations, index) => (
-            <Fragment key={index}>
-              <div class={`${style.phasesContainer}`} style={{ flex: 1 }}>
+            <div
+              style={{
+                border: 'solid var(--background-action-high-blue-france)',
+                borderWidth: '0 4px 4px 0',
+                padding: '8px',
+                display: 'inline-block',
+                transform: 'rotate(-45deg)',
+                marginLeft: '-20px',
+              }}
+            ></div>
+          </div>
+          <div class="fr-pt-1w" style={{ display: 'flex', columnGap: '14px' }}>
+            {props.phasesWithAlterations.map(phaseWithAlterations => (
+              <div style={{ flex: 1 }} class={`${style.datesContainer}`}>
                 {phaseWithAlterations.map(demarche => (
-                  <Fragment key={demarche.slug}>
-                    <DemarchePhase titreSlug={props.titreSlug} phase={demarche} currentDemarcheSlug={props.currentDemarcheSlug} />
-                  </Fragment>
+                  <div style={{ flex: 1, minWidth: '200px' }}>
+                    <CaminoRouterLink
+                      {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
+                      key={demarche.slug}
+                      to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
+                      title={capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                      class="fr-link"
+                    >
+                      {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                    </CaminoRouterLink>
+                  </div>
                 ))}
               </div>
-              {index !== props.phasesWithAlterations.length - 1 ? <div style={{ border: '2px solid black' }}></div> : null}
-              {index === props.phasesWithAlterations.length - 1 ? (
-                <div
-                  style={{
-                    border: 'solid var(--background-action-high-blue-france)',
-                    borderWidth: '0 4px 4px 0',
-                    padding: '8px',
-                    display: 'inline-block',
-                    transform: 'translate(-26px) rotate(-45deg)',
-                  }}
-                ></div>
-              ) : null}
-            </Fragment>
-          ))}
-        </div>
-        <div class="fr-pt-1w" style={{ display: 'flex' }}>
-          {props.phasesWithAlterations.map(phaseWithAlterations => (
-            <div style={{ flex: 1 }} class={`${style.datesContainer}`}>
-              {phaseWithAlterations.map(demarche => (
-                <div style={{ flex: 1 }}>
-                  <CaminoRouterLink
-                    {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
-                    key={demarche.slug}
-                    to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }}
-                    title={capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
-                    class="fr-link"
-                  >
-                    {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
-                  </CaminoRouterLink>
-                </div>
-              ))}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
       <DsfrSeparator />
@@ -150,7 +162,11 @@ const getAriaCurrent = (slug: DemarcheSlug, currentPhaseSlug: DemarcheSlug | nul
   return slug === currentPhaseSlug ? { 'aria-current': 'page' } : {}
 }
 
-const DemarchePhase = defineComponent<{ titreSlug: TitreSlug; phase: PhaseWithDateDebut | DemarcheAlteration; currentDemarcheSlug: DemarcheSlug }>(props => {
+const DemarchePhase = defineComponent<{
+  titreSlug: TitreSlug
+  phase: PhaseWithDateDebut | DemarcheAlteration
+  currentDemarcheSlug: DemarcheSlug
+}>(props => {
   // Impossible d’utiliser du css pour gérer le hover, obliger d’utiliser du javascript
   const isOntoRootElement = ref<boolean>(false)
   const isOntoChildElement = ref<boolean>(false)
