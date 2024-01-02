@@ -157,6 +157,7 @@ describe('canHaveActivites', () => {
           titreTypeId: 'axm',
           demarches: [{}],
           communes: [],
+          secteursMaritime: [],
         })
       ).toEqual(false)
     })
@@ -167,13 +168,19 @@ describe('canHaveActivites', () => {
           titreTypeId: 'axm',
           demarches: [{}],
           communes: [{ id: toCommuneId('97300') }],
+          secteursMaritime: [],
         })
       ).toEqual(true)
     })
 
     test("ne retourne aucun type d'activité sur un titre AXM de métropole", () => {
       expect(
-        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], { titreTypeId: 'axm', demarches: [{}], communes: [{ id: toCommuneId('72000') }] })
+        canHaveActiviteTypeId(ACTIVITES_TYPES_IDS["rapport trimestriel d'exploitation d'or en Guyane"], {
+          titreTypeId: 'axm',
+          demarches: [{}],
+          communes: [{ id: toCommuneId('72000') }],
+          secteursMaritime: [],
+        })
       ).toEqual(false)
     })
 
@@ -183,6 +190,7 @@ describe('canHaveActivites', () => {
           titreTypeId: 'prm',
           demarches: [{}],
           communes: [{ id: toCommuneId('72000') }],
+          secteursMaritime: [],
         })
       ).toEqual(true)
     })
@@ -193,6 +201,7 @@ describe('canHaveActivites', () => {
           titreTypeId: 'prm',
           demarches: [{}],
           communes: [{ id: toCommuneId('72000') }],
+          secteursMaritime: [],
         })
       ).toEqual(false)
     })
@@ -203,6 +212,7 @@ describe('canHaveActivites', () => {
           titreTypeId: 'pxw',
           demarches: [{}],
           communes: [],
+          secteursMaritime: [],
         })
       ).toEqual(true)
     })
@@ -212,6 +222,7 @@ describe('canHaveActivites', () => {
           titreTypeId: 'pxw',
           demarches: [],
           communes: [],
+          secteursMaritime: [],
         })
       ).toEqual(false)
     })

@@ -46,8 +46,12 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
           throw new Error('les communes du titre ne sont pas chargées')
         }
 
+        if (isNullOrUndefined(titre.secteursMaritime)) {
+          throw new Error('les secteursMaritime du titre ne sont pas chargés')
+        }
+
         // si le type d'activité est relié au type de titre
-        if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, demarches: titre.demarches })) return acc
+        if (!canHaveActiviteTypeId(activiteType.id, { titreTypeId: titre.typeId, communes: titre.communes, secteursMaritime: titre.secteursMaritime, demarches: titre.demarches })) return acc
 
         acc.push(...titreActivitesBuild(activiteType.id, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 

@@ -59,6 +59,7 @@ const titresToutesActivites = [
     ],
     communes: [],
     demarches: [],
+    secteursMaritime: [],
   },
 ] as unknown as Titres[]
 
@@ -81,6 +82,7 @@ describe("activités d'un titre", () => {
       titulaires: [{ utilisateurs: [{ email: 'email' }] }],
       communes: [],
       demarches: [],
+      secteursMaritime: [],
     },
   ] as unknown as Titres[]
 

@@ -1,6 +1,6 @@
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { describe, expect, test } from 'vitest'
-import { territoiresFind } from './territoires'
+import { territoiresFind, territoiresIdFind } from './territoires'
 describe('territoiresFind', () => {
   test('territoiresFind uniquement des communes', () => {
     expect(
@@ -144,6 +144,99 @@ describe('territoiresFind', () => {
         "facades": [],
         "regions": [
           "Centre-Val de Loire",
+        ],
+      }
+    `)
+  })
+})
+
+describe('territoiresIdFind', () => {
+  test('territoiresIdFind communes et secteurs maritimes', () => {
+    expect(
+      territoiresIdFind(
+        [
+          { id: toCommuneId('72500') },
+          {
+            id: toCommuneId('72200'),
+          },
+
+          {
+            id: toCommuneId('37000'),
+          },
+        ],
+        ['Baie de Seine']
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "departements": [
+          "76",
+          "14",
+          "50",
+          "72",
+          "37",
+        ],
+        "facades": [
+          "Manche Est - Mer du Nord",
+        ],
+        "pays": [
+          "FR",
+        ],
+        "regions": [
+          "28",
+          "52",
+          "24",
+        ],
+      }
+    `)
+  })
+  test('territoiresIdFind uniquement des communes', () => {
+    expect(
+      territoiresIdFind(
+        [
+          { id: toCommuneId('72500') },
+          {
+            id: toCommuneId('72200'),
+          },
+
+          {
+            id: toCommuneId('37000'),
+          },
+        ],
+        []
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "departements": [
+          "72",
+          "37",
+        ],
+        "facades": [],
+        "pays": [
+          "FR",
+        ],
+        "regions": [
+          "52",
+          "24",
+        ],
+      }
+    `)
+  })
+  test('territoiresFind uniquement des secteurs maritimes', () => {
+    expect(territoiresIdFind([], ['Baie de Seine'])).toMatchInlineSnapshot(`
+      {
+        "departements": [
+          "76",
+          "14",
+          "50",
+        ],
+        "facades": [
+          "Manche Est - Mer du Nord",
+        ],
+        "pays": [
+          "FR",
+        ],
+        "regions": [
+          "28",
         ],
       }
     `)
