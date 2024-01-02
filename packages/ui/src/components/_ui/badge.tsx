@@ -9,7 +9,7 @@ type BadgeSystemProps = BaseProps & { systemLevel: (typeof systemes)[number]; sy
 
 type Props = BadgeColorProps | BadgeSystemProps
 
-export const isBadgeSystemProps = (props: Props): props is BadgeSystemProps => 'systemLevel' in props
+const isBadgeSystemProps = (props: Props): props is BadgeSystemProps => 'systemLevel' in props
 
 export const Badge: FunctionalComponent<Props> = props => {
   const classes = []

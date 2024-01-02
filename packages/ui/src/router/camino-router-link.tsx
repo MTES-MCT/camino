@@ -26,7 +26,7 @@ export const routerQueryToStringArray = (value: LocationQueryValue | LocationQue
   return Array.isArray(value) ? value.map(value => String(value)) : String(value).split(',')
 }
 
-export type Props = {
+type Props = {
   title: string
   class?: LinkHTMLAttributes['class']
   anchorHTMLAttributes?: AnchorHTMLAttributes

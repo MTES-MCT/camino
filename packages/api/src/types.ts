@@ -9,7 +9,6 @@ import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { Couleur } from 'camino-common/src/static/couleurs.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { FrequenceId } from 'camino-common/src/static/frequence.js'
@@ -89,7 +88,7 @@ interface IColonne<T> {
 }
 
 export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
-export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
+type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
@@ -188,12 +187,6 @@ interface ICommune {
 interface ICoordonnees {
   x: number
   y: number
-}
-
-interface IDemarcheStatut {
-  id: string
-  nom: string
-  couleur: Couleur
 }
 
 interface IDemarcheType {
@@ -618,7 +611,6 @@ export {
   IContenuValeur,
   IContenusTitreEtapesIds,
   ICoordonnees,
-  IDemarcheStatut,
   IDemarcheType,
   IDocumentRepertoire,
   IDomaine,
@@ -626,8 +618,6 @@ export {
   IEntrepriseEtablissement,
   IEtapeType,
   IGeoJson,
-  IGeoJsonProperties,
-  IGeometry,
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,

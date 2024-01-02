@@ -1,11 +1,9 @@
 import { leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletDivIconBuild } from '../_map/leaflet'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { DomaineId, Domaines, sortedDomaines } from 'camino-common/src/static/domaines'
+import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import type { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre, TitreId } from 'camino-common/src/titres'
-import { GeoJsonObject } from 'geojson'
-import { createVNode } from 'vue'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 
@@ -116,13 +114,13 @@ export interface TitreWithPoint extends CommonTitre {
   }
   geojsonCentre?: { geometry: { coordinates: [number, number] } }
 }
-export type CaminoMarker = {
+type CaminoMarker = {
   marker: Marker
   id: TitreId
   domaineId: DomaineId
 }
 
-export const svgDomaineAnchor = (domaineId: DomaineId): string => {
+const svgDomaineAnchor = (domaineId: DomaineId): string => {
   return `
     <svg width="33" height="39" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.5 23C1 25 10.0563 32.5564 16.5 39C22.9437 32.5564 30 26 32 23C32.5 22 33 22 33 16C33 5.5 23.8967 0 17 0C10.1033 0 5.17674e-05 4 0 16C-1.16842e-05 18.7406 0 21 0.5 23Z" fill="var(--${

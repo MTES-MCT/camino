@@ -3,7 +3,7 @@ import { StatistiquesGuyaneActivite } from 'camino-common/src/statistiques'
 import styles from './statistiques.module.css'
 import { numberFormat } from 'camino-common/src/number'
 import { Alert } from '../_ui/alert'
-export interface Props {
+interface Props {
   statistiqueGuyane: StatistiquesGuyaneActivite
   enConstruction: boolean
 }

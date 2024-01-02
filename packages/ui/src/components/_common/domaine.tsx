@@ -2,7 +2,7 @@ import { DomaineId, DOMAINES_IDS, Domaines } from 'camino-common/src/static/doma
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { DsfrTag } from '../_ui/tag'
 
-export type Props = {
+type Props = {
   domaineId?: DomaineId
 } & HTMLAttributes
 

@@ -60,10 +60,10 @@ export const getEntrepriseDocumentIdsByEtapeId = async (params: { titre_etape_id
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
+const entrepriseDocumentLargeObjectIdsValidator = entrepriseDocumentValidator
   .pick({ id: true, entreprise_id: true, entreprise_document_type_id: true })
   .extend({ largeobject_id: entrepriseDocumentLargeObjectIdValidator })
-export type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>
+type EntrepriseDocumentLargeObjectId = z.infer<typeof entrepriseDocumentLargeObjectIdsValidator>
 
 const getEntrepriseDocumentLargeObjectIdsByEtapeIdQuery = sql<Redefine<IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EntrepriseDocumentLargeObjectId>>`
 select
@@ -109,7 +109,7 @@ const pointsByEtapeIdValidator = z.object({
   description: z.string().nullable(),
   nom: z.string().nullable(),
 })
-export type PointByEtapeId = z.infer<typeof pointsByEtapeIdValidator>
+type PointByEtapeId = z.infer<typeof pointsByEtapeIdValidator>
 
 export const getPointsByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<PointByEtapeId[]> => {
   return dbQueryAndValidate(getPointsByEtapeIdQueryDb, { etapeId }, pool, pointsByEtapeIdValidator)

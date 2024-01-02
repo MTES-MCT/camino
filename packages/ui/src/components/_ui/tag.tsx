@@ -4,7 +4,7 @@ import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { UseLinkOptions } from 'vue-router'
 import { CaminoRouterLink } from '../../router/camino-router-link'
 
-export type Props = {
+type Props = {
   color?: `bg-${Couleur}`
   mini?: boolean
   text: string

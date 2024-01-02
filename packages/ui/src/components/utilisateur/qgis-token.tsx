@@ -7,7 +7,7 @@ import { Messages } from '@/components/_ui/messages'
 import { UtilisateurApiClient } from './utilisateur-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
-export interface Props {
+interface Props {
   apiClient: Pick<UtilisateurApiClient, 'getQGISToken'>
 }
 

@@ -83,7 +83,7 @@ const travaux = {
   ],
 } as const satisfies { [key in TravauxIds]: readonly EtapeTypeId[] }
 
-export const TDE = {
+const TDE = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Renonciation]: [

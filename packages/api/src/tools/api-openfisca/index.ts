@@ -2,7 +2,7 @@ import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino
 import { Unite, Unites } from 'camino-common/src/static/unites.js'
 type Attribute = 'surface_communale' | 'surface_communale_proportionnee' | 'taxe_guyane_brute' | 'taxe_guyane_deduction' | 'taxe_guyane' | string
 
-export const openfiscaSubstanceFiscaleNom = (substanceFiscale: SubstanceFiscale): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
+const openfiscaSubstanceFiscaleNom = (substanceFiscale: SubstanceFiscale): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
 export const openfiscaSubstanceFiscaleUnite = (substanceFiscale: SubstanceFiscale): Unite => {
   const unite = substanceFiscale.openFisca?.unite ? Unites[substanceFiscale.openFisca.unite] : Unites[substanceFiscale.uniteId]
   if (!unite.openfiscaId) {

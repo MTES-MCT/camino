@@ -3,7 +3,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Pill } from '../_ui/pill'
 
-export type Props = {
+type Props = {
   color?: Couleur | `domaine-${DomaineId}`
   nom?: string
 } & HTMLAttributes

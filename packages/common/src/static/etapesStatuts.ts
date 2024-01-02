@@ -29,10 +29,6 @@ export type EtapeStatutKey = keyof typeof ETAPES_STATUTS
 
 export const isStatut = (statut: string): statut is EtapeStatutId => etapeStatutIdValidator.safeParse(statut).success
 
-export const isEtapeStatutKey = (etapeStatutKey: string): etapeStatutKey is EtapeStatutKey => {
-  return etapeStatutKey in ETAPES_STATUTS
-}
-
 export interface EtapeStatut<T = EtapeStatutId> {
   id: T
   nom: string

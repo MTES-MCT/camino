@@ -37,7 +37,7 @@ export interface ActiviteApiClient {
   ) => Promise<void>
 }
 
-export type GetActivitesParams = {
+type GetActivitesParams = {
   page?: number
   colonne?: string
   ordre?: 'asc' | 'desc'

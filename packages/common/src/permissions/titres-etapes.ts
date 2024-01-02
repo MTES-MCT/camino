@@ -139,7 +139,7 @@ const canCreateOrEditEtape = (
   return false
 }
 
-export type IsEtapeCompleteEtape = {
+type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
   /** 
    @deprecated use sectionsWithValue

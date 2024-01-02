@@ -1,7 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { TransitionGroup } from 'vue'
 
-export interface Props {
+interface Props {
   messages: { type: 'error' | 'success'; value: string }[]
 }
 export const Messages = caminoDefineComponent<Props>(['messages'], props => {

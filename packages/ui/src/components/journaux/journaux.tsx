@@ -56,7 +56,7 @@ const lignes = (journaux: JournauxData): TableRow<ColonneId>[] => {
   })
 }
 
-export const filtres = ['titresIds'] as const satisfies readonly CaminoFiltre[]
+const filtres = ['titresIds'] as const satisfies readonly CaminoFiltre[]
 
 export const Journaux = caminoDefineComponent<Props>(['apiClient'], props => {
   const router = useRouter()

@@ -3,7 +3,7 @@ import { DomaineId } from 'camino-common/src/static/domaines'
 import { capitalize } from 'camino-common/src/strings'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 
-export type Props = {
+type Props = {
   color?: `bg-${Couleur}` | `bg-domaine-${DomaineId}`
   text: string
   noCapitalize?: boolean

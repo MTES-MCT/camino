@@ -1,7 +1,7 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { IsEtapeCompleteEtape, canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
+import { canCreateEtape, canEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck, isEtapeComplete } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
@@ -216,7 +216,7 @@ test.each<{
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
-const etapeComplete: IsEtapeCompleteEtape = {
+const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   typeId: 'mfr',
   substances: ['auru'],
   points: [{}, {}, {}, {}],

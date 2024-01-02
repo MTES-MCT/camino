@@ -30,7 +30,7 @@ export interface TextColumnData {
   class?: string[]
 }
 
-export type TableRouterLink = {
+type TableRouterLink = {
   name: string
   params?: {
     id?: string
@@ -53,7 +53,7 @@ export interface Column<T = string> {
   noSort?: boolean
 }
 
-export const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
+const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
   return 'component' in columnRow
 }
 
@@ -65,7 +65,7 @@ interface Props<ColumnId> {
   updateParams: (column: ColumnId, order: 'asc' | 'desc') => void
 }
 
-export const isColumnId = <ColumnId extends string>(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
+const isColumnId = <ColumnId extends string>(columns: readonly Column<ColumnId>[], value: string): value is ColumnId => {
   return columns.some(({ id }) => value === id)
 }
 

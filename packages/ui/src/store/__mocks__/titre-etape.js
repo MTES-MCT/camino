@@ -64,23 +64,6 @@ const titreEtapeEdited = {
   documents: [],
 }
 
-const titreEtapeCreation = {
-  titreDemarcheId: 'demarche-id',
-  date: '2020-01-01',
-  duree: { ans: null, mois: null },
-  amodiataires: [],
-  titulaires: [],
-  contenu: {},
-  geoSystemeIds: [],
-  geoSystemeOpposableId: null,
-  groupes: [],
-  incertitudes: {},
-  statutId: '',
-  substances: [],
-  documents: [],
-  justificatifs: [],
-}
-
 const titreEtapeHeritage1 = {
   id: 'etape-id',
   titreDemarcheId: 'demarche-id',
@@ -167,4 +150,4 @@ const titreEtapeHeritageRes2 = {
   contenu: {},
 }
 
-export { titreEtapeMetas, titreEtapeMetasRes, titreEtapeMetasRes2, titreEtapeEdited, titreEtapeCreation, titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritage2, titreEtapeHeritageRes2 }
+export { titreEtapeMetas, titreEtapeMetasRes, titreEtapeMetasRes2, titreEtapeEdited, titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritage2, titreEtapeHeritageRes2 }

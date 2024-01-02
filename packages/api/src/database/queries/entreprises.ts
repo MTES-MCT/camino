@@ -59,7 +59,7 @@ const entreprisesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => 
   return q
 }
 
-const entreprisesCount = async (
+export const entreprisesCount = async (
   {
     noms,
     archive,
@@ -77,13 +77,13 @@ const entreprisesCount = async (
   return q.resultSize()
 }
 
-const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: IFields }, user: User): Promise<IEntreprise | undefined> => {
+export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: IFields }, user: User): Promise<IEntreprise | undefined> => {
   const q = entreprisesQueryBuild({ fields }, user)
 
   return (await q.findById(id)) as IEntreprise
 }
 
-const entreprisesGet = async (
+export const entreprisesGet = async (
   {
     page,
     intervalle,
@@ -130,13 +130,11 @@ const entreprisesGet = async (
   return q
 }
 
-const entreprisesUpsert = async (entreprises: IEntreprise[]) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprises, options.entreprises.update)
+export const entreprisesUpsert = async (entreprises: IEntreprise[]) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprises, options.entreprises.update)
 
-const entrepriseUpsert = async (entreprise: IEntreprise) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')
+export const entrepriseUpsert = async (entreprise: IEntreprise) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')
 
-const entrepriseDelete = async (id: string) => Entreprises.query().deleteById(id).first().returning('*')
-
-const titreDemandeEntreprisesGet = async ({ fields }: { fields?: IFields }, user: User) => {
+export const titreDemandeEntreprisesGet = async ({ fields }: { fields?: IFields }, user: User) => {
   if (!user) return []
 
   if (isSuper(user)) {
@@ -159,5 +157,3 @@ const titreDemandeEntreprisesGet = async ({ fields }: { fields?: IFields }, user
 
   return []
 }
-
-export { entrepriseGet, entreprisesGet, entreprisesCount, entreprisesUpsert, entrepriseUpsert, entrepriseDelete, titreDemandeEntreprisesGet }

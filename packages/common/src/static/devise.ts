@@ -10,7 +10,7 @@ export const DEVISES_IDS = {
 export const deviseIdValidator = z.enum(IDS)
 
 export type DeviseId = z.infer<typeof deviseIdValidator>
-export type Devise<T = DeviseId> = Omit<Definition<T>, 'description'>
+type Devise<T = DeviseId> = Omit<Definition<T>, 'description'>
 export const Devises: { [key in DeviseId]: Devise<key> } = {
   EUR: { id: 'EUR', nom: 'Euros' },
   XPF: { id: 'XPF', nom: 'Francs Pacifique' },

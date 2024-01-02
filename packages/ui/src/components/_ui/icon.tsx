@@ -4,7 +4,7 @@ import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export type Size = 'S' | 'M'
-export type Props = {
+type Props = {
   name: IconType
   size: Size
   color?: string
@@ -32,7 +32,7 @@ export const Icon: FunctionalComponent<Props> = (props: Props): JSX.Element => {
   )
 }
 
-export type DsfrIconProps = {
+type DsfrIconProps = {
   name: DsfrIconType
   size?: 'sm' | 'md' | 'lg'
   color?: 'text-title-blue-france'

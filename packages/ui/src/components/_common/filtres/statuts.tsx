@@ -2,7 +2,7 @@ import { Couleur } from 'camino-common/src/static/couleurs'
 import { FunctionalComponent } from 'vue'
 import { Statut } from '../statut'
 
-export type Props = {
+type Props = {
   element: { couleur: Couleur; nom: string }
 }
 

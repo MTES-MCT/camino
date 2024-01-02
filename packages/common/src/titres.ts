@@ -19,7 +19,7 @@ export type TitreSlug = z.infer<typeof titreSlugValidator>
 export const titreIdOrSlugValidator = z.union([titreSlugValidator, titreIdValidator])
 export type TitreIdOrSlug = z.infer<typeof titreIdOrSlugValidator>
 
-export const commonTitreValidator = z.object({
+const commonTitreValidator = z.object({
   id: titreIdValidator,
   nom: z.string(),
   slug: titreSlugValidator,
@@ -47,7 +47,7 @@ export interface CommonTitre {
 
 export type CommonRestTitre = z.infer<typeof commonTitreValidator>
 
-export const demarcheGetValidator = z.object({
+const demarcheGetValidator = z.object({
   id: demarcheIdValidator,
   slug: demarcheSlugValidator,
   description: z.string().nullable(),
@@ -103,7 +103,7 @@ export const titreOnfValidator = commonTitreValidator.omit({ administrations_loc
 })
 export type CommonTitreONF = z.infer<typeof titreOnfValidator>
 
-export const titreLinkValidator = commonTitreValidator.pick({ id: true, nom: true })
+const titreLinkValidator = commonTitreValidator.pick({ id: true, nom: true })
 export type TitreLink = z.infer<typeof titreLinkValidator>
 
 export const titreLinksValidator = z.object({

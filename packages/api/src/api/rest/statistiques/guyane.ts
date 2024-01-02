@@ -144,7 +144,7 @@ const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreA
   }
 }
 
-export const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
+const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
   try {
     const anneeMoins5 = caminoAnneeToNumber(anneeCurrent) - 5
     // un tableau avec les 5 dernières années

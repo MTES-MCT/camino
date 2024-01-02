@@ -248,7 +248,7 @@ const concessionChartConfiguration = (data: StatistiquesMinerauxMetauxMetropole)
   }
 }
 
-export interface Props {
+interface Props {
   getStats: () => Promise<StatistiquesMinerauxMetauxMetropole>
 }
 

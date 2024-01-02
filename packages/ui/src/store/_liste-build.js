@@ -112,18 +112,8 @@ const listeActionsBuild = (id, name, elements, metas) => ({
   },
 })
 
-export const listeMutationsWithDefaultState = getDefaultState => {
-  return Object.assign({}, listeMutations, {
-    reset(state) {
-      // Merge rather than replace so we don't lose observers
-      // https://github.com/vuejs/vuex/issues/1118
-      Object.assign(state, getDefaultState())
-    },
-  })
-}
-
 /**
- * @deprecated use listeMutationsWithDefaultState
+ * @deprecated
  */
 export const listeMutations = {
   reset(state) {

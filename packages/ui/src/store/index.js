@@ -206,7 +206,7 @@ const mutations = {
   },
 }
 
-export { state, actions, mutations }
+export { actions, mutations }
 
 export default createStore({
   state,

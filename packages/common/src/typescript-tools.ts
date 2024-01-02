@@ -29,8 +29,6 @@ export const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
   return self.indexOf(value) === index
 }
 
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
-
 export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T
 }
@@ -68,7 +66,7 @@ export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 export type OmitDistributive<T, K extends string> = T extends unknown ? Omit<T, K> : never
 
 export type SimplePromiseFn<T> = () => Promise<T>
-export type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
+type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
 export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
   let cache: T | null = null
 

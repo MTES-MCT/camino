@@ -21,12 +21,10 @@ const baseUserNotNullValidator = z.object({ id: utilisateurIdValidator, email: z
 export type BaseUserNotNull = z.infer<typeof baseUserNotNullValidator>
 
 const superRoleValidator = z.literal('super')
-export type SuperRole = z.infer<typeof superRoleValidator>
 const superUserNotNullValidator = baseUserNotNullValidator.extend({ role: superRoleValidator })
 export type UserSuper = z.infer<typeof superUserNotNullValidator>
 
 const defautRoleValidator = z.literal('defaut')
-export type defautRole = z.infer<typeof defautRoleValidator>
 const defautUserNotNullValidator = baseUserNotNullValidator.extend({ role: defautRoleValidator })
 export type UserDefaut = z.infer<typeof defautUserNotNullValidator>
 
@@ -39,11 +37,11 @@ export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]
 const entrepriseRoleValidator = z.enum(ENTREPRISE_ROLES)
-export type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
+type EntrepriseOrBureauDetudeRole = z.infer<typeof entrepriseRoleValidator>
 const entrepriseUserNotNullValidator = baseUserNotNullValidator.extend({ role: entrepriseRoleValidator, entreprises: z.array(z.object({ id: entrepriseIdValidator })) })
 
 export type EntrepriseUserNotNull = z.infer<typeof entrepriseUserNotNullValidator>
-export const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
+const userNotNullValidator = z.union([superUserNotNullValidator, defautUserNotNullValidator, adminUserNotNullValidator, entrepriseUserNotNullValidator])
 export const userValidator = userNotNullValidator.nullable().optional()
 
 export const isSuper = (user: User): user is UserSuper => userPermissionCheck(user, 'super')
@@ -68,7 +66,6 @@ export type User = z.infer<typeof userValidator>
 export type UserNotNull = z.infer<typeof userNotNullValidator>
 
 export const isAdministrationRole = (role: Role): role is AdministrationRole => administrationRoleValidator.safeParse(role).success
-export const isAdministrationAdminRole = (role: Role): role is 'admin' => role === 'admin'
 export const isSuperRole = (role: Role): role is 'super' => role === 'super'
 export const isDefautRole = (role: Role): role is 'defaut' => role === 'defaut'
 

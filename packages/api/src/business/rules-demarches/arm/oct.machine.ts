@@ -25,7 +25,7 @@ type RefuserRDE = {
   type: 'REFUSER_RDE'
 }
 
-export type XStateEvent =
+type XStateEvent =
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'CLASSER_SANS_SUITE' }
@@ -77,7 +77,7 @@ export type XStateEvent =
   | { type: 'FAIRE_AVENANT_ARM' }
   | { type: 'NOTIFIER_AVENANT_ARM' }
 
-export type Event = XStateEvent['type']
+type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
@@ -188,7 +188,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
   constructor() {
@@ -304,7 +304,7 @@ type MecanisationConnu = MecanisationConnuMecanise | MecanisationConnuNonMecanis
 
 type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
-export interface OctARMContext extends CaminoCommonContext {
+interface OctARMContext extends CaminoCommonContext {
   mecanisation: MecanisationInconnu
   expertiseONFFaite: boolean
   paiementFraisDossierValide: boolean

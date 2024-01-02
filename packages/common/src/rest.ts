@@ -164,7 +164,7 @@ export const DOWNLOAD_FORMATS = {
   Zip: 'zip',
 } as const satisfies Record<string, (typeof DOWNLOAD_FORMATS_IDS)[number]>
 
-export const downloadFormatValidator = z.enum(DOWNLOAD_FORMATS_IDS)
+const downloadFormatValidator = z.enum(DOWNLOAD_FORMATS_IDS)
 
 export type DownloadFormat = z.infer<typeof downloadFormatValidator>
 

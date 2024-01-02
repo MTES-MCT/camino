@@ -10,7 +10,7 @@ import { daysBetween, toCaminoDate } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DashboardApiClient } from './dashboard-api-client'
-export interface Props {
+interface Props {
   apiClient: Pick<DashboardApiClient, 'getOnfTitres'>
 }
 

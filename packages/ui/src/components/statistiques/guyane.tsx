@@ -218,7 +218,7 @@ const cxmChartConfiguration = (data: StatistiquesGuyaneData): ChartConfiguration
   return defaultConfiguration(chartData)
 }
 
-export interface Props {
+interface Props {
   getStats: () => Promise<StatistiquesGuyane>
   currentDate: CaminoDate
 }

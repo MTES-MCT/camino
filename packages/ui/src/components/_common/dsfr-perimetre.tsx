@@ -10,7 +10,7 @@ import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 export type TabId = 'carte' | 'points'
-export interface Props {
+interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
   apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'> | null
   titreSlug: TitreSlug

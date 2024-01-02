@@ -4,7 +4,7 @@ import { CaminoCommonContext, DBEtat, Etape } from '../machine-common.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 
-export type PXGOctXStateEvent =
+type PXGOctXStateEvent =
   | { type: 'FAIRE_DEMANDE' }
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
@@ -100,7 +100,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 // basé sur https://cacoo.com/diagrams/QDCLi7jxd3EUOOba/249D0
 export class PxgOctMachine extends CaminoMachine<PxgContext, PXGOctXStateEvent> {

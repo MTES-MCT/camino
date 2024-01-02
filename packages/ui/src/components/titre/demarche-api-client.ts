@@ -13,17 +13,17 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { getWithJson } from '../../api/client-rest'
 
-export interface InputDemarcheCreation {
+interface InputDemarcheCreation {
   titreId: string
   typeId: DemarcheTypeId
   description: string
 }
 
-export type InputDemarcheUpdation = InputDemarcheCreation & {
+type InputDemarcheUpdation = InputDemarcheCreation & {
   id: DemarcheId
 }
 
-export interface GetDemarchesParams {
+interface GetDemarchesParams {
   page?: number
   colonne?: string
   ordre?: 'asc' | 'desc'

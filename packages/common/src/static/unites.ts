@@ -27,7 +27,7 @@ export interface Unite<T = UniteId> {
   openfiscaId?: UniteOpenfiscaId
 }
 
-export type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
+type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
 
 export const uniteIdValidator = z.enum(IDS)
 export type UniteId = z.infer<typeof uniteIdValidator>

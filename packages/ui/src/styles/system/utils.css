@@ -13,14 +13,6 @@ http://cssmojo.com/the-very-latest-clearfix-reloaded/
   clear: both;
 }
 
-.dot {
-  display: inline-block;
-  width: var(--unit-m);
-  height: var(--unit-m);
-  border: 3px solid var(--color-bg);
-  vertical-align: text-bottom;
-}
-
 .hide {
   display: none;
   visibility: hidden;

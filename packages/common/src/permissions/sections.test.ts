@@ -1,20 +1,10 @@
 import { sectionElementWithValueCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { test, expect, describe } from 'vitest'
-import {
-  CheckboxElementWithValue,
-  CheckboxesElementWithValue,
-  DateElementWithValue,
-  ElementWithValue,
-  FileElementWithValue,
-  NumberElementWithValue,
-  RadioElementWithValue,
-  SelectElementWithValue,
-  TextElementWithValue,
-} from '../sections.js'
-import { getCurrent } from '../date'
+import { ElementWithValue } from '../sections.js'
+import { CaminoDate, getCurrent } from '../date'
 
 describe('sectionElementWithValueCompleteValidate', () => {
-  test.each<[TextElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[string | null, ElementWithValue['optionnel'], boolean]>([
     ['', false, false],
     [null, false, false],
     ['un texte', false, true],
@@ -25,7 +15,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'text', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[NumberElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[number | null, ElementWithValue['optionnel'], boolean]>([
     [0, false, true],
     [null, false, false],
     [10, false, true],
@@ -37,7 +27,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'integer', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[RadioElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[boolean | null, ElementWithValue['optionnel'], boolean]>([
     [false, false, true],
     [null, false, false],
     [true, false, true],
@@ -48,7 +38,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'radio', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[CheckboxElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[boolean | null, ElementWithValue['optionnel'], boolean]>([
     [false, false, true],
     [null, false, true],
     [true, false, true],
@@ -59,7 +49,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'checkbox', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[CheckboxesElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[string[], ElementWithValue['optionnel'], boolean]>([
     [[], false, true],
     [[], true, true],
     [[], undefined, true],
@@ -70,7 +60,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'checkboxes', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[SelectElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[string | null, ElementWithValue['optionnel'], boolean]>([
     ['', false, false],
     [null, false, false],
     ['id1', false, true],
@@ -81,7 +71,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'select', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[DateElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[CaminoDate | null, ElementWithValue['optionnel'], boolean]>([
     [getCurrent(), false, true],
     [null, false, false],
     [null, true, true],
@@ -91,7 +81,7 @@ describe('sectionElementWithValueCompleteValidate', () => {
     expect(sectionElementWithValueCompleteValidate({ type: 'date', value, optionnel })).toEqual(expectedComplete)
   })
 
-  test.each<[FileElementWithValue['value'], ElementWithValue['optionnel'], boolean]>([
+  test.each<[string | null, ElementWithValue['optionnel'], boolean]>([
     ['', false, false],
     [null, false, false],
     ['fileId', false, true],

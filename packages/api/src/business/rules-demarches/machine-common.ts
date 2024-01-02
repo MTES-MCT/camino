@@ -1,4 +1,4 @@
-import { IContenu, ITitreEtape } from '../../types.js'
+import { IContenu } from '../../types.js'
 import { EtapeStatutId, EtapeStatutKey, ETAPES_STATUTS, isStatut, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
@@ -39,7 +39,6 @@ export const titreEtapeForMachineValidator = z.object({
 })
 
 export type TitreEtapeForMachine = z.infer<typeof titreEtapeForMachineValidator>
-export const isTitreEtapeForMachine = (etape: Omit<ITitreEtape, 'titreDemarcheId'>): etape is TitreEtapeForMachine => titreEtapeForMachineValidator.safeParse(etape).success
 
 export const toMachineEtapes = (etapes: (Pick<Partial<TitreEtapeForMachine>, 'ordre'> & Omit<TitreEtapeForMachine, 'id' | 'ordre'>)[]): Etape[] => {
   // TODO 2022-10-12 si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique

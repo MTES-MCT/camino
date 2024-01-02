@@ -37,7 +37,7 @@ type FaireDemande = {
   surface: number
 }
 
-export type XStateEvent =
+type XStateEvent =
   | FaireDemande
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'FAIRE_SAISINE_PREFET' }
@@ -88,7 +88,7 @@ export type XStateEvent =
   | { type: 'DEMANDER_INFORMATIONS' }
   | { type: 'RECEVOIR_INFORMATIONS' }
 
-export type Event = XStateEvent['type']
+type Event = XStateEvent['type']
 
 const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   FAIRE_DEMANDE: { db: EtapesTypesEtapesStatuts.demande, mainStep: true },
@@ -154,7 +154,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
+const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 

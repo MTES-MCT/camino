@@ -77,7 +77,7 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'matomo', 'id', 'downloadTitle', 'class']
 
-export async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
+async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
   if (selectedFormat !== null) {
     const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...query })
 

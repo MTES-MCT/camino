@@ -76,7 +76,8 @@ else
 	npm run ci:lint --workspace=packages/api
 endif
 
-
+lint/detect-dead-code:
+	npm run knip
 
 lint/common:
 ifndef CI

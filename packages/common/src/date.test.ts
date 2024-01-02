@@ -10,7 +10,6 @@ import {
   dateAddMonths,
   dateValidate,
   setDayInMonth,
-  monthsBetween,
   dateFormat,
   getMois,
   getDay,
@@ -133,13 +132,6 @@ test("la méthode dateAddMonths n'est pas idempotente", () => {
   const date = '2022-05-30'
 
   expect(dateAddMonths(dateAddMonths(toCaminoDate(date), -3), 3)).toBe('2022-06-02')
-})
-
-test.each([
-  ['2020-03-10', '2020-01-07', 2],
-  ['2021-01-01', '2020-01-01', 12],
-])('calcul le nombre de mois entre 2 dates', (dateFin, dateDebut, months) => {
-  expect(monthsBetween(dateDebut, dateFin)).toBe(months)
 })
 
 test('setDayInMonth', () => {

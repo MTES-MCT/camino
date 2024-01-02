@@ -1,7 +1,7 @@
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Tag } from './tag'
 
-export type Props = {
+type Props = {
   elements: string[]
 } & HTMLAttributes
 

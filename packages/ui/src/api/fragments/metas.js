@@ -1,39 +1,5 @@
 import gql from 'graphql-tag'
 
-const fragmentTitreTypeType = gql`
-  fragment titreTypeType on TitreTypeType {
-    id
-    nom
-    description
-    ordre
-  }
-`
-
-const fragmentTitreStatut = gql`
-  fragment titreStatut on TitreStatut {
-    id
-    nom
-    description
-    ordre
-  }
-`
-
-const fragmentTitreType = gql`
-  fragment titreType on TitreType {
-    id
-    typeId
-    domaineId
-    type {
-      ...titreTypeType
-    }
-    domaine {
-      id
-      nom
-    }
-  }
-  ${fragmentTitreTypeType}
-`
-
 const fragmentDocumentType = gql`
   fragment documentType on DocumentType {
     id
@@ -87,4 +53,4 @@ const fragmentEtapeTypeDocumentType = gql`
   }
 `
 
-export { fragmentTitreTypeType, fragmentTitreStatut, fragmentEtapeType, fragmentTitreType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType }
+export { fragmentEtapeType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType }

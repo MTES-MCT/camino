@@ -23,7 +23,7 @@ export default defineConfig({
   },
 
   test: {
-    setupFiles: ['./__mocks__/setupVitest.js'],
+    setupFiles: [path.resolve(__dirname, './src/__mocks__/setupVitest.js')],
     testTransformMode: {
       web: ['*.tsx'],
     },

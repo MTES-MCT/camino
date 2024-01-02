@@ -2,7 +2,7 @@ import { dateFormat } from '@/utils'
 import { CaminoDate } from 'camino-common/src/date'
 import { FunctionalComponent } from 'vue'
 
-export interface Props {
+interface Props {
   date: CaminoDate
 }
 

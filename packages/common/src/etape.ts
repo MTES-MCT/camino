@@ -1,8 +1,6 @@
 import { CaminoDate } from './date.js'
-import { DemarcheId } from './demarche.js'
 import { EntrepriseId, documentIdValidator } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
-import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
@@ -15,7 +13,7 @@ export type EtapeId = z.infer<typeof etapeIdValidator>
 export const etapeSlugValidator = z.string().brand<'EtapeSlug'>()
 export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 
-export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
+const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
 export type HeritageProp<T> =
@@ -74,11 +72,6 @@ export type EtapeFondamentale = EtapeWithIncertitudesAndHeritage<Omit<EtapeBase,
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
-
-export type CommonEtape = {
-  titreDemarcheId: DemarcheId
-  typeId: DemarcheTypeId
-}
 
 export const etapeDocumentValidator = z.object({
   id: documentIdValidator,

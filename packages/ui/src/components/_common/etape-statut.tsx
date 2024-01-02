@@ -3,7 +3,7 @@ import { Badge } from '../_ui/badge'
 import { CouleurIllustrative } from 'camino-common/src/static/couleurs'
 import { EtapeStatutId, EtapesStatuts, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
-export type Props = {
+type Props = {
   etapeStatutId: EtapeStatutId
 } & HTMLAttributes
 

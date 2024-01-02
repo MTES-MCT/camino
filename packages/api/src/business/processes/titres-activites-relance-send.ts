@@ -5,7 +5,7 @@ import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
 
-export const ACTIVITES_DELAI_RELANCE_JOURS = 14
+const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
 export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
   console.info()

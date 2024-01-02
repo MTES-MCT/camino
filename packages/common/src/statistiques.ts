@@ -41,7 +41,6 @@ export const substancesFiscalesStats = [
 ] as const satisfies readonly SubstanceFiscaleId[]
 
 const substancesFiscalesStatsValidator = z.enum(substancesFiscalesStats)
-export type SubstancesFiscalesStats = z.infer<typeof substancesFiscalesStatsValidator>
 
 export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
 const titreTypeIdDelaisValidator = z.enum(titreTypeIdDelais)
@@ -154,7 +153,7 @@ export type StatistiquesGuyane = {
   parAnnee: Record<CaminoAnnee, StatistiquesGuyaneActivite>
 }
 
-export const statistiqueGranulatsMarinsStatAnneeValidator = z.object({
+const statistiqueGranulatsMarinsStatAnneeValidator = z.object({
   annee: z.number(),
   titresPrw: z.object({
     quantite: z.number(),

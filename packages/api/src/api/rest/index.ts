@@ -2,7 +2,6 @@ import { titreGet, titresGet } from '../../database/queries/titres.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
 import { entreprisesGet } from '../../database/queries/entreprises.js'
-import { utilisateursGet } from '../../database/queries/utilisateurs.js'
 
 import { titreFormat, titresFormat } from '../_format/titres.js'
 import { titreDemarcheFormat } from '../_format/titres-demarches.js'
@@ -19,7 +18,6 @@ import { entreprisesFormatTable } from './format/entreprises.js'
 
 import { matomo } from '../../tools/matomo.js'
 import { User } from 'camino-common/src/roles.js'
-import { utilisateursFormatTable } from './format/utilisateurs.js'
 import {
   CaminoFiltre,
   caminoFiltres,
@@ -29,8 +27,6 @@ import {
   titresDownloadFormats,
   activitesFiltresNames,
   activitesDownloadFormats,
-  utilisateursFiltresNames,
-  utilisateursDownloadFormats,
   entreprisesFiltresNames,
   entreprisesDownloadFormats,
 } from 'camino-common/src/filters.js'
@@ -358,48 +354,6 @@ export const activites =
         }
       : null
   }
-
-// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const utilisateursColonnes = ['nom', 'prenom', 'email', 'role'] as const
-const utilisateursValidator = generateValidator(utilisateursFiltresNames, utilisateursColonnes, utilisateursDownloadFormats)
-
-export const utilisateurs = async ({ query }: { query: GenericQueryInput<typeof utilisateursValidator> }, user: User) => {
-  const params = utilisateursValidator.parse(query)
-
-  const utilisateurs = await utilisateursGet(
-    {
-      colonne: params.colonne,
-      ordre: params.ordre,
-      entreprisesIds: params.entreprisesIds,
-      administrationIds: params.administrationIds,
-      roles: params.roles,
-      noms: params.nomsUtilisateurs,
-      emails: params.emails,
-    },
-    {},
-    user
-  )
-
-  let contenu
-
-  switch (params.format) {
-    case 'csv':
-    case 'xlsx':
-    case 'ods':
-      contenu = tableConvert('utilisateurs', utilisateursFormatTable(utilisateurs), params.format)
-      break
-    default:
-      exhaustiveCheck(params.format)
-  }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, params.format),
-        format: params.format,
-        contenu,
-      }
-    : null
-}
 
 // TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
 const entreprisesColonnes = ['siren'] as const

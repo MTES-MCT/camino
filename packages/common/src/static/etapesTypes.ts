@@ -183,8 +183,6 @@ export const ETAPES_TYPES = {
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp',
 } as const satisfies Record<string, EtapeTypeId>
 
-export type EtapeTypeKey = keyof typeof ETAPES_TYPES
-
 export const etapeTypeIdValidator = z.enum(IDS)
 export const etapeTypeIdFondamentaleValidator = z.enum(FONDAMENTALES_IDS)
 export const etapeTypeIdNonFondamentaleValidator = z.enum(NON_FONDAMENTALES_IDS)
@@ -1891,14 +1889,11 @@ type EtapeFondamentaleIdFinder<Etapes> = Etapes extends readonly [infer First, .
   : []
 
 type EtapeTypeIdFondamentaleArray = EtapeFondamentaleIdFinder<typeof IDS>
-export type EtapeTypeIdFondamentale = EtapeFondamentaleIdFinder<typeof IDS>[number]
-export type EtapeTypeIdNonFondamentale = Exclude<EtapeTypeId, EtapeTypeIdFondamentale>
+type EtapeTypeIdFondamentale = EtapeFondamentaleIdFinder<typeof IDS>[number]
+type EtapeTypeIdNonFondamentale = Exclude<EtapeTypeId, EtapeTypeIdFondamentale>
 
 export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId => {
   return etapeTypeIdValidator.safeParse(etapeTypeId).success
-}
-export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeKey => {
-  return etapeTypeKey in ETAPES_TYPES
 }
 
 const ETAPES_DECISIONS_IDS = [

@@ -4,7 +4,7 @@ import path, { join } from 'node:path'
 import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export const connection = {
+const connection = {
   host: process.env.PGHOST,
   port: Number(process.env.PGPORT),
   database: process.env.PGDATABASE,

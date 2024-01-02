@@ -24,5 +24,4 @@ export const ActivitesStatuts: { [key in ActivitesStatutId]: ActivitesStatut<key
   enc: { id: 'enc', nom: 'en construction', couleur: 'warning' },
 }
 
-export const activitesStatutsIds = Object.values(ACTIVITES_STATUTS_IDS)
 export const activitesStatuts = Object.values(ActivitesStatuts)

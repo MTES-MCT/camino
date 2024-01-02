@@ -3,7 +3,7 @@ import { Icon } from './icon'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 import styles from './help-tooltip.module.css'
 
-export interface Props {
+interface Props {
   icon?: IconType
   text: string
   class?: HTMLAttributes['class']
