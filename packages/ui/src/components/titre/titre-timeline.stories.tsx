@@ -2,14 +2,13 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { toCaminoDate } from 'camino-common/src/date'
 import { vueRouter } from 'storybook-vue3-router'
-import { Phase } from './titre-timeline'
+import { Phase, TitreTimeline } from './titre-timeline'
 import { titreSlugValidator } from 'camino-common/src/titres'
-import { TitreTimeline2 } from './titre-timeline2'
 
 const meta: Meta = {
   title: 'Components/Titre/Timeline',
-  component: TitreTimeline2,
-  decorators: [() => ({ template: '<div><story/></div>' }), vueRouter([{ name: 'titre' }])],
+  component: TitreTimeline,
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' }), vueRouter([{ name: 'titre' }])],
 }
 export default meta
 const defaultPhasesWithAlterations: Phase = [
@@ -53,17 +52,17 @@ const defaultPhasesWithAlterations: Phase = [
   ],
 ]
 export const Default: StoryFn = () => (
-  <TitreTimeline2 titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
 )
 export const DefaultWithEventSelected: StoryFn = () => (
-  <TitreTimeline2 titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche4')} />
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche4')} />
 )
 export const DefaultWithTravauxSelected: StoryFn = () => (
-  <TitreTimeline2 titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-travaux1')} />
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={defaultPhasesWithAlterations} currentDemarcheSlug={demarcheSlugValidator.parse('slug-travaux1')} />
 )
 
 export const SimpleOnePhase: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[
       [
@@ -81,7 +80,7 @@ export const SimpleOnePhase: StoryFn = () => (
 )
 
 export const TwoPhases: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[
       [
@@ -108,7 +107,7 @@ export const TwoPhases: StoryFn = () => (
 )
 
 export const MultipleUnorderedDemarchesWithoutPhase: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[
       [
@@ -142,7 +141,7 @@ export const MultipleUnorderedDemarchesWithoutPhase: StoryFn = () => (
 )
 
 export const OnePhaseMultipleAlterations: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[
       [
@@ -172,7 +171,7 @@ export const OnePhaseMultipleAlterations: StoryFn = () => (
 )
 
 export const BigExample: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[
       [
@@ -255,7 +254,7 @@ export const BigExample: StoryFn = () => (
 )
 
 export const OneDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline2
+  <TitreTimeline
     titreSlug={titreSlugValidator.parse('slug-titre')}
     phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
     currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
@@ -263,5 +262,5 @@ export const OneDemarcheNoPhase: StoryFn = () => (
 )
 
 export const NoDemarcheNoPhase: StoryFn = () => (
-  <TitreTimeline2 titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
+  <TitreTimeline titreSlug={titreSlugValidator.parse('slug-titre')} phasesWithAlterations={[]} currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')} />
 )
