@@ -1,4 +1,4 @@
-import Loader from '../_ui/loader.vue'
+import { LoadingElement } from '@/components/_ui/functional-loader'
 import { statistiquesGlobales } from '@/api/statistiques'
 import { defineComponent, onMounted, ref, FunctionalComponent } from 'vue'
 import { QuantiteParMois, Statistiques } from 'camino-common/src/statistiques'
@@ -9,6 +9,7 @@ import { ADMINISTRATION_TYPE_IDS_ARRAY, AdministrationTypeId, sortedAdministrati
 import { ConfigurableChart } from '../_charts/configurable-chart'
 import { numberFormat } from 'camino-common/src/number'
 import styles from './statistiques.module.css'
+import { AsyncData } from '@/api/client-rest'
 
 const pieConfiguration = (data: ChartConfiguration<'pie'>['data']): ChartConfiguration<'pie'> => ({
   type: 'pie',
@@ -64,28 +65,26 @@ const statsLineFormat = ({ stats, labelY }: { stats: QuantiteParMois[]; labelY: 
       ],
     }
   )
-export const Globales = defineComponent({
-  setup() {
-    const statistiques = ref<Statistiques | null>(null)
+export const Globales = defineComponent(() => {
+  const data = ref<AsyncData<Statistiques>>({ status: 'LOADING' })
 
-    onMounted(async () => {
-      try {
-        statistiques.value = await statistiquesGlobales()
-      } catch (e) {}
-    })
+  onMounted(async () => {
+    data.value = { status: 'LOADING' }
+    try {
+      const statistiques = await statistiquesGlobales()
 
-    return () => (
-      <>
-        {statistiques.value ? (
-          <div class="content">
-            <PureGlobales statistiques={statistiques.value} />
-          </div>
-        ) : (
-          <Loader class="content" />
-        )}
-      </>
-    )
-  },
+      if (statistiques !== null) {
+        data.value = { status: 'LOADED', value: statistiques }
+      }
+    } catch (e: any) {
+      data.value = {
+        status: 'ERROR',
+        message: e.message ?? 'something wrong happened',
+      }
+    }
+  })
+
+  return () => <LoadingElement data={data.value} renderItem={statistiques => <PureGlobales statistiques={statistiques} />} />
 })
 
 interface Props {
