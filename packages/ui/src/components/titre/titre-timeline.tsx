@@ -34,6 +34,8 @@ const isNoPhase = (phase: Phase | NoPhase): phase is NoPhase => {
   return phase.length === 1 && phase[0].length === 1 && phase[0][0].demarche_date_debut === null
 }
 
+const minWidth = 200
+
 export const TitreTimeline: FunctionalComponent<Props> = props => {
   if (props.phasesWithAlterations.length === 0 || isNoPhase(props.phasesWithAlterations)) {
     return null
@@ -63,7 +65,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
         <div class="fr-mx-4w">
           <div style={{ display: 'flex', gap: '14px' }}>
             {datePhasesWithAlterations.map((datePhases, i) => (
-              <div key={i} style={{ flex: 1, minWidth: datePhases.length * 202 + 1 + 'px' }} class={`${style.datesContainer}`}>
+              <div key={i} style={{ flex: 1, minWidth: datePhases.length * (minWidth + 2) + 1 + 'px' }} class={`${style.datesContainer}`}>
                 {datePhases.map((datePhase, index) => (
                   <div
                     class={`${style.date} fr-text--md fr-mb-1w`}
@@ -89,7 +91,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                     style={{
                       justifyContent: 'end',
                       flex: 1,
-                      minWidth: '100px',
+                      minWidth: `${minWidth / 2}px`,
                     }}
                   >
                     <span
@@ -136,7 +138,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
             {props.phasesWithAlterations.map(phaseWithAlterations => (
               <div style={{ flex: 1 }} class={`${style.datesContainer}`}>
                 {phaseWithAlterations.map(demarche => (
-                  <div style={{ flex: 1, minWidth: '200px' }}>
+                  <div style={{ flex: 1, minWidth: `${minWidth}px` }}>
                     <CaminoRouterLink
                       {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
                       key={demarche.slug}
@@ -190,6 +192,7 @@ const DemarchePhase = defineComponent<{
       {...getAriaCurrent(props.phase.slug, props.currentDemarcheSlug)}
       to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: props.phase.slug } }}
       title={capitalize(DemarchesTypes[props.phase.demarche_type_id].nom)}
+      style={{ minWidth: `${minWidth}px` }}
       class={`${style.phase} ${isOntoRootElement.value && !isOntoChildElement.value ? style.phaseHover : ''}`}
       anchorHTMLAttributes={{ onMouseenter, onMouseleave }}
     >
