@@ -121,8 +121,14 @@ export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
  * @returns une étape fondamentale
  */
 
+/**
+ * @public pour les tests
+ */
+export type TitrePropTitreEtapeFindDemarcheEtape =
+  | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'date'>
+  | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'date'>
 type TitrePropTitreEtapeFindDemarche = Pick<TitreGetDemarche, 'demarche_type_id' | 'demarche_statut_id'> & {
-  etapes: (Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id'> | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale'>)[]
+  etapes: TitrePropTitreEtapeFindDemarcheEtape[]
 }
 
 export const getMostRecentValidValueProp = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances'>(
@@ -150,7 +156,7 @@ export const getMostRecentValidValueProp = <P extends 'titulaires' | 'amodiatair
 
   for (const titreDemarche of titreDemarchesDesc) {
     if (canImpactTitre(titreDemarche.demarche_type_id, titreDemarche.demarche_statut_id)) {
-      const titreEtapeDesc = [...titreDemarche.etapes].reverse()
+      const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.date.localeCompare(a.date))
 
       for (const titreEtape of titreEtapeDesc) {
         if ('fondamentale' in titreEtape && titreEtapeValid(titreEtape, titreDemarche.demarche_type_id)) {
