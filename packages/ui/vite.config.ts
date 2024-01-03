@@ -58,6 +58,11 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
+      '/openstreetmapfr': {
+        target: 'https://a.tile.openstreetmap.fr',
+        rewrite: path => path.replace(/^\/openstreetmapfr/, ''),
+        changeOrigin: true,
+      },
       '/apiUrl': {
         target: process.env.API_URL,
         changeOrigin: true,

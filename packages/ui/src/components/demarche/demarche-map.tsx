@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onBeforeUnmount } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
@@ -79,7 +79,7 @@ const overlayMapNames = {
 const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
   osm: {
     type: 'raster',
-    tiles: ['https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'],
+    tiles: ['/openstreetmapfr/osmfr/{z}/{x}/{y}.png'],
     attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxzoom: 19,
   },
@@ -452,8 +452,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
-  onBeforeUnmount(() => {
-    map.value?.off('moveend', moveend)
+  onUnmounted(() => {
+    map.value?.remove()
   })
 
   const selectLayer = (layer: LayerId) => {
