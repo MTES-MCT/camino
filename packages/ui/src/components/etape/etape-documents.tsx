@@ -27,7 +27,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   }
 
   return (
-    <>
+    <div style={{ overflowX: 'auto' }}>
       {props.etapeDocuments.length > 0 ? (
         <div class=" fr-table fr-m-0">
           <table style={{ display: 'table' }} class="fr-table--no-caption fr-m-0">
@@ -66,7 +66,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
           </table>
         </div>
       ) : null}
-    </>
+    </div>
   )
 }
 
