@@ -76,6 +76,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
         const etapeCommon: Omit<DemarcheEtapeCommon, 'documents'> = {
           date: etape.date,
+          ordre: etape.ordre,
           id: etape.id,
           slug: etape.slug,
           etape_statut_id: etape.etape_statut_id,

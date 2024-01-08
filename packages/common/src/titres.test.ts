@@ -22,7 +22,7 @@ describe('getMostRecentValidValueProp', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
-      date: toCaminoDate('2012-08-18'),
+      ordre: 2,
     }
 
     const dex: TitrePropTitreEtapeFindDemarcheEtape = {
@@ -43,7 +43,7 @@ describe('getMostRecentValidValueProp', () => {
         perimetre: null,
       },
       etape_statut_id: 'acc',
-      date: toCaminoDate('2012-08-09'),
+      ordre: 1,
     }
 
     expect(

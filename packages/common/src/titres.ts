@@ -47,7 +47,7 @@ export interface CommonTitre {
 
 export type CommonRestTitre = z.infer<typeof commonTitreValidator>
 
-const demarcheGetValidator = z.object({
+export const demarcheGetValidator = z.object({
   id: demarcheIdValidator,
   slug: demarcheSlugValidator,
   description: z.string().nullable(),
@@ -125,8 +125,8 @@ export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
  * @public pour les tests
  */
 export type TitrePropTitreEtapeFindDemarcheEtape =
-  | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'date'>
-  | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'date'>
+  | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>
+  | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'ordre'>
 type TitrePropTitreEtapeFindDemarche = Pick<TitreGetDemarche, 'demarche_type_id' | 'demarche_statut_id'> & {
   etapes: TitrePropTitreEtapeFindDemarcheEtape[]
 }
@@ -156,7 +156,7 @@ export const getMostRecentValidValueProp = <P extends 'titulaires' | 'amodiatair
 
   for (const titreDemarche of titreDemarchesDesc) {
     if (canImpactTitre(titreDemarche.demarche_type_id, titreDemarche.demarche_statut_id)) {
-      const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.date.localeCompare(a.date))
+      const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
 
       for (const titreEtape of titreEtapeDesc) {
         if ('fondamentale' in titreEtape && titreEtapeValid(titreEtape, titreDemarche.demarche_type_id)) {
