@@ -15,7 +15,7 @@ import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
-import { getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { isNumberElement, valeurFind } from 'camino-common/src/sections'
 import { EtapeDocuments } from '../etape/etape-documents'
 import { User } from 'camino-common/src/roles'
@@ -35,7 +35,7 @@ import { DeposeEtapePopup } from './depose-etape-popup'
 const fondamentalePropsName = 'fondamentale'
 
 type Props = {
-  etape: CommonDemarcheEtape
+  etape: OmitDistributive<CommonDemarcheEtape, 'ordre'>
   demarche: {
     titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[]
     administrationsLocales: AdministrationId[]

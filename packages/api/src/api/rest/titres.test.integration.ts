@@ -485,6 +485,7 @@ describe('getTitre', () => {
                   "titulaires": null,
                 },
                 "id": "titre-etape-id",
+                "ordre": 0,
                 "sections_with_values": [
                   {
                     "elements": [

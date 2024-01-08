@@ -22,6 +22,7 @@ export const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
   date: caminoDateValidator,
+  ordre: z.number(),
   communes: z.array(communeValidator.pick({ id: true })),
   secteurs_maritime: z.array(secteurMaritimeValidator).nullable(),
   substances: z.array(substanceLegaleIdValidator).nullable(),
@@ -44,6 +45,7 @@ export const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuer
 select
     e.id,
     e.date,
+    e.ordre,
     e.communes,
     e.secteurs_maritime,
     e.substances,
