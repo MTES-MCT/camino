@@ -53,15 +53,16 @@ import { createReadStream } from 'node:fs'
 import { join } from 'node:path'
 import { NewDownload } from './fichiers'
 import { TempDocumentName } from 'camino-common/src/document.js'
+import Decimal from 'decimal.js'
 
-const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
+const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {
-    return 0
+    return new Decimal(0)
   }
 
   const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
 
-  return quantite / (unite.referenceUniteRatio ?? 1)
+  return new Decimal(quantite).div(unite.referenceUniteRatio ?? 1).toDecimalPlaces(3)
 }
 // VisibleForTesting
 export const bodyBuilder = (
@@ -138,7 +139,7 @@ export const bodyBuilder = (
         for (const substancesFiscale of substancesFiscales) {
           const production = conversion(substancesFiscale, activite.contenu.substancesFiscales[substancesFiscale.id])
 
-          if (production > 0) {
+          if (production.greaterThan(0)) {
             const surfaceTotale = titre.communes.reduce((value, commune) => value + (commune.surface ?? 0), 0)
 
             let communePrincipale: ICommune | null = null
