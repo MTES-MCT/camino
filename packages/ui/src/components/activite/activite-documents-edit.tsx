@@ -44,7 +44,7 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
   notifyChange()
 
   return () => (
-    <>
+    <div style={{ overflowX: 'auto' }}>
       {hasDocumentTypes ? (
         <div class="fr-table">
           <table style={{ display: 'table' }}>
@@ -100,6 +100,6 @@ export const ActiviteDocumentsEdit = caminoDefineComponent<Props>(['activiteDocu
           }}
         />
       ) : null}
-    </>
+    </div>
   )
 })
