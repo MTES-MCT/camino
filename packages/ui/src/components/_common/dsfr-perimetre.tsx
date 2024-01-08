@@ -109,12 +109,14 @@ const TabCaminoMap = defineComponent<Props>(props => {
     return DemarcheMap
   })
 
+  const geojson = { type: 'FeatureCollection', properties: null, features: [props.geojsonMultiPolygon] }
+
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DemarcheMap geojsonMultiPolygon={props.geojsonMultiPolygon} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} router={props.router} />
       <DsfrLink
         style={{ alignSelf: 'end' }}
-        href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(props.geojsonMultiPolygon))}`}
+        href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson))}`}
         download={`points-${props.titreSlug}.geojson`}
         icon="fr-icon-download-line"
         buttonType="secondary"
