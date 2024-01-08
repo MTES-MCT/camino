@@ -86,6 +86,12 @@
     >
       <DecisionsAnnexesEdit :etape="etape" @complete-update="decisionsAnnexesComplete = $event" />
     </Accordion>
+
+    <div class="dsfr">
+      <div class="fr-input-group">
+      <label class="fr-label" for="notes">Notes</label>
+      <textarea v-model="etape.notes" class="fr-input" id="notes" name="notes"></textarea></div>
+    </div>
   </div>
 </template>
 

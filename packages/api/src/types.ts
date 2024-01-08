@@ -427,6 +427,7 @@ interface ITitreEtape {
   heritageContenu?: IHeritageContenu | null
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
+  notes?: string | null
 }
 
 interface ITitreEtapeFiltre {

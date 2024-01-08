@@ -16,7 +16,7 @@ const meta: Meta = {
   title: 'Components/Demarche/Etape',
   // @ts-ignore
   component: DemarcheEtape,
-  decorators: [vueRouter([{ name: 'entreprise' }]), () => ({ template: '<div class="dsfr"><story/></div>' })],
+  decorators: [vueRouter([{ name: 'entreprise' }, { name: 'etape-edition' }]), () => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 
 export default meta
@@ -181,6 +181,7 @@ export const NoSnapshotDemande: StoryFn = () => (
     apiClient={apiClient}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
+      notes: null,
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
@@ -271,6 +272,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       decisions_annexes_contenu: {},
       decisions_annexes_sections: [],
       date,
+      notes: 'Super note',
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -331,6 +333,7 @@ export const DemandeNoMap: StoryFn = () => (
     apiClient={apiClient}
     etape={{
       id: etapeIdValidator.parse('etapeId'),
+      notes: null,
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
@@ -382,6 +385,7 @@ export const DemandeNonDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
@@ -417,6 +421,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
@@ -494,6 +499,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
@@ -575,6 +581,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
@@ -650,6 +657,7 @@ export const Depot: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date,
@@ -672,6 +680,7 @@ export const AvisDefavorable: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
       etape_type_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
       date,
@@ -696,6 +705,65 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
     etape={{
       id: etapeIdValidator.parse('etapeId'),
       slug: etapeSlugValidator.parse('etape-slug'),
+      notes: null,
+      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      date,
+      decisions_annexes_contenu: {},
+      decisions_annexes_sections: [],
+      fondamentale: {
+        date_debut: null,
+        duree: null,
+        date_fin: null,
+        substances: [],
+        titulaires: [],
+        amodiataires: [],
+        perimetre: {
+          geojsonMultiPolygon: {
+            properties: null,
+            type: 'Feature',
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
+                [
+                  [
+                    [-53.58181013905019, 3.8309654861273],
+                    [-53.58178306390299, 3.8219278216269807],
+                    [-53.572785590706495, 3.82195493825841],
+                    [-53.57281257175149, 3.8309926670647294],
+                    [-53.58181013905019, 3.8309654861273],
+                  ],
+                ],
+              ],
+            },
+          },
+          surface: null,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
+        },
+      },
+      sections_with_values: [],
+      documents: [],
+      entreprises_documents: [],
+    }}
+  />
+)
+
+
+export const DemandeAvecGrosseNote: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [] }}
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    initTab="points"
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      notes: 'Ceci est une énorme note sur plusieurs lignes.\n Une seconde ligne.\n Incertitudes: \n * date \n * substances \n * titulaires',
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,

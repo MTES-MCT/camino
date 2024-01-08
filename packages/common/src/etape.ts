@@ -50,6 +50,7 @@ type EtapeBase = {
   communes?: string[]
   geojsonPoints?: unknown[]
   geojsonMultiPolygon?: unknown[]
+  notes: null | string
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
 export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {

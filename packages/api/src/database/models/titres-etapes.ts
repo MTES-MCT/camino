@@ -11,6 +11,7 @@ import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Journaux from './journaux.js'
 import { etapeSlugValidator } from 'camino-common/src/etape.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -49,6 +50,7 @@ class TitresEtapes extends Model {
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
+      notes: { type: 'string' },
     },
   }
 
@@ -133,6 +135,10 @@ class TitresEtapes extends Model {
 
     if (!this.slug && this.titreDemarcheId && this.typeId) {
       this.slug = etapeSlugValidator.parse(`${this.titreDemarcheId}-${this.typeId}99`)
+    }
+
+    if(isNotNullNorUndefined(this.notes) && this.notes.trim() === ""){
+      this.notes = null
     }
 
     return super.$beforeInsert(context)

@@ -24,6 +24,7 @@ export interface IGetEtapesByDemarcheIdDbResult {
   heritage_contenu: Json | null;
   heritage_props: Json | null;
   id: string;
+  notes: string | null;
   ordre: number;
   sdom_zones: Json;
   secteurs_maritime: Json;

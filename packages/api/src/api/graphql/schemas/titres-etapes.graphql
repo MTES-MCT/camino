@@ -92,6 +92,8 @@ type Etape {
   decisionsAnnexesSections: Json
   "Le contenu des décisions annexes nécessaires à la demande"
   decisionsAnnexesContenu: Json
+
+  notes: String
 }
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -172,6 +174,7 @@ input InputEtapeCreation {
   contenu: Json
   documentIds: [ID]
   entrepriseDocumentIds: [ID]
+  notes: String
 }
 
 input InputEtapeModification {
@@ -195,6 +198,7 @@ input InputEtapeModification {
   documentIds: [ID]
   entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
+  notes: String
 }
 
 input InputEtapeFiltre {

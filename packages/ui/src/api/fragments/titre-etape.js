@@ -179,6 +179,7 @@ const fragmentEtape = gql`
     heritageContenu
     decisionsAnnexesSections
     decisionsAnnexesContenu
+    notes
   }
 
   ${fragmentTitreEntreprises}
