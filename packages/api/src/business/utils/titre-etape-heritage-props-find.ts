@@ -1,4 +1,4 @@
-import { ITitreEtape, IEntreprise, ITitrePoint, ITitreIncertitudes, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, IEntreprise, ITitrePoint, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
@@ -99,28 +99,6 @@ const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: I
           } else if (propId === 'duree' || propId === 'surface') {
             newTitreEtape[propId] = newValue as number
           }
-        }
-
-        const incertitudePropId = propId as keyof ITitreIncertitudes
-
-        if (newTitreEtape.incertitudes && prevTitreEtape.incertitudes && newTitreEtape.incertitudes[incertitudePropId] !== prevTitreEtape.incertitudes[incertitudePropId]) {
-          hasChanged = true
-          newTitreEtape = objectClone(newTitreEtape)
-          newTitreEtape.incertitudes![incertitudePropId] = prevTitreEtape.incertitudes[incertitudePropId]
-        } else if (newTitreEtape.incertitudes && !prevTitreEtape.incertitudes) {
-          newTitreEtape = objectClone(newTitreEtape)
-          if (newTitreEtape.incertitudes && newTitreEtape.incertitudes[incertitudePropId]) {
-            hasChanged = true
-            delete newTitreEtape.incertitudes[incertitudePropId]
-            if (!Object.keys(newTitreEtape.incertitudes).length) {
-              newTitreEtape.incertitudes = null
-            }
-          }
-        } else if (prevTitreEtape.incertitudes && prevTitreEtape.incertitudes[incertitudePropId] && !newTitreEtape.incertitudes) {
-          hasChanged = true
-          newTitreEtape = objectClone(newTitreEtape)
-          newTitreEtape.incertitudes = {}
-          newTitreEtape.incertitudes![incertitudePropId] = prevTitreEtape.incertitudes[incertitudePropId]
         }
       } else {
         // l’étape précédente a été supprimée, il faut donc désactiver l’héritage

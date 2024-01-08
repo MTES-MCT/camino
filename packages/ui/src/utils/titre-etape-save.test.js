@@ -19,14 +19,12 @@ describe('etapeSaveFormat', () => {
         groupes: [],
         substances: [],
         contenu: {},
-        incertitudes: {},
       })
     ).toEqual({
       amodiataires: [],
       duree: null,
       dateFin: null,
       id: 'etape-id',
-      incertitudes: {},
       points: null,
       statutId: '',
       substances: [],
@@ -66,7 +64,6 @@ describe('etapeSaveFormat', () => {
         ],
         substances: [],
         contenu: {},
-        incertitudes: {},
         heritageProps: { 'prop-id': { etape: {}, actif: true } },
         heritageContenu: {
           'section-id': { 'element-id': { etape: {}, actif: true } },
@@ -76,7 +73,6 @@ describe('etapeSaveFormat', () => {
       amodiataires: [],
       duree: 10,
       id: 'etape-id',
-      incertitudes: {},
       points: [
         {
           contour: 1,
@@ -156,7 +152,6 @@ describe('etapeSaveFormat', () => {
         ],
         substances: ['substance-id-1', undefined],
         contenu: { 'prop-id': 'prop-value' },
-        incertitudes: { amodiataires: true },
         documents: [{ id: 'tmp', typeId: 'tmp' }, { id: 'doc-id' }],
       })
     ).toEqual({
@@ -164,7 +159,6 @@ describe('etapeSaveFormat', () => {
       contenu: { 'prop-id': 'prop-value' },
       duree: 240,
       id: 'etape-id',
-      incertitudes: { amodiataires: true },
       points: [
         {
           contour: 1,

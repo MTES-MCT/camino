@@ -38,7 +38,6 @@ class TitresEtapes extends Model {
       duree: { type: ['integer', 'null'] },
       surface: { type: ['number', 'null'] },
       contenu: { type: ['object', 'null'] },
-      incertitudes: { type: ['object', 'null'] },
       heritageContenu: { type: ['object', 'null'] },
       heritageProps: { type: ['object', 'null'] },
       decisionsAnnexesSections: {},
@@ -180,18 +179,6 @@ class TitresEtapes extends Model {
       json.substances = json.substancesIds.map((id: string) => ({ id }))
 
       delete json.substancesIds
-    }
-
-    if (json.incertitudes) {
-      Object.keys(json.incertitudes).forEach(id => {
-        if (!json.incertitudes[id] || !(json[id] || json[id] === 0) || (Array.isArray(json[id]) && !json[id].length)) {
-          delete json.incertitudes[id]
-        }
-      })
-
-      if (!Object.keys(json.incertitudes).length) {
-        json.incertitudes = null
-      }
     }
 
     delete json.geojsonMultiPolygon

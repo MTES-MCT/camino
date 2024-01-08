@@ -82,8 +82,6 @@ type Etape {
   "Documents relatifs à l'étape"
   documents: [Document]
 
-  incertitudes: Incertitudes
-
   heritageProps: HeritageProps
 
   heritageContenu: Json
@@ -137,17 +135,7 @@ type EtapeId {
   etapeId: ID!
 }
 
-type Incertitudes {
-  date: Boolean
-  dateDebut: Boolean
-  dateFin: Boolean
-  duree: Boolean
-  surface: Boolean
-  points: Boolean
-  substances: Boolean
-  titulaires: Boolean
-  amodiataires: Boolean
-}
+
 
 type HeritageProps {
   dateDebut: HeritageProp
@@ -179,7 +167,6 @@ input InputEtapeCreation {
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
-  incertitudes: InputIncertitudes
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
@@ -202,7 +189,6 @@ input InputEtapeModification {
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
-  incertitudes: InputIncertitudes
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
@@ -216,18 +202,6 @@ input InputEtapeFiltre {
   statutId: ID
   dateDebut: String
   dateFin: String
-}
-
-input InputIncertitudes {
-  date: Boolean
-  dateDebut: Boolean
-  dateFin: Boolean
-  duree: Boolean
-  surface: Boolean
-  points: Boolean
-  substances: Boolean
-  titulaires: Boolean
-  amodiataires: Boolean
 }
 
 input InputHeritageProps {

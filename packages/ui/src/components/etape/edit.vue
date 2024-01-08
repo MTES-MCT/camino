@@ -1,7 +1,7 @@
 <template>
   <div class="mb">
     <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
-      <DateEdit v-if="userIsAdmin" :date="etape.date" :incertitude="etape.incertitudes.date" :onDateChanged="onDateChanged" :onIncertitudeChanged="onIncertitudeChanged" />
+      <DateEdit v-if="userIsAdmin" :date="etape.date" :onDateChanged="onDateChanged"/>
 
       <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="apiClient" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
@@ -406,11 +406,6 @@ export default {
 
     onDateChanged(date) {
       this.etape.date = date
-      this.$emit('update:etape', this.etape)
-    },
-
-    onIncertitudeChanged(incertitude) {
-      this.etape.incertitudes.date = incertitude
       this.$emit('update:etape', this.etape)
     },
 

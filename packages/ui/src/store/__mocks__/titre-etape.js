@@ -49,17 +49,6 @@ const titreEtapeEdited = {
   geoSystemeIds: [],
   geoSystemeOpposableId: null,
   groupes: [],
-  incertitudes: {
-    amodiataires: false,
-    date: false,
-    dateDebut: false,
-    dateFin: false,
-    duree: false,
-    points: false,
-    substances: false,
-    surface: false,
-    titulaires: false,
-  },
   substances: [],
   documents: [],
 }
@@ -68,9 +57,6 @@ const titreEtapeHeritage1 = {
   id: 'etape-id',
   titreDemarcheId: 'demarche-id',
   date: '2020-01-02',
-  incertitudes: {
-    date: undefined,
-  },
   statutId: '',
   type: {
     id: 'new-etape-type-id',
@@ -131,7 +117,6 @@ const titreEtapeHeritage2 = {
   geoSystemeOpposableId: null,
   groupes: [],
   heritageProps: {},
-  incertitudes: {},
   statutId: '',
   substances: [],
   titreDemarcheId: 'demarche-id',

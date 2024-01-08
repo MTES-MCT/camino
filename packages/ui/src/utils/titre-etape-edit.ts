@@ -193,20 +193,6 @@ export const etapeEditFormat = (etape: Etape): EtapeEdit => {
   newEtapePointEnhanced.geoSystemeIds = geoSystemeIds
   newEtapePointEnhanced.geoSystemeOpposableId = geoSystemeOpposableId
 
-  if (!newEtapePointEnhanced.incertitudes) {
-    newEtapePointEnhanced.incertitudes = {
-      amodiataires: false,
-      date: false,
-      dateDebut: false,
-      dateFin: false,
-      duree: false,
-      points: false,
-      substances: false,
-      surface: false,
-      titulaires: false,
-    }
-  }
-
   if (!newEtapePointEnhanced.contenu) {
     newEtapePointEnhanced.contenu = {}
   }

@@ -175,19 +175,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
     { deep: true }
   )
 
-  watch(
-    () => props.etape,
-    etape => {
-      if (!etape.groupes || !etape.groupes[0] || !etape.groupes[0][0] || !etape.groupes[0][0].length) {
-        props.etape.incertitudes.points = false
-      }
-
-      if (!etape.surface) {
-        props.etape.incertitudes.surface = false
-      }
-    },
-    { deep: true }
-  )
   onMounted(() => {
     completeUpdate()
   })
@@ -372,15 +359,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                         )}
                       />
                     ) : null}
-
-                    <div class="h6">
-                      {pointsTotal.value.length ? (
-                        <label>
-                          <input v-model={props.etape.incertitudes.points} type="checkbox" />
-                          Incertain
-                        </label>
-                      ) : null}
-                    </div>
                   </>
                 ))}
               </div>
@@ -409,7 +387,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           class="tablet-blob-2-3"
           propId="surface"
           write={() => (
-            <>
               <InputNumber
                 initialValue={props.etape.surface}
                 placeholder="0"
@@ -418,15 +395,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
                   props.etape.surface = value ?? 0
                 }}
               />
-              {props.etape.surface ? (
-                <div class="h6">
-                  <label>
-                    <input v-model={props.etape.incertitudes.surface} type="checkbox" class="mr-xs" />
-                    Incertain
-                  </label>
-                </div>
-              ) : null}
-            </>
           )}
           read={() => <div class="border p-s mb-s bold">{props.etape.heritageProps.surface.etape?.surface}</div>}
         />

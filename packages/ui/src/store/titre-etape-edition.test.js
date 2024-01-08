@@ -135,7 +135,6 @@ describe('étapes', () => {
     store.state.titreEtapeEdition.element = {
       id: 'etape-id',
       typeId: 'etape-type-id',
-      incertitudes: {},
       date: '2020-01-02',
       titreDemarcheId: 'demarche-id',
     }
@@ -161,7 +160,6 @@ describe('étapes', () => {
     store.state.titreEtapeEdition.element = {
       date: '2020-01-01',
       typeId: 'etape-type-id',
-      incertitudes: {},
       titreDemarcheId: 'demarche-id',
       heritageProps: {},
     }
@@ -178,7 +176,6 @@ describe('étapes', () => {
     expect(apiMock3).toHaveBeenCalled()
     expect(store.state.titreEtapeEdition.element).toEqual({
       date: '2020-01-01',
-      incertitudes: { date: undefined },
       statutId: '',
       titreDemarcheId: 'demarche-id',
       type: {
@@ -215,7 +212,6 @@ describe('étapes', () => {
     await store.dispatch('titreEtapeEdition/upsert', {
       etape: {
         nom: 'champs',
-        incertitudes: {},
         type: {},
       },
     })
@@ -229,7 +225,6 @@ describe('étapes', () => {
     api.etapeCreer.mockRejectedValue(new Error('erreur api'))
     await store.dispatch('titreEtapeEdition/upsert', {
       nom: 'champs',
-      incertitudes: {},
     })
 
     expect(actions.apiError).toHaveBeenCalled()
@@ -242,7 +237,6 @@ describe('étapes', () => {
       etape: {
         id: 14,
         nom: 'champs',
-        incertitudes: {},
         type: {},
       },
     })
@@ -254,7 +248,6 @@ describe('étapes', () => {
       etape: {
         id: 14,
         nom: 'champs',
-        incertitudes: {},
       },
     })
 

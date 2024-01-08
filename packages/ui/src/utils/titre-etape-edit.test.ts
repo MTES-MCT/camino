@@ -21,17 +21,6 @@ describe('etapeEditFormat', () => {
       groupes: [],
       substances: [],
       contenu: {},
-      incertitudes: {
-        amodiataires: false,
-        date: false,
-        dateDebut: false,
-        dateFin: false,
-        duree: false,
-        points: false,
-        substances: false,
-        surface: false,
-        titulaires: false,
-      },
       documents: [],
     })
 
@@ -81,17 +70,6 @@ describe('etapeEditFormat', () => {
       ],
       substances: [],
       contenu: {},
-      incertitudes: {
-        amodiataires: false,
-        date: false,
-        dateDebut: false,
-        dateFin: false,
-        duree: false,
-        points: false,
-        substances: false,
-        surface: false,
-        titulaires: false,
-      },
       documents: [],
       justificatifs: [{ id: 'toto', nom: 'name' }],
     })
@@ -150,17 +128,6 @@ describe('etapeEditFormat', () => {
           },
         ],
         contenu: { 'prop-id': 'prop-value' },
-        incertitudes: {
-          amodiataires: true,
-          date: false,
-          dateDebut: false,
-          dateFin: false,
-          duree: false,
-          points: false,
-          substances: false,
-          surface: false,
-          titulaires: false,
-        },
         substances: ['auru'],
         documents: [{ typeId: 'aac' }],
       })
@@ -201,17 +168,6 @@ describe('etapeEditFormat', () => {
       ],
       substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
-      incertitudes: {
-        amodiataires: true,
-        date: false,
-        dateDebut: false,
-        dateFin: false,
-        duree: false,
-        points: false,
-        substances: false,
-        surface: false,
-        titulaires: false,
-      },
       documents: [{ fichierNouveau: null, typeId: 'aac' }],
     })
   })

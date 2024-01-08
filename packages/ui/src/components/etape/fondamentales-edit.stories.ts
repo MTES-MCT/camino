@@ -23,15 +23,6 @@ const etape: EtapeFondamentale = {
   dateDebut: toCaminoDate('2022-02-02'),
   dateFin: undefined,
   duree: 4,
-  incertitudes: {
-    date: false,
-    duree: false,
-    dateDebut: false,
-    dateFin: false,
-    amodiataires: false,
-    titulaires: true,
-    substances: false,
-  },
   substances: ['arse'],
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
@@ -54,7 +45,6 @@ const etape: EtapeFondamentale = {
           nom: 'étape précédente',
         },
         substances: ['arge'],
-        incertitudes: { substances: true },
       },
     },
     titulaires: {

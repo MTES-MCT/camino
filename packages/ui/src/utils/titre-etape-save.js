@@ -165,10 +165,6 @@ const etapeSaveFormat = etape => {
     etape.points = pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
   } else {
     etape.points = null
-
-    if (etape.incertitudes) {
-      delete etape.incertitudes.points
-    }
   }
 
   delete etape.groupes
