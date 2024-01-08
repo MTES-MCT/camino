@@ -4,6 +4,9 @@ dist
 **/dist
 Dockerfile*
 .env
+.eslintcache
+.idea
+.vscode
 docker-compose*
 infra/cd/.cargo_docker
 infra/cd/target
