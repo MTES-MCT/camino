@@ -114,9 +114,9 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
   onMounted(() => {
     const L = window.L
 
-    const osm = L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; Openstreetmap | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     })
     const hot = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       maxZoom: 19,
