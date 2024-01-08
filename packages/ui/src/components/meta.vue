@@ -1,6 +1,5 @@
 <template>
-  <Loader v-if="!loaded" />
-  <div v-else>
+  <div v-if="loaded">
     <router-link :to="{ name: 'metas' }">
       <h5>Métas</h5>
     </router-link>
@@ -33,15 +32,10 @@
 </template>
 
 <script>
-import Loader from './_ui/loader.vue'
 import { metasIndex } from '../store/metas-definitions'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
 
 export default {
-  components: {
-    Loader,
-  },
-
   data() {
     return {
       elementNew: {},

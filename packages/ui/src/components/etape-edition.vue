@@ -1,6 +1,5 @@
 <template>
-  <Loader v-if="!loaded" />
-  <div v-else>
+  <div v-if="loaded">
     <h6>
       <router-link :to="{ name: 'titre', params: { id: titre.slug } }" class="cap-first">
         {{ titre.nom }}
@@ -64,7 +63,6 @@
 
 <script>
 import { cap, dateFormat } from '@/utils'
-import Loader from './_ui/loader.vue'
 import { InputDate } from './_ui/input-date'
 import Edit from './etape/edit.vue'
 import { getCurrent } from 'camino-common/src/date'
@@ -74,7 +72,7 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
-  components: { Loader, Edit, InputDate, FormSaveBtn },
+  components: { Edit, InputDate, FormSaveBtn },
 
   beforeRouteLeave(_, __, next) {
     if (this.isFormDirty && !confirm(this.promptMsg)) {
