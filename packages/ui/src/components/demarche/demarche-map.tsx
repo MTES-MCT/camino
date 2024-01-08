@@ -182,8 +182,6 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     id: contourPointsName,
     type: 'circle',
     source: pointsSourceName,
-    minzoom: 12,
-
     paint: {
       'circle-color': '#000091',
       'circle-radius': 16,
@@ -193,7 +191,6 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     id: 'ContoursPointLabels',
     type: 'symbol',
     source: pointsSourceName,
-    minzoom: 12,
     paint: {
       'text-color': '#ffffff',
     },
