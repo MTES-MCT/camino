@@ -246,14 +246,6 @@ type DemarcheTypeDemarcheStatut {
   ordre: Int!
 }
 
-type TitreTypeDemarcheTypeEtapeType {
-  titreTypeId: ID!
-  demarcheTypeId: ID!
-  etapeTypeId: ID!
-  ordre: Int!
-  sections: Json
-}
-
 type EtapeTypeDocumentType {
   etapeTypeId: ID!
   documentTypeId: ID!

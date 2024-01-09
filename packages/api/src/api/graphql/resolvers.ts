@@ -17,7 +17,6 @@ import {
   demarchesStatuts,
   documentsTypes,
   domaines,
-  etapesTypes,
   etapesStatuts,
   geoSystemes,
   phasesStatuts,
@@ -34,7 +33,7 @@ import {
 
 import { activitesTypes, activitesStatuts } from './resolvers/metas-activites.js'
 
-import { titresTypes, titresTypesTitresStatuts, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from './resolvers/metas-join.js'
+import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from './resolvers/metas-join.js'
 
 import { substances } from './resolvers/substances.js'
 
@@ -62,7 +61,6 @@ export default {
   devises,
   documentsTypes,
   domaines,
-  etapesTypes,
   etapesStatuts,
   geoSystemes,
   phasesStatuts,
@@ -87,7 +85,6 @@ export default {
   regions,
   departements,
   titresTypesTitresStatuts,
-  titresTypesDemarchesTypesEtapesTypes,
   etapesTypesDocumentsTypes,
   activitesTypes,
   activitesStatuts,

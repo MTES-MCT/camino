@@ -4,7 +4,6 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find.js'
 import Titres from '../../database/models/titres.js'
-import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types.js'
 import { documentCreate } from '../../database/queries/documents.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
@@ -34,13 +33,6 @@ let dbPool: Pool
 beforeAll(async () => {
   const { pool } = await dbManager.populateDb()
   dbPool = pool
-
-  const mfrTDE = (await TitresTypesDemarchesTypesEtapesTypes.query()
-    .where('titreTypeId', 'arm')
-    .andWhere('demarcheTypeId', 'oct')
-    .andWhere('etapeTypeId', 'mfr')
-    .first()) as TitresTypesDemarchesTypesEtapesTypes
-  await TitresTypesDemarchesTypesEtapesTypes.query().upsertGraph(mfrTDE)
 })
 
 beforeEach(async () => {

@@ -153,8 +153,6 @@ export const titreEtapeHeritageBuild = (date: string, etapeType: IEtapeType, tit
     titreEtape = titreEtapeHeritagePropsBuild(date, titreDemarche.etapes)
   }
 
-  titreEtape.modification = true
-
   const sections = getSections(titreTypeId, demarcheTypeId, etapeType.id)
   if (sections?.length) {
     const { contenu, heritageContenu } = titreEtapeHeritageContenuBuild(date, etapeType, titreTypeId, demarcheTypeId, titreDemarche.etapes)

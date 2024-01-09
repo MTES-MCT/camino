@@ -1,33 +1,17 @@
-import { raw, QueryBuilder } from 'objection'
+import { QueryBuilder } from 'objection'
 
 import Documents from '../../models/documents.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import Entreprises from '../../models/entreprises.js'
 
 import { documentsQueryModify } from './documents.js'
-import { administrationsEtapesTypesPropsQuery, entreprisesEtapesTypesPropsQuery } from './metas.js'
 import { administrationsTitresTypesEtapesTypesModify, administrationsTitresQuery } from './administrations.js'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
 import { titresDemarchesQueryModify } from './titres-demarches.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import Journaux from '../../models/journaux.js'
 import { journauxQueryModify } from './journaux.js'
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
-
-// TODO 2023-04-04 à supprimer et à mettre en JS dans le common
-const titreEtapeModificationQueryBuild = (user: User) => {
-  if (isSuper(user)) {
-    return raw('true')
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    return administrationsEtapesTypesPropsQuery(user.administrationId, 'modification')
-      .whereRaw('?? = ??', ['demarchesModification.id', 'titresEtapes.titreDemarcheId'])
-      .whereRaw('?? = ??', ['t_d_e.etapeTypeId', 'titresEtapes.typeId'])
-  } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
-    return entreprisesEtapesTypesPropsQuery(user.entreprises.map(({ id }) => id)).whereRaw('?? = ??', ['titresEtapes.id', 'e_te.id'])
-  }
-
-  return raw('false')
-}
+import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 
 /**
  * Modifie la requête d'étape(s) pour prendre en compte les permissions de l'utilisateur connecté
@@ -68,9 +52,6 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
       }
     })
   }
-
-  // TODO 2023-02-28 TDE à supprimer pour pouvoir supprimer TDE de la bdd, mais nécessite de revoir l’héritage cf 2023-02-28 TDE
-  q.select(titreEtapeModificationQueryBuild(user).as('modification'))
 
   q.modifyGraph('demarche', b => {
     titresDemarchesQueryModify(b as QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user)

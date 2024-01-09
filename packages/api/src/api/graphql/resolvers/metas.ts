@@ -1,7 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql'
-import { Context, IDocumentRepertoire, IEtapeType } from '../../../types.js'
+import { Context, IDocumentRepertoire } from '../../../types.js'
 
-import { demarchesStatutsGet, devisesGet, documentsTypesGet, domainesGet, etapesTypesGet, titresTypesTypesGet } from '../../../database/queries/metas.js'
+import { demarchesStatutsGet, devisesGet, documentsTypesGet, domainesGet, titresTypesTypesGet } from '../../../database/queries/metas.js'
 
 import { fieldsBuild } from './_fields-build.js'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
@@ -70,27 +70,6 @@ export const demarchesStatuts = async () => {
   }
 }
 
-export const etapesTypes = async (
-  {
-    travaux,
-  }: {
-    travaux?: boolean
-  },
-  _context: Context,
-  info: GraphQLResolveInfo
-): Promise<IEtapeType[]> => {
-  try {
-    const fields = fieldsBuild(info)
-    // sinon (p.e.: édition des métas ou des permissions d'administration)
-    // retourne la liste des types d'étapes
-
-    return etapesTypesGet({ travaux }, { fields })
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
 
 export const etapesStatuts = () => Object.values(EtapesStatuts)
 

@@ -1,6 +1,6 @@
 import { Context } from '../../../types.js'
 
-import { titresTypesGet, titresTypesDemarchesTypesEtapesTypesGet, etapesTypesDocumentsTypesGet } from '../../../database/queries/metas.js'
+import { titresTypesGet, etapesTypesDocumentsTypesGet } from '../../../database/queries/metas.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
 import { isSuper } from 'camino-common/src/roles.js'
@@ -30,23 +30,6 @@ export const titresTypesTitresStatuts = (_: never) => {
   return titreTypesStatutsTitresPublicLecture
 }
 
-//
-
-export const titresTypesDemarchesTypesEtapesTypes = async (_: never, { user }: Context) => {
-  try {
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const titresTypesDemarchesTypesEtapesTypes = await titresTypesDemarchesTypesEtapesTypesGet()
-
-    return titresTypesDemarchesTypesEtapesTypes
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
 //
 
 export const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {

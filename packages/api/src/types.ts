@@ -198,6 +198,9 @@ interface IDemarcheType {
   titulaires?: boolean | null
   renouvelable?: boolean | null
   exception?: boolean | null
+  /*
+   @deprecated TODO à supprimer, c’est TDE en bdd qui est chargé via objection
+   */
   etapesTypes: IEtapeType[]
   titreTypeId?: string | null
 
@@ -405,7 +408,6 @@ interface ITitreEtape {
   surface?: number | null
   contenu?: IContenu | null
   documents?: IDocument[] | null
-  modification?: boolean | null
   documentIds?: string[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche

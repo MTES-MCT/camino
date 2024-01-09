@@ -12,7 +12,14 @@ export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: IFiel
   }
 
   if (fields.etapes && titreDemarche.etapes && titreDemarche.etapes.length) {
-    titreDemarche.etapes = titreDemarche.etapes.map(te => titreEtapeFormat(te, fields.etapes))
+    titreDemarche.etapes = titreDemarche.etapes.map(te => {
+
+      const etape = titreEtapeFormat(te, fields.etapes)
+      delete etape.heritageProps
+      delete etape.heritageContenu
+
+      return etape
+    })
   }
 
   return titreDemarche
