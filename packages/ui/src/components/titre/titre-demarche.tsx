@@ -1,5 +1,5 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
-import { getMostRecentValidValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
+import { TitreGet, TitreGetDemarche, TitrePropTitreEtapeFindDemarcheEtape } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
@@ -75,8 +75,30 @@ export const TitreDemarche = defineComponent<Props>(props => {
     return null
   })
 
+  const getMostRecentValueProp = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances'>(
+    propId: P,
+    titreDemarchesAsc: { etapes: TitrePropTitreEtapeFindDemarcheEtape[] }[]
+  ): DemarcheEtapeFondamentale['fondamentale'][P] | null => {
+    const titreDemarchesDesc = [...titreDemarchesAsc].reverse()
+
+    for (const titreDemarche of titreDemarchesDesc) {
+      const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
+
+      for (const titreEtape of titreEtapeDesc) {
+        if ('fondamentale' in titreEtape) {
+          const value = titreEtape.fondamentale[propId]
+          if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
+            return value
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('perimetre', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('perimetre', phaseDemarchesAsc.value) : null
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -99,15 +121,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('titulaires', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('titulaires', phaseDemarchesAsc.value) : null
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('amodiataires', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('amodiataires', phaseDemarchesAsc.value) : null
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('substances', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('substances', phaseDemarchesAsc.value) : null
   })
 
   const addDemarchePopup = ref<boolean>(false)
