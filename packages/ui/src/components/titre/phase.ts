@@ -14,13 +14,14 @@ export type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_da
 export type DemarcheAlteration = TitreGetDemarche & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
 
 export type PhaseWithAlterations = [PhaseWithDateDebut, ...DemarcheAlteration[]][] | [[OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: null }]]
-export const phaseWithAlterations = (demarches: TitreGetDemarche[]): PhaseWithAlterations => {
+export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate: CaminoDate): PhaseWithAlterations => {
   if (isNullOrUndefinedOrEmpty(demarches)) {
     return []
   }
-  const simplePhases: PhaseWithDateDebut[] = demarches
-    .filter((demarche): demarche is PhaseWithDateDebut => isNotNullNorUndefined(demarche.demarche_date_debut))
-    .map(phase => ({ ...phase, events: [] }))
+
+  const isPhase = (demarche: TitreGetDemarche): demarche is PhaseWithDateDebut => isNotNullNorUndefined(demarche.demarche_date_debut) && demarche.demarche_date_debut <= currentDate
+
+  const simplePhases: PhaseWithDateDebut[] = demarches.filter(isPhase).map(phase => ({ ...phase, events: [] }))
 
   const demarchesUsed: DemarcheSlug[] = simplePhases.map(({ slug }) => slug)
   if (isNullOrUndefinedOrEmpty(simplePhases)) {
@@ -34,11 +35,14 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[]): PhaseWithAl
   const phasesWithAlterations: [PhaseWithDateDebut, ...DemarcheAlteration[]][] = simplePhases.map(phase => {
     const demarchesAlterationsForThisPhase = demarches
       .map(demarche => {
-        if (isNullOrUndefined(demarche.demarche_date_debut) && [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(demarche.demarche_statut_id)) {
-          const etapeFound = [...demarche.etapes].reverse().find(etape => isEtapeDecision(etape.etape_type_id) && isEtapeStatusOk(etape.etape_statut_id))
+        if (!isPhase(demarche) && [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(demarche.demarche_statut_id)) {
+          let demarcheDate = demarche.demarche_date_debut
+          if (isNullOrUndefined(demarcheDate)) {
+            demarcheDate = [...demarche.etapes].sort((a, b) => b.ordre - a.ordre).find(etape => isEtapeDecision(etape.etape_type_id) && isEtapeStatusOk(etape.etape_statut_id))?.date ?? null
+          }
 
-          if (isNotNullNorUndefined(etapeFound) && etapeFound.date > phase.demarche_date_debut && (isNullOrUndefined(phase.demarche_date_fin) || etapeFound.date <= phase.demarche_date_fin)) {
-            return { ...demarche, date_etape_decision_ok: etapeFound.date }
+          if (isNotNullNorUndefined(demarcheDate) && demarcheDate > phase.demarche_date_debut && (isNullOrUndefined(phase.demarche_date_fin) || demarcheDate <= phase.demarche_date_fin)) {
+            return { ...demarche, date_etape_decision_ok: demarcheDate }
           }
         }
 
@@ -53,7 +57,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[]): PhaseWithAl
   demarches.forEach(demarche => {
     if (isNotNullNorUndefined(demarche.etapes) && (isTravaux(demarche.demarche_type_id) || ![DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(demarche.demarche_statut_id))) {
       const first_etape_date = demarche.etapes.length > 0 ? demarche.etapes[0].date : null
-      if (demarche.demarche_date_debut === null) {
+      if (!isPhase(demarche)) {
         if (first_etape_date === null) {
           const latestPhaseWithAlterations = phasesWithAlterations[phasesWithAlterations.length - 1]
           const latestAlterations = latestPhaseWithAlterations[latestPhaseWithAlterations.length - 1]

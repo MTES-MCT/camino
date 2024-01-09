@@ -45,8 +45,8 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
   })
 
   const lastPhaseWithDateFin = props.phasesWithAlterations[props.phasesWithAlterations.length - 1][0]
-  const dateFin = isNotNullNorUndefined(lastPhaseWithDateFin.demarche_date_fin) ? dateFormat(lastPhaseWithDateFin.demarche_date_fin) : 'xx-xx-xxxx'
-  const datePhasesWithAlterations: (CaminoDateFormated | 'xx-xx-xxxx')[][] = [
+  const dateFin = isNotNullNorUndefined(lastPhaseWithDateFin.demarche_date_fin) ? dateFormat(lastPhaseWithDateFin.demarche_date_fin) : 'Survie provisoire'
+  const datePhasesWithAlterations: CaminoDateFormated[][] = [
     ...props.phasesWithAlterations.map(phaseWithAlterations => {
       return phaseWithAlterations.map(stuff => {
         if ('date_etape_decision_ok' in stuff) {
