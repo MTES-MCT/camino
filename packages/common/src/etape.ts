@@ -57,7 +57,7 @@ export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & 
   heritageProps: {
     [key in keyof Omit<
       T,
-      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'
+      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id' | 'notes'
     >]: HeritageProp<Pick<T, 'type' | 'date' | key>>
   }
 }

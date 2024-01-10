@@ -26,6 +26,7 @@ const etape: EtapeFondamentale = {
   substances: ['arse'],
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
+  notes: null,
   heritageProps: {
     dateDebut: {
       actif: false,
