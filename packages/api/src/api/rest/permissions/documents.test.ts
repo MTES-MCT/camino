@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { canReadDocument } from './documents'
-import { ADMINISTRATION_ROLES, User } from 'camino-common/src/roles'
+import { ADMINISTRATION_ROLES, EntrepriseUserNotNull, User } from 'camino-common/src/roles'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
@@ -53,7 +53,7 @@ describe('canReadDocument', () => {
   })
 
   test('en tant qu’entreprise je peux lire les documents en fonction de entreprise_lecture', async () => {
-    const users: User[] = [
+    const users: EntrepriseUserNotNull[] = [
       { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entreprise1') }] },
       { ...testBlankUser, role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entreprise2') }] },
     ]
@@ -67,13 +67,21 @@ describe('canReadDocument', () => {
         })
       ).toBe(false)
       expect(
-        await canReadDocument({ public_lecture: false, entreprises_lecture: true }, user, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, 'mfr', {
+        await canReadDocument({ public_lecture: false, entreprises_lecture: true }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve(user.entreprises.map(({ id }) => id)), 'mfr', {
           public_lecture: true,
           entreprises_lecture: false,
           titre_public_lecture: true,
           demarche_type_id: 'oct',
         })
       ).toBe(true)
+      expect(
+        await canReadDocument({ public_lecture: false, entreprises_lecture: true }, user, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([]), 'mfr', {
+          public_lecture: true,
+          entreprises_lecture: false,
+          titre_public_lecture: true,
+          demarche_type_id: 'oct',
+        })
+      ).toBe(false)
     }
   })
 

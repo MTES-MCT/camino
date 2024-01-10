@@ -243,9 +243,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         />
       ) : null}
 
-      {props.etape.documents.length > 0 ? (
-        <EtapeDocuments etapeDocuments={props.etape.documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
-      ) : null}
+      <EtapeDocuments etapeDocuments={props.etape.documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
+
       {removePopupVisible.value ? (
         <RemoveEtapePopup
           close={closeRemovePopup}

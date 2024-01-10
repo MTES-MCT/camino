@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { getMostRecentValidValueProp, TitrePropTitreEtapeFindDemarcheEtape } from './titres'
+import { getMostRecentValueProp, TitrePropTitreEtapeFindDemarcheEtape } from './titres'
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
-describe('getMostRecentValidValueProp', () => {
+describe('getMostRecentValueProp', () => {
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dpu',
@@ -47,7 +47,7 @@ describe('getMostRecentValidValueProp', () => {
     }
 
     expect(
-      getMostRecentValidValueProp('titulaires', [
+      getMostRecentValueProp('titulaires', [
         {
           etapes: [dpu, dex],
           demarche_type_id: 'mut',
@@ -65,7 +65,7 @@ describe('getMostRecentValidValueProp', () => {
     `)
 
     expect(
-      getMostRecentValidValueProp('titulaires', [
+      getMostRecentValueProp('titulaires', [
         {
           etapes: [dex, dpu],
           demarche_type_id: 'mut',

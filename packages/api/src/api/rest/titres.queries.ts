@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValidValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
@@ -43,7 +43,7 @@ type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes
 
 export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug): Promise<TitreGet | null> => {
   const titres = await dbQueryAndValidate(getTitreInternal, { id: idOrSlug }, pool, getTitreInternalValidator)
-  if (titres.length !== 1 || !canReadTitre(user, titres[0])) {
+  if (titres.length !== 1) {
     return null
   } else {
     const titre = titres[0]
@@ -167,7 +167,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
-    const perimetre = getMostRecentValidValueProp('perimetre', superDemarches)
+    const perimetre = getMostRecentValueProp('perimetre', superDemarches)
     const administrationsLocales = memoize(() => {
       return Promise.resolve(
         getAdministrationsLocales(
@@ -177,11 +177,15 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       )
     })
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
-      const titulaires = getMostRecentValidValueProp('titulaires', superDemarches) ?? []
-      const amodiataires = getMostRecentValidValueProp('amodiataires', superDemarches) ?? []
+      const titulaires = getMostRecentValueProp('titulaires', superDemarches) ?? []
+      const amodiataires = getMostRecentValueProp('amodiataires', superDemarches) ?? []
 
       return Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)])
     })
+
+    if (!(await canReadTitre(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titre))) {
+      return null
+    }
 
     const formattedDemarches: TitreGetDemarche[] = []
     for (const superDemarche of superDemarches) {

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { canReadDemarche } from './demarches'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { isAssociee, isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
 
@@ -103,13 +103,14 @@ describe('canReadDemarche', () => {
 
   describe("pour les utilisateurs entreprises, on peut lire une démarche si la démarche entreprise_lecture ET que l'utilisateur fait partie d'une entreprise titulaire ou amodiataire", () => {
     test('pas lisible par une entreprise', async () => {
+      const entrepriseId = newEntrepriseId('idEntreprise')
       expect(
         await canReadDemarche(
           { entreprises_lecture: false, public_lecture: false, titre_public_lecture: false, demarche_type_id: 'oct' },
-          { ...testBlankUser, role: 'entreprise', entreprises: [] },
+          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] },
           shouldNotBeCalled,
           shouldNotBeCalled,
-          shouldNotBeCalled
+          () => Promise.resolve([entrepriseId])
         )
       ).toBe(false)
     })
