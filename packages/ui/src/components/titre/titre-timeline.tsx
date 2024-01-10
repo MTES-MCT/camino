@@ -66,24 +66,21 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
           <div style={{ display: 'flex', gap: '14px' }}>
             {datePhasesWithAlterations.map((datePhases, i) => (
               <div key={i} style={{ flex: 1, minWidth: datePhases.length * (minWidth + 2) + 1 + 'px' }} class={`${style.datesContainer}`}>
-                {datePhases.map((datePhase, index) => (
-                  <div
-                    class={`${style.date} fr-text--md fr-mb-1w`}
+                <div
+                  class={`${style.date} fr-text--md fr-mb-1w`}
+                  style={{
+                    flex: 1,
+                    justifyContent: 'start',
+                  }}
+                >
+                  <span
                     style={{
-                      flex: index !== 0 ? 2 : 1,
-                      justifyContent: index !== 0 ? 'center' : 'start',
+                      marginLeft: i === 0 ? '-32px' : '-40px',
                     }}
-                    key={index}
                   >
-                    <span
-                      style={{
-                        marginLeft: index !== 0 ? 0 : i === 0 ? '-32px' : '-40px',
-                      }}
-                    >
-                      {datePhase}
-                    </span>
-                  </div>
-                ))}
+                    {datePhases[0]}
+                  </span>
+                </div>
 
                 {i === datePhasesWithAlterations.length - 1 ? (
                   <div
@@ -135,9 +132,9 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
             ></div>
           </div>
           <div class="fr-pt-1w" style={{ display: 'flex', columnGap: '14px' }}>
-            {props.phasesWithAlterations.map(phaseWithAlterations => (
+            {props.phasesWithAlterations.map((phaseWithAlterations, phaseIndex) => (
               <div style={{ flex: 1 }} class={`${style.datesContainer}`}>
-                {phaseWithAlterations.map(demarche => (
+                {phaseWithAlterations.map((demarche, demarcheIndex) => (
                   <div style={{ flex: 1, minWidth: `${minWidth}px` }}>
                     <CaminoRouterLink
                       {...getAriaCurrent(demarche.slug, props.currentDemarcheSlug)}
@@ -146,7 +143,9 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                       title={capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
                       class="fr-link"
                     >
-                      {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+                      {demarcheIndex === 0
+                        ? capitalize(DemarchesTypes[demarche.demarche_type_id].nom)
+                        : `${capitalize(DemarchesTypes[demarche.demarche_type_id].nom)} (${datePhasesWithAlterations[phaseIndex][demarcheIndex]})`}
                     </CaminoRouterLink>
                   </div>
                 ))}
