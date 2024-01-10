@@ -24,7 +24,6 @@ class DemarchesTypes extends Model {
     },
   }
 
-
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('ordre', 'asc')

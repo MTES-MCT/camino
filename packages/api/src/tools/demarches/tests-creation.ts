@@ -23,7 +23,7 @@ const writeEtapesForTest = async () => {
         fields: {
           titre: { id: {}, demarches: { etapes: { id: {} } } },
           etapes: { communes: { id: {} } },
-          type: {  id: {}  },
+          type: { id: {} },
         },
       },
       userSuper

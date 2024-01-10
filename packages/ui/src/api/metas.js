@@ -2,7 +2,6 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 import { fragmentDocumentType, fragmentEtapeTypeDocumentType } from './fragments/metas'
 
-
 const documentsTypes = apiGraphQLFetch(
   gql`
     query DocumentsTypes {
@@ -14,7 +13,6 @@ const documentsTypes = apiGraphQLFetch(
     ${fragmentDocumentType}
   `
 )
-
 
 const etapesTypesDocumentsTypes = apiGraphQLFetch(
   gql`

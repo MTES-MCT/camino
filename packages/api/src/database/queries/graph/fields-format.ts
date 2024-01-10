@@ -32,7 +32,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     fields.demarches.type = { id: {} }
   }
 
-
   // ajoute la propriété `type` sur les activités
   // pour savoir si une activité est liée à une administration
   if (fields.activites && !fields.activites.type) {

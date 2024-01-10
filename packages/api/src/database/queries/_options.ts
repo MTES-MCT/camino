@@ -2,7 +2,6 @@ const points = {
   graph: `references`,
 }
 
-
 const titresTypes = {
   graph: `[type]`,
 }

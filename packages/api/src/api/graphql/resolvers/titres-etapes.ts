@@ -79,10 +79,10 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
       fields.demarche = { titre: { pointsEtape: { id: {} } } }
     }
     if (isNullOrUndefined(fields.demarche.titre)) {
-      fields.demarche.titre = {  pointsEtape: { id: {} }  }
+      fields.demarche.titre = { pointsEtape: { id: {} } }
     }
     if (isNullOrUndefined(fields.demarche.titre.pointsEtape)) {
-      fields.demarche.titre.pointsEtape = {  id: {}  }
+      fields.demarche.titre.pointsEtape = { id: {} }
     }
 
     const titreEtape = await titreEtapeGet(id, { fields, fetchHeritage: true }, user)
@@ -361,7 +361,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.titreDemarcheId,
       {
         fields: {
-          type: {  id: {}  },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             titulaires: { id: {} },

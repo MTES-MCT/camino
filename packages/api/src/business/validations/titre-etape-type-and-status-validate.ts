@@ -7,22 +7,21 @@ import { DemarcheTypeId, DemarchesTypes } from 'camino-common/src/static/demarch
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 export const titreEtapeTypeAndStatusValidate = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId | undefined): string[] => {
-    if (!etapeStatutId) {
-      return [`le statut est obligatoire`]
-    }
+  if (!etapeStatutId) {
+    return [`le statut est obligatoire`]
+  }
 
+  if (!isTDEExist(titreTypeId, demarcheTypeId, etapeTypeId)) {
+    return [`étape "${etapeTypeId}" invalide pour une démarche "${DemarchesTypes[demarcheTypeId].nom}"`]
+  }
 
-    if (!isTDEExist(titreTypeId, demarcheTypeId, etapeTypeId)) {
-      return [`étape "${etapeTypeId}" invalide pour une démarche "${DemarchesTypes[demarcheTypeId].nom}"`]
-    }
+  const etapesStatuts = getEtapesStatuts(etapeTypeId)
 
-    const etapesStatuts = getEtapesStatuts(etapeTypeId)
+  const titreEtapeStatut = etapesStatuts.find(etapeStatut => etapeStatut.id === etapeStatutId)
 
-    const titreEtapeStatut = etapesStatuts.find(etapeStatut => etapeStatut.id === etapeStatutId)
+  if (!titreEtapeStatut) {
+    return [`statut de l'étape "${etapeStatutId}" invalide pour une type d'étape ${etapeTypeId} pour une démarche de type ${DemarchesTypes[demarcheTypeId].nom}`]
+  }
 
-    if (!titreEtapeStatut) {
-      return [`statut de l'étape "${etapeStatutId}" invalide pour une type d'étape ${etapeTypeId} pour une démarche de type ${DemarchesTypes[demarcheTypeId].nom}`]
-    }
-
-    return []
+  return []
 }

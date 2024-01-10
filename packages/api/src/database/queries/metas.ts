@@ -36,7 +36,6 @@ export const etapesTypesDocumentsTypesGet = () => toDocuments()
 
 export const demarchesStatutsGet = () => sortedDemarchesStatuts
 
-
 export const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
   const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 

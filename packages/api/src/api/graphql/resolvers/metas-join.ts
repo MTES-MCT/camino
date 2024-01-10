@@ -24,7 +24,6 @@ export const titresTypes = async (_: never, { user }: Context, info: GraphQLReso
   }
 }
 
-
 export const titresTypesTitresStatuts = (_: never) => {
   return titreTypesStatutsTitresPublicLecture
 }

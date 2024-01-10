@@ -70,7 +70,6 @@ export const demarchesStatuts = async () => {
   }
 }
 
-
 export const etapesStatuts = () => Object.values(EtapesStatuts)
 
 export const version = () => process.env.APPLICATION_VERSION

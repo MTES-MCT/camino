@@ -33,7 +33,7 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -50,7 +50,7 @@ const titreFields = {
   points: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
-    type: {  id: {}  },
+    type: { id: {} },
     etapes: {
       points: { id: {} },
       type: { id: {} },
@@ -258,7 +258,7 @@ export const demarches =
       },
       {
         fields: {
-          type: {  id: {}  },
+          type: { id: {} },
           titre: {
             id: {},
             titulaires: { id: {} },
