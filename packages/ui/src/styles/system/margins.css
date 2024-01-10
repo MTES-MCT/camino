@@ -144,14 +144,6 @@
   margin-top: var(--unit-xxl);
 }
 
-.mt--s {
-  margin-top: calc(var(--unit-s) * -1);
-}
-
-.mt--m {
-  margin-top: calc(var(--unit-m) * -1);
-}
-
 .mb {
   margin-bottom: var(--unit);
 }
@@ -250,16 +242,6 @@
   margin-right: auto;
 }
 
-.mx-- {
-  margin-left: calc(var(--unit) * -1);
-  margin-right: calc(var(--unit) * -1);
-}
-
-.mx--m {
-  margin-left: calc(var(--unit-m) * -1);
-  margin-right: calc(var(--unit-m) * -1);
-}
-
 .my {
   margin-top: var(--unit);
   margin-bottom: var(--unit);
@@ -303,11 +285,6 @@
 .my-0 {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.my--s {
-  margin-top: calc(var(--unit-s) * -1);
-  margin-bottom: calc(var(--unit-s) * -1);
 }
 
 .my--xs {
