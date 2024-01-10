@@ -33,7 +33,7 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -50,7 +50,7 @@ const titreFields = {
   points: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
-    type: { etapesTypes: { id: {} } },
+    type: {  id: {}  },
     etapes: {
       points: { id: {} },
       type: { id: {} },
@@ -188,7 +188,7 @@ export const titres =
         exhaustiveCheck(params.format)
     }
 
-    if (matomo) {
+    if (isNotNullNorUndefined(matomo)) {
       const url = Object.entries({
         format: params.format,
         ordre: params.ordre,
@@ -213,7 +213,7 @@ export const titres =
       })
     }
 
-    return contenu
+    return isNotNullNorUndefined(contenu)
       ? {
           nom: fileNameCreate(`titres-${titres.length}`, params.format),
           format: params.format,
@@ -244,8 +244,8 @@ export const demarches =
         colonne: params.colonne,
         typesIds: [...(params.demarchesTypesIds ?? []), ...(params.travauxTypesIds ?? [])],
         statutsIds: params.demarchesStatutsIds,
-        etapesInclues: params.etapesInclues ? JSON.parse(params.etapesInclues) : null,
-        etapesExclues: params.etapesExclues ? JSON.parse(params.etapesExclues) : null,
+        etapesInclues: isNotNullNorUndefined(params.etapesInclues) ? JSON.parse(params.etapesInclues) : null,
+        etapesExclues: isNotNullNorUndefined(params.etapesExclues) ? JSON.parse(params.etapesExclues) : null,
         titresTypesIds: params.typesIds,
         titresDomainesIds: params.domainesIds,
         titresStatutsIds: params.statutsIds,
@@ -258,7 +258,7 @@ export const demarches =
       },
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: {  id: {}  },
           titre: {
             id: {},
             titulaires: { id: {} },
@@ -289,7 +289,7 @@ export const demarches =
         exhaustiveCheck(params.format)
     }
 
-    return contenu
+    return isNotNullNorUndefined(contenu)
       ? {
           nom: fileNameCreate(`${params.travaux ? 'travaux' : 'demarches'}-${titresDemarches.length}`, params.format),
           format: params.format,
@@ -380,7 +380,7 @@ export const entreprises =
         exhaustiveCheck(params.format)
     }
 
-    return contenu
+    return isNotNullNorUndefined(contenu)
       ? {
           nom: fileNameCreate(`entreprises-${entreprises.length}`, params.format),
           format: params.format,

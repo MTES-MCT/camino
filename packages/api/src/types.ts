@@ -198,10 +198,6 @@ interface IDemarcheType {
   titulaires?: boolean | null
   renouvelable?: boolean | null
   exception?: boolean | null
-  /*
-   @deprecated TODO à supprimer, c’est TDE en bdd qui est chargé via objection
-   */
-  etapesTypes: IEtapeType[]
   titreTypeId?: string | null
 
   travaux?: boolean
@@ -254,6 +250,7 @@ interface ITitreEntreprise extends IEntreprise {
   operateur?: boolean
 }
 
+// TODO 2024-01-10 supprimer ça dès que l'on arrête de faire passer le type d'étape entier via graphql
 interface IEtapeType {
   id: EtapeTypeId
   nom: string
@@ -500,15 +497,6 @@ interface ITitreTypeType {
   ordre: number
 }
 
-interface ITitreTypeDemarcheTypeEtapeType {
-  titreTypeId: string
-  demarcheTypeId: string
-  etapeTypeId: string
-  ordre: number
-  etapeType?: IEtapeType
-  documentsTypes?: DocumentType[] | null
-}
-
 interface IUtilisateur {
   id: UtilisateurId
   email?: string | null
@@ -632,7 +620,6 @@ export {
   ITitrePointReference,
   ITitreType,
   ITitreTypeType,
-  ITitreTypeDemarcheTypeEtapeType,
   ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,

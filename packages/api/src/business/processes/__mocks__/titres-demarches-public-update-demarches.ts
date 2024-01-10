@@ -10,7 +10,6 @@ const titresDemarchesPublicModifie = [
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
-        type: { etapesTypes: [{ id: 'dpu', titreTypeId: 'cxh' }] },
         publicLecture: true,
         entreprisesLecture: true,
       },
@@ -28,7 +27,6 @@ const titresDemarchesPublicIdentique = [
         typeId: 'oct',
         statutId: 'rej',
         ordre: 1,
-        type: { etapesTypes: [{ id: 'dpu', titreTypeId: 'prw' }] },
         etapes: [
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',

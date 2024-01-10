@@ -86,12 +86,6 @@ type DemarcheType {
 
   "Type de titre pour laquelle cette démarche existe"
   titreTypeId: ID
-
-  "Types d'étapes applicables à ce type de démarche"
-  etapesTypes: [EtapeType]
-
-  "Ids des types d'étape déjà présents sur cette démarche"
-  etapesTypesIds: [ID]
 }
 
 "Statut d'une démarche applicable à un titre minier"

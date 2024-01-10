@@ -9,6 +9,7 @@ import { demarchesDefinitions } from '../../business/rules-demarches/definitions
 import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 
 const writeEtapesForTest = async () => {
   for (const demarcheDefinition of demarchesDefinitions) {
@@ -22,7 +23,7 @@ const writeEtapesForTest = async () => {
         fields: {
           titre: { id: {}, demarches: { etapes: { id: {} } } },
           etapes: { communes: { id: {} } },
-          type: { etapesTypes: { id: {} } },
+          type: {  id: {}  },
         },
       },
       userSuper
@@ -33,7 +34,7 @@ const writeEtapesForTest = async () => {
       .filter(demarche => {
         const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
 
-        return (date ?? '') > demarcheDefinition.dateDebut && !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
+        return (date ?? '') > demarcheDefinition.dateDebut && (isNullOrUndefinedOrEmpty(demarcheDefinition.demarcheIdExceptions) || !demarcheDefinition.demarcheIdExceptions.includes(demarche.id))
       })
       .map((demarche, index) => {
         const etapes: Etape[] = toMachineEtapes(
@@ -47,7 +48,7 @@ const writeEtapesForTest = async () => {
                   delete etape.contenu
                 }
 
-                if (etape.communes?.length) {
+                if (isNotNullNorUndefinedNorEmpty(etape.communes)) {
                   etape.communes = etape.communes.map(({ id }) => ({ nom: '', id: toCommuneId(`${id.startsWith('97') ? `${id.substring(0, 3)}00` : `${id.substring(0, 2)}000`}}`) }))
                 }
 

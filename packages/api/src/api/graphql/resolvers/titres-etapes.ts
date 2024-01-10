@@ -182,7 +182,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             pointsEtape: { id: {} },
@@ -361,7 +361,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: {  id: {}  },
           titre: {
             demarches: { etapes: { id: {} } },
             titulaires: { id: {} },
@@ -654,7 +654,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
       titreEtape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
           },

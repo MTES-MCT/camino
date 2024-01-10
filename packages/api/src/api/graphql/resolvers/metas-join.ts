@@ -24,21 +24,18 @@ export const titresTypes = async (_: never, { user }: Context, info: GraphQLReso
   }
 }
 
-//
 
 export const titresTypesTitresStatuts = (_: never) => {
   return titreTypesStatutsTitresPublicLecture
 }
 
-//
-
-export const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
+export const etapesTypesDocumentsTypes = (_: never, { user }: Context) => {
   try {
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
-    const etapesTypesDocumentsTypes = await etapesTypesDocumentsTypesGet()
+    const etapesTypesDocumentsTypes = etapesTypesDocumentsTypesGet()
 
     return etapesTypesDocumentsTypes
   } catch (e) {
