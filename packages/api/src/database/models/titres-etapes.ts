@@ -137,7 +137,7 @@ class TitresEtapes extends Model {
       this.slug = etapeSlugValidator.parse(`${this.titreDemarcheId}-${this.typeId}99`)
     }
 
-    if(isNotNullNorUndefined(this.notes) && this.notes.trim() === ""){
+    if (isNotNullNorUndefined(this.notes) && this.notes.trim() === '') {
       this.notes = null
     }
 

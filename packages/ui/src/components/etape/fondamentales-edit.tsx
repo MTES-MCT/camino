@@ -45,7 +45,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
-
   const dureeOptionalCheck = computed<boolean>(() => {
     return titreEtapesDureeOptionalCheck(props.etape.type.id, props.demarcheTypeId, props.titreTypeId)
   })
@@ -88,7 +87,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
     }
 
     const etablissementName: string | null = etablissementNameFind(entreprise.etablissements, props.etape.date)
-    if( isNotNullNorUndefined(etablissementName)){
+    if (isNotNullNorUndefined(etablissementName)) {
       return etablissementName
     }
 
@@ -163,9 +162,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               prop={props.etape.heritageProps.dateDebut}
               class="tablet-blob-2-3"
               propId="dateDebut"
-              write={() => (
-                  <InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />
-              )}
+              write={() => <InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />}
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateDebut)}</div>}
             />
           </div>
@@ -186,9 +183,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               prop={props.etape.heritageProps.dateFin}
               class="tablet-blob-2-3"
               propId="dateFin"
-              write={() => (
-                  <InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />
-              )}
+              write={() => <InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />}
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateFin)}</div>}
             />
           </div>
@@ -204,13 +199,13 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             prop={props.etape.heritageProps.titulaires}
             propId="titulaires"
             write={() => (
-                <AutocompleteEntreprise
-                  allEntities={props.entreprises}
-                  selectedEntities={props.etape.titulaires}
-                  nonSelectableEntities={entreprisesDisabled.value}
-                  placeholder="Sélectionner un titulaire"
-                  onEntreprisesUpdate={titulairesUpdate}
-                />
+              <AutocompleteEntreprise
+                allEntities={props.entreprises}
+                selectedEntities={props.etape.titulaires}
+                nonSelectableEntities={entreprisesDisabled.value}
+                placeholder="Sélectionner un titulaire"
+                onEntreprisesUpdate={titulairesUpdate}
+              />
             )}
             read={heritagePropEtape => (
               <ul class="list-prefix">
@@ -238,13 +233,13 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             prop={props.etape.heritageProps.amodiataires}
             propId="amodiataires"
             write={() => (
-                <AutocompleteEntreprise
-                  allEntities={props.entreprises}
-                  selectedEntities={props.etape.amodiataires}
-                  nonSelectableEntities={entreprisesDisabled.value}
-                  placeholder="Sélectionner un amodiataire"
-                  onEntreprisesUpdate={amodiatairesUpdate}
-                />
+              <AutocompleteEntreprise
+                allEntities={props.entreprises}
+                selectedEntities={props.etape.amodiataires}
+                nonSelectableEntities={entreprisesDisabled.value}
+                placeholder="Sélectionner un amodiataire"
+                onEntreprisesUpdate={amodiatairesUpdate}
+              />
             )}
             read={heritagePropEtape => (
               <ul class="list-prefix">

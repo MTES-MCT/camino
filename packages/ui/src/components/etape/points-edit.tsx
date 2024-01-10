@@ -387,14 +387,14 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
           class="tablet-blob-2-3"
           propId="surface"
           write={() => (
-              <InputNumber
-                initialValue={props.etape.surface}
-                placeholder="0"
-                class="mb-s"
-                numberChanged={value => {
-                  props.etape.surface = value ?? 0
-                }}
-              />
+            <InputNumber
+              initialValue={props.etape.surface}
+              placeholder="0"
+              class="mb-s"
+              numberChanged={value => {
+                props.etape.surface = value ?? 0
+              }}
+            />
           )}
           read={() => <div class="border p-s mb-s bold">{props.etape.heritageProps.surface.etape?.surface}</div>}
         />

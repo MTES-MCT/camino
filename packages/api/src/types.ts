@@ -437,7 +437,6 @@ interface ITitreEtapeFiltre {
   dateFin?: string
 }
 
-
 interface ITitrePoint {
   id: string
   slug?: string

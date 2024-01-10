@@ -137,8 +137,6 @@ type EtapeId {
   etapeId: ID!
 }
 
-
-
 type HeritageProps {
   dateDebut: HeritageProp
   dateFin: HeritageProp

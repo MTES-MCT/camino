@@ -751,7 +751,6 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
   />
 )
 
-
 export const DemandeAvecGrosseNote: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}

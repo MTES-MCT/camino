@@ -13,34 +13,34 @@ type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   class?: HTMLAttributes['class']
 }
 export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T>) => {
-    const buttonText = computed<string>(() => (props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`))
-    const hasHeritage = computed<boolean>(() => {
-      return hasValeurCheck(props.propId, props.prop.etape)
-    })
-
-    return () => (
-      <div class={["mb-s", props.class]}>
-        {!props.prop.actif && props.write ? (
-          props.write()
-        ) : (
-          <div>
-            {hasHeritage.value && props.read ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}
-
-            <p class="h6 italic mb-s">
-              Hérité de :<span class="cap-first">{props.prop.etape?.type.nom}</span> ({dateFormat(props.prop.etape?.date)})
-            </p>
-          </div>
-        )}
-
-        {props.display ? props.display() : null}
-        {props.prop.etape ? (
-          <button class="btn full-x rnd-xs py-s px-m small mb-s" onClick={() => (props.prop.actif = !props.prop.actif)}>
-            {buttonText.value}
-          </button>
-        ) : null}
-      </div>
-    )
+  const buttonText = computed<string>(() => (props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`))
+  const hasHeritage = computed<boolean>(() => {
+    return hasValeurCheck(props.propId, props.prop.etape)
   })
 
+  return () => (
+    <div class={['mb-s', props.class]}>
+      {!props.prop.actif && props.write ? (
+        props.write()
+      ) : (
+        <div>
+          {hasHeritage.value && props.read ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}
+
+          <p class="h6 italic mb-s">
+            Hérité de :<span class="cap-first">{props.prop.etape?.type.nom}</span> ({dateFormat(props.prop.etape?.date)})
+          </p>
+        </div>
+      )}
+
+      {props.display ? props.display() : null}
+      {props.prop.etape ? (
+        <button class="btn full-x rnd-xs py-s px-m small mb-s" onClick={() => (props.prop.actif = !props.prop.actif)}>
+          {buttonText.value}
+        </button>
+      ) : null}
+    </div>
+  )
+})
+
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-HeritageEdit.props = ['prop','propId','write','read','display', 'class']
+HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class']

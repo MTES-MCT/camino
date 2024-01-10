@@ -1,7 +1,7 @@
 <template>
   <div class="mb">
     <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
-      <DateEdit v-if="userIsAdmin" :date="etape.date" :onDateChanged="onDateChanged"/>
+      <DateEdit v-if="userIsAdmin" :date="etape.date" :onDateChanged="onDateChanged" />
 
       <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="apiClient" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
@@ -89,8 +89,9 @@
 
     <div class="dsfr">
       <div class="fr-input-group">
-      <label class="fr-label" for="notes">Notes</label>
-      <textarea v-model="etape.notes" class="fr-input" id="notes" name="notes"></textarea></div>
+        <label class="fr-label" for="notes">Notes</label>
+        <textarea id="notes" v-model="etape.notes" class="fr-input" name="notes"></textarea>
+      </div>
     </div>
   </div>
 </template>

@@ -6,8 +6,6 @@ import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
 
-
-
 // fragment qui représente l’étape dont on hérite sur une prop
 const fragmentHeritageEtape = gql`
   fragment heritageEtape on Etape {
