@@ -24,10 +24,6 @@ export const tables = [
   { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_types', orderBy: ['id'] },
-  {
-    name: 'titres_types__demarches_types__etapes_types',
-    orderBy: ['titre_type_id', 'demarche_type_id', 'etape_type_id'],
-  },
   { name: 'titres_types_types', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {

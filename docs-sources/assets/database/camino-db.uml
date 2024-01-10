@@ -78,8 +78,8 @@ entity "**documents**" {
   *""description"": //character varying(1024) //
   ""fichier"": //boolean //
   ""fichier_type_id"": //character varying(3) //
-  ""public_lecture"": //boolean //
-  ""entreprises_lecture"": //boolean //
+  *""public_lecture"": //boolean //
+  *""entreprises_lecture"": //boolean //
 }
 
 entity "**documents_types**" {
@@ -209,8 +209,8 @@ entity "**titres**" {
   *""nom"": //character varying(255) //
   *""type_id"": //character varying(3) [FK]//
   *""titre_statut_id"": //character varying(3) //
-  ""public_lecture"": //boolean //
-  ""entreprises_lecture"": //boolean //
+  *""public_lecture"": //boolean //
+  *""entreprises_lecture"": //boolean //
   ""doublon_titre_id"": //character varying(128) //
   ""contenus_titre_etapes_ids"": //jsonb //
   ""coordonnees"": //point //
@@ -256,8 +256,8 @@ entity "**titres_demarches**" {
   *""titre_id"": //character varying(128) [FK]//
   *""type_id"": //character varying(3) [FK]//
   *""statut_id"": //character varying(3) //
-  ""public_lecture"": //boolean //
-  ""entreprises_lecture"": //boolean //
+  *""public_lecture"": //boolean //
+  *""entreprises_lecture"": //boolean //
   ""ordre"": //integer //
   ""slug"": //character varying(255) //
   ""description"": //character varying(255) //
@@ -341,14 +341,6 @@ entity "**titres_types**" {
   ""archive"": //boolean //
 }
 
-entity "**titres_types__demarches_types__etapes_types**" {
-  + ""titre_type_id"": //character varying(3) [PK][FK]//
-  + ""demarche_type_id"": //character varying(7) [PK][FK]//
-  + ""etape_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""ordre"": //integer //
-}
-
 entity "**titres_types_types**" {
   + ""id"": //character varying(2) [PK]//
   --
@@ -369,6 +361,7 @@ entity "**utilisateurs**" {
   *""date_creation"": //character varying(255) //
   ""administration_id"": //character varying(255) [FK]//
   ""qgis_token"": //character varying(255) //
+  ""keycloak_id"": //character varying(255) //
 }
 
 entity "**utilisateurs__entreprises**" {
@@ -462,18 +455,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types**"   }--  "**titres_types_types**"
 
 "**titres_types**"   }--  "**titres_types_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**demarches_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**demarches_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**etapes_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**etapes_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
-
-"**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
 
 "**utilisateurs**"   }--  "**administrations**"
 

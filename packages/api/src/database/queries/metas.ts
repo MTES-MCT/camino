@@ -14,7 +14,6 @@ import EtapesTypes from '../models/etapes-types.js'
 import TitresTypesTypes from '../models/titres-types-types.js'
 
 import TitresTypes from '../models/titres-types.js'
-import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -33,38 +32,9 @@ export const titresTypesGet = async (_: never, { fields }: { fields?: IFields })
   return TitresTypes.query().withGraphFetched(graph).orderBy('id')
 }
 
-export const titresTypesDemarchesTypesEtapesTypesGet = async () => TitresTypesDemarchesTypesEtapesTypes.query().orderBy(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
-
 export const etapesTypesDocumentsTypesGet = () => toDocuments()
 
 export const demarchesStatutsGet = () => sortedDemarchesStatuts
-
-export const etapesTypesGet = async (
-  {
-    travaux,
-  }: {
-    travaux?: boolean
-  },
-  { fields }: { fields?: IFields }
-) => {
-  const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
-
-  const q = EtapesTypes.query().withGraphFetched(graph)
-
-  q.orderBy('ordre')
-
-  if (travaux === false || travaux === true) {
-    const travauxQuery = TitresTypesDemarchesTypesEtapesTypes.query().leftJoinRelated('demarcheType').whereRaw('?? = ??', ['etapeTypeId', 'etapesTypes.id'])
-    if (travaux) {
-      travauxQuery.where('demarcheType.travaux', travaux)
-    } else {
-      travauxQuery.whereRaw('?? is not true', ['demarcheType.travaux'])
-    }
-    q.whereExists(travauxQuery)
-  }
-
-  return q
-}
 
 export const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
   const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []

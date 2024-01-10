@@ -66,12 +66,42 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
     if (isNullOrUndefined(fields.type)) {
       fields.type = { id: {} }
     }
+    if (isNullOrUndefined(fields.documents)) {
+      fields.documents = { id: {} }
+    }
+    if (isNullOrUndefined(fields.titulaires)) {
+      fields.titulaires = { id: {} }
+    }
+    if (isNullOrUndefined(fields.amodiataires)) {
+      fields.amodiataires = { id: {} }
+    }
+    if (isNullOrUndefined(fields.demarche)) {
+      fields.demarche = { titre: { pointsEtape: { id: {} } } }
+    }
+    if (isNullOrUndefined(fields.demarche.titre)) {
+      fields.demarche.titre = { pointsEtape: { id: {} } }
+    }
+    if (isNullOrUndefined(fields.demarche.titre.pointsEtape)) {
+      fields.demarche.titre.pointsEtape = { id: {} }
+    }
 
     const titreEtape = await titreEtapeGet(id, { fields, fetchHeritage: true }, user)
 
     if (isNullOrUndefined(titreEtape)) {
       throw new Error("l'étape n'existe pas")
     }
+    if (!titreEtape.titulaires || !titreEtape.demarche || !titreEtape.demarche.titre || titreEtape.demarche.titre.administrationsLocales === undefined || !titreEtape.demarche.titre.titreStatutId) {
+      throw new Error('la démarche n’est pas chargée complètement')
+    }
+
+    // Cette route est utilisée que par l’ancienne interface qui permet d’éditer une étape. Graphql permet de récupérer trop de champs si on ne fait pas ça.
+    if (
+      !canEditEtape(user, titreEtape.typeId, titreEtape.statutId, titreEtape.titulaires, titreEtape.demarche.titre.administrationsLocales ?? [], titreEtape.demarche.typeId, {
+        typeId: titreEtape.demarche.titre.typeId,
+        titreStatutId: titreEtape.demarche.titre.titreStatutId,
+      })
+    )
+      throw new Error('droits insuffisants')
 
     const titreDemarche = await titreDemarcheGet(
       titreEtape.titreDemarcheId,
@@ -152,7 +182,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             pointsEtape: { id: {} },
@@ -331,7 +361,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             titulaires: { id: {} },
@@ -624,7 +654,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
       titreEtape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { id: {} } },
+          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
           },

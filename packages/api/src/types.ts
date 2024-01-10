@@ -198,7 +198,6 @@ interface IDemarcheType {
   titulaires?: boolean | null
   renouvelable?: boolean | null
   exception?: boolean | null
-  etapesTypes: IEtapeType[]
   titreTypeId?: string | null
 
   travaux?: boolean
@@ -251,6 +250,7 @@ interface ITitreEntreprise extends IEntreprise {
   operateur?: boolean
 }
 
+// TODO 2024-01-10 supprimer ça dès que l'on arrête de faire passer le type d'étape entier via graphql
 interface IEtapeType {
   id: EtapeTypeId
   nom: string
@@ -405,7 +405,6 @@ interface ITitreEtape {
   surface?: number | null
   contenu?: IContenu | null
   documents?: IDocument[] | null
-  modification?: boolean | null
   documentIds?: string[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
@@ -496,15 +495,6 @@ interface ITitreTypeType {
   id: TitreTypeTypeId
   nom: string
   ordre: number
-}
-
-interface ITitreTypeDemarcheTypeEtapeType {
-  titreTypeId: string
-  demarcheTypeId: string
-  etapeTypeId: string
-  ordre: number
-  etapeType?: IEtapeType
-  documentsTypes?: DocumentType[] | null
 }
 
 interface IUtilisateur {
@@ -630,7 +620,6 @@ export {
   ITitrePointReference,
   ITitreType,
   ITitreTypeType,
-  ITitreTypeDemarcheTypeEtapeType,
   ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,

@@ -1,4 +1,4 @@
-import { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes } from '@/api/metas'
+import { documentsTypes, etapesTypesDocumentsTypes } from '@/api/metas'
 
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
@@ -10,11 +10,13 @@ import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { titresTypesDemarcheTypesMetas } from 'camino-common/src/static/titresTypesDemarchesTypes'
 import { etapesTypesEntrepriseDocumentsTypesMetas, TDEEntrepriseDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
+import { TDEMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { TDEDocumentsTypesMetas } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { etapesTypesEtapesStatutsMetas } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { TitresTypes } from 'camino-common/src/static/titresTypes'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const labelGet = (entity?: { id: string; nom: string }) => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -169,17 +171,15 @@ export const metasIndex = {
     ],
   },
   'etapes-types': {
-    get: etapesTypes,
+    get: () => Object.values(EtapesTypes),
     labelGet,
     nom: 'Types des étapes',
     colonnes: [
       { id: 'id', nom: 'Id' },
       { id: 'nom', nom: 'Nom', type: String },
       { id: 'description', nom: 'Description', type: String, optional: true },
-      { id: 'ordre', nom: 'Ordre', type: Number },
-      { id: 'sections', nom: 'Sections', type: 'json', optional: true },
       {
-        id: 'dateFin',
+        id: 'date_fin',
         nom: 'Date de fin',
         type: Date,
         class: ['min-width-12'],
@@ -191,21 +191,14 @@ export const metasIndex = {
         type: Boolean,
         optional: true,
       },
-      { id: 'unique', nom: 'Unique', type: Boolean, optional: true },
       {
-        id: 'acceptationAuto',
-        nom: 'Acceptation auto',
-        type: Boolean,
-        optional: true,
-      },
-      {
-        id: 'publicLecture',
+        id: 'public_lecture',
         nom: 'Lecture public',
         type: Boolean,
         optional: true,
       },
       {
-        id: 'entrepriseLecture',
+        id: 'entreprises_lecture',
         nom: 'Lecture entreprises',
         type: Boolean,
         optional: true,
@@ -213,7 +206,7 @@ export const metasIndex = {
     ],
   },
   'titres-types--demarches-types--etapes-types': {
-    get: titresTypesDemarchesTypesEtapesTypes,
+    get: () => TDEMetas,
     nom: 'Types des titres | Types des démarches | types des étapes',
     colonnes: [
       {
@@ -234,8 +227,6 @@ export const metasIndex = {
         type: 'entities',
         entities: 'etapes-types',
       },
-      { id: 'sections', nom: 'Sections', type: 'json', optional: true },
-      { id: 'ordre', nom: 'Ordre', type: Number },
     ],
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId'],
   },

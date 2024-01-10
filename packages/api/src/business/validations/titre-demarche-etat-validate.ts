@@ -1,4 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
+import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import type { ITitre, ITitreEtape, IDemarcheType } from '../../types.js'
 
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
@@ -7,7 +8,7 @@ import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-v
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
 const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
-  if (!titreDemarcheEtapes?.length) {
+  if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
     return [titreEtape]
   }
 
@@ -59,7 +60,7 @@ export const titreDemarcheUpdatedEtatValidate = (
       return []
     }
     // le type d'étape correspond à la démarche et au type de titre
-    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titreEtape.typeId, titreEtape.statutId, titreDemarche.type!.etapesTypes, titreDemarche.type!.nom)
+    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(titre.typeId, titreDemarche.typeId, titreEtape.typeId, titreEtape.statutId)
     titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
 
     return titreDemarchesErrors

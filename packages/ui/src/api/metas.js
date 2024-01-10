@@ -1,18 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
-import { fragmentEtapeType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType } from './fragments/metas'
-
-const etapesTypes = apiGraphQLFetch(
-  gql`
-    query EtapesTypes {
-      etapesTypes {
-        ...etapeType
-      }
-    }
-
-    ${fragmentEtapeType}
-  `
-)
+import { fragmentDocumentType, fragmentEtapeTypeDocumentType } from './fragments/metas'
 
 const documentsTypes = apiGraphQLFetch(
   gql`
@@ -23,18 +11,6 @@ const documentsTypes = apiGraphQLFetch(
     }
 
     ${fragmentDocumentType}
-  `
-)
-
-const titresTypesDemarchesTypesEtapesTypes = apiGraphQLFetch(
-  gql`
-    query TitresTypesDemarchesTypesEtapesTypes {
-      titresTypesDemarchesTypesEtapesTypes {
-        ...titreTypeDemarcheTypeEtapeType
-      }
-    }
-
-    ${fragmentTitreTypeDemarcheTypeEtapeType}
   `
 )
 
@@ -50,4 +26,4 @@ const etapesTypesDocumentsTypes = apiGraphQLFetch(
   `
 )
 
-export { etapesTypes, documentsTypes, titresTypesDemarchesTypesEtapesTypes, etapesTypesDocumentsTypes }
+export { documentsTypes, etapesTypesDocumentsTypes }

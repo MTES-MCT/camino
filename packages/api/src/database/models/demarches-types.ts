@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 
 import { IDemarcheType } from '../../types.js'
-import EtapesTypes from './etapes-types.js'
 
 interface DemarchesTypes extends IDemarcheType {}
 
@@ -24,26 +23,6 @@ class DemarchesTypes extends Model {
       exception: { type: ['boolean', 'null'] },
     },
   }
-
-  static relationMappings = () => ({
-    etapesTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: EtapesTypes,
-      join: {
-        from: 'demarchesTypes.id',
-        through: {
-          from: 'titresTypes__demarchesTypes__etapesTypes.demarcheTypeId',
-          to: 'titresTypes__demarchesTypes__etapesTypes.etapeTypeId',
-          // permet de donner un alias spécial aux champs extra { alias: field }
-          extra: {
-            ordre: 'ordre',
-            titreTypeId: 'titreTypeId',
-          },
-        },
-        to: 'etapesTypes.id',
-      },
-    },
-  })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {

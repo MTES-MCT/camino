@@ -9,41 +9,6 @@ const fragmentDocumentType = gql`
   }
 `
 
-const fragmentEtapeType = gql`
-  fragment etapeType on EtapeType {
-    id
-    parentId
-    nom
-    description
-    ordre
-    sections
-    legalLien
-    legalRef
-    dateDebut
-    dateFin
-    fondamentale
-    unique
-    acceptationAuto
-    publicLecture
-    entreprisesLecture
-    documentsTypes {
-      ...documentType
-    }
-  }
-
-  ${fragmentDocumentType}
-`
-
-const fragmentTitreTypeDemarcheTypeEtapeType = gql`
-  fragment titreTypeDemarcheTypeEtapeType on TitreTypeDemarcheTypeEtapeType {
-    titreTypeId
-    demarcheTypeId
-    etapeTypeId
-    ordre
-    sections
-  }
-`
-
 const fragmentEtapeTypeDocumentType = gql`
   fragment etapeTypeDocumentType on EtapeTypeDocumentType {
     etapeTypeId
@@ -53,4 +18,4 @@ const fragmentEtapeTypeDocumentType = gql`
   }
 `
 
-export { fragmentEtapeType, fragmentDocumentType, fragmentTitreTypeDemarcheTypeEtapeType, fragmentEtapeTypeDocumentType }
+export { fragmentDocumentType, fragmentEtapeTypeDocumentType }

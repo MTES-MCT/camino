@@ -194,7 +194,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
             type: {
               id: 'oct',
               nom: 'oct',
-              etapesTypes: [{ id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }],
             } as IDemarcheType,
           },
         ],
@@ -221,7 +220,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
             type: {
               id: 'oct',
               nom: 'oct',
-              etapesTypes: [{ id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }],
             } as IDemarcheType,
           },
         ],

@@ -1,81 +1,19 @@
-import { IEtapeType } from '../../types.js'
-
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
-import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find.js'
-import { vi, describe, test, expect } from 'vitest'
-vi.mock('../utils/titre-etape-demarche-etape-type-find', () => ({
-  titreEtapeDemarcheEtapeTypeFind: vi.fn(),
-}))
-
-const titreEtapeDemarcheEtapeTypeFindMock = vi.mocked(titreEtapeDemarcheEtapeTypeFind, true)
+import { describe, test, expect } from 'vitest'
 
 describe("valide le type et le statut d'une étape en fonction du type de titre et du type de démarche", () => {
   test('le statut est obligatoire', () => {
-    expect(
-      titreEtapeTypeAndStatusValidate(
-        'mdp',
-        undefined,
-        [
-          {
-            id: 'mdp',
-          },
-        ] as IEtapeType[],
-        ''
-      )
-    ).toEqual(['le statut est obligatoire'])
+    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'mdp', undefined)).toEqual(['le statut est obligatoire'])
   })
   test("le type et le statut de l'étape correspondent au type de titre et de démarche", () => {
-    titreEtapeDemarcheEtapeTypeFindMock.mockReturnValue({
-      id: 'mdp',
-    } as IEtapeType)
-
-    expect(
-      titreEtapeTypeAndStatusValidate(
-        'mdp',
-        'fai',
-        [
-          {
-            id: 'mdp',
-          },
-        ] as IEtapeType[],
-        ''
-      )
-    ).toHaveLength(0)
+    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'mdp', 'fai')).toHaveLength(0)
   })
 
   test("le statut de l'étape ne correspond pas au type de titre et de démarche", () => {
-    titreEtapeDemarcheEtapeTypeFindMock.mockReturnValue({
-      id: 'mdp',
-    } as IEtapeType)
-    expect(
-      titreEtapeTypeAndStatusValidate(
-        'mdp',
-        'rej',
-        [
-          {
-            id: 'mdp',
-          },
-        ] as IEtapeType[],
-        'toto'
-      )
-    ).toEqual(['statut de l\'étape "rej" invalide pour une type d\'étape mdp pour une démarche de type toto'])
+    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'mdp', 'rej')).toEqual(['statut de l\'étape "rej" invalide pour une type d\'étape mdp pour une démarche de type octroi'])
   })
 
-  test("le statut de l'étape ne correspond pas au type de titre et de démarche", () => {
-    titreEtapeDemarcheEtapeTypeFindMock.mockImplementation(() => {
-      throw new Error('erreur titreEtapeDemarcheEtapeTypeFind')
-    })
-    expect(
-      titreEtapeTypeAndStatusValidate(
-        'mdp',
-        'rej',
-        [
-          {
-            id: 'mdp',
-          },
-        ] as IEtapeType[],
-        'toto'
-      )
-    ).toEqual(['erreur titreEtapeDemarcheEtapeTypeFind'])
+  test("le type de l'étape n'est pas compatible avec le type de titre et de démarche", () => {
+    expect(titreEtapeTypeAndStatusValidate('arm', 'oct', 'dex', 'fai')).toEqual(['étape "dex" invalide pour une démarche "octroi"'])
   })
 })

@@ -123,9 +123,6 @@ type Query {
   "Statuts de démarches"
   demarchesStatuts: [DemarcheStatut]
 
-  "Types d'étapes"
-  etapesTypes(travaux: Boolean): [EtapeType]
-
   "Status d'étapes"
   etapesStatuts: [EtapeStatut]
 
@@ -155,7 +152,6 @@ type Query {
 
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
 
-  titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
 
   "Liste des entreprises"

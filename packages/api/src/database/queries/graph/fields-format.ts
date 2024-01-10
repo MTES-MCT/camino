@@ -1,5 +1,5 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
-const fieldsOrderAsc = ['domaines', 'points', 'references', 'etapesTypes', 'titresTypes']
+const fieldsOrderAsc = ['domaines', 'points', 'references', 'titresTypes']
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps', 'communes']
 const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
@@ -30,12 +30,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // pour pouvoir récupérer les types d'étapes spécifiques
   if (fields.demarches && !fields.demarches.type) {
     fields.demarches.type = { id: {} }
-  }
-
-  // ajoute la propriété `etapesTypes` sur les démarches
-  // pour pouvoir récupérer les types spécifiques
-  if (fields.demarches && fields.demarches.type && !fields.demarches.type.etapesTypes) {
-    fields.demarches.type.etapesTypes = { id: {} }
   }
 
   // ajoute la propriété `type` sur les activités
@@ -121,9 +115,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     }
   }
 
-  if (['etapesTypes'].includes(parent)) {
-    delete fields.documentsTypes
-  }
   // pour calculer la propriété « déposable » sur les étapes
   if (['etapes', 'etape'].includes(parent)) {
     if (!fields.documents) {

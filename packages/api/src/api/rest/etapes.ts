@@ -17,7 +17,7 @@ import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sor
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
-import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
+import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { Pool } from 'pg'
@@ -104,7 +104,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     titreDemarcheId,
     {
       fields: {
-        type: { etapesTypes: { id: {} } },
+        type: { id: {} },
         titre: {
           type: { id: {} },
           demarches: { etapes: { id: {} } },
@@ -125,14 +125,10 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
 
   if (titreEtapeId && !titreEtape) throw new Error("l'étape n'existe pas")
 
-  // TODO 2023-04-12 supprimer etapesTypes et utiliser getTDE
-  const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes
   // si on modifie une étape
   // vérifie que son type est possible sur la démarche
   if (titreEtape) {
-    const etapeType = demarcheTypeEtapesTypes.find(et => et.id === titreEtape.typeId)
-
-    if (!etapeType) {
+    if (!isTDEExist(titre.typeId, titreDemarche.typeId, titreEtape.typeId)) {
       throw new Error(`étape ${titreEtape.type!.nom} inexistante pour une démarche ${titreDemarche.type!.nom} pour un titre ${titre.typeId}.`)
     }
   }
