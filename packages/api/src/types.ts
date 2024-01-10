@@ -422,12 +422,12 @@ interface ITitreEtape {
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
-  incertitudes?: ITitreIncertitudes | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
+  notes?: string | null
 }
 
 interface ITitreEtapeFiltre {
@@ -435,19 +435,6 @@ interface ITitreEtapeFiltre {
   statutId?: string
   dateDebut?: string
   dateFin?: string
-}
-
-interface ITitreIncertitudes {
-  date?: boolean | null
-  dateDebut?: boolean | null
-  dateFin?: boolean | null
-  duree?: boolean | null
-  surface?: boolean | null
-  points?: boolean | null
-  substances?: boolean | null
-  titulaires?: boolean | null
-  amodiataires?: boolean | null
-  administrations?: boolean | null
 }
 
 interface ITitrePoint {
@@ -615,7 +602,6 @@ export {
   IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
-  ITitreIncertitudes,
   ITitrePoint,
   ITitrePointReference,
   ITitreType,

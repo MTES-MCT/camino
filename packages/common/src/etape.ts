@@ -50,25 +50,20 @@ type EtapeBase = {
   communes?: string[]
   geojsonPoints?: unknown[]
   geojsonMultiPolygon?: unknown[]
+  notes: null | string
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
-export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
-  incertitudes: {
-    [key in keyof Omit<
-      T,
-      'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'
-    >]: boolean
-  }
+export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
   heritageProps: {
     [key in keyof Omit<
       T,
-      'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'
-    >]: HeritageProp<Pick<T, 'type' | 'date' | key> & { incertitudes: { [k in key]: boolean } }>
+      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id' | 'notes'
+    >]: HeritageProp<Pick<T, 'type' | 'date' | key>>
   }
 }
 
-export type Etape = EtapeWithIncertitudesAndHeritage<EtapeBase>
-export type EtapeFondamentale = EtapeWithIncertitudesAndHeritage<Omit<EtapeBase, 'points' | 'surface'>>
+export type Etape = EtapeWithHeritage<EtapeBase>
+export type EtapeFondamentale = EtapeWithHeritage<Omit<EtapeBase, 'points' | 'surface'>>
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>

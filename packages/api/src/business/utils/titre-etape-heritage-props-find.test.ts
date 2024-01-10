@@ -240,108 +240,6 @@ describe('retourne l’étape en fonction de son héritage', () => {
     expect(result.titreEtape.points![0].references[0].id).not.toEqual(newTitreEtape.points![0].references[0].id)
   })
 
-  test('l’étape est modifiée si changement d’incertitude', () => {
-    const titreEtapePrecedente = {
-      id: 'titreEtapePrecedenteId',
-      incertitudes: { surface: true },
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: false, etapeId: null }
-
-        return acc
-      }, {} as IHeritageProps),
-    } as ITitreEtape
-
-    const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
-    titreEtape.heritageProps!.surface.actif = true
-    titreEtape.incertitudes = {}
-    titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
-
-    const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.incertitudes = { surface: true }
-
-    expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
-      hasChanged: true,
-      titreEtape: newTitreEtape,
-    })
-  })
-
-  test('l’étape est modifiée si suppression de l’incertitude', () => {
-    const titreEtapePrecedente = {
-      id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: false, etapeId: null }
-
-        return acc
-      }, {} as IHeritageProps),
-    } as ITitreEtape
-
-    const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
-    titreEtape.heritageProps!.surface.actif = true
-    titreEtape.incertitudes = { surface: true }
-    titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
-
-    const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.incertitudes = null
-
-    expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
-      hasChanged: true,
-      titreEtape: newTitreEtape,
-    })
-  })
-
-  test('l’étape est modifiée si ajout de l’incertitude', () => {
-    const titreEtapePrecedente = {
-      id: 'titreEtapePrecedenteId',
-      incertitudes: { surface: true },
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: false, etapeId: null }
-
-        return acc
-      }, {} as IHeritageProps),
-    } as ITitreEtape
-
-    const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
-    titreEtape.heritageProps!.surface.actif = true
-    titreEtape.incertitudes = null
-    titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
-
-    const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.incertitudes = { surface: true }
-
-    expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
-      hasChanged: true,
-      titreEtape: newTitreEtape,
-    })
-  })
-
-  test('l’étape n’est pas modifiée si ajout de l’incertitude sur une propriété non héritée', () => {
-    const titreEtapePrecedente = {
-      id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: false, etapeId: null }
-
-        return acc
-      }, {} as IHeritageProps),
-    } as ITitreEtape
-
-    const titreEtape = objectClone(titreEtapePrecedente)
-    titreEtape.heritageProps!.surface.actif = true
-    titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtape.incertitudes = { date: true }
-
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
-
-    const newTitreEtape = objectClone(titreEtape)
-
-    expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
-      hasChanged: false,
-      titreEtape: newTitreEtape,
-    })
-  })
-
   test('l’héritage est désactivé si l’étape précédente n’existe plus', () => {
     const titreEtape = {
       id: 'titreEtapeId',
@@ -368,7 +266,6 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’héritage est réinitialisé si l’héritage n’existe pas', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      incertitudes: { surface: true },
       heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 

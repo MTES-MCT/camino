@@ -23,7 +23,6 @@ const Template: StoryFn<Props> = (args: Props) => ({
 const heritageProps: Props['heritageProps']['substances'] = {
   actif: true,
   etape: {
-    incertitudes: { substances: true },
     substances: [SubstancesLegale.auru.id],
     date: toCaminoDate('2020-01-01'),
     type: { nom: 'Demande', id: 'aac' },
@@ -33,12 +32,10 @@ export const SansHeritage = Template.bind({})
 SansHeritage.args = {
   domaineId: 'm',
   heritageProps: { substances: { ...heritageProps, actif: false } },
-  incertitudes: { substances: false },
 }
 
 export const AvecHeritage = Template.bind({})
 AvecHeritage.args = {
   domaineId: 'm',
   heritageProps: { substances: { ...heritageProps } },
-  incertitudes: { substances: true },
 }

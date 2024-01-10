@@ -20,6 +20,7 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { watch, computed, ref } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   etape: EtapeFondamentale
@@ -29,8 +30,8 @@ export interface Props {
   entreprises: Entreprise[]
 }
 export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises'], (props, context) => {
-  const ans = ref<number>(props.etape.duree ? Math.floor(props.etape.duree / 12) : 0)
-  const mois = ref<number>(props.etape.duree ? Math.floor(props.etape.duree % 12) : 0)
+  const ans = ref<number>(isNotNullNorUndefined(props.etape.duree) && props.etape.duree > 0 ? Math.floor(props.etape.duree / 12) : 0)
+  const mois = ref<number>(isNotNullNorUndefined(props.etape.duree) && props.etape.duree > 0 ? Math.floor(props.etape.duree % 12) : 0)
 
   const entreprisesDisabled = computed<EntrepriseId[]>(() => [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id))
 
@@ -43,14 +44,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   }
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
-
-  const titulairesLength = computed<number>(() => {
-    return props.etape.titulaires.filter(({ id }) => id).length
-  })
-
-  const amodiatairesLength = computed<number>(() => {
-    return props.etape.amodiataires?.filter(({ id }) => id).length || 0
-  })
 
   const dureeOptionalCheck = computed<boolean>(() => {
     return titreEtapesDureeOptionalCheck(props.etape.type.id, props.demarcheTypeId, props.titreTypeId)
@@ -68,37 +61,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
     () => complete.value,
     () => completeUpdate(),
     { immediate: true }
-  )
-  watch<EtapeFondamentale>(
-    () => props.etape,
-    etape => {
-      if (!etape.duree) {
-        etape.incertitudes.duree = false
-      }
-
-      if (!etape.dateDebut) {
-        etape.incertitudes.dateDebut = false
-      }
-
-      if (!etape.dateFin) {
-        etape.incertitudes.dateFin = false
-      }
-
-      if (!etape.titulaires.length) {
-        etape.incertitudes.titulaires = false
-      }
-
-      if (!etape.amodiataires?.length) {
-        etape.incertitudes.amodiataires = false
-      }
-
-      if (!etape.substances?.length) {
-        etape.incertitudes.substances = false
-      }
-
-      context.emit('update:etape', etape)
-    },
-    { deep: true }
   )
 
   const titulairesUpdate = (titulaires: EtapeEntreprise[]) => {
@@ -124,7 +86,12 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
       return ''
     }
 
-    return etablissementNameFind(entreprise.etablissements, props.etape.date) || entreprise.nom
+    const etablissementName: string | null = etablissementNameFind(entreprise.etablissements, props.etape.date)
+    if (isNotNullNorUndefined(etablissementName)) {
+      return etablissementName
+    }
+
+    return entreprise.nom
   }
 
   const updateDuree = (): void => {
@@ -172,14 +139,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                     />
                   </div>
                 </div>
-                {ans.value || mois.value ? (
-                  <div class="h6">
-                    <label>
-                      <input v-model={props.etape.incertitudes.duree} type="checkbox" class="mr-xs" />
-                      Incertain
-                    </label>
-                  </div>
-                ) : null}
               </>
             )}
             read={heritagePropEtape => (
@@ -203,19 +162,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               prop={props.etape.heritageProps.dateDebut}
               class="tablet-blob-2-3"
               propId="dateDebut"
-              write={() => (
-                <>
-                  <InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />
-                  {props.etape.dateDebut ? (
-                    <div class="h6">
-                      <label>
-                        <input v-model={props.etape.incertitudes.dateDebut} type="checkbox" class="mr-xs" />
-                        Incertain
-                      </label>
-                    </div>
-                  ) : null}
-                </>
-              )}
+              write={() => <InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />}
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateDebut)}</div>}
             />
           </div>
@@ -236,19 +183,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               prop={props.etape.heritageProps.dateFin}
               class="tablet-blob-2-3"
               propId="dateFin"
-              write={() => (
-                <>
-                  <InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />
-                  {props.etape.dateFin ? (
-                    <div class="h6">
-                      <label>
-                        <input v-model={props.etape.incertitudes.dateFin} type="checkbox" class="mr-xs" />
-                        Incertain
-                      </label>
-                    </div>
-                  ) : null}
-                </>
-              )}
+              write={() => <InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />}
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateFin)}</div>}
             />
           </div>
@@ -264,23 +199,13 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             prop={props.etape.heritageProps.titulaires}
             propId="titulaires"
             write={() => (
-              <>
-                <AutocompleteEntreprise
-                  allEntities={props.entreprises}
-                  selectedEntities={props.etape.titulaires}
-                  nonSelectableEntities={entreprisesDisabled.value}
-                  placeholder="Sélectionner un titulaire"
-                  onEntreprisesUpdate={titulairesUpdate}
-                />
-                <div class="h6 mt-s">
-                  {titulairesLength.value ? (
-                    <label>
-                      <input v-model={props.etape.incertitudes.titulaires} type="checkbox" class="mr-xs" />
-                      Incertain
-                    </label>
-                  ) : null}
-                </div>
-              </>
+              <AutocompleteEntreprise
+                allEntities={props.entreprises}
+                selectedEntities={props.etape.titulaires}
+                nonSelectableEntities={entreprisesDisabled.value}
+                placeholder="Sélectionner un titulaire"
+                onEntreprisesUpdate={titulairesUpdate}
+              />
             )}
             read={heritagePropEtape => (
               <ul class="list-prefix">
@@ -308,23 +233,13 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             prop={props.etape.heritageProps.amodiataires}
             propId="amodiataires"
             write={() => (
-              <>
-                <AutocompleteEntreprise
-                  allEntities={props.entreprises}
-                  selectedEntities={props.etape.amodiataires}
-                  nonSelectableEntities={entreprisesDisabled.value}
-                  placeholder="Sélectionner un amodiataire"
-                  onEntreprisesUpdate={amodiatairesUpdate}
-                />
-                <div class="h6 mt-s">
-                  {amodiatairesLength.value ? (
-                    <label>
-                      <input v-model={props.etape.incertitudes.amodiataires} type="checkbox" class="mr-xs" />
-                      Incertain
-                    </label>
-                  ) : null}
-                </div>
-              </>
+              <AutocompleteEntreprise
+                allEntities={props.entreprises}
+                selectedEntities={props.etape.amodiataires}
+                nonSelectableEntities={entreprisesDisabled.value}
+                placeholder="Sélectionner un amodiataire"
+                onEntreprisesUpdate={amodiatairesUpdate}
+              />
             )}
             read={heritagePropEtape => (
               <ul class="list-prefix">
@@ -342,7 +257,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </>
       ) : null}
 
-      <SubstancesEdit substances={props.etape.substances} heritageProps={props.etape.heritageProps} incertitudes={props.etape.incertitudes} domaineId={domaineId.value} />
+      <SubstancesEdit substances={props.etape.substances} heritageProps={props.etape.heritageProps} domaineId={domaineId.value} />
 
       <hr />
     </div>

@@ -6,20 +6,6 @@ import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
 
-const fragmentIncertitudes = gql`
-  fragment incertitudes on Incertitudes {
-    date
-    dateDebut
-    dateFin
-    duree
-    surface
-    points
-    substances
-    titulaires
-    amodiataires
-  }
-`
-
 // fragment qui représente l’étape dont on hérite sur une prop
 const fragmentHeritageEtape = gql`
   fragment heritageEtape on Etape {
@@ -31,9 +17,6 @@ const fragmentHeritageEtape = gql`
     dateFin
     duree
     surface
-    incertitudes {
-      ...incertitudes
-    }
     type {
       id
       nom
@@ -51,8 +34,6 @@ const fragmentHeritageEtape = gql`
     substances
     contenu
   }
-
-  ${fragmentIncertitudes}
 
   ${fragmentTitreEntreprises}
 
@@ -189,9 +170,6 @@ const fragmentEtape = gql`
     documents {
       ...document
     }
-    incertitudes {
-      ...incertitudes
-    }
     heritageProps {
       ...heritageProps
     }
@@ -199,6 +177,7 @@ const fragmentEtape = gql`
     heritageContenu
     decisionsAnnexesSections
     decisionsAnnexesContenu
+    notes
   }
 
   ${fragmentTitreEntreprises}
@@ -210,8 +189,6 @@ const fragmentEtape = gql`
   ${fragmentDocument}
 
   ${fragmentHeritageProps}
-
-  ${fragmentIncertitudes}
 
   ${fragmentDocumentType}
 `

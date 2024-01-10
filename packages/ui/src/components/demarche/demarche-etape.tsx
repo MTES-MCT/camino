@@ -65,6 +65,10 @@ const displayEtapeStatus = (etape_type_id: EtapeTypeId, etape_statut_id: EtapeSt
 
 export const DemarcheEtape = defineComponent<Props>(props => {
   const hasContent = computed<boolean>(() => {
+    if (props.etape.notes !== null) {
+      return true
+    }
+
     if (fondamentalePropsName in props.etape) {
       const { perimetre: _perimetre, ...fondamentale } = props.etape.fondamentale
 
@@ -228,6 +232,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
                   ))}
               </>
             ))}
+            {props.etape.notes !== null ? <EtapePropItem style={{ gridColumn: '1 / -1', whiteSpace: 'pre-line' }} title="Notes" text={props.etape.notes} /> : null}
           </div>
         </>
       ) : null}

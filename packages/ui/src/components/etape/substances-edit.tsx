@@ -5,17 +5,16 @@ import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { TagList } from '@/components/_ui/tag-list'
 import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapeFondamentale, EtapeWithIncertitudesAndHeritage } from 'camino-common/src/etape'
+import { EtapeFondamentale, EtapeWithHeritage } from 'camino-common/src/etape'
 import { ButtonIcon } from '../_ui/button-icon'
 import { Button } from '../_ui/button'
 
 export type Props = {
   substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: EtapeWithIncertitudesAndHeritage<Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>>['heritageProps']
-  incertitudes: { substances: boolean }
+  heritageProps: EtapeWithHeritage<Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>>['heritageProps']
   domaineId: DomaineId
 }
-export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'incertitudes', 'domaineId'], props => {
+export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'domaineId'], props => {
   const substancesLength = computed<number>(() => props.substances?.filter(substanceId => substanceId).length)
 
   const substancesByDomaine = computed<SubstanceLegale[]>(() => SubstancesLegales.filter(({ domaineIds }) => domaineIds.includes(props.domaineId)).sort((a, b) => a.nom.localeCompare(b.nom)))
@@ -95,15 +94,6 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
                   </>
                 )}
               />
-            ) : null}
-
-            {substancesLength.value ? (
-              <div class="h6">
-                <label>
-                  <input v-model={props.incertitudes.substances} type="checkbox" class="mr-xs" />
-                  Incertain
-                </label>
-              </div>
             ) : null}
           </>
         )}

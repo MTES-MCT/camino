@@ -82,8 +82,6 @@ type Etape {
   "Documents relatifs à l'étape"
   documents: [Document]
 
-  incertitudes: Incertitudes
-
   heritageProps: HeritageProps
 
   heritageContenu: Json
@@ -94,6 +92,8 @@ type Etape {
   decisionsAnnexesSections: Json
   "Le contenu des décisions annexes nécessaires à la demande"
   decisionsAnnexesContenu: Json
+
+  notes: String
 }
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -137,18 +137,6 @@ type EtapeId {
   etapeId: ID!
 }
 
-type Incertitudes {
-  date: Boolean
-  dateDebut: Boolean
-  dateFin: Boolean
-  duree: Boolean
-  surface: Boolean
-  points: Boolean
-  substances: Boolean
-  titulaires: Boolean
-  amodiataires: Boolean
-}
-
 type HeritageProps {
   dateDebut: HeritageProp
   dateFin: HeritageProp
@@ -179,12 +167,12 @@ input InputEtapeCreation {
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
-  incertitudes: InputIncertitudes
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
   documentIds: [ID]
   entrepriseDocumentIds: [ID]
+  notes: String
 }
 
 input InputEtapeModification {
@@ -202,13 +190,13 @@ input InputEtapeModification {
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
-  incertitudes: InputIncertitudes
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
   documentIds: [ID]
   entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
+  notes: String
 }
 
 input InputEtapeFiltre {
@@ -216,18 +204,6 @@ input InputEtapeFiltre {
   statutId: ID
   dateDebut: String
   dateFin: String
-}
-
-input InputIncertitudes {
-  date: Boolean
-  dateDebut: Boolean
-  dateFin: Boolean
-  duree: Boolean
-  surface: Boolean
-  points: Boolean
-  substances: Boolean
-  titulaires: Boolean
-  amodiataires: Boolean
 }
 
 input InputHeritageProps {

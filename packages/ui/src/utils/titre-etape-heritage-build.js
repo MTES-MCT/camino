@@ -7,7 +7,6 @@ export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTy
     typeId: apiEtape.typeId,
     type: apiEtape.type,
     statutId: '',
-    incertitudes: { date: stateEtape.incertitudes.date },
     titreDemarcheId: stateEtape.titreDemarcheId,
   }
 
