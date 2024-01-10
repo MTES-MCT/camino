@@ -86,7 +86,7 @@ export interface IGetAdministrationsLocalesByActiviteIdParams {
 
 /** 'GetAdministrationsLocalesByActiviteId' return type */
 export interface IGetAdministrationsLocalesByActiviteIdResult {
-  administrations_locales: Json | null;
+  administrations_locales: Json;
 }
 
 /** 'GetAdministrationsLocalesByActiviteId' query type */

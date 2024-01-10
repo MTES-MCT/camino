@@ -3,7 +3,7 @@
 exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 1`] = `
 [
   {
-    "administrationsLocales": null,
+    "administrationsLocales": [],
     "archive": false,
     "communes": [
       {
@@ -47,7 +47,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
 exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 2`] = `
 [
   {
-    "administrationsLocales": null,
+    "administrationsLocales": [],
     "archive": false,
     "communes": [
       {
@@ -69,7 +69,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "id": "titreIdUniquePourMiseAJourAreas",
     "nom": "nom-titreIdUniquePourMiseAJourAreas",
     "pointsEtape": {
-      "administrationsLocales": null,
+      "administrationsLocales": [],
       "archive": false,
       "communes": [
         {
