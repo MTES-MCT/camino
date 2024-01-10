@@ -17,7 +17,7 @@ import { caminoFiltres } from 'camino-common/src/filters'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { TableSortEvent } from './_ui/table'
 import { activitesColonneIdAnnee } from './activites'
-import { dateFormat } from 'camino-common/src/date'
+import { CaminoDate, dateFormat, getCurrent } from 'camino-common/src/date'
 import { Alert } from './_ui/alert'
 import { titreIdOrSlugValidator, TitreIdOrSlug, TitreGet, getMostRecentValidValueProp, TitreId } from 'camino-common/src/titres'
 import { TitresLinkForm } from './titre/titres-link-form'
@@ -66,13 +66,14 @@ export const Titre = defineComponent(() => {
     return demarcheSlugValidator.optional().parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
   })
 
-  return () => <PureTitre user={user.value} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={apiClient} router={router} />
+  return () => <PureTitre user={user.value} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={apiClient} router={router} currentDate={getCurrent()} />
 })
 
 interface Props {
   user: User
   titreIdOrSlug: TitreIdOrSlug | null
   currentDemarcheSlug: DemarcheSlug | null
+  currentDate: CaminoDate
   apiClient: Pick<
     ApiClient,
     | 'getTitreById'
@@ -255,7 +256,7 @@ export const PureTitre = defineComponent<Props>(props => {
 
   const phases = computed<PhaseWithAlterations>(() => {
     if (titreData.value.status === 'LOADED') {
-      return phaseWithAlterations(titreData.value.value.demarches)
+      return phaseWithAlterations(titreData.value.value.demarches, props.currentDate)
     }
 
     return []
@@ -447,4 +448,4 @@ export const PureTitre = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureTitre.props = ['user', 'titreIdOrSlug', 'apiClient', 'router', 'initTab', 'currentDemarcheSlug']
+PureTitre.props = ['user', 'titreIdOrSlug', 'apiClient', 'router', 'initTab', 'currentDemarcheSlug', 'currentDate']

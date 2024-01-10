@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { vueRouter } from 'storybook-vue3-router'
 import { PureTitre } from './titre'
 import { action } from '@storybook/addon-actions'
-import { toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { Router } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -309,11 +309,21 @@ const apiClient: PropsApiClient = {
   },
 }
 
+const currentDate = caminoDateValidator.parse('2024-01-09')
+
 export const FullWithMapNoSnapshot: StoryFn = () => (
-  <PureTitre currentDemarcheSlug={demarcheSlug} user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} titreIdOrSlug={titre.id} />
+  <PureTitre currentDate={currentDate} currentDemarcheSlug={demarcheSlug} user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} titreIdOrSlug={titre.id} />
 )
 export const Full: StoryFn = () => (
-  <PureTitre currentDemarcheSlug={demarcheSlug} initTab="points" user={{ ...testBlankUser, role: 'super' }} router={routerPushMock} apiClient={apiClient} titreIdOrSlug={titre.id} />
+  <PureTitre
+    currentDate={currentDate}
+    currentDemarcheSlug={demarcheSlug}
+    initTab="points"
+    user={{ ...testBlankUser, role: 'super' }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    titreIdOrSlug={titre.id}
+  />
 )
 
 const chantePieApiClient: PropsApiClient = {
@@ -413,6 +423,7 @@ const chantePieApiClient: PropsApiClient = {
 
 export const ChantepieOctroi: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-cx-chantepie-1988-oct01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'admin', administrationId: 'min-mtes-dgaln-01' }}
@@ -424,6 +435,7 @@ export const ChantepieOctroi: StoryFn = () => (
 
 export const ChantepieOctroiAsEntreprise: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-cx-chantepie-1988-oct01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-409160132') }] }}
@@ -435,6 +447,7 @@ export const ChantepieOctroiAsEntreprise: StoryFn = () => (
 
 export const ChantepieMutation: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-cx-chantepie-1988-mut01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'super' }}
@@ -459,6 +472,7 @@ const criqueAdolpheApiClient: PropsApiClient = {
 
 export const CriqueAdolpheOctroi: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-ar-crique-adolphe-2023-oct01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'super' }}
@@ -483,6 +497,7 @@ const abattisKoticaApiClient: PropsApiClient = {
 
 export const AbattisKoticaOctroi: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-ar-abattis-kotika-2006-oct01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'defaut' }}
@@ -511,6 +526,7 @@ const bonEspoirApiClient: PropsApiClient = {
 
 export const BonEspoirOctroi: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-oct01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
@@ -522,6 +538,7 @@ export const BonEspoirOctroi: StoryFn = () => (
 
 export const BonEspoirTravaux: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-bon-espoir-2001-dam01')}
     initTab="points"
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('fr-401802863') }] }}
@@ -531,8 +548,33 @@ export const BonEspoirTravaux: StoryFn = () => (
   />
 )
 
+const basseManaApiClient: PropsApiClient = {
+  ...apiClient,
+  getTitreById: (titreIdOrSlug: TitreIdOrSlug) => {
+    getTitreAction(titreIdOrSlug)
+
+    // prettier-ignore
+    const bonEspoirData = titreGetValidator.parse({"id":"ORKjSbwrb87xE53MsYClV8OF","nom":"Basse Mana","slug":"m-pr-basse-mana-2018","titre_type_id":"prm","titre_statut_id":"mod","titre_doublon":null,"references":[{"nom":"22/2018","referenceTypeId":"dea"},{"nom":"2016-0010-MI","referenceTypeId":"deb"}],"titre_last_modified_date":"2023-12-19","demarches":[{"id":"GnIerujOWqlS3U06Xcbc1Dr0","slug":"m-pr-basse-mana-2018-oct01","description":null,"etapes":[{"etape_type_id":"dpu","fondamentale":{"date_debut":null,"date_fin":null,"duree":36,"substances":["tant","niob","lith","bery","etai","wolf","tita","auru"],"titulaires":[{"id":"fr-790856850","nom":"SUDMINE","operateur":true}],"amodiataires":null,"perimetre":{"geojsonMultiPolygon":{"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[-53.699125239725,5.29137675727333],[-53.735659753333,5.24333287037071],[-53.6847736578144,5.232646225266],[-53.664223513371,5.23752353831223],[-53.6554344678131,5.25034817283726],[-53.6402449164671,5.25044876137938],[-53.6331053301638,5.26979119871868],[-53.6650166925488,5.27353207619541],[-53.699125239725,5.29137675727333]]]]},"properties":null},"surface":48,"communes":[{"id":"97306","nom":"Mana"}],"secteurs_maritimes":[],"sdom_zones":["2"],"forets":["BSM"]}},"etape_statut_id":"acc","date":"2018-09-11","id":"ooH6ZbECJPcDPFsE0McnKvUm","ordre":9,"slug":"m-pr-basse-mana-2018-oct01-dpu01","sections_with_values":[{"id":"prx","nom":"Propriétés du permis exclusif de recherches","elements":[{"id":"engagement","nom":"Engagement","optionnel":true,"type":"number","value":150000},{"id":"engagementDeviseId","nom":"Devise de l'engagement","description":"","optionnel":true,"type":"select","options":[{"id":"EUR","nom":"Euros"},{"id":"FRF","nom":"Francs"},{"id":"XPF","nom":"Francs Pacifique"}],"value":"EUR"}]},{"id":"publication","nom":"Références Légifrance","elements":[{"id":"jorf","nom":"Numéro JORF","description":"","optionnel":false,"type":"text","value":"JORFTEXT000037382008"},{"id":"nor","nom":"Numéro NOR","description":"","optionnel":true,"type":"text","value":"ECOL1816264A"}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"dex","fondamentale":{"date_debut":null,"date_fin":null,"duree":36,"substances":["tant","niob","lith","bery","etai","wolf","tita","auru"],"titulaires":[{"id":"fr-790856850","nom":"SUDMINE","operateur":true}],"amodiataires":null,"perimetre":{"geojsonMultiPolygon":{"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[-53.699125239725,5.29137675727333],[-53.735659753333,5.24333287037071],[-53.6847736578144,5.232646225266],[-53.664223513371,5.23752353831223],[-53.6554344678131,5.25034817283726],[-53.6402449164671,5.25044876137938],[-53.6331053301638,5.26979119871868],[-53.6650166925488,5.27353207619541],[-53.699125239725,5.29137675727333]]]]},"properties":null},"surface":48,"communes":[{"id":"97306","nom":"Mana"}],"secteurs_maritimes":[],"sdom_zones":["2"],"forets":["BSM"]}},"etape_statut_id":"acc","date":"2018-08-31","id":"KJtV68vswF5ewUyF2jTuLGhS","ordre":8,"slug":"m-pr-basse-mana-2018-oct01-dex01","sections_with_values":[{"id":"prx","nom":"Propriétés du permis exclusif de recherches","elements":[{"id":"engagement","nom":"Engagement","optionnel":true,"type":"number","value":150000},{"id":"engagementDeviseId","nom":"Devise de l'engagement","description":"","optionnel":true,"type":"select","options":[{"id":"EUR","nom":"Euros"},{"id":"FRF","nom":"Francs"},{"id":"XPF","nom":"Francs Pacifique"}],"value":"EUR"}]},{"id":"publication","nom":"Références Légifrance","elements":[{"id":"jorf","nom":"Numéro JORF","description":"","optionnel":true,"type":"text","value":"JORFTEXT000037382008"},{"id":"nor","nom":"Numéro NOR","description":"","optionnel":true,"type":"text","value":"ECOL1816264A"}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"mdp","etape_statut_id":"fai","date":"2016-08-28","id":"qVJM9zS6hWyIr3My5OoubQA3","ordre":2,"slug":"m-pr-basse-mana-2018-oct01-mdp01","sections_with_values":[],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"mfr","fondamentale":{"date_debut":null,"date_fin":null,"duree":36,"substances":["tant","niob","scoc"],"titulaires":null,"amodiataires":null,"perimetre":null},"etape_statut_id":"fai","date":"2016-06-19","id":"abABihashClZP0lL3NUPELNV","ordre":1,"slug":"m-pr-basse-mana-2018-oct01-mfr01","sections_with_values":[{"id":"prx","nom":"Propriétés du permis exclusif de recherches","elements":[{"id":"engagement","nom":"Engagement","optionnel":true,"type":"number","value":null},{"id":"engagementDeviseId","nom":"Devise de l'engagement","description":"","optionnel":true,"type":"select","options":[{"id":"EUR","nom":"Euros"},{"id":"FRF","nom":"Francs"},{"id":"XPF","nom":"Francs Pacifique"}],"value":null}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null}],"demarche_type_id":"oct","demarche_statut_id":"acc","demarche_date_debut":"2018-09-11","demarche_date_fin":"2021-09-11"},{"id":"mZAUVvPyznbzpj3e3grjFmlJ","slug":"m-pr-basse-mana-2018-pr101","description":null,"etapes":[{"etape_type_id":"rpu","fondamentale":{"date_debut":null,"date_fin":null,"duree":null,"substances":null,"titulaires":null,"amodiataires":null,"perimetre":null},"etape_statut_id":"fai","date":"2023-11-17","id":"f76c17ab21ca966988390d92","ordre":11,"slug":"m-pr-basse-mana-2018-pr101-rpu01","sections_with_values":[],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"dpu","fondamentale":{"date_debut":null,"date_fin":null,"duree":null,"substances":null,"titulaires":null,"amodiataires":null,"perimetre":null},"etape_statut_id":"acc","date":"2023-11-15","id":"71f6497117b21325d53d8e56","ordre":10,"slug":"m-pr-basse-mana-2018-pr101-dpu01","sections_with_values":[{"id":"publication","nom":"Références Légifrance","elements":[{"id":"jorf","nom":"Numéro JORF","description":"","optionnel":false,"type":"text","value":"Texte 3 sur 160"}]}],"entreprises_documents":[],"documents":[{"id":"2023-11-15-pub-4d420801","description":"","document_type_id":"pub","public_lecture":true,"entreprises_lecture":true}],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"dex","fondamentale":{"date_debut":null,"date_fin":null,"duree":30,"substances":null,"titulaires":null,"amodiataires":null,"perimetre":null},"etape_statut_id":"acc","date":"2023-11-07","id":"590f6dd2f808eeadf51b820e","ordre":9,"slug":"m-pr-basse-mana-2018-pr101-dex01","sections_with_values":[{"id":"publication","nom":"Références Légifrance","elements":[{"id":"jorf","nom":"Numéro JORF","description":"","optionnel":true,"type":"text","value":null},{"id":"nor","nom":"Numéro NOR","description":"","optionnel":true,"type":"text","value":null}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"ppc","etape_statut_id":"ter","date":"2023-04-14","id":"da4a6c74690a6d1ef01ddde2","ordre":6,"slug":"m-pr-basse-mana-2018-pr101-ppc01","sections_with_values":[],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"ppu","etape_statut_id":"fai","date":"2023-03-27","id":"M1mK0vhAHH5CTaUwq4cJzK49","ordre":5,"slug":"m-pr-basse-mana-2018-pr101-ppu01","sections_with_values":[{"id":"opdp","elements":[{"id":"lien","nom":"Lien public externe","description":"","optionnel":true,"type":"url","value":null}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"mdp","etape_statut_id":"fai","date":"2021-04-30","id":"wFb34sxGyHoRNOByPffQZyAF","ordre":2,"slug":"m-pr-basse-mana-2018-pr101-mdp01","sections_with_values":[],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"mfr","fondamentale":{"date_debut":null,"date_fin":null,"duree":60,"substances":["tant","niob","lith","bery","etai","wolf","tita","auru"],"titulaires":[{"id":"fr-790856850","nom":"SUDMINE","operateur":false}],"amodiataires":null,"perimetre":{"geojsonMultiPolygon":{"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[-53.699150462397206,5.291394409468797],[-53.73568497160258,5.2433505257409125],[-53.684798879087204,5.232663883719148],[-53.664248736219285,5.2375411971227654],[-53.65545969176547,5.250365830767107],[-53.64027014144058,5.250466419912988],[-53.633130556393525,5.269808855679936],[-53.66511918689031,5.291623119512839],[-53.699150462397206,5.291394409468797]]]]},"properties":null},"surface":null,"communes":[{"id":"97306","nom":"Mana"}],"secteurs_maritimes":[],"sdom_zones":["2"],"forets":["BSM"]}},"etape_statut_id":"fai","date":"2021-04-30","id":"NKW0jIKc5cPBIp2dwu2VceCG","ordre":1,"slug":"m-pr-basse-mana-2018-pr101-mfr01","sections_with_values":[{"id":"prx","nom":"Propriétés du permis exclusif de recherches","elements":[{"id":"engagement","nom":"Engagement","optionnel":true,"type":"number","value":null},{"id":"engagementDeviseId","nom":"Devise de l'engagement","description":"","optionnel":true,"type":"select","options":[{"id":"EUR","nom":"Euros"},{"id":"FRF","nom":"Francs"},{"id":"XPF","nom":"Francs Pacifique"}],"value":null}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null}],"demarche_type_id":"pr1","demarche_statut_id":"acc","demarche_date_debut":"2021-09-11","demarche_date_fin":"2024-03-11"},{"id":"5df48d3536a38dd1dab542d7","slug":"m-pr-basse-mana-2018-pr201","description":"","etapes":[{"etape_type_id":"mdp","etape_statut_id":"fai","date":"2023-10-30","id":"37a1752da216067fc73328f9","ordre":2,"slug":"m-pr-basse-mana-2018-pr201-mdp01","sections_with_values":[],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null},{"etape_type_id":"mfr","fondamentale":{"date_debut":null,"date_fin":null,"duree":60,"substances":["tant","niob","lith","bery","etai","wolf","tita","auru"],"titulaires":null,"amodiataires":null,"perimetre":{"geojsonMultiPolygon":{"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[-53.695977302723314,5.258026897118486],[-53.69166175320614,5.243894120712839],[-53.691207934852734,5.238962048893827],[-53.66947244758239,5.236434510036549],[-53.66426676493007,5.2375411203489115],[-53.655468706369525,5.250365792413383],[-53.64027010339901,5.25045738302719],[-53.63422022259896,5.267391338838475],[-53.64933956522329,5.274005464773927],[-53.66943759690406,5.2748050575845875],[-53.66988205803166,5.281761503749559],[-53.671594626284566,5.281690874443703],[-53.67432345044184,5.276844434310086],[-53.67742349010169,5.274481516415551],[-53.68523182828244,5.270616251350751],[-53.695977302723314,5.258026897118486]]]]},"properties":null},"surface":20.69,"communes":[{"id":"97306","nom":"Mana"}],"secteurs_maritimes":[],"sdom_zones":["2"],"forets":["BSM"]}},"etape_statut_id":"fai","date":"2023-10-30","id":"47a22a6ca44891d40e2f4149","ordre":1,"slug":"m-pr-basse-mana-2018-pr201-mfr01","sections_with_values":[{"id":"prx","nom":"Propriétés du permis exclusif de recherches","elements":[{"id":"engagement","nom":"Engagement","optionnel":true,"type":"number","value":null},{"id":"engagementDeviseId","nom":"Devise de l'engagement","description":"","optionnel":true,"type":"select","options":[{"id":"EUR","nom":"Euros"},{"id":"FRF","nom":"Francs"},{"id":"XPF","nom":"Francs Pacifique"}],"value":null}]}],"entreprises_documents":[],"documents":[],"decisions_annexes_contenu":null,"decisions_annexes_sections":null}],"demarche_type_id":"pr2","demarche_statut_id":"dep","demarche_date_debut":"2024-03-11","demarche_date_fin":null}],"nb_activites_to_do":null})
+
+    return Promise.resolve(bonEspoirData)
+  },
+}
+
+export const BasseManaMod: StoryFn = () => (
+  <PureTitre
+    currentDate={currentDate}
+    currentDemarcheSlug={demarcheSlugValidator.parse('m-pr-basse-mana-2018-pr101')}
+    initTab="points"
+    user={{ ...testBlankUser, role: 'defaut' }}
+    router={routerPushMock}
+    apiClient={basseManaApiClient}
+    titreIdOrSlug={titreIdValidator.parse('ORKjSbwrb87xE53MsYClV8OF')}
+  />
+)
+
 export const Empty: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlug}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
@@ -561,6 +603,7 @@ export const Empty: StoryFn = () => (
 
 export const WithDoublon: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlug}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
@@ -592,6 +635,7 @@ export const WithDoublon: StoryFn = () => (
 
 export const WithLinkableTitres: StoryFn = () => (
   <PureTitre
+    currentDate={currentDate}
     currentDemarcheSlug={demarcheSlug}
     user={{ ...testBlankUser, role: 'super' }}
     router={routerPushMock}
