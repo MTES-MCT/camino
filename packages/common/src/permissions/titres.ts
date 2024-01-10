@@ -74,6 +74,10 @@ export const canReadTitre = async (
     return true
   }
 
+  if (titre.public_lecture) {
+    return true
+  }
+
   if (isAdministration(user)) {
     return (
       isGestionnaire(user.administrationId, await titreTypeId()) || isAssociee(user.administrationId, await titreTypeId()) || (await titresAdministrationsLocales()).includes(user.administrationId)
@@ -86,7 +90,7 @@ export const canReadTitre = async (
     return user.entreprises.map(({ id }) => id).some(entrepriseId => entreprises.includes(entrepriseId))
   }
 
-  return titre.public_lecture
+  return false
 }
 
 export const canEditTitre = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {

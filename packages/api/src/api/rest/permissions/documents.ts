@@ -34,7 +34,13 @@ export const canReadDocument = async (
   }
 
   if (isEntrepriseOrBureauDEtude(user)) {
-    return document.entreprises_lecture
+    if (!document.entreprises_lecture) {
+      return false
+    }
+
+    const titulaires = await entreprisesTitulairesOuAmodiataires()
+
+    return titulaires.some(entrepriseId => user.entreprises?.some(({ id }) => id === entrepriseId) ?? false)
   }
 
   return false
