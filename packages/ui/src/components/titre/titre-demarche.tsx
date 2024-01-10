@@ -1,5 +1,5 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
-import { getMostRecentValidValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
+import { getMostRecentValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
@@ -76,7 +76,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('perimetre', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('perimetre', phaseDemarchesAsc.value) : null
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -99,15 +99,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('titulaires', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('titulaires', phaseDemarchesAsc.value) : null
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('amodiataires', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('amodiataires', phaseDemarchesAsc.value) : null
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValidValueProp('substances', phaseDemarchesAsc.value) : null
+    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('substances', phaseDemarchesAsc.value) : null
   })
 
   const addDemarchePopup = ref<boolean>(false)
@@ -212,28 +212,30 @@ export const TitreDemarche = defineComponent<Props>(props => {
               ) : null}
             </div>
             <div class="fr-mt-3w">
-              {demarche.value.etapes.map(etape => (
-                <>
-                  {demarche.value !== null ? (
-                    <div class="fr-pb-2w">
-                      <DemarcheEtape
-                        etape={etape}
-                        router={props.router}
-                        user={props.user}
-                        titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
-                        demarche={{
-                          administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
-                          demarche_type_id: demarche.value.demarche_type_id,
-                          titulaires: titulaires.value ?? [],
-                          sdom_zones: perimetre.value?.sdom_zones ?? [],
-                        }}
-                        apiClient={props.apiClient}
-                        initTab={props.initTab}
-                      />
-                    </div>
-                  ) : null}
-                </>
-              ))}
+              {[...demarche.value.etapes]
+                .sort((a, b) => b.ordre - a.ordre)
+                .map(etape => (
+                  <>
+                    {demarche.value !== null ? (
+                      <div class="fr-pb-2w">
+                        <DemarcheEtape
+                          etape={etape}
+                          router={props.router}
+                          user={props.user}
+                          titre={{ typeId: props.titre.titre_type_id, titreStatutId: props.titre.titre_statut_id, slug: props.titre.slug, nom: props.titre.nom }}
+                          demarche={{
+                            administrationsLocales: getAdministrationsLocales(perimetre.value?.communes.map(({ id }) => id) ?? [], perimetre.value?.secteurs_maritimes ?? []),
+                            demarche_type_id: demarche.value.demarche_type_id,
+                            titulaires: titulaires.value ?? [],
+                            sdom_zones: perimetre.value?.sdom_zones ?? [],
+                          }}
+                          apiClient={props.apiClient}
+                          initTab={props.initTab}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                ))}
             </div>
           </div>
           {addDemarchePopup.value ? (

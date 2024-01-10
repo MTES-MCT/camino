@@ -1,13 +1,16 @@
-import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, getLinkConfig } from './titres.js'
+import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, canReadTitre, getLinkConfig } from './titres.js'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect, describe } from 'vitest'
 import { testBlankUser, TestUser } from '../tests-utils.js'
 import { User } from '../roles.js'
-import { newEntrepriseId } from '../entreprise.js'
+import { entrepriseIdValidator, newEntrepriseId } from '../entreprise.js'
 import { ACTIVITES_TYPES_IDS } from '../static/activitesTypes.js'
 import { toCommuneId } from '../static/communes.js'
 import { TitreStatutId, titresStatutsArray } from '../static/titresStatuts.js'
+import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes.js'
+
+const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
 
 test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
@@ -225,6 +228,105 @@ describe('canHaveActivites', () => {
           secteursMaritime: [],
         })
       ).toEqual(false)
+    })
+  })
+})
+
+describe('canReadTitre', () => {
+  test('en tant que super je peux lire tous les titres', async () => {
+    expect(await canReadTitre({ ...testBlankUser, role: 'super' }, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, { public_lecture: false })).toBe(true)
+  })
+
+  test('si le titre est en lecture publique, tout le monde y a accès', async () => {
+    expect(await canReadTitre(null, shouldNotBeCalled, shouldNotBeCalled, shouldNotBeCalled, { public_lecture: true })).toBe(true)
+  })
+
+  describe("pour les utilisateurs administrations, on peut lire un titre si l'utilisateur fait partie d'une administration gestionnaire, associé ou locale", () => {
+    test('gestionnaire', async () => {
+      const adminId = 'dea-guyane-01'
+      const titreTypeId = 'axm'
+      expect(isGestionnaire(adminId, titreTypeId)).toBe(true)
+      expect(isAssociee(adminId, titreTypeId)).toBe(false)
+      expect(
+        await canReadTitre(
+          { ...testBlankUser, role: 'admin', administrationId: adminId },
+          () => Promise.resolve(titreTypeId),
+          () => Promise.resolve([]),
+          shouldNotBeCalled,
+          { public_lecture: false }
+        )
+      ).toBe(true)
+    })
+    test('associée', async () => {
+      const adminId = 'dea-guyane-01'
+      const titreTypeId = 'arm'
+      expect(isGestionnaire(adminId, titreTypeId)).toBe(false)
+      expect(isAssociee(adminId, titreTypeId)).toBe(true)
+      expect(
+        await canReadTitre(
+          { ...testBlankUser, role: 'admin', administrationId: adminId },
+          () => Promise.resolve(titreTypeId),
+          () => Promise.resolve([]),
+          shouldNotBeCalled,
+          { public_lecture: false }
+        )
+      ).toBe(true)
+    })
+    test('locale', async () => {
+      const adminId = 'dre-aura-01'
+      const titreTypeId = 'cxm'
+      expect(isGestionnaire(adminId, titreTypeId)).toBe(false)
+      expect(isAssociee(adminId, titreTypeId)).toBe(false)
+      expect(
+        await canReadTitre(
+          { ...testBlankUser, role: 'admin', administrationId: adminId },
+          () => Promise.resolve(titreTypeId),
+          () => Promise.resolve([adminId]),
+          shouldNotBeCalled,
+          { public_lecture: false }
+        )
+      ).toBe(true)
+    })
+
+    test('ni gestionnaire, ni associée, ni locale', async () => {
+      const adminId = 'dre-aura-01'
+      const titreTypeId = 'cxm'
+      expect(isGestionnaire(adminId, titreTypeId)).toBe(false)
+      expect(isAssociee(adminId, titreTypeId)).toBe(false)
+      expect(
+        await canReadTitre(
+          { ...testBlankUser, role: 'admin', administrationId: adminId },
+          () => Promise.resolve(titreTypeId),
+          () => Promise.resolve([]),
+          shouldNotBeCalled,
+          { public_lecture: false }
+        )
+      ).toBe(false)
+    })
+  })
+
+  describe("pour les utilisateurs entreprises, on peut lire un titre si l'utilisateur fait partie d'une entreprise titulaire ou amodiataire", () => {
+    test('entreprise titulaire', async () => {
+      const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
+      expect(
+        await canReadTitre({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), {
+          public_lecture: false,
+        })
+      ).toBe(true)
+    })
+
+    test('entreprise non titulaire', async () => {
+      const entrepriseIdTitulaire = entrepriseIdValidator.parse('entrepriseIdTitulaire')
+      const entrepriseIdNonTitulaire = entrepriseIdValidator.parse('entrepriseIdNonTitulaire')
+      expect(
+        await canReadTitre(
+          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire }] },
+          shouldNotBeCalled,
+          shouldNotBeCalled,
+          () => Promise.resolve([entrepriseIdNonTitulaire]),
+          { public_lecture: false }
+        )
+      ).toBe(false)
     })
   })
 })

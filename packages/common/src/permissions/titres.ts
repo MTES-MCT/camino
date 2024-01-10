@@ -1,8 +1,8 @@
 import { isTitreType, TitresTypes, TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User, UserNotNull } from '../roles.js'
+import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User, UserNotNull } from '../roles.js'
 import { AdministrationId } from '../static/administrations.js'
-import { isGestionnaire } from '../static/administrationsTitresTypes.js'
+import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { CommuneId } from '../static/communes.js'
 import { ActivitesTypesId, sortedActivitesTypes } from '../static/activitesTypes.js'
 import { activitesTypesTitresTypes } from '../static/activitesTypesTitresTypes.js'
@@ -10,8 +10,9 @@ import { activitesTypesPays } from '../static/activitesTypesPays.js'
 import { canAdministrationModifyTitres } from '../static/administrationsTitresTypesTitresStatuts.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { territoiresIdFind } from '../territoires.js'
-import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from '../typescript-tools.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, SimplePromiseFn } from '../typescript-tools.js'
 import { SecteursMaritimes } from '../static/facades.js'
+import { EntrepriseId } from '../entreprise.js'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { demarche_type_id: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {
@@ -62,9 +63,27 @@ export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boo
   return false
 }
 
-export const canReadTitre = (user: User, titre: { public_lecture: boolean }): boolean => {
+export const canReadTitre = async (
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  titre: { public_lecture: boolean }
+): Promise<boolean> => {
   if (isSuper(user)) {
     return true
+  }
+
+  if (isAdministration(user)) {
+    return (
+      isGestionnaire(user.administrationId, await titreTypeId()) || isAssociee(user.administrationId, await titreTypeId()) || (await titresAdministrationsLocales()).includes(user.administrationId)
+    )
+  }
+
+  if (isEntrepriseOrBureauDEtude(user)) {
+    const entreprises = await entreprisesTitulairesOuAmodiataires()
+
+    return user.entreprises.map(({ id }) => id).some(entrepriseId => entreprises.includes(entrepriseId))
   }
 
   return titre.public_lecture

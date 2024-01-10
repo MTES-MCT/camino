@@ -27,7 +27,7 @@
       :action="addAction"
       :title="documentPopupTitle"
       :repertoire="repertoire"
-      class="btn py-s px-m rnd-xs mt--s mb-s full-x"
+      class="btn py-s px-m rnd-xs mb-s full-x"
       :parentTypeId="parentTypeId"
       :large="true"
       :documentsTypes="documentsTypes"

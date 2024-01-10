@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
 import { DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheEtapeValidator, demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
 import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
-import { DemarcheTypeId, canImpactTitre, demarcheTypeIdValidator, isDemarcheTypeOctroi } from './static/demarchesTypes.js'
+import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
 
 export const titreIdValidator = z.string().brand<'TitreId'>()
@@ -131,39 +131,19 @@ type TitrePropTitreEtapeFindDemarche = Pick<TitreGetDemarche, 'demarche_type_id'
   etapes: TitrePropTitreEtapeFindDemarcheEtape[]
 }
 
-export const getMostRecentValidValueProp = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances'>(
+export const getMostRecentValueProp = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances'>(
   propId: P,
   titreDemarchesAsc: TitrePropTitreEtapeFindDemarche[]
 ): DemarcheEtapeFondamentale['fondamentale'][P] | null => {
-  const titreEtapeValid = (titreEtape: Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id'>, titreDemarcheTypeId: DemarcheTypeId): boolean => {
-    // si l'étape n'a pas le statut acceptée, fait ou favorable
-    if (!['acc', 'fai', 'fav'].includes(titreEtape.etape_statut_id)) {
-      return false
-    }
-
-    if (isDemarcheTypeOctroi(titreDemarcheTypeId)) {
-      return true
-    }
-    // si il s'agit d'une étape de décision
-    if (['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco'].includes(titreEtape.etape_type_id)) {
-      return true
-    }
-
-    return false
-  }
-
-  const titreDemarchesDesc = [...titreDemarchesAsc].reverse()
+  const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche[] = [...titreDemarchesAsc].reverse()
 
   for (const titreDemarche of titreDemarchesDesc) {
-    if (canImpactTitre(titreDemarche.demarche_type_id, titreDemarche.demarche_statut_id)) {
-      const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
-
-      for (const titreEtape of titreEtapeDesc) {
-        if ('fondamentale' in titreEtape && titreEtapeValid(titreEtape, titreDemarche.demarche_type_id)) {
-          const value = titreEtape.fondamentale[propId]
-          if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
-            return value
-          }
+    const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
+    for (const titreEtape of titreEtapeDesc) {
+      if ('fondamentale' in titreEtape && ['acc', 'fai', 'fav', 'aco'].includes(titreEtape.etape_statut_id)) {
+        const value = titreEtape.fondamentale[propId]
+        if ((Array.isArray(value) && isNotNullNorUndefinedNorEmpty(value)) || (!Array.isArray(value) && isNotNullNorUndefined(value))) {
+          return value
         }
       }
     }

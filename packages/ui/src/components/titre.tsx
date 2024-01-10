@@ -19,7 +19,7 @@ import { TableSortEvent } from './_ui/table'
 import { activitesColonneIdAnnee } from './activites'
 import { CaminoDate, dateFormat, getCurrent } from 'camino-common/src/date'
 import { Alert } from './_ui/alert'
-import { titreIdOrSlugValidator, TitreIdOrSlug, TitreGet, getMostRecentValidValueProp, TitreId } from 'camino-common/src/titres'
+import { titreIdOrSlugValidator, TitreIdOrSlug, TitreGet, getMostRecentValueProp, TitreId } from 'camino-common/src/titres'
 import { TitresLinkForm } from './titre/titres-link-form'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
 import { TitreTimeline } from './titre/titre-timeline'
@@ -169,8 +169,8 @@ export const PureTitre = defineComponent<Props>(props => {
             () => Promise.resolve(titre.titre_type_id),
             () => Promise.resolve(administrations.value),
             () => {
-              const titulaires = getMostRecentValidValueProp('titulaires', titre.demarches) ?? []
-              const amodiataires = getMostRecentValidValueProp('amodiataires', titre.demarches) ?? []
+              const titulaires = getMostRecentValueProp('titulaires', titre.demarches) ?? []
+              const amodiataires = getMostRecentValueProp('amodiataires', titre.demarches) ?? []
 
               return Promise.resolve([...titulaires, ...amodiataires].map(({ id }) => id))
             }
@@ -204,7 +204,7 @@ export const PureTitre = defineComponent<Props>(props => {
   const showActivitesLink = ref<boolean>(false)
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return titreData.value.status === 'LOADED' && titreData.value.value.demarches !== null ? getMostRecentValidValueProp('perimetre', titreData.value.value.demarches) : null
+    return titreData.value.status === 'LOADED' && titreData.value.value.demarches !== null ? getMostRecentValueProp('perimetre', titreData.value.value.demarches) : null
   })
 
   const administrations = computed<AdministrationId[]>(() => {
