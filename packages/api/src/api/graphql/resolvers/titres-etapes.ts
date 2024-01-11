@@ -442,12 +442,13 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       await contenuElementFilesCreate(decisionsAnnexesNewFiles, 'demarches', etape.id)
     }
 
-    if (isNotNullNorUndefined(etape.duree) && !canEditDuree(titreTypeId, titreDemarche.typeId)) {
-      throw new Error(`Il est interdit de modifier une durée pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+      etape.duree = titreEtapeOld.duree
     }
 
-    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-      throw new Error(`Il est interdit de modifier la date de début ou de fin pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user)) {
+      etape.dateDebut = titreEtapeOld.dateDebut
+      etape.dateFin = titreEtapeOld.dateFin
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
