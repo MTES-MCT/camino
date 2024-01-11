@@ -30,7 +30,7 @@ import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, 
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateEtape, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
@@ -40,6 +40,7 @@ import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
@@ -229,8 +230,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       etape.communes = []
     }
 
-    const typeId = titreDemarche?.titre?.typeId
-    if (!typeId) {
+    const titreTypeId = titreDemarche?.titre?.typeId
+    if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user)
@@ -250,10 +251,18 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       etape.points = titreEtapePoints
     }
 
-    const sections = getSections(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType.id)
+    const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
+
+    if (isNotNullNorUndefined(etape.duree) && !canEditDuree(titreTypeId, titreDemarche.typeId)) {
+      throw new Error(`Il est interdit de modifier une durée pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    }
+
+    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
+      throw new Error(`Il est interdit de modifier la date de début ou de fin pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
@@ -406,8 +415,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     } else {
       etape.communes = []
     }
-    const typeId = titreDemarche?.titre?.typeId
-    if (!typeId) {
+    const titreTypeId = titreDemarche?.titre?.typeId
+    if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
 
@@ -422,7 +431,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     }
     await documentsLier(context, documentIds, etape.id, titreEtapeOld)
 
-    const sections = getSections(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType.id)
+    const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
@@ -431,6 +440,14 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       const { contenu: decisionsAnnexesContenu, newFiles: decisionsAnnexesNewFiles } = sectionsContenuAndFilesGet(etape.decisionsAnnexesContenu, titreEtapeOld.decisionsAnnexesSections)
       etape.decisionsAnnexesContenu = decisionsAnnexesContenu as IDecisionAnnexeContenu
       await contenuElementFilesCreate(decisionsAnnexesNewFiles, 'demarches', etape.id)
+    }
+
+    if (isNotNullNorUndefined(etape.duree) && !canEditDuree(titreTypeId, titreDemarche.typeId)) {
+      throw new Error(`Il est interdit de modifier une durée pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    }
+
+    if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
+      throw new Error(`Il est interdit de modifier la date de début ou de fin pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
