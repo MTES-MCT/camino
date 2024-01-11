@@ -3,30 +3,10 @@ import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
 import { CommonRestTitre } from './titres.js'
 import { EntrepriseId } from './entreprise.js'
 import { getDomaineId } from './static/titresTypes.js'
-import { z } from 'zod'
 import { Decimal } from 'decimal.js'
+import type { Fiscalite } from './validators/fiscalite.js'
 
-const fiscaliteFranceValidator = z.object({
-  redevanceCommunale: z.number(),
-  redevanceDepartementale: z.number(),
-})
-export type FiscaliteFrance = z.infer<typeof fiscaliteFranceValidator>
-
-const fiscaliteGuyaneValidator = fiscaliteFranceValidator.extend({
-  guyane: z.object({
-    taxeAurifereBrute: z.number(),
-    totalInvestissementsDeduits: z.number(),
-    taxeAurifere: z.number(),
-  }),
-})
-export type FiscaliteGuyane = z.infer<typeof fiscaliteGuyaneValidator>
-
-export const fiscaliteValidator = z.union([fiscaliteFranceValidator, fiscaliteGuyaneValidator])
-export type Fiscalite = z.infer<typeof fiscaliteValidator>
-
-export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteGuyane => 'guyane' in fiscalite
-
-export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0)
+export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => ('guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : 0)
 
 export const fraisGestion = (fiscalite: Fiscalite): Decimal =>
   new Decimal(fiscalite.redevanceDepartementale).add(fiscalite.redevanceCommunale).add(montantNetTaxeAurifere(fiscalite)).mul(0.08).toDecimalPlaces(2)

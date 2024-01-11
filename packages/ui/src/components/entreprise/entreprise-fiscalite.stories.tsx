@@ -1,6 +1,6 @@
 import { EntrepriseFiscalite } from './entreprise-fiscalite'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Fiscalite } from 'camino-common/src/fiscalite'
+import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 const meta: Meta = {

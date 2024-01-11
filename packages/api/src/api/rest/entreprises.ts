@@ -1,5 +1,6 @@
 import { Request as JWTRequest } from 'express-jwt'
-import { Fiscalite, FiscaliteFrance, FiscaliteGuyane, fiscaliteVisible, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
+import { fiscaliteVisible } from 'camino-common/src/fiscalite.js'
+import { Fiscalite, FiscaliteFrance, FiscaliteGuyane } from 'camino-common/src/validators/fiscalite.js'
 import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 
@@ -262,7 +263,7 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
         acc.fiscalite.redevanceCommunale += fiscalite.redevanceCommunale
         acc.fiscalite.redevanceDepartementale += fiscalite.redevanceDepartementale
 
-        if (!acc.guyane && isFiscaliteGuyane(fiscalite)) {
+        if (!acc.guyane && 'guyane' in fiscalite) {
           acc = {
             guyane: true,
             fiscalite: {
@@ -275,7 +276,7 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
             },
           }
         }
-        if (acc.guyane && isFiscaliteGuyane(fiscalite)) {
+        if (acc.guyane && 'guyane' in fiscalite) {
           acc.fiscalite.guyane.taxeAurifereBrute += fiscalite.guyane.taxeAurifereBrute
           acc.fiscalite.guyane.totalInvestissementsDeduits += fiscalite.guyane.totalInvestissementsDeduits
           acc.fiscalite.guyane.taxeAurifere += fiscalite.guyane.taxeAurifere

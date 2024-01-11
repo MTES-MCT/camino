@@ -1,6 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { onMounted, ref } from 'vue'
-import { Fiscalite, isFiscaliteGuyane, montantNetTaxeAurifere, fraisGestion } from 'camino-common/src/fiscalite'
+import { montantNetTaxeAurifere, fraisGestion } from 'camino-common/src/fiscalite'
+import type { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
@@ -72,7 +73,7 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
         <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(item.redevanceCommunale)}</>} />
         <div>b. Redevance départementale</div>
         <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(item.redevanceDepartementale)}</>} />
-        {data.value.status === 'LOADED' && isFiscaliteGuyane(data.value.value) ? (
+        {data.value.status === 'LOADED' && 'guyane' in data.value.value ? (
           <>
             <div>c. Taxe minière sur l’or de Guyane</div>
             <div class={styles['fiscalite-value']}>{currencyFormat(data.value.value.guyane.taxeAurifereBrute)}</div>
@@ -82,7 +83,7 @@ export const EntrepriseFiscalite = caminoDefineComponent<Props>(['anneeCourante'
             <div class={styles['fiscalite-value']}>{currencyFormat(montantNetTaxeAurifere(data.value.value))}</div>
           </>
         ) : null}
-        <div>f. Frais de gestion de fiscalité directe locale (a+b{data.value.status === 'LOADED' && isFiscaliteGuyane(data.value.value) ? '+e' : ''})X 8%</div>
+        <div>f. Frais de gestion de fiscalité directe locale (a+b{data.value.status === 'LOADED' && 'guyane' in data.value.value ? '+e' : ''})X 8%</div>
         <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(fraisGestion(item).toNumber())}</>} />
         <div>Somme à payer auprès du comptable (2)</div>
         <LoadingElement data={data.value} class={styles['fiscalite-value']} renderItem={item => <>{currencyFormat(sommeAPayer(item))}</>} />

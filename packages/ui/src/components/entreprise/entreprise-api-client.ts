@@ -1,5 +1,4 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { uploadCall } from '@/api/_upload'
 import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
 import {
@@ -14,7 +13,7 @@ import {
 } from 'camino-common/src/entreprise'
 import { TempDocumentName } from 'camino-common/src/document'
 import { EtapeId } from 'camino-common/src/etape'
-import { Fiscalite } from 'camino-common/src/fiscalite'
+import { Fiscalite } from 'camino-common/src/validators/fiscalite'
 import gql from 'graphql-tag'
 import { z } from 'zod'
 
