@@ -38,6 +38,7 @@ import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administ
 import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
+import { EtapeId } from 'camino-common/src/etape'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -66,7 +67,28 @@ export const Titre = defineComponent(() => {
     return demarcheSlugValidator.optional().parse(Array.isArray(demarcheId) ? demarcheId[0] : demarcheId) ?? null
   })
 
-  return () => <PureTitre user={user.value} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={apiClient} router={router} currentDate={getCurrent()} />
+  const overriddenApiClient: ApiClient = {
+    ...apiClient,
+    deleteEtape: async (titreEtapeId: EtapeId) => {
+      try {
+        await apiClient.deleteEtape(titreEtapeId)
+      } catch (e) {
+        store.dispatch(
+          'messageAdd',
+          {
+            value: `Impossible de supprimer cette étape`,
+            type: 'error',
+          },
+          { root: true }
+        )
+        throw e
+      }
+    },
+  }
+
+  return () => (
+    <PureTitre user={user.value} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={overriddenApiClient} router={router} currentDate={getCurrent()} />
+  )
 })
 
 interface Props {
