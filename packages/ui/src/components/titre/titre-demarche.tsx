@@ -54,6 +54,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
     return null
   })
 
+  // FIXME attention si le résumé utilise ça ou pas ? (gestion des droits ?)
   const phaseDemarchesAsc = computed<(PhaseWithDateDebut | DemarcheAlteration)[] | [TitreTimelineEvents] | null>(() => {
     for (let topLevelIndex = 0; topLevelIndex < props.phasesWithAlterations.length; topLevelIndex++) {
       const phase = props.phasesWithAlterations[topLevelIndex]
