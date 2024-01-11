@@ -45,9 +45,10 @@ export const canEditAmodiataires = (titreTypeId: TitreTypeId, user: User): boole
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
 
+const demarchesSansDatesNiDureePourLesEtapes = [DEMARCHES_TYPES_IDS.DeplacementDePerimetre, DEMARCHES_TYPES_IDS.Mutation, DEMARCHES_TYPES_IDS.ExtensionDePerimetre] as const
 export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: User): boolean => {
   // ne peut pas ajouter de dates à la démarche déplacement de périmètre
-  if (demarcheTypeId === DEMARCHES_TYPES_IDS.DeplacementDePerimetre) {
+  if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return false
   }
 
@@ -77,7 +78,7 @@ export const canEditTitulaires = (titreTypeId: TitreTypeId, user: User): boolean
 
 export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): boolean => {
   // ne peut pas ajouter de durée à la démarche déplacement de périmètre
-  if (demarcheTypeId === DEMARCHES_TYPES_IDS.DeplacementDePerimetre) {
+  if (demarchesSansDatesNiDureePourLesEtapes.includes(demarcheTypeId)) {
     return false
   }
 
