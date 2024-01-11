@@ -13,6 +13,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { couleurParDomaine } from '../_common/domaine'
 import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
+import { indexToLetter } from 'camino-common/src/number'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -257,7 +258,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
                 coordinates: [x, y],
               },
               properties: {
-                pointNumber: `${index}`,
+                pointNumber: `${indexToLetter(index)}`,
                 latitude: `${y}`,
                 longitude: `${x}`,
               },

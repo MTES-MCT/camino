@@ -9,6 +9,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
+import { indexToLetter } from 'camino-common/src/number'
 export type TabId = 'carte' | 'points'
 interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
@@ -63,7 +64,7 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
             link: null,
             columns: {
               polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
-              nom: { value: `${index}` },
+              nom: { value: indexToLetter(index) },
               latitude: { value: `${x}` },
               longitude: { value: `${y}` },
             },
