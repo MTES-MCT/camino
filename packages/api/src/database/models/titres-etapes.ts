@@ -50,7 +50,7 @@ class TitresEtapes extends Model {
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
-      notes: { type: 'string' },
+      notes: { type: ['string', 'null'] },
     },
   }
 
