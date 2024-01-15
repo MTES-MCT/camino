@@ -40,6 +40,7 @@ export interface IGetDemarchesByTitreIdQueryDbResult {
   description: string | null;
   entreprises_lecture: boolean;
   id: string;
+  ordre: number;
   public_lecture: boolean;
   slug: string | null;
 }

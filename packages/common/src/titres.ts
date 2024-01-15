@@ -56,6 +56,7 @@ export const demarcheGetValidator = z.object({
   demarche_statut_id: demarcheStatutIdValidator,
   demarche_date_debut: caminoDateValidator.nullable(),
   demarche_date_fin: caminoDateValidator.nullable(),
+  ordre: z.number(),
 })
 
 export type TitreGetDemarche = z.infer<typeof demarcheGetValidator>

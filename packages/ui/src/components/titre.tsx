@@ -438,7 +438,7 @@ export const PureTitre = defineComponent<Props>(props => {
                   titre={titre}
                   demarcheCreatedOrUpdated={demarcheCreatedOrUpdated}
                   demarcheDeleted={demarcheDeleted}
-                  phasesWithAlterations={phases.value}
+                  demarches={titre.demarches}
                   currentDemarcheSlug={props.currentDemarcheSlug}
                   user={props.user}
                   apiClient={customApiClient.value}

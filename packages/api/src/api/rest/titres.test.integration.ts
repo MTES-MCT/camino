@@ -514,6 +514,7 @@ describe('getTitre', () => {
               },
             ],
             "id": "demarche-id",
+            "ordre": 0,
             "slug": "titre-id-oct99",
           },
         ],
