@@ -5,7 +5,8 @@ import { apiOpenfiscaCalculate, apiOpenfiscaConstantsFetch, OpenfiscaConstants, 
 import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
 import { userSuper } from '../database/user-super.js'
 import { entreprisesGet } from '../database/queries/entreprises.js'
-import { Fiscalite, fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
+import { fraisGestion } from 'camino-common/src/fiscalite.js'
+import type { Fiscalite } from 'camino-common/src/validators/fiscalite.js'
 import { ICommune, ITitre } from '../types.js'
 import { DepartementLabel, Departements, toDepartementId } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
@@ -251,8 +252,8 @@ export const buildMatrices = (
       totalRedevanceDesMines: new Decimal(fiscalite.redevanceCommunale).add(new Decimal(fiscalite.redevanceDepartementale)),
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesPME: openfiscaConstants.tarifTaxeMinierePME,
       taxeMiniereSurLOrDeGuyaneTarifsParKgExtraitPourLesAutresEntreprises: 0,
-      taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.totalInvestissementsDeduits : 0,
-      taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0,
+      taxeMiniereSurLOrDeGuyaneMontantDesInvestissementsDeduits: 'guyane' in fiscalite ? fiscalite.guyane.totalInvestissementsDeduits : 0,
+      taxeMiniereSurLOrDeGuyaneMontantNetDeTaxeMinièreSurLOrDeGuyane: 'guyane' in fiscalite ? fiscalite.guyane.taxeAurifere : 0,
       fraisDeGestionDeLaFiscaliteDirecteLocale: fraisGestion(fiscalite),
       serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement: 'Direction régionale des finances publiques (DRFIP) - Guyane',
       numeroDeLArticleDuRole: line.titreLabel,
@@ -280,7 +281,7 @@ export const buildMatrices = (
         if (toAdd === null) {
           throw new Error(`la commune ${line.commune.id} n'appartient à aucun SIP`)
         } else {
-          const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0
+          const taxeMiniereSurLOrDeGuyane = 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : 0
           toAdd.redevanceDepartementale = new Decimal(line.fiscalite.redevanceDepartementale).add(toAdd.redevanceDepartementale)
           toAdd.redevanceCommunale = new Decimal(line.fiscalite.redevanceCommunale).add(toAdd.redevanceCommunale)
           toAdd.taxeMiniereSurLOrDeGuyane = new Decimal(taxeMiniereSurLOrDeGuyane).add(toAdd.taxeMiniereSurLOrDeGuyane)
@@ -368,8 +369,8 @@ export const buildMatrices = (
           redevanceCommunale_revenantAuxCommunes_1ereFraction: redevanceCommunalePremiereFraction,
           redevanceCommunale_revenantAuxCommunes_2emeFraction: redevanceCommunaleDeuxiemeFraction,
           redevanceCommunale_revenantAuxCommunes_total: new Decimal(redevanceCommunalePremiereFraction).add(redevanceCommunaleDeuxiemeFraction),
-          taxeMiniereSurLOrDeGuyane_produitNet: isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0,
-          taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: isFiscaliteGuyane(line.fiscalite) ? line.fiscalite.guyane.taxeAurifere : 0,
+          taxeMiniereSurLOrDeGuyane_produitNet: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : 0,
+          taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: 'guyane' in line.fiscalite ? line.fiscalite.guyane.taxeAurifere : 0,
           taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0,
         })
       }
@@ -677,7 +678,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
     for (const matriceLine of rawLines) {
       const fiscaliteLine = matriceLine.fiscalite
 
-      if (!isFiscaliteGuyane(fiscaliteLine)) {
+      if (!('guyane' in fiscaliteLine)) {
         console.error("cette ligne n'est pas de guyane", matriceLine)
       } else {
         const matrice = {
