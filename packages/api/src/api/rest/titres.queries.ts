@@ -163,6 +163,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         demarche_date_fin: demarche.demarche_date_fin,
         titre_public_lecture: titre.public_lecture,
         etapes: formatedEtapes.map(e => ({ ...e, documents: [] })),
+        ordre: demarche.ordre,
       }
 
       superDemarches.push(formatedDemarche)
@@ -215,6 +216,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           demarche_date_debut: superDemarche.demarche_date_debut,
           demarche_date_fin: superDemarche.demarche_date_fin,
           etapes,
+          ordre: superDemarche.ordre,
         })
       }
     }
@@ -297,6 +299,7 @@ const getDemarchesByTitreIdQueryDbValidator = z.object({
   entreprises_lecture: z.boolean().default(false),
   demarche_date_debut: caminoDateValidator.nullable(),
   demarche_date_fin: caminoDateValidator.nullable(),
+  ordre: z.number(),
 })
 type GetDemarchesByTitreIdQueryDb = z.infer<typeof getDemarchesByTitreIdQueryDbValidator>
 
@@ -310,7 +313,8 @@ select
     d.public_lecture,
     d.entreprises_lecture,
     d.demarche_date_debut,
-    d.demarche_date_fin
+    d.demarche_date_fin,
+    d.ordre
 from
     titres_demarches d
 where

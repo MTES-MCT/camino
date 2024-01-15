@@ -8,10 +8,10 @@ import { isNotNullNorUndefined, isNullOrUndefined, isNullOrUndefinedOrEmpty, Omi
 import { DemarcheSlug } from 'camino-common/src/demarche'
 import { isTravaux } from 'camino-common/src/static/demarchesTypes'
 
-export type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
-export type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }
+type TitreTimelineEvents = TitreGetDemarche & { first_etape_date: CaminoDate | null }
+type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: CaminoDate; events: TitreTimelineEvents[] }
 
-export type DemarcheAlteration = TitreGetDemarche & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
+type DemarcheAlteration = TitreGetDemarche & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
 
 export type PhaseWithAlterations = [PhaseWithDateDebut, ...DemarcheAlteration[]][] | [[OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: null }]]
 export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate: CaminoDate): PhaseWithAlterations => {

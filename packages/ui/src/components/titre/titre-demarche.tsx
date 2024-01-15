@@ -1,7 +1,7 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
 import { getMostRecentValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { DemarcheEtape } from '@/components/demarche/demarche-etape'
@@ -13,7 +13,6 @@ import { EtapePropAdministrationsItem, EtapePropEntreprisesItem, EtapePropItem }
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 import { ApiClient } from '@/api/api-client'
-import type { DemarcheAlteration, PhaseWithAlterations, PhaseWithDateDebut, TitreTimelineEvents } from './phase'
 import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { territoiresFind } from 'camino-common/src/territoires'
 import { DsfrButton, DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
@@ -22,10 +21,11 @@ import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Forets } from 'camino-common/src/static/forets'
 import { SDOMZones } from 'camino-common/src/static/sdom'
+import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
-  phasesWithAlterations: PhaseWithAlterations
+  demarches: TitreGetDemarche[]
   currentDemarcheSlug: DemarcheSlug
   apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche'>
   demarcheCreatedOrUpdated: (demarcheSlug: DemarcheSlug) => Promise<void>
@@ -36,48 +36,31 @@ type Props = {
 }
 
 export const TitreDemarche = defineComponent<Props>(props => {
-  const demarche = computed<TitreGetDemarche | null>(() => {
-    for (const phase of props.phasesWithAlterations) {
-      for (const demarche of phase) {
+  const demarchesAsc = computed<TitreGetDemarche[]>(() => {
+    const demarches: TitreGetDemarche[] = []
+    for (const demarche of [...props.demarches].sort((a, b) => a.ordre - b.ordre)) {
+      const isDemarcheTravaux = isTravaux(demarche.demarche_type_id)
+
+      if (isDemarcheTravaux) {
         if (demarche.slug === props.currentDemarcheSlug) {
-          return demarche
-        } else if ('events' in demarche) {
-          for (const event of demarche.events) {
-            if (event.slug === props.currentDemarcheSlug) {
-              return event
-            }
-          }
+          return [demarche]
+        }
+      } else {
+        if (demarche.slug === props.currentDemarcheSlug) {
+          return [...demarches, demarche]
+        } else if (!isDemarcheStatutNonStatue(demarche.demarche_statut_id) && !isDemarcheStatutNonValide(demarche.demarche_statut_id)) {
+          demarches.push(demarche)
         }
       }
     }
 
-    return null
+    return []
   })
 
-  // FIXME attention si le résumé utilise ça ou pas ? (gestion des droits ?)
-  const phaseDemarchesAsc = computed<(PhaseWithDateDebut | DemarcheAlteration)[] | [TitreTimelineEvents] | null>(() => {
-    for (let topLevelIndex = 0; topLevelIndex < props.phasesWithAlterations.length; topLevelIndex++) {
-      const phase = props.phasesWithAlterations[topLevelIndex]
-
-      for (let phaseIndex = 0; phaseIndex < phase.length; phaseIndex++) {
-        const demarche = phase[phaseIndex]
-        if (demarche.slug === props.currentDemarcheSlug) {
-          return phase.slice(0, phaseIndex + 1) as (PhaseWithDateDebut | DemarcheAlteration)[]
-        } else if ('events' in demarche) {
-          for (const event of demarche.events) {
-            if (event.slug === props.currentDemarcheSlug) {
-              return [event]
-            }
-          }
-        }
-      }
-    }
-
-    return null
-  })
+  const demarche = computed<TitreGetDemarche | null>(() => (demarchesAsc.value.length > 0 ? demarchesAsc.value[demarchesAsc.value.length - 1] : null))
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('perimetre', phaseDemarchesAsc.value) : null
+    return getMostRecentValueProp('perimetre', demarchesAsc.value)
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -100,15 +83,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('titulaires', phaseDemarchesAsc.value) : null
+    return getMostRecentValueProp('titulaires', demarchesAsc.value)
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('amodiataires', phaseDemarchesAsc.value) : null
+    return getMostRecentValueProp('amodiataires', demarchesAsc.value)
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return phaseDemarchesAsc.value !== null ? getMostRecentValueProp('substances', phaseDemarchesAsc.value) : null
+    return getMostRecentValueProp('substances', demarchesAsc.value)
   })
 
   const addDemarchePopup = ref<boolean>(false)
@@ -139,7 +122,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
 
   return () => (
     <>
-      {demarche.value !== null && phaseDemarchesAsc.value !== null ? (
+      {demarche.value !== null ? (
         <>
           <div class="fr-grid-row fr-grid-row--middle">
             <h2 style={{ margin: 0 }}>{`${capitalize(DemarchesTypes[demarche.value.demarche_type_id].nom)}`}</h2>
@@ -279,7 +262,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TitreDemarche.props = ['titre', 'phasesWithAlterations', 'currentDemarcheSlug', 'apiClient', 'user', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
+TitreDemarche.props = ['titre', 'demarches', 'currentDemarcheSlug', 'apiClient', 'user', 'router', 'initTab', 'demarcheCreatedOrUpdated', 'demarcheDeleted']
 
 const DisplayLocalisation: FunctionalComponent<Pick<DemarcheEtapeFondamentale['fondamentale'], 'perimetre'>> = props => {
   if (isNullOrUndefined(props.perimetre)) {
