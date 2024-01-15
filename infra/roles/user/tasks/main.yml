@@ -42,10 +42,25 @@
   become: True
 - name: Configure le serveur ssh
   block:
+    - name: Copie la configuration extra de ssh
+      ansible.builtin.copy:
+        src: ssh_hardening.conf
+        dest: /etc/ssh/sshd_config_extra_ssh_hardening.conf
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      become: True
+      notify: Restart SSH
+    - name: Charge la configuration ssh_hardening
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        line: 'Include /etc/ssh/sshd_config_extra_ssh_hardening.conf'
+      become: True
+      notify: Restart SSH
     - name: Empêche ssh de charger des configurations dans des sous-fichiers
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^Include '
+        search_string: 'Include /etc/ssh/sshd_config.d/*.conf'
         line: '#Include /etc/ssh/sshd_config.d/*.conf'
       become: True
       notify: Restart SSH
