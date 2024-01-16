@@ -6,7 +6,6 @@ export const titreInsertFormat = (json: Pojo) => {
   delete json.communes
   delete json.surface
   delete json.contenu
-  delete json.modification
   delete json.suppression
   delete json.activitesAbsentes
   delete json.activitesEnConstruction

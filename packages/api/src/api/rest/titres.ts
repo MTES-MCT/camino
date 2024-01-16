@@ -23,7 +23,7 @@ import { userSuper } from '../../database/user-super.js'
 import { NotNullableKeys, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
-import { canDeleteTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
+import { canDeleteTitre, canEditTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
@@ -213,7 +213,7 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
           }
 
           return (
-            (titre.modification ?? false) ||
+            canEditTitre(user, titre.typeId, titre.titreStatutId) ||
             canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
             canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
           )
@@ -505,7 +505,7 @@ export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
       if (isNullOrUndefined(titreOld)) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_NOT_FOUND)
       } else {
-        if (isNullOrUndefined(titreOld.modification) || !titreOld.modification) {
+        if (!canEditTitre(user, titreOld.typeId, titreOld.titreStatutId)) {
           res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
         } else {
           // on doit utiliser upsert (plutôt qu'un simple update)

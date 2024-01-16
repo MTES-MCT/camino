@@ -1,4 +1,4 @@
-import { QueryBuilder, raw, RawBuilder } from 'objection'
+import { QueryBuilder, raw } from 'objection'
 
 import Titres from '../../models/titres.js'
 import TitresDemarches from '../../models/titres-demarches.js'
@@ -10,8 +10,7 @@ import { titresDemarchesQueryModify } from './titres-demarches.js'
 import { administrationsTitresTypesTitresStatutsModify, administrationsTitresQuery } from './administrations.js'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises.js'
 import TitresEtapes from '../../models/titres-etapes.js'
-import AdministrationsModel from '../../models/administrations.js'
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
+import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
@@ -80,20 +79,6 @@ export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres
       .as('confidentiel')
   )
 
-export const titresModificationSelectQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User): QueryBuilder<AdministrationsModel> | RawBuilder => {
-  if (isSuper(user)) {
-    return raw('true')
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    return administrationsTitresQuery(user.administrationId, 'titres', {
-      isGestionnaire: true,
-    })
-      .modify(administrationsTitresTypesTitresStatutsModify, 'titres', 'titres', user.administrationId)
-      .select(raw('true'))
-  }
-
-  return raw('false')
-}
-
 const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null) => {
   q.select('titres.*').where('titres.archive', false)
 
@@ -137,8 +122,6 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
       }
     })
   }
-
-  q.select(titresModificationSelectQuery(q, user).as('modification'))
 
   if ((isEntreprise(user) || isBureauDEtudes(user)) && isNotNullNorUndefinedNorEmpty(user.entreprises)) {
     if (isNotNullNorUndefined(demandeEnCours) && demandeEnCours) {

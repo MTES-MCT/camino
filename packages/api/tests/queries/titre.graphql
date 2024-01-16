@@ -37,8 +37,6 @@ fragment titre on Titre {
   demarches {
     ...demarche
   }
-
-  modification
 }
 
 fragment demarche on Demarche {

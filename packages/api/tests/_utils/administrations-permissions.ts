@@ -262,7 +262,6 @@ export const modificationCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
   modifier: boolean,
-  cible: 'titres' | 'demarches',
   titreTypeId: TitreTypeId,
   locale?: boolean,
   etapeTypeId?: EtapeTypeId
@@ -273,7 +272,7 @@ export const modificationCheck = async (
 
   const titre = titreBuild(
     {
-      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`),
+      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-demarches-modification-admin-${administrationId}`),
       titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
@@ -292,16 +291,6 @@ export const modificationCheck = async (
     }
   )
 
-  if (cible === 'titres') {
-    if (modifier) {
-      expect(res.body.errors).toBe(undefined)
-      expect(res.body.data.titre).toMatchObject({
-        modification: true,
-      })
-    } else {
-      expect(res.body.data.titre ? res.body.data.titre.modification : null).toBeNull()
-    }
-  } else if (cible === 'demarches') {
     if (modifier) {
       expect(res.body.errors).toBe(undefined)
       expect(res.body.data.titre.demarches![0]).toMatchObject({
@@ -313,18 +302,7 @@ export const modificationCheck = async (
       const check = !demarches.length || !demarches[0].modification
       expect(check).toBeTruthy()
     }
-  } else if (cible === 'etapes') {
-    if (modifier) {
-      expect(res.body.errors).toBe(undefined)
-      expect(res.body.data.titre.demarches![0]!.etapes![0]).toMatchObject({
-        modification: true,
-      })
-    } else {
-      const etapes = res.body.data.titre.demarches![0]!.etapes
-      const check = !etapes.length || !etapes[0].modification
-      expect(check).toBeTruthy()
-    }
-  }
+
 }
 
 const titreCreerSuper = async (pool: Pool, administrationId: string, titreTypeId: string) =>

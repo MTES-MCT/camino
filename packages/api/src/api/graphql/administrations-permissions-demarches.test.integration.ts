@@ -117,7 +117,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre ARM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'arm')
+    modificationCheck(dbPool, administrationId, modifier,  'arm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -126,7 +126,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre AXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'axm')
+    modificationCheck(dbPool, administrationId, modifier, 'axm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -134,7 +134,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre CXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'cxm')
+    modificationCheck(dbPool, administrationId, modifier, 'cxm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -142,7 +142,7 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PRM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'prm')
+    modificationCheck(dbPool, administrationId, modifier, 'prm')
   )
 
   test.each<[AdministrationId, boolean]>([
@@ -150,6 +150,6 @@ describe('Modification des démarches', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])("un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PXM : $modifier", async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'demarches', 'pxm')
+    modificationCheck(dbPool, administrationId, modifier, 'pxm')
   )
 })
