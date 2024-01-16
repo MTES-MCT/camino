@@ -1,4 +1,4 @@
-import { Model, Modifiers, Pojo, QueryContext } from 'objection'
+import { Model, Modifiers, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types.js'
 import { newDemarcheId } from './_format/id-create.js'
@@ -96,20 +96,6 @@ class TitresDemarches extends Model {
     }
 
     return super.$beforeInsert(context)
-  }
-
-  public $parseJson(json: Pojo) {
-    delete json.suppression
-    json = super.$parseJson(json)
-
-    return json
-  }
-
-  public $formatDatabaseJson(json: Pojo) {
-    delete json.suppression
-    json = super.$formatDatabaseJson(json)
-
-    return json
   }
 }
 

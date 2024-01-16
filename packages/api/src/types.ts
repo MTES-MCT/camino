@@ -370,7 +370,6 @@ interface ITitreDemarche {
   demarcheDateFin?: CaminoDate | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
-  suppression?: boolean | null
 
   etapes?: ITitreEtape[]
 }

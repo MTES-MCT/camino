@@ -44,8 +44,6 @@ type Demarche {
 
   "Étapes effectuées sur la démarche"
   etapes: [Etape]
-
-  suppression: Boolean
 }
 
 type DemarcheSlug {
