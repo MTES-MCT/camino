@@ -200,10 +200,11 @@ export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche 
     )
 
     if (isNullOrUndefined(demarcheOld)) throw new Error('la démarche n’existe pas')
-    const titre = await titreGet(demarcheOld.titreId, { fields: {} }, user)
+    const titre = await titreGet(demarcheOld.titreId, { fields: { pointsEtape: { id: {} } } }, user)
     if (isNullOrUndefined(titre)) throw new Error("le titre n'existe pas")
+    if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales ne sont pas chargées')
 
-    if (isNullOrUndefined(demarcheOld.modification) || !demarcheOld.modification) throw new Error('droits insuffisants')
+    if (canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales)) throw new Error('droits insuffisants')
 
     if (demarcheOld.titreId !== demarche.titreId) throw new Error('le titre n’existe pas')
 

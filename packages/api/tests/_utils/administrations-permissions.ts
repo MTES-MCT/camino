@@ -258,53 +258,6 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
   }
 }
 
-export const modificationCheck = async (
-  pool: Pool,
-  administrationId: AdministrationId,
-  modifier: boolean,
-  titreTypeId: TitreTypeId,
-  locale?: boolean,
-  etapeTypeId?: EtapeTypeId
-) => {
-  const administration = sortedAdministrations.find(a => a.id === administrationId)!
-
-  const gestionnaire = isGestionnaire(administrationId, titreTypeId)
-
-  const titre = titreBuild(
-    {
-      titreId: newTitreId(`${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-demarches-modification-admin-${administrationId}`),
-      titreTypeId,
-    },
-    gestionnaire ? administrationId : undefined,
-    locale ? administrationId : undefined,
-    etapeTypeId
-  )
-  await Titres.query().insertGraph(titre, options.titres.update)
-
-  const res = await graphQLCall(
-    pool,
-    queryImport('titre'),
-    { id: titre.id },
-    {
-      role: 'admin',
-      administrationId: administration.id,
-    }
-  )
-
-    if (modifier) {
-      expect(res.body.errors).toBe(undefined)
-      expect(res.body.data.titre.demarches![0]).toMatchObject({
-        modification: true,
-      })
-    } else {
-      expect(res.body.errors).toBe(undefined)
-      const demarches = res.body.data.titre.demarches
-      const check = !demarches.length || !demarches[0].modification
-      expect(check).toBeTruthy()
-    }
-
-}
-
 const titreCreerSuper = async (pool: Pool, administrationId: string, titreTypeId: string) =>
   graphQLCall(
     pool,

@@ -5,7 +5,7 @@ import TitresEtapes from '../../models/titres-etapes.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 
 import { titresEtapesQueryModify } from './titres-etapes.js'
-import { titresQueryModify, titresDemarchesAdministrationsModificationQuery } from './titres.js'
+import { titresQueryModify } from './titres.js'
 import { administrationsTitresQuery } from './administrations.js'
 import { entreprisesTitresQuery } from './entreprises.js'
 import { isSuper, isAdministration, isEntreprise, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, User } from 'camino-common/src/roles.js'
@@ -44,7 +44,6 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
     })
   }
 
-  q.modify(titreDemarcheModificationSelectQuery, 'titresDemarches', user)
   q.select(titreDemarcheSuppressionSelectQuery('titresDemarches', user).as('suppression'))
 
   q.modifyGraph('etapes', b => {
@@ -54,19 +53,6 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
   q.modifyGraph('titre', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
 
   return q
-}
-
-const titreDemarcheModificationSelectQuery = (q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, demarcheAlias: string, user: User): void => {
-  let modificationQuery = raw('false')
-  if (isSuper(user)) {
-    modificationQuery = raw('true')
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    modificationQuery = titresDemarchesAdministrationsModificationQuery(user.administrationId, 'type').whereRaw('?? = ??', ['titresModification.id', 'titresDemarches.titreId'])
-
-    q.groupBy(`${demarcheAlias}.id`, 'type.travaux')
-  }
-
-  q.select(modificationQuery.as('modification'))
 }
 
 export const titreDemarcheSuppressionSelectQuery = (demarcheAlias: string, user: User): RawBuilder => {

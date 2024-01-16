@@ -165,4 +165,3 @@ describe('Création des titres', () => {
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut créer un titre PXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'pxm'))
 })
-

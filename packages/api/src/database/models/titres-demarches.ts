@@ -99,7 +99,6 @@ class TitresDemarches extends Model {
   }
 
   public $parseJson(json: Pojo) {
-    delete json.modification
     delete json.suppression
     json = super.$parseJson(json)
 
@@ -107,7 +106,6 @@ class TitresDemarches extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    delete json.modification
     delete json.suppression
     json = super.$formatDatabaseJson(json)
 

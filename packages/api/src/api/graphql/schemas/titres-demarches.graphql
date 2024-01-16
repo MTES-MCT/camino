@@ -45,7 +45,6 @@ type Demarche {
   "Étapes effectuées sur la démarche"
   etapes: [Etape]
 
-  modification: Boolean
   suppression: Boolean
 }
 
