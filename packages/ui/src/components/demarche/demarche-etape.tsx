@@ -114,7 +114,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             sectionsWithValue: props.etape.sections_with_values,
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
-            points: props.etape.fondamentale.perimetre?.geojsonMultiPolygon?.geometry.coordinates[0][0] ?? [],
+            // FIXME aller chercher la bonne feature et ses coordonnées
+            points: props.etape.fondamentale.perimetre?.geojson4326_perimetre?.geometry.coordinates[0][0] ?? [],
             decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
             decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
@@ -237,14 +238,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         </>
       ) : null}
 
-      {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojsonMultiPolygon) ? (
+      {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojson4326_perimetre) ? (
         <DsfrPerimetre
           class="fr-pt-2w"
           initTab={props.initTab}
           titreSlug={props.titre.slug}
           apiClient={props.apiClient}
           calculateNeighbours={false}
-          geojsonMultiPolygon={props.etape.fondamentale.perimetre.geojsonMultiPolygon}
+          geojson4326_perimetre={props.etape.fondamentale.perimetre.geojson4326_perimetre}
           router={props.router}
         />
       ) : null}

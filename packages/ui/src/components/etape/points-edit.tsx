@@ -16,6 +16,10 @@ interface Props {
   showTitle?: boolean
 }
 
+// FIXMEs
+// renommer l'héritage de point en héritage de périmètre
+// supprimer l'héritage de surface (c'est le même héritage que périmètre)
+
 export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'events'], (props, context) => {
   const store = useStore()
   const showTitle = props.showTitle ?? true
@@ -38,17 +42,10 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   const complete = computed(() => {
     return props.etape.type.id !== 'mfr' || pointsTotal.value?.length > 3
   })
-
-  const etapeGeoSystemeOpposableIdUpdate = () => {
-    if (props.etape.geoSystemeIds.length < 2) {
-      props.etape.geoSystemeOpposableId = ''
-    } else if (props.etape.geoSystemeIds.length > 1 && (!props.etape.geoSystemeOpposableId || !props.etape.geoSystemeIds.includes(props.etape.geoSystemeOpposableId))) {
-      props.etape.geoSystemeOpposableId = props.etape.geoSystemeIds[0]
-    }
-  }
-
+  
 
   const completeUpdate = () => {
+    // FIXME pass props instead of emit
     context.emit('complete-update', complete.value)
   }
 
@@ -57,11 +54,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   }
 
   watch(complete, () => completeUpdate())
-  watch(
-    () => props.etape.geoSystemeIds,
-    () => etapeGeoSystemeOpposableIdUpdate(),
-    { deep: true }
-  )
 
   onMounted(() => {
     completeUpdate()
@@ -90,6 +82,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
         propId="points"
         write={() => (
           <>
+            FIXME DSFR
             <Button
               class="btn small rnd-xs py-s px-m full-x flex mb-s"
               onClick={openPopup}
@@ -103,7 +96,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
             />
           </>
         )}
-        read={() => <Points points={props.etape.heritageProps.points.etape?.points ?? []} />}
+        read={() => <>FIXME AFFICHER LES POINTS</>}
       />
 
       <hr />

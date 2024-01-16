@@ -28,7 +28,6 @@ import {
   getTitulairesByEtapeIdQuery,
   getAmodiatairesByEtapeIdQuery,
 } from '../../database/queries/titres-etapes.queries.js'
-import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
@@ -101,7 +100,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               }
 
               perimetre = {
-                geojsonMultiPolygon: geojsonFeatureMultiPolygon(etapePoints),
+                // FIXME 
+                // geojson4326_perimetre: etape.geojson4326_perimetre,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],

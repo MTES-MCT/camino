@@ -22,15 +22,6 @@ fragment titre on Titre {
   amodiataires {
     ...entreprise
   }
-  points {
-    ...point
-  }
-  geojsonPoints {
-    ...geojsonPoints
-  }
-  geojsonMultiPolygon {
-    ...geojsonMultiPolygon
-  }
   communes {
     id
   }
@@ -68,15 +59,6 @@ fragment etape on Etape {
   }
   amodiataires {
     ...entreprise
-  }
-  points {
-    ...point
-  }
-  geojsonPoints {
-    ...geojsonPoints
-  }
-  geojsonMultiPolygon {
-    ...geojsonMultiPolygon
   }
   substances
   documents {
@@ -119,50 +101,6 @@ fragment utilisateur on Utilisateur {
   telephoneMobile
   telephoneFixe
   role
-}
-
-fragment point on Point {
-  id
-  coordonnees {
-    x
-    y
-  }
-  groupe
-  contour
-  point
-  nom
-  description
-  references {
-    ...pointReference
-  }
-}
-
-fragment pointReference on PointReference {
-  id
-  geoSystemeId
-  coordonnees {
-    x
-    y
-  }
-}
-
-fragment geojsonMultiPolygon on GeojsonMultiPolygon {
-  type
-  geometry {
-    type
-    coordinates
-  }
-}
-
-fragment geojsonPoints on GeojsonPoints {
-  type
-  features {
-    type
-    geometry {
-      type
-      coordinates
-    }
-  }
 }
 
 fragment document on Document {

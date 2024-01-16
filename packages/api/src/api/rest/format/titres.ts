@@ -88,7 +88,8 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
       amodiataires_adresses: titre.amodiataires?.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(separator),
       amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
       amodiataires_categorie: titre.amodiataires?.map(e => e.categorie).join(separator),
-      geojson: JSON.stringify(titre.geojsonMultiPolygon),
+
+      geojson: JSON.stringify(titre.geojson4326_perimetre),
       ...titreReferences,
       ...titreContenuTableFormat(titre),
     }
@@ -145,11 +146,7 @@ const getTitreDates = (titre: Pick<ITitre, 'demarches'>): { dateDebut: CaminoDat
 export const titreGeojsonFormat = async (pool: Pool, titre: ITitre) => {
   const communesIndex = await getCommunesIndex(pool, titre.communes?.map(({ id }) => id) ?? [])
 
-  return {
-    type: 'FeatureCollection',
-    properties: titreGeojsonPropertiesFormat(communesIndex, titre),
-    features: titre.geojsonPoints ? [titre.geojsonMultiPolygon].concat(titre.geojsonPoints.features) : titre.geojsonMultiPolygon,
-  }
+  return {...titre.geojson4326_perimetre, properties: titreGeojsonPropertiesFormat(communesIndex, titre)}
 }
 
 export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]) => {
@@ -161,8 +158,9 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]) => {
   return {
     type: 'FeatureCollection',
     features: titres.map(titre => ({
+      // FIXME {...titre.geojson4326_perimetre, properties: titreGeojsonPropertiesFormat(communesIndex, titre)}
       type: 'Feature',
-      geometry: titre.geojsonMultiPolygon?.geometry,
+      geometry: null,
       properties: titreGeojsonPropertiesFormat(communesIndex, titre),
     })),
   }

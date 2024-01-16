@@ -9,8 +9,7 @@ import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable } from './dsfr-perimetre-table'
 export type TabId = 'carte' | 'points'
 type Props = {
-  geojsonMultiPolygon: FeatureMultiPolygon
-
+  geojson4326_perimetre: FeatureMultiPolygon
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
   initTab?: TabId
@@ -38,7 +37,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable geojsonMultiPolygon={props.geojsonMultiPolygon} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable geojson4326_perimetre={props.geojson4326_perimetre} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 
@@ -54,11 +53,12 @@ const TabCaminoMap = defineComponent<Props>(props => {
     return DemarcheMap
   })
 
-  const geojson = { type: 'FeatureCollection', properties: null, features: [props.geojsonMultiPolygon] }
+  // FIXME normalement ici on doit juste retourner le geojson4326_perimetre à la fin
+  const geojson = { type: 'FeatureCollection', properties: null, features: [props.geojson4326_perimetre] }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap geojsonMultiPolygon={props.geojsonMultiPolygon} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} router={props.router} />
+      <DemarcheMap geojson4326_perimetre={props.geojson4326_perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} router={props.router} />
       <DsfrLink
         style={{ alignSelf: 'end' }}
         href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson))}`}
@@ -73,7 +73,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+DsfrPerimetre.props = ['geojson4326_perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+TabCaminoMap.props = ['geojson4326_perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']

@@ -3,7 +3,6 @@
 # import * from 'substances.graphql'
 # import * from 'geojsons.graphql'
 # import * from 'metas.graphql'
-# import * from 'points.graphql'
 # import * from 'territoires.graphql'
 # import * from 'documents.graphql'
 # import * from 'titres-demarches.graphql'
@@ -55,15 +54,6 @@ type Etape {
 
   "Substances concernées par le titre"
   substances: [String!]
-
-  "Coordonnées des points du périmètre géographique du titre"
-  points: [Point]
-
-  "Geojson du contour du périmètre géographique du titre"
-  geojsonMultiPolygon: GeojsonMultiPolygon
-
-  "Geojson de la liste de points du périmètre géographique du titre"
-  geojsonPoints: GeojsonPoints
 
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
@@ -117,8 +107,8 @@ type EtapeHeritage {
   "Substances concernées par le titre"
   substances: [String!]
 
-  "Coordonnées des points du périmètre géographique du titre"
-  points: [Point]
+  "Périmètre géographique du titre"
+  geojson4326_perimetre: Json
 
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
@@ -164,7 +154,7 @@ input InputEtapeCreation {
   dateFin: String
   surface: Float
   substances: [String!]
-  points: [InputPoint]
+  geojson4326_perimetre: Json
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
   heritageProps: InputHeritageProps
@@ -187,7 +177,6 @@ input InputEtapeModification {
   dateFin: String
   surface: Float
   substances: [String!]
-  points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
   heritageProps: InputHeritageProps

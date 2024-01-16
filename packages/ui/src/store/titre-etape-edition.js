@@ -1,10 +1,9 @@
-import { documentEtapeFormat, etapeEditFormat, etapePointsFormat } from '../utils/titre-etape-edit'
-import { etapeSaveFormat, pointsBuild } from '../utils/titre-etape-save'
+import { documentEtapeFormat, etapeEditFormat } from '../utils/titre-etape-edit'
+import { etapeSaveFormat } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
 import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
 import { documentsRequiredAdd } from '../utils/documents'
-import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from '../api/geojson'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const state = {
@@ -210,10 +209,6 @@ const actions = {
         demarcheId: state.metas.demarche.id,
         etapeTypeId: state.element.type.id,
       })
-      const { groupes, geoSystemeIds, geoSystemeOpposableId } = etapePointsFormat(points)
-      state.element.groupes = groupes
-      state.element.geoSystemeIds = geoSystemeIds
-      state.element.geoSystemeOpposableId = geoSystemeOpposableId
       // pour modifier la surface, on doit désactiver l’héritage
       state.element.heritageProps.surface.actif = false
       state.element.surface = surface
@@ -245,7 +240,7 @@ const actions = {
       commit('loadingAdd', 'surfaceRefresh', { root: true })
 
       if (etape.geoSystemeIds && etape.geoSystemeIds.length && etape.groupes.length) {
-        const points = pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
+        const points = {} //pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
         const { surface, documentTypeIds, alertes } = await perimetreInformations({
           points,
           demarcheId: state.metas.demarche.id,

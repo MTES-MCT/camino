@@ -25,10 +25,6 @@ const titres: TitreEntreprise[] = [
     slug: 'm-cx-aachen-1810',
     nom: 'Aachen',
     typeId: 'cxm',
-    coordonnees: {
-      x: 6.049336777414595,
-      y: 49.45057350532248,
-    },
     titreStatutId: 'ech',
     substances: ['ferx'],
     activitesEnConstruction: 2,

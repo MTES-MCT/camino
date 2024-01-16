@@ -170,13 +170,13 @@ export const TitreDemarche = defineComponent<Props>(props => {
             </div>
           </div>
 
-          {isNotNullNorUndefined(perimetre.value) && isNotNullNorUndefined(perimetre.value.geojsonMultiPolygon) ? (
+          {isNotNullNorUndefined(perimetre.value) && isNotNullNorUndefined(perimetre.value.geojson4326_perimetre) ? (
             <DsfrPerimetre
               class="fr-pt-3w"
               titreSlug={props.titre.slug}
               apiClient={props.apiClient}
               calculateNeighbours={true}
-              geojsonMultiPolygon={perimetre.value.geojsonMultiPolygon}
+              geojson4326_perimetre={perimetre.value.geojson4326_perimetre}
               router={props.router}
               initTab={props.initTab}
             />

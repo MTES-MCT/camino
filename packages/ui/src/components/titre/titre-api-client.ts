@@ -21,10 +21,6 @@ export type TitreForTable = {
   slug: string
   nom: string
   typeId: TitreTypeId
-  coordonnees?: {
-    x: number
-    y: number
-  }
   titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
   activitesEnConstruction: number | null
@@ -180,10 +176,6 @@ export const titreApiClient: TitreApiClient = {
               slug
               nom
               typeId
-              coordonnees {
-                x
-                y
-              }
               titreStatutId
               substances
               activitesEnConstruction
@@ -255,12 +247,8 @@ export const titreApiClient: TitreApiClient = {
                 id
                 nom
               }
-
-              geojsonCentre {
-                geometry {
-                  coordinates
-                }
-              }
+              geojson4326_centre
+              
             }
             total
           }
@@ -316,18 +304,8 @@ export const titreApiClient: TitreApiClient = {
                 nom
               }
 
-              geojsonCentre {
-                geometry {
-                  coordinates
-                }
-              }
-              geojsonMultiPolygon {
-                type
-                geometry {
-                  type
-                  coordinates
-                }
-              }
+              geojson4326_centre
+              geojson4326_perimetre
             }
             total
           }

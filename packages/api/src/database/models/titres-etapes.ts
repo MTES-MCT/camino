@@ -1,12 +1,11 @@
 import { Model, Pojo, QueryContext } from 'objection'
 
-import { ITitreEtape, ITitrePoint } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
 import { idGenerate } from './_format/id-create.js'
 import EtapesTypes from './etapes-types.js'
 import TitresDemarches from './titres-demarches.js'
-import TitresPoints from './titres-points.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Journaux from './journaux.js'
@@ -73,14 +72,6 @@ class TitresEtapes extends Model {
       },
     },
 
-    points: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresPoints,
-      join: {
-        from: 'titresEtapes.id',
-        to: 'titresPoints.titreEtapeId',
-      },
-    },
 
     titulaires: {
       relation: Model.ManyToManyRelation,
@@ -165,12 +156,6 @@ class TitresEtapes extends Model {
   }
 
   public $parseJson(json: Pojo) {
-    if (json.points) {
-      json.points.forEach((point: ITitrePoint) => {
-        point.titreEtapeId = json.id
-      })
-    }
-
     if (json.amodiatairesIds) {
       json.amodiataires = json.amodiatairesIds.map((id: string) => ({ id }))
       delete json.amodiatairesIds
@@ -187,8 +172,6 @@ class TitresEtapes extends Model {
       delete json.substancesIds
     }
 
-    delete json.geojsonMultiPolygon
-    delete json.geojsonPoints
     delete json.modification
     delete json.suppression
     json = super.$parseJson(json)

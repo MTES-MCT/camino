@@ -206,7 +206,7 @@ export const NoSnapshotDemande: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {
@@ -445,7 +445,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {
@@ -523,7 +523,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {
@@ -605,7 +605,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {
@@ -726,7 +726,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         titulaires: [],
         amodiataires: [],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {
@@ -783,7 +783,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
         titulaires: [],
         amodiataires: [],
         perimetre: {
-          geojsonMultiPolygon: {
+          geojson4326_perimetre: {
             properties: null,
             type: 'Feature',
             geometry: {

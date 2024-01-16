@@ -15,7 +15,7 @@ const meta: Meta = {
 }
 export default meta
 
-const geojsonMultiPolygon: FeatureMultiPolygon = {
+const geojson4326_perimetre: FeatureMultiPolygon = {
   type: 'Feature',
   properties: null,
   geometry: {
@@ -55,7 +55,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={geojsonMultiPolygon}
+      geojson4326_perimetre={geojson4326_perimetre}
       calculateNeighbours={true}
       apiClient={{
         ...apiClientMock,
@@ -72,7 +72,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
                 titreStatutId: TitresStatutIds.Echu,
                 typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN,
                 titulaires: [],
-                geojsonMultiPolygon: {
+                geojson4326_perimetre: {
                   type: 'Feature',
                   properties: {},
 
@@ -112,7 +112,7 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={geojsonMultiPolygon}
+      geojson4326_perimetre={geojson4326_perimetre}
       calculateNeighbours={false}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -131,7 +131,7 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={{
+      geojson4326_perimetre={{
         type: 'Feature',
         properties: null,
         geometry: {
@@ -186,7 +186,7 @@ export const BigNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={bigGeoJson}
+      geojson4326_perimetre={bigGeoJson}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -205,7 +205,7 @@ export const MultipleNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={{
+      geojson4326_perimetre={{
         properties: null,
         type: 'Feature',
         geometry: {
@@ -259,7 +259,7 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojsonMultiPolygon={{
+      geojson4326_perimetre={{
         type: 'Feature',
         properties: null,
         geometry: {

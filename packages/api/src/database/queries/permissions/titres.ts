@@ -112,6 +112,9 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
     }
   }
 
+  // left join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
+
+  q.select(raw('')).as('geojson4326_centre')
   // visibilité des étapes
   q.modifyGraph('demarches', b => {
     titresDemarchesQueryModify(b as QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user)

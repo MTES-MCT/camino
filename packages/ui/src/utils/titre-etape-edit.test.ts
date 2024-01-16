@@ -28,22 +28,6 @@ describe('etapeEditFormat', () => {
       // @ts-ignore
       etapeEditFormat({
         id: etapeIdValidator.parse('etape-id'),
-        points: [
-          {
-            id: 'point-id-111',
-            groupe: 1,
-            contour: 1,
-            point: 1,
-            references: [
-              {
-                opposable: true,
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 1 },
-                id: 'ref',
-              },
-            ],
-          },
-        ],
         justificatifs: [{ id: 'toto', nom: 'name' }],
       })
     ).toEqual({
@@ -83,50 +67,6 @@ describe('etapeEditFormat', () => {
         duree: 240,
         administrations: ['aut-97300-01'],
         titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
-        points: [
-          {
-            id: 'point-id-111',
-            groupe: 1,
-            contour: 1,
-            point: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 1 },
-                id: 'ref',
-              },
-            ],
-          },
-          {
-            id: 'point-id-113',
-            groupe: 1,
-            contour: 1,
-            point: 3,
-            lot: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 3 },
-                id: 'ref3',
-              },
-            ],
-          },
-          {
-            id: 'point-id-114',
-            groupe: 1,
-            contour: 1,
-            point: 4,
-            lot: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-
-                coordonnees: { x: 1.5, y: 4 },
-                id: 'ref2',
-              },
-            ],
-          },
-        ],
         contenu: { 'prop-id': 'prop-value' },
         substances: ['auru'],
         documents: [{ typeId: 'aac' }],

@@ -4,9 +4,7 @@
 # import * from 'titres-demarches.graphql'
 # import * from 'metas.graphql'
 # import * from 'substances.graphql'
-# import * from 'points.graphql'
 # import * from 'geojsons.graphql'
-# import * from 'points.graphql'
 # import * from 'territoires.graphql'
 
 type Titres {
@@ -52,21 +50,6 @@ type Titre {
   "Substances concernées par le titre dans son dernier état de validité"
   substances: [String!]
 
-  "Coordonnées x,y du titre"
-  coordonnees: Coordonnees
-
-  "Coordonnées des points du périmètre géographique du titre dans son dernier état de validité"
-  points: [Point]
-
-  "Geojson du contour du périmètre géographique du titre dans son dernier état de validité"
-  geojsonMultiPolygon: GeojsonMultiPolygon
-
-  "Geojson de la liste de points du périmètre géographique du titre dans son dernier état de validité"
-  geojsonPoints: GeojsonPoints
-
-  "Point représentant le centre géographique du titre"
-  geojsonCentre: GeojsonCentre
-
   "Titualires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
 
@@ -101,6 +84,8 @@ type Titre {
   secteursMaritime: [String]
 
   doublonTitre: Titre
+  geojson4326_centre: Json
+  geojson4326_perimetre: Json
 
   "L’utilisateur est abonné au titre"
   abonnement: Boolean

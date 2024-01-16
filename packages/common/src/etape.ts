@@ -1,4 +1,5 @@
 import { CaminoDate } from './date.js'
+import { EtapePerimetre } from './demarche.js'
 import { EntrepriseId, documentIdValidator } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
@@ -41,15 +42,13 @@ type EtapeBase = {
   substances: SubstanceLegaleId[]
   titulaires: EtapeEntreprise[]
   amodiataires: EtapeEntreprise[]
-  points: any[]
   surface: number
   dateDebut: CaminoDate | null
   administrations?: AdministrationId[]
   documents?: CaminoDocument[]
   justificatifs?: unknown[]
   communes?: string[]
-  geojsonPoints?: unknown[]
-  geojsonMultiPolygon?: unknown[]
+  perimetre: EtapePerimetre | null
   notes: null | string
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
@@ -57,7 +56,7 @@ export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & 
   heritageProps: {
     [key in keyof Omit<
       T,
-      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id' | 'notes'
+      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'id' | 'notes'
     >]: HeritageProp<Pick<T, 'type' | 'date' | key>>
   }
 }

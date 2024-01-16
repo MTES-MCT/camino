@@ -42,7 +42,7 @@ export const multiPolygonValidator = z.object({
 })
 export type MultiPolygon = z.infer<typeof multiPolygonValidator>
 
-export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.null() })
+export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.object({}) })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
 /**
@@ -66,6 +66,20 @@ const demarcheEtapeCommonValidator = z.object({
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
 
+
+const etapePerimetreValidator = z
+.object({
+  // FIXME il faut que ça soit une featureCollection plutôt probablement
+  geojson4326_perimetre: featureMultiPolygonValidator.nullable(),
+  surface: z.number().nullable(),
+  communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
+  secteurs_maritimes: z.array(secteurMaritimeValidator),
+  sdom_zones: z.array(sdomZoneIdValidator),
+  forets: z.array(foretIdValidator),
+})
+
+export type EtapePerimetre = z.infer<typeof etapePerimetreValidator>
+
 const demarcheEtapeFondamentaleValidator = z.intersection(
   z.object({
     etape_type_id: etapeTypeIdFondamentaleValidator,
@@ -76,16 +90,7 @@ const demarcheEtapeFondamentaleValidator = z.intersection(
       substances: z.array(substanceLegaleIdValidator).nullable(),
       titulaires: z.array(entreprisesByEtapeIdValidator).nullable(),
       amodiataires: z.array(entreprisesByEtapeIdValidator).nullable(),
-      perimetre: z
-        .object({
-          geojsonMultiPolygon: featureMultiPolygonValidator.nullable(),
-          surface: z.number().nullable(),
-          communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
-          secteurs_maritimes: z.array(secteurMaritimeValidator),
-          sdom_zones: z.array(sdomZoneIdValidator),
-          forets: z.array(foretIdValidator),
-        })
-        .nullable(),
+      perimetre: etapePerimetreValidator.nullable(),
     }),
   }),
   demarcheEtapeCommonValidator

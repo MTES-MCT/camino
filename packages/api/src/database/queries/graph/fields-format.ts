@@ -1,8 +1,7 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
-const fieldsOrderAsc = ['domaines', 'points', 'references', 'titresTypes']
-const fieldsToRemove = ['coordonnees', 'heritageProps', 'communes']
+const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
+const fieldsToRemove = ['heritageProps', 'communes']
 const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
-const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
 const titrePropsEtapesFields = ['surface', 'substances']
 
 interface IFields {
@@ -37,19 +36,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   if (fields.activites && !fields.activites.type) {
     fields.activites.type = { id: {} }
   }
-
-  // si `geojsonPoints` ou `geojsonMultiPolygon` sont présentes
-  // - ajoute la propriété `points`
-  // - supprime les propriété `geojsonPoints` ou `geojsonMultiPolygon`
-  geoFieldsToReplace.forEach(key => {
-    if (fields[key]) {
-      if (!fields.points) {
-        fields.points = { id: {} }
-      }
-
-      delete fields[key]
-    }
-  })
 
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {
@@ -133,10 +119,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
     if (!fields.demarche.titre) {
       fields.demarche.titre = { id: {} }
-    }
-
-    if (!fields.points) {
-      fields.points = { id: {} }
     }
   }
 

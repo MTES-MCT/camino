@@ -23,7 +23,7 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  geojsonMultiPolygon: FeatureMultiPolygon
+  geojson4326_perimetre: FeatureMultiPolygon
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -246,11 +246,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
   }>(() => {
     const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[] = []
     let index = 0
-    props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+    props.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
       topLevel.forEach((secondLevel, secondLevelIndex) =>
         secondLevel.forEach(([x, y], currentLevelIndex) => {
           // On ne rajoute pas le dernier point qui est égal au premier du contour...
-          if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+          if (props.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
             currentPoints.push({
               type: 'Feature',
               geometry: {
@@ -276,13 +276,14 @@ export const DemarcheMap = defineComponent<Props>(props => {
   })
 
   watch(
-    () => props.geojsonMultiPolygon,
+    () => props.geojson4326_perimetre,
     () => {
       const bounds = new LngLatBounds()
-      props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
+      // FIXME on a problement une featureCollection avant la geometry
+      props.geojson4326_perimetre.geometry.coordinates.forEach(top => {
         top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
       })
-      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.geojsonMultiPolygon)
+      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
 
       map.value?.fitBounds(bounds, { padding: 50 })
@@ -313,7 +314,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           type: 'FeatureCollection',
           features: res.elements
             .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-            .filter(titreValide => isNotNullNorUndefined(titreValide.geojsonMultiPolygon))
+            .filter(titreValide => isNotNullNorUndefined(titreValide.geojson4326_perimetre))
             .map(titreValide => {
               const properties: TitreValideProperties = {
                 slug: titreValide.slug,
@@ -324,7 +325,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
               }
 
               // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-              return { ...titreValide.geojsonMultiPolygon!, properties }
+              return { ...titreValide.geojson4326_perimetre!, properties }
             }),
         })
       } catch (e) {
@@ -335,7 +336,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
   onMounted(() => {
     const bounds = new LngLatBounds()
-    props.geojsonMultiPolygon.geometry.coordinates.forEach(top => {
+    // FIXME featuleCollection avant geometry
+    props.geojson4326_perimetre.geometry.coordinates.forEach(top => {
       top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
     })
 
@@ -347,7 +349,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
         ...staticOverlayLayersSourceSpecification,
         [contoursSourceName]: {
           type: 'geojson',
-          data: props.geojsonMultiPolygon,
+          data: props.geojson4326_perimetre,
         },
         [pointsSourceName]: {
           type: 'geojson',
@@ -560,4 +562,4 @@ const LayersControl: FunctionalComponent<{
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['geojsonMultiPolygon', 'class', 'style', 'maxMarkers', 'neighbours', 'router']
+DemarcheMap.props = ['geojson4326_perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router']

@@ -73,21 +73,6 @@ describe('etapeSaveFormat', () => {
       amodiataires: [],
       duree: 10,
       id: 'etape-id',
-      points: [
-        {
-          contour: 1,
-          groupe: 1,
-          point: 1,
-          references: [
-            {
-              coordonnees: { x: 1.5, y: 1 },
-              geoSystemeId: 'geo-systeme-id',
-              opposable: true,
-              id: 'id1',
-            },
-          ],
-        },
-      ],
       statutId: '',
       substances: [],
       titreDemarcheId: 'demarche-id',
@@ -159,52 +144,6 @@ describe('etapeSaveFormat', () => {
       contenu: { 'prop-id': 'prop-value' },
       duree: 240,
       id: 'etape-id',
-      points: [
-        {
-          contour: 1,
-          groupe: 1,
-          point: 1,
-          references: [
-            {
-              id: '2',
-              coordonnees: { x: 1.5, y: 1 },
-              geoSystemeId: 'geo-systeme-id',
-            },
-          ],
-        },
-        {
-          contour: 1,
-          description: undefined,
-          groupe: 1,
-          lot: 1,
-          nom: null,
-          point: 2,
-          references: [
-            {
-              coordonnees: { x: 1.5, y: 3 },
-              geoSystemeId: 'geo-systeme-id',
-              id: '3',
-            },
-          ],
-          subsidiaire: true,
-        },
-        {
-          contour: 1,
-          description: undefined,
-          groupe: 1,
-          lot: 1,
-          nom: null,
-          point: 3,
-          references: [
-            {
-              coordonnees: { x: 1.5, y: 4 },
-              geoSystemeId: 'geo-systeme-id',
-              id: '4',
-            },
-          ],
-          subsidiaire: true,
-        },
-      ],
       statutId: 'etape-statut-id',
       substances: ['substance-id-1'],
       titreDemarcheId: 'demarche-id',

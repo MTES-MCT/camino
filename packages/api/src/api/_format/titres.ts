@@ -1,6 +1,6 @@
-import { ITitre, IGeoJson, IFields, ITitreDemarche } from '../../types.js'
+import { ITitre, IFields, ITitreDemarche } from '../../types.js'
 
-import { geojsonFeatureMultiPolygon, geojsonFeatureCollectionPoints } from '../../tools/geojson.js'
+import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
 
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
@@ -22,7 +22,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
       titreStatutId: t.titreStatutId,
       typeId: t.typeId,
       type: t.type,
-      points: t.points,
       secteursMaritime: t.secteursMaritime,
       forets: t.forets,
       communes: t.communes,
@@ -31,14 +30,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   }
 
   if (isNullOrUndefined(fields)) return t
-
-  if (isNotNullNorUndefined(fields.geojsonMultiPolygon) && t.points?.length) {
-    t.geojsonMultiPolygon = geojsonFeatureMultiPolygon(t.points)
-  }
-
-  if (fields.geojsonPoints && t.points?.length) {
-    t.geojsonPoints = geojsonFeatureCollectionPoints(t.points) as IGeoJson
-  }
 
   if (fields.geojsonCentre && t.coordonnees && t.propsTitreEtapesIds.points) {
     t.geojsonCentre = {

@@ -1,4 +1,5 @@
 /* eslint-disable sql/no-unsafe-query */
+// FIXME remove geojson-rewind et @turf/center
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
@@ -17,7 +18,7 @@ import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tool
 export const geojsonFeatureMultiPolygon = (points: Pick<ITitrePoint, 'groupe' | 'contour' | 'coordonnees' | 'point'>[]): FeatureMultiPolygon => {
   const feature: FeatureMultiPolygon = {
     type: 'Feature',
-    properties: null,
+    properties: {},
     geometry: rewind(
       {
         type: 'MultiPolygon',
@@ -33,9 +34,9 @@ export const geojsonFeatureMultiPolygon = (points: Pick<ITitrePoint, 'groupe' | 
 // convertit des points
 // en un geojson de type 'FeatureCollection' de 'Points'
 
-export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]): IGeoJson => ({
+export const geojsonFeatureCollectionPoints = (points: Pick<ITitrePoint,  'coordonnees' | 'nom' | 'description'>[]): IGeoJson => ({
   type: 'FeatureCollection',
-  properties: { etapeId: points[0].titreEtapeId },
+  properties: {},
   features: points.map(p => ({
     type: 'Feature',
     geometry: {
@@ -43,13 +44,8 @@ export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]): IGeoJson 
       coordinates: [p.coordonnees.x, p.coordonnees.y],
     },
     properties: {
-      id: p.id,
-      groupe: p.groupe,
-      contour: p.contour,
-      point: p.point,
       nom: p.nom,
       description: p.description,
-      references: p.references,
     },
   })),
 })

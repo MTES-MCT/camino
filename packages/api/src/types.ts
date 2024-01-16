@@ -311,10 +311,8 @@ interface ITitre {
   activitesAbsentes?: number | null
   substancesEtape?: ITitreEtape | null
   substances?: SubstanceLegaleId[] | null
-  points?: ITitrePoint[] | null
+  // FIXME delete ?
   coordonnees?: ICoordonnees | null
-  geojsonMultiPolygon?: IGeoJson | null
-  geojsonPoints?: IGeoJson | null
   geojsonCentre?: IGeoJsonCentre | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
@@ -325,6 +323,7 @@ interface ITitre {
   communes?: ICommune[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
+  // FIXME rename to etapeWithPerimetre
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
@@ -408,15 +407,13 @@ interface ITitreEtape {
   dateDebut?: CaminoDate | null
   dateFin?: CaminoDate | null
   substances?: SubstanceLegaleId[] | null
-  points?: ITitrePoint[] | null
-  geojsonMultiPolygon?: IGeoJson | null
-  geojsonPoints?: IGeoJson | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   communes?: ICommune[] | null
   forets?: ForetId[] | null
+  // FIXME ajouter un champ en base geojson4326_perimetre
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null

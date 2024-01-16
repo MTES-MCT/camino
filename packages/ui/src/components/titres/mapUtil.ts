@@ -104,7 +104,8 @@ export const clustersBuild = () =>
   }, {})
 
 export interface TitreWithPoint extends CommonTitre {
-  geojsonMultiPolygon?: {
+  // FIXME FeatureCollection
+  geojson4326_perimetre?: {
     type: 'Feature'
     properties: Record<string, unknown>
     geometry: {
@@ -140,11 +141,11 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
 
   return titres.reduce<{ geojsons: Record<TitreId, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre) => {
-      if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
+      if (!titre.geojson4326_perimetre && !titre.geojsonCentre) return { geojsons, markers }
 
       const isMarkerAlreadyInMap = markersAlreadyInMap.includes(titre.id)
       const isPerimeterAlreadyInMap = geojsonAlreadyInMap.includes(titre.id)
-      if (!titre.geojsonMultiPolygon && isMarkerAlreadyInMap) {
+      if (!titre.geojson4326_perimetre && isMarkerAlreadyInMap) {
         return { geojsons, markers }
       }
 
@@ -190,7 +191,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
         }
         const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
         if (!isMarkerAlreadyInMap) {
-          const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
+          const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojson4326_perimetre)
           const marker = leafletMarkerBuild(latLng, icon)
 
           // @ts-ignore infernal à typer
@@ -215,7 +216,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
           markers.push({ marker, id: titreId, domaineId })
         }
 
-        if (!isPerimeterAlreadyInMap && titre.geojsonMultiPolygon) {
+        if (!isPerimeterAlreadyInMap && titre.geojson4326_perimetre) {
           const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
           const geojsonOptions: GeoJSONOptions = {
             style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
@@ -239,7 +240,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
             },
           }
 
-          const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
+          const geojson = leafletGeojsonBuild(titre.geojson4326_perimetre, geojsonOptions)
 
           // @ts-ignore infernal à typer
           geojson.titreId = titreId
