@@ -13,8 +13,9 @@ import { titreGet } from '../../../database/queries/titres.js'
 import { titreDemarcheUpdate as titreDemarcheUpdateTask } from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
-import { canCreateTravaux, canCreateOrEditDemarche } from 'camino-common/src/permissions/titres-demarches.js'
+import { canCreateTravaux, canCreateOrEditDemarche, canDeleteDemarche } from 'camino-common/src/permissions/titres-demarches.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { userSuper } from '../../../database/user-super.js'
 
 export const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
@@ -200,10 +201,11 @@ export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche 
     )
 
     if (isNullOrUndefined(demarcheOld)) throw new Error('la démarche n’existe pas')
-    const titre = await titreGet(demarcheOld.titreId, { fields: {} }, user)
+    const titre = await titreGet(demarcheOld.titreId, { fields: { pointsEtape: { id: {} } } }, user)
     if (isNullOrUndefined(titre)) throw new Error("le titre n'existe pas")
+    if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales ne sont pas chargées')
 
-    if (isNullOrUndefined(demarcheOld.modification) || !demarcheOld.modification) throw new Error('droits insuffisants')
+    if (!canCreateOrEditDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales)) throw new Error('droits insuffisants')
 
     if (demarcheOld.titreId !== demarche.titreId) throw new Error('le titre n’existe pas')
 
@@ -229,11 +231,15 @@ export const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche 
 
 export const demarcheSupprimer = async ({ id }: { id: string }, { user, pool }: Context) => {
   try {
-    const demarcheOld = await titreDemarcheGet(id, { fields: { etapes: { id: {} } } }, user)
+    const demarcheOld = await titreDemarcheGet(id, { fields: { titre: { pointsEtape: { id: {} } }, etapes: { id: {} } } }, userSuper)
 
     if (isNullOrUndefined(demarcheOld)) throw new Error("la démarche n'existe pas")
+    const etapes = demarcheOld.etapes
+    if (isNullOrUndefined(etapes)) throw new Error('les étapes ne sont pas chargées')
+    if (isNullOrUndefined(demarcheOld.titre)) throw new Error("le titre n'existe pas")
+    if (isNullOrUndefined(demarcheOld.titre.administrationsLocales)) throw new Error('les administrations locales ne sont pas chargées')
 
-    if (isNullOrUndefined(demarcheOld.suppression) || !demarcheOld.suppression) throw new Error('droits insuffisants')
+    if (!canDeleteDemarche(user, demarcheOld.titre.typeId, demarcheOld.titre.titreStatutId, demarcheOld.titre.administrationsLocales, { etapes })) throw new Error('droits insuffisants')
 
     await titreDemarcheArchive(id)
 

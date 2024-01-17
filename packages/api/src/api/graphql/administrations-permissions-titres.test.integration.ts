@@ -1,5 +1,5 @@
 import { dbManager } from '../../../tests/db-manager.js'
-import { visibleCheck, creationCheck, modificationCheck } from '../../../tests/_utils/administrations-permissions.js'
+import { visibleCheck, creationCheck } from '../../../tests/_utils/administrations-permissions.js'
 import Utilisateurs from '../../database/models/utilisateurs'
 
 import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
@@ -164,49 +164,4 @@ describe('Création des titres', () => {
     ['min-mtes-dgaln-01', true],
     ['min-dajb-01', false],
   ])('un utilisateur admin de l’administration $administrationId peut créer un titre PXM : $creer', async (administrationId, creer) => creationCheck(dbPool, administrationId, creer, 'titres', 'pxm'))
-})
-
-describe('Modification des titres', () => {
-  test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', true],
-    ['min-mtes-dgec-01', false],
-    ['min-mtes-dgaln-01', true],
-    ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut modifier un titre ARM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'titres', 'arm')
-  )
-
-  test.each<[AdministrationId, boolean]>([
-    ['ope-onf-973-01', false],
-    ['dea-guyane-01', true],
-    ['min-mtes-dgec-01', false],
-    ['min-mtes-dgaln-01', true],
-    ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut modifier un titre AXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'titres', 'axm')
-  )
-
-  test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
-    ['min-mtes-dgaln-01', true],
-    ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut modifier un titre CXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'titres', 'cxm')
-  )
-
-  test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', true],
-    ['min-mtes-dgaln-01', true],
-    ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut modifier un titre PRM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'titres', 'prm')
-  )
-
-  test.each<[AdministrationId, boolean]>([
-    ['min-mtes-dgec-01', false],
-    ['min-mtes-dgaln-01', true],
-    ['min-dajb-01', false],
-  ])('un utilisateur admin de l’administration $administrationId peut modifier un titre PXM : $modifier', async (administrationId, modifier) =>
-    modificationCheck(dbPool, administrationId, modifier, 'titres', 'pxm')
-  )
 })

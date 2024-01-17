@@ -10,7 +10,6 @@ import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { getAdministrationTitresTypesTitresStatuts } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts.js'
 
 export const administrationsQueryModify = (
   q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
@@ -72,27 +71,6 @@ export const administrationsTitresQuery = (
   })
 
   return q
-}
-
-export const administrationsTitresTypesTitresStatutsModify = (
-  q: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>,
-  type: 'titres' | 'demarches' | 'etapes',
-  titreAlias: string,
-  administrationId: AdministrationId,
-  conditionsAdd?: (b: QueryBuilder<AdministrationsModel, AdministrationsModel | AdministrationsModel[]>) => void
-) => {
-  const restrictions = getAdministrationTitresTypesTitresStatuts(administrationId).filter(r => r[`${type}ModificationInterdit`])
-
-  q.where(p => {
-    if (restrictions.length) {
-      p.orWhereNot(b =>
-        restrictions.forEach(r => b.orWhere(c => c.where(knex.raw('?? = ?', [`${titreAlias}.typeId`, r.titreTypeId])).where(knex.raw('?? = ?', [`${titreAlias}.titreStatutId`, r.titreStatutId]))))
-      )
-    }
-    if (conditionsAdd) {
-      conditionsAdd(p)
-    }
-  })
 }
 
 // l'utilisateur est dans au moins une administration

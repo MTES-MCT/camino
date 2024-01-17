@@ -329,7 +329,6 @@ interface ITitre {
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
-  modification?: boolean | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
@@ -371,8 +370,6 @@ interface ITitreDemarche {
   demarcheDateFin?: CaminoDate | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
-  modification?: boolean | null
-  suppression?: boolean | null
 
   etapes?: ITitreEtape[]
 }

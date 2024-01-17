@@ -3,10 +3,9 @@ import { IEntreprise, ITitre, ITitreDemarche } from '../../../types.js'
 import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
-import { idGenerate, newDemarcheId, newEtapeId, newTitreId, newUtilisateurId } from '../../models/_format/id-create.js'
-import { titresArmEnDemandeQuery, titresConfidentielSelect, titresModificationSelectQuery, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
+import { idGenerate, newDemarcheId, newEtapeId, newTitreId } from '../../models/_format/id-create.js'
+import { titresArmEnDemandeQuery, titresConfidentielSelect, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
 import { userSuper } from '../../user-super.js'
-import { AdministrationRole } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
@@ -14,7 +13,6 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 console.info = vi.fn()
@@ -225,80 +223,6 @@ describe('titresQueryModify', () => {
       } else {
         expect(res[0].confidentiel).toBeFalsy()
       }
-    })
-  })
-
-  describe('titresModificationSelectQuery', () => {
-    test.each<[AdministrationRole, boolean]>([
-      ['admin', true],
-      ['editeur', true],
-      ['lecteur', false],
-    ])('un utilisateur $role d’une administration gestionnaire peut modifier un titre', async (role, modification) => {
-      await Titres.query().insert({
-        nom: idGenerate(),
-        titreStatutId: 'val',
-        typeId: 'arm',
-      })
-
-      const administrationId = 'ope-ptmg-973-01'
-
-      const q = Titres.query()
-      q.select(
-        titresModificationSelectQuery(q, {
-          role,
-          ...testBlankUser,
-          administrationId,
-        }).as('modification')
-      )
-
-      const titre = await q.first()
-
-      expect(titre?.modification).toBe(modification)
-    })
-
-    test('une administration non gestionnaire ne peut pas modifier un titre', async () => {
-      await Titres.query().insert({
-        nom: idGenerate(),
-        titreStatutId: 'val',
-        typeId: 'arm',
-      })
-
-      const administrationId = 'pre-97302-01'
-
-      const q = Titres.query()
-      q.select(
-        titresModificationSelectQuery(q, {
-          email: '',
-          id: newUtilisateurId(''),
-          nom: '',
-          prenom: '',
-          role: 'admin',
-          administrationId,
-        }).as('modification')
-      )
-
-      const titre = await q.first()
-
-      expect(titre?.modification).toBeFalsy()
-    })
-
-    test.each<[TestUser, boolean]>([
-      [userSuper, true],
-      [{ role: 'entreprise', entreprises: [] }, false],
-      [{ role: 'lecteur', administrationId: 'dea-guyane-01' }, false],
-      [{ role: 'defaut' }, false],
-    ])('Vérifie si un profil $role peut modifier un titre', async (user, modification) => {
-      await Titres.query().insert({
-        nom: idGenerate(),
-        titreStatutId: 'val',
-        typeId: 'arm',
-      })
-      const q = Titres.query()
-      q.select(titresModificationSelectQuery(q, { ...user, ...testBlankUser }).as('modification'))
-
-      const titre = await q.first()
-
-      expect(titre?.modification).toBe(modification)
     })
   })
 

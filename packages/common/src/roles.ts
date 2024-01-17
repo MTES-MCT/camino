@@ -30,6 +30,10 @@ export type UserDefaut = z.infer<typeof defautUserNotNullValidator>
 
 export const ADMINISTRATION_ROLES = ['admin', 'editeur', 'lecteur'] as const satisfies readonly Role[]
 const administrationRoleValidator = z.enum(ADMINISTRATION_ROLES)
+
+/**
+ * @public
+ */
 export type AdministrationRole = z.infer<typeof administrationRoleValidator>
 
 const adminUserNotNullValidator = baseUserNotNullValidator.extend({ role: administrationRoleValidator, administrationId: administrationIdValidator })

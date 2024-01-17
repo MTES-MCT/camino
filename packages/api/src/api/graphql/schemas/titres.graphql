@@ -100,8 +100,6 @@ type Titre {
   "Secteurs Maritime"
   secteursMaritime: [String]
 
-  modification: Boolean
-
   doublonTitre: Titre
 
   "L’utilisateur est abonné au titre"
