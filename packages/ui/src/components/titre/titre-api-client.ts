@@ -247,8 +247,8 @@ export const titreApiClient: TitreApiClient = {
                 id
                 nom
               }
-              geojson4326_centre
-              
+              geojson4326Centre
+
             }
             total
           }
@@ -304,8 +304,8 @@ export const titreApiClient: TitreApiClient = {
                 nom
               }
 
-              geojson4326_centre
-              geojson4326_perimetre
+              geojson4326Centre
+              geojson4326Perimetre
             }
             total
           }

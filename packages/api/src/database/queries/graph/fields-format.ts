@@ -1,7 +1,7 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
 const fieldsToRemove = ['heritageProps', 'communes']
-const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
+const titreFieldsToRemove: string[] = ['geojson4326Centre', 'references']
 const titrePropsEtapesFields = ['surface', 'substances']
 
 interface IFields {

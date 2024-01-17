@@ -135,7 +135,7 @@ export const titre =
   }
 
 // TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const titresColonnes = ['nom', 'domaine', 'coordonnees', 'type', 'statut', 'titulaires'] as const
+const titresColonnes = ['nom', 'domaine', 'type', 'statut', 'titulaires'] as const
 const titresValidator = generateValidator(titresFiltresNames, titresColonnes, titresDownloadFormats).extend({
   // legacy pour le plugin qgis camino
   territoires: z.string().optional(),

@@ -4,11 +4,10 @@ import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
 import shpjs from 'shpjs'
 import { FeatureCollection, MultiPolygon, Polygon, Position, Feature } from 'geojson'
-import { titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
+import { titreEtapeSdomZonesGet } from './_titre-etape.js'
 import { geojsonFeatureMultiPolygon, geojsonSurface } from '../../../tools/geojson.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
-import { etapeTypeGet } from '../../../database/queries/metas.js'
-import { titreGet, titresGet } from '../../../database/queries/titres.js'
+import { titresGet } from '../../../database/queries/titres.js'
 import { userSuper } from '../../../database/user-super.js'
 import intersect from '@turf/intersect'
 import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
@@ -20,7 +19,8 @@ import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/
 import { EtapeId } from 'camino-common/src/etape.js'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { TitreId } from 'camino-common/src/titres.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -42,6 +42,7 @@ interface IPerimetreInformations {
   documentTypeIds: string[]
   alertes: IPerimetreAlerte[]
   sdomZones: SDOMZone[]
+  //FIXME ajouter communes, forêts, facade maritime
 }
 
 export const pointsImporter = async (
@@ -88,36 +89,12 @@ export const pointsImporter = async (
       geojson = ((await shpjs.parseShp(buffer, 'EPSG:4326')) as Polygon[]).map(p => p.coordinates)
     }
 
-    const points: Omit<ITitrePoint, 'id' | 'titreEtapeId'>[] = []
 
-    geojson.forEach((groupe, groupeIndex) => {
-      groupe.forEach((contour, contourIndex) => {
-        contour.forEach((point, pointIndex) => {
-          // Si le point n’a pas déjà été ajouté. Souvent le dernier point est le même que le premier.
-          if (!points.some(p => p.references[0].coordonnees.x === point[0] && p.references[0].coordonnees.y === point[1])) {
-            points.push({
-              groupe: groupeIndex + 1,
-              contour: contourIndex + 1,
-              point: pointIndex + 1,
-              coordonnees: { x: 0, y: 0 },
-              references: [
-                {
-                  id: '',
-                  titrePointId: '',
-                  coordonnees: { x: point[0], y: point[1] },
-                  geoSystemeId: geoSysteme.id,
-                },
-              ],
-            })
-          }
-        })
-      })
-    })
 
-    return await perimetreInformations(
+    // FIXME passer le géojson
+    return await sdomZonesInformationsGet(
       {
-        points: points as ITitrePoint[],
-        demarcheId,
+        geojson4326_perimetre: geojson,
         etapeTypeId,
       },
       context
@@ -130,20 +107,14 @@ export const pointsImporter = async (
 }
 
 const sdomZonesInformationsGet = async (
-  etapePoints: ITitrePoint[],
-  etapeSdomZones: SDOMZoneId[],
-  titreTypeId: string,
-  demarcheTypeId: string,
-  etapeTypeId: string,
-  titrePoints: ITitrePoint[],
-  titreSdomZones: SDOMZoneId[],
-  titreId: string,
+  geojson4326_perimetre: any,
+  etapeTypeId: EtapeTypeId,
   user: User
-) => {
-  const etapeType = await etapeTypeGet(etapeTypeId, { fields: { id: {} } })
+): Promise<IPerimetreInformations> => {
+  const etapeType = EtapesTypes[etapeTypeId]
   // si c’est une étape fondamentale on récupère les informations directement sur l’étape
-  const points = etapeType!.fondamentale ? etapePoints : titrePoints
-  const zones = etapeType!.fondamentale ? etapeSdomZones : titreSdomZones
+  const points = etapeType.fondamentale ? etapePoints : titrePoints
+  const zones = etapeType.fondamentale ? etape.sdomZones : titreSdomZones
 
   const alertes: IPerimetreAlerte[] = []
 
@@ -195,9 +166,9 @@ export const getSDOMZoneByPoints = async (demarcheId: DemarcheId, points: ITitre
   const sdomZones: SDOMZoneId[] = []
   let titreEtapePoints: ITitrePoint[] = []
   if (points && points.length > 2) {
-    titreEtapePoints = titreEtapePointsCalc(points)
 
-    const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
+    //FIXME 
+    const geojsonFeatures: Feature<any> ={type: 'Feature', geometry: null, properties: {}}
 
     const result = await titreEtapeSdomZonesGet(geojsonFeatures)
     if (result.fallback) {
@@ -211,11 +182,9 @@ export const getSDOMZoneByPoints = async (demarcheId: DemarcheId, points: ITitre
 
 export const perimetreInformations = async (
   {
-    points,
     demarcheId,
     etapeTypeId,
   }: {
-    points: ITitrePoint[] | undefined | null
     demarcheId: DemarcheId
     etapeTypeId: EtapeTypeId
   },
@@ -232,23 +201,11 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const titre = await titreGet(
-      demarche.titreId,
-      {
-        fields: { points: { id: {} } },
-      },
-      userSuper
-    )
+    //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
 
-    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(demarcheId, points)
+    return sdomZonesInformationsGet(null, etapeTypeId, demarche.titreId, user)
 
-    const informations = await sdomZonesInformationsGet(titreEtapePoints, sdomZones, titre!.typeId, demarche.typeId, etapeTypeId, titre!.points || [], titre?.sdomZones ?? [], titre!.id, user)
 
-    return {
-      ...informations,
-      sdomZones: sdomZones.map(id => SDOMZones[id]),
-      points: titreEtapePoints,
-    }
   } catch (e) {
     console.error(e)
 
@@ -272,9 +229,7 @@ export const titreEtapePerimetreInformations = async (
     const etape = await titreEtapeGet(
       titreEtapeId,
       {
-        fields: {
-          demarche: { titre: { points: { id: {} } } },
-        },
+        fields: { id: {} },
       },
       user
     )
@@ -283,21 +238,15 @@ export const titreEtapePerimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = etape.sdomZones?.map(id => SDOMZones[id]) ?? []
 
-    const informations = await sdomZonesInformationsGet(
-      etape.points || [],
-      etape?.sdomZones ?? [],
-      etape.demarche!.titre!.typeId,
-      etape.demarche!.typeId,
+    //FIXME charger le perimètre de l’étape si elle est fondamentale sinon périmètre du titre
+
+    return sdomZonesInformationsGet(
+      etape.id,
       etape.typeId,
-      etape.demarche!.titre!.points || [],
-      etape.demarche?.titre?.sdomZones ?? [],
-      etape.demarche!.titreId,
+      null,
       user
     )
-
-    return { sdomZones, ...informations }
   } catch (e) {
     console.error(e)
 

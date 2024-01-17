@@ -6,8 +6,8 @@ import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tool
 
 const etapesToNotMigrate = ["0NmsqYGVQJYKhFY22Ltt4NBV"]
 export const up = async (knex: Knex) => {
-  // await knex.raw('alter table titres_etapes add column geojson4326_perimetre public.geometry(MultiPolygon,4326)')
-  // await knex.raw('alter table titres_etapes add column geojson4326_points JSONB')
+  await knex.raw('alter table titres_etapes add column geojson4326_perimetre public.geometry(MultiPolygon,4326)')
+  await knex.raw('alter table titres_etapes add column geojson4326_points JSONB')
   // await knex.raw('alter table titres_etapes add column geojson4326 public.geometry(GeometryCollection,4326)')
 
   const etapes: { rows: { id: EtapeId }[] } = await knex.raw('select * from titres_etapes')

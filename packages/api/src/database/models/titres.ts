@@ -33,10 +33,6 @@ class Titres extends Model {
       titreStatutId: { type: 'string', maxLength: 3 },
       contenusTitreEtapesIds: { type: ['object', 'null'] },
       propsTitreEtapesIds: { type: 'object' },
-      coordonnees: {
-        type: ['object', 'null'],
-        properties: { x: { type: 'number' }, y: { type: 'number' } },
-      },
       doublonTitreId: { type: ['string', 'null'] },
       archive: { type: 'boolean' },
       references: { type: ['array', 'null'] },
@@ -184,9 +180,6 @@ class Titres extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    if (json.coordonnees) {
-      json.coordonnees = `${json.coordonnees.x},${json.coordonnees.y}`
-    }
 
     json = titreInsertFormat(json)
     json = super.$formatDatabaseJson(json)

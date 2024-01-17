@@ -1,11 +1,9 @@
-import { ICoordonnees, IEtapeType, IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape, ITitrePointReference } from '../../../types.js'
+import { IEtapeType, IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../../types.js'
 
-import { geoConvert } from '../../../tools/geo-convert.js'
 
 import { titreEtapeHeritagePropsFind, titreEtapePropsIds } from '../../../business/utils/titre-etape-heritage-props-find.js'
 import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
-import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
@@ -14,41 +12,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
-export const titreEtapePointsCalc = <
-  T extends {
-    references: ITitrePointReference[]
-    coordonnees: ICoordonnees
-  }
->(
-  titrePoints: T[]
-) => {
-  const uniteRatio = uniteRatioFind(pointReferenceFind(titrePoints))
-
-  return titrePoints.map(point => {
-    const reference = point.references.find(r => r.opposable) || point.references[0]
-
-    point.coordonnees = geoConvert(reference.geoSystemeId, {
-      x: reference.coordonnees.x * uniteRatio,
-      y: reference.coordonnees.y * uniteRatio,
-    })
-
-    return point
-  })
-}
-
-const pointReferenceFind = (
-  points: {
-    references: ITitrePointReference[]
-  }[]
-) => points.length && points[0].references && points[0].references.length && (points[0].references.find(r => r.opposable) || points[0].references[0])
-
-const uniteRatioFind = (pointReference: ITitrePointReference | 0) => {
-  if (!pointReference || !pointReference.geoSystemeId) return 1
-
-  const geoSysteme = GeoSystemes[pointReference.geoSystemeId]
-
-  return geoSysteme.uniteId === 'gon' ? 0.9 : 1
-}
 
 const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] | null) => {
   const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => e.type?.fondamentale && e.date <= date) ?? [])

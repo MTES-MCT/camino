@@ -42,15 +42,11 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   const complete = computed(() => {
     return props.etape.type.id !== 'mfr' || pointsTotal.value?.length > 3
   })
-  
+
 
   const completeUpdate = () => {
     // FIXME pass props instead of emit
     context.emit('complete-update', complete.value)
-  }
-
-  const surfaceRefresh = () => {
-    store.dispatch('titreEtapeEdition/surfaceRefresh', props.etape)
   }
 
   watch(complete, () => completeUpdate())
@@ -107,11 +103,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
             <h5 class="mb-0">Surface (Km²)</h5>
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
-          {!props.etape.heritageProps.surface.actif ? (
-            <button class="flex-right btn-border pill p-s tooltip" onClick={surfaceRefresh}>
-              <HelpTooltip icon="refresh" text="Recalculer automatiquement la surface à partir du périmètre" />
-            </button>
-          ) : null}
         </div>
         <HeritageEdit
           prop={props.etape.heritageProps.surface}

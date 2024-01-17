@@ -7,8 +7,8 @@ import { CommonTitre, TitreId } from 'camino-common/src/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 
-const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
-  const coordinates = geojson.geometry.coordinates
+const leafletCoordinatesFind = (geojson:  { coordinates: [number, number] } ) => {
+  const coordinates = geojson.coordinates
 
   return {
     lng: coordinates[0],
@@ -105,7 +105,7 @@ export const clustersBuild = () =>
 
 export interface TitreWithPoint extends CommonTitre {
   // FIXME FeatureCollection
-  geojson4326_perimetre?: {
+  geojson4326Perimetre?: {
     type: 'Feature'
     properties: Record<string, unknown>
     geometry: {
@@ -113,7 +113,7 @@ export interface TitreWithPoint extends CommonTitre {
       coordinates: [number, number][][][]
     }
   }
-  geojsonCentre?: { geometry: { coordinates: [number, number] } }
+  geojson4326Centre?: { type: 'Point',  coordinates: [number, number] }
 }
 type CaminoMarker = {
   marker: Marker
@@ -141,11 +141,11 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
 
   return titres.reduce<{ geojsons: Record<TitreId, GeoJSON>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre) => {
-      if (!titre.geojson4326_perimetre && !titre.geojsonCentre) return { geojsons, markers }
+      if (!titre.geojson4326Perimetre && !titre.geojson4326Centre) return { geojsons, markers }
 
       const isMarkerAlreadyInMap = markersAlreadyInMap.includes(titre.id)
       const isPerimeterAlreadyInMap = geojsonAlreadyInMap.includes(titre.id)
-      if (!titre.geojson4326_perimetre && isMarkerAlreadyInMap) {
+      if (!titre.geojson4326Perimetre && isMarkerAlreadyInMap) {
         return { geojsons, markers }
       }
 
@@ -191,7 +191,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
         }
         const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
         if (!isMarkerAlreadyInMap) {
-          const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojson4326_perimetre)
+          const latLng = titre.geojson4326Centre ? leafletCoordinatesFind(titre.geojson4326Centre) : leafletGeojsonCenterFind(titre.geojson4326Perimetre)
           const marker = leafletMarkerBuild(latLng, icon)
 
           // @ts-ignore infernal à typer
@@ -216,7 +216,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
           markers.push({ marker, id: titreId, domaineId })
         }
 
-        if (!isPerimeterAlreadyInMap && titre.geojson4326_perimetre) {
+        if (!isPerimeterAlreadyInMap && titre.geojson4326Perimetre) {
           const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
           const geojsonOptions: GeoJSONOptions = {
             style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
@@ -240,7 +240,7 @@ export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push
             },
           }
 
-          const geojson = leafletGeojsonBuild(titre.geojson4326_perimetre, geojsonOptions)
+          const geojson = leafletGeojsonBuild(titre.geojson4326Perimetre, geojsonOptions)
 
           // @ts-ignore infernal à typer
           geojson.titreId = titreId

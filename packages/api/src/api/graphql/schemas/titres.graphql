@@ -84,8 +84,8 @@ type Titre {
   secteursMaritime: [String]
 
   doublonTitre: Titre
-  geojson4326_centre: Json
-  geojson4326_perimetre: Json
+  geojson4326Centre: Json
+  geojson4326Perimetre: Json
 
   "L’utilisateur est abonné au titre"
   abonnement: Boolean

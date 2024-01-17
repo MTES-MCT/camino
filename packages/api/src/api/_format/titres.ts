@@ -31,16 +31,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
 
   if (isNullOrUndefined(fields)) return t
 
-  if (fields.geojsonCentre && t.coordonnees && t.propsTitreEtapesIds.points) {
-    t.geojsonCentre = {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [t.coordonnees.x, t.coordonnees.y],
-      },
-      properties: { etapeId: t.propsTitreEtapesIds.points },
-    }
-  }
 
   if (fields.demarches && t.demarches?.length) {
     t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))

@@ -14,7 +14,6 @@ export const logsUpdate = ({
   titresEtapesAdministrationsLocalesUpdated,
   titresPropsEtapesIdsUpdated,
   titresContenusEtapesIdsUpdated,
-  titresCoordonneesUpdated,
   titresActivitesCreated,
   titresActivitesRelanceSent,
   titresActivitesStatutIdsUpdated,
@@ -37,7 +36,6 @@ export const logsUpdate = ({
   titresEtapesAdministrationsLocalesUpdated?: string[]
   titresPropsEtapesIdsUpdated?: string[]
   titresContenusEtapesIdsUpdated?: string[]
-  titresCoordonneesUpdated?: string[]
   titresActivitesCreated?: string[]
   titresActivitesRelanceSent?: string[]
   titresActivitesStatutIdsUpdated?: string[]
@@ -101,10 +99,6 @@ export const logsUpdate = ({
 
   if (titresContenusEtapesIdsUpdated?.length) {
     console.info(`mise à jour: ${titresContenusEtapesIdsUpdated.length} titres(s) (contenu)`)
-  }
-
-  if (titresCoordonneesUpdated?.length) {
-    console.info(`mise à jour: ${titresCoordonneesUpdated.length} titres(s) (coordonnées)`)
   }
 
   if (titresActivitesCreated?.length) {

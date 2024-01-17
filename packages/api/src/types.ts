@@ -92,7 +92,7 @@ type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
-type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | 'titulaires'
+type ITitreColonneId = 'nom' | 'domaine' |  'type' | 'statut' | 'titulaires'
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
@@ -311,9 +311,6 @@ interface ITitre {
   activitesAbsentes?: number | null
   substancesEtape?: ITitreEtape | null
   substances?: SubstanceLegaleId[] | null
-  // FIXME delete ?
-  coordonnees?: ICoordonnees | null
-  geojsonCentre?: IGeoJsonCentre | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
@@ -422,6 +419,7 @@ interface ITitreEtape {
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
+  geojson4326_perimetre: Geojson
 }
 
 interface ITitreEtapeFiltre {

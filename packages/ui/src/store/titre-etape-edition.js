@@ -233,53 +233,7 @@ const actions = {
     } finally {
       commit('loadingRemove', 'pointsImport', { root: true })
     }
-  },
-
-  async surfaceRefresh({ state, commit, dispatch }, etape) {
-    try {
-      commit('loadingAdd', 'surfaceRefresh', { root: true })
-
-      if (etape.geoSystemeIds && etape.geoSystemeIds.length && etape.groupes.length) {
-        const points = {} //pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
-        const { surface, documentTypeIds, alertes } = await perimetreInformations({
-          points,
-          demarcheId: state.metas.demarche.id,
-          etapeTypeId: etape.type.id,
-        })
-        state.element.surface = surface
-        commit('set', state.element)
-
-        commit('metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes,
-        })
-        await dispatch('documentInit', state.element.documents)
-
-        commit('popupClose', null, { root: true })
-        dispatch(
-          'messageAdd',
-          {
-            value: `la surface a été recalculée à partir du périmètre`,
-            type: 'success',
-          },
-          { root: true }
-        )
-      } else {
-        dispatch(
-          'messageAdd',
-          {
-            value: `la surface ne peut-être calculée car le périmètre est invalide`,
-            type: 'warning',
-          },
-          { root: true }
-        )
-      }
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'surfaceRefresh', { root: true })
-    }
-  },
+  }
 }
 
 const mutations = {
