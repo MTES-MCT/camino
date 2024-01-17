@@ -1,3 +1,7 @@
+import {z} from 'zod'
+import { UniteId } from './unites'
+
+const IDS = ['2154','27561','27563','27571','27572','27573','2970','2972','32620','32621','32622','32630','3313','3949','4171','4230','4275','4326','4624','4807','5490','4471','2975',] as const
 export const GEO_SYSTEME_IDS = {
   'RGF93 / Lambert-93': '2154',
   'NTF (Paris) / Lambert Nord France': '27561',
@@ -22,20 +26,22 @@ export const GEO_SYSTEME_IDS = {
   'RGAF09 / UTM zone 20N': '5490',
   'Mayotte 2004 / UTM zone 38S': '4471',
   'Réunion ': '2975',
-} as const
+} as const satisfies Record<string, typeof IDS[number]>
 
 export interface GeoSysteme<T = GeoSystemeId> {
   id: T
   nom: string
-  uniteId: 'met' | 'deg' | 'gon'
+  uniteId: Extract<UniteId, 'met' | 'deg' | 'gon'>
   zone: string
   definitionProj4: string // https://github.com/josueggh/proj4-list/blob/master/list.js
 }
 
 const GEO_SYSTEME_KEYS = Object.values(GEO_SYSTEME_IDS)
-export type GeoSystemeId = (typeof GEO_SYSTEME_IDS)[keyof typeof GEO_SYSTEME_IDS]
 
-export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => GEO_SYSTEME_KEYS.includes(entry)
+export const geoSystemeIdValidator = z.enum(IDS)
+export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
+
+export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => geoSystemeIdValidator.safeParse(entry).success
 
 export const GeoSystemes = {
   '2154': {

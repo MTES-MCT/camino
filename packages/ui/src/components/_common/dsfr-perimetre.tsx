@@ -1,19 +1,22 @@
-import { FunctionalComponent, defineComponent, HTMLAttributes, defineAsyncComponent } from 'vue'
+import { defineComponent, HTMLAttributes, defineAsyncComponent, computed, ref, watch} from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
-import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
 import { Column, TableAuto } from '../_ui/table-auto'
 import { TableRow } from '../_ui/table'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { indexToLetter } from 'camino-common/src/number'
+import { AsyncData } from '../../api/client-rest'
+import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { GeoSysteme, GeoSystemes, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { ApiClient } from '../../api/api-client'
 export type TabId = 'carte' | 'points'
 interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
-  apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'> | null
+  apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemId'>
+  calculateNeighbours: boolean,
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
   initTab?: TabId
@@ -38,59 +41,123 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable geojsonMultiPolygon={props.geojsonMultiPolygon} titreSlug={props.titreSlug} />,
+      renderContent: () => <TabCaminoTable geojsonMultiPolygon={props.geojsonMultiPolygon} titreSlug={props.titreSlug} apiClient={props.apiClient} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
+// FIXME changer le nom des colonnes en fonction de l'unité
 const columns: Column<string>[] = [
   { id: 'polygone', name: 'Polygone', noSort: true },
   { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
   { id: 'latitude', name: 'Latitude', noSort: true },
   { id: 'longitude', name: 'Longitude', noSort: true },
 ]
-const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug'>> = props => {
+
+const geoJsonToArray = (geojsonMultiPolygon: FeatureMultiPolygon): TableRow<string>[] => {
   let index = 0
-  const currentRows: TableRow<string>[] = []
-  props.geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-    topLevel.forEach((secondLevel, secondLevelIndex) =>
-      secondLevel.forEach(([y, x], currentLevelIndex) => {
-        // On ne rajoute pas le dernier point qui est égal au premier du contour...
-        if (props.geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-          currentRows.push({
-            id: `${index}`,
-            link: null,
-            columns: {
-              polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
-              nom: { value: indexToLetter(index) },
-              latitude: { value: `${x}` },
-              longitude: { value: `${y}` },
-            },
-          })
-          index++
-        }
-      })
-    )
+
+  const rows: TableRow<string>[] = []
+  geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+      topLevel.forEach((secondLevel, secondLevelIndex) =>
+        secondLevel.forEach(([y, x], currentLevelIndex) => {
+          // On ne rajoute pas le dernier point qui est égal au premier du contour...
+          if (geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+            rows.push({
+              id: `${index}`,
+              link: null,
+              columns: {
+                polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
+                nom: { value: indexToLetter(index) },
+                latitude: { value: `${x}` },
+                longitude: { value: `${y}` },
+              },
+            })
+            index++
+          }
+        })
+      )
+      )
+      return rows
+}
+const TabCaminoTable = defineComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug' | 'apiClient'>>(props => {
+  const currentRows = ref<AsyncData<TableRow<string>[]>>({status: 'LOADING'})
+
+  watch(
+    () => props.geojsonMultiPolygon,
+    () => {
+
+      currentRows.value = {status: 'LOADED', value: geoJsonToArray(props.geojsonMultiPolygon)}
+    }, {immediate: true}
   )
 
-  const csvContent = encodeURI(
-    `${columns.map(c => c.name).join(';')}\n${currentRows.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`
-  )
 
-  if (index > maxRows + 1) {
-    currentRows.splice(maxRows, index)
-    currentRows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
+  const csvContent = computed(() =>{
+    if( currentRows.value.status === 'LOADED'){
+      return encodeURI(
+        `${columns.map(c => c.name).join(';')}\n${currentRows.value.value.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`
+      )
+    }
+
+     })
+
+  const rowsToDisplay = computed(() => {
+    if( currentRows.value.status === 'LOADED'){
+    const rows = currentRows.value.value.slice(0, maxRows)
+
+    if (currentRows.value.value.length > maxRows + 1) {
+      rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
+    }
+
+    return rows
+  }
+  return []
+  })
+
+
+  const geoSystemSelected = ref<GeoSysteme | undefined>(GeoSystemes[4326])
+  const geoSystemUpdate = async (geoSysteme: GeoSysteme | undefined) => {
+    geoSystemSelected.value = geoSysteme
+    if ( geoSysteme !== undefined ){
+    try{
+      currentRows.value= {status: 'LOADING'}
+
+      const newGeojson = await props.apiClient.getGeojsonByGeoSystemId(props.geojsonMultiPolygon, geoSysteme.id)
+      currentRows.value = {status: 'LOADED', value: geoJsonToArray(newGeojson)}
+
+
+    } catch(e: any) {
+      console.error('error', e)
+      currentRows.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      }
+    }}
   }
 
-  return (
+  const geoSystemeFiltered = ref<GeoSysteme[]>(sortedGeoSystemes)
+  const geoSystemeOnInput = (search: string) => {
+
+    const formatedSearch = search.trim().toLowerCase()
+
+    if(formatedSearch.length === 0){
+      geoSystemeFiltered.value = sortedGeoSystemes
+    }else{
+      geoSystemeFiltered.value = sortedGeoSystemes.filter(({nom, id}) => id.toLowerCase().includes(formatedSearch) || nom.toLowerCase().includes(formatedSearch) || id === geoSystemSelected.value?.id )
+    }
+  }
+  const overrideItems = [GeoSystemes[4326]]
+
+  return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={currentRows} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
+      <TypeAheadSingle overrideItems={overrideItems} props={{items: geoSystemeFiltered.value, itemChipLabel: (item) => item.nom, itemKey: 'id', placeholder: '', minInputLength: 1, onSelectItem: geoSystemUpdate, onInput: geoSystemeOnInput }}/>
+      <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={rowsToDisplay.value} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}
-        href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
+        href={`data:${contentTypes.csv};charset=utf-8,${csvContent.value}`}
         download={`points-${props.titreSlug}.csv`}
         icon="fr-icon-download-line"
         buttonType="secondary"
@@ -99,10 +166,10 @@ const TabCaminoTable: FunctionalComponent<Pick<Props, 'geojsonMultiPolygon' | 't
       />
     </div>
   )
-}
+})
 
 const TabCaminoMap = defineComponent<Props>(props => {
-  const neighbours = isNullOrUndefined(props.apiClient) ? null : { apiClient: props.apiClient, titreSlug: props.titreSlug }
+  const neighbours = props.calculateNeighbours ? null : { apiClient: props.apiClient, titreSlug: props.titreSlug }
 
   const DemarcheMap = defineAsyncComponent(async () => {
     const { DemarcheMap } = await import('../demarche/demarche-map')
@@ -129,7 +196,9 @@ const TabCaminoMap = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab']
+DsfrPerimetre.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab']
+TabCaminoMap.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+TabCaminoTable.props = ['geojsonMultiPolygon', 'apiClient', 'titreSlug']

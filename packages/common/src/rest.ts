@@ -11,7 +11,7 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
 } from './entreprise.js'
-import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
+import { demarcheIdOrSlugValidator, demarcheIdValidator, featureMultiPolygonValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
   editableTitreValidator,
@@ -33,6 +33,7 @@ import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
+import { geoSystemeIdValidator } from './static/geoSystemes.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -72,6 +73,7 @@ const IDS = [
   '/rest/etapes/:etapeId',
   '/rest/etapes/:etapeId/depot',
   '/rest/activites/:activiteId',
+  '/rest/geojson/:geoSystemeId',
   '/rest/communes',
   '/deconnecter',
   '/changerMotDePasse',
@@ -136,6 +138,7 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
+  '/rest/geojson/:geoSystemeId': {params: {geoSystemeId: geoSystemeIdValidator}, post: {input: featureMultiPolygonValidator, output: featureMultiPolygonValidator}},
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },

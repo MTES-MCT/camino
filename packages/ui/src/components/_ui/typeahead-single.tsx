@@ -6,6 +6,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 type TypeAheadRecord = Record<string | symbol | number, any>
 
 type Props<T extends TypeAheadRecord, K extends keyof T> = {
+  // TODO 2024-01-17 ça devrait être overrideItem, il ne peut y avoir qu'une seule valeur ici
   overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
   props: {
     id?: string
