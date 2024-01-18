@@ -6,6 +6,7 @@ import { titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
+import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
   title: 'Components/Common/Perimetre',
@@ -34,13 +35,30 @@ const geojsonMultiPolygon: FeatureMultiPolygon = {
 }
 
 const pushAction = action('push')
-const getTitresWithPerimetreForCarteAction = action('getTitresWithPerimetreForCarteAction')
+const getGeojsonByGeoSystemIdAction = action('getGeojsonByGeoSystemId')
+const getTitresWithPerimetreForCarteAction = action('getGeojsonByGeoSystemId')
+
+const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemId'> = {
+  getGeojsonByGeoSystemId: (geojson, geoSystemeId) => {
+    getGeojsonByGeoSystemIdAction(geojson, geoSystemeId)
+
+    return Promise.resolve(geojsonMultiPolygon)
+  },
+  getTitresWithPerimetreForCarte: carte => {
+    getTitresWithPerimetreForCarteAction(carte)
+
+    return Promise.resolve({ elements: [], total: 0 })
+  },
+}
+
 export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
       geojsonMultiPolygon={geojsonMultiPolygon}
+      calculateNeighbours={true}
       apiClient={{
+        ...apiClientMock,
         getTitresWithPerimetreForCarte: params => {
           getTitresWithPerimetreForCarteAction(params)
 
@@ -95,7 +113,8 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
     <MapPattern />
     <DsfrPerimetre
       geojsonMultiPolygon={geojsonMultiPolygon}
-      apiClient={null}
+      calculateNeighbours={false}
+      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -136,11 +155,8 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
           ],
         },
       }}
-      apiClient={{
-        getTitresWithPerimetreForCarte: _params => {
-          return Promise.resolve({ elements: [], total: 0 })
-        },
-      }}
+      calculateNeighbours={true}
+      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -179,11 +195,8 @@ export const BigNoSnapshot: StoryFn = () => (
           return Promise.resolve()
         },
       }}
-      apiClient={{
-        getTitresWithPerimetreForCarte: _params => {
-          return Promise.resolve({ elements: [], total: 0 })
-        },
-      }}
+      calculateNeighbours={true}
+      apiClient={apiClientMock}
     />
   </>
 )
@@ -236,11 +249,8 @@ export const MultipleNoSnapshot: StoryFn = () => (
           return Promise.resolve()
         },
       }}
-      apiClient={{
-        getTitresWithPerimetreForCarte: _params => {
-          return Promise.resolve({ elements: [], total: 0 })
-        },
-      }}
+      calculateNeighbours={true}
+      apiClient={apiClientMock}
     />
   </>
 )
@@ -308,11 +318,8 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
           ],
         },
       }}
-      apiClient={{
-        getTitresWithPerimetreForCarte: _params => {
-          return Promise.resolve({ elements: [], total: 0 })
-        },
-      }}
+      calculateNeighbours={true}
+      apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {

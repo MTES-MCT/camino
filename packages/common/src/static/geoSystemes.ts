@@ -73,17 +73,13 @@ export const geoSystemeIdValidator = z.enum(IDS)
 export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
 export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => geoSystemeIdValidator.safeParse(entry).success
-// pour les mètres, précision au millimètre
-// pour les degrès, précision à 4 chiffres après la virgule ?
-// liste obligatoire uniquement
 // TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 
 // FIXME l’ordre des points change tout le temps
-// FIXME le nom des colonne doit changer en fonction de l'unité
 export const GeoSystemes = {
   '2154': {
     id: '2154',
-    nom: 'France RGF93 / Lambert-93',
+    nom: 'RGF93 / Lambert-93',
     uniteId: 'met',
     zone: 'France - onshore et offshore - continentale et Corse.',
     definitionProj4: '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
@@ -206,7 +202,7 @@ export const GeoSystemes = {
   },
   '4326': {
     id: '4326',
-    nom: 'Système géodesique mondial / WGS84',
+    nom: 'WGS84',
     uniteId: 'deg',
     zone: 'Monde',
     definitionProj4: '+proj=longlat +datum=WGS84 +no_defs',

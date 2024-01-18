@@ -5,6 +5,7 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 export interface IGetGeojsonByGeoSystemeIdDbParams {
   geojson: string;
   geoSystemeId: number;
+  precision: number;
 }
 
 /** 'GetGeojsonByGeoSystemeIdDb' return type */

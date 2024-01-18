@@ -28,9 +28,9 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { RemoveEtapePopup } from './remove-etape-popup'
-import { EtapeApiClient } from '../etape/etape-api-client'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { DeposeEtapePopup } from './depose-etape-popup'
+import { ApiClient } from '@/api/api-client'
 // Il ne faut pas utiliser de literal dans le 'in' il n'y aura jamais d'erreur typescript
 const fondamentalePropsName = 'fondamentale'
 
@@ -48,7 +48,7 @@ type Props = {
     nom: string
     titreStatutId: TitreStatutId
   }
-  apiClient: Pick<EtapeApiClient, 'deleteEtape' | 'deposeEtape'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemId'>
   router: Pick<Router, 'push'>
   user: User
   initTab?: TabId
@@ -242,7 +242,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           class="fr-pt-2w"
           initTab={props.initTab}
           titreSlug={props.titre.slug}
-          apiClient={null}
+          apiClient={props.apiClient}
+          calculateNeighbours={false}
           geojsonMultiPolygon={props.etape.fondamentale.perimetre.geojsonMultiPolygon}
           router={props.router}
         />

@@ -50,6 +50,7 @@ const loadLinkableTitresAction = action('loadLinkableTitresAction')
 const getTitreUtilisateurAbonneAction = action('getTitreUtilisateurAbonneAction')
 const titreUtilisateurAbonneAction = action('titreUtilisateurAbonneAction')
 const linkTitresAction = action('linkTitresAction')
+const getGeojsonByGeoSystemIdAction = action('getGeojsonByGeoSystemId')
 const date = toCaminoDate('2023-10-24')
 
 type PropsApiClient = Pick<
@@ -68,6 +69,7 @@ type PropsApiClient = Pick<
   | 'createDemarche'
   | 'updateDemarche'
   | 'deleteDemarche'
+  | 'getGeojsonByGeoSystemId'
 >
 const routerPushMock: Pick<Router, 'push' | 'replace'> = {
   push: to => {
@@ -308,6 +310,11 @@ const apiClient: PropsApiClient = {
     deposerEtapeAction(etapeId)
 
     return Promise.resolve()
+  },
+  getGeojsonByGeoSystemId: (geojson, systemId) => {
+    getGeojsonByGeoSystemIdAction(geojson, systemId)
+
+    return Promise.resolve(geojson)
   },
 }
 
