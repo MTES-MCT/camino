@@ -46,7 +46,6 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 })
 
 const TabCaminoMap = defineComponent<Props>(props => {
-  // CE BUG DETECTE PAR LE TYPAGE :HEART:
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug } : null
 
   const DemarcheMap = defineAsyncComponent(async () => {

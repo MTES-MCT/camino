@@ -50,7 +50,6 @@ export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => geoSystemeIdValidator.safeParse(entry).success
 // TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 
-// FIXME l’ordre des points change tout le temps
 export const GeoSystemes = {
   '2154': {
     id: '2154',
