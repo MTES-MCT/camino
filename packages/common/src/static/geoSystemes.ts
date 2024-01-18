@@ -1,32 +1,9 @@
 import { z } from 'zod'
 import { UniteId } from './unites'
 
-const IDS = [
-  '2154',
-  '27561',
-  '27563',
-  '27571',
-  '27572',
-  '27573',
-  '2970',
-  '2972',
-  '32620',
-  '32621',
-  '32622',
-  '32630',
-  '3313',
-  '3949',
-  '4171',
-  '4230',
-  '4275',
-  '4326',
-  '4624',
-  '4807',
-  '5490',
-  '4471',
-  '2975',
-  '4467',
-] as const
+// prettier-ignore
+const IDS = ['2154',  '27561',  '27563',  '27571',  '27572',  '27573',  '2970',  '2972',  '32620',  '32621',  '32622',  '32630',  '3313',  '3949',  '4171',  '4230',  '4275',  '4326',  '4624',  '4807',  '5490',  '4471',  '2975',  '4467', ] as const
+
 export const GEO_SYSTEME_IDS = {
   'RGF93 / Lambert-93': '2154',
   'NTF (Paris) / Lambert Nord France': '27561',
@@ -46,14 +23,12 @@ export const GEO_SYSTEME_IDS = {
   'Mayotte 2004 / UTM zone 38S': '4471',
   'Réunion ': '2975',
   'St Pierre et Miquelon': '4467',
-  // marche pas
   RGF93: '4171',
   ED50: '4230',
   'NTF (Greenwich)': '4275',
   WGS84: '4326',
   RGFG95: '4624',
   'NTF (Paris)': '4807',
-  // marche pas
 } as const satisfies Record<string, (typeof IDS)[number]>
 
 export interface GeoSysteme<T = GeoSystemeId> {
@@ -81,7 +56,7 @@ export const GeoSystemes = {
     id: '2154',
     nom: 'RGF93 / Lambert-93',
     uniteId: 'met',
-    zone: 'France - onshore et offshore - continentale et Corse.',
+    zone: 'France - à terre et extraterritorial - continentale et Corse.',
     definitionProj4: '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
   },
   '27561': {
@@ -127,14 +102,14 @@ export const GeoSystemes = {
     id: '2970',
     nom: 'Guadeloupe 1948 / UTM zone 20N',
     uniteId: 'met',
-    zone: 'Guadeloupe - onshore - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.',
+    zone: 'Guadeloupe - à terre - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.',
     definitionProj4: '+proj=utm +zone=20 +ellps=intl +towgs84=-467,-16,-300,0,0,0,0 +units=m +no_defs',
   },
   '2972': {
     id: '2972',
-    nom: 'Guyane française RGFG95 / UTM zone 22N',
+    nom: 'RGFG95 / UTM zone 22N',
     uniteId: 'met',
-    zone: 'Guyane française - onshore et offshore.',
+    zone: 'Guyane française - à terre et extraterritorial.',
     definitionProj4: '+proj=utm +zone=22 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
   },
   '32620': {
@@ -169,7 +144,7 @@ export const GeoSystemes = {
     id: '3313',
     nom: 'RGFG95 / UTM zone 21N',
     uniteId: 'met',
-    zone: 'Guyane française - onshore et offshore.',
+    zone: 'Guyane française - à terre et extraterritorial.',
     definitionProj4: '+proj=utm +zone=21 +ellps=GRS80 +towgs84=2,2,-2,0,0,0,0 +units=m +no_defs',
   },
   '3949': {
@@ -183,7 +158,7 @@ export const GeoSystemes = {
     id: '4171',
     nom: 'RGF93',
     uniteId: 'deg',
-    zone: 'France - onshore et offshore - continentale et Corse.',
+    zone: 'France - à terre et extraterritorial - continentale et Corse.',
     definitionProj4: '+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs',
   },
   '4230': {
@@ -197,7 +172,7 @@ export const GeoSystemes = {
     id: '4275',
     nom: 'NTF (Greenwich)',
     uniteId: 'deg',
-    zone: 'France - onshore - continentale et Corse.',
+    zone: 'France - à terre - continentale et Corse.',
     definitionProj4: '+proj=longlat +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +no_defs',
   },
   '4326': {
@@ -209,30 +184,30 @@ export const GeoSystemes = {
   },
   '4624': {
     id: '4624',
-    nom: 'Guyane Française / RGFG95',
+    nom: 'RGFG95',
     uniteId: 'deg',
-    zone: 'Guyane Française - onshore and offshore.',
+    zone: 'Guyane Française - à terre et extraterritorial.',
     definitionProj4: '+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs ',
   },
   '4807': {
     id: '4807',
     nom: 'NTF (Paris)',
     uniteId: 'gon',
-    zone: 'France - onshore - continentale et Corse.',
+    zone: 'France - à terre - continentale et Corse.',
     definitionProj4: '+proj=longlat +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +no_defs',
   },
   '5490': {
     id: '5490',
-    nom: 'Antilles françaises / UTM zone 20N',
+    nom: 'RGAF09 / UTM zone 20N',
     uniteId: 'met',
-    zone: "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
+    zone: "Antilles françaises à terre et extraterritorial à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
     definitionProj4: '+proj=utm +zone=20 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ',
   },
   '4471': {
     id: '4471',
     nom: 'Mayotte 2004 / UTM zone 38S',
     uniteId: 'met',
-    zone: 'Mayotte - onshore et offshore',
+    zone: 'Mayotte - à terre et extraterritorial',
     definitionProj4: '+proj=utm +zone=38 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ',
   },
   '2975': {
@@ -246,7 +221,7 @@ export const GeoSystemes = {
     id: '4467',
     nom: 'St Pierre et Miquelon / UTM zone 21N',
     uniteId: 'met',
-    zone: 'St Pierre et Miquelon onshore et offshore',
+    zone: 'St Pierre et Miquelon à terre et extraterritorial',
     definitionProj4: '+proj=utm +zone=21 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs',
   },
 } as const satisfies { [key in GeoSystemeId]: GeoSysteme<key> }
