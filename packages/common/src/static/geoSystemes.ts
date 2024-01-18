@@ -1,7 +1,32 @@
-import {z} from 'zod'
+import { z } from 'zod'
 import { UniteId } from './unites'
 
-const IDS = ['2154','27561','27563','27571','27572','27573','2970','2972','32620','32621','32622','32630','3313','3949','4171','4230','4275','4326','4624','4807','5490','4471','2975',] as const
+const IDS = [
+  '2154',
+  '27561',
+  '27563',
+  '27571',
+  '27572',
+  '27573',
+  '2970',
+  '2972',
+  '32620',
+  '32621',
+  '32622',
+  '32630',
+  '3313',
+  '3949',
+  '4171',
+  '4230',
+  '4275',
+  '4326',
+  '4624',
+  '4807',
+  '5490',
+  '4471',
+  '2975',
+  '4467',
+] as const
 export const GEO_SYSTEME_IDS = {
   'RGF93 / Lambert-93': '2154',
   'NTF (Paris) / Lambert Nord France': '27561',
@@ -17,16 +42,19 @@ export const GEO_SYSTEME_IDS = {
   'WGS84 / UTM zone 30N': '32630',
   'RGFG95 / UTM zone 21N': '3313',
   'RGF93 / CC49': '3949',
+  'RGAF09 / UTM zone 20N': '5490',
+  'Mayotte 2004 / UTM zone 38S': '4471',
+  'Réunion ': '2975',
+  'St Pierre et Miquelon': '4467',
+  // marche pas
   RGF93: '4171',
   ED50: '4230',
   'NTF (Greenwich)': '4275',
   WGS84: '4326',
   RGFG95: '4624',
   'NTF (Paris)': '4807',
-  'RGAF09 / UTM zone 20N': '5490',
-  'Mayotte 2004 / UTM zone 38S': '4471',
-  'Réunion ': '2975',
-} as const satisfies Record<string, typeof IDS[number]>
+  // marche pas
+} as const satisfies Record<string, (typeof IDS)[number]>
 
 export interface GeoSysteme<T = GeoSystemeId> {
   id: T
@@ -36,17 +64,26 @@ export interface GeoSysteme<T = GeoSystemeId> {
   definitionProj4: string // https://github.com/josueggh/proj4-list/blob/master/list.js
 }
 
-const GEO_SYSTEME_KEYS = Object.values(GEO_SYSTEME_IDS)
+// https://github.com/MTES-MCT/camino/issues/917
+export const transformableGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975', '4471', '4467'] as const satisfies readonly GeoSystemeId[]
+export const transformableGeoSystemeIdValidator = z.enum(transformableGeoSystemeIds)
+export type TransformableGeoSystemeId = z.infer<typeof transformableGeoSystemeIdValidator>
 
 export const geoSystemeIdValidator = z.enum(IDS)
 export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
 export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => geoSystemeIdValidator.safeParse(entry).success
+// pour les mètres, précision au millimètre
+// pour les degrès, précision à 4 chiffres après la virgule ?
+// liste obligatoire uniquement
+// TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 
+// FIXME l’ordre des points change tout le temps
+// FIXME le nom des colonne doit changer en fonction de l'unité
 export const GeoSystemes = {
   '2154': {
     id: '2154',
-    nom: 'RGF93 / Lambert-93',
+    nom: 'France RGF93 / Lambert-93',
     uniteId: 'met',
     zone: 'France - onshore et offshore - continentale et Corse.',
     definitionProj4: '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
@@ -99,7 +136,7 @@ export const GeoSystemes = {
   },
   '2972': {
     id: '2972',
-    nom: 'RGFG95 / UTM zone 22N',
+    nom: 'Guyane française RGFG95 / UTM zone 22N',
     uniteId: 'met',
     zone: 'Guyane française - onshore et offshore.',
     definitionProj4: '+proj=utm +zone=22 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
@@ -169,16 +206,16 @@ export const GeoSystemes = {
   },
   '4326': {
     id: '4326',
-    nom: 'WGS84',
+    nom: 'Système géodesique mondial / WGS84',
     uniteId: 'deg',
     zone: 'Monde',
     definitionProj4: '+proj=longlat +datum=WGS84 +no_defs',
   },
   '4624': {
     id: '4624',
-    nom: 'RGFG95',
+    nom: 'Guyane Française / RGFG95',
     uniteId: 'deg',
-    zone: 'French Guiana - onshore and offshore.',
+    zone: 'Guyane Française - onshore and offshore.',
     definitionProj4: '+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs ',
   },
   '4807': {
@@ -190,7 +227,7 @@ export const GeoSystemes = {
   },
   '5490': {
     id: '5490',
-    nom: 'RGAF09 / UTM zone 20N',
+    nom: 'Antilles françaises / UTM zone 20N',
     uniteId: 'met',
     zone: "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
     definitionProj4: '+proj=utm +zone=20 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ',
@@ -206,12 +243,20 @@ export const GeoSystemes = {
     id: '2975',
     nom: 'Réunion / UTM zone 40S',
     uniteId: 'met',
-    zone: 'Réuinon',
+    zone: 'Réunion',
     definitionProj4: '+proj=utm +zone=40 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ',
+  },
+  '4467': {
+    id: '4467',
+    nom: 'St Pierre et Miquelon / UTM zone 21N',
+    uniteId: 'met',
+    zone: 'St Pierre et Miquelon onshore et offshore',
+    definitionProj4: '+proj=utm +zone=21 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs',
   },
 } as const satisfies { [key in GeoSystemeId]: GeoSysteme<key> }
 
 export const sortedGeoSystemes = Object.values(GeoSystemes).sort((a, b) => a.nom.localeCompare(b.nom))
+export const transformableGeoSystemes: GeoSysteme<TransformableGeoSystemeId>[] = transformableGeoSystemeIds.map(id => GeoSystemes[id])
 
 export function assertGeoSystemeId(geoSystemeId: string): asserts geoSystemeId is GeoSystemeId {
   if (!Object.values(GEO_SYSTEME_IDS).includes(geoSystemeId)) {

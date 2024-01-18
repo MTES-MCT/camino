@@ -1,4 +1,4 @@
-import { defineComponent, HTMLAttributes, defineAsyncComponent, computed, ref, watch} from 'vue'
+import { defineComponent, HTMLAttributes, defineAsyncComponent, computed, ref, watch } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/titres'
 import { Router } from 'vue-router'
@@ -10,13 +10,14 @@ import { contentTypes } from 'camino-common/src/rest'
 import { indexToLetter } from 'camino-common/src/number'
 import { AsyncData } from '../../api/client-rest'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
-import { GeoSysteme, GeoSystemes, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { GeoSysteme, GeoSystemes, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { ApiClient } from '../../api/api-client'
+import { capitalize } from 'camino-common/src/strings'
 export type TabId = 'carte' | 'points'
 interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
   apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemId'>
-  calculateNeighbours: boolean,
+  calculateNeighbours: boolean
   titreSlug: TitreSlug
   router: Pick<Router, 'push'>
   initTab?: TabId
@@ -61,98 +62,125 @@ const geoJsonToArray = (geojsonMultiPolygon: FeatureMultiPolygon): TableRow<stri
 
   const rows: TableRow<string>[] = []
   geojsonMultiPolygon.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-      topLevel.forEach((secondLevel, secondLevelIndex) =>
-        secondLevel.forEach(([y, x], currentLevelIndex) => {
-          // On ne rajoute pas le dernier point qui est égal au premier du contour...
-          if (geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-            rows.push({
-              id: `${index}`,
-              link: null,
-              columns: {
-                polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
-                nom: { value: indexToLetter(index) },
-                latitude: { value: `${x}` },
-                longitude: { value: `${y}` },
-              },
-            })
-            index++
-          }
-        })
-      )
-      )
-      return rows
+    topLevel.forEach((secondLevel, secondLevelIndex) =>
+      secondLevel.forEach(([y, x], currentLevelIndex) => {
+        // On ne rajoute pas le dernier point qui est égal au premier du contour...
+        if (geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+          rows.push({
+            id: `${index}`,
+            link: null,
+            columns: {
+              polygone: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
+              nom: { value: indexToLetter(index) },
+              latitude: { value: `${x}` },
+              longitude: { value: `${y}` },
+            },
+          })
+          index++
+        }
+      })
+    )
+  )
+
+  return rows
 }
 const TabCaminoTable = defineComponent<Pick<Props, 'geojsonMultiPolygon' | 'titreSlug' | 'apiClient'>>(props => {
-  const currentRows = ref<AsyncData<TableRow<string>[]>>({status: 'LOADING'})
+  const currentRows = ref<AsyncData<TableRow<string>[]>>({ status: 'LOADING' })
 
   watch(
     () => props.geojsonMultiPolygon,
     () => {
-
-      currentRows.value = {status: 'LOADED', value: geoJsonToArray(props.geojsonMultiPolygon)}
-    }, {immediate: true}
+      currentRows.value = { status: 'LOADED', value: geoJsonToArray(props.geojsonMultiPolygon) }
+    },
+    { immediate: true }
   )
 
-
-  const csvContent = computed(() =>{
-    if( currentRows.value.status === 'LOADED'){
+  const csvContent = computed(() => {
+    if (currentRows.value.status === 'LOADED') {
       return encodeURI(
-        `${columns.map(c => c.name).join(';')}\n${currentRows.value.value.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`).join('\n')}`
+        `${columns.map(c => c.name).join(';')}\n${currentRows.value.value
+          .map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.latitude.value};${columns.longitude.value}`)
+          .join('\n')}`
       )
     }
 
-     })
-
-  const rowsToDisplay = computed(() => {
-    if( currentRows.value.status === 'LOADED'){
-    const rows = currentRows.value.value.slice(0, maxRows)
-
-    if (currentRows.value.value.length > maxRows + 1) {
-      rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
-    }
-
-    return rows
-  }
-  return []
+    return ''
   })
 
+  const rowsToDisplay = computed(() => {
+    if (currentRows.value.status === 'LOADED') {
+      const rows = currentRows.value.value.slice(0, maxRows)
+
+      if (currentRows.value.value.length > maxRows + 1) {
+        rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, latitude: { value: '...' }, longitude: { value: '...' } } })
+      }
+
+      return rows
+    }
+
+    return []
+  })
 
   const geoSystemSelected = ref<GeoSysteme | undefined>(GeoSystemes[4326])
   const geoSystemUpdate = async (geoSysteme: GeoSysteme | undefined) => {
     geoSystemSelected.value = geoSysteme
-    if ( geoSysteme !== undefined ){
-    try{
-      currentRows.value= {status: 'LOADING'}
+    if (geoSysteme !== undefined) {
+      try {
+        currentRows.value = { status: 'LOADING' }
 
-      const newGeojson = await props.apiClient.getGeojsonByGeoSystemId(props.geojsonMultiPolygon, geoSysteme.id)
-      currentRows.value = {status: 'LOADED', value: geoJsonToArray(newGeojson)}
-
-
-    } catch(e: any) {
-      console.error('error', e)
-      currentRows.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
+        const newGeojson = await props.apiClient.getGeojsonByGeoSystemId(props.geojsonMultiPolygon, geoSysteme.id)
+        currentRows.value = { status: 'LOADED', value: geoJsonToArray(newGeojson) }
+      } catch (e: any) {
+        console.error('error', e)
+        currentRows.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
       }
-    }}
+    }
   }
 
-  const geoSystemeFiltered = ref<GeoSysteme[]>(sortedGeoSystemes)
+  const geoSystemeFiltered = ref<GeoSysteme[]>(transformableGeoSystemes)
   const geoSystemeOnInput = (search: string) => {
-
     const formatedSearch = search.trim().toLowerCase()
 
-    if(formatedSearch.length === 0){
-      geoSystemeFiltered.value = sortedGeoSystemes
-    }else{
-      geoSystemeFiltered.value = sortedGeoSystemes.filter(({nom, id}) => id.toLowerCase().includes(formatedSearch) || nom.toLowerCase().includes(formatedSearch) || id === geoSystemSelected.value?.id )
+    if (formatedSearch.length === 0) {
+      geoSystemeFiltered.value = transformableGeoSystemes
+    } else {
+      geoSystemeFiltered.value = transformableGeoSystemes.filter(
+        ({ nom, id, zone }) =>
+          id.toLowerCase().includes(formatedSearch) || nom.toLowerCase().includes(formatedSearch) || zone.toLowerCase().includes(formatedSearch) || id === geoSystemSelected.value?.id
+      )
     }
   }
   const overrideItems = [GeoSystemes[4326]]
 
+  const display = (geosystem: GeoSysteme) => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-pl-2w">
+        <span class="fr-text--bold">
+          {capitalize(geosystem.nom)} - ({geosystem.id})
+        </span>
+        <span class="fr-text">{capitalize(geosystem.zone)}</span>
+      </div>
+    )
+  }
+
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TypeAheadSingle overrideItems={overrideItems} props={{items: geoSystemeFiltered.value, itemChipLabel: (item) => item.nom, itemKey: 'id', placeholder: '', minInputLength: 1, onSelectItem: geoSystemUpdate, onInput: geoSystemeOnInput }}/>
+      <TypeAheadSingle
+        overrideItems={overrideItems}
+        props={{
+          items: geoSystemeFiltered.value,
+          itemChipLabel: item => `${item.nom} - (${item.id})`,
+          itemKey: 'id',
+          placeholder: '',
+          minInputLength: 1,
+          onSelectItem: geoSystemUpdate,
+          onInput: geoSystemeOnInput,
+          displayItemInList: display,
+        }}
+      />
       <TableAuto caption="" class="fr-mb-1w" columns={columns} rows={rowsToDisplay.value} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
 
       <DsfrLink
