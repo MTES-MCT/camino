@@ -138,7 +138,7 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
-  '/rest/geojson/:geoSystemeId': {params: {geoSystemeId: geoSystemeIdValidator}, post: {input: featureMultiPolygonValidator, output: featureMultiPolygonValidator}},
+  '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },

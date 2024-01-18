@@ -23,7 +23,7 @@ export interface ApiClient
     ActiviteApiClient,
     EntrepriseApiClient,
     DemarcheApiClient,
-    PerimetreApiClient{
+    PerimetreApiClient {
   uploadTempDocument: (document: File) => Promise<TempDocumentName>
 }
 
