@@ -5,7 +5,6 @@ import { transformableGeoSystemeIdValidator } from 'camino-common/src/static/geo
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery } from './perimetre.queries.js'
 
-// FIXME integration test
 export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
   const geojsonParsed = featureMultiPolygonValidator.safeParse(req.body)

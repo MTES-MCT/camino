@@ -20,7 +20,6 @@ interface Props {
   maxRows: number
 }
 
-// FIXME changer le nom des colonnes en fonction de l'unité
 const columns = (uniteId: GeoSysteme['uniteId'] | undefined): Column<string>[] => {
   if (isNotNullNorUndefined(uniteId)) {
     return [
