@@ -15,7 +15,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   geojsonMultiPolygon: FeatureMultiPolygon
-  apiClient: Pick<PerimetreApiClient, 'getGeojsonByGeoSystemId'>
+  apiClient: Pick<PerimetreApiClient, 'getGeojsonByGeoSystemeId'>
   titreSlug: TitreSlug
   maxRows: number
 }
@@ -110,7 +110,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
       try {
         currentRows.value = { status: 'LOADING' }
 
-        const newGeojson = await props.apiClient.getGeojsonByGeoSystemId(props.geojsonMultiPolygon, geoSysteme.id)
+        const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.geojsonMultiPolygon, geoSysteme.id)
         currentRows.value = { status: 'LOADED', value: geoJsonToArray(newGeojson) }
       } catch (e: any) {
         console.error('error', e)

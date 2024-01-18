@@ -26,9 +26,9 @@ const titreSlug = titreSlugValidator.parse('titre-slug')
 const routerPushAction = action('routerPushAction')
 const deleteEtapeAction = action('deleteEtapeAction')
 const deposeEtapeAction = action('deposeEtapeAction')
-const getGeojsonByGeoSystemIdAction = action('getGeojsonByGeoSystemId')
+const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 
-const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemId'> = {
+const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'> = {
   deleteEtape: etapeId => {
     deleteEtapeAction(etapeId)
 
@@ -40,8 +40,8 @@ const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGe
     return Promise.resolve()
   },
 
-  getGeojsonByGeoSystemId: (geojson, systemId) => {
-    getGeojsonByGeoSystemIdAction(geojson, systemId)
+  getGeojsonByGeoSystemeId: (geojson, systemId) => {
+    getGeojsonByGeoSystemeIdAction(geojson, systemId)
 
     return Promise.resolve(geojson)
   },

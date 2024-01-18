@@ -16,8 +16,8 @@ type Props = {
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & (
-  | { calculateNeighbours: true; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemId'> }
-  | { apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemId'>; calculateNeighbours: false }
+  | { calculateNeighbours: true; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
+  | { apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>; calculateNeighbours: false }
 )
 
 const maxRows = 20

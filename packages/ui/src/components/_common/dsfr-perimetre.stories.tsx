@@ -35,12 +35,12 @@ const geojsonMultiPolygon: FeatureMultiPolygon = {
 }
 
 const pushAction = action('push')
-const getGeojsonByGeoSystemIdAction = action('getGeojsonByGeoSystemId')
-const getTitresWithPerimetreForCarteAction = action('getGeojsonByGeoSystemId')
+const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
+const getTitresWithPerimetreForCarteAction = action('getGeojsonByGeoSystemeId')
 
-const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemId'> = {
-  getGeojsonByGeoSystemId: (geojson, geoSystemeId) => {
-    getGeojsonByGeoSystemIdAction(geojson, geoSystemeId)
+const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> = {
+  getGeojsonByGeoSystemeId: (geojson, geoSystemeId) => {
+    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
 
     return Promise.resolve(geojsonMultiPolygon)
   },

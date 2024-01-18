@@ -48,7 +48,7 @@ type Props = {
     nom: string
     titreStatutId: TitreStatutId
   }
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemId'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'>
   router: Pick<Router, 'push'>
   user: User
   initTab?: TabId
