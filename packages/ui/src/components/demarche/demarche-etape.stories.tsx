@@ -9,8 +9,8 @@ import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
-import { EtapeApiClient } from '../etape/etape-api-client'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
+import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -26,8 +26,9 @@ const titreSlug = titreSlugValidator.parse('titre-slug')
 const routerPushAction = action('routerPushAction')
 const deleteEtapeAction = action('deleteEtapeAction')
 const deposeEtapeAction = action('deposeEtapeAction')
+const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 
-const apiClient: Pick<EtapeApiClient, 'deleteEtape' | 'deposeEtape'> = {
+const apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getGeojsonByGeoSystemeId'> = {
   deleteEtape: etapeId => {
     deleteEtapeAction(etapeId)
 
@@ -37,6 +38,12 @@ const apiClient: Pick<EtapeApiClient, 'deleteEtape' | 'deposeEtape'> = {
     deposeEtapeAction(etapeId)
 
     return Promise.resolve()
+  },
+
+  getGeojsonByGeoSystemeId: (geojson, systemId) => {
+    getGeojsonByGeoSystemeIdAction(geojson, systemId)
+
+    return Promise.resolve(geojson)
   },
 }
 

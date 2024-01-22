@@ -27,7 +27,7 @@ type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
   demarches: TitreGetDemarche[]
   currentDemarcheSlug: DemarcheSlug
-  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche'>
+  apiClient: Pick<ApiClient, 'deleteEtape' | 'deposeEtape' | 'getTitresWithPerimetreForCarte' | 'createDemarche' | 'updateDemarche' | 'deleteDemarche' | 'getGeojsonByGeoSystemeId'>
   demarcheCreatedOrUpdated: (demarcheSlug: DemarcheSlug) => Promise<void>
   demarcheDeleted: () => Promise<void>
   router: Pick<Router, 'push'>
@@ -175,6 +175,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
               class="fr-pt-3w"
               titreSlug={props.titre.slug}
               apiClient={props.apiClient}
+              calculateNeighbours={true}
               geojsonMultiPolygon={perimetre.value.geojsonMultiPolygon}
               router={props.router}
               initTab={props.initTab}

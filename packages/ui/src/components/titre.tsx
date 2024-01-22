@@ -112,6 +112,7 @@ interface Props {
     | 'createDemarche'
     | 'updateDemarche'
     | 'deleteDemarche'
+    | 'getGeojsonByGeoSystemeId'
   >
   router: Pick<Router, 'push' | 'replace'>
   initTab?: TabId

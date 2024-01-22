@@ -36,10 +36,11 @@ export const entreprisesByEtapeIdValidator = z.object({
 export type EntreprisesByEtapeId = z.infer<typeof entreprisesByEtapeIdValidator>
 
 const multipolygonPositionValidator = z.tuple([z.number(), z.number()])
-const multiPolygonValidator = z.object({
+export const multiPolygonValidator = z.object({
   type: z.literal('MultiPolygon'),
   coordinates: z.array(z.array(z.array(multipolygonPositionValidator))),
 })
+export type MultiPolygon = z.infer<typeof multiPolygonValidator>
 
 export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.null() })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
