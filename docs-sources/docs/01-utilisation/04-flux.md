@@ -59,13 +59,13 @@ Les flux GeoJSON de Camino peuvent être affichés dans [QGIS](https://www.qgis.
 
 Les donnés importées sont automatiquement mises à jour à chaque ouverture ou rafraîchissement du projet.
 
-### Import avec le plugin dédié camino-flux-QGIS
 
-Camino dispose d'un plugin dédié pour simplifier l'utilisation des flux GeoJSON.
+Pour récupérer les périmètres et autres informations sur les titres directement dans le logiciel QGIS vous devez aller sur votre page de profil en appuyant sur votre nom en haut à droite de la page.
 
-Les instructions sont disponibles sur cette page : [https://github.com/MTES-MCT/camino-flux-QGIS](https://github.com/MTES-MCT/camino-flux-QGIS).
 
-### Import sans plugin
+Sur votre profil, appuyer sur le bouton « Générer des identifiants pour QGIS »
+
+Vous pouvez alors copier/coller cette URL directement dans QGIS à l’emplacement de l’illustration suivante.
 
 1. Dans le menu _Couches_, sélectionner _Gestionnaire des sources de données_, puis choisir l'option _Vecteur_.
 2. Dans la popup, utiliser les réglages suivants :
@@ -74,6 +74,6 @@ Les instructions sont disponibles sur cette page : [https://github.com/MTES-MCT/
 - encodage : `UTF-8`
 - Protocole :
   - Type : `GeoJSON`
-  - URI : `https://api.camino.beta.gouv.fr/titres?format=geojson` (ou une URL plus spécifique, selon les instructions ci-dessus)
+  - URI : l'URL qui vous venez de copier depuis le menu utilisateur de Camino
 
 ![camino qgis data sources manager](media://flux/camino-qgis-data-source-manager.jpg)
