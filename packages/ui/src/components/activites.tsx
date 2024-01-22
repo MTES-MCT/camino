@@ -14,6 +14,7 @@ import { activitesDownloadFormats, activitesFiltresNames } from 'camino-common/s
 import { ApiClient, apiClient } from '@/api/api-client'
 import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { capitalize } from 'camino-common/src/strings'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -33,6 +34,11 @@ const activitesColonnes = [
   {
     id: 'periode',
     name: 'Période',
+  },
+  {
+    id: 'activite_type',
+    name: 'Type de rapport',
+    noSort: true,
   },
   {
     id: 'statut',
@@ -55,6 +61,7 @@ const activitesLignesBuild = (activites: UiGraphqlActivite[]): TableRow[] =>
         value: activite.titre.titulaires.map(({ nom }) => nom).join(', '),
       },
       annee: { value: activite.annee },
+      activite_type: { value: capitalize(ActivitesTypes[activite.typeId].nom) },
       periode: {
         value: getPeriode(ActivitesTypes[activite.typeId].frequenceId, activite.periodeId),
       },
