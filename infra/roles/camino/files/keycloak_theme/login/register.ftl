@@ -2,6 +2,15 @@
 <#import "register-commons.ftl" as registerCommons>
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('firstName','lastName','email','password','password-confirm'); section>
     <#if section = "form">
+        <#if messagesPerField.existsError('email')>
+          <div class="fr-container">
+            <div class="fr-alert fr-alert--info fr-mt-3w">
+                <h3 class="fr-alert__title">${msg("emailVerifyInstruction1",(register.formData.email!''))}</h3>
+                <p>Si vous pensez avoir déjà créé votre compte sur Camino, utilisez la fonctionnalité "Mot de passe oublié"</p>
+            </div>
+          </div>
+        <#else>
+        
       <main class="fr-pt-md-14v" role="main" id="content">
     <div class="fr-container fr-container--fluid fr-mb-md-14v">
         <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
@@ -58,7 +67,7 @@
                                                     </div>
                                                 </div>
 
-                                                                                                
+
                                                 <div class="fr-fieldset__element">
                                                     <div class="fr-input-group <#if messagesPerField.existsError('email')>fr-input-group--error</#if>" aria-describedby="<#if messagesPerField.existsError('email')>text-input-email-error-desc-error</#if>">
                                                         <label class="fr-label" for="email">
@@ -136,5 +145,6 @@
         </div>
     </div>
 </main>
+      </#if>
     </#if>
 </@layout.registrationLayout>
