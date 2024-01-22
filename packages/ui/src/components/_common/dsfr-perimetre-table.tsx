@@ -88,11 +88,11 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
   const csvContent = computed(() => {
     if (currentRows.value.status === 'LOADED') {
-      return encodeURI(
-        `${columns(geoSystemSelected.value?.uniteId)
-          .map(c => c.name)
-          .join(';')}\n${currentRows.value.value.map(({ columns }) => `${columns.polygone.value};${columns.nom.value};${columns.x.value};${columns.y.value}`).join('\n')}`
-      )
+      const columsToSave = columns(geoSystemSelected.value?.uniteId)
+
+      const values = currentRows.value.value.map(({ columns }) => columsToSave.map(({ id }) => columns[id].value).join(';'))
+
+      return encodeURI(`${columsToSave.map(c => c.name).join(';')}\n${values.join('\n')}`)
     }
 
     return ''
