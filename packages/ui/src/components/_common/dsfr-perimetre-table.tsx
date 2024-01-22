@@ -103,7 +103,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
       const rows = currentRows.value.value.slice(0, props.maxRows)
 
       if (currentRows.value.value.length > props.maxRows + 1) {
-        rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, x: { value: '...' }, y: { value: '...' } } })
+        rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, x: { value: '...' }, y: { value: '...' }, x_deg: { value: '...' }, y_deg: { value: '...' } } })
       }
 
       return rows
