@@ -10,7 +10,7 @@ import { PerimetreApiClient } from '../titre/perimetre-api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/demarche'
 import { TitreSlug } from 'camino-common/src/titres'
 import { capitalize } from 'camino-common/src/strings'
-import { indexToLetter } from 'camino-common/src/number'
+import { indexToLetter, toDegresMinutesSecondes } from 'camino-common/src/number'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
@@ -22,12 +22,17 @@ interface Props {
 
 const columns = (uniteId: GeoSysteme['uniteId'] | undefined): Column<string>[] => {
   if (isNotNullNorUndefined(uniteId)) {
-    return [
+    const alwaysPresentColumns = [
       { id: 'polygone', name: 'Polygone', noSort: true },
       { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
       { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
       { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
     ]
+    if (uniteId === 'deg') {
+      alwaysPresentColumns.push({ id: 'x_deg', name: capitalize(labels[uniteId].x), noSort: true }, { id: 'y_deg', name: capitalize(labels[uniteId].y), noSort: true })
+    }
+
+    return alwaysPresentColumns
   }
 
   return []
@@ -47,6 +52,8 @@ const geoJsonToArray = (geojsonMultiPolygon: FeatureMultiPolygon): TableRow<stri
       secondLevel.forEach(([y, x], currentLevelIndex) => {
         // On ne rajoute pas le dernier point qui est égal au premier du contour...
         if (geojsonMultiPolygon.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+          const x_deg = toDegresMinutesSecondes(x)
+          const y_deg = toDegresMinutesSecondes(y)
           rows.push({
             id: `${index}`,
             link: null,
@@ -55,6 +62,8 @@ const geoJsonToArray = (geojsonMultiPolygon: FeatureMultiPolygon): TableRow<stri
               nom: { value: indexToLetter(index) },
               x: { value: `${x}` },
               y: { value: `${y}` },
+              x_deg: { value: `${x_deg.degres}°${x_deg.minutes}'${x_deg.secondes}` },
+              y_deg: { value: `${y_deg.degres}°${y_deg.minutes}'${y_deg.secondes}` },
             },
           })
           index++
