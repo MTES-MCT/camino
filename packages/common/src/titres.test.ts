@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getMostRecentValueProp, TitrePropTitreEtapeFindDemarcheEtape } from './titres'
+import { getMostRecentEtapeFondamentaleValide, TitrePropTitreEtapeFindDemarcheEtape } from './titres'
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
 describe('getMostRecentValueProp', () => {
@@ -47,39 +47,22 @@ describe('getMostRecentValueProp', () => {
     }
 
     expect(
-      getMostRecentValueProp('titulaires', [
+      getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dpu, dex],
-          demarche_type_id: 'mut',
-          demarche_statut_id: 'acc',
+          ordre: 1
         },
       ])
-    ).toMatchInlineSnapshot(`
-      [
-        {
-          "id": "fr-791652399",
-          "nom": "AMAZONE GOLD",
-          "operateur": false,
-        },
-      ]
-    `)
+    ).toStrictEqual(dpu)
 
     expect(
-      getMostRecentValueProp('titulaires', [
+      getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dex, dpu],
-          demarche_type_id: 'mut',
-          demarche_statut_id: 'acc',
+          ordre: 1
         },
+      
       ])
-    ).toMatchInlineSnapshot(`
-        [
-          {
-            "id": "fr-791652399",
-            "nom": "AMAZONE GOLD",
-            "operateur": false,
-          },
-        ]
-      `)
+    ).toStrictEqual(dpu)
   })
 })

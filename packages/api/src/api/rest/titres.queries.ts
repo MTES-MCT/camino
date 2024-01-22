@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentEtapeFondamentaleValide, titreGetValidator, titreIdOrSlugValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
+import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
 import { Commune } from 'camino-common/src/static/communes.js'
@@ -14,7 +14,7 @@ import { titreReferenceValidator } from 'camino-common/src/titres-references.js'
 import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
-import { getEtapesByDemarcheIdDb, getEtapesByDemarcheIdDbValidator } from './demarches.queries.js'
+import { getEtapesByDemarcheId } from './demarches.queries.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { canReadDemarche } from './permissions/demarches.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
@@ -56,7 +56,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
     const superDemarches: SuperDemarcheTitreGet[] = []
     for (const demarche of demarchesFromDatabase) {
-      const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
+      const etapes = await getEtapesByDemarcheId(pool, demarche.id)
 
       const formatedEtapes: SuperEtapeDemarcheTitreGet[] = []
       for (const etape of etapes) {
@@ -169,18 +169,24 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
-    const perimetre = getMostRecentValueProp('perimetre', superDemarches)
+
+    const latestEtapeFondamentaleValide = getMostRecentEtapeFondamentaleValide(superDemarches)
+
+    let fondamentale: null | DemarcheEtapeFondamentale['fondamentale'] = null
+    if( latestEtapeFondamentaleValide !== null && 'fondamentale' in latestEtapeFondamentaleValide){
+      fondamentale = latestEtapeFondamentaleValide.fondamentale
+    }
     const administrationsLocales = memoize(() => {
       return Promise.resolve(
         getAdministrationsLocales(
-          perimetre?.communes.map(({ id }) => id),
-          perimetre?.secteurs_maritimes
+          fondamentale?.perimetre?.communes.map(({ id }) => id),
+          fondamentale?.perimetre?.secteurs_maritimes
         )
       )
     })
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
-      const titulaires = getMostRecentValueProp('titulaires', superDemarches) ?? []
-      const amodiataires = getMostRecentValueProp('amodiataires', superDemarches) ?? []
+      const titulaires = fondamentale?.titulaires ?? []
+      const amodiataires = fondamentale?.amodiataires ?? []
 
       return Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)])
     })
@@ -223,7 +229,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     let nb_activites_to_do: number | null = null
 
     if (
-      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches, secteursMaritime: perimetre?.secteurs_maritimes ?? [] }) &&
+      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: fondamentale?.perimetre?.communes ?? [], demarches: formattedDemarches, secteursMaritime: fondamentale?.perimetre?.secteurs_maritimes ?? [] }) &&
       (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
       nb_activites_to_do = titre.nb_activites_to_do
@@ -322,4 +328,27 @@ where
     and d.archive is false
 order by
     ordre
+`
+
+
+
+const getTitreByIdOrSlugValidator = z.object({
+   titre_slug: titreIdOrSlugValidator,
+   titre_type_id: titreTypeIdValidator
+   })
+type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>
+
+export const getTitreByIdOrSlug = async (pool: Pool, idOrSlug: TitreIdOrSlug): Promise<z.infer<typeof getTitreByIdOrSlugValidator>> => {
+  return (await dbQueryAndValidate(getTitreByIdOrSlugDb, { idOrSlug }, pool, getTitreByIdOrSlugValidator))[0]
+}
+
+const getTitreByIdOrSlugDb = sql<Redefine<IGetTitreByIdOrSlugDbQuery, { idOrSlug: TitreIdOrSlug }, GetTitreByIdOrSlugValidator>>`
+select
+    slug as titre_slug,
+    type_id as titre_type_id
+from
+    titres
+where (id = $ idOrSlug !
+    or slug = $ idOrSlug !)
+and archive is false
 `

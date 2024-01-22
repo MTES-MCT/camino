@@ -19,3 +19,23 @@ export interface IGetGeojsonByGeoSystemeIdDbQuery {
   result: IGetGeojsonByGeoSystemeIdDbResult;
 }
 
+/** 'GetTitresIntersectionWithGeojsonDb' parameters type */
+export interface IGetTitresIntersectionWithGeojsonDbParams {
+  domaine_id: string;
+  geojson4326_perimetre: string;
+  titre_statut_ids: readonly (string)[];
+}
+
+/** 'GetTitresIntersectionWithGeojsonDb' return type */
+export interface IGetTitresIntersectionWithGeojsonDbResult {
+  nom: string;
+  slug: string;
+  titre_statut_id: string;
+}
+
+/** 'GetTitresIntersectionWithGeojsonDb' query type */
+export interface IGetTitresIntersectionWithGeojsonDbQuery {
+  params: IGetTitresIntersectionWithGeojsonDbParams;
+  result: IGetTitresIntersectionWithGeojsonDbResult;
+}
+

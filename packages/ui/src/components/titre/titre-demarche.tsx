@@ -1,5 +1,5 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
-import { getMostRecentValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
+import { getMostRecentEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
@@ -59,8 +59,19 @@ export const TitreDemarche = defineComponent<Props>(props => {
 
   const demarche = computed<TitreGetDemarche | null>(() => (demarchesAsc.value.length > 0 ? demarchesAsc.value[demarchesAsc.value.length - 1] : null))
 
+  const fondamentale = computed<null | DemarcheEtapeFondamentale['fondamentale']>(() => {
+
+    const etape = getMostRecentEtapeFondamentaleValide(demarchesAsc.value)
+
+    if( etape !== null && 'fondamentale' in etape){
+      return etape.fondamentale
+    }
+    return null
+  })
+
+
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return getMostRecentValueProp('perimetre', demarchesAsc.value)
+    return fondamentale.value?.perimetre ?? null
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -83,15 +94,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValueProp('titulaires', demarchesAsc.value)
+    return fondamentale.value?.titulaires ?? null
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValueProp('amodiataires', demarchesAsc.value)
+    return fondamentale.value?.amodiataires ?? null
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return getMostRecentValueProp('substances', demarchesAsc.value)
+    return fondamentale.value?.substances ?? null
   })
 
   const addDemarchePopup = ref<boolean>(false)

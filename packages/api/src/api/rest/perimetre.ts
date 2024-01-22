@@ -1,21 +1,21 @@
-import { FeatureMultiPolygon, demarcheIdValidator, featureMultiPolygonValidator } from 'camino-common/src/demarche.js'
+import { FeatureMultiPolygon, MultiPolygon, demarcheIdValidator, featureMultiPolygonValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
 import { transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery } from './perimetre.queries.js'
+import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import {z} from 'zod'
-import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { getMostRecentEtapeFondamentaleValide, titreSlugValidator } from 'camino-common/src/titres.js'
 import { titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
-import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles.js'
+import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries.js'
+import { getTitreByIdOrSlug } from './titres.queries.js'
 
 export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -37,7 +37,12 @@ type PerimetreAlertes = Pick<PerimetreInformation, 'alertes' | 'sdomZoneIds'>
 
 // /rest/perimetre/:demarcheId/:etapeTypeId/alertes
 //FIXME à appeler lors de la création d’une nouvelle étape non fondamentale, 
-export const getPerimetreAlertes = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreAlertes>) => {
+export const getPerimetreAlertes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreAlertes>) => {
+  const user = req.auth
+
+  if (!user) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  }else{
   const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
   const etapeTypeIdParsed = etapeTypeIdValidator.safeParse(req.params.etapeTypeId)
 
@@ -50,15 +55,28 @@ export const getPerimetreAlertes = (_pool: Pool) => async (req: CaminoRequest, r
 
 
     //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
+    
+    const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdParsed.data)
 
-    // return sdomZonesInformationsGet(null, etapeTypeId, demarche.titreId, user)
+    const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
 
-      res.json({alertes: []})
+    const etapes = await getEtapesByDemarcheId(pool, demarcheIdParsed.data)
+
+    const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ordre: 1, etapes}])
+
+    if( mostRecentEtapeFondamentale === null){
+      res.json({alertes: [], sdomZoneIds: []})
+    }else{
+      res.json({alertes: await getAlertesSuperposition(mostRecentEtapeFondamentale.geojson4326_perimetre, mostRecentEtapeFondamentale.etape_type_id, titre.titre_type_id, user, pool), sdomZoneIds: mostRecentEtapeFondamentale.sdom_zones ?? [] })
+    }
+
+
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)
     }
   }
+}
 }
 
 // /rest/perimetre/:etapeId
@@ -76,10 +94,10 @@ export const geojsonImport = (_pool: Pool) => async (req: CaminoRequest, res: Cu
 
 }
 
-const superPositionAlerteValidator = z.object({slug: titreSlugValidator, nom: z.string(), titreStatutId: titreStatutIdValidator})
+const superpositionAlerteValidator = z.object({slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator})
 
 const geojsonInformationsValidator = z.object({
-  alertes: z.array(superPositionAlerteValidator),
+  alertes: z.array(superpositionAlerteValidator),
   surface: z.number(),
   sdomZoneIds: z.array(sdomZoneIdValidator),
   foretIds: z.array(foretIdValidator),
@@ -114,9 +132,12 @@ const getGeojsonInformations = async (
 }
 
 
-const getAlertesSupperposition = async (geojson4326_perimetre: any | null,
+const getAlertesSuperposition = async (
+  geojson4326_perimetre: MultiPolygon | null,
   etapeTypeId: EtapeTypeId,
-  titreTypeId: TitreTypeId, user: User) => {
+  titreTypeId: TitreTypeId, 
+  user: User,
+  pool: Pool) => {
    // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
    if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId) && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
 
@@ -127,20 +148,9 @@ const getAlertesSupperposition = async (geojson4326_perimetre: any | null,
     // }
 
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
-      const titres = await titresGet(
-        { statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire], domainesIds: ['m'] },
-        { fields: { points: { id: {} } } },
-        userSuper
-      )
-      const geojsonFeatures = geojsonFeatureMultiPolygon(points)
+      return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre)
 
-      // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect
-      titres
-        ?.filter(t => t.id !== titreId)
-        ?.filter(t => t.points && t.points.length > 2)
-        .filter(t => !!intersect(geojsonFeatures, geojsonFeatureMultiPolygon(t.points ?? [])))
-        .forEach(t =>
-          alertes.push({nom: t.nom, titreStatutId: t.titreStatutId, slug: t.slug})
-        )
   }
+
+  return []
 }

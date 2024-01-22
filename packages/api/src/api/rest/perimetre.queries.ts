@@ -5,7 +5,10 @@ import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { FeatureMultiPolygon, MultiPolygon, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/demarche.js'
-import { IGetGeojsonByGeoSystemeIdDbQuery } from './perimetre.queries.types.js'
+import { IGetGeojsonByGeoSystemeIdDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
+import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
+import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
+import { titreSlugValidator } from 'camino-common/src/titres.js'
 
 const precision = {
   met: 0.001,
@@ -43,9 +46,32 @@ select
 LIMIT 1
 `
 
+const getTitresIntersectionWithGeojsonValidator = z.object({
+  nom: z.string(),
+  slug: titreSlugValidator,
+  titre_statut_id: titreStatutIdValidator
+})
 
-const getGeojsonInfoDb = sql<>`
+type GetTitresIntersectionWithGeojson = z.infer<typeof getTitresIntersectionWithGeojsonValidator>
+export const getTitresIntersectionWithGeojson = async (pool: Pool, geojson4326_perimetre: MultiPolygon) => {
+
+  return dbQueryAndValidate(
+    getTitresIntersectionWithGeojsonDb,
+    { titre_statut_ids: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire], geojson4326_perimetre, domaine_id: DOMAINES_IDS.METAUX },
+    pool,
+    getTitresIntersectionWithGeojsonValidator
+  )
+}
+
+const getTitresIntersectionWithGeojsonDb = sql<Redefine<IGetTitresIntersectionWithGeojsonDbQuery, { titre_statut_ids: TitreStatutId[], geojson4326_perimetre: MultiPolygon, domaine_id: DomaineId }, GetTitresIntersectionWithGeojson>>`
 select
-
-LIMIT 1
+ t.nom,
+ t.slug,
+ t.titre_statut_id
+from titres t
+left join titres_etapes e on t.props_titre_etapes_ids ->> 'points' = e.id
+where t.archive is false
+and t.titre_statut_id in $$titre_statut_ids!
+and ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), e.geojson4326_perimetre) is true
+and right(t.type_id, 1) =  $domaine_id!
 `

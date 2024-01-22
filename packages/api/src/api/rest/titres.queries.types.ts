@@ -51,3 +51,20 @@ export interface IGetDemarchesByTitreIdQueryDbQuery {
   result: IGetDemarchesByTitreIdQueryDbResult;
 }
 
+/** 'GetTitreByIdOrSlugDb' parameters type */
+export interface IGetTitreByIdOrSlugDbParams {
+  idOrSlug: string;
+}
+
+/** 'GetTitreByIdOrSlugDb' return type */
+export interface IGetTitreByIdOrSlugDbResult {
+  titre_slug: string;
+  titre_type_id: string;
+}
+
+/** 'GetTitreByIdOrSlugDb' query type */
+export interface IGetTitreByIdOrSlugDbQuery {
+  params: IGetTitreByIdOrSlugDbParams;
+  result: IGetTitreByIdOrSlugDbResult;
+}
+

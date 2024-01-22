@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheIdOrSlug, multiPolygonValidator } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
@@ -40,9 +40,15 @@ export const getEtapesByDemarcheIdDbValidator = z.object({
   forets: z.array(foretIdValidator).nullable(),
   decisions_annexes_contenu: contenuValidator.nullable(),
   decisions_annexes_sections: z.array(sectionValidator).nullable(),
+  geojson4326_perimetre: multiPolygonValidator.nullable()
 })
+
+export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
+
+    return dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
+} 
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
-export const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
+const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
 select
     e.id,
     e.date,
@@ -64,7 +70,8 @@ select
     e.sdom_zones,
     e.forets,
     e.decisions_annexes_contenu,
-    e.decisions_annexes_sections
+    e.decisions_annexes_sections,
+    ST_AsGeoJSON(e.geojson4326_perimetre)::json as geojson4326_perimetre
 from
     titres_etapes e
 where
