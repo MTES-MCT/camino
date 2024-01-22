@@ -106,61 +106,7 @@ export const pointsImporter = async (
   }
 }
 
-const sdomZonesInformationsGet = async (
-  geojson4326_perimetre: any,
-  etapeTypeId: EtapeTypeId,
-  user: User
-): Promise<IPerimetreInformations> => {
-  const etapeType = EtapesTypes[etapeTypeId]
-  // si c’est une étape fondamentale on récupère les informations directement sur l’étape
-  const points = etapeType.fondamentale ? etapePoints : titrePoints
-  const zones = etapeType.fondamentale ? etape.sdomZones : titreSdomZones
 
-  const alertes: IPerimetreAlerte[] = []
-
-  // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
-  if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
-    const zoneId = zones.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
-    if (zoneId) {
-      alertes.push({
-        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`,
-      })
-    }
-
-    if ((isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && points?.length > 2) {
-      // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
-      const titres = await titresGet(
-        { statutsIds: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire], domainesIds: ['m'] },
-        { fields: { points: { id: {} } } },
-        userSuper
-      )
-      const geojsonFeatures = geojsonFeatureMultiPolygon(points)
-
-      // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect
-      titres
-        ?.filter(t => t.id !== titreId)
-        ?.filter(t => t.points && t.points.length > 2)
-        .filter(t => !!intersect(geojsonFeatures, geojsonFeatureMultiPolygon(t.points ?? [])))
-        .forEach(t =>
-          alertes.push({
-            message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titreStatutId) ? TitresStatuts[t.titreStatutId].nom : ''} » est superposé à ce titre`,
-            url: `/titres/${t.slug}`,
-          })
-        )
-    }
-  }
-
-  if (!points || points.length < 3) {
-    return { surface: 0, documentTypeIds: [], alertes }
-  }
-  const geojsonFeatures = geojsonFeatureMultiPolygon(points as ITitrePoint[])
-
-  const surface = await geojsonSurface(geojsonFeatures as Feature)
-
-  const documentTypeIds = documentTypeIdsBySdomZonesGet(etapeSdomZones, titreTypeId, demarcheTypeId, etapeTypeId)
-
-  return { surface, documentTypeIds, alertes }
-}
 
 export const getSDOMZoneByPoints = async (demarcheId: DemarcheId, points: ITitrePoint[] | null | undefined): Promise<{ sdomZones: SDOMZoneId[]; titreEtapePoints: ITitrePoint[] }> => {
   const sdomZones: SDOMZoneId[] = []
@@ -178,39 +124,6 @@ export const getSDOMZoneByPoints = async (demarcheId: DemarcheId, points: ITitre
   }
 
   return { sdomZones, titreEtapePoints }
-}
-
-export const perimetreInformations = async (
-  {
-    demarcheId,
-    etapeTypeId,
-  }: {
-    demarcheId: DemarcheId
-    etapeTypeId: EtapeTypeId
-  },
-  { user }: Context
-): Promise<IPerimetreInformations & { points: ITitrePoint[] }> => {
-  try {
-    if (!user) {
-      throw new Error('droits insuffisants')
-    }
-
-    const demarche = await titreDemarcheGet(demarcheId, { fields: { id: {} } }, userSuper)
-
-    if (!demarche) {
-      throw new Error('droits insuffisants')
-    }
-
-    //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
-
-    return sdomZonesInformationsGet(null, etapeTypeId, demarche.titreId, user)
-
-
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
 }
 
 export const titreEtapePerimetreInformations = async (

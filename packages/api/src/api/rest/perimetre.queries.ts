@@ -42,3 +42,10 @@ select
     ST_AsGeoJSON (ST_Multi (ST_ReducePrecision (ST_Transform (ST_GeomFromGeoJSON ($ geojson !::text), $ geoSystemeId !::integer), $ precision !)))::json as geojson
 LIMIT 1
 `
+
+
+const getGeojsonInfoDb = sql<>`
+select
+
+LIMIT 1
+`

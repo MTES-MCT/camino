@@ -129,11 +129,12 @@ const actions = {
       commit('heritageSet', { etape: newEtape })
       await dispatch('documentInit', state.element.documents)
 
-      const { alertes } = await perimetreInformations({
-        points: [],
-        demarcheId: state.metas.demarche.id,
-        etapeTypeId,
-      })
+      //FIXME maintenant c’est getPerimetreAlertes
+      const alertes = []
+      // const { alertes } = await perimetreInformations({
+      //   demarcheId: state.metas.demarche.id,
+      //   etapeTypeId,
+      // })
       commit('metasSet', {
         alertes,
       })
