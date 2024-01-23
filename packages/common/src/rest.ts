@@ -74,6 +74,7 @@ const IDS = [
   '/rest/etapes/:etapeId/depot',
   '/rest/activites/:activiteId',
   '/rest/geojson/:geoSystemeId',
+  '/rest/geojson/import/:geosystemeId',
   '/rest/communes',
   '/deconnecter',
   '/changerMotDePasse',
@@ -139,6 +140,8 @@ export const CaminoRestRoutes = {
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
   '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
+  //FIXME ça pourrait être une featureCollection
+  '/rest/geojson/import/:geosystemeId': {params: {geosystemeId: geoSystemeIdValidator}, post: {input: z.any() }, output: featureMultiPolygonValidator}, 
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },

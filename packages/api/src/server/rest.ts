@@ -46,7 +46,7 @@ import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
-import { getGeojsonByGeoSystemeId } from '../api/rest/perimetre.js'
+import { geojsonImport, getGeojsonByGeoSystemeId } from '../api/rest/perimetre.js'
 
 interface IRestResolverResult {
   nom: string
@@ -140,6 +140,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/:geoSystemeId': { post: getGeojsonByGeoSystemeId },
+  '/rest/geojson/import/:geosystemeId': {post: geojsonImport},
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
 } as const
