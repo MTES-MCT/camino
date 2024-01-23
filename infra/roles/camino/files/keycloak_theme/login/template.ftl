@@ -59,20 +59,17 @@
             </div>
         </header>
       <div id="kc-content">
-        <div id="kc-content-wrapper">
+        <div id="kc-content-wrapper" class="fr-container">
 
           <#-- App-initiated actions should not see warning messages about the need to complete the action -->
           <#-- during login.                                                                               -->
           
           <#if displayMessage && message?has_content && (message.type != 'warning' || !isAppInitiatedAction??)>
-            <div class="fr-container">
                 <div class="fr-alert fr-alert--${message.type} fr-mt-3w">
                     <h3 class="fr-alert__title">${kcSanitize(message.summary)?no_esc}</h3>
                 </div>
-            </div>
           </#if>
-
-          <#nested "form">
+            <#nested "form">
         </div>
       </div>
 

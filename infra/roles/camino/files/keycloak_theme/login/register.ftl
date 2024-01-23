@@ -3,12 +3,10 @@
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('firstName','lastName','email','password','password-confirm'); section>
     <#if section = "form">
         <#if messagesPerField.existsError('email')>
-          <div class="fr-container">
             <div class="fr-alert fr-alert--info fr-mt-3w">
                 <h3 class="fr-alert__title">${msg("emailVerifyInstruction1",(register.formData.email!''))}</h3>
                 <p>Si vous pensez avoir déjà créé votre compte sur Camino, utilisez la fonctionnalité "Mot de passe oublié"</p>
             </div>
-          </div>
         <#else>
         
       <main class="fr-pt-md-14v" role="main" id="content">
