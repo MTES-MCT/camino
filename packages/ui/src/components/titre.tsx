@@ -4,7 +4,7 @@ import { LoadingElement } from './_ui/functional-loader'
 import { DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { AsyncData } from '@/api/client-rest'
 import { useStore } from 'vuex'
-import { User, isEntrepriseOrBureauDEtude, isSuper } from 'camino-common/src/roles'
+import { User, isAdministration, isEntrepriseOrBureauDEtude, isSuper } from 'camino-common/src/roles'
 import { capitalize } from 'camino-common/src/strings'
 import { TitresTypes } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
@@ -396,17 +396,7 @@ export const PureTitre = defineComponent<Props>(props => {
               ) : null}
               {showActivitesLink.value && isNotNullNorUndefined(titre.nb_activites_to_do) ? (
                 <>
-                  {titre.nb_activites_to_do === 0 ? (
-                    <DsfrLink
-                      disabled={false}
-                      icon={null}
-                      class="fr-mt-2w"
-                      title="Consulter les rapports d'activités"
-                      label="Consulter les rapports d'activités"
-                      buttonType="secondary"
-                      to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
-                    />
-                  ) : (
+                  {titre.nb_activites_to_do > 0 ? (
                     <Alert
                       class="fr-mt-2w"
                       small={true}
@@ -423,7 +413,18 @@ export const PureTitre = defineComponent<Props>(props => {
                         </>
                       }
                     />
-                  )}
+                  ) : null}
+                  {titre.nb_activites_to_do === 0 || isAdministration(props.user) || isSuper(props.user) ? (
+                    <DsfrLink
+                      disabled={false}
+                      icon={null}
+                      class="fr-mt-2w"
+                      title="Consulter les rapports d'activités"
+                      label="Consulter les rapports d'activités"
+                      buttonType="secondary"
+                      to={{ name: 'activites', query: { [caminoFiltres.titresIds.id]: titre.id, ...activitesSort } }}
+                    />
+                  ) : null}
                 </>
               ) : null}
               {titreLinkFormTitre.value !== null ? <TitresLinkForm user={props.user} titre={titreLinkFormTitre.value} apiClient={props.apiClient} /> : null}
