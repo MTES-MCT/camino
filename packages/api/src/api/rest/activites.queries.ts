@@ -32,7 +32,7 @@ import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titr
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
 import { ACTIVITES_STATUTS_IDS, ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { CaminoDate, getCurrent } from 'camino-common/src/date.js'
-import { titreIdValidator } from 'camino-common/src/titres.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'

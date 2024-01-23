@@ -1,7 +1,7 @@
 import { DisplayTitre, PureQuickAccessTitre } from './quick-access-titre'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {

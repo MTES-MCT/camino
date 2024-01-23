@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {

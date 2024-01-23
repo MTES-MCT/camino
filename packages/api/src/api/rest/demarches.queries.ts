@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug, multiPolygonValidator } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
@@ -17,6 +17,7 @@ import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
+import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
 
 export const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,

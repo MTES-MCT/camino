@@ -9,7 +9,7 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
 import { Feature } from 'geojson'
 import { CommuneId } from 'camino-common/src/static/communes.js'
-import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/demarche.js'
+import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 // convertit des points

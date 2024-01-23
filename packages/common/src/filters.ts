@@ -7,7 +7,7 @@ import { SubstancesLegales, substanceLegaleIdValidator } from './static/substanc
 import { domaineIdValidator, sortedDomaines } from './static/domaines.js'
 import { titresStatutsArray, titreStatutIdValidator } from './static/titresStatuts.js'
 import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from './static/titresTypesTypes.js'
-import { titreIdValidator } from './titres.js'
+import { titreIdValidator } from './validators/titres.js'
 import { z, ZodType } from 'zod'
 import { entrepriseIdValidator, Entreprise } from './entreprise.js'
 import { activiteTypeIdValidator, sortedActivitesTypes } from './static/activitesTypes.js'

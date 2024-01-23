@@ -1,21 +1,20 @@
 import { defineComponent, HTMLAttributes, defineAsyncComponent } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
-import { TitreSlug } from 'camino-common/src/titres'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
-import { FeatureMultiPolygon } from 'camino-common/src/demarche'
+import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable } from './dsfr-perimetre-table'
 export type TabId = 'carte' | 'points'
 type Props = {
-  geojson4326_perimetre: FeatureMultiPolygon
+  perimetre: {geojson4326_perimetre: FeatureMultiPolygon, geojson4326_points: FeatureCollectionPoints | null}
   titreSlug: TitreSlug
-  router: Pick<Router, 'push'>
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & (
-  | { calculateNeighbours: true; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
+  | { calculateNeighbours: true; router: Pick<Router, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeojsonByGeoSystemeId'> }
   | { apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>; calculateNeighbours: false }
 )
 
@@ -37,7 +36,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable geojson4326_perimetre={props.geojson4326_perimetre} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable perimetre={props.perimetre} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 
@@ -45,7 +44,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 })
 
 const TabCaminoMap = defineComponent<Props>(props => {
-  const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug } : null
+  const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 
   const DemarcheMap = defineAsyncComponent(async () => {
     const { DemarcheMap } = await import('../demarche/demarche-map')
@@ -54,11 +53,11 @@ const TabCaminoMap = defineComponent<Props>(props => {
   })
 
   // FIXME normalement ici on doit juste retourner le geojson4326_perimetre à la fin
-  const geojson = { type: 'FeatureCollection', properties: null, features: [props.geojson4326_perimetre] }
+  const geojson = { type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre] }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap geojson4326_perimetre={props.geojson4326_perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} router={props.router} />
+      <DemarcheMap perimetre={props.perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
       <DsfrLink
         style={{ alignSelf: 'end' }}
         href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson))}`}
@@ -73,7 +72,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['geojson4326_perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['geojson4326_perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']

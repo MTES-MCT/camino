@@ -6,7 +6,7 @@ import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { Router } from 'vue-router'
 import { ApiClient } from '@/api/api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { TitreGet, TitreIdOrSlug, TitreLink, demarcheGetValidator, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
+import { TitreGet, TitreLink, demarcheGetValidator, titreGetValidator } from 'camino-common/src/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre } from './titre/titres-link-form-api-client'
@@ -14,6 +14,7 @@ import { demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/de
 import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { titreIdValidator, titreSlugValidator, TitreIdOrSlug } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre',

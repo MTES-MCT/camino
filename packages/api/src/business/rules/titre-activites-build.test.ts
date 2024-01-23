@@ -6,7 +6,7 @@ import { describe, expect, test } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes.js'
-import { titreIdValidator } from 'camino-common/src/titres.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 
 const titreId = titreIdValidator.parse('titre-id')
 

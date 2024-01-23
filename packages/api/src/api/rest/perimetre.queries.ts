@@ -4,11 +4,16 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import { FeatureMultiPolygon, MultiPolygon, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/demarche.js'
-import { IGetGeojsonByGeoSystemeIdDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
+import { FeatureMultiPolygon, MultiPolygon, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { communeIdValidator } from 'camino-common/src/static/communes.js'
+import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
+import { foretIdValidator } from 'camino-common/src/static/forets.js'
+import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const precision = {
   met: 0.001,
@@ -16,13 +21,13 @@ const precision = {
   gon: 0.0001,
 } as const satisfies Record<GeoSysteme['uniteId'], number>
 
-export const getGeojsonByGeoSystemeId = async (pool: Pool, geoSystemeId: TransformableGeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
-  if (geoSystemeId === '4326') {
+export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: TransformableGeoSystemeId, toGeoSystemeId: TransformableGeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
+  if (fromGeoSystemeId === toGeoSystemeId) {
     return geojson
   }
   const result = await dbQueryAndValidate(
     getGeojsonByGeoSystemeIdDb,
-    { geoSystemeId, geojson: JSON.stringify(geojson.geometry), precision: precision[GeoSystemes[geoSystemeId].uniteId] },
+    { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(geojson.geometry), precision: precision[GeoSystemes[toGeoSystemeId].uniteId] },
     pool,
     z.object({ geojson: multiPolygonValidator })
   )
@@ -30,19 +35,18 @@ export const getGeojsonByGeoSystemeId = async (pool: Pool, geoSystemeId: Transfo
   if (result.length === 1) {
     const feature: FeatureMultiPolygon = {
       type: 'Feature',
-      properties: null,
+      properties: {},
       geometry: result[0].geojson,
     }
 
     return featureMultiPolygonValidator.parse(feature)
   }
-  throw new Error(`Impossible de convertir le geojson vers le systeme ${geoSystemeId}`)
+  throw new Error(`Impossible de convertir le geojson vers le systeme ${toGeoSystemeId}`)
 }
 
-// ST_ReducePrecision change de Multipolygon à Polygon :scream:
-const getGeojsonByGeoSystemeIdDb = sql<Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { geoSystemeId: TransformableGeoSystemeId; geojson: string; precision: number }, { geojson: MultiPolygon }>>`
+const getGeojsonByGeoSystemeIdDb = sql<Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: TransformableGeoSystemeId; toGeoSystemeId: TransformableGeoSystemeId; geojson: string; precision: number }, { geojson: MultiPolygon }>>`
 select
-    ST_AsGeoJSON (ST_Multi (ST_ReducePrecision (ST_Transform (ST_GeomFromGeoJSON ($ geojson !::text), $ geoSystemeId !::integer), $ precision !)))::json as geojson
+    ST_AsGeoJSON (ST_Multi (ST_ReducePrecision (ST_Transform (ST_SetSRID(ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer), $ precision !)))::json as geojson
 LIMIT 1
 `
 
@@ -74,4 +78,42 @@ where t.archive is false
 and t.titre_statut_id in $$titre_statut_ids!
 and ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), e.geojson4326_perimetre) is true
 and right(t.type_id, 1) =  $domaine_id!
+`
+
+
+export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: MultiPolygon): Promise<GetGeojsonInformation> => {
+const result =await dbQueryAndValidate(getGeojsonInformationDb, {geojson4326_perimetre}, pool, getGeojsonInformationValidator)
+if (result.length !== 1) {
+  throw new Error('On veut un seul résultat')
+}
+  return result[0]
+}
+
+const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
+  if (isNullOrUndefined(val)) {
+      return [];
+  }
+  return val;
+}
+const getGeojsonInformationValidator = z.object({
+  surface: z.number(),
+  sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
+  forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
+  communes: z.array(z.object({id: communeIdValidator, nom: z.string()})).nullable().transform(nullToEmptyArray),
+  secteurs: z.array(secteurMaritimeValidator).nullable().transform(nullToEmptyArray)
+})
+type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
+const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformation>>`
+select (
+  select json_agg(sdom.id) as sdom
+  from sdom_zones_postgis sdom 
+  where ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), sdom.geometry) is true
+  ) as sdom,
+(select json_agg(c) as communes from communes_postgis commune join communes c on c.id = commune.id  where ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), commune.geometry) is true
+) as communes,
+(select json_agg(foret.id) as forets from forets_postgis foret  where ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), foret.geometry) is true
+) as forets,
+(select json_agg(secteur.id) as secteurs from secteurs_maritime_postgis secteur  where ST_INTERSECTS(ST_GeomFromGeoJSON($geojson4326_perimetre!), secteur.geometry) is true
+) as secteurs,
+(select ST_AREA(ST_GeomFromGeoJSON($geojson4326_perimetre!)))as surface
 `

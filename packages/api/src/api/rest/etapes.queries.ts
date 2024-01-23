@@ -5,8 +5,9 @@ import { z } from "zod"
 import { Redefine, dbQueryAndValidate } from "../../pg-database.js"
 import { sql } from "@pgtyped/runtime"
 import { IGetEtapeByIdDbQuery } from "./etapes.queries.types.js"
-import { demarcheIdValidator, multiPolygonValidator } from "camino-common/src/demarche.js"
+import { demarcheIdValidator } from "camino-common/src/demarche.js"
 import { sdomZoneIdValidator } from "camino-common/src/static/sdom.js"
+import { multiPolygonValidator } from "camino-common/src/perimetre.js"
 
 
 const getEtapeByIdValidator = z.object({

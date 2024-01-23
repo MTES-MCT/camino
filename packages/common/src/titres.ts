@@ -8,16 +8,7 @@ import { administrationIdValidator } from './static/administrations.js'
 import { DemarcheEtape, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheEtapeValidator, demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
 import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
-
-export const titreIdValidator = z.string().brand<'TitreId'>()
-export type TitreId = z.infer<typeof titreIdValidator>
-
-export const titreSlugValidator = z.string().brand<'TitreSlug'>()
-export type TitreSlug = z.infer<typeof titreSlugValidator>
-
-export const titreIdOrSlugValidator = z.union([titreSlugValidator, titreIdValidator])
-export type TitreIdOrSlug = z.infer<typeof titreIdOrSlugValidator>
+import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,

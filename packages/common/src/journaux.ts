@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { titreIdValidator } from './titres'
+import { titreIdValidator } from './validators/titres'
 
 const journauxQueryParamsValidator = z.object({
   page: z.number(),

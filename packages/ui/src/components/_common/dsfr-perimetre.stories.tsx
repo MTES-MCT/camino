@@ -2,10 +2,10 @@ import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { MapPattern } from '../_map/pattern'
 import { DsfrPerimetre } from './dsfr-perimetre'
-import { titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
+import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
-import { FeatureMultiPolygon } from 'camino-common/src/demarche'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
@@ -17,7 +17,7 @@ export default meta
 
 const geojson4326_perimetre: FeatureMultiPolygon = {
   type: 'Feature',
-  properties: null,
+  properties: {},
   geometry: {
     type: 'MultiPolygon',
     coordinates: [

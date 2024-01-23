@@ -1,10 +1,11 @@
 import { TitresLinkForm, Props } from './titres-link-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { TitreLink, TitreLinks, titreIdValidator } from 'camino-common/src/titres'
+import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCaminoDate } from 'camino-common/src/date'
 import { vueRouter } from 'storybook-vue3-router'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLinkForm',

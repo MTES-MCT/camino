@@ -3,10 +3,10 @@ import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpe
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
-import { FeatureMultiPolygon } from 'camino-common/src/demarche'
+import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { TitreSlug } from 'camino-common/src/titres'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreWithPoint } from '../titres/mapUtil'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
@@ -23,15 +23,17 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  geojson4326_perimetre: FeatureMultiPolygon
+  perimetre: {geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints | null
+  }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
   neighbours: {
     apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'>
     titreSlug: TitreSlug
+    router: Pick<Router, 'push'>
   } | null
-  router: Pick<Router, 'push'>
 }
 
 type TitreValideProperties = Pick<TitreWithPoint, 'nom' | 'slug' | 'typeId' | 'titreStatutId'> & { domaineColor: string }
@@ -196,7 +198,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
       'text-color': '#ffffff',
     },
     layout: {
-      'text-field': ['get', 'pointNumber'],
+      'text-field': ['get', 'nom'],
       'text-allow-overlap': false,
     },
   },
@@ -222,6 +224,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   },
 }
 
+
 export const DemarcheMap = defineComponent<Props>(props => {
   const mapRef = ref<HTMLDivElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
@@ -240,17 +243,23 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  const points = computed<{
-    type: 'FeatureCollection'
-    features: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[]
-  }>(() => {
-    const currentPoints: { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: { pointNumber: string; latitude: string; longitude: string } }[] = []
+  // FIXME tests avec points customs
+  const points = computed<FeatureCollectionPoints>(() => {
+    if (props.perimetre.geojson4326_points !== null) {
+      return  {
+        type: 'FeatureCollection',
+        features: props.perimetre.geojson4326_points.features.map(feature => {
+          return {...feature, properties: {...feature.properties, latitude: feature.geometry.coordinates[1], longitude:feature.geometry.coordinates[0] }}
+        })
+      }
+    } else {
+    const currentPoints: (FeatureCollectionPoints['features'][0] & {properties: {latitude: string; longitude: string}})[] = []
     let index = 0
-    props.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
       topLevel.forEach((secondLevel, secondLevelIndex) =>
         secondLevel.forEach(([x, y], currentLevelIndex) => {
           // On ne rajoute pas le dernier point qui est égal au premier du contour...
-          if (props.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+          if (props.perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
             currentPoints.push({
               type: 'Feature',
               geometry: {
@@ -258,7 +267,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
                 coordinates: [x, y],
               },
               properties: {
-                pointNumber: `${indexToLetter(index)}`,
+                nom: `${indexToLetter(index)}`,
                 latitude: `${y}`,
                 longitude: `${x}`,
               },
@@ -273,17 +282,17 @@ export const DemarcheMap = defineComponent<Props>(props => {
       type: 'FeatureCollection',
       features: currentPoints,
     }
+  }
   })
 
   watch(
-    () => props.geojson4326_perimetre,
+    () => props.perimetre,
     () => {
       const bounds = new LngLatBounds()
-      // FIXME on a problement une featureCollection avant la geometry
-      props.geojson4326_perimetre.geometry.coordinates.forEach(top => {
+      props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
         top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
       })
-      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.geojson4326_perimetre)
+      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
 
       map.value?.fitBounds(bounds, { padding: 50 })
@@ -314,7 +323,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           type: 'FeatureCollection',
           features: res.elements
             .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
-            .filter(titreValide => isNotNullNorUndefined(titreValide.geojson4326_perimetre))
+            .filter(titreValide => isNotNullNorUndefined(titreValide.geojson4326Perimetre))
             .map(titreValide => {
               const properties: TitreValideProperties = {
                 slug: titreValide.slug,
@@ -325,7 +334,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
               }
 
               // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-              return { ...titreValide.geojson4326_perimetre!, properties }
+              return { ...titreValide.geojson4326Perimetre!, properties }
             }),
         })
       } catch (e) {
@@ -336,8 +345,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
   onMounted(() => {
     const bounds = new LngLatBounds()
-    // FIXME featuleCollection avant geometry
-    props.geojson4326_perimetre.geometry.coordinates.forEach(top => {
+    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
       top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
     })
 
@@ -349,7 +357,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
         ...staticOverlayLayersSourceSpecification,
         [contoursSourceName]: {
           type: 'geojson',
-          data: props.geojson4326_perimetre,
+          data: props.perimetre.geojson4326_perimetre,
         },
         [pointsSourceName]: {
           type: 'geojson',
@@ -419,6 +427,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
       mapLibre.on('click', contourPointsName, e => {
         if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          console.log(e.features, 'bite')
           new Popup({ closeButton: false, maxWidth: '500' })
             .setLngLat(e.lngLat)
             .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div></div>`)
@@ -446,7 +455,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       mapLibre.on('click', titresValidesFillName, e => {
         if (isNotNullNorUndefinedNorEmpty(e.features)) {
           const titreProperties = e.features[0].properties as TitreValideProperties
-          props.router.push({ name: 'titre', params: { id: titreProperties.slug } })
+          props.neighbours?.router.push({ name: 'titre', params: { id: titreProperties.slug } })
         }
       })
     }
@@ -562,4 +571,4 @@ const LayersControl: FunctionalComponent<{
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['geojson4326_perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router']
+DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router']

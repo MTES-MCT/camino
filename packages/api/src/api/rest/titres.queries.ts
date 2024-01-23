@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentEtapeFondamentaleValide, titreGetValidator, titreIdOrSlugValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche,  getMostRecentEtapeFondamentaleValide, titreGetValidator  } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
@@ -36,6 +36,7 @@ import { EtapeDocument } from 'camino-common/src/etape.js'
 import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
+import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId, titreIdOrSlugValidator } from 'camino-common/src/validators/titres.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }

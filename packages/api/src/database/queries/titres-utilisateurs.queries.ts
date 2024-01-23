@@ -5,7 +5,7 @@ import { IGetTitreUtilisateurDbQuery } from './titres-utilisateurs.queries.types
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
-import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { UtilisateurId, utilisateurIdValidator } from 'camino-common/src/roles.js'
 
 export const getTitreUtilisateur = async (pool: Pool, titreId: TitreId, userId: UtilisateurId): Promise<boolean> => {

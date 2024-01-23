@@ -2,6 +2,9 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { PointsImportPopup } from './points-import-popup'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { ApiClient } from '@/api/api-client'
+import { GeojsonInformations } from 'camino-common/src/perimetre'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPoint',
@@ -10,10 +13,30 @@ const meta: Meta = {
 export default meta
 
 const close = action('close')
-const importAction = action('import')
+const geojsonImportAction = action('geojsonImport')
+const geojsonImport = action('geojsonImport')
+const resultAction = action('resultAction')
 
-const pointsImport = async (file: File, geoSystemeId: GeoSystemeId) => {
-  importAction(file, geoSystemeId)
+
+const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'> = {
+geojsonImport(body, geoSystemeId) {
+  geojsonImportAction(body, geoSystemeId)
+  const result: GeojsonInformations = {
+    alertes: [],
+    communes: [],
+    foretIds: [], 
+    geojson4326_perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[12, 12]]]]}},
+    surface: 9,
+    geojson4326_points: null,
+    sdomZoneIds: [],
+    secteurMaritimeIds: []
+  }
+  return Promise.resolve(result)
+},
+uploadTempDocument(document) {
+  geojsonImport(document)
+  return Promise.resolve(tempDocumentNameValidator.parse('name'))
+},
 }
 
-export const Default: StoryFn = () => <PointsImportPopup close={close} pointsImport={pointsImport} />
+export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} etapeTypeId='mfr' titreTypeId='arm' />

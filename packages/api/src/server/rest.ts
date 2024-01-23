@@ -140,7 +140,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/:geoSystemeId': { post: getGeojsonByGeoSystemeId },
-  '/rest/geojson/import/:geosystemeId': {post: geojsonImport},
+  '/rest/geojson/import/:geoSystemeId': {post: geojsonImport},
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
 } as const

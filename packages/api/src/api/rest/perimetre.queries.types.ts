@@ -3,9 +3,10 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 
 /** 'GetGeojsonByGeoSystemeIdDb' parameters type */
 export interface IGetGeojsonByGeoSystemeIdDbParams {
+  fromGeoSystemeId: number;
   geojson: string;
-  geoSystemeId: number;
   precision: number;
+  toGeoSystemeId: number;
 }
 
 /** 'GetGeojsonByGeoSystemeIdDb' return type */
@@ -37,5 +38,25 @@ export interface IGetTitresIntersectionWithGeojsonDbResult {
 export interface IGetTitresIntersectionWithGeojsonDbQuery {
   params: IGetTitresIntersectionWithGeojsonDbParams;
   result: IGetTitresIntersectionWithGeojsonDbResult;
+}
+
+/** 'GetGeojsonInformationDb' parameters type */
+export interface IGetGeojsonInformationDbParams {
+  geojson4326_perimetre: string;
+}
+
+/** 'GetGeojsonInformationDb' return type */
+export interface IGetGeojsonInformationDbResult {
+  communes: Json | null;
+  forets: Json | null;
+  sdom: Json | null;
+  secteurs: Json | null;
+  surface: number | null;
+}
+
+/** 'GetGeojsonInformationDb' query type */
+export interface IGetGeojsonInformationDbQuery {
+  params: IGetGeojsonInformationDbParams;
+  result: IGetGeojsonInformationDbResult;
 }
 

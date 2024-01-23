@@ -1,7 +1,8 @@
 import { toCaminoDate, toCaminoAnnee } from 'camino-common/src/date'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CommonTitreAdministration, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres'
+import { CommonTitreAdministration } from 'camino-common/src/titres'
+import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 
 export const titresDreal: CommonTitreAdministration[] = [
   {
