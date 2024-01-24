@@ -12,7 +12,7 @@ import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
 import { DemarcheEtape as CommonDemarcheEtape, EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
-import { TitreSlug } from 'camino-common/src/titres'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -245,8 +245,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreSlug={props.titre.slug}
           apiClient={props.apiClient}
           calculateNeighbours={false}
-          geojson4326_perimetre={props.etape.fondamentale.perimetre.geojson4326_perimetre}
-          router={props.router}
+          perimetre={{geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre, geojson4326_points: props.etape.fondamentale.perimetre.geojson4326_points}}
         />
       ) : null}
 

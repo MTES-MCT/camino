@@ -2,7 +2,8 @@ import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
 import { HTMLAttributes, computed, defineComponent } from 'vue'
 import { HeritageProp } from 'camino-common/src/etape'
-import { EtapeHeritageProps, EtapeHeritage } from './heritage-edit.types'
+import { EtapeHeritage } from './heritage-edit.types'
+import { EtapeHeritageProps } from 'camino-common/src/heritage'
 
 type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   prop: HeritageProp<T>

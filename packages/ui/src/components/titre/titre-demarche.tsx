@@ -187,7 +187,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
               titreSlug={props.titre.slug}
               apiClient={props.apiClient}
               calculateNeighbours={true}
-              geojson4326_perimetre={perimetre.value.geojson4326_perimetre}
+              perimetre={{geojson4326_perimetre: perimetre.value.geojson4326_perimetre, geojson4326_points: perimetre.value.geojson4326_points}}
               router={props.router}
               initTab={props.initTab}
             />

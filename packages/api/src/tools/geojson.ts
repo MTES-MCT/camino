@@ -3,7 +3,7 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { IGeoJson, ITitrePoint } from '../types.js'
+import { ITitrePoint } from '../types.js'
 import { knex } from '../knex.js'
 import { Feature } from 'geojson'
 import { CommuneId } from 'camino-common/src/static/communes.js'
@@ -29,24 +29,7 @@ export const geojsonFeatureMultiPolygon = (points: Pick<ITitrePoint, 'groupe' | 
   return featureMultiPolygonValidator.parse(feature)
 }
 
-// convertit des points
-// en un geojson de type 'FeatureCollection' de 'Points'
 
-export const geojsonFeatureCollectionPoints = (points: Pick<ITitrePoint,  'coordonnees' | 'nom' | 'description'>[]): IGeoJson => ({
-  type: 'FeatureCollection',
-  properties: {},
-  features: points.map(p => ({
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [p.coordonnees.x, p.coordonnees.y],
-    },
-    properties: {
-      nom: p.nom,
-      description: p.description,
-    },
-  })),
-})
 
 // convertit une liste de points
 // en un tableau 'coordinates' geoJson

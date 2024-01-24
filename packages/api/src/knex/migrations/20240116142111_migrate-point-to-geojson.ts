@@ -1,10 +1,41 @@
 import { Knex } from 'knex'
-import { geojsonFeatureCollectionPoints, geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
+import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { ITitrePoint } from '../../types.js'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 const etapesToNotMigrate = ["0NmsqYGVQJYKhFY22Ltt4NBV"]
+
+interface IGeoJson {
+  type: string
+  geometry?: {} | null
+  bbox?: number[] | null
+  properties: {} | null
+  features?: IGeoJson[] | null
+}
+
+//FIXME heritage virer surface
+//FIXME heritage renommer points en perimetre
+
+
+// convertit des points
+// en un geojson de type 'FeatureCollection' de 'Points'
+const geojsonFeatureCollectionPoints = (points: Pick<ITitrePoint,  'coordonnees' | 'nom' | 'description'>[]): IGeoJson => ({
+  type: 'FeatureCollection',
+  properties: {},
+  features: points.map(p => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [p.coordonnees.x, p.coordonnees.y],
+    },
+    properties: {
+      nom: p.nom,
+      description: p.description,
+    },
+  })),
+})
+
 export const up = async (knex: Knex) => {
   await knex.raw('alter table titres_etapes add column geojson4326_perimetre public.geometry(MultiPolygon,4326)')
   await knex.raw('alter table titres_etapes add column geojson4326_points JSONB')

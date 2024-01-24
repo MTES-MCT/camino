@@ -3,7 +3,6 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
-import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find.js'
 import Titres from '../../database/models/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
@@ -12,6 +11,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -127,7 +127,7 @@ describe('etapeModifier', () => {
           statutId: 'aco',
           titreDemarcheId,
           date: '2018-01-01',
-          heritageProps: titreEtapePropsIds.reduce(
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
 

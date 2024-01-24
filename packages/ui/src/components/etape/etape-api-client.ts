@@ -2,9 +2,6 @@ import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { TitreId } from 'camino-common/src/titres'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>

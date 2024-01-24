@@ -44,10 +44,9 @@ export const transformableGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975
 export const transformableGeoSystemeIdValidator = z.enum(transformableGeoSystemeIds)
 export type TransformableGeoSystemeId = z.infer<typeof transformableGeoSystemeIdValidator>
 
-export const geoSystemeIdValidator = z.enum(IDS)
+const geoSystemeIdValidator = z.enum(IDS)
 export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
-export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => geoSystemeIdValidator.safeParse(entry).success
 // TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 
 export const GeoSystemes = {
@@ -228,8 +227,3 @@ export const GeoSystemes = {
 export const sortedGeoSystemes = Object.values(GeoSystemes).sort((a, b) => a.nom.localeCompare(b.nom))
 export const transformableGeoSystemes: GeoSysteme<TransformableGeoSystemeId>[] = transformableGeoSystemeIds.map(id => GeoSystemes[id])
 
-export function assertGeoSystemeId(geoSystemeId: string): asserts geoSystemeId is GeoSystemeId {
-  if (!Object.values(GEO_SYSTEME_IDS).includes(geoSystemeId)) {
-    throw new Error(`système géographique inconnu : EPSG:${geoSystemeId}`)
-  }
-}

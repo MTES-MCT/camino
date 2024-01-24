@@ -169,8 +169,9 @@ const titre: TitreGet = {
             titulaires: [{ id: entrepriseIdValidator.parse('id-entreprise1'), nom: 'Super titulaire', operateur: false }],
             amodiataires: [],
             perimetre: {
+              geojson4326_points: null,
               geojson4326_perimetre: {
-                properties: null,
+                properties: {},
                 type: 'Feature',
                 geometry: {
                   type: 'MultiPolygon',

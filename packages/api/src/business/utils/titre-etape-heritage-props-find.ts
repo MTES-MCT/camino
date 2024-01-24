@@ -4,9 +4,7 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js
 import { CaminoDate } from 'camino-common/src/date.js'
 import { MultiPolygon } from 'camino-common/src/perimetre.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-
-export const titreEtapePropsIds = ['points', 'titulaires', 'amodiataires', 'substances', 'surface', 'dateFin', 'dateDebut', 'duree'] as const satisfies Readonly<((keyof ITitreEtape) | 'points')[]>
-
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
   for(let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++){
@@ -54,7 +52,7 @@ const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newVa
   }
 
   
-  if (propId === 'points' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
+  if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
     return equalGeojson(newValue as MultiPolygon, oldValue as MultiPolygon) && equalGeojson(oldValue as MultiPolygon, newValue as MultiPolygon)
   } 
 
@@ -68,11 +66,19 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
 
   if (!titreEtape.heritageProps) {
     newTitreEtape = objectClone(newTitreEtape)
-    newTitreEtape.heritageProps = {}
+    newTitreEtape.heritageProps = {
+      amodiataires: { actif: false, etapeId: null },
+      dateDebut: { actif: false, etapeId: null },
+      dateFin: { actif: false, etapeId: null },
+      duree: { actif: false, etapeId: null },
+      perimetre: { actif: false, etapeId: null },
+      substances: { actif: false, etapeId: null },
+      titulaires: { actif: false, etapeId: null },
+    }
     hasChanged = true
   }
 
-  titreEtapePropsIds.forEach(propId => {
+  ETAPE_HERITAGE_PROPS.forEach(propId => {
     const heritage = newTitreEtape.heritageProps![propId]
 
     if (!heritage) {
@@ -87,14 +93,14 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
 
     if (heritage?.actif) {
       if (prevTitreEtape) {
-        const oldValue = (propId === 'points' ? titreEtape.geojson4326Perimetre : titreEtape[propId]) as IPropValue | undefined | null
-        const newValue = (propId === 'points' ? prevTitreEtape.geojson4326Perimetre :prevTitreEtape[propId]) as IPropValue | undefined | null
+        const oldValue = (propId === 'perimetre' ? titreEtape.geojson4326Perimetre : titreEtape[propId]) as IPropValue | undefined | null
+        const newValue = (propId === 'perimetre' ? prevTitreEtape.geojson4326Perimetre :prevTitreEtape[propId]) as IPropValue | undefined | null
 
         if (!titreEtapePropCheck(propId, oldValue, newValue)) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
-          if (propId === 'points') {
+          if (propId === 'perimetre') {
             newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre 
             newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points 
           } else if (propId === 'amodiataires' || propId === 'titulaires') {

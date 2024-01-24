@@ -88,12 +88,13 @@ const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
   heritageProps: {perimetre: {actif: true, etape: {date: toCaminoDate('2023-01-01'), type: EtapesTypes['mfr'], perimetre: {
-  communes: [],
-  forets: [],
-  sdom_zones: [],
-  secteurs_maritimes: [],
-  surface: 2,
-  geojson4326_perimetre: null
+    communes: [],
+    forets: [],
+    sdom_zones: [],
+    secteurs_maritimes: [],
+    surface: 2,
+    geojson4326_perimetre: null,
+    geojson4326_points: null,
   } }}},
 }
 export const EmptyHeritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId='arm' titreSlug={titreSlug}/>
@@ -107,7 +108,8 @@ const etapeHeritage: Props['etape'] = {
     sdom_zones: [],
     secteurs_maritimes: [],
     surface: 2,
-    geojson4326_perimetre: perimetre
+    geojson4326_perimetre: perimetre,
+    geojson4326_points: null,
     } }}},
 }
 export const Heritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeHeritage} titreTypeId='arm' titreSlug={titreSlug}  />

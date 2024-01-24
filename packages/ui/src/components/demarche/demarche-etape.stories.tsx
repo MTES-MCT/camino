@@ -3,7 +3,7 @@ import { DemarcheEtape } from './demarche-etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
 import { EtapeEntrepriseDocument, documentIdValidator, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { titreSlugValidator } from 'camino-common/src/titres'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
@@ -206,8 +206,9 @@ export const NoSnapshotDemande: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',
@@ -445,8 +446,9 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',
@@ -523,8 +525,9 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',
@@ -605,8 +608,9 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',
@@ -726,8 +730,9 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         titulaires: [],
         amodiataires: [],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',
@@ -783,8 +788,9 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
         titulaires: [],
         amodiataires: [],
         perimetre: {
+          geojson4326_points: null,
           geojson4326_perimetre: {
-            properties: null,
+            properties: {},
             type: 'Feature',
             geometry: {
               type: 'MultiPolygon',

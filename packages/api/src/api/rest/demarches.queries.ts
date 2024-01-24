@@ -19,7 +19,7 @@ import { Pool } from 'pg'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { featureCollectionPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 
-export const getEtapesByDemarcheIdDbValidator = z.object({
+const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
   date: caminoDateValidator,

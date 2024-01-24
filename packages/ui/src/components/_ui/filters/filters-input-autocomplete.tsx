@@ -5,7 +5,7 @@ import { AsyncData } from '../../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { LoadingElement } from '../functional-loader'
 import { ApiClient } from '../../../api/api-client'
-import { TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 import { caminoFiltres } from 'camino-common/src/filters'
 
 export type InputAutocompleteValues = (typeof caminoFiltres)[AutocompleteCaminoFiltres]['validator']['_output']

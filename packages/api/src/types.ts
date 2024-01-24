@@ -32,6 +32,7 @@ import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre.js'
+import { EtapeHeritageProps } from 'camino-common/src/heritage'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -135,16 +136,17 @@ interface IContenusTitreEtapesIds {
   [sectionId: string]: { [key: string]: string }
 }
 
-interface IHeritageProps {
-  [elementId: string]: {
-    actif: boolean
-    etapeId?: string | null
+export interface IHeritageElement {
+  actif: boolean
+    etapeId?: EtapeId | null
     etape?: ITitreEtape
-  }
 }
 
+
+type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
+
 interface IHeritageContenu {
-  [sectionId: string]: IHeritageProps
+  [sectionId: string]: {[elementId: string]: IHeritageElement}
 }
 
 interface IActiviteType {

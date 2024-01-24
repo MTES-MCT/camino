@@ -78,7 +78,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
   }
 
   const result = (value: GeojsonInformations | Error) => {
-    if( 'alertes' in value){
+    if( 'geojson4326_perimetre' in value) {
       importError.value = false
 
       props.onEtapeChange(value)

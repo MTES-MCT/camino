@@ -39,7 +39,7 @@ features:z.array(featurePointValidator)
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
 
 export type FeatureCollection = z.infer<typeof featureCollectionValidator>
-export const superpositionAlerteValidator = z.object({slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator})
+const superpositionAlerteValidator = z.object({slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator})
 
 export const geojsonInformationsValidator = z.object({
     superposition_alertes: z.array(superpositionAlerteValidator),

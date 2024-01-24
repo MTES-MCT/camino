@@ -5,7 +5,6 @@ import { graphQLCall, queryImport } from './index.js'
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
 import { etapeTypeGet } from '../../src/database/queries/metas.js'
-import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
 import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -20,6 +19,7 @@ import type { Pool } from 'pg'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../src/database/models/titres-demarches.js'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -202,7 +202,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
           titreDemarcheId: demarche?.id,
           date: '2022-01-01',
           duree: 10,
-          heritageProps: titreEtapePropsIds.reduce(
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
 
