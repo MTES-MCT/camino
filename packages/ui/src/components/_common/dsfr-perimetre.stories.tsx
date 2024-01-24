@@ -42,7 +42,7 @@ const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeoj
   getGeojsonByGeoSystemeId: (geojson, geoSystemeId) => {
     getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
 
-    return Promise.resolve(geojsonMultiPolygon)
+    return Promise.resolve(geojson4326_perimetre)
   },
   getTitresWithPerimetreForCarte: carte => {
     getTitresWithPerimetreForCarteAction(carte)
@@ -55,7 +55,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={geojson4326_perimetre}
+      perimetre={{geojson4326_perimetre, geojson4326_points: null}}
       calculateNeighbours={true}
       apiClient={{
         ...apiClientMock,
@@ -112,17 +112,10 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={geojson4326_perimetre}
+      perimetre={{geojson4326_perimetre, geojson4326_points: null}}
       calculateNeighbours={false}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
-      router={{
-        push: to => {
-          pushAction(to)
-
-          return Promise.resolve()
-        },
-      }}
     />
   </>
 )
@@ -131,9 +124,9 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={{
+      perimetre={{geojson4326_perimetre: {
         type: 'Feature',
-        properties: null,
+        properties: {},
         geometry: {
           type: 'MultiPolygon',
           coordinates: [
@@ -154,7 +147,7 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
             ],
           ],
         },
-      }}
+      }, geojson4326_points: null}}
       calculateNeighbours={true}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -171,7 +164,7 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
 
 const bigGeoJson: FeatureMultiPolygon = {
   type: 'Feature',
-  properties: null,
+  properties: {},
   geometry: {
     type: 'MultiPolygon',
     // prettier-ignore
@@ -186,7 +179,7 @@ export const BigNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={bigGeoJson}
+      perimetre={{geojson4326_perimetre: bigGeoJson, geojson4326_points: null}}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -205,8 +198,8 @@ export const MultipleNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={{
-        properties: null,
+      perimetre={{geojson4326_perimetre: {
+        properties: {},
         type: 'Feature',
         geometry: {
           type: 'MultiPolygon',
@@ -240,7 +233,7 @@ export const MultipleNoSnapshot: StoryFn = () => (
             ],
           ],
         },
-      }}
+      }, geojson4326_points: null}}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -259,9 +252,9 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      geojson4326_perimetre={{
+      perimetre={{geojson4326_perimetre: {
         type: 'Feature',
-        properties: null,
+        properties: {},
         geometry: {
           type: 'MultiPolygon',
           coordinates: [
@@ -317,7 +310,7 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
             ],
           ],
         },
-      }}
+      }, geojson4326_points: null}}
       calculateNeighbours={true}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -329,6 +322,19 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
         },
       }}
       initTab={'points'}
+    />
+  </>
+)
+
+export const CustomPoints: StoryFn = () => (
+  <>
+    <MapPattern />
+    <DsfrPerimetre
+      perimetre={{geojson4326_perimetre, geojson4326_points: {type: 'FeatureCollection', features: [{type: 'Feature', properties: {nom: '1', description: 'Description du point 1'}, geometry: {type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0]}}]}}}
+      initTab='points'
+      calculateNeighbours={false}
+      apiClient={apiClientMock}
+      titreSlug={titreSlugValidator.parse('titre-slug')}
     />
   </>
 )

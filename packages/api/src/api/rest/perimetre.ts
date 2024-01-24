@@ -55,7 +55,7 @@ export const getPerimetreAlertes = (pool: Pool) => async (req: CaminoRequest, re
       //FIXME canRead demarche
 
 
-    //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
+    //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
     
     const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdParsed.data)
 
@@ -72,15 +72,15 @@ export const getPerimetreAlertes = (pool: Pool) => async (req: CaminoRequest, re
 }
 }
 
-const getAlertesByDemarcheId = async (pool: Pool, user: User, titreTypeId: TitreTypeId, demarcheId: DemarcheId) => {
+const getAlertesByDemarcheId = async (pool: Pool, user: User, titreTypeId: TitreTypeId, demarcheId: DemarcheId): Promise<PerimetreAlertes> => {
   const etapes = await getEtapesByDemarcheId(pool, demarcheId)
 
     const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ordre: 1, etapes}])
 
     if( mostRecentEtapeFondamentale === null){
-      return {alertes: [], sdomZoneIds: []}
+      return {superposition_alertes: [], sdomZoneIds: []}
     }else{
-      return {alertes: await getAlertesSuperposition(mostRecentEtapeFondamentale.geojson4326_perimetre, mostRecentEtapeFondamentale.etape_type_id, titreTypeId, user, pool), sdomZoneIds: mostRecentEtapeFondamentale.sdom_zones ?? [] }
+      return {superposition_alertes: await getAlertesSuperposition(mostRecentEtapeFondamentale.geojson4326_perimetre, mostRecentEtapeFondamentale.etape_type_id, titreTypeId, user, pool), sdomZoneIds: mostRecentEtapeFondamentale.sdom_zones ?? [] }
     }
 
 }
@@ -109,7 +109,7 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
     const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
     
     if( isEtapeTypeIdFondamentale(etape.etape_type_id)){
-      res.json({alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, etape.etape_type_id, titre.titre_type_id, user, pool), sdomZoneIds: etape.sdom_zones ?? [] })
+      res.json({superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, etape.etape_type_id, titre.titre_type_id, user, pool), sdomZoneIds: etape.sdom_zones ?? [] })
     }else{
       res.json(await getAlertesByDemarcheId(pool, user, titre.titre_type_id, etape.demarche_id))
     }
@@ -167,7 +167,8 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
           const features = featureCollectionValidator.parse(JSON.parse(buffer.toString()))
           
           coordinates = (await getGeojsonByGeoSystemeIdQuery(pool,geoSystemeId.data ,  GEO_SYSTEME_IDS.WGS84, features.features[0])).geometry.coordinates
-          if (features.features.length > 1) {
+          // TODO 2024-01-24 on importe les points que si le référentiel est en 4326
+          if (geoSystemeId.data === '4326' && features.features.length > 1) {
             const [_multi, ...points] = features.features
             featureCollectionPoints = {type: 'FeatureCollection', features: points}
           }
@@ -180,7 +181,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
               
         const geoInfo = await getGeojsonInformation(pool, geojson)
         const result: GeojsonInformations = {
-          alertes: await getAlertesSuperposition(geojson,geojsonImportInput.data.etapeTypeId, geojsonImportInput.data.titreTypeId, user, pool),
+          superposition_alertes: await getAlertesSuperposition(geojson,geojsonImportInput.data.etapeTypeId, geojsonImportInput.data.titreTypeId, user, pool),
           communes: geoInfo.communes,
           foretIds: geoInfo.forets,
           sdomZoneIds: geoInfo.sdom,
@@ -212,14 +213,7 @@ const getAlertesSuperposition = async (
   titreTypeId: TitreTypeId, 
   user: User,
   pool: Pool) => {
-   // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
    if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId) && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
-
-    // FIXME à mettre dans le front
-    // const zoneId = zones.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
-    // if (zoneId) {
-    //   alertes.push({sdomZoneId: zoneId})
-    // }
 
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
       return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre)

@@ -17,7 +17,7 @@ import { TITRES_TYPES_TYPES_IDS } from './static/titresTypesTypes.js'
 import { UniteId, uniteIdValidator, UNITE_IDS, Unites } from './static/unites.js'
 import { capitalize } from './strings.js'
 import { foretIdValidator } from './static/forets.js'
-import { featureMultiPolygonValidator } from './perimetre.js'
+import { featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -61,8 +61,8 @@ export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
 // FIXME c'est un geojsonInformationsValidator
 const etapePerimetreValidator = z
 .object({
-  // FIXME il faut que ça soit une featureCollection plutôt probablement
   geojson4326_perimetre: featureMultiPolygonValidator.nullable(),
+  geojson4326_points: featureCollectionPointsValidator.nullable(),
   surface: z.number().nullable(),
   communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
   secteurs_maritimes: z.array(secteurMaritimeValidator),

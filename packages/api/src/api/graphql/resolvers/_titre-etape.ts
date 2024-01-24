@@ -4,9 +4,6 @@ import { IEtapeType, IHeritageContenu, IHeritageProps, ITitreDemarche, ITitreEta
 import { titreEtapeHeritagePropsFind, titreEtapePropsIds } from '../../../business/utils/titre-etape-heritage-props-find.js'
 import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
-import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
-import { Feature } from 'geojson'
-import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
@@ -130,11 +127,3 @@ export const titreEtapeHeritageBuild = (date: string, etapeType: IEtapeType, tit
   return titreEtape
 }
 
-export const titreEtapeSdomZonesGet = async (geoJson: Feature<any>): Promise<GeoJsonResult<SDOMZoneId[]>> => {
-  const sdomZoneIds = await geojsonIntersectsSDOM(geoJson)
-
-  return {
-    fallback: sdomZoneIds.fallback,
-    data: sdomZoneIds.data,
-  }
-}

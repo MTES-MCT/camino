@@ -17,7 +17,7 @@ import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
-import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { featureCollectionPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 
 export const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -41,7 +41,8 @@ export const getEtapesByDemarcheIdDbValidator = z.object({
   forets: z.array(foretIdValidator).nullable(),
   decisions_annexes_contenu: contenuValidator.nullable(),
   decisions_annexes_sections: z.array(sectionValidator).nullable(),
-  geojson4326_perimetre: multiPolygonValidator.nullable()
+  geojson4326_perimetre: multiPolygonValidator.nullable(),
+  geojson4326_points: featureCollectionPointsValidator.nullable(),
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
@@ -72,7 +73,8 @@ select
     e.forets,
     e.decisions_annexes_contenu,
     e.decisions_annexes_sections,
-    ST_AsGeoJSON(e.geojson4326_perimetre)::json as geojson4326_perimetre
+    ST_AsGeoJSON(e.geojson4326_perimetre)::json as geojson4326_perimetre,
+    e.geojson4326_points as geojson4326_points
 from
     titres_etapes e
 where

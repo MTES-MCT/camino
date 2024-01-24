@@ -57,7 +57,7 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
-      await titresEtapesAreasUpdate([titreEtapeId])
+      await titresEtapesAreasUpdate(pool, [titreEtapeId])
     }
 
     const { titresEtapesAdministrationsLocalesUpdated = [] } = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)

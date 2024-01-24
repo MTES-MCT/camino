@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetLastJournalInternalQuery } from './journal.queries.types.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'

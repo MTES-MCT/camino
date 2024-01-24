@@ -101,8 +101,12 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               }
 
               perimetre = {
-                // FIXME 
-                // geojson4326_perimetre: etape.geojson4326_perimetre,
+                geojson4326_perimetre: isNotNullNorUndefined(etape.geojson4326_perimetre) ? {
+                  type: 'Feature', 
+                  properties: {},
+                geometry: etape.geojson4326_perimetre
+              } : null,
+                geojson4326_points: etape.geojson4326_points,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],

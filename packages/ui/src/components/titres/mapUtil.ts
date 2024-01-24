@@ -3,9 +3,11 @@ import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresT
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
 import type { DivIconOptions, GeoJSON, GeoJSONOptions, Layer, LeafletEventHandlerFnMap, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
-import { CommonTitre, TitreId } from 'camino-common/src/titres'
+import { CommonTitre } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
+import { FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre'
 
 const leafletCoordinatesFind = (geojson:  { coordinates: [number, number] } ) => {
   const coordinates = geojson.coordinates
@@ -104,16 +106,8 @@ export const clustersBuild = () =>
   }, {})
 
 export interface TitreWithPoint extends CommonTitre {
-  // FIXME FeatureCollection
-  geojson4326Perimetre?: {
-    type: 'Feature'
-    properties: Record<string, unknown>
-    geometry: {
-      type: 'MultiPolygon'
-      coordinates: [number, number][][][]
-    }
-  }
-  geojson4326Centre?: { type: 'Point',  coordinates: [number, number] }
+  geojson4326Perimetre?: FeatureMultiPolygon
+  geojson4326Centre?: GeojsonPoint
 }
 type CaminoMarker = {
   marker: Marker

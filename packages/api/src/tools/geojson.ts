@@ -5,8 +5,6 @@ import center from '@turf/center'
 
 import { IGeoJson, ITitrePoint } from '../types.js'
 import { knex } from '../knex.js'
-import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
 import { Feature } from 'geojson'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/perimetre.js'
@@ -100,64 +98,7 @@ export interface GeoJsonResult<T> {
   data: T
 }
 
-export const geojsonIntersectsSDOM = async (geojson: Feature<any>): Promise<GeoJsonResult<SDOMZoneId[]>> => {
-  let result: { rows: { id: SDOMZoneId }[] }
-  let fallback = false
-  try {
-    result = await knex.raw(
-      `select sdom_zones_postgis.id from sdom_zones_postgis
-         where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}'), sdom_zones_postgis.geometry) is true`
-    )
-  } catch (e) {
-    fallback = true
-    result = await knex.raw(
-      `select sdom_zones_postgis.id from sdom_zones_postgis
-             where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), sdom_zones_postgis.geometry) is true`
-    )
-  }
-
-  return { fallback, data: result.rows.map(({ id }) => id) }
-}
-
-export const geojsonIntersectsForets = async (geojson: Feature<any>): Promise<GeoJsonResult<string[]>> => {
-  let result: { rows: { id: string }[] }
-  let fallback = false
-  try {
-    result = await knex.raw(
-      `select forets_postgis.id from forets_postgis 
-           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}'), forets_postgis.geometry) is true`
-    )
-  } catch (e) {
-    fallback = true
-    result = await knex.raw(
-      `select forets_postgis.id from forets_postgis 
-           where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), forets_postgis.geometry) is true`
-    )
-  }
-
-  return { fallback, data: result.rows.map(({ id }) => id) }
-}
-
-export const geojsonIntersectsSecteursMaritime = async (geojson: Feature<any>): Promise<GeoJsonResult<SecteursMaritimesIds[]>> => {
-  let result: { rows: { id: SecteursMaritimesIds }[] }
-  let fallback = false
-  try {
-    result = await knex.raw(
-      `select secteurs_maritime_postgis.id from secteurs_maritime_postgis 
-           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}'), secteurs_maritime_postgis.geometry) is true`
-    )
-  } catch (e) {
-    fallback = true
-    result = await knex.raw(
-      `select secteurs_maritime_postgis.id from secteurs_maritime_postgis 
-           where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}')), secteurs_maritime_postgis.geometry) is true`
-    )
-  }
-
-  return { fallback, data: result.rows.map(({ id }) => id) }
-}
-
-export const geojsonIntersectsCommunes = async (geojson: Feature<any>): Promise<GeoJsonResult<{ id: CommuneId; surface: number }[]>> => {
+export const geojsonIntersectsCommunes = async (geojson: FeatureMultiPolygon): Promise<GeoJsonResult<{ id: CommuneId; surface: number }[]>> => {
   let result: { rows: { id: CommuneId; surface: string }[] }
   let fallback = false
   try {

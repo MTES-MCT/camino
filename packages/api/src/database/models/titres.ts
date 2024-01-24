@@ -11,7 +11,7 @@ import { idGenerate } from './_format/id-create.js'
 import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean

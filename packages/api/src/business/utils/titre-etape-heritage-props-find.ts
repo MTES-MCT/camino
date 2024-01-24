@@ -1,25 +1,30 @@
 import { ITitreEtape, IEntreprise, ITitrePoint, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
-import { idGenerate } from '../../database/models/_format/id-create.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { MultiPolygon } from 'camino-common/src/perimetre.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
-const titreEtapePropsIds: (keyof ITitreEtape)[] = ['points', 'titulaires', 'amodiataires', 'substances', 'surface', 'dateFin', 'dateDebut', 'duree']
+export const titreEtapePropsIds = ['points', 'titulaires', 'amodiataires', 'substances', 'surface', 'dateFin', 'dateDebut', 'duree'] as const satisfies Readonly<((keyof ITitreEtape) | 'points')[]>
 
-const titrePointsIdsUpdate = (titrePoints: ITitrePoint[], newTitreEtapeId: string) =>
-  titrePoints.map(p => {
-    p.id = idGenerate()
-    p.titreEtapeId = newTitreEtapeId
 
-    p.references = p.references.map(r => {
-      r.id = idGenerate()
-      r.titrePointId = p.id
+const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
+  for(let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++){
+    for(let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++){
+      for(let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++){
 
-      return r
-    })
+        if(geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][0] || 
+          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][1] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][1]
+          ){
+          return false
+        }
+      }
+    }
+  }
+  
 
-    return p
-  })
+  return true
+}  
 
 const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -27,11 +32,7 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
   }
 
   if (prevValue?.length && newValue?.length) {
-    if (propId === 'points') {
-      const comparator = ({ coordonnees }: ITitrePoint) => `(${coordonnees.x}, ${coordonnees.y})`
-
-      return (newValue as ITitrePoint[]).map(comparator).sort().toString() === (prevValue as ITitrePoint[]).map(comparator).sort().toString()
-    } else if (propId === 'substances') {
+    if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
       const comparator = (propValueArray: ITitreEntreprise) => propValueArray.id + propValueArray.operateur
@@ -45,17 +46,22 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
 
 type IPropValueArray = undefined | null | IEntreprise[] | ITitrePoint[] | SubstanceLegaleId[]
 
-type IPropValue = number | string | IPropValueArray
+type IPropValue = number | string | IPropValueArray | MultiPolygon
 
 const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
-  if (['titulaires', 'amodiataires', 'substances', 'points'].includes(propId)) {
+  if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
     return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
   }
+
+  
+  if (propId === 'points' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
+    return equalGeojson(newValue as MultiPolygon, oldValue as MultiPolygon) && equalGeojson(oldValue as MultiPolygon, newValue as MultiPolygon)
+  } 
 
   return oldValue === newValue
 }
 
-const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
+export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
   let hasChanged = false
 
   let newTitreEtape = titreEtape
@@ -81,15 +87,16 @@ const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: I
 
     if (heritage?.actif) {
       if (prevTitreEtape) {
-        const oldValue = titreEtape[propId] as IPropValue | undefined | null
-        const newValue = prevTitreEtape[propId] as IPropValue | undefined | null
+        const oldValue = (propId === 'points' ? titreEtape.geojson4326Perimetre : titreEtape[propId]) as IPropValue | undefined | null
+        const newValue = (propId === 'points' ? prevTitreEtape.geojson4326Perimetre :prevTitreEtape[propId]) as IPropValue | undefined | null
 
         if (!titreEtapePropCheck(propId, oldValue, newValue)) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
           if (propId === 'points') {
-            newTitreEtape.points = titrePointsIdsUpdate(newValue as ITitrePoint[], newTitreEtape.id)
+            newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre 
+            newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points 
           } else if (propId === 'amodiataires' || propId === 'titulaires') {
             newTitreEtape[propId] = newValue as IEntreprise[]
           } else if (propId === 'substances') {
@@ -117,5 +124,3 @@ const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: I
 
   return { hasChanged, titreEtape: newTitreEtape }
 }
-
-export { titreEtapeHeritagePropsFind, titreEtapePropsIds }

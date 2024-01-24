@@ -11,7 +11,7 @@ import { entrepriseFormat } from '../_format/entreprises.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
 
-import { titresGeojsonFormat, titreGeojsonFormat, titresTableFormat } from './format/titres.js'
+import { titreGeojsonPropertiesFormat, titresGeojsonFormat, titresTableFormat } from './format/titres.js'
 import { titresDemarchesFormatTable } from './format/titres-demarches.js'
 import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
@@ -33,7 +33,9 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { getCommunesIndex } from '../../database/queries/communes.js'
+import { FeatureCollection, GeojsonFeaturePoint } from 'camino-common/src/perimetre.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -47,7 +49,6 @@ const titreFields = {
   titulaires: { id: {} },
   amodiataires: { id: {} },
   surfaceEtape: { id: {} },
-  points: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
     type: { id: {} },
@@ -125,7 +126,24 @@ export const titre =
 
     const titreFormatted = titreFormat(titre)
 
-    const titreGeojson = await titreGeojsonFormat(pool, titreFormatted)
+    const communesIndex = await getCommunesIndex(pool, titreFormatted.communes?.map(({ id }) => id) ?? [])
+
+    if ( titreFormatted.pointsEtape === undefined){
+      throw new Error('Le périmètre du titre n’est pas chargé')
+    }
+  
+    if ( titreFormatted.pointsEtape === null || isNullOrUndefined(titreFormatted.pointsEtape.geojson4326Perimetre)){
+      throw new Error('Il n’y a pas de périmètre pour ce titre')
+    }
+  
+    const geojson4326Points: GeojsonFeaturePoint[] = titreFormatted.pointsEtape.geojson4326Points?.features ?? []
+  
+    const titreGeojson: FeatureCollection  = {
+      type: 'FeatureCollection',
+      features: [titreFormatted.pointsEtape.geojson4326Perimetre, ...geojson4326Points],
+      
+      properties: titreGeojsonPropertiesFormat(communesIndex, titreFormatted)
+    }
 
     return {
       nom: fileNameCreate(titre.id, format),

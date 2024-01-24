@@ -16,7 +16,8 @@ import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
-import { EditableTitre, TitreId } from 'camino-common/src/titres.js'
+import { EditableTitre } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -174,11 +175,7 @@ export const titresGet = async (
       q.groupBy(titresColonnes[colonne].id)
     }
 
-    if (colonne === 'coordonnees') {
-      q.orderByRaw(`"coordonnees" notnull ${ordre}`)
-    } else {
-      q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
-    }
+    q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
   } else {
     if (noms?.length) {
       q.orderByRaw('case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom', [`${noms}%`])

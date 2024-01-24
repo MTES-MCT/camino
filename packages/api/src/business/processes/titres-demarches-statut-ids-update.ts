@@ -1,4 +1,4 @@
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'

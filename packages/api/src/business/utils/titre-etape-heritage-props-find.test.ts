@@ -1,4 +1,4 @@
-import { IEntreprise, IHeritageProps, ITitreEtape, ITitrePoint } from '../../types.js'
+import { IEntreprise, IHeritageProps, ITitreEtape } from '../../types.js'
 
 import { titreEtapeHeritagePropsFind, titreEtapePropsIds } from './titre-etape-heritage-props-find.js'
 
@@ -188,7 +188,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si pas de changement sur les points', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      points: [{ coordonnees: { x: 1, y: 2 } }, { coordonnees: { x: 2, y: 3 } }] as unknown as ITitrePoint[],
+      geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
       heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
@@ -210,10 +210,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape est modifiée si changement sur les points', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      points: [
-        { id: '1', coordonnees: { x: 1, y: 2 }, references: [{ id: '23' }] },
-        { id: '2', coordonnees: { x: 2, y: 3 }, references: [] },
-      ] as unknown as ITitrePoint[],
+      geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
       heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
@@ -224,20 +221,15 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps!.points.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtape.points = [
-      { id: '3', coordonnees: { x: 1, y: 2 } },
-      { id: '4', coordonnees: { x: 2, y: 4 } },
-    ] as unknown as ITitrePoint[]
+    titreEtape.geojson4326Perimetre = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [3,4]]]]}}
     titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.points = objectClone(titreEtapePrecedente.points)
+    newTitreEtape.geojson4326Perimetre = objectClone(titreEtapePrecedente.geojson4326Perimetre)
 
     const result = titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
 
     expect(result.hasChanged).toBeTruthy()
-    expect(result.titreEtape.points![0].id).not.toEqual(newTitreEtape.points![0].id)
-    expect(result.titreEtape.points![0].references[0].id).not.toEqual(newTitreEtape.points![0].references[0].id)
   })
 
   test('l’héritage est désactivé si l’étape précédente n’existe plus', () => {

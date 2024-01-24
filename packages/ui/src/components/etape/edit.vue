@@ -29,11 +29,9 @@
     <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
       <PointsEdit
         :etape="etape"
-        :events="events"
-        :showTitle="false"
-        @update:etape="newValue => $emit('update:etape', newValue)"
-        @update:events="newValue => $emit('update:events', newValue)"
-        @complete-update="perimetreCompleteUpdate"
+        :apiClient="apiClient"
+        :onEtapeChange="onEtapePerimetreChange"
+        :onCompleteUpdate="perimetreCompleteUpdate"
       />
     </Accordion>
 
@@ -128,13 +126,12 @@ export default {
     demarcheTypeId: { type: String, required: true },
     etapeType: { type: Object, default: null },
     titreTypeId: { type: String, required: true },
-    events: { type: Object, required: true },
     user: { type: Object, required: true },
     etapeIsDemandeEnConstruction: { type: Boolean, required: true },
     documentPopupTitle: { type: String, required: true },
   },
 
-  emits: ['complete-update', 'type-complete-update', 'change', 'update:etape', 'update:events'],
+  emits: ['complete-update', 'type-complete-update', 'change', 'update:etape', 'alertes-update'],
 
   data() {
     return {
@@ -433,6 +430,18 @@ export default {
       this.$emit('type-complete-update', this.typeComplete)
       this.$emit('update:etape', this.etape)
     },
+
+    onEtapePerimetreChange(perimetreInfos){
+
+      // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
+      // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
+      this.etape.geojson4326_perimetre = perimetreInfos.geojson4326_perimetre
+      this.etape.geojson4326_points = perimetreInfos.geojson4326_points
+      this.etape.surface = perimetreInfos.surface
+
+      this.$emit('alertes-update', {superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds})
+      this.$emit('update:etape', this.etape)
+    }
   },
 }
 </script>

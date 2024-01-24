@@ -10,11 +10,12 @@ import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } fro
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
+import { Alert } from '../_ui/alert'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'>
-  etape: { 
-    typeId: EtapeTypeId, 
+  etape: {
+    typeId: EtapeTypeId,
     heritageProps:{ perimetre: EtapeEdit['heritageProps']['perimetre']}
     geojson4326_perimetre: FeatureMultiPolygon | null,
     geojson4326_points: FeatureCollectionPoints | null,
@@ -22,21 +23,25 @@ export interface Props {
   }
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
+  completeUpdate: (complete: boolean) => void
+  onEtapeChange: (geojsonInformations: GeojsonInformations) => void
+  initTab?: 'points' | 'carte'
 }
 
 type DisplayPerimetreProps = {
   apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>
-  etape: { 
+  etape: {
     geojson4326_perimetre: FeatureMultiPolygon | null,
     geojson4326_points: FeatureCollectionPoints | null,
   }
   titreSlug: TitreSlug
+  initTab?: 'points' | 'carte'
 }
 
 const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = (props) => {
   if (props.etape.geojson4326_perimetre !== null) {
-    
-    return <DsfrPerimetre calculateNeighbours={false} apiClient={props.apiClient} perimetre={{geojson4326_points: props.etape.geojson4326_points, geojson4326_perimetre: props.etape.geojson4326_perimetre}} titreSlug={props.titreSlug}   />
+
+    return <DsfrPerimetre calculateNeighbours={false} apiClient={props.apiClient} perimetre={{geojson4326_points: props.etape.geojson4326_points, geojson4326_perimetre: props.etape.geojson4326_perimetre}} titreSlug={props.titreSlug} initTab={props.initTab ?? 'carte'}   />
   }
   return null
 
@@ -46,17 +51,16 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = (props) => 
 // renommer l'héritage de point en héritage de périmètre
 // supprimer l'héritage de surface (c'est le même héritage que périmètre)
 
-export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug'], (props, context) => {
+export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab'], (props) => {
   const importPopup = ref<boolean>(false)
-  
+  const importError = ref<boolean>(false)
+
   const complete = computed(() => {
     return props.etape.typeId !== 'mfr' || props.etape.geojson4326_perimetre !== null
   })
 
-
   const completeUpdate = () => {
-    // FIXME pass props instead of emit
-    context.emit('complete-update', complete.value)
+    props.completeUpdate(complete.value)
   }
 
   watch(complete, () => completeUpdate())
@@ -73,17 +77,17 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
     importPopup.value = false
   }
 
-  // const importPoints = async (file: File, geoSystemeId: GeoSystemeId) => {
-  //   store.dispatch('titreEtapeEdition/pointsImport', {
-  //     file,
-  //     geoSystemeId,
-  //   })
-  // }
-
   const result = (value: GeojsonInformations | Error) => {
+    if( 'alertes' in value){
+      importError.value = false
 
+      props.onEtapeChange(value)
+    }else{
+      importError.value = true
+    }
   }
 
+  //FIXME rajouter du padding/margin
   return () => (
     <div>
       <HeritageEdit
@@ -91,18 +95,17 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
         propId="perimetre"
         write={() => <>
         <DsfrButton onClick={openPopup} title="Importer depuis un fichier…" />
-        
-        <DisplayPerimetre apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} />
-        </>}
-        read={(heritage) => <DisplayPerimetre apiClient={props.apiClient} etape={{...props.etape, geojson4326_perimetre:  heritage?.perimetre?.geojson4326_perimetre ?? null}} titreSlug={props.titreSlug} />}
-      />
 
-      FIXME AFFICHER LES POINTS
+        {importError.value ? <Alert title='Une erreur est survenue lors de l’import de votre fichier.' type='error' description='Vérifiez le contenu de votre fichier' /> : null}
+
+        <DisplayPerimetre apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} />
+        </>}
+        read={(heritage) => <DisplayPerimetre apiClient={props.apiClient} etape={{...props.etape, geojson4326_perimetre:  heritage?.perimetre?.geojson4326_perimetre ?? null}} titreSlug={props.titreSlug} initTab={props.initTab} />}
+      />
         <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s flex">
           <div>
             <h5 class="mb-0">Surface (Km²)</h5>
-            <p class="h6 italic mb-0">Optionnel</p>
           </div>
         </div>
         {props.etape.surface}

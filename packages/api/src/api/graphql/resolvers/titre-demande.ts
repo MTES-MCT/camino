@@ -18,7 +18,7 @@ import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesType
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 
 export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: TitreId[] } }, { user, pool }: Context) => {
   try {

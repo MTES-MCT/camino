@@ -17,6 +17,7 @@ import { titreDateDemandeFind } from '../../../business/rules/titre-date-demande
 import { Forets } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { CommuneId } from 'camino-common/src/static/communes.js'
+import { FeatureCollection, FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 import { getCommunesIndex } from '../../../database/queries/communes.js'
 
 const getFacadesMaritimeCell = (secteursMaritime: SecteursMaritimes[], separator: string): string =>
@@ -89,7 +90,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
       amodiataires_legal: titre.amodiataires?.map(e => e.legalEtranger || e.legalSiren).join(separator),
       amodiataires_categorie: titre.amodiataires?.map(e => e.categorie).join(separator),
 
-      geojson: JSON.stringify(titre.geojson4326_perimetre),
+      geojson: JSON.stringify(titre.geojson4326Perimetre),
       ...titreReferences,
       ...titreContenuTableFormat(titre),
     }
@@ -98,7 +99,7 @@ export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
   })
 }
 
-const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, titre: ITitre) => {
+export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, string>, titre: ITitre) => {
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }
@@ -143,13 +144,8 @@ const getTitreDates = (titre: Pick<ITitre, 'demarches'>): { dateDebut: CaminoDat
   }
 }
 
-export const titreGeojsonFormat = async (pool: Pool, titre: ITitre) => {
-  const communesIndex = await getCommunesIndex(pool, titre.communes?.map(({ id }) => id) ?? [])
-
-  return {...titre.geojson4326_perimetre, properties: titreGeojsonPropertiesFormat(communesIndex, titre)}
-}
-
-export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]) => {
+//Retourne une feature collection contenant tous les Multipolygones
+export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]): Promise<{type: 'FeatureCollection', features: FeatureMultiPolygon[]}> => {
   const communesIndex = await getCommunesIndex(
     pool,
     titres.flatMap(titre => titre.communes?.map(({ id }) => id) ?? [])
@@ -157,11 +153,11 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]) => {
 
   return {
     type: 'FeatureCollection',
-    features: titres.map(titre => ({
-      // FIXME {...titre.geojson4326_perimetre, properties: titreGeojsonPropertiesFormat(communesIndex, titre)}
+    features: titres.map<FeatureMultiPolygon | null>(titre => 
+       isNotNullNorUndefined(titre.geojson4326Perimetre) ? {
       type: 'Feature',
-      geometry: null,
+      geometry: titre.geojson4326Perimetre.geometry,
       properties: titreGeojsonPropertiesFormat(communesIndex, titre),
-    })),
+    } : null).filter(isNotNullNorUndefined),
   }
 }

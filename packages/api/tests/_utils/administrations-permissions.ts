@@ -18,7 +18,7 @@ import { AdministrationId, sortedAdministrations } from 'camino-common/src/stati
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import type { Pool } from 'pg'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../src/database/models/titres-demarches.js'
 export const visibleCheck = async (
   pool: Pool,

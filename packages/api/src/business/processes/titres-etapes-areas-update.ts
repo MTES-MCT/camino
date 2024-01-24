@@ -1,20 +1,23 @@
 /* eslint-disable sql/no-unsafe-query */
-import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes, geojsonIntersectsSecteursMaritime, geojsonIntersectsForets, geojsonIntersectsSDOM } from '../../tools/geojson.js'
+import { geojsonIntersectsCommunes } from '../../tools/geojson.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
-import { Feature } from 'geojson'
 import { ITitreEtape } from '../../types.js'
-import { getSecteurMaritime, SecteursMaritimes } from 'camino-common/src/static/facades.js'
+import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { knex } from '../../knex.js'
-import { ForetId, isForetId } from 'camino-common/src/static/forets.js'
+import { ForetId } from 'camino-common/src/static/forets.js'
 import { CommuneId, toCommuneId } from 'camino-common/src/static/communes.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
+import type { Pool } from 'pg'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
  * @param titresEtapesIds - liste d’étapes
  * @returns toutes les modifications effectuées
  */
-export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]): Promise<void> => {
+export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: string[]): Promise<void> => {
   console.info()
   console.info('communes, forêts et zones du SDOM associées aux étapes…')
 
@@ -36,12 +39,14 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]): Promi
       console.info(`${i} étapes traitées`)
     }
     try {
-      if (titreEtape.points?.length) {
-        const multipolygonGeojson = geojsonFeatureMultiPolygon(titreEtape.points) as Feature
-        await intersectForets(multipolygonGeojson, titreEtape)
-        await intersectSdom(multipolygonGeojson, titreEtape)
-        await intersectCommunes(multipolygonGeojson, titreEtape)
-        await intersectSecteursMaritime(multipolygonGeojson, titreEtape)
+      if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
+
+        const {forets, sdom, secteurs} = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+        
+        await intersectForets(titreEtape, forets)
+        await intersectSdom(titreEtape, sdom)
+        await intersectCommunes(titreEtape)
+        await intersectSecteursMaritime(titreEtape, secteurs)
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)
@@ -49,34 +54,21 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]): Promi
     }
   }
 }
-async function intersectSdom(multipolygonGeojson: Feature, titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>) {
-  const sdomZonesIds = await geojsonIntersectsSDOM(multipolygonGeojson)
+async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
 
-  if (sdomZonesIds.fallback) {
-    if (sdomZonesIds.fallback) {
-      console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
-    }
-  }
-  if (sdomZonesIds.data.length > 0) {
-    if (sdomZonesIds.data.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sdomZonesIds.data[index])) {
-      console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sdomZonesIds.data)}`)
-      await knex.raw(`update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join('","')}"]' where id ='${titreEtape.id}'`)
+  if (sdomZonesIds.length > 0) {
+    if (sdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sdomZonesIds[index])) {
+      console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sdomZonesIds)}`)
+      await knex.raw(`update titres_etapes set sdom_zones = '["${sdomZonesIds.join('","')}"]' where id ='${titreEtape.id}'`)
     }
   }
 }
 
-async function intersectForets(multipolygonGeojson: Feature, titreEtape: Pick<ITitreEtape, 'forets' | 'id'>) {
+async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, foretsNew: ForetId[]) {
   if (!titreEtape.forets) {
     throw new Error('les forêts de l’étape ne sont pas chargées')
   }
 
-  const foretIds = await geojsonIntersectsForets(multipolygonGeojson)
-
-  if (foretIds.fallback) {
-    console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
-  }
-
-  const foretsNew: ForetId[] = foretIds.data.filter(isForetId).sort()
   if (titreEtape.forets?.length !== foretsNew.length || titreEtape.forets.some((value, index) => value !== foretsNew[index])) {
     console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(foretsNew)}'`)
     await knex('titres_etapes')
@@ -85,12 +77,12 @@ async function intersectForets(multipolygonGeojson: Feature, titreEtape: Pick<IT
   }
 }
 
-async function intersectCommunes(multipolygonGeojson: Feature, titreEtape: Pick<ITitreEtape, 'communes' | 'id'>) {
+async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>) {
   if (!titreEtape.communes) {
     throw new Error('les communes de l’étape ne sont pas chargées')
   }
 
-  const communes = await geojsonIntersectsCommunes(multipolygonGeojson)
+  const communes = isNotNullNorUndefined(titreEtape.geojson4326Perimetre) ? await geojsonIntersectsCommunes(titreEtape.geojson4326Perimetre) : {fallback: false, data: []}
 
   if (communes.fallback) {
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
@@ -105,14 +97,8 @@ async function intersectCommunes(multipolygonGeojson: Feature, titreEtape: Pick<
   }
 }
 
-async function intersectSecteursMaritime(multipolygonGeojson: Feature, titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>) {
-  const secteurMaritimeIds = await geojsonIntersectsSecteursMaritime(multipolygonGeojson)
-
-  if (secteurMaritimeIds.fallback) {
-    console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
-  }
-
-  const secteurMaritimeNew: SecteursMaritimes[] = secteurMaritimeIds.data.map(getSecteurMaritime).sort()
+async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: SecteursMaritimes[]) {
+  const secteurMaritimeNew: SecteursMaritimes[] = [...secteursMaritime].sort()
   if (titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length || titreEtape.secteursMaritime.some((value, index) => value !== secteurMaritimeNew[index])) {
     console.info(`Mise à jour des secteurs maritimes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.secteursMaritime}', nouveaux: '${secteurMaritimeNew}'`)
     await knex('titres_etapes')

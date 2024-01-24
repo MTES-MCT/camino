@@ -1,4 +1,4 @@
-import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
+import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape} from '../../types.js'
 
 import { DemarcheId } from 'camino-common/src/demarche.js'
 
@@ -9,12 +9,11 @@ import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
-import { titrePointReferenceUpdate, titrePointUpdate } from '../../database/queries/titres-points.js'
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
-import { TitreId, TitreSlug, titreSlugValidator } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug, titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
@@ -40,11 +39,6 @@ const titreEtapeSlugFind = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarc
   return `${titreDemarche.slug}-${titreEtape.typeId}${titreEtapeTypeOrder.toString().padStart(2, '0')}`
 }
 
-const titrePointSlugFind = (titrePoint: ITitrePoint, titreEtape: ITitreEtape) =>
-  `${titreEtape.slug}-g${titrePoint.groupe.toString().padStart(2, '0')}-c${titrePoint.contour.toString().padStart(2, '0')}-p${titrePoint.point.toString().padStart(3, '0')}`
-
-const titrePointReferenceSlugFind = (titrePointReference: ITitrePointReference, titrePoint: ITitrePoint) => `${titrePoint.slug}-${titrePointReference.geoSystemeId}`
-
 const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) => `${titre.slug}-${titreActivite.typeId}-${titreActivite.annee}-${titreActivite.periodeId.toString().padStart(2, '0')}`
 
 interface ITitreRelation<T extends string | DemarcheId = string> {
@@ -66,20 +60,6 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation<ActiviteId> |
         slugFind: titreDemarcheEtapeSlugFind,
         // @ts-ignore
         update: titreEtapeUpdate,
-        relations: [
-          {
-            name: 'points',
-            slugFind: titrePointSlugFind,
-            update: titrePointUpdate,
-            relations: [
-              {
-                name: 'references',
-                update: titrePointReferenceUpdate,
-                slugFind: titrePointReferenceSlugFind,
-              },
-            ],
-          },
-        ],
       },
     ],
   },

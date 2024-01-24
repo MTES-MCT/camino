@@ -11,7 +11,7 @@ export const monthly = async (pool: Pool) => {
     console.info('mise à jour mensuelle')
 
     await updateTerritoires(pool)
-    await titresEtapesAreasUpdate()
+    await titresEtapesAreasUpdate(pool)
     await entreprisesUpdate()
     await subscribeUsersToGuyaneExploitants()
   } catch (e) {

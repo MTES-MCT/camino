@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { PointsImportPopup } from './points-import-popup'
-import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
@@ -22,9 +21,9 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'> = {
 geojsonImport(body, geoSystemeId) {
   geojsonImportAction(body, geoSystemeId)
   const result: GeojsonInformations = {
-    alertes: [],
+    superposition_alertes: [],
     communes: [],
-    foretIds: [], 
+    foretIds: [],
     geojson4326_perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[12, 12]]]]}},
     surface: 9,
     geojson4326_points: null,

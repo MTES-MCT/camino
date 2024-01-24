@@ -4,7 +4,7 @@ import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { PointsEdit, Props } from './points-edit'
-import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
+import { toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 
@@ -19,6 +19,8 @@ export default meta
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
+const completeUpdateAction = action('completeUpdate')
+const onEtapeChangeAction = action('onEtapeChange')
 
 const perimetre: FeatureMultiPolygon = {
   type: 'Feature',
@@ -43,9 +45,9 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
 geojsonImport(body, geoSystemeId) {
   geojsonImportAction(body, geoSystemeId)
   const result: GeojsonInformations = {
-    alertes: [],
+    superposition_alertes: [],
     communes: [],
-    foretIds: [], 
+    foretIds: [],
     geojson4326_perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[12, 12]]]]}},
     surface: 9,
     geojson4326_points: null,
@@ -64,8 +66,16 @@ getGeojsonByGeoSystemeId(geojson, geoSystemeId) {
 },
 }
 
+
+const completeUpdate= (value: boolean) => {
+  completeUpdateAction(value)
+}
+
+const onEtapeChange= (geojsonInformations: GeojsonInformations) => {
+  onEtapeChangeAction(geojsonInformations)
+}
 const etapeNoHeritage: Props['etape'] = {
-  typeId: 'mfr', 
+  typeId: 'mfr',
   heritageProps: {perimetre: {actif: false}},
   geojson4326_perimetre: null,
   geojson4326_points: null,
@@ -73,7 +83,7 @@ const etapeNoHeritage: Props['etape'] = {
 }
 
 const titreSlug = titreSlugValidator.parse('titre-slug')
-export const EmptyNoHeritage: StoryFn = () => <PointsEdit apiClient={apiClient} etape={etapeNoHeritage} titreTypeId='arm' titreSlug={titreSlug}  />
+export const EmptyNoHeritage: StoryFn = () => <PointsEdit initTab='points' apiClient={apiClient} etape={etapeNoHeritage} titreTypeId='arm' titreSlug={titreSlug} completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} />
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
@@ -86,7 +96,7 @@ const etapeEmptyHeritage: Props['etape'] = {
   geojson4326_perimetre: null
   } }}},
 }
-export const EmptyHeritage: StoryFn = () => <PointsEdit apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId='arm' titreSlug={titreSlug} />
+export const EmptyHeritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId='arm' titreSlug={titreSlug}/>
 
 
 const etapeHeritage: Props['etape'] = {
@@ -100,7 +110,7 @@ const etapeHeritage: Props['etape'] = {
     geojson4326_perimetre: perimetre
     } }}},
 }
-export const Heritage: StoryFn = () => <PointsEdit apiClient={apiClient} etape={etapeHeritage} titreTypeId='arm' titreSlug={titreSlug}  />
+export const Heritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeHeritage} titreTypeId='arm' titreSlug={titreSlug}  />
 
 
 const etape: Props['etape'] = {
@@ -108,4 +118,4 @@ const etape: Props['etape'] = {
   geojson4326_perimetre: perimetre,
   heritageProps: {perimetre: {actif: false}},
 }
-export const FilledNoHeritage: StoryFn = () => <PointsEdit apiClient={apiClient} etape={etape} titreTypeId='arm' titreSlug={titreSlug} />
+export const FilledNoHeritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etape} titreTypeId='arm' titreSlug={titreSlug} />

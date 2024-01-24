@@ -13,7 +13,6 @@ const state = {
     entreprises: [],
     documentsTypes: [],
     sdomZonesDocumentTypeIds: [],
-    alertes: [],
   },
   heritageLoaded: false,
   loaded: false,
@@ -71,14 +70,16 @@ const actions = {
       if (id) {
         await dispatch('dateUpdate', { date: state.element.date })
 
-        const { documentTypeIds, alertes } = await titreEtapePerimetreInformations({
-          titreEtapeId: id,
-        })
 
-        commit('metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes,
-        })
+        //FIXME
+        // const { documentTypeIds, alertes } = await titreEtapePerimetreInformations({
+        //   titreEtapeId: id,
+        // })
+
+        // commit('metasSet', {
+        //   sdomZonesDocumentTypeIds: documentTypeIds,
+        //   alertes,
+        // })
 
         await dispatch('documentInit', state.element.documents)
       }
@@ -130,14 +131,11 @@ const actions = {
       await dispatch('documentInit', state.element.documents)
 
       //FIXME maintenant c’est getPerimetreAlertes
-      const alertes = []
+      // const alertes = []
       // const { alertes } = await perimetreInformations({
       //   demarcheId: state.metas.demarche.id,
       //   etapeTypeId,
       // })
-      commit('metasSet', {
-        alertes,
-      })
 
       commit('heritageLoaded', true)
     } catch (e) {
@@ -198,42 +196,6 @@ const actions = {
     } finally {
       commit('loadingRemove', 'titreEtapeUpdate', { root: true })
     }
-  },
-
-  async pointsImport({ state, commit, dispatch }, { file, geoSystemeId }) {
-    try {
-      commit('loadingAdd', 'pointsImport', { root: true })
-
-      const { points, surface, documentTypeIds, alertes } = await pointsImporter({
-        file,
-        geoSystemeId,
-        demarcheId: state.metas.demarche.id,
-        etapeTypeId: state.element.type.id,
-      })
-      // pour modifier la surface, on doit désactiver l’héritage
-      state.element.heritageProps.surface.actif = false
-      state.element.surface = surface
-      commit('set', state.element)
-
-      commit('metasSet', {
-        sdomZonesDocumentTypeIds: documentTypeIds,
-        alertes,
-      })
-      await dispatch('documentInit', state.element.documents)
-      commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        {
-          value: `${points.length} points ont été importés avec succès`,
-          type: 'success',
-        },
-        { root: true }
-      )
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'pointsImport', { root: true })
-    }
   }
 }
 
@@ -257,7 +219,6 @@ const mutations = {
       entreprises: [],
       documentsTypes: [],
       sdomZonesDocumentTypeIds: [],
-      alertes: [],
     }
     state.heritageLoaded = false
     state.loaded = false

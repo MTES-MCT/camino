@@ -78,7 +78,7 @@ describe('geojsonImport', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName)
     }
     
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geosystemeId', { geosystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -94,7 +94,7 @@ describe('geojsonImport', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName)
     }
     
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geosystemeId', { geosystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -181,7 +181,7 @@ describe('geojsonImport', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName)
     }
     
-    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geosystemeId', { geosystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`
       {

@@ -30,7 +30,6 @@
       :etape="editedEtape"
       :demarcheTypeId="demarcheType.id"
       :user="user"
-      :events="events"
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
       :titreTypeId="titre.typeId"
       :documentPopupTitle="documentPopupTitle"
@@ -38,6 +37,7 @@
       @complete-update="completeUpdate"
       @type-complete-update="typeCompleteUpdate"
       @change="editChange"
+      @alertes-update="alertesUpdate"
     />
 
     <div v-if="loading" class="tablet-blobs">
@@ -69,6 +69,10 @@ import { getCurrent } from 'camino-common/src/date'
 import FormSaveBtn from './etape/pure-form-save-btn.vue'
 import DeposePopup from './etape/depose-popup.vue'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
+import {SDOMZoneIds, SDOMZones} from 'camino-common/src/static/sdom'
+import {isNotNullNorUndefined} from 'camino-common/src/typescript-tools'
+import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
@@ -89,7 +93,8 @@ export default {
       typeComplete: false,
       promptMsg: 'Quitter le formulaire sans enregistrer les changements ?',
       newDate: getCurrent(),
-      events: { saveKeyUp: true },
+      sdomZoneIds: [],
+      superposition_alertes: []
     }
   },
 
@@ -123,7 +128,22 @@ export default {
     },
 
     alertes() {
-      return this.$store.state.titreEtapeEdition.metas.alertes || []
+
+      const alertes = []
+      if( this.superposition_alertes.length > 0 ){
+        alertes.push(...this.superposition_alertes.map(t => ({message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titre_statut_id) ? TitresStatuts[t.titre_statut_id].nom : ''} » est superposé à ce titre`,
+            url: `/titres/${t.slug}`, })))
+      }
+
+      // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
+      if(['mfr', 'mcr'].includes(this.etapeType.id) && this.titre.typeId === 'axm') {
+        const zoneId = this.sdomZoneIds.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
+        if (zoneId) {
+          alertes.push({message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`})
+        }
+      }
+
+      return alertes
     },
 
     demarcheType() {
@@ -270,7 +290,7 @@ export default {
     },
 
     keyUp(e) {
-      if ((e.which || e.keyCode) === 13 && this.events.saveKeyUp && this.complete && !this.isPopupOpen) {
+      if ((e.which || e.keyCode) === 13  && this.complete && !this.isPopupOpen) {
         if (this.dateIsVisible && this.newDate) {
           this.$refs['date-button'].focus()
           this.dateUpdate()
@@ -287,6 +307,18 @@ export default {
 
     typeCompleteUpdate(complete) {
       this.typeComplete = complete
+    },
+
+    alertesUpdate(infos){
+      this.superposition_alertes = infos.superposition_alertes
+      this.sdomZoneIds = infos.sdomZoneIds
+
+      const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
+
+      this.$store.commit('titreEtapeEdition/metasSet', {
+        sdomZonesDocumentTypeIds: documentTypeIds
+      })
+      this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
     },
 
     editChange() {

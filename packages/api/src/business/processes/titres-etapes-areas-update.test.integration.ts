@@ -15,7 +15,7 @@ import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { Pool } from 'pg'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -120,7 +120,7 @@ describe('titresEtapesAreasUpdate', () => {
       },
     ])
 
-    await titresEtapesAreasUpdate([titreEtapeId])
+    await titresEtapesAreasUpdate(dbPool, [titreEtapeId])
 
     expect(await TitresEtapes.query().where('id', titreEtapeId)).toMatchSnapshot()
     await Titres.query()

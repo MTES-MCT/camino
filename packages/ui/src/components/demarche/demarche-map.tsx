@@ -243,7 +243,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  // FIXME tests avec points customs
   const points = computed<FeatureCollectionPoints>(() => {
     if (props.perimetre.geojson4326_points !== null) {
       return  {
@@ -427,10 +426,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
       mapLibre.on('click', contourPointsName, e => {
         if (isNotNullNorUndefinedNorEmpty(e.features)) {
-          console.log(e.features, 'bite')
           new Popup({ closeButton: false, maxWidth: '500' })
             .setLngLat(e.lngLat)
-            .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div></div>`)
+            .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`)
             .addTo(mapLibre)
         }
       })

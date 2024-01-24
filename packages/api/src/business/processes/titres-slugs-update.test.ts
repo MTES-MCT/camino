@@ -4,7 +4,7 @@ import { titresSlugsUpdate } from './titres-slugs-update.js'
 import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { vi, describe, expect, test } from 'vitest'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
   titreSlugAndRelationsUpdate: vi.fn(),

@@ -6,7 +6,7 @@ import { getDemarches } from './titres-etapes-heritage-contenu-update.queries.js
 import { UserNotNull } from 'camino-common/src/roles.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import { TitreEtapeForMachine, titreEtapeForMachineValidator } from '../rules-demarches/machine-common.js'
 
 export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId) => {

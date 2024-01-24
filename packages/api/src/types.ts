@@ -28,9 +28,10 @@ import { Section, SectionElement } from 'camino-common/src/static/titresTypes_de
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
-import { TitreId, TitreSlug } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
-import { ActiviteId } from 'camino-common/src/activite'
+import { ActiviteId } from 'camino-common/src/activite.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -277,12 +278,6 @@ interface IGeoJson {
   features?: IGeoJson[] | null
 }
 
-interface IGeoJsonCentre {
-  type: string
-  geometry?: IGeometry | null
-  properties: { etapeId?: string | null }
-}
-
 interface IGeometry {
   type: string
   coordinates: number[] | number[][] | number[][][] | number[][][][]
@@ -331,6 +326,9 @@ interface ITitre {
   propsTitreEtapesIds: IPropsTitreEtapesIds
   doublonTitreId?: string | null
   confidentiel?: boolean | null
+
+  geojson4326Centre?: GeojsonPoint | null
+  geojson4326Perimetre?: FeatureMultiPolygon | null
 }
 
 interface ITitreActivite {
@@ -419,7 +417,8 @@ interface ITitreEtape {
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
-  geojson4326_perimetre: Geojson
+  geojson4326Perimetre?: FeatureMultiPolygon | null
+  geojson4326Points?: FeatureCollectionPoints | null
 }
 
 interface ITitreEtapeFiltre {
