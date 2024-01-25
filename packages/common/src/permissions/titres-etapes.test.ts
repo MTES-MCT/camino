@@ -9,6 +9,7 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
+import { FeatureMultiPolygon, MultiPolygon } from '../perimetre.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -220,10 +221,11 @@ test.each<{
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
+const multiPolygonWith4Points: FeatureMultiPolygon = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [1, 2], [1, 2], [1, 2]]]]}}
 const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   typeId: 'mfr',
   substances: ['auru'],
-  points: [{}, {}, {}, {}],
+  geojson4326Perimetre: multiPolygonWith4Points,
   duree: 4,
 }
 
@@ -297,24 +299,23 @@ test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, Parameters<typeof isEt
   }
 })
 
-test.each<[unknown[], EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
-  [[], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
-  [[], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
-  [[], 'rde', 'arm', armDocuments, [], false],
-  [[], 'mfr', 'prm', [], [], false],
-  [[{}, {}, {}, {}], 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
-  [[{}, {}, {}, {}], 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
-  [[{}, {}, {}], 'mfr', 'axm', armDocuments, armEntrepriseDocuments, true],
-])('teste la complétude du périmètre', (points, etapeType, titreType, documents, entrepriseDocuments, error) => {
-  const titreEtape = {
+test.each<[FeatureMultiPolygon | null, EtapeTypeId, TitreTypeId, Parameters<typeof isEtapeComplete>[3], Parameters<typeof isEtapeComplete>[4], boolean]>([
+  [null, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, true],
+  [null, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, true],
+  [null, 'rde', 'arm', armDocuments, [], false],
+  [null, 'mfr', 'prm', [], [], false],
+  [multiPolygonWith4Points, 'mfr', 'arm', armDocuments, armEntrepriseDocuments, false],
+  [multiPolygonWith4Points, 'mfr', 'axm', axmDocuments, axmEntrepriseDocuments, false],
+])('teste la complétude du périmètre', (geojson4326Perimetre, etapeType, titreType, documents, entrepriseDocuments, error) => {
+  const titreEtape: Parameters<typeof isEtapeComplete>[0] = {
     ...etapeComplete,
-    points,
+    geojson4326Perimetre,
     typeId: etapeType,
   }
 
   const result = isEtapeComplete(titreEtape, titreType, 'oct', documents, entrepriseDocuments, [])
 
-  const errorLabel = 'le périmètre doit comporter au moins 4 points'
+  const errorLabel = 'le périmètre doit être renseigné'
   if (error) {
     if (!result.valid) {
       expect(result.errors).toContain(errorLabel)

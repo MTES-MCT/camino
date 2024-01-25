@@ -1,4 +1,4 @@
-import { ITitreEtape, IEntreprise, ITitrePoint, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, IEntreprise, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
@@ -42,7 +42,7 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
   return true
 }
 
-type IPropValueArray = undefined | null | IEntreprise[] | ITitrePoint[] | SubstanceLegaleId[]
+type IPropValueArray = undefined | null | IEntreprise[] | SubstanceLegaleId[]
 
 type IPropValue = number | string | IPropValueArray | MultiPolygon
 

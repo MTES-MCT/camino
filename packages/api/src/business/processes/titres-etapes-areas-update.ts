@@ -3,11 +3,11 @@ import { geojsonIntersectsCommunes } from '../../tools/geojson.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { ITitreEtape } from '../../types.js'
-import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
+import { SecteursMaritimes, SecteursMaritimesIds, getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { knex } from '../../knex.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { CommuneId, toCommuneId } from 'camino-common/src/static/communes.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
@@ -25,7 +25,7 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     { titresEtapesIds, etapesTypesIds: null, titresDemarchesIds: null },
     {
       fields: {
-        points: { id: {} },
+         id: {},
       },
     },
     userSuper
@@ -40,7 +40,6 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-
         const {forets, sdom, secteurs} = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
         
         await intersectForets(titreEtape, forets)
@@ -97,8 +96,8 @@ async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id'
   }
 }
 
-async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: SecteursMaritimes[]) {
-  const secteurMaritimeNew: SecteursMaritimes[] = [...secteursMaritime].sort()
+async function intersectSecteursMaritime(titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>, secteursMaritime: SecteursMaritimesIds[]) {
+  const secteurMaritimeNew: SecteursMaritimes[] = [...secteursMaritime.map(id => getSecteurMaritime(id))].filter(onlyUnique).sort()
   if (titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length || titreEtape.secteursMaritime.some((value, index) => value !== secteurMaritimeNew[index])) {
     console.info(`Mise à jour des secteurs maritimes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.secteursMaritime}', nouveaux: '${secteurMaritimeNew}'`)
     await knex('titres_etapes')

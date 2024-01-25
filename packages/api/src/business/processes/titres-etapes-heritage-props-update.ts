@@ -19,7 +19,6 @@ export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresD
           type: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
-          points: { references: { id: {} } },
         },
       },
     },

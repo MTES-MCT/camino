@@ -21,7 +21,7 @@ const titreAdd = async (titre: ITitre) =>
       type: { type: { id: {} } },
       demarches: {
         etapes: {
-          points: { references: { id: {} } },
+          id: {},
         },
       },
       activites: { id: {} },

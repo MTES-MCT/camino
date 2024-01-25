@@ -152,10 +152,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
       try {
         
         const filename = geojsonImportInput.data.tempDocumentName
-        if (!filename.endsWith('.geojson') && !filename.endsWith('.shp')) {
-          throw new Error('seul les fichiers geojson ou shape sont acceptés')
-        }
-
+        
         const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
         const fileStream = createReadStream(pathFrom)
 
@@ -163,7 +160,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 
         let coordinates: [number, number][][][]
         let featureCollectionPoints: null | FeatureCollectionPoints = null
-        if (filename.endsWith('.geojson')) {
+        if (geojsonImportInput.data.fileType === 'geojson') {
           const features = featureCollectionValidator.parse(JSON.parse(buffer.toString()))
           
           coordinates = (await getGeojsonByGeoSystemeIdQuery(pool,geoSystemeId.data ,  GEO_SYSTEME_IDS.WGS84, features.features[0])).geometry.coordinates

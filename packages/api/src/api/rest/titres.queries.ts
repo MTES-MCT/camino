@@ -88,7 +88,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         }
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
-          if (!(etape.heritage_props?.points?.actif ?? false)) {
+          if (!(etape.heritage_props?.perimetre?.actif ?? false)) {
             const etapePoints = await getPointsByEtapeIdQuery(etape.id, pool)
 
             if (etapePoints.length > 0) {
@@ -139,8 +139,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             fondamentale: {
               amodiataires,
               titulaires,
-              date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.date_debut?.actif ?? false) ? etape.date_debut : null,
-              date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.date_fin?.actif ?? false) ? etape.date_fin : null,
+              date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.dateDebut?.actif ?? false) ? etape.date_debut : null,
+              date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.dateFin?.actif ?? false) ? etape.date_fin : null,
               duree: isNotNullNorUndefined(etape.duree) && !(etape.heritage_props?.duree?.actif ?? false) ? etape.duree : null,
               substances: isNotNullNorUndefined(etape.substances) && !(etape.heritage_props?.substances?.actif ?? false) ? etape.substances : null,
               perimetre,

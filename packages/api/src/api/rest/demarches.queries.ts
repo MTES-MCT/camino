@@ -18,6 +18,7 @@ import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { featureCollectionPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -30,7 +31,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   substances: z.array(substanceLegaleIdValidator).nullable(),
   etape_type_id: etapeTypeIdValidator,
   etape_statut_id: etapeStatutIdValidator,
-  heritage_props: z.record(z.string(), z.object({ actif: z.boolean() })).nullable(),
+  heritage_props: z.record(etapeHeritagePropsValidator, z.object({ actif: z.boolean() })).nullable(),
   heritage_contenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))).nullable(),
   date_debut: caminoDateValidator.nullable(),
   date_fin: caminoDateValidator.nullable(),

@@ -26,7 +26,8 @@ const fragmentHeritageEtape = gql`
     amodiataires {
       ...titreEntreprises
     }
-    geojson4326_perimetre
+    geojson4326Perimetre
+    geojson4326Points
     substances
     contenu
   }
@@ -45,10 +46,7 @@ const fragmentHeritageProps = gql`
     duree {
       ...heritageProp
     }
-    surface {
-      ...heritageProp
-    }
-    geojson4326_perimetre {
+    perimetre {
       ...heritageProp
     }
     substances {
@@ -94,7 +92,8 @@ const fragmentEtapeHeritage = gql`
       ...titreEntreprises
     }
 
-    geojson4326_perimetre
+    geojson4326Perimetre
+    geojson4326Points
 
     substances
 
@@ -150,7 +149,8 @@ const fragmentEtape = gql`
     amodiataires {
       ...titreEntreprises
     }
-    geojson4326_perimetre
+    geojson4326Perimetre
+    geojson4326Points
     substances
     documents {
       ...document

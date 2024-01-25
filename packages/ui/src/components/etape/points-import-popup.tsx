@@ -8,6 +8,7 @@ import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { perimetreFileUploadTypeValidator } from 'camino-common/src/static/documentsTypes'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'>
@@ -91,8 +92,11 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
       validate={{
         action: async () => {
           if (importFile.value !== null) {
+            console.log(importFile.value)
             const tempFile = await props.apiClient.uploadTempDocument(importFile.value)
-            const result = await props.apiClient.geojsonImport({tempDocumentName: tempFile, etapeTypeId: props.etapeTypeId, titreTypeId: props.titreTypeId}, systemeGeographique.value)
+            const values = importFile.value.name.split('.')
+            const extension = perimetreFileUploadTypeValidator.parse(values[values.length - 1])
+            const result = await props.apiClient.geojsonImport({tempDocumentName: tempFile, etapeTypeId: props.etapeTypeId, titreTypeId: props.titreTypeId, fileType: extension}, systemeGeographique.value)
             props.result(result)
           }
         },

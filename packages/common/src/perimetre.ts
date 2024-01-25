@@ -1,6 +1,6 @@
 import {z} from 'zod'
 import { communeIdValidator } from './static/communes.js'
-import { secteurMaritimeValidator } from './static/facades.js'
+import { secteurDbIdValidator, secteurMaritimeValidator } from './static/facades.js'
 import { foretIdValidator } from './static/forets.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
 import { titreStatutIdValidator } from './static/titresStatuts.js'
@@ -8,6 +8,8 @@ import { titreSlugValidator } from './validators/titres.js'
 import { tempDocumentNameValidator } from './document.js'
 import { etapeTypeIdValidator } from './static/etapesTypes.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
+import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
+import { isNullOrUndefined } from './typescript-tools.js'
 
 
 const coordinatesValidator = z.tuple([z.number(), z.number()])
@@ -17,8 +19,14 @@ export const multiPolygonValidator = z.object({
 })
 export type MultiPolygon = z.infer<typeof multiPolygonValidator>
 
+const nullToEmptyObject = (val: null | {}): {} => {
+  if (isNullOrUndefined(val)) {
+      return {};
+  }
+  return val;
+}
 
-export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.object({}) })
+export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.object({}).nullable().transform(nullToEmptyObject) })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
 const pointValidator = z.object({type: z.literal('Point'), coordinates: coordinatesValidator})
@@ -47,7 +55,7 @@ export const geojsonInformationsValidator = z.object({
     sdomZoneIds: z.array(sdomZoneIdValidator),
     foretIds: z.array(foretIdValidator),
     communes: z.array(z.object({id: communeIdValidator, nom: z.string()})),
-    secteurMaritimeIds: z.array(secteurMaritimeValidator),
+    secteurMaritimeIds: z.array(secteurDbIdValidator),
     geojson4326_perimetre: featureMultiPolygonValidator,
     geojson4326_points: featureCollectionPointsValidator.nullable()
   })
@@ -59,6 +67,7 @@ export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
 export type PerimetreAlertes = Pick<GeojsonInformations, 'superposition_alertes' | 'sdomZoneIds'>
 
 export const geojsonImportBodyValidator = z.object({  tempDocumentName: tempDocumentNameValidator,
+  fileType: perimetreFileUploadTypeValidator,
     etapeTypeId: etapeTypeIdValidator,
     titreTypeId: titreTypeIdValidator, })
 

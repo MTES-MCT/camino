@@ -35,7 +35,7 @@ export const titresSlugsUpdate = async (titresIds?: string[]) => {
         type: { type: { id: {} } },
         demarches: {
           etapes: {
-            points: { references: { id: {} } },
+            id: {}
           },
         },
         activites: { id: {} },

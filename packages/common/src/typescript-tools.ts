@@ -65,6 +65,8 @@ export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 // from https://stackoverflow.com/questions/72789915/typescript-omit-seems-to-transform-an-union-into-an-intersection/72790170#72790170
 export type OmitDistributive<T, K extends string> = T extends unknown ? Omit<T, K> : never
 
+export type isExtends<T, U> = T extends U ? T : never;
+
 export type SimplePromiseFn<T> = () => Promise<T>
 type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
 export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {

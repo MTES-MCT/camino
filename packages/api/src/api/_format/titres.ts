@@ -1,13 +1,12 @@
 import { ITitre, IFields, ITitreDemarche } from '../../types.js'
 
-import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
 
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 

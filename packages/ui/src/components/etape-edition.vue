@@ -32,6 +32,7 @@
       :user="user"
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
       :titreTypeId="titre.typeId"
+      :titreSlug="titre.slug"
       :documentPopupTitle="documentPopupTitle"
       :etapeType="etapeType"
       @complete-update="completeUpdate"

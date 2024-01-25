@@ -2,7 +2,6 @@ import { FileUpload } from 'graphql-upload'
 import { AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
 import { CodePostal, DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
-import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
@@ -92,6 +91,7 @@ interface IColonne<T> {
 export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
 type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
+// FIXME étrange cette prop
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
 type ITitreColonneId = 'nom' | 'domaine' |  'type' | 'statut' | 'titulaires'
@@ -270,21 +270,6 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-type IGeoJsonProperties = Index<string | number | undefined | null | ITitrePointReference[]>
-
-interface IGeoJson {
-  type: string
-  geometry?: IGeometry | null
-  bbox?: number[] | null
-  properties: IGeoJsonProperties | null
-  features?: IGeoJson[] | null
-}
-
-interface IGeometry {
-  type: string
-  coordinates: number[] | number[][] | number[][][] | number[][][][]
-}
-
 interface IAdministrationActiviteTypeEmail {
   administrationId: AdministrationId
   activiteTypeId: string
@@ -430,29 +415,6 @@ interface ITitreEtapeFiltre {
   dateFin?: string
 }
 
-interface ITitrePoint {
-  id: string
-  slug?: string
-  titreEtapeId: string
-  nom?: string | null
-  description?: string | null
-  groupe: number
-  contour: number
-  point: number
-  references: ITitrePointReference[]
-  coordonnees: ICoordonnees
-  lot?: number | null
-  subsidiaire?: boolean | null
-}
-
-interface ITitrePointReference {
-  id: string
-  slug?: string
-  titrePointId: string
-  geoSystemeId: GeoSystemeId
-  coordonnees: ICoordonnees
-  opposable?: boolean | null
-}
 
 type ICacheId = 'matomo'
 
@@ -587,7 +549,6 @@ export {
   IEntreprise,
   IEntrepriseEtablissement,
   IEtapeType,
-  IGeoJson,
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
@@ -595,8 +556,6 @@ export {
   IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
-  ITitrePoint,
-  ITitrePointReference,
   ITitreType,
   ITitreTypeType,
   ITitreEntreprise,

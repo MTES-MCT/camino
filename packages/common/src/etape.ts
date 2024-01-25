@@ -1,12 +1,14 @@
 import { CaminoDate } from './date.js'
 import { EtapePerimetre } from './demarche.js'
 import { EntrepriseId, documentIdValidator } from './entreprise.js'
+import { EtapeHeritageProps } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
+import { isExtends } from './typescript-tools.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -42,7 +44,6 @@ type EtapeBase = {
   substances: SubstanceLegaleId[]
   titulaires: EtapeEntreprise[]
   amodiataires: EtapeEntreprise[]
-  surface: number
   dateDebut: CaminoDate | null
   administrations?: AdministrationId[]
   documents?: CaminoDocument[]
@@ -54,15 +55,12 @@ type EtapeBase = {
 
 export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
   heritageProps: {
-    [key in keyof Omit<
-      T,
-      'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'id' | 'notes'
-    >]: HeritageProp<Pick<T, 'type' | 'date' | key>>
+    [key in isExtends<EtapeHeritageProps, keyof T>]: HeritageProp<Pick<T, 'type' | 'date' | key>>
   }
 }
 
 export type Etape = EtapeWithHeritage<EtapeBase>
-export type EtapeFondamentale = EtapeWithHeritage<Omit<EtapeBase, 'points' | 'surface'>>
+export type EtapeFondamentale = Etape
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>

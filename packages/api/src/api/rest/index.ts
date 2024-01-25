@@ -53,7 +53,6 @@ const titreFields = {
   demarches: {
     type: { id: {} },
     etapes: {
-      points: { id: {} },
       type: { id: {} },
     },
   },
@@ -283,7 +282,6 @@ export const demarches =
             amodiataires: { id: {} },
           },
           etapes: {
-            points: { id: {} },
             type: {
               id: {},
             },

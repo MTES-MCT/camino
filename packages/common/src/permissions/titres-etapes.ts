@@ -22,6 +22,7 @@ import { isDocumentsComplete } from './documents.js'
 import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { SectionWithValue } from '../sections.js'
+import { FeatureMultiPolygon } from '../perimetre.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -149,7 +150,7 @@ type IsEtapeCompleteEtape = {
   sectionsWithValue?: SectionWithValue[]
   decisionsAnnexesSections?: DeepReadonly<Section[]> | null
   decisionsAnnexesContenu?: Contenu
-  points?: null | unknown[]
+  geojson4326Perimetre?: null | FeatureMultiPolygon
   substances?: null | SubstanceLegaleId[]
   duree?: number | null
 }
@@ -235,10 +236,8 @@ export const isEtapeComplete = (
   // Si c’est une demande d’AEX ou d’ARM, certaines informations sont obligatoires
   if (titreEtape.typeId === 'mfr' && ['arm', 'axm'].includes(titreTypeId)) {
     // le périmètre doit être défini
-    if (!titreEtape.points) {
+    if (isNullOrUndefined(titreEtape.geojson4326Perimetre)) {
       errors.push('le périmètre doit être renseigné')
-    } else if (titreEtape.points.length < 4) {
-      errors.push('le périmètre doit comporter au moins 4 points')
     }
 
     // il doit exister au moins une substance

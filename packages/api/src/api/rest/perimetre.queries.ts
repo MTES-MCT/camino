@@ -10,7 +10,7 @@ import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-c
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import { communeIdValidator } from 'camino-common/src/static/communes.js'
-import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
+import { secteurDbIdValidator } from 'camino-common/src/static/facades.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
@@ -82,7 +82,7 @@ and right(t.type_id, 1) =  $domaine_id!
 
 
 export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: MultiPolygon): Promise<GetGeojsonInformation> => {
-const result =await dbQueryAndValidate(getGeojsonInformationDb, {geojson4326_perimetre}, pool, getGeojsonInformationValidator)
+const result = await dbQueryAndValidate(getGeojsonInformationDb, {geojson4326_perimetre}, pool, getGeojsonInformationValidator)
 if (result.length !== 1) {
   throw new Error('On veut un seul résultat')
 }
@@ -100,7 +100,7 @@ const getGeojsonInformationValidator = z.object({
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
   forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
   communes: z.array(z.object({id: communeIdValidator, nom: z.string()})).nullable().transform(nullToEmptyArray),
-  secteurs: z.array(secteurMaritimeValidator).nullable().transform(nullToEmptyArray)
+  secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray)
 })
 type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
 const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformation>>`

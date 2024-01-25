@@ -22,7 +22,7 @@ const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
  */
 const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =>
   titreDemarches.find(
-    titreDemarche => ['acc', 'ter'].includes(titreDemarche.statutId!) && (titreDemarche.typeId === 'ret' || (titreDemarche.typeId === 'ren' && !titreDemarche.etapes!.find(te => te.points?.length)))
+    titreDemarche => ['acc', 'ter'].includes(titreDemarche.statutId!) && (titreDemarche.typeId === 'ret' || (titreDemarche.typeId === 'ren' && !titreDemarche.etapes!.find(te => isNotNullNorUndefined(te.geojson4326Perimetre))))
   )
 
 const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeId, isEtapeDateEnough: boolean): CaminoDate | null => {
@@ -166,7 +166,7 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
   }, {})
 }
 
-export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId'> & { points?: unknown[] | null }
+export type TitreEtapePhaseFind = Pick<ITitreEtape, 'titreDemarcheId' | 'ordre' | 'typeId' | 'dateFin' | 'duree' | 'dateDebut' | 'date' | 'statutId' | 'geojson4326Perimetre'> 
 export type TitreDemarchePhaseFind = Pick<ITitreDemarche, 'statutId' | 'ordre' | 'typeId' | 'id' | 'titreId' | 'demarcheDateDebut' | 'demarcheDateFin'> & { etapes?: TitreEtapePhaseFind[] }
 
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {

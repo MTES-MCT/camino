@@ -140,7 +140,6 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
             type: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
-            points: { references: { id: {} } },
           },
         },
       },
@@ -487,7 +486,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
       throw new Error("l'étape n'existe pas")
     }
 
-    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, points: { references: { id: {} } } } }, user)
+    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, } }, user)
 
     if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)

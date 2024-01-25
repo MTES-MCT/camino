@@ -256,6 +256,7 @@ describe('etapeCreer', () => {
           },
           substances: ['auru'],
           documentIds: [idDom, idFor, idJpa, idCar],
+          // FIXME geojson
           points: [
             {
               groupe: 1,

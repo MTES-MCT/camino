@@ -4,7 +4,6 @@ import { ITitre } from '../../types.js'
 import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
-import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
 import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
@@ -67,15 +66,6 @@ class Titres extends Model {
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
         to: 'titresEtapes.id',
-      },
-    },
-
-    points: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresPoints,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titresPoints.titreEtapeId',
       },
     },
 

@@ -114,8 +114,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             sectionsWithValue: props.etape.sections_with_values,
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
-            // FIXME aller chercher la bonne feature et ses coordonnées
-            points: props.etape.fondamentale.perimetre?.geojson4326_perimetre?.geometry.coordinates[0][0] ?? [],
+            geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
             decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
             decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },

@@ -4,7 +4,6 @@ import { Knex } from 'knex'
 import Titres from '../../database/models/titres.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import TitresEtapes from '../../database/models/titres-etapes.js'
-import TitresPoints from '../../database/models/titres-points.js'
 import { titresEtapesAreasUpdate } from './titres-etapes-areas-update.js'
 import { BaisieuxPerimetre, foret2BranchesPerimetre, foretReginaPerimetre, SaintEliePerimetre, SinnamaryPerimetre } from './__mocks__/titres-etapes-areas-update.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
@@ -16,6 +15,7 @@ import { ForetId } from 'camino-common/src/static/forets.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
 import { Pool } from 'pg'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -72,6 +72,8 @@ describe('titresEtapesAreasUpdate', () => {
     ])
 
     const titreEtapeId = newEtapeId('titreEtapeIdUniquePourMiseAJourAreas')
+    const multiPolygonWith4Points: FeatureMultiPolygon = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[-53.16822754488772, 5.02935254143807], [-53.15913163720232, 5.029382753429523], [-53.15910186841349, 5.020342601941031], [-53.168197650929095, 5.02031244452273], [-53.16822754488772, 5.02935254143807]]]]}}
+
     await TitresEtapes.query().insert([
       {
         id: titreEtapeId,
@@ -86,37 +88,7 @@ describe('titresEtapesAreasUpdate', () => {
           { id: baisieuxId, surface: 12 },
           { id: saintElieId, surface: 12 },
         ],
-      },
-    ])
-
-    await TitresPoints.query().insert([
-      {
-        titreEtapeId,
-        groupe: 1,
-        contour: 1,
-        point: 1,
-        coordonnees: { x: -53.16822754488772, y: 5.02935254143807 },
-      },
-      {
-        titreEtapeId,
-        groupe: 1,
-        contour: 1,
-        point: 2,
-        coordonnees: { x: -53.15913163720232, y: 5.029382753429523 },
-      },
-      {
-        titreEtapeId,
-        groupe: 1,
-        contour: 1,
-        point: 3,
-        coordonnees: { x: -53.15910186841349, y: 5.020342601941031 },
-      },
-      {
-        titreEtapeId,
-        groupe: 1,
-        contour: 1,
-        point: 4,
-        coordonnees: { x: -53.168197650929095, y: 5.02031244452273 },
+        geojson4326Perimetre: multiPolygonWith4Points
       },
     ])
 

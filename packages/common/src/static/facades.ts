@@ -8,6 +8,13 @@ const IDS = ['Manche Est - Mer du Nord', 'Nord Atlantique - Manche Ouest', 'Sud 
 // prettier-ignore
 const SECTEURS_MARITIME_IDS = [
   'Caps et détroit du Pas de Calais', "Estuaires picards et mer d'Opale", "Côte d'Albâtre et ses ouverts", 'Baie de Seine', 'Large baie de Seine', 'Nord Cotentin', 'Ouest Cotentin - Baie du Mont Saint-Michel', 'Manche Ouest au large des îles anglo-normandes', 'Plaine abyssale', 'Talus continental', 'Plateau continental nord', 'Plateau continental central', 'Manche occidentale', 'Golfe normand breton et baie du Mont Saint-Michel', 'Bretagne nord', "Parc naturel marin d'Iroise", 'Rade de Brest', 'Bretagne sud', 'Estuaire de la Loire', 'Baie de Bourgneuf et littoral vendéen', "Parc naturel marin de l'estuaire de la Gironde et de la mer des Pertuis", "Parc Naturel Marin de l'estuaire de la Gironde et de la Mer des Pertuis", 'Côte sableuse aquitaine', "Parc naturel marin du Bassin d'Arcachon", "Côte rocheuse basque, estuaire de l'Adour, Gouf de Capbreton", 'Talus du Golfe de Gascogne', 'Plaine abyssale du Golfe de Gascogne', 'Périmètre du Parc naturel marin du Golfe du Lion', 'Port-la-Nouvelle', 'Littoral languedocien', 'Sète', 'Camargue', 'Plateau du Golfe du Lion', 'Côte Bleue', 'Golfe de Fos-sur-Mer', 'Rade de Marseille', 'Périmètre du parc national des Calanques', 'Littoral varois Ouest', 'Rade de Toulon', 'Périmètre du Parc national de Port-Cros', 'Littoral varois Est', 'Riviera', 'Nice et abords', 'Littoral des Alpes-Maritimes', "Large Provence Alpes Côte d'Azur", 'Plaine bathyale', 'Canyons du Golfe du Lion', "Périmètre du Parc naturel marin du Cap Corse et de l'Agriate", 'Bastia', 'Balagne', 'Scandola', 'Littoral occidental de la Corse', "Golfe d'Ajaccio", 'Large côte occidental de la Corse', 'Bouches de Bonifacio Ouest', 'Bouches de Bonifacio Est - Porto-Vecchio', 'Plaine orientale et large Est de la Corse', 'Plateau continental du Golfe de Gascogne',] as const
+
+// prettier-ignore
+const TECHNICAL_IDS = [z.literal(1),  z.literal(2),  z.literal(3),  z.literal(4),  z.literal(5),  z.literal(8),  z.literal(6),  z.literal(7),  z.literal(9),  z.literal(10),  z.literal(18),  z.literal(17),  z.literal(11),  z.literal(15),  z.literal(13),  z.literal(14),  z.literal(12),  z.literal(21),  z.literal(20),  z.literal(19),  z.literal(16),  z.literal(22),  z.literal(25),  z.literal(24),  z.literal(28),  z.literal(23),  z.literal(26),  z.literal(27),  z.literal(44),  z.literal(35),  z.literal(38), z.literal(39),  z.literal(29),  z.literal(31),  z.literal(47),  z.literal(48),  z.literal(58),  z.literal(32),  z.literal(51),  z.literal(30),  z.literal(50),  z.literal(40),  z.literal(45),  z.literal(43),  z.literal(52),  z.literal(41),  z.literal(55),  z.literal(54),  z.literal(37),  z.literal(46),  z.literal(36),  z.literal(61),  z.literal(62),  z.literal(59),  z.literal(49),  z.literal(53),  z.literal(33),  z.literal(57),  z.literal(34),z.literal(42), z.literal(56), z.literal(60) ] as const
+
+export const secteurDbIdValidator = z.union(TECHNICAL_IDS)
+export type SecteursMaritimesIds = z.infer<typeof secteurDbIdValidator>
+
 export const facadeMaritimeIdValidator = z.enum(IDS)
 export type FacadesMaritimes = z.infer<typeof facadeMaritimeIdValidator>
 
@@ -84,12 +91,11 @@ const facades = {
     'Bouches de Bonifacio Est - Porto-Vecchio': { ids: [57], secteurId: '29', departementIds: [] },
     'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] },
   },
-} as const satisfies Record<FacadesMaritimes, { [key in SecteursMaritimes]?: unknown }>
+} as const satisfies Record<FacadesMaritimes, { [key in SecteursMaritimes]?: {ids: Readonly<SecteursMaritimesIds[]>, secteurId: string, departementIds: Readonly<DepartementId[]>} }>
 export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
 
 type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
-export type SecteursMaritimesIds = sect['ids'][number]
 
 export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): DepartementId[] => {
   return Object.values(facades)

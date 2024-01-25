@@ -17,8 +17,8 @@ export interface Props {
   etape: {
     typeId: EtapeTypeId,
     heritageProps:{ perimetre: EtapeEdit['heritageProps']['perimetre']}
-    geojson4326_perimetre: FeatureMultiPolygon | null,
-    geojson4326_points: FeatureCollectionPoints | null,
+    geojson4326Perimetre: FeatureMultiPolygon | null,
+    geojson4326Points: FeatureCollectionPoints | null,
     surface: number | null,
   }
   titreTypeId: TitreTypeId
@@ -31,17 +31,17 @@ export interface Props {
 type DisplayPerimetreProps = {
   apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>
   etape: {
-    geojson4326_perimetre: FeatureMultiPolygon | null,
-    geojson4326_points: FeatureCollectionPoints | null,
+    geojson4326Perimetre: FeatureMultiPolygon | null,
+    geojson4326Points: FeatureCollectionPoints | null,
   }
   titreSlug: TitreSlug
   initTab?: 'points' | 'carte'
 }
 
 const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = (props) => {
-  if (props.etape.geojson4326_perimetre !== null) {
+  if (props.etape.geojson4326Perimetre !== null) {
 
-    return <DsfrPerimetre calculateNeighbours={false} apiClient={props.apiClient} perimetre={{geojson4326_points: props.etape.geojson4326_points, geojson4326_perimetre: props.etape.geojson4326_perimetre}} titreSlug={props.titreSlug} initTab={props.initTab ?? 'carte'}   />
+    return <DsfrPerimetre calculateNeighbours={false} apiClient={props.apiClient} perimetre={{geojson4326_points: props.etape.geojson4326Points, geojson4326_perimetre: props.etape.geojson4326Perimetre}} titreSlug={props.titreSlug} initTab={props.initTab ?? 'carte'}   />
   }
   return null
 
@@ -56,7 +56,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
   const importError = ref<boolean>(false)
 
   const complete = computed(() => {
-    return props.etape.typeId !== 'mfr' || props.etape.geojson4326_perimetre !== null
+    return props.etape.typeId !== 'mfr' || props.etape.geojson4326Perimetre !== null
   })
 
   const completeUpdate = () => {
@@ -100,7 +100,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
 
         <DisplayPerimetre apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} />
         </>}
-        read={(heritage) => <DisplayPerimetre apiClient={props.apiClient} etape={{...props.etape, geojson4326_perimetre:  heritage?.perimetre?.geojson4326_perimetre ?? null}} titreSlug={props.titreSlug} initTab={props.initTab} />}
+        read={(heritage) => <DisplayPerimetre apiClient={props.apiClient} etape={{...props.etape, geojson4326Perimetre:  heritage?.perimetre?.geojson4326_perimetre ?? null, geojson4326Points: heritage?.perimetre?.geojson4326_points ?? null}} titreSlug={props.titreSlug} initTab={props.initTab} />}
       />
         <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s flex">

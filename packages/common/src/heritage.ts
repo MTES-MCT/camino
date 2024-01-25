@@ -1,10 +1,8 @@
 import { z } from "zod"
-import type { Etape } from "./etape"
 
+export const ETAPE_HERITAGE_PROPS = ['titulaires', 'amodiataires', 'dateDebut', 'dateFin', 'duree', 'perimetre', 'substances'] as const
 
-export const ETAPE_HERITAGE_PROPS = ['titulaires', 'amodiataires', 'dateDebut', 'dateFin', 'duree', 'perimetre', 'substances'] as const satisfies Readonly<(keyof Etape)[]>
-
-const etapeHeritagePropsValidator = z.enum(ETAPE_HERITAGE_PROPS)
+export const etapeHeritagePropsValidator = z.enum(ETAPE_HERITAGE_PROPS)
 
 export type EtapeHeritageProps = z.infer<typeof etapeHeritagePropsValidator>
 

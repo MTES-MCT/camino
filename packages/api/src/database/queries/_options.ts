@@ -1,7 +1,3 @@
-const points = {
-  graph: `references`,
-}
-
 const titresTypes = {
   graph: `[type]`,
 }
@@ -62,7 +58,6 @@ const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilis
 
 const titresEtapes = {
   graph: `[
-    points(orderAsc).${points.graph},
     type,
     documents.${documents.graph},
     titulaires.${entreprises.graph},
@@ -121,8 +116,6 @@ const titresRelateTrue = ['type', ...titresActivitesRelateTrue.map(k => `activit
 
 const titresRelateFalse = [
   ...titresTypesRelateFalse.map(k => `type.${k}`),
-  'points',
-  'points.references',
   'substancesEtape',
   'pointsEtape',
   'titulaires',
@@ -138,7 +131,6 @@ const titresRelateFalse = [
 const titres = {
   graph: `[
     type.${titresTypes.graph},
-    points(orderAsc).${points.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     demarches(orderDesc).${titresDemarches.graph},
@@ -165,7 +157,6 @@ export default {
   documents,
   entreprises,
   entreprisesEtablissements,
-  points,
   titres,
   titresActivites,
   titresDemarches,
