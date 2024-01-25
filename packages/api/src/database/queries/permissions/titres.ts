@@ -136,6 +136,7 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
     entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresAmodiataires.operateur')
   })
 
+  // FIXME remove this and cleanup
   // visibilité du doublonTitre
   q.modifyGraph('doublonTitre', b => {
     titresQueryModify(b as QueryBuilder<Titres, Titres | Titres[]>, user)
