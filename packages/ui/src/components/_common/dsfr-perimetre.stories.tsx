@@ -338,3 +338,16 @@ export const CustomPoints: StoryFn = () => (
     />
   </>
 )
+
+export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
+  <>
+    <MapPattern />
+    <DsfrPerimetre
+      perimetre={{geojson4326_perimetre, geojson4326_points: {type: 'FeatureCollection', features: [{type: 'Feature', properties: {nom: null, description: null}, geometry: {type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0]}}]}}}
+      initTab='points'
+      calculateNeighbours={false}
+      apiClient={apiClientMock}
+      titreSlug={titreSlugValidator.parse('titre-slug')}
+    />
+  </>
+)

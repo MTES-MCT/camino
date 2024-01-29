@@ -47,10 +47,6 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = (props) => 
 
 }
 
-// FIXMEs
-// renommer l'héritage de point en héritage de périmètre
-// supprimer l'héritage de surface (c'est le même héritage que périmètre)
-
 export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab'], (props) => {
   const importPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
@@ -88,6 +84,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
   }
 
   //FIXME rajouter du padding/margin
+  //FIXME afficher erreur si import pas bon
   return () => (
     <div>
       <HeritageEdit

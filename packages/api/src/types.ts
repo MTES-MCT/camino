@@ -395,7 +395,6 @@ interface ITitreEtape {
   entrepriseDocumentIds?: EntrepriseDocumentId[] | null
   communes?: ICommune[] | null
   forets?: ForetId[] | null
-  // FIXME ajouter un champ en base geojson4326_perimetre
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null

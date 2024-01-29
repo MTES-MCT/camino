@@ -51,6 +51,8 @@ const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
 
   if (perimetre.geojson4326_points !== null ) {
     return perimetre.geojson4326_points.features.map<TableRow<string>>((feature,index) => {
+      const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
+      const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
       return {
         id: `${index}`,
         link: null,
@@ -59,6 +61,8 @@ const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
           nom: { value: feature.properties.nom ?? '' },
           x: { value: `${feature.geometry.coordinates[0]}` },
           y: { value: `${feature.geometry.coordinates[1]}` },
+          x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
+          y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
         },
       }
     })
@@ -110,7 +114,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     if (currentRows.value.status === 'LOADED') {
       const columsToSave = columns(geoSystemSelected.value?.uniteId)
 
-      const values = currentRows.value.value.map(({ columns }) => columsToSave.map(({ id }) => columns[id].value).join(';'))
+      const values = currentRows.value.value.map(({ columns }) => columsToSave.map(({ id }) => columns[id]?.value ?? '').join(';'))
 
       return encodeURI(`${columsToSave.map(c => c.name).join(';')}\n${values.join('\n')}`)
     }
@@ -140,8 +144,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
         currentRows.value = { status: 'LOADING' }
 
         const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_perimetre, geoSysteme.id)
-        // FIXME on perd les points qu'on a mis à la main
-        // On veut faire quoi ? Convertir les points ? Ou le périmètre ?
+        // TODO 2024-01-29 on perd les points qu'on a mis à la main
         currentRows.value = { status: 'LOADED', value: geoJsonToArray({geojson4326_perimetre: newGeojson, geojson4326_points: null}) }
       } catch (e: any) {
         console.error('error', e)

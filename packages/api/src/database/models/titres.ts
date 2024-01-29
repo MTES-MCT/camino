@@ -5,7 +5,6 @@ import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
 import Types from './titres-types.js'
-import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
 import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
@@ -170,6 +169,19 @@ class Titres extends Model {
 
     return json
   }
+}
+
+const titreInsertFormat = (json: Pojo) => {
+  delete json.communes
+  delete json.surface
+  delete json.contenu
+  delete json.activitesAbsentes
+  delete json.activitesEnConstruction
+  delete json.abonnement
+  delete json.geojson4326Centre
+  delete json.geojson4326Perimetre
+
+  return json
 }
 
 export default Titres
