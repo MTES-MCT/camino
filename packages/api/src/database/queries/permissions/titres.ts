@@ -112,7 +112,6 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
     }
   }
 
-
   // {"type":"Point","coordinates":[5.636779897,43.389000571]}
   q.joinRaw("left join titres_etapes teGeojsonCentre on teGeojsonCentre.id = titres.props_titre_etapes_ids ->> 'points'")
   q.select(raw('ST_AsGeoJSON(ST_Centroid(teGeojsonCentre.geojson4326_perimetre))::json as geojson4326_centre'))
@@ -134,12 +133,6 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
 
   q.modifyGraph('amodiataires', b => {
     entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresAmodiataires.operateur')
-  })
-
-  // FIXME remove this and cleanup
-  // visibilité du doublonTitre
-  q.modifyGraph('doublonTitre', b => {
-    titresQueryModify(b as QueryBuilder<Titres, Titres | Titres[]>, user)
   })
 
   return q

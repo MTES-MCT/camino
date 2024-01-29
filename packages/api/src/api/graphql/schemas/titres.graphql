@@ -83,7 +83,6 @@ type Titre {
   "Secteurs Maritime"
   secteursMaritime: [String]
 
-  doublonTitre: Titre
   geojson4326Centre: Json
   geojson4326Perimetre: Json
 

@@ -11,6 +11,7 @@ import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -111,20 +112,14 @@ class Titres extends Model {
       modelClass: TitresActivites,
       join: { from: 'titres.id', to: 'titresActivites.titreId' },
     },
-
-    doublonTitre: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Titres,
-      join: { from: 'titres.doublonTitreId', to: 'titres.id' },
-    },
   })
 
   async $beforeInsert(context: QueryContext) {
-    if (!this.id) {
+    if (isNullOrUndefined(this.id)) {
       this.id = idGenerate()
     }
 
-    if (!this.slug && this.typeId && this.nom) {
+    if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.typeId) && isNotNullNorUndefined(this.nom)) {
       this.slug = titreSlugValidator.parse(`${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`)
     }
 
@@ -170,7 +165,6 @@ class Titres extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-
     json = titreInsertFormat(json)
     json = super.$formatDatabaseJson(json)
 
