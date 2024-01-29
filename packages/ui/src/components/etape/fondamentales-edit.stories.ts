@@ -27,15 +27,7 @@ const etape: EtapeFondamentale = {
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
   notes: null,
-  perimetre: {
-    geojson4326_perimetre: null,
-    geojson4326_points: null,
-    communes: [],
-    forets: [],
-    sdom_zones:[],
-    secteurs_maritimes: [],
-    surface: 0
-  },
+  perimetre: null,
   heritageProps: {
     dateDebut: {
       actif: false,

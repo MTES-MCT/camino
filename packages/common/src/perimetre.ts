@@ -4,7 +4,7 @@ import { secteurDbIdValidator, secteurMaritimeValidator } from './static/facades
 import { foretIdValidator } from './static/forets.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
 import { titreStatutIdValidator } from './static/titresStatuts.js'
-import { titreSlugValidator } from './validators/titres.js'
+import { titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { tempDocumentNameValidator } from './document.js'
 import { etapeTypeIdValidator } from './static/etapesTypes.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
@@ -63,12 +63,12 @@ export const geojsonInformationsValidator = z.object({
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
   
   
-
-export type PerimetreAlertes = Pick<GeojsonInformations, 'superposition_alertes' | 'sdomZoneIds'>
+export const perimetreInformationsValidator = geojsonInformationsValidator.pick({superposition_alertes: true, sdomZoneIds: true})
+export type PerimetreInformations = z.infer<typeof perimetreInformationsValidator>
 
 export const geojsonImportBodyValidator = z.object({  tempDocumentName: tempDocumentNameValidator,
   fileType: perimetreFileUploadTypeValidator,
-    etapeTypeId: etapeTypeIdValidator,
-    titreTypeId: titreTypeIdValidator, })
+    titreTypeId: titreTypeIdValidator, 
+  titreSlug: titreSlugValidator})
 
 export type GeojsonImportBody = z.infer<typeof geojsonImportBodyValidator>

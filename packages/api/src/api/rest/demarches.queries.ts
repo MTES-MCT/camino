@@ -91,6 +91,7 @@ export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSl
 
 const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
 select
+    id as demarche_id,
     slug as demarche_slug,
     titre_id
 from

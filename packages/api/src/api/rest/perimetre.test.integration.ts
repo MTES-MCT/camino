@@ -10,6 +10,7 @@ import { GeojsonImportBody } from 'camino-common/src/perimetre.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -73,9 +74,10 @@ describe('geojsonImport', () => {
       mkdirSync(dir, { recursive: true })
       writeFileSync(`${dir}/${fileName}`, 'Hey there!')
     const body: GeojsonImportBody = {
-      etapeTypeId: 'mfr',
+      titreSlug: titreSlugValidator.parse('titre-slug'),
       titreTypeId: 'arm',
-      tempDocumentName: tempDocumentNameValidator.parse(fileName)
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson'
     }
     
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
@@ -89,9 +91,10 @@ describe('geojsonImport', () => {
       mkdirSync(dir, { recursive: true })
       writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
     const body: GeojsonImportBody = {
-      etapeTypeId: 'mfr',
+      titreSlug: titreSlugValidator.parse('titre-slug'),
       titreTypeId: 'arm',
-      tempDocumentName: tempDocumentNameValidator.parse(fileName)
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson'
     }
     
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
@@ -176,9 +179,10 @@ describe('geojsonImport', () => {
       mkdirSync(dir, { recursive: true })
       writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
     const body: GeojsonImportBody = {
-      etapeTypeId: 'mfr',
+      titreSlug: titreSlugValidator.parse('mfr'),
       titreTypeId: 'arm',
-      tempDocumentName: tempDocumentNameValidator.parse(fileName)
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson'
     }
     
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)

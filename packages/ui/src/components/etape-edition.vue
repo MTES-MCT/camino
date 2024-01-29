@@ -74,6 +74,7 @@ import {SDOMZoneIds, SDOMZones} from 'camino-common/src/static/sdom'
 import {isNotNullNorUndefined} from 'camino-common/src/typescript-tools'
 import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
+import { apiClient } from '../api/api-client'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
@@ -213,11 +214,20 @@ export default {
       this.newDate = date
     },
     async init() {
+      const titreDemarcheId = this.$route.query['demarche-id']
       await this.$store.dispatch('titreEtapeEdition/init', {
-        titreDemarcheId: this.$route.query['demarche-id'],
+        titreDemarcheId,
         id: this.etapeId,
         date: this.newDate,
       })
+
+      let perimetreInfos = null
+      if( isNotNullNorUndefined(this.etapeId) ){
+        perimetreInfos = await apiClient.getPerimetreInfosByEtapeId(this.etapeId)
+      }else{
+        perimetreInfos = await apiClient.getPerimetreInfosByDemarcheId(titreDemarcheId)
+      }
+      this.alertesUpdate(perimetreInfos)
     },
 
     beforeWindowUnload(e) {

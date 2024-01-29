@@ -24,6 +24,7 @@ export interface IGetGeojsonByGeoSystemeIdDbQuery {
 export interface IGetTitresIntersectionWithGeojsonDbParams {
   domaine_id: string;
   geojson4326_perimetre: string;
+  titre_slug: string;
   titre_statut_ids: readonly (string)[];
 }
 

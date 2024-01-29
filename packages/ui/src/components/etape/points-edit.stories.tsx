@@ -77,8 +77,8 @@ const onEtapeChange= (geojsonInformations: GeojsonInformations) => {
 const etapeNoHeritage: Props['etape'] = {
   typeId: 'mfr',
   heritageProps: {perimetre: {actif: false}},
-  geojson4326_perimetre: null,
-  geojson4326_points: null,
+  geojson4326Perimetre: null,
+  geojson4326Points: null,
   surface: 0,
 }
 
@@ -87,15 +87,7 @@ export const EmptyNoHeritage: StoryFn = () => <PointsEdit initTab='points' apiCl
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
-  heritageProps: {perimetre: {actif: true, etape: {date: toCaminoDate('2023-01-01'), type: EtapesTypes['mfr'], perimetre: {
-    communes: [],
-    forets: [],
-    sdom_zones: [],
-    secteurs_maritimes: [],
-    surface: 2,
-    geojson4326_perimetre: null,
-    geojson4326_points: null,
-  } }}},
+  heritageProps: {perimetre: {actif: true, etape: {date: toCaminoDate('2023-01-01'), type: EtapesTypes['mfr'], perimetre: null }}},
 }
 export const EmptyHeritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId='arm' titreSlug={titreSlug}/>
 
@@ -117,7 +109,7 @@ export const Heritage: StoryFn = () => <PointsEdit initTab='points' completeUpda
 
 const etape: Props['etape'] = {
   ...etapeEmptyHeritage,
-  geojson4326_perimetre: perimetre,
+  geojson4326Perimetre: perimetre,
   heritageProps: {perimetre: {actif: false}},
 }
 export const FilledNoHeritage: StoryFn = () => <PointsEdit initTab='points' completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etape} titreTypeId='arm' titreSlug={titreSlug} />

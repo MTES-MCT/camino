@@ -4,6 +4,7 @@ import { PointsImportPopup } from './points-import-popup'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
+import { titreSlugValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPoint',
@@ -38,4 +39,4 @@ uploadTempDocument(document) {
 },
 }
 
-export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} etapeTypeId='mfr' titreTypeId='arm' />
+export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} titreSlug={titreSlugValidator.parse('titreslug')} titreTypeId='arm' />

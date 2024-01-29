@@ -1,5 +1,5 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
-import { getMostRecentEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
+import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
@@ -59,19 +59,11 @@ export const TitreDemarche = defineComponent<Props>(props => {
 
   const demarche = computed<TitreGetDemarche | null>(() => (demarchesAsc.value.length > 0 ? demarchesAsc.value[demarchesAsc.value.length - 1] : null))
 
-  const fondamentale = computed<null | DemarcheEtapeFondamentale['fondamentale']>(() => {
 
-    const etape = getMostRecentEtapeFondamentaleValide(demarchesAsc.value)
-
-    if( etape !== null && 'fondamentale' in etape){
-      return etape.fondamentale
-    }
-    return null
-  })
 
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return fondamentale.value?.perimetre ?? null
+    return getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', demarchesAsc.value)
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -94,15 +86,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return fondamentale.value?.titulaires ?? null
+    return getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', demarchesAsc.value)
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return fondamentale.value?.amodiataires ?? null
+    return getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', demarchesAsc.value)
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return fondamentale.value?.substances ?? null
+    return getMostRecentValuePropFromEtapeFondamentaleValide('substances', demarchesAsc.value)
   })
 
   const addDemarchePopup = ref<boolean>(false)

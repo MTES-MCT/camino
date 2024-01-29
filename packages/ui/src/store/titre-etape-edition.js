@@ -69,19 +69,6 @@ const actions = {
 
       if (id) {
         await dispatch('dateUpdate', { date: state.element.date })
-
-
-        //FIXME
-        // const { documentTypeIds, alertes } = await titreEtapePerimetreInformations({
-        //   titreEtapeId: id,
-        // })
-
-        // commit('metasSet', {
-        //   sdomZonesDocumentTypeIds: documentTypeIds,
-        //   alertes,
-        // })
-
-        await dispatch('documentInit', state.element.documents)
       }
 
       commit('load')
@@ -129,13 +116,6 @@ const actions = {
 
       commit('heritageSet', { etape: newEtape })
       await dispatch('documentInit', state.element.documents)
-
-      //FIXME maintenant c’est getPerimetreAlertes
-      // const alertes = []
-      // const { alertes } = await perimetreInformations({
-      //   demarcheId: state.metas.demarche.id,
-      //   etapeTypeId,
-      // })
 
       commit('heritageLoaded', true)
     } catch (e) {

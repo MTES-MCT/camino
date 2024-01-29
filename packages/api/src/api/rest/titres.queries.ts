@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche,  getMostRecentEtapeFondamentaleValide, titreGetValidator  } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche, titreGetValidator  } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
@@ -24,7 +24,6 @@ import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } fro
 import {
   getEntrepriseDocumentIdsByEtapeId,
   getDocumentsByEtapeId,
-  getPointsByEtapeIdQuery,
   getTitulairesByEtapeIdQuery,
   getAmodiatairesByEtapeIdQuery,
 } from '../../database/queries/titres-etapes.queries.js'
@@ -37,6 +36,7 @@ import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId, titreIdOrSlugValidator } from 'camino-common/src/validators/titres.js'
+import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -89,9 +89,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
           if (!(etape.heritage_props?.perimetre?.actif ?? false)) {
-            const etapePoints = await getPointsByEtapeIdQuery(etape.id, pool)
 
-            if (etapePoints.length > 0) {
+            if (isNotNullNorUndefined(etape.geojson4326_perimetre)) {
               const communes: Commune[] = []
               if (isNonEmptyArray(etape.communes)) {
                 const ids = etape.communes.map(({ id }) => id)
@@ -101,16 +100,16 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               }
 
               perimetre = {
-                geojson4326_perimetre: isNotNullNorUndefined(etape.geojson4326_perimetre) ? {
+                geojson4326_perimetre:  {
                   type: 'Feature', 
                   properties: {},
                 geometry: etape.geojson4326_perimetre
-              } : null,
+              },
                 geojson4326_points: etape.geojson4326_points,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],
-                surface: etape.surface,
+                surface: etape.surface ?? 0,
                 forets: etape.forets ?? [],
               }
             }
@@ -338,7 +337,7 @@ order by
 
 
 const getTitreByIdOrSlugValidator = z.object({
-   titre_slug: titreIdOrSlugValidator,
+   titre_slug: titreSlugValidator,
    titre_type_id: titreTypeIdValidator
    })
 type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>

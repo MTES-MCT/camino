@@ -1,4 +1,4 @@
-import { Model, Pojo, QueryContext } from 'objection'
+import { Model, ModelOptions, Pojo, QueryContext } from 'objection'
 
 import { ITitreEtape } from '../../types.js'
 
@@ -139,6 +139,16 @@ class TitresEtapes extends Model {
     }
 
     return super.$beforeInsert(context)
+  }
+
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
+
+    if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
+      this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
+    }
+
+    return super.$beforeUpdate(opt, context)
   }
 
   async $afterFind(context: QueryContext) {

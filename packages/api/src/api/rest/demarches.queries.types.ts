@@ -48,6 +48,7 @@ export interface IGetDemarcheByIdOrSlugDbParams {
 
 /** 'GetDemarcheByIdOrSlugDb' return type */
 export interface IGetDemarcheByIdOrSlugDbResult {
+  demarche_id: string;
   demarche_slug: string | null;
   titre_id: string;
 }

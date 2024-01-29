@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { TitrePropTitreEtapeFindDemarcheEtape, getMostRecentValuePropFromEtapeFondamentaleValide } from './titres'
-import { toCaminoDate } from './date'
-import { entrepriseIdValidator } from './entreprise'
+import { TitrePropTitreEtapeFindDemarcheEtape } from 'camino-common/src/titres'
+import { getMostRecentEtapeFondamentaleValide } from './titre-heritage'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { toCaminoDate } from 'camino-common/src/date'
 describe('getMostRecentValueProp', () => {
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
@@ -47,7 +48,7 @@ describe('getMostRecentValueProp', () => {
     }
 
     expect(
-      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [
+      getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dpu, dex],
           ordre: 1
@@ -56,7 +57,7 @@ describe('getMostRecentValueProp', () => {
     ).toStrictEqual(dpu)
 
     expect(
-      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre' , [
+      getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dex, dpu],
           ordre: 1

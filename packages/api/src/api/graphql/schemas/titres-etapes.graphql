@@ -193,6 +193,8 @@ input InputEtapeModification {
   entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
   notes: String
+  geojson4326Perimetre: Json
+  geojson4326Points: Json
 }
 
 input InputEtapeFiltre {

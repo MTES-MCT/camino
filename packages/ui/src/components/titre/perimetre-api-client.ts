@@ -1,10 +1,14 @@
-import { FeatureMultiPolygon, GeojsonImportBody, GeojsonInformations } from 'camino-common/src/perimetre'
+import { FeatureMultiPolygon, GeojsonImportBody, GeojsonInformations, PerimetreInformations } from 'camino-common/src/perimetre'
 import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { postWithJson } from '../../api/client-rest'
+import { getWithJson, postWithJson } from '../../api/client-rest'
+import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape'
+import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche'
 
 export interface PerimetreApiClient {
   getGeojsonByGeoSystemeId: (geojson: FeatureMultiPolygon, geoSystemeId: TransformableGeoSystemeId) => Promise<FeatureMultiPolygon>
   geojsonImport: (body: GeojsonImportBody, geoSystemeId: TransformableGeoSystemeId) => Promise<GeojsonInformations | Error>
+  getPerimetreInfosByEtapeId: (etapeId: EtapeIdOrSlug) => Promise<PerimetreInformations>
+  getPerimetreInfosByDemarcheId: (demarcheId: DemarcheIdOrSlug) => Promise<PerimetreInformations>
 }
 
 export const perimetreApiClient: PerimetreApiClient = {
@@ -13,5 +17,11 @@ export const perimetreApiClient: PerimetreApiClient = {
   },
   geojsonImport: (body: GeojsonImportBody, geoSystemeId: TransformableGeoSystemeId) => {
     return postWithJson('/rest/geojson/import/:geoSystemeId', { geoSystemeId }, body)
+  },
+  getPerimetreInfosByEtapeId: (etapeId: EtapeIdOrSlug) => {
+    return getWithJson('/rest/etapes/:etapeId/geojson', { etapeId })
+  },
+  getPerimetreInfosByDemarcheId: (demarcheId: DemarcheIdOrSlug) => {
+    return getWithJson('/rest/demarches/:demarcheId/geojson', { demarcheId })
   }
 }

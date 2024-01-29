@@ -19,7 +19,7 @@ import { TableSortEvent } from './_ui/table'
 import { activitesColonneIdAnnee } from './activites'
 import { CaminoDate, dateFormat, getCurrent } from 'camino-common/src/date'
 import { Alert } from './_ui/alert'
-import { TitreGet, getMostRecentEtapeFondamentaleValide } from 'camino-common/src/titres'
+import { TitreGet, getMostRecentValuePropFromEtapeFondamentaleValide } from 'camino-common/src/titres'
 import { titreIdOrSlugValidator, TitreIdOrSlug, TitreId } from 'camino-common/src/validators/titres'
 import { TitresLinkForm } from './titre/titres-link-form'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites'
@@ -193,17 +193,11 @@ export const PureTitre = defineComponent<Props>(props => {
             () => Promise.resolve(titre.titre_type_id),
             () => Promise.resolve(administrations.value),
             () => {
-              const etapeFondamentale = getMostRecentEtapeFondamentaleValide(titre.demarches)
 
-              if( etapeFondamentale !== null && 'fondamentale' in etapeFondamentale){
-
-                const titulaires = etapeFondamentale?.fondamentale.titulaires ?? []
-                const amodiataires = etapeFondamentale?.fondamentale.amodiataires ?? []
+              const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', titre.demarches) ?? []
+              const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', titre.demarches) ?? []
 
                 return Promise.resolve([...titulaires, ...amodiataires].map(({ id }) => id))
-              }
-
-              return Promise.resolve([])
             }
           ))
       } else {
@@ -237,14 +231,7 @@ export const PureTitre = defineComponent<Props>(props => {
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
 
     if (titreData.value.status === 'LOADED' && titreData.value.value.demarches !== null) {
-
-      const etapeFondamentale = getMostRecentEtapeFondamentaleValide(titreData.value.value.demarches)
-
-      if( etapeFondamentale !== null && 'fondamentale' in etapeFondamentale){
-
-        return etapeFondamentale.fondamentale?.perimetre ?? null
-      }
-
+      return getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', titreData.value.value.demarches)
     }
 
     return   null

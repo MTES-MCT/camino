@@ -1,23 +1,25 @@
-import { DemarcheId,  demarcheIdValidator } from 'camino-common/src/demarche.js'
+import { DemarcheId,  demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
 import { GEO_SYSTEME_IDS, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
-import { EtapeTypeId, etapeTypeIdValidator, isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { getMostRecentEtapeFondamentaleValide } from 'camino-common/src/titres.js'
+import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles.js'
 import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries.js'
 import { getTitreByIdOrSlug } from './titres.queries.js'
-import { etapeIdValidator } from 'camino-common/src/etape.js'
+import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
 import { getEtapeById } from './etapes.queries.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations, MultiPolygon, PerimetreAlertes, featureCollectionValidator, featureMultiPolygonValidator, geojsonImportBodyValidator } from 'camino-common/src/perimetre.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations, MultiPolygon, PerimetreInformations, featureCollectionValidator, featureMultiPolygonValidator, geojsonImportBodyValidator } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
 import { createReadStream } from 'node:fs'
 import shpjs from 'shpjs'
 import { Polygon } from 'geojson'
 import { Stream } from 'node:stream'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { TitreSlug } from 'camino-common/src/validators/titres.js'
 
 export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -35,58 +37,7 @@ export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoReques
   }
 }
 
-
-// /rest/perimetre/:demarcheId/:etapeTypeId/alertes
-//FIXME à appeler lors de la création d’une nouvelle étape non fondamentale, 
-export const getPerimetreAlertes = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreAlertes>) => {
-  const user = req.auth
-
-  if (!user) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-  }else{
-  const demarcheIdParsed = demarcheIdValidator.safeParse(req.params.demarcheId)
-  const etapeTypeIdParsed = etapeTypeIdValidator.safeParse(req.params.etapeTypeId)
-
-  if (!demarcheIdParsed.success || !etapeTypeIdParsed.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    try {
-
-      //FIXME canRead demarche
-
-
-    //FIXME charger le perimètre du titre si l’étape type n’est pas fondamentale
-    
-    const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdParsed.data)
-
-    const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
-
-    res.json(await getAlertesByDemarcheId(pool, user, titre.titre_type_id, demarcheIdParsed.data))
-
-
-    } catch (e) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-      console.error(e)
-    }
-  }
-}
-}
-
-const getAlertesByDemarcheId = async (pool: Pool, user: User, titreTypeId: TitreTypeId, demarcheId: DemarcheId): Promise<PerimetreAlertes> => {
-  const etapes = await getEtapesByDemarcheId(pool, demarcheId)
-
-    const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ordre: 1, etapes}])
-
-    if( mostRecentEtapeFondamentale === null){
-      return {superposition_alertes: [], sdomZoneIds: []}
-    }else{
-      return {superposition_alertes: await getAlertesSuperposition(mostRecentEtapeFondamentale.geojson4326_perimetre, mostRecentEtapeFondamentale.etape_type_id, titreTypeId, user, pool), sdomZoneIds: mostRecentEtapeFondamentale.sdom_zones ?? [] }
-    }
-
-}
-
-// /rest/perimetre/:etapeId
-export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreAlertes>) => {
+export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
 
   //on charge l’étape pour récupérer son périmètre et ses zones du sdom
 
@@ -95,30 +46,58 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
   if (!user) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   }else{
-  const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+  const etapeIdOrSlugParsed = etapeIdOrSlugValidator.safeParse(req.params.etapeId)
+  const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheId)
 
-  if (!etapeIdParsed.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  if (!etapeIdOrSlugParsed.success && !demarcheIdOrSlugParsed.success) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
 
       //FIXME canRead etape
 
-    const etape = await getEtapeById(pool, etapeIdParsed.data)
+    let etape: null | {demarche_id: DemarcheId, geojson4326_perimetre: MultiPolygon | null, sdom_zones: SDOMZoneId[]} = null
+    if (etapeIdOrSlugParsed.success) {
+      const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
+
+      etape = {demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? []}
+    } else if (demarcheIdOrSlugParsed.success) {
+      const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
+      const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
+
+      const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ordre: 1, etapes}])
+      if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
+        etape = {demarche_id: demarche.demarche_id, geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre, sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? []}
+      }  
+
+    } else {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      console.error('cas impossible où ni l\'étape id ni la démarche Id n\'est chargée')
+    }
+    
+    
+    if (isNullOrUndefined(etape)) {
+      res.json({
+        superposition_alertes: [], 
+        sdomZoneIds: []})
+    } else {
+      
+
     const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
     const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
     
-    if( isEtapeTypeIdFondamentale(etape.etape_type_id)){
-      res.json({superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, etape.etape_type_id, titre.titre_type_id, user, pool), sdomZoneIds: etape.sdom_zones ?? [] })
-    }else{
-      res.json(await getAlertesByDemarcheId(pool, user, titre.titre_type_id, etape.demarche_id))
+      res.json({
+        superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool), 
+        sdomZoneIds: etape.sdom_zones
+      })
+ 
+
     }
-
-
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)
     }
+  
   }
 }
 
@@ -178,7 +157,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
               
         const geoInfo = await getGeojsonInformation(pool, geojson)
         const result: GeojsonInformations = {
-          superposition_alertes: await getAlertesSuperposition(geojson,geojsonImportInput.data.etapeTypeId, geojsonImportInput.data.titreTypeId, user, pool),
+          superposition_alertes: await getAlertesSuperposition(geojson, geojsonImportInput.data.titreTypeId,  geojsonImportInput.data.titreSlug, user, pool),
           communes: geoInfo.communes,
           foretIds: geoInfo.forets,
           sdomZoneIds: geoInfo.sdom,
@@ -206,14 +185,14 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 
 const getAlertesSuperposition = async (
   geojson4326_perimetre: MultiPolygon | null,
-  etapeTypeId: EtapeTypeId,
   titreTypeId: TitreTypeId, 
+  titreSlug: TitreSlug,
   user: User,
   pool: Pool) => {
-   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId) && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
+   if (titreTypeId === 'axm' && (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && geojson4326_perimetre !== null) {
 
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
-      return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre)
+      return getTitresIntersectionWithGeojson(pool, geojson4326_perimetre, titreSlug)
 
   }
 

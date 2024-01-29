@@ -107,7 +107,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
         </div>
         {props.etape.surface}
       </div>
-      {importPopup.value ? <PointsImportPopup close={closePopup} result={result} apiClient={props.apiClient} etapeTypeId={props.etape.typeId} titreTypeId={props.titreTypeId} /> : null}
+      {importPopup.value ? <PointsImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug}/> : null}
     </div>
   )
 })

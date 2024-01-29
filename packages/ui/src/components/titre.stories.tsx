@@ -188,7 +188,7 @@ const titre: TitreGet = {
                   ],
                 },
               },
-              surface: null,
+              surface: 0,
               communes: [],
               sdom_zones: [],
               forets: [],

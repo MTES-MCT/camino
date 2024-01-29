@@ -24,7 +24,7 @@ import {
 } from './titres.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './validators/fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
@@ -32,7 +32,7 @@ import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
 import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
-import { featureMultiPolygonValidator, geojsonImportBodyValidator, geojsonInformationsValidator } from './perimetre.js'
+import { featureMultiPolygonValidator, geojsonImportBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
@@ -69,6 +69,8 @@ const IDS = [
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
   '/rest/utilisateur/generateQgisToken',
   '/rest/etapesTypes/:demarcheId/:date',
+  '/rest/demarches/:demarcheId/geojson',
+  '/rest/etapes/:etapeId/geojson',
   '/rest/etapes/:etapeId/entrepriseDocuments',
   '/rest/etapes/:etapeId',
   '/rest/etapes/:etapeId/depot',
@@ -134,6 +136,8 @@ export const CaminoRestRoutes = {
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: { entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }, delete: true },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
+  '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeId': { params: { etapeId: etapeIdValidator }, delete: true },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
