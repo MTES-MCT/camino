@@ -21,14 +21,12 @@ export const indexToLetter = (value: number): string => {
     .join('')
 }
 
-export const toDegresMinutesSecondes = (value: number): { degres: number; minutes: number; secondes: number } => {
+export const toDegresMinutes = (value: number): { degres: number; minutes: number } => {
   const degres = Math.trunc(value)
   const minutes = Math.abs((value - degres) * 60)
-  const secondes = (minutes - Math.trunc(minutes)) * 60
 
   return {
     degres,
-    minutes: Math.trunc(minutes),
-    secondes: Number.parseFloat(secondes.toFixed(3)),
+    minutes: Number.parseFloat(minutes.toFixed(4)),
   }
 }

@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { indexToLetter, toDegresMinutesSecondes } from './number'
+import { indexToLetter, toDegresMinutes } from './number'
 
 test('indexToLetter', () => {
   expect(indexToLetter(0)).toBe('A')
@@ -10,21 +10,22 @@ test('indexToLetter', () => {
   expect(indexToLetter(52)).toBe('BA')
 })
 
-test('toDegresMinutesSecondes', () => {
-  expect(toDegresMinutesSecondes(50.467995)).toStrictEqual({
+test('toDegresMinutes', () => {
+  expect(toDegresMinutes(43.60426)).toStrictEqual({
+    degres: 43,
+    minutes: 36.2556,
+  })
+  expect(toDegresMinutes(50.467995)).toStrictEqual({
     degres: 50,
-    minutes: 28,
-    secondes: 4.782,
+    minutes: 28.0797,
   })
 
-  expect(toDegresMinutesSecondes(11.719666)).toStrictEqual({
+  expect(toDegresMinutes(11.719666)).toStrictEqual({
     degres: 11,
-    minutes: 43,
-    secondes: 10.798,
+    minutes: 43.18,
   })
-  expect(toDegresMinutesSecondes(-6.113892)).toStrictEqual({
+  expect(toDegresMinutes(-6.113892)).toStrictEqual({
     degres: -6,
-    minutes: 6,
-    secondes: 50.011,
+    minutes: 6.8335,
   })
 })
