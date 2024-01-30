@@ -16,7 +16,6 @@ export const titreEtapeFormat = (titreEtape: ITitreEtape, fields = titreEtapeFor
 
   if (!fields) return titreEtape
 
-
   titreEtape.titulaires = titreEtape.titulaires?.map(entrepriseFormat)
 
   titreEtape.amodiataires = titreEtape.amodiataires?.map(entrepriseFormat)

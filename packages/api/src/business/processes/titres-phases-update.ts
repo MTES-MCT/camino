@@ -12,7 +12,7 @@ export const titresDemarchesDatesUpdate = async (pool: Pool, titresIds?: string[
     { ids: titresIds },
     {
       fields: {
-        demarches: { etapes: {  id: {} } },
+        demarches: { etapes: { id: {} } },
       },
     },
     userSuper

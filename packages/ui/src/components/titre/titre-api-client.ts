@@ -249,7 +249,6 @@ export const titreApiClient: TitreApiClient = {
                 nom
               }
               geojson4326Centre
-
             }
             total
           }

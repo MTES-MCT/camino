@@ -70,8 +70,8 @@ import { getCurrent } from 'camino-common/src/date'
 import FormSaveBtn from './etape/pure-form-save-btn.vue'
 import DeposePopup from './etape/depose-popup.vue'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
-import {SDOMZoneIds, SDOMZones} from 'camino-common/src/static/sdom'
-import {isNotNullNorUndefined} from 'camino-common/src/typescript-tools'
+import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { apiClient } from '../api/api-client'
@@ -96,7 +96,7 @@ export default {
       promptMsg: 'Quitter le formulaire sans enregistrer les changements ?',
       newDate: getCurrent(),
       sdomZoneIds: [],
-      superposition_alertes: []
+      superposition_alertes: [],
     }
   },
 
@@ -130,18 +130,21 @@ export default {
     },
 
     alertes() {
-
       const alertes = []
-      if( this.superposition_alertes.length > 0 ){
-        alertes.push(...this.superposition_alertes.map(t => ({message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titre_statut_id) ? TitresStatuts[t.titre_statut_id].nom : ''} » est superposé à ce titre`,
-            url: `/titres/${t.slug}`, })))
+      if (this.superposition_alertes.length > 0) {
+        alertes.push(
+          ...this.superposition_alertes.map(t => ({
+            message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titre_statut_id) ? TitresStatuts[t.titre_statut_id].nom : ''} » est superposé à ce titre`,
+            url: `/titres/${t.slug}`,
+          }))
+        )
       }
 
       // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
-      if(['mfr', 'mcr'].includes(this.etapeType.id) && this.titre.typeId === 'axm') {
+      if (['mfr', 'mcr'].includes(this.etapeType.id) && this.titre.typeId === 'axm') {
         const zoneId = this.sdomZoneIds.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
         if (zoneId) {
-          alertes.push({message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`})
+          alertes.push({ message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}` })
         }
       }
 
@@ -222,9 +225,9 @@ export default {
       })
 
       let perimetreInfos = null
-      if( isNotNullNorUndefined(this.etapeId) ){
+      if (isNotNullNorUndefined(this.etapeId)) {
         perimetreInfos = await apiClient.getPerimetreInfosByEtapeId(this.etapeId)
-      }else{
+      } else {
         perimetreInfos = await apiClient.getPerimetreInfosByDemarcheId(titreDemarcheId)
       }
       this.alertesUpdate(perimetreInfos)
@@ -301,7 +304,7 @@ export default {
     },
 
     keyUp(e) {
-      if ((e.which || e.keyCode) === 13  && this.complete && !this.isPopupOpen) {
+      if ((e.which || e.keyCode) === 13 && this.complete && !this.isPopupOpen) {
         if (this.dateIsVisible && this.newDate) {
           this.$refs['date-button'].focus()
           this.dateUpdate()
@@ -320,14 +323,14 @@ export default {
       this.typeComplete = complete
     },
 
-    alertesUpdate(infos){
+    alertesUpdate(infos) {
       this.superposition_alertes = infos.superposition_alertes
       this.sdomZoneIds = infos.sdomZoneIds
 
       const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
 
       this.$store.commit('titreEtapeEdition/metasSet', {
-        sdomZonesDocumentTypeIds: documentTypeIds
+        sdomZonesDocumentTypeIds: documentTypeIds,
       })
       this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
     },

@@ -218,16 +218,14 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-
-      //FIXME on peut pas mettre les forêts et compagnie aussi ? (idem plus bas)
-      const {communes, sdom} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      // FIXME on peut pas mettre les forêts et compagnie aussi ? (idem plus bas)
+      const { communes, sdom } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
 
       etape.communes = communes
       sdomZones.push(...sdom)
-    }else{
+    } else {
       etape.communes = []
     }
-    
 
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
@@ -399,11 +397,11 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      const {communes, sdom} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      const { communes, sdom } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
 
       etape.communes = communes
       sdomZones.push(...sdom)
-    }else{
+    } else {
       etape.communes = []
     }
 
@@ -486,7 +484,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
       throw new Error("l'étape n'existe pas")
     }
 
-    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, } }, user)
+    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} } } }, user)
 
     if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
@@ -508,12 +506,10 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-
-      const {sdom} = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+      const { sdom } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
 
       sdomZones.push(...sdom)
     }
-
 
     const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
     // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titreDemarche.titre

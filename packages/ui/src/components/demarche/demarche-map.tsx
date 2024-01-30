@@ -23,9 +23,7 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: {geojson4326_perimetre: FeatureMultiPolygon
-    geojson4326_points: FeatureCollectionPoints | null
-  }
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -224,7 +222,6 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
   },
 }
 
-
 export const DemarcheMap = defineComponent<Props>(props => {
   const mapRef = ref<HTMLDivElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
@@ -245,43 +242,43 @@ export const DemarcheMap = defineComponent<Props>(props => {
 
   const points = computed<FeatureCollectionPoints>(() => {
     if (props.perimetre.geojson4326_points !== null) {
-      return  {
+      return {
         type: 'FeatureCollection',
         features: props.perimetre.geojson4326_points.features.map(feature => {
-          return {...feature, properties: {...feature.properties, latitude: feature.geometry.coordinates[1], longitude:feature.geometry.coordinates[0] }}
-        })
+          return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
+        }),
       }
     } else {
-    const currentPoints: (FeatureCollectionPoints['features'][0] & {properties: {latitude: string; longitude: string}})[] = []
-    let index = 0
-    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-      topLevel.forEach((secondLevel, secondLevelIndex) =>
-        secondLevel.forEach(([x, y], currentLevelIndex) => {
-          // On ne rajoute pas le dernier point qui est égal au premier du contour...
-          if (props.perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-            currentPoints.push({
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: [x, y],
-              },
-              properties: {
-                nom: `${indexToLetter(index)}`,
-                latitude: `${y}`,
-                longitude: `${x}`,
-              },
-            })
-            index++
-          }
-        })
+      const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []
+      let index = 0
+      props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+        topLevel.forEach((secondLevel, secondLevelIndex) =>
+          secondLevel.forEach(([x, y], currentLevelIndex) => {
+            // On ne rajoute pas le dernier point qui est égal au premier du contour...
+            if (props.perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+              currentPoints.push({
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [x, y],
+                },
+                properties: {
+                  nom: `${indexToLetter(index)}`,
+                  latitude: `${y}`,
+                  longitude: `${x}`,
+                },
+              })
+              index++
+            }
+          })
+        )
       )
-    )
 
-    return {
-      type: 'FeatureCollection',
-      features: currentPoints,
+      return {
+        type: 'FeatureCollection',
+        features: currentPoints,
+      }
     }
-  }
   })
 
   watch(
@@ -428,7 +425,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
         if (isNotNullNorUndefinedNorEmpty(e.features)) {
           new Popup({ closeButton: false, maxWidth: '500' })
             .setLngLat(e.lngLat)
-            .setHTML(`<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`)
+            .setHTML(
+              `<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div>${
+                isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''
+              }</div>`
+            )
             .addTo(mapLibre)
         }
       })

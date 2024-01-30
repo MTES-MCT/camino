@@ -189,7 +189,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si pas de changement sur le perimetre', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+      geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
       heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
@@ -211,7 +211,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape est modifiée si changement sur le perimetre', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+      geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
       heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
@@ -222,7 +222,21 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps!.perimetre.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtape.geojson4326Perimetre = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [3,4]]]]}}
+    titreEtape.geojson4326Perimetre = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [1, 2],
+              [3, 4],
+            ],
+          ],
+        ],
+      },
+    }
     ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     const newTitreEtape = objectClone(titreEtape) as ITitreEtape

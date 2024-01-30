@@ -1,8 +1,7 @@
 import { ITitreEtape, IPropId } from '../../types.js'
 
 export const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
-
-  if( propId === 'points'){
+  if (propId === 'points') {
     return titreEtape.geojson4326Perimetre
   }
 

@@ -91,11 +91,9 @@ const facades = {
     'Bouches de Bonifacio Est - Porto-Vecchio': { ids: [57], secteurId: '29', departementIds: [] },
     'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] },
   },
-} as const satisfies Record<FacadesMaritimes, { [key in SecteursMaritimes]?: {ids: Readonly<SecteursMaritimesIds[]>, secteurId: string, departementIds: Readonly<DepartementId[]>} }>
+} as const satisfies Record<FacadesMaritimes, { [key in SecteursMaritimes]?: { ids: Readonly<SecteursMaritimesIds[]>; secteurId: string; departementIds: Readonly<DepartementId[]> } }>
 export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
-
-type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
 
 export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): DepartementId[] => {
   return Object.values(facades)

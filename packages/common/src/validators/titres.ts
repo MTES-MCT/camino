@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-
 export const titreIdValidator = z.string().brand<'TitreId'>()
 export type TitreId = z.infer<typeof titreIdValidator>
 

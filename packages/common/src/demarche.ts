@@ -57,10 +57,8 @@ const demarcheEtapeCommonValidator = z.object({
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
 
-
 // FIXME c'est un geojsonInformationsValidator
-const etapePerimetreValidator = z
-.object({
+const etapePerimetreValidator = z.object({
   geojson4326_perimetre: featureMultiPolygonValidator,
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   surface: z.number(),

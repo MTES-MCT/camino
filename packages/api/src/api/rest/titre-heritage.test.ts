@@ -51,7 +51,7 @@ describe('getMostRecentValueProp', () => {
       getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dpu, dex],
-          ordre: 1
+          ordre: 1,
         },
       ])
     ).toStrictEqual(dpu)
@@ -60,9 +60,8 @@ describe('getMostRecentValueProp', () => {
       getMostRecentEtapeFondamentaleValide([
         {
           etapes: [dex, dpu],
-          ordre: 1
+          ordre: 1,
         },
-      
       ])
     ).toStrictEqual(dpu)
   })

@@ -25,7 +25,7 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     { titresEtapesIds, etapesTypesIds: null, titresDemarchesIds: null },
     {
       fields: {
-         id: {},
+        id: {},
       },
     },
     userSuper
@@ -40,8 +40,8 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const {forets, sdom, secteurs} = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
-        
+        const { forets, sdom, secteurs } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+
         await intersectForets(titreEtape, forets)
         await intersectSdom(titreEtape, sdom)
         await intersectCommunes(titreEtape)
@@ -54,7 +54,6 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
   }
 }
 async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
-
   if (sdomZonesIds.length > 0) {
     if (sdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sdomZonesIds[index])) {
       console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sdomZonesIds)}`)
@@ -81,7 +80,7 @@ async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id'
     throw new Error('les communes de l’étape ne sont pas chargées')
   }
 
-  const communes = isNotNullNorUndefined(titreEtape.geojson4326Perimetre) ? await geojsonIntersectsCommunes(titreEtape.geojson4326Perimetre) : {fallback: false, data: []}
+  const communes = isNotNullNorUndefined(titreEtape.geojson4326Perimetre) ? await geojsonIntersectsCommunes(titreEtape.geojson4326Perimetre) : { fallback: false, data: [] }
 
   if (communes.fallback) {
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)

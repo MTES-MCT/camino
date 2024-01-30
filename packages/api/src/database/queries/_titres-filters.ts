@@ -66,10 +66,8 @@ export const titresFiltersQueryModify = (
 
   if (perimetre?.length === 4) {
     q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
-    q.whereRaw(`ST_INTERSECTS(??, st_setsrid('BOX(${perimetre[0]} ${perimetre[1]}, ${perimetre[2]} ${perimetre[3]})'::box2d, 4326)) is true`, ['pointsEtape.geojson4326_perimetre'
-  ])
+    q.whereRaw(`ST_INTERSECTS(??, st_setsrid('BOX(${perimetre[0]} ${perimetre[1]}, ${perimetre[2]} ${perimetre[3]})'::box2d, 4326)) is true`, ['pointsEtape.geojson4326_perimetre'])
   }
-
 
   if (domainesIds?.length) {
     if (name === 'titre') {

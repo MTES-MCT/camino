@@ -127,21 +127,21 @@ export const titre =
 
     const communesIndex = await getCommunesIndex(pool, titreFormatted.communes?.map(({ id }) => id) ?? [])
 
-    if ( titreFormatted.pointsEtape === undefined){
+    if (titreFormatted.pointsEtape === undefined) {
       throw new Error('Le périmètre du titre n’est pas chargé')
     }
-  
-    if ( titreFormatted.pointsEtape === null || isNullOrUndefined(titreFormatted.pointsEtape.geojson4326Perimetre)){
+
+    if (titreFormatted.pointsEtape === null || isNullOrUndefined(titreFormatted.pointsEtape.geojson4326Perimetre)) {
       throw new Error('Il n’y a pas de périmètre pour ce titre')
     }
-  
+
     const geojson4326Points: GeojsonFeaturePoint[] = titreFormatted.pointsEtape.geojson4326Points?.features ?? []
-  
-    const titreGeojson: FeatureCollection  = {
+
+    const titreGeojson: FeatureCollection = {
       type: 'FeatureCollection',
       features: [titreFormatted.pointsEtape.geojson4326Perimetre, ...geojson4326Points],
-      
-      properties: titreGeojsonPropertiesFormat(communesIndex, titreFormatted)
+
+      properties: titreGeojsonPropertiesFormat(communesIndex, titreFormatted),
     }
 
     return {

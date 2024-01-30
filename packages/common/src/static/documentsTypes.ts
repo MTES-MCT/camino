@@ -19,11 +19,10 @@ interface Definition<T> {
   description?: string
 }
 
+const PERIMETRE_FILE_UPLOAD_TYPE_IDS = ['geojson', 'shp'] as const
+const FILE_UPLOAD_TYPE_IDS = ['pdf', 'doc', 'docx'] as const
 
-const PERIMETRE_FILE_UPLOAD_TYPE_IDS = ['geojson' , 'shp'] as const
-const FILE_UPLOAD_TYPE_IDS = ['pdf' , 'doc' , 'docx' ] as const
-
-const fileUploadTypeValidator = z.enum([...FILE_UPLOAD_TYPE_IDS,...PERIMETRE_FILE_UPLOAD_TYPE_IDS] )
+const fileUploadTypeValidator = z.enum([...FILE_UPLOAD_TYPE_IDS, ...PERIMETRE_FILE_UPLOAD_TYPE_IDS])
 export const perimetreFileUploadTypeValidator = z.enum(PERIMETRE_FILE_UPLOAD_TYPE_IDS)
 export type FileUploadType = z.infer<typeof fileUploadTypeValidator>
 export type PerimetreFileUploadType = z.infer<typeof perimetreFileUploadTypeValidator>

@@ -9,7 +9,7 @@ import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
-import { FeatureMultiPolygon, MultiPolygon } from '../perimetre.js'
+import { FeatureMultiPolygon } from '../perimetre.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -221,7 +221,23 @@ test.each<{
   expect(canEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' })).toBe(canEdit)
 })
 
-const multiPolygonWith4Points: FeatureMultiPolygon = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [1, 2], [1, 2], [1, 2]]]]}}
+const multiPolygonWith4Points: FeatureMultiPolygon = {
+  type: 'Feature',
+  properties: {},
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: [
+      [
+        [
+          [1, 2],
+          [1, 2],
+          [1, 2],
+          [1, 2],
+        ],
+      ],
+    ],
+  },
+}
 const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   typeId: 'mfr',
   substances: ['auru'],

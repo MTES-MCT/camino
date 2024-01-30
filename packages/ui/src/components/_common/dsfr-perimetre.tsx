@@ -9,7 +9,7 @@ import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable } from './dsfr-perimetre-table'
 export type TabId = 'carte' | 'points'
 type Props = {
-  perimetre: {geojson4326_perimetre: FeatureMultiPolygon, geojson4326_points: FeatureCollectionPoints | null}
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
   titreSlug: TitreSlug
   initTab?: TabId
   class?: HTMLAttributes['class']

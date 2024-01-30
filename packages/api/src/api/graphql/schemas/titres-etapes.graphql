@@ -88,7 +88,6 @@ type Etape {
   "Périmètre géographique du titre"
   geojson4326Perimetre: Json
   geojson4326Points: Json
-
 }
 
 "Étape d'une démarche effectuée sur un titre minier"

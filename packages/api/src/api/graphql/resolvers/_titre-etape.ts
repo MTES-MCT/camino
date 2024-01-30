@@ -1,6 +1,5 @@
 import { IEtapeType, IHeritageContenu, IHeritageElement, IHeritageProps, ITitreDemarche, ITitreEtape } from '../../../types.js'
 
-
 import { titreEtapeHeritagePropsFind } from '../../../business/utils/titre-etape-heritage-props-find.js'
 import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
@@ -9,7 +8,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage.js'
-
 
 const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] | null) => {
   const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => e.type?.fondamentale && e.date <= date) ?? [])
@@ -75,7 +73,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, tit
   titreEtape.heritageContenu = sections.reduce((heritageContenu: IHeritageContenu, section) => {
     if (!section.elements?.length) return heritageContenu
 
-    heritageContenu[section.id] = section.elements?.reduce((acc: {[elementId: string]: IHeritageElement}, element) => {
+    heritageContenu[section.id] = section.elements?.reduce((acc: { [elementId: string]: IHeritageElement }, element) => {
       acc[element.id] = {
         actif: !!titreEtapesFiltered.find(
           e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && etapeSectionsDictionary[e.id].find(s => s.id === section.id && s.elements?.find(el => el.id === element.id))
@@ -83,7 +81,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeType: IEtapeType, tit
       }
 
       return acc
-    }, {} as {[elementId: string]: IHeritageElement})
+    }, {} as { [elementId: string]: IHeritageElement })
 
     return heritageContenu
   }, {})
@@ -127,4 +125,3 @@ export const titreEtapeHeritageBuild = (date: string, etapeType: IEtapeType, tit
 
   return titreEtape
 }
-

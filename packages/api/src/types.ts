@@ -94,7 +94,7 @@ type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 // FIXME étrange cette prop
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
-type ITitreColonneId = 'nom' | 'domaine' |  'type' | 'statut' | 'titulaires'
+type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut' | 'titulaires'
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
@@ -138,15 +138,14 @@ interface IContenusTitreEtapesIds {
 
 export interface IHeritageElement {
   actif: boolean
-    etapeId?: EtapeId | null
-    etape?: ITitreEtape
+  etapeId?: EtapeId | null
+  etape?: ITitreEtape
 }
-
 
 type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
 
 interface IHeritageContenu {
-  [sectionId: string]: {[elementId: string]: IHeritageElement}
+  [sectionId: string]: { [elementId: string]: IHeritageElement }
 }
 
 interface IActiviteType {
@@ -413,7 +412,6 @@ interface ITitreEtapeFiltre {
   dateDebut?: string
   dateFin?: string
 }
-
 
 type ICacheId = 'matomo'
 

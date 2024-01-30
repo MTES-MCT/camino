@@ -50,7 +50,7 @@ class TitresEtapes extends Model {
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
       notes: { type: ['string', 'null'] },
-      geojson4326Perimetre: {type: ['object', 'null']}
+      geojson4326Perimetre: { type: ['object', 'null'] },
     },
   }
 
@@ -72,7 +72,6 @@ class TitresEtapes extends Model {
         to: 'titresDemarches.id',
       },
     },
-
 
     titulaires: {
       relation: Model.ManyToManyRelation,
@@ -134,6 +133,7 @@ class TitresEtapes extends Model {
     }
 
     if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
       const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
       this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
     }
@@ -142,8 +142,8 @@ class TitresEtapes extends Model {
   }
 
   async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
-
     if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
       const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
       this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
     }
@@ -161,10 +161,11 @@ class TitresEtapes extends Model {
     }
 
     if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
       const rawLine = await context.transaction.raw(`select ST_AsGeoJSON('${this.geojson4326Perimetre}'::text)::json`)
-      this.geojson4326Perimetre = {type: 'Feature', properties: {}, geometry: rawLine.rows[0].st_asgeojson}
+      this.geojson4326Perimetre = { type: 'Feature', properties: {}, geometry: rawLine.rows[0].st_asgeojson }
     }
-   
+
     return this
   }
 
@@ -172,6 +173,7 @@ class TitresEtapes extends Model {
     delete json.modification
     delete json.suppression
     json = super.$formatDatabaseJson(json)
+
     return json
   }
 

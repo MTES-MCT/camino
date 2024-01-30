@@ -9,7 +9,7 @@ import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre'
 
-const leafletCoordinatesFind = (geojson:  { coordinates: [number, number] } ) => {
+const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
 
   return {

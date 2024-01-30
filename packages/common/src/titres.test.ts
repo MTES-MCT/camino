@@ -50,18 +50,17 @@ describe('getMostRecentValueProp', () => {
       getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [
         {
           etapes: [dpu, dex],
-          ordre: 1
+          ordre: 1,
         },
       ])
     ).toStrictEqual(dpu)
 
     expect(
-      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre' , [
+      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [
         {
           etapes: [dex, dpu],
-          ordre: 1
+          ordre: 1,
         },
-      
       ])
     ).toStrictEqual(dpu)
   })

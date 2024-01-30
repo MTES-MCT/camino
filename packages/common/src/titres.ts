@@ -124,15 +124,16 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
   etapes: F[]
 }
 
-
-
-
 // FIXME tests
-export const getMostRecentValuePropFromEtapeFondamentaleValide = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances', F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale' >, NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' >>(
+export const getMostRecentValuePropFromEtapeFondamentaleValide = <
+  P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances',
+  F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale'>,
+  NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>
+>(
   propId: P,
   titreDemarches: TitrePropTitreEtapeFindDemarche<F | NF>[]
 ): DemarcheEtapeFondamentale['fondamentale'][P] | null => {
-  const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche<F| NF>[] = [...titreDemarches].sort((a, b) => b.ordre - a.ordre)
+  const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche<F | NF>[] = [...titreDemarches].sort((a, b) => b.ordre - a.ordre)
 
   for (const titreDemarche of titreDemarchesDesc) {
     const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
@@ -148,8 +149,6 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <P extends 'tit
 
   return null
 }
-
-
 
 export const getDemarcheByIdOrSlugValidator = z.object({ demarche_id: demarcheIdValidator, demarche_slug: demarcheSlugValidator, titre_id: titreIdValidator })
 

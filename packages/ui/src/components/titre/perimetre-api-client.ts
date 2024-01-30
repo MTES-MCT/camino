@@ -23,5 +23,5 @@ export const perimetreApiClient: PerimetreApiClient = {
   },
   getPerimetreInfosByDemarcheId: (demarcheId: DemarcheIdOrSlug) => {
     return getWithJson('/rest/demarches/:demarcheId/geojson', { demarcheId })
-  }
+  },
 }

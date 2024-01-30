@@ -1,6 +1,5 @@
 import { ITitre, IFields, ITitreDemarche } from '../../types.js'
 
-
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
@@ -29,7 +28,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   }
 
   if (isNullOrUndefined(fields)) return t
-
 
   if (fields.demarches && t.demarches?.length) {
     t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))

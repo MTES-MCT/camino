@@ -55,7 +55,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre, geojson4326_points: null}}
+      perimetre={{ geojson4326_perimetre, geojson4326_points: null }}
       calculateNeighbours={true}
       apiClient={{
         ...apiClientMock,
@@ -111,12 +111,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
 export const NoNeighborsNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
-    <DsfrPerimetre
-      perimetre={{geojson4326_perimetre, geojson4326_points: null}}
-      calculateNeighbours={false}
-      apiClient={apiClientMock}
-      titreSlug={titreSlugValidator.parse('titre-slug')}
-    />
+    <DsfrPerimetre perimetre={{ geojson4326_perimetre, geojson4326_points: null }} calculateNeighbours={false} apiClient={apiClientMock} titreSlug={titreSlugValidator.parse('titre-slug')} />
   </>
 )
 
@@ -124,30 +119,33 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre: {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [
+      perimetre={{
+        geojson4326_perimetre: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
               [
-                [-52.5660583466962, 4.23944263425535],
-                [-52.5591878553913, 4.22269896902571],
-                [-52.5550566725882, 4.22438936251509],
-                [-52.5619271168799, 4.24113309117193],
-                [-52.5660583466962, 4.23944263425535],
-              ],
-              [
-                [-52.563, 4.236],
-                [-52.5591878553913, 4.227],
-                [-52.561, 4.236],
-                [-52.563, 4.236],
+                [
+                  [-52.5660583466962, 4.23944263425535],
+                  [-52.5591878553913, 4.22269896902571],
+                  [-52.5550566725882, 4.22438936251509],
+                  [-52.5619271168799, 4.24113309117193],
+                  [-52.5660583466962, 4.23944263425535],
+                ],
+                [
+                  [-52.563, 4.236],
+                  [-52.5591878553913, 4.227],
+                  [-52.561, 4.236],
+                  [-52.563, 4.236],
+                ],
               ],
             ],
-          ],
+          },
         },
-      }, geojson4326_points: null}}
+        geojson4326_points: null,
+      }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -179,7 +177,7 @@ export const BigNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre: bigGeoJson, geojson4326_points: null}}
+      perimetre={{ geojson4326_perimetre: bigGeoJson, geojson4326_points: null }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -198,42 +196,45 @@ export const MultipleNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre: {
-        properties: {},
-        type: 'Feature',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [
+      perimetre={{
+        geojson4326_perimetre: {
+          properties: {},
+          type: 'Feature',
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
               [
-                [-53.58181013905019, 3.8309654861273],
-                [-53.58178306390299, 3.8219278216269807],
-                [-53.572785590706495, 3.82195493825841],
-                [-53.57281257175149, 3.8309926670647294],
-                [-53.58181013905019, 3.8309654861273],
+                [
+                  [-53.58181013905019, 3.8309654861273],
+                  [-53.58178306390299, 3.8219278216269807],
+                  [-53.572785590706495, 3.82195493825841],
+                  [-53.57281257175149, 3.8309926670647294],
+                  [-53.58181013905019, 3.8309654861273],
+                ],
+              ],
+              [
+                [
+                  [-53.60031408473134, 3.8224780986447566],
+                  [-53.59891645305842, 3.8181831495446303],
+                  [-53.58181205656814, 3.82379854768971],
+                  [-53.58320964990986, 3.828093576227541],
+                  [-53.60031408473134, 3.8224780986447566],
+                ],
+              ],
+              [
+                [
+                  [-53.583861926103765, 3.8502114455117433],
+                  [-53.592379712320195, 3.834289122043602],
+                  [-53.588417035915334, 3.8321501920354253],
+                  [-53.57989914401643, 3.8480725119510217],
+                  [-53.583861926103765, 3.8502114455117433],
+                ],
               ],
             ],
-            [
-              [
-                [-53.60031408473134, 3.8224780986447566],
-                [-53.59891645305842, 3.8181831495446303],
-                [-53.58181205656814, 3.82379854768971],
-                [-53.58320964990986, 3.828093576227541],
-                [-53.60031408473134, 3.8224780986447566],
-              ],
-            ],
-            [
-              [
-                [-53.583861926103765, 3.8502114455117433],
-                [-53.592379712320195, 3.834289122043602],
-                [-53.588417035915334, 3.8321501920354253],
-                [-53.57989914401643, 3.8480725119510217],
-                [-53.583861926103765, 3.8502114455117433],
-              ],
-            ],
-          ],
+          },
         },
-      }, geojson4326_points: null}}
+        geojson4326_points: null,
+      }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -252,65 +253,68 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre: {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [
+      perimetre={{
+        geojson4326_perimetre: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
               [
-                [-52.5660583466962, 4.23944263425535],
-                [-52.5591878553913, 4.22269896902571],
-                [-52.5550566725882, 4.22438936251509],
-                [-52.5619271168799, 4.24113309117193],
-                [-52.5660583466962, 4.23944263425535],
+                [
+                  [-52.5660583466962, 4.23944263425535],
+                  [-52.5591878553913, 4.22269896902571],
+                  [-52.5550566725882, 4.22438936251509],
+                  [-52.5619271168799, 4.24113309117193],
+                  [-52.5660583466962, 4.23944263425535],
+                ],
+                [
+                  [-52.563, 4.236],
+                  [-52.5591878553913, 4.227],
+                  [-52.561, 4.236],
+                  [-52.563, 4.236],
+                ],
               ],
               [
-                [-52.563, 4.236],
-                [-52.5591878553913, 4.227],
-                [-52.561, 4.236],
-                [-52.563, 4.236],
+                [
+                  [-53.58181013905019, 3.8309654861273],
+                  [-53.58178306390299, 3.8219278216269807],
+                  [-53.572785590706495, 3.82195493825841],
+                  [-53.57281257175149, 3.8309926670647294],
+                  [-53.58181013905019, 3.8309654861273],
+                ],
+              ],
+              [
+                [
+                  [-53.60031408473134, 3.8224780986447566],
+                  [-53.59891645305842, 3.8181831495446303],
+                  [-53.58181205656814, 3.82379854768971],
+                  [-53.58320964990986, 3.828093576227541],
+                  [-53.60031408473134, 3.8224780986447566],
+                ],
+              ],
+              [
+                [
+                  [-53.583861926103765, 3.8502114455117433],
+                  [-53.592379712320195, 3.834289122043602],
+                  [-53.588417035915334, 3.8321501920354253],
+                  [-53.57989914401643, 3.8480725119510217],
+                  [-53.583861926103765, 3.8502114455117433],
+                ],
+              ],
+              [
+                [
+                  [-52.54, 4.22269896902571],
+                  [-52.55, 4.22438936251509],
+                  [-52.55, 4.24113309117193],
+                  [-52.54, 4.22269896902571],
+                ],
               ],
             ],
-            [
-              [
-                [-53.58181013905019, 3.8309654861273],
-                [-53.58178306390299, 3.8219278216269807],
-                [-53.572785590706495, 3.82195493825841],
-                [-53.57281257175149, 3.8309926670647294],
-                [-53.58181013905019, 3.8309654861273],
-              ],
-            ],
-            [
-              [
-                [-53.60031408473134, 3.8224780986447566],
-                [-53.59891645305842, 3.8181831495446303],
-                [-53.58181205656814, 3.82379854768971],
-                [-53.58320964990986, 3.828093576227541],
-                [-53.60031408473134, 3.8224780986447566],
-              ],
-            ],
-            [
-              [
-                [-53.583861926103765, 3.8502114455117433],
-                [-53.592379712320195, 3.834289122043602],
-                [-53.588417035915334, 3.8321501920354253],
-                [-53.57989914401643, 3.8480725119510217],
-                [-53.583861926103765, 3.8502114455117433],
-              ],
-            ],
-            [
-              [
-                [-52.54, 4.22269896902571],
-                [-52.55, 4.22438936251509],
-                [-52.55, 4.24113309117193],
-                [-52.54, 4.22269896902571],
-              ],
-            ],
-          ],
+          },
         },
-      }, geojson4326_points: null}}
+        geojson4326_points: null,
+      }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -330,8 +334,16 @@ export const CustomPoints: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre, geojson4326_points: {type: 'FeatureCollection', features: [{type: 'Feature', properties: {nom: '1', description: 'Description du point 1'}, geometry: {type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0]}}]}}}
-      initTab='points'
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: {
+          type: 'FeatureCollection',
+          features: [
+            { type: 'Feature', properties: { nom: '1', description: 'Description du point 1' }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0] } },
+          ],
+        },
+      }}
+      initTab="points"
       calculateNeighbours={false}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -343,8 +355,14 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{geojson4326_perimetre, geojson4326_points: {type: 'FeatureCollection', features: [{type: 'Feature', properties: {nom: null, description: null}, geometry: {type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0]}}]}}}
-      initTab='points'
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: {
+          type: 'FeatureCollection',
+          features: [{ type: 'Feature', properties: { nom: null, description: null }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0] } }],
+        },
+      }}
+      initTab="points"
       calculateNeighbours={false}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}

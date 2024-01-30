@@ -193,11 +193,10 @@ export const PureTitre = defineComponent<Props>(props => {
             () => Promise.resolve(titre.titre_type_id),
             () => Promise.resolve(administrations.value),
             () => {
-
               const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', titre.demarches) ?? []
               const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', titre.demarches) ?? []
 
-                return Promise.resolve([...titulaires, ...amodiataires].map(({ id }) => id))
+              return Promise.resolve([...titulaires, ...amodiataires].map(({ id }) => id))
             }
           ))
       } else {
@@ -229,12 +228,11 @@ export const PureTitre = defineComponent<Props>(props => {
   const showActivitesLink = ref<boolean>(false)
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-
     if (titreData.value.status === 'LOADED' && titreData.value.value.demarches !== null) {
       return getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', titreData.value.value.demarches)
     }
 
-    return   null
+    return null
   })
 
   const administrations = computed<AdministrationId[]>(() => {

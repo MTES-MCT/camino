@@ -176,7 +176,7 @@ const actions = {
     } finally {
       commit('loadingRemove', 'titreEtapeUpdate', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {

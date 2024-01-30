@@ -47,9 +47,8 @@ const getEtapesByDemarcheIdDbValidator = z.object({
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
-
-    return dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
-} 
+  return dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
+}
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
 const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
 select
@@ -74,7 +73,7 @@ select
     e.forets,
     e.decisions_annexes_contenu,
     e.decisions_annexes_sections,
-    ST_AsGeoJSON(e.geojson4326_perimetre)::json as geojson4326_perimetre,
+    ST_AsGeoJSON (e.geojson4326_perimetre)::json as geojson4326_perimetre,
     e.geojson4326_points as geojson4326_points
 from
     titres_etapes e

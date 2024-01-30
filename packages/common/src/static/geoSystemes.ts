@@ -226,4 +226,3 @@ export const GeoSystemes = {
 
 export const sortedGeoSystemes = Object.values(GeoSystemes).sort((a, b) => a.nom.localeCompare(b.nom))
 export const transformableGeoSystemes: GeoSysteme<TransformableGeoSystemeId>[] = transformableGeoSystemeIds.map(id => GeoSystemes[id])
-

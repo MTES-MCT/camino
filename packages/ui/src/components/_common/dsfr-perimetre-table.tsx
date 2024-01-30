@@ -12,7 +12,6 @@ import { TitreSlug } from 'camino-common/src/validators/titres'
 import { capitalize } from 'camino-common/src/strings'
 import { indexToLetter, toDegresMinutes } from 'camino-common/src/number'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { Properties } from 'maplibre-gl'
 
 interface Props {
   perimetre: {
@@ -48,11 +47,11 @@ const labels = {
   gon: { x: 'longitude', y: 'latitude' },
 } as const satisfies Record<GeoSysteme['uniteId'], { x: string; y: string }>
 const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
-
-  if (perimetre.geojson4326_points !== null ) {
-    return perimetre.geojson4326_points.features.map<TableRow<string>>((feature,index) => {
+  if (perimetre.geojson4326_points !== null) {
+    return perimetre.geojson4326_points.features.map<TableRow<string>>((feature, index) => {
       const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
       const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
+
       return {
         id: `${index}`,
         link: null,
@@ -67,36 +66,36 @@ const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
       }
     })
   } else {
-  let index = 0
-  const rows: TableRow<string>[] = []
+    let index = 0
+    const rows: TableRow<string>[] = []
 
-  perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-    topLevel.forEach((secondLevel, secondLevelIndex) =>
-      secondLevel.forEach(([x, y], currentLevelIndex) => {
-        // On ne rajoute pas le dernier point qui est égal au premier du contour...
-        if (perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-          const x_deg = toDegresMinutes(x)
-          const y_deg = toDegresMinutes(y)
-          rows.push({
-            id: `${index}`,
-            link: null,
-            columns: {
-              description: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
-              nom: { value: indexToLetter(index) },
-              x: { value: `${x}` },
-              y: { value: `${y}` },
-              x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
-              y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
-            },
-          })
-          index++
-        }
-      })
+    perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+      topLevel.forEach((secondLevel, secondLevelIndex) =>
+        secondLevel.forEach(([x, y], currentLevelIndex) => {
+          // On ne rajoute pas le dernier point qui est égal au premier du contour...
+          if (perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+            const x_deg = toDegresMinutes(x)
+            const y_deg = toDegresMinutes(y)
+            rows.push({
+              id: `${index}`,
+              link: null,
+              columns: {
+                description: { value: `Polygone ${topLevelIndex + 1}${secondLevelIndex > 0 ? ` - Lacune ${secondLevelIndex}` : ''}` },
+                nom: { value: indexToLetter(index) },
+                x: { value: `${x}` },
+                y: { value: `${y}` },
+                x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
+                y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
+              },
+            })
+            index++
+          }
+        })
+      )
     )
-  )
-  return rows
 
-}
+    return rows
+  }
 }
 
 export const TabCaminoTable = defineComponent<Props>(props => {
@@ -144,8 +143,8 @@ export const TabCaminoTable = defineComponent<Props>(props => {
         currentRows.value = { status: 'LOADING' }
 
         const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_perimetre, geoSysteme.id)
-        // TODO 2024-01-29 on perd les points qu'on a mis à la main
-        currentRows.value = { status: 'LOADED', value: geoJsonToArray({geojson4326_perimetre: newGeojson, geojson4326_points: null}) }
+        // TODO 2024-01-29 on perd les points qu'on a mis à la main
+        currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: newGeojson, geojson4326_points: null }) }
       } catch (e: any) {
         console.error('error', e)
         currentRows.value = {

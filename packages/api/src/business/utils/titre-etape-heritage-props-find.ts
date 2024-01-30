@@ -7,22 +7,21 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
-  for(let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++){
-    for(let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++){
-      for(let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++){
-
-        if(geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][0] || 
+  for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {
+    for (let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++) {
+      for (let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++) {
+        if (
+          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][0] ||
           geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][1] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][1]
-          ){
+        ) {
           return false
         }
       }
     }
   }
-  
 
   return true
-}  
+}
 
 const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -51,10 +50,9 @@ const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newVa
     return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
   }
 
-  
   if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
     return equalGeojson(newValue as MultiPolygon, oldValue as MultiPolygon) && equalGeojson(oldValue as MultiPolygon, newValue as MultiPolygon)
-  } 
+  }
 
   return oldValue === newValue
 }
@@ -94,15 +92,15 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
     if (heritage?.actif) {
       if (prevTitreEtape) {
         const oldValue = (propId === 'perimetre' ? titreEtape.geojson4326Perimetre : titreEtape[propId]) as IPropValue | undefined | null
-        const newValue = (propId === 'perimetre' ? prevTitreEtape.geojson4326Perimetre :prevTitreEtape[propId]) as IPropValue | undefined | null
+        const newValue = (propId === 'perimetre' ? prevTitreEtape.geojson4326Perimetre : prevTitreEtape[propId]) as IPropValue | undefined | null
 
         if (!titreEtapePropCheck(propId, oldValue, newValue)) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
           if (propId === 'perimetre') {
-            newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre 
-            newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points 
+            newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre
+            newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points
           } else if (propId === 'amodiataires' || propId === 'titulaires') {
             newTitreEtape[propId] = newValue as IEntreprise[]
           } else if (propId === 'substances') {

@@ -27,14 +27,7 @@
     </Accordion>
 
     <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
-      <PointsEdit
-        :etape="etape"
-        :titreTypeId="titreTypeId"
-        :titreSlug="titreSlug"
-        :apiClient="apiClient"
-        :onEtapeChange="onEtapePerimetreChange"
-        :completeUpdate="perimetreCompleteUpdate"
-      />
+      <PointsEdit :etape="etape" :titreTypeId="titreTypeId" :titreSlug="titreSlug" :apiClient="apiClient" :onEtapeChange="onEtapePerimetreChange" :completeUpdate="perimetreCompleteUpdate" />
     </Accordion>
 
     <Accordion v-if="stepSections" id="step-sections" :step="stepSections" :opened="opened['sections']" :complete="stepSectionsComplete" :enConstruction="enConstruction" @toggle="toggle('sections')">
@@ -434,17 +427,16 @@ export default {
       this.$emit('update:etape', this.etape)
     },
 
-    onEtapePerimetreChange(perimetreInfos){
-
+    onEtapePerimetreChange(perimetreInfos) {
       // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
       // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
       this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
       this.etape.geojson4326Points = perimetreInfos.geojson4326_points
       this.etape.surface = perimetreInfos.surface
 
-      this.$emit('alertes-update', {superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds})
+      this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
       this.$emit('update:etape', this.etape)
-    }
+    },
   },
 }
 </script>

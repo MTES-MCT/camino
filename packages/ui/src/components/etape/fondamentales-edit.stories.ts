@@ -56,8 +56,8 @@ const etape: EtapeFondamentale = {
       actif: false,
     },
     perimetre: {
-      actif: false
-    }
+      actif: false,
+    },
   },
 }
 const Template: StoryFn<Props> = (args: Props) => ({

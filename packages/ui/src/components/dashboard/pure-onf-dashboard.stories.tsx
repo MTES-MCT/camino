@@ -1,6 +1,6 @@
 import { PureONFDashboard } from './pure-onf-dashboard'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { CommonTitreONF} from 'camino-common/src/titres'
+import { CommonTitreONF } from 'camino-common/src/titres'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { vueRouter } from 'storybook-vue3-router'
 

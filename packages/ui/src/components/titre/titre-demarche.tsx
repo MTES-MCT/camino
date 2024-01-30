@@ -59,9 +59,6 @@ export const TitreDemarche = defineComponent<Props>(props => {
 
   const demarche = computed<TitreGetDemarche | null>(() => (demarchesAsc.value.length > 0 ? demarchesAsc.value[demarchesAsc.value.length - 1] : null))
 
-
-
-
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
     return getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', demarchesAsc.value)
   })
@@ -179,7 +176,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
               titreSlug={props.titre.slug}
               apiClient={props.apiClient}
               calculateNeighbours={true}
-              perimetre={{geojson4326_perimetre: perimetre.value.geojson4326_perimetre, geojson4326_points: perimetre.value.geojson4326_points}}
+              perimetre={{ geojson4326_perimetre: perimetre.value.geojson4326_perimetre, geojson4326_points: perimetre.value.geojson4326_points }}
               router={props.router}
               initTab={props.initTab}
             />

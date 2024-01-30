@@ -1,4 +1,4 @@
-import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape} from '../../types.js'
+import { ITitre, ITitreActivite, ITitreDemarche, ITitreEtape } from '../../types.js'
 
 import { DemarcheId } from 'camino-common/src/demarche.js'
 

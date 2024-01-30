@@ -99,8 +99,6 @@ where
     tt.titre_etape_id = $ etapeId !
 `
 
-
-
 export const getAmodiatairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
   return dbQueryAndValidate(getAmodiatairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, titreGetValidator  } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
@@ -21,12 +21,7 @@ import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import {
-  getEntrepriseDocumentIdsByEtapeId,
-  getDocumentsByEtapeId,
-  getTitulairesByEtapeIdQuery,
-  getAmodiatairesByEtapeIdQuery,
-} from '../../database/queries/titres-etapes.queries.js'
+import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getTitulairesByEtapeIdQuery, getAmodiatairesByEtapeIdQuery } from '../../database/queries/titres-etapes.queries.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
@@ -35,7 +30,7 @@ import { EtapeDocument } from 'camino-common/src/etape.js'
 import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
-import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId, titreIdOrSlugValidator } from 'camino-common/src/validators/titres.js'
+import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'camino-common/src/validators/titres.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
@@ -89,7 +84,6 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
           if (!(etape.heritage_props?.perimetre?.actif ?? false)) {
-
             if (isNotNullNorUndefined(etape.geojson4326_perimetre)) {
               const communes: Commune[] = []
               if (isNonEmptyArray(etape.communes)) {
@@ -100,11 +94,11 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               }
 
               perimetre = {
-                geojson4326_perimetre:  {
-                  type: 'Feature', 
+                geojson4326_perimetre: {
+                  type: 'Feature',
                   properties: {},
-                geometry: etape.geojson4326_perimetre
-              },
+                  geometry: etape.geojson4326_perimetre,
+                },
                 geojson4326_points: etape.geojson4326_points,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
@@ -173,11 +167,10 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
-
     const latestEtapeFondamentaleValide = getMostRecentEtapeFondamentaleValide(superDemarches)
 
     let fondamentale: null | DemarcheEtapeFondamentale['fondamentale'] = null
-    if( latestEtapeFondamentaleValide !== null && 'fondamentale' in latestEtapeFondamentaleValide){
+    if (latestEtapeFondamentaleValide !== null && 'fondamentale' in latestEtapeFondamentaleValide) {
       fondamentale = latestEtapeFondamentaleValide.fondamentale
     }
     const administrationsLocales = memoize(() => {
@@ -233,7 +226,12 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     let nb_activites_to_do: number | null = null
 
     if (
-      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: fondamentale?.perimetre?.communes ?? [], demarches: formattedDemarches, secteursMaritime: fondamentale?.perimetre?.secteurs_maritimes ?? [] }) &&
+      canHaveActivites({
+        titreTypeId: titre.titre_type_id,
+        communes: fondamentale?.perimetre?.communes ?? [],
+        demarches: formattedDemarches,
+        secteursMaritime: fondamentale?.perimetre?.secteurs_maritimes ?? [],
+      }) &&
       (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
       nb_activites_to_do = titre.nb_activites_to_do
@@ -334,12 +332,10 @@ order by
     ordre
 `
 
-
-
 const getTitreByIdOrSlugValidator = z.object({
-   titre_slug: titreSlugValidator,
-   titre_type_id: titreTypeIdValidator
-   })
+  titre_slug: titreSlugValidator,
+  titre_type_id: titreTypeIdValidator,
+})
 type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>
 
 export const getTitreByIdOrSlug = async (pool: Pool, idOrSlug: TitreIdOrSlug): Promise<z.infer<typeof getTitreByIdOrSlugValidator>> => {

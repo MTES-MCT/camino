@@ -4,9 +4,8 @@ import { restPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { FeatureCollection, FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { FeatureCollection, FeatureMultiPolygon, featureMultiPolygonValidator, GeojsonImportBody } from 'camino-common/src/perimetre.js'
 import { GEO_SYSTEME_IDS, TransformableGeoSystemeId, transformableGeoSystemeIds } from 'camino-common/src/static/geoSystemes.js'
-import { GeojsonImportBody } from 'camino-common/src/perimetre.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
@@ -69,34 +68,35 @@ describe('getGeojsonByGeoSystemeId', () => {
 const dir = `${process.cwd()}/files/tmp/`
 describe('geojsonImport', () => {
   test('fichier invalide', async () => {
-
     const fileName = `existing_temp_file_${idGenerate()}.geojson`
-      mkdirSync(dir, { recursive: true })
-      writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
     const body: GeojsonImportBody = {
       titreSlug: titreSlugValidator.parse('titre-slug'),
       titreTypeId: 'arm',
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
-      fileType: 'geojson'
+      fileType: 'geojson',
     }
-    
+
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
-
   test('fichier valide', async () => {
-    const feature: FeatureCollection = {type: 'FeatureCollection', features: [value, {type: 'Feature', geometry: {type: 'Point', coordinates: [-52.54, 4.22269896902571]}, properties: {nom: 'A', description: 'Une description du point A'}}]}
+    const feature: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [value, { type: 'Feature', geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] }, properties: { nom: 'A', description: 'Une description du point A' } }],
+    }
     const fileName = `existing_temp_file_${idGenerate()}.geojson`
-      mkdirSync(dir, { recursive: true })
-      writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
     const body: GeojsonImportBody = {
       titreSlug: titreSlugValidator.parse('titre-slug'),
       titreTypeId: 'arm',
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
-      fileType: 'geojson'
+      fileType: 'geojson',
     }
-    
+
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
@@ -160,31 +160,30 @@ describe('geojsonImport', () => {
   })
 
   test('geojson geometrie non valide', async () => {
-    const feature: FeatureCollection = {type: 'FeatureCollection', features: [{
-      type: 'Feature',
-      properties: {},
-    
-      geometry: {
-        type: 'MultiPolygon',
-        coordinates: [
-          [
-            [
-              [-52.54, 4.22269896902571],
-            ],
-          ],
-        ],
-      },
-    }]}
+    const feature: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [[[[-52.54, 4.22269896902571]]]],
+          },
+        },
+      ],
+    }
     const fileName = `existing_temp_file_${idGenerate()}.geojson`
-      mkdirSync(dir, { recursive: true })
-      writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
     const body: GeojsonImportBody = {
       titreSlug: titreSlugValidator.parse('mfr'),
       titreTypeId: 'arm',
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
-      fileType: 'geojson'
+      fileType: 'geojson',
     }
-    
+
     const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     expect(tested.body).toMatchInlineSnapshot(`
@@ -212,4 +211,3 @@ describe('geojsonImport', () => {
     `)
   })
 })
-

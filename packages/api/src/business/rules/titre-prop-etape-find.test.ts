@@ -29,7 +29,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1989-01-02'),
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1989-oct01-dex01'),
@@ -149,7 +149,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1986-02-02'),
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1986-mut01-dex01'),
@@ -208,7 +208,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                 date: toCaminoDate('1986-02-02'),
               },
               {
@@ -246,7 +246,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1985-01-01'),
                 ordre: 2,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1985-mut01-dex01'),
@@ -270,7 +270,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1985-02-02'),
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1985-oct01-dex01'),
@@ -306,7 +306,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'rej',
                 ordre: 2,
                 date: toCaminoDate('1984-01-01'),
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1984-oct01-dex01'),
@@ -380,7 +380,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
             ],
           },
@@ -465,7 +465,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
             ],
           },
@@ -511,7 +511,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                   typeId: 'aac',
                   statutId: 'acc',
                   ordre: 1,
-                  geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                  geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                   surface: 3.2,
                   substances: ['auru'],
                   communes: ['paris' as unknown as ICommune],
@@ -531,7 +531,21 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                   statutId: 'acc',
                   ordre: 1,
                   date: toCaminoDate('1981-01-01'),
-                  geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [2, 3]]]]}},
+                  geojson4326Perimetre: {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'MultiPolygon',
+                      coordinates: [
+                        [
+                          [
+                            [1, 2],
+                            [2, 3],
+                          ],
+                        ],
+                      ],
+                    },
+                  },
                   surface: 3,
                   substances: ['arge'],
                   communes: ['tours'] as unknown as ICommune[],
@@ -564,7 +578,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'aac',
                 statutId: 'acc',
                 ordre: 1,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2]]]]}},
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                 surface: 3.2,
                 substances: ['auru'],
                 titulaires: [{ id: newEntrepriseId('titulaire2') }],
@@ -585,7 +599,21 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                geojson4326Perimetre: {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[1, 2], [2, 3]]]]}},
+                geojson4326Perimetre: {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'MultiPolygon',
+                    coordinates: [
+                      [
+                        [
+                          [1, 2],
+                          [2, 3],
+                        ],
+                      ],
+                    ],
+                  },
+                },
                 surface: 3,
                 substances: ['arge'],
                 titulaires: [{ id: newEntrepriseId('titulaire1') }],

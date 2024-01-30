@@ -72,7 +72,24 @@ describe('titresEtapesAreasUpdate', () => {
     ])
 
     const titreEtapeId = newEtapeId('titreEtapeIdUniquePourMiseAJourAreas')
-    const multiPolygonWith4Points: FeatureMultiPolygon = {type: 'Feature', properties: {}, geometry: {type: 'MultiPolygon', coordinates: [[[[-53.16822754488772, 5.02935254143807], [-53.15913163720232, 5.029382753429523], [-53.15910186841349, 5.020342601941031], [-53.168197650929095, 5.02031244452273], [-53.16822754488772, 5.02935254143807]]]]}}
+    const multiPolygonWith4Points: FeatureMultiPolygon = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [-53.16822754488772, 5.02935254143807],
+              [-53.15913163720232, 5.029382753429523],
+              [-53.15910186841349, 5.020342601941031],
+              [-53.168197650929095, 5.02031244452273],
+              [-53.16822754488772, 5.02935254143807],
+            ],
+          ],
+        ],
+      },
+    }
 
     await TitresEtapes.query().insert([
       {
@@ -88,7 +105,7 @@ describe('titresEtapesAreasUpdate', () => {
           { id: baisieuxId, surface: 12 },
           { id: saintElieId, surface: 12 },
         ],
-        geojson4326Perimetre: multiPolygonWith4Points
+        geojson4326Perimetre: multiPolygonWith4Points,
       },
     ])
 
