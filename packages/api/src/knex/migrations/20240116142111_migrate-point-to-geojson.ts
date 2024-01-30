@@ -62,21 +62,27 @@ const multiPolygonContoursClose = (groupes: [number, number][][][]): [number, nu
 
 // convertit des points
 // en un geojson de type 'FeatureCollection' de 'Points'
-const geojsonFeatureCollectionPoints = (points: any[]): IGeoJson => ({
-  type: 'FeatureCollection',
-  properties: {},
-  features: points.map(p => ({
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [p.coordonnees.x, p.coordonnees.y],
-    },
-    properties: {
-      nom: p.nom,
-      description: p.description,
-    },
-  })),
-})
+const geojsonFeatureCollectionPoints = (points: any[]): IGeoJson | null => {
+  if (points.some(({ nom, description }) => (isNotNullNorUndefined(nom) && nom !== '') || (isNotNullNorUndefined(description) && description !== ''))) {
+    return {
+      type: 'FeatureCollection',
+      properties: {},
+      features: points.map(p => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [p.coordonnees.x, p.coordonnees.y],
+        },
+        properties: {
+          nom: p.nom,
+          description: p.description,
+        },
+      })),
+    }
+  }
+
+  return null
+}
 
 export const up = async (knex: Knex) => {
   await knex.raw('alter table titres_etapes add column geojson4326_perimetre public.geometry(MultiPolygon,4326)')
@@ -86,17 +92,23 @@ export const up = async (knex: Knex) => {
 
   for (const etape of etapes.rows) {
     if (!etapesToNotMigrate.includes(etape.id)) {
-      const points: { rows: any[] } = await knex.raw('select * from titres_points where titre_etape_id = ?', [etape.id])
+      const points: { rows: any[] } = await knex.raw('select * from titres_points where titre_etape_id = ? order by groupe, contour, point', [etape.id])
 
       if (isNotNullNorUndefinedNorEmpty(points.rows)) {
         const geojsonPoints = geojsonFeatureCollectionPoints(points.rows)
 
-        await knex.raw(
-          `update titres_etapes set geojson4326_perimetre = ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-            geojsonFeatureMultiPolygon(points.rows).geometry
-          )}'), 4326), geojson4326_points = ?::jsonb where id = ?`,
-          [JSON.stringify(geojsonPoints), etape.id]
-        )
+        if (geojsonPoints !== null) {
+          await knex.raw(
+            `update titres_etapes set geojson4326_perimetre = ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+              geojsonFeatureMultiPolygon(points.rows).geometry
+            )}'), 4326), geojson4326_points = ?::jsonb where id = ?`,
+            [JSON.stringify(geojsonPoints), etape.id]
+          )
+        } else {
+          await knex.raw(`update titres_etapes set geojson4326_perimetre = ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(geojsonFeatureMultiPolygon(points.rows).geometry)}'), 4326) where id = ?`, [
+            etape.id,
+          ])
+        }
 
         await knex.raw('select ST_Centroid(te.geojson4326_perimetre) from titres_etapes te  where te.id = ?', [etape.id])
       }
@@ -116,7 +128,6 @@ export const up = async (knex: Knex) => {
 
   // FIXME migrer les titres_points_references
   // FIXME ajouter des index
-  // FIXME supprimer la colonne description quand tout est vide
   // await knex.raw('alter table titres drop column coordonnees')
   // await knex.raw('drop table titres_points_references')
   // await knex.raw('drop table titres_points')

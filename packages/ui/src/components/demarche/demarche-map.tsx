@@ -426,9 +426,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
           new Popup({ closeButton: false, maxWidth: '500' })
             .setLngLat(e.lngLat)
             .setHTML(
-              `<div class="fr-text--md fr-m-0"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${e.features[0].properties.longitude}</b></div>${
-                isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''
-              }</div>`
+              `<div class="fr-text--md fr-m-0" style="max-width: 400px;"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${
+                e.features[0].properties.longitude
+              }</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`
             )
             .addTo(mapLibre)
         }

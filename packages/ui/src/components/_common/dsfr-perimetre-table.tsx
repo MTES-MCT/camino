@@ -3,7 +3,7 @@ import { contentTypes } from 'camino-common/src/rest'
 import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { defineComponent, ref, watch, computed } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
-import { TableRow } from '../_ui/table'
+import { TableRow, TextColumnData } from '../_ui/table'
 import { TableAuto, Column } from '../_ui/table-auto'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { PerimetreApiClient } from '../titre/perimetre-api-client'
@@ -21,24 +21,6 @@ interface Props {
   apiClient: Pick<PerimetreApiClient, 'getGeojsonByGeoSystemeId'>
   titreSlug: TitreSlug
   maxRows: number
-}
-
-const columns = (uniteId: GeoSysteme['uniteId'] | undefined): Column<string>[] => {
-  if (isNotNullNorUndefined(uniteId)) {
-    const alwaysPresentColumns = [
-      { id: 'description', name: 'Description', noSort: true },
-      { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
-      { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
-      { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
-    ]
-    if (uniteId === 'deg') {
-      alwaysPresentColumns.push({ id: 'x_deg', name: capitalize(labels[uniteId].x), noSort: true }, { id: 'y_deg', name: capitalize(labels[uniteId].y), noSort: true })
-    }
-
-    return alwaysPresentColumns
-  }
-
-  return []
 }
 
 const labels = {
@@ -109,9 +91,29 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     { immediate: true }
   )
 
+  const columns = computed(() => {
+    const uniteId = geoSystemSelected.value?.uniteId
+
+    if (isNotNullNorUndefined(uniteId)) {
+      const alwaysPresentColumns: Column<string>[] = [
+        { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
+        { id: 'description', name: 'Description', noSort: true },
+        { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
+        { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
+      ]
+
+      if (uniteId === 'deg') {
+        alwaysPresentColumns.push({ id: 'x_deg', name: capitalize(labels[uniteId].x), noSort: true }, { id: 'y_deg', name: capitalize(labels[uniteId].y), noSort: true })
+      }
+
+      return alwaysPresentColumns
+    }
+
+    return []
+  })
   const csvContent = computed(() => {
     if (currentRows.value.status === 'LOADED') {
-      const columsToSave = columns(geoSystemSelected.value?.uniteId)
+      const columsToSave = columns.value
 
       const values = currentRows.value.value.map(({ columns }) => columsToSave.map(({ id }) => columns[id]?.value ?? '').join(';'))
 
@@ -126,7 +128,15 @@ export const TabCaminoTable = defineComponent<Props>(props => {
       const rows = currentRows.value.value.slice(0, props.maxRows)
 
       if (currentRows.value.value.length > props.maxRows + 1) {
-        rows.push({ id: '11', link: null, columns: { polygone: { value: '...' }, nom: { value: '...' }, x: { value: '...' }, y: { value: '...' }, x_deg: { value: '...' }, y_deg: { value: '...' } } })
+        rows.push({
+          id: `${props.maxRows + 1}`,
+          link: null,
+          columns: columns.value.reduce<Record<string, TextColumnData>>((acc, { id }) => {
+            acc[id] = { value: '...' }
+
+            return acc
+          }, {}),
+        })
       }
 
       return rows
@@ -196,7 +206,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
           displayItemInList: display,
         }}
       />
-      <TableAuto caption="" class="fr-mb-1w" columns={columns(geoSystemSelected.value?.uniteId)} rows={rowsToDisplay.value} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
+      <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}
