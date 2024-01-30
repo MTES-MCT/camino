@@ -16,7 +16,7 @@ import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 //   return Number.parseFloat((area / 1000000).toFixed(2))
 // }
 
-export interface GeoJsonResult<T> {
+interface GeoJsonResult<T> {
   fallback: boolean
   data: T
 }
