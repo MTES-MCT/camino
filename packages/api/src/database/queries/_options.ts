@@ -124,7 +124,6 @@ const titresRelateFalse = [
   'amodiataires',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'surfaceEtape',
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
 ]
 

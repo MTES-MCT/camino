@@ -432,7 +432,6 @@ export default {
       // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
       this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
       this.etape.geojson4326Points = perimetreInfos.geojson4326_points
-      this.etape.surface = perimetreInfos.surface
 
       this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
       this.$emit('update:etape', this.etape)

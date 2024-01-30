@@ -23,7 +23,7 @@ export const etapeSaveFormat = etape => {
 
   delete etape.decisionsAnnexesSections
 
-  const props = ['date', 'dateDebut', 'dateFin', 'surface', 'duree']
+  const props = ['date', 'dateDebut', 'dateFin', 'duree']
 
   props.forEach(prop => {
     if (etape[prop] === '') {
@@ -32,6 +32,7 @@ export const etapeSaveFormat = etape => {
   })
 
   delete etape.demarche
+  delete etape.surface
 
   etape.substances = etape.substances?.filter(substanceId => !!substanceId)
 

@@ -48,7 +48,6 @@ const titreFields = {
   substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },
-  surfaceEtape: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
     type: { id: {} },

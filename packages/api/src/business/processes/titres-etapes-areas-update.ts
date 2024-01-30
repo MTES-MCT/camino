@@ -1,5 +1,4 @@
 /* eslint-disable sql/no-unsafe-query */
-import { geojsonIntersectsCommunes } from '../../tools/geojson.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { ITitreEtape } from '../../types.js'
@@ -11,6 +10,7 @@ import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-
 import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { KM2 } from 'camino-common/src/number.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -40,11 +40,11 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
     }
     try {
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
-        const { forets, sdom, secteurs } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+        const { forets, sdom, secteurs, communes } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
 
         await intersectForets(titreEtape, forets)
         await intersectSdom(titreEtape, sdom)
-        await intersectCommunes(titreEtape)
+        await intersectCommunes(titreEtape, communes)
         await intersectSecteursMaritime(titreEtape, secteurs)
       }
     } catch (e) {
@@ -75,18 +75,8 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
   }
 }
 
-async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>) {
-  if (!titreEtape.communes) {
-    throw new Error('les communes de l’étape ne sont pas chargées')
-  }
-
-  const communes = isNotNullNorUndefined(titreEtape.geojson4326Perimetre) ? await geojsonIntersectsCommunes(titreEtape.geojson4326Perimetre) : { fallback: false, data: [] }
-
-  if (communes.fallback) {
-    console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
-  }
-
-  const communesNew: { id: CommuneId; surface: number }[] = communes.data.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
+async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: { id: CommuneId; surface: KM2 }[]) {
+  const communesNew: { id: CommuneId; surface: KM2 }[] = communes.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
   if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
     console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.communes)}', nouveaux: '${JSON.stringify(communesNew)}'`)
     await knex('titres_etapes')

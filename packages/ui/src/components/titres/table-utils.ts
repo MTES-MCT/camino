@@ -82,6 +82,7 @@ export const referencesColumn: Column<'references'> = {
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
+  noSort: true,
 }
 export const titresColonnes = [
   nomColumn,

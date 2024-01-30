@@ -2,7 +2,6 @@ const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
 const fieldsToRemove = ['heritageProps', 'communes']
 const titreFieldsToRemove: string[] = ['geojson4326Centre', 'references']
-const titrePropsEtapesFields = ['surface', 'substances']
 
 interface IFields {
   [key: string]: IFields
@@ -63,14 +62,17 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // sur les titres
   if (isParentTitre) {
     // si la propriété `surface` est présente
-    // - la remplace par `surfaceEtape`
-    titrePropsEtapesFields.forEach(key => {
-      if (fields[key]) {
-        fields[`${key}Etape`] = { id: {} }
+    // - la remplace par `pointsEtape`
+    if (fields.surface) {
+      fields.pointsEtape = { id: {} }
 
-        delete fields[key]
-      }
-    })
+      delete fields.surface
+    }
+    if (fields.substances) {
+      fields.substancesEtape = { id: {} }
+
+      delete fields.substances
+    }
 
     // supprime certaines propriétés
     titreFieldsToRemove.forEach(key => {

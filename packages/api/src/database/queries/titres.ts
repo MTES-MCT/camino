@@ -61,15 +61,14 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 }
 
 const titresColonnes = {
-  nom: { id: 'nom', groupBy: ['titres.nom'] },
-  domaine: { id: raw(`right( titres.type_id, 1 )`), groupBy: [] },
-  coordonnees: { id: 'coordonnees', groupBy: [] },
+  nom: { id: 'nom', },
+  domaine: { id: raw(`right( titres.type_id, 1 )`), },
+  coordonnees: { id: 'coordonnees', },
   type: { id: 'type:type.nom', relation: 'type.type' },
-  statut: { id: 'titreStatutId', groupBy: ['titres.titreStatutId'] },
+  statut: { id: 'titreStatutId'},
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
-    groupBy: [],
   },
 } as Index<IColonne<string | RawBuilder>>
 
@@ -161,18 +160,6 @@ export const titresGet = async (
   if (colonne) {
     if (titresColonnes[colonne].relation) {
       q.leftJoinRelated(titresColonnes[colonne].relation!)
-    }
-
-    const groupBy = titresColonnes[colonne].groupBy as string[]
-
-    q.groupBy('titres.id')
-
-    if (groupBy) {
-      groupBy.forEach(gb => {
-        q.groupBy(gb)
-      })
-    } else {
-      q.groupBy(titresColonnes[colonne].id)
     }
 
     q.orderBy(titresColonnes[colonne].id, ordre || 'asc')

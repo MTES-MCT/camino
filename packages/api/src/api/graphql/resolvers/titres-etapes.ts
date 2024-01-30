@@ -41,6 +41,8 @@ import { Pool } from 'pg'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
+import { equalGeojson } from 'camino-common/src/perimetre.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -207,7 +209,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
     etape.date = date
-    etape.surface = etape.surface ?? null
 
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
@@ -218,13 +219,21 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      // FIXME on peut pas mettre les forêts et compagnie aussi ? (idem plus bas)
-      const { communes, sdom } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      const { communes, sdom, surface, forets, secteurs} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      etape.surface = surface
 
       etape.communes = communes
+      etape.forets = forets
+      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
+      etape.sdomZones = sdom
+
       sdomZones.push(...sdom)
     } else {
       etape.communes = []
+      etape.forets = []
+      etape.secteursMaritime = []
+      etape.sdomZones = []
+      etape.surface = null
     }
 
     const titreTypeId = titreDemarche?.titre?.typeId
@@ -397,12 +406,24 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      const { communes, sdom } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      const { communes, sdom, surface, forets, secteurs} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      
+      if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
+        etape.surface = surface
+      }
 
       etape.communes = communes
+      etape.forets = forets
+      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
+      etape.sdomZones = sdom
+
       sdomZones.push(...sdom)
     } else {
       etape.communes = []
+      etape.forets = []
+      etape.secteursMaritime = []
+      etape.sdomZones = []
+      etape.surface = null
     }
 
     const titreTypeId = titreDemarche?.titre?.typeId

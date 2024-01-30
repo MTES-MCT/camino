@@ -51,15 +51,6 @@ class Titres extends Model {
       join: { from: 'titres.id', to: 'titresDemarches.titreId' },
     },
 
-    surfaceEtape: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: TitresEtapes,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:surface').castText(),
-        to: 'titresEtapes.id',
-      },
-    },
-
     substancesEtape: {
       relation: Model.BelongsToOneRelation,
       modelClass: TitresEtapes,

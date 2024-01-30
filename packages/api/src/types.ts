@@ -88,13 +88,13 @@ interface IColonne<T> {
   groupBy?: boolean | string[]
 }
 
-export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
+export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances'] as const
 type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 // FIXME étrange cette prop
-type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
+type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets' | 'surface'
 
-type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut' | 'titulaires'
+type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut'
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
@@ -296,7 +296,6 @@ interface ITitre {
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
   administrations?: AdministrationId[] | null
-  surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
   forets?: ForetId[] | null

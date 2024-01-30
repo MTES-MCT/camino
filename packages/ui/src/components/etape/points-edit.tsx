@@ -11,6 +11,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Alert } from '../_ui/alert'
+import { KM2 } from 'camino-common/src/number'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'>
@@ -19,7 +20,7 @@ export interface Props {
     heritageProps: { perimetre: EtapeEdit['heritageProps']['perimetre'] }
     geojson4326Perimetre: FeatureMultiPolygon | null
     geojson4326Points: FeatureCollectionPoints | null
-    surface: number | null
+    surface: KM2 | null
   }
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
@@ -80,10 +81,13 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
     importPopup.value = false
   }
 
+
+  const surface = ref<KM2 | null>(props.etape.surface)
+
   const result = (value: GeojsonInformations | Error) => {
     if ('geojson4326_perimetre' in value) {
       importError.value = false
-
+      surface.value = value.surface
       props.onEtapeChange(value)
     } else {
       importError.value = true
@@ -92,15 +96,17 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
 
   // FIXME rajouter du padding/margin
   // FIXME afficher erreur si import pas bon
+  // FIXME jouer avec les heritage props et la propId
   return () => (
     <div>
+      {JSON.stringify(props.etape.heritageProps.perimetre)}
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
-        propId="perimetre"
+        
+        propId="geojson4326Perimetre"
         write={() => (
           <>
             <DsfrButton onClick={openPopup} title="Importer depuis un fichier…" />
-
             {importError.value ? <Alert title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
 
             <DisplayPerimetre apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} />
@@ -109,7 +115,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
         read={heritage => (
           <DisplayPerimetre
             apiClient={props.apiClient}
-            etape={{ ...props.etape, geojson4326Perimetre: heritage?.perimetre?.geojson4326_perimetre ?? null, geojson4326Points: heritage?.perimetre?.geojson4326_points ?? null }}
+            etape={{ ...props.etape, geojson4326Perimetre: heritage?.geojson4326Perimetre ?? null, geojson4326Points: heritage?.geojson4326Points ?? null }}
             titreSlug={props.titreSlug}
             initTab={props.initTab}
           />
@@ -121,7 +127,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
             <h5 class="mb-0">Surface (Km²)</h5>
           </div>
         </div>
-        {props.etape.surface}
+        {surface.value}
       </div>
       {importPopup.value ? <PointsImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
     </div>

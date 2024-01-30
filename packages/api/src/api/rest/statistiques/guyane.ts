@@ -59,9 +59,9 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
     (acc, titre) => {
       if (isTitreValide(titre.titreStatutId)) {
         if (['arm', 'prm'].includes(titre.typeId)) {
-          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
+          acc.surfaceExploration += titre.pointsEtape?.surface ?? 0
         } else {
-          acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
+          acc.surfaceExploitation += titre.pointsEtape?.surface ?? 0
         }
         const id = `titres${capitalize(titre.typeId)}` as IStatsGuyaneTitresTypes
 
@@ -158,7 +158,7 @@ const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
       },
       {
         fields: {
-          surfaceEtape: { id: {} },
+          pointsEtape: { id: {} },
           demarches: { etapes: { id: {} }, type: { id: {} } },
         },
       },

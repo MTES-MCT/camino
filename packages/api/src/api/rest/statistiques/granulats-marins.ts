@@ -60,15 +60,15 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<Statist
       const isValide = isTitreValide(titre.titreStatutId)
       const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
 
-      if ((isValide || instructionEnCours) && titre.surfaceEtape && titre.surfaceEtape.surface) {
+      if ((isValide || instructionEnCours) && titre.pointsEtape && titre.pointsEtape.surface) {
         if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
-          acc.surfaceExploration += titre.surfaceEtape.surface
+          acc.surfaceExploration += titre.pointsEtape.surface
           if (instructionEnCours) {
             acc.titresInstructionExploration++
           }
         } else {
           if (isValide) {
-            acc.surfaceExploitation += titre.surfaceEtape.surface
+            acc.surfaceExploitation += titre.pointsEtape.surface
           }
           if (instructionEnCours) {
             acc.titresInstructionExploitation++
@@ -137,7 +137,7 @@ export const statistiquesGranulatsMarins = async (annee: CaminoAnnee): Promise<S
       },
       {
         fields: {
-          surfaceEtape: { id: {} },
+          pointsEtape: { id: {} },
           demarches: {
             etapes: { id: {} },
             type: { id: {} },

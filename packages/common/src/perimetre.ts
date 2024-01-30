@@ -9,6 +9,7 @@ import { tempDocumentNameValidator } from './document.js'
 import { titreTypeIdValidator } from './static/titresTypes.js'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
+import { km2Validator } from './number.js'
 
 const coordinatesValidator = z.tuple([z.number(), z.number()])
 export const multiPolygonValidator = z.object({
@@ -49,7 +50,7 @@ const superpositionAlerteValidator = z.object({ slug: titreSlugValidator, nom: z
 
 export const geojsonInformationsValidator = z.object({
   superposition_alertes: z.array(superpositionAlerteValidator),
-  surface: z.number(),
+  surface: km2Validator,
   sdomZoneIds: z.array(sdomZoneIdValidator),
   foretIds: z.array(foretIdValidator),
   communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
@@ -71,3 +72,28 @@ export const geojsonImportBodyValidator = z.object({
 })
 
 export type GeojsonImportBody = z.infer<typeof geojsonImportBodyValidator>
+
+const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
+  for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {
+    for (let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++) {
+      for (let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++) {
+        if (
+          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][0] ||
+          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][1] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][1]
+        ) {
+          return false
+        }
+      }
+    }
+  }
+
+  return true
+}
+
+// FIXME tests bugs potentiels
+export const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon | null | undefined): boolean => {
+  if (isNullOrUndefined(geo2)) {
+    return false
+  }
+ return internalEqualGeojson(geo1, geo2) && internalEqualGeojson(geo2, geo1)
+}

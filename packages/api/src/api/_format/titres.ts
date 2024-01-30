@@ -33,8 +33,8 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
     t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))
   }
 
-  if (fields.surface && t.surfaceEtape) {
-    t.surface = t.surfaceEtape.surface
+  if (fields.surface && t.pointsEtape) {
+    t.surface = t.pointsEtape.surface
   }
 
   if (fields.activites && t.activites?.length) {

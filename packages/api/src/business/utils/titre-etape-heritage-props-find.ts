@@ -2,26 +2,11 @@ import { ITitreEtape, IEntreprise, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { MultiPolygon } from 'camino-common/src/perimetre.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
+import { exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
-const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
-  for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {
-    for (let indexLevel2 = 0; indexLevel2 < geo1.coordinates[indexLevel1].length; indexLevel2++) {
-      for (let indexLevel3 = 0; indexLevel3 < geo1.coordinates[indexLevel1][indexLevel2].length; indexLevel3++) {
-        if (
-          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][0] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][0] ||
-          geo1.coordinates[indexLevel1][indexLevel2][indexLevel3][1] !== geo2.coordinates[indexLevel1][indexLevel2][indexLevel3][1]
-        ) {
-          return false
-        }
-      }
-    }
-  }
 
-  return true
-}
 
 const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -43,7 +28,7 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
 
 type IPropValueArray = undefined | null | IEntreprise[] | SubstanceLegaleId[]
 
-type IPropValue = number | string | IPropValueArray | MultiPolygon
+type IPropValue = number | string | IPropValueArray | FeatureMultiPolygon
 
 const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
   if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
@@ -51,7 +36,7 @@ const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newVa
   }
 
   if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
-    return equalGeojson(newValue as MultiPolygon, oldValue as MultiPolygon) && equalGeojson(oldValue as MultiPolygon, newValue as MultiPolygon)
+    return equalGeojson((newValue as FeatureMultiPolygon).geometry, (oldValue as FeatureMultiPolygon).geometry)
   }
 
   return oldValue === newValue
@@ -98,17 +83,28 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
-          if (propId === 'perimetre') {
-            newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre
-            newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points
-          } else if (propId === 'amodiataires' || propId === 'titulaires') {
-            newTitreEtape[propId] = newValue as IEntreprise[]
-          } else if (propId === 'substances') {
-            newTitreEtape[propId] = newValue as SubstanceLegaleId[]
-          } else if (propId === 'dateDebut' || propId === 'dateFin') {
-            newTitreEtape[propId] = newValue as CaminoDate
-          } else if (propId === 'duree' || propId === 'surface') {
-            newTitreEtape[propId] = newValue as number
+          switch (propId) {
+            case 'perimetre':
+              newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre
+              newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points
+              newTitreEtape.surface = prevTitreEtape.surface
+              break
+            case 'amodiataires':
+            case 'titulaires':
+              newTitreEtape[propId] = newValue as IEntreprise[]
+              break
+            case 'substances':
+              newTitreEtape[propId] = newValue as SubstanceLegaleId[]
+              break
+            case 'dateDebut':
+            case 'dateFin':
+              newTitreEtape[propId] = newValue as CaminoDate
+              break
+            case 'duree':
+              newTitreEtape[propId] = newValue as number
+              break
+            default:
+              exhaustiveCheck(propId)
           }
         }
       } else {

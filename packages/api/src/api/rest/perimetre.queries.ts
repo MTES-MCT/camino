@@ -14,6 +14,7 @@ import { secteurDbIdValidator } from 'camino-common/src/static/facades.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { KM2, km2Validator } from 'camino-common/src/number.js'
 
 const precision = {
   met: 0.001,
@@ -102,13 +103,18 @@ where
         1) = $ domaine_id !
 `
 
+const numberTokm2 = (value: number): KM2 => km2Validator.parse(Number.parseFloat((value / 1000000).toFixed(2)))
+
 export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: MultiPolygon): Promise<GetGeojsonInformation> => {
   const result = await dbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationValidator)
   if (result.length !== 1) {
     throw new Error('On veut un seul résultat')
   }
 
-  return result[0]
+  return {...result[0], surface: numberTokm2(result[0].surface),
+  communes: result[0].communes.map(commune => ({...commune, surface: numberTokm2(commune.surface)}))
+  
+  }
 }
 
 const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
@@ -119,17 +125,28 @@ const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
   return val
 }
 const getGeojsonInformationValidator = z.object({
-  surface: z.number(),
+  surface: km2Validator,
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
   forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
   communes: z
-    .array(z.object({ id: communeIdValidator, nom: z.string() }))
+    .array(z.object({ id: communeIdValidator, nom: z.string(), surface: km2Validator }))
     .nullable()
     .transform(nullToEmptyArray),
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
 })
 type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
-const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformation>>`
+const getGeojsonInformationDbValidator = z.object({
+  surface: z.number(),
+  sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
+  forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
+  communes: z
+    .array(z.object({ id: communeIdValidator, nom: z.string(), surface: z.number() }))
+    .nullable()
+    .transform(nullToEmptyArray),
+  secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
+})
+type GetGeojsonInformationDbValidator = z.infer<typeof getGeojsonInformationDbValidator>
+const getGeojsonInformationDb = sql<Redefine<IGetGeojsonInformationDbQuery, { geojson4326_perimetre: MultiPolygon }, GetGeojsonInformationDbValidator>>`
 select
     (
         select
@@ -139,13 +156,18 @@ select
         where
             ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), sdom.geometry) is true) as sdom,
     (
+      select json_agg(communes_with_surface) from (
         select
-            json_agg(c) as communes
+          c.id,
+          c.nom,
+          ST_Area(ST_INTERSECTION(ST_MAKEVALID(ST_GeomFromGeoJSON($ geojson4326_perimetre !)), commune.geometry), true) as surface
         from
-            communes_postgis commune
-            join communes c on c.id = commune.id
+          communes_postgis commune
+        join communes c on
+          c.id = commune.id
         where
-            ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), commune.geometry) is true) as communes,
+          ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !),
+          commune.geometry) is true) as communes_with_surface) as communes,
     (
         select
             json_agg(foret.id) as forets
@@ -162,5 +184,5 @@ select
             ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), secteur.geometry) is true) as secteurs,
     (
         select
-            ST_AREA (ST_GeomFromGeoJSON ($ geojson4326_perimetre !))) as surface
+            ST_AREA (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), true)) as surface
 `

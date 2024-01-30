@@ -197,7 +197,6 @@ type GeoSysteme {
   ordre: Int!
   zone: String!
   uniteId: String
-  definitionProj4: String!
 }
 
 type DocumentType {

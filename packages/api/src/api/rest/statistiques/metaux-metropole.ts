@@ -47,7 +47,6 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
     },
     {
       fields: {
-        surfaceEtape: { id: {} },
         demarches: {
           etapes: { id: {} },
           type: { id: {} },
@@ -62,17 +61,17 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
       const isValide = isTitreValide(titre.titreStatutId)
       const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
       if (isValide || titre.titreStatutId === TitresStatutIds.DemandeInitiale) {
-        if (!titre.surfaceEtape) {
+        if (!titre.pointsEtape) {
           console.warn(`ce titre ${titre.slug} n'a pas de surface`)
         }
         if (['arm', 'apm', 'prm'].includes(titre.typeId!)) {
-          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
+          acc.surfaceExploration += titre.pointsEtape?.surface ?? 0
           if (instructionEnCours) {
             acc.titres.instructionExploration++
           }
         } else {
           if (isValide) {
-            acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
+            acc.surfaceExploitation += titre.pointsEtape?.surface ?? 0
           }
           if (instructionEnCours) {
             acc.titres.instructionExploitation++

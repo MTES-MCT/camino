@@ -25,7 +25,6 @@ import { databaseInit } from './database/init.js'
 
 import { consoleOverride } from './config/logger.js'
 import { filesInit } from './config/files.js'
-import { geoSystemesInit } from './config/proj4.js'
 import { userLoader } from './server/user-loader.js'
 import { connectedCatcher } from './server/connected-catcher.js'
 import cookieParser from 'cookie-parser'
@@ -41,7 +40,6 @@ const pool = new pg.Pool({
 })
 
 consoleOverride()
-geoSystemesInit()
 filesInit()
 databaseInit(pool).then(() => {
   const app = express()

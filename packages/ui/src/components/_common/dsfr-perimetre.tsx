@@ -52,7 +52,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
     return DemarcheMap
   })
 
-  // FIXME normalement ici on doit juste retourner le geojson4326_perimetre à la fin
+  // FIXME normalement ici on doit retourner le geojson4326_perimetre et ses points associés
   const geojson = { type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre] }
 
   return () => (

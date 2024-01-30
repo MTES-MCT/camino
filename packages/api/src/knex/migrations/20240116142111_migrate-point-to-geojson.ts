@@ -4,6 +4,7 @@ import { EtapeId } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 import rewind from 'geojson-rewind'
 import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 const etapesToNotMigrate = ['0NmsqYGVQJYKhFY22Ltt4NBV']
 
@@ -87,6 +88,13 @@ const geojsonFeatureCollectionPoints = (points: any[]): IGeoJson | null => {
 export const up = async (knex: Knex) => {
   await knex.raw('alter table titres_etapes add column geojson4326_perimetre public.geometry(MultiPolygon,4326)')
   await knex.raw('alter table titres_etapes add column geojson4326_points JSONB')
+  await knex.raw('CREATE INDEX titres_etapes_geom_idx  ON titres_etapes USING GIST (geojson4326_perimetre)')
+
+  await knex.raw('CREATE TABLE perimetre_reference (titre_etape_id character varying(255) NOT NULL, geo_systeme character varying(255) NOT NULL, opposable boolean default false, geojson_perimetre JSONB)')
+  await knex.raw('ALTER TABLE perimetre_reference ADD CONSTRAINT perimetre_reference_pk PRIMARY KEY (titre_etape_id, geo_systeme)')
+  await knex.raw('ALTER TABLE perimetre_reference ADD CONSTRAINT perimetre_reference_titre_etape_fk FOREIGN KEY (titre_etape_id) REFERENCES titres_etapes(id)')
+
+
 
   const etapes: { rows: { id: EtapeId; heritage_props: { points?: any; surface?: any; perimetre?: any } | null }[] } = await knex.raw('select * from titres_etapes')
 
@@ -109,8 +117,6 @@ export const up = async (knex: Knex) => {
             etape.id,
           ])
         }
-
-        await knex.raw('select ST_Centroid(te.geojson4326_perimetre) from titres_etapes te  where te.id = ?', [etape.id])
       }
     }
 
@@ -126,11 +132,22 @@ export const up = async (knex: Knex) => {
     }
   }
 
-  // FIXME migrer les titres_points_references
-  // FIXME ajouter des index
-  // await knex.raw('alter table titres drop column coordonnees')
-  // await knex.raw('drop table titres_points_references')
-  // await knex.raw('drop table titres_points')
+
+  const titres: { rows: { id: TitreId; props_titre_etapes_ids: { surface: any } | null }[] } = await knex.raw('select * from titres')
+  for (const titre of titres.rows) {
+
+    if (isNotNullNorUndefined(titre.props_titre_etapes_ids)) {
+      delete titre.props_titre_etapes_ids.surface
+
+      await knex.raw(`update titres set props_titre_etapes_ids = ? where id = ?`, [titre.props_titre_etapes_ids, titre.id])
+    }
+
+
+  }
+
+  await knex.raw('alter table titres drop column coordonnees')
+  await knex.raw('drop table titres_points_references')
+  await knex.raw('drop table titres_points')
 }
 
 export const down = () => ({})

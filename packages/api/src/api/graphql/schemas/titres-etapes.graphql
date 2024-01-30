@@ -157,7 +157,6 @@ input InputEtapeCreation {
   duree: Int
   dateDebut: String
   dateFin: String
-  surface: Float
   substances: [String!]
   geojson4326Perimetre: Json
   geojson4326Points: Json
@@ -181,7 +180,6 @@ input InputEtapeModification {
   duree: Int
   dateDebut: String
   dateFin: String
-  surface: Float
   substances: [String!]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
