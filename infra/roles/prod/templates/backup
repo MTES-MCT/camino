@@ -16,6 +16,8 @@ docker exec camino_api_db vacuumlo camino
 docker exec camino_api_db pg_dump --clean --if-exists --format=d --no-owner --no-privileges --dbname=camino -f /dump
 docker exec camino_api_db chown -R "{{camino_user_uid}}:${USER_GROUP_ID}" /dump
 
+docker exec camino_api_db pg_dump --clean --if-exists --no-owner --no-privileges -B --dbname=camino > /srv/backups/dump_without_files.sql
+
 # sauvegarde les fichiers
 rsync --delete -r /srv/www/camino/files/  /srv/backups/files
 chown camino:users -R /srv/backups/
