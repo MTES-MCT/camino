@@ -24,10 +24,7 @@
       "geojson-rewind": ["./src/@types/geojson-rewind"],
       "graphql-fields": ["./src/@types/graphql-fields"],
       "html-to-text": ["./src/@types/html-to-text"],
-      "matomo-tracker": ["./src/@types/matomo-tracker"],
-      "momoa": ["./src/@types/momoa"],
-      "turf-center": ["./src/@types/turf-center"],
-      "type-fest": ["./src/@types/type-fest"],
+      "matomo-tracker": ["./src/@types/matomo-tracker"]
     },
   }
 }

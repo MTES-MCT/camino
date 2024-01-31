@@ -44,8 +44,8 @@ export const transformableGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975
 export const transformableGeoSystemeIdValidator = z.enum(transformableGeoSystemeIds)
 export type TransformableGeoSystemeId = z.infer<typeof transformableGeoSystemeIdValidator>
 
-export const geoSystemeIdValidator = z.enum(IDS)
-export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
+const geoSystemeIdValidator = z.enum(IDS)
+type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
 // TODO 2024-01-18 issue https://github.com/MTES-MCT/camino/issues/919 --> pour les degrès, on affiche la notation DMS également
 

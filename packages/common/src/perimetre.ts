@@ -11,9 +11,9 @@ import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
 
-export const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
+const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
 
-export const polygonCoordinatesValidator  = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
+export const polygonCoordinatesValidator = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
 export const multiPolygonValidator = z.object({
   type: z.literal('MultiPolygon'),
   coordinates: z.array(polygonCoordinatesValidator).min(1),
@@ -97,5 +97,6 @@ export const equalGeojson = (geo1: MultiPolygon, geo2: MultiPolygon | null | und
   if (isNullOrUndefined(geo2)) {
     return false
   }
- return internalEqualGeojson(geo1, geo2) && internalEqualGeojson(geo2, geo1)
+
+  return internalEqualGeojson(geo1, geo2) && internalEqualGeojson(geo2, geo1)
 }

@@ -185,11 +185,6 @@ interface ICommune {
   surface?: number | null
 }
 
-interface ICoordonnees {
-  x: number
-  y: number
-}
-
 interface IDemarcheType {
   id: DemarcheTypeId
   nom: string
@@ -536,7 +531,6 @@ export {
   IContenuElement,
   IContenuValeur,
   IContenusTitreEtapesIds,
-  ICoordonnees,
   IDemarcheType,
   IDocumentRepertoire,
   IDomaine,

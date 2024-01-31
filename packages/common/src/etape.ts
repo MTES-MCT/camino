@@ -1,5 +1,4 @@
 import { CaminoDate } from './date.js'
-import { EtapePerimetre } from './demarche.js'
 import { EntrepriseId, documentIdValidator } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
@@ -8,7 +7,6 @@ import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
-import { isExtends } from './typescript-tools.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
 import { KM2 } from './number.js'
 
@@ -59,8 +57,7 @@ type EtapeBase = {
   notes: null | string
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
-
-export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
+type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
 export type EtapeWithHeritage<K extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'type' | 'date' | EtapePropsFromHeritagePropName<K>>> = T & {
   heritageProps: {
