@@ -95,11 +95,15 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
             const tempFile = await props.apiClient.uploadTempDocument(importFile.value)
             const values = importFile.value.name.split('.')
             const extension = perimetreFileUploadTypeValidator.parse(values[values.length - 1])
+            try{
             const result = await props.apiClient.geojsonImport(
               { tempDocumentName: tempFile, titreTypeId: props.titreTypeId, titreSlug: props.titreSlug, fileType: extension },
               systemeGeographique.value
             )
             props.result(result)
+            }catch(e: any){
+              props.result(new Error('Erreur lors de l\'import'))
+            }
           }
         },
         text: 'Importer',

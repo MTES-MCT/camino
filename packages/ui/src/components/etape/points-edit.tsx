@@ -1,7 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { HeritageEdit } from './heritage-edit'
 import { PointsImportPopup } from './points-import-popup'
-import { FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, HTMLAttributes, computed, onMounted, ref, watch } from 'vue'
 import { EtapeEdit } from '@/utils/titre-etape-edit'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
@@ -36,13 +36,15 @@ type DisplayPerimetreProps = {
     geojson4326Perimetre: FeatureMultiPolygon | null
     geojson4326Points: FeatureCollectionPoints | null
   }
+  surface: KM2 | null
   titreSlug: TitreSlug
   initTab?: 'points' | 'carte'
+  class?: HTMLAttributes['class']
 }
 
 const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
   if (props.etape.geojson4326Perimetre !== null) {
-    return (
+    return (<div>
       <DsfrPerimetre
         calculateNeighbours={false}
         apiClient={props.apiClient}
@@ -50,7 +52,9 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
         titreSlug={props.titreSlug}
         initTab={props.initTab ?? 'carte'}
       />
-    )
+
+        {props.surface ? <div class='fr-text--md'>Surface : {props.surface} Km²</div> : null}
+      </div>)
   }
 
   return null
@@ -92,24 +96,22 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
       props.onEtapeChange(value)
     } else {
       importError.value = true
+      console.log('coucou', value)
     }
   }
 
-  // FIXME rajouter du padding/margin
-  // FIXME afficher erreur si import pas bon
-  // FIXME jouer avec les heritage props et la propId
   return () => (
-    <div>
+    <div class='dsfr'>
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
         propId="perimetre"
         write={() => (
-          <>
+          <div>
             <DsfrButton onClick={openPopup} title="Importer depuis un fichier…" />
-            {importError.value ? <Alert title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
+            {importError.value ? <Alert class='fr-mt-2w' title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
 
-            <DisplayPerimetre apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} />
-          </>
+            <DisplayPerimetre class='fr-mt-2w' apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} surface={surface.value} />
+          </div>
         )}
         read={heritage => (
           <DisplayPerimetre
@@ -117,17 +119,11 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
             etape={{ ...props.etape, geojson4326Perimetre: heritage?.geojson4326Perimetre ?? null, geojson4326Points: heritage?.geojson4326Points ?? null }}
             titreSlug={props.titreSlug}
             initTab={props.initTab}
+            surface={heritage?.surface ?? null}
           />
         )}
       />
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s flex">
-          <div>
-            <h5 class="mb-0">Surface (Km²)</h5>
-          </div>
-        </div>
-        {surface.value}
-      </div>
+
       {importPopup.value ? <PointsImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
     </div>
   )

@@ -120,7 +120,7 @@ const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   })
 }
 
-export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations | Error>) => {
+export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
   const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -182,12 +182,10 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         res.json(result)
       } catch (e: any) {
         console.error(e)
-        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-        res.json(e)
+        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)
       }
     } else {
-      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-      res.json(geojsonImportInput.error)
+      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(geojsonImportInput.error)
     }
   }
 }

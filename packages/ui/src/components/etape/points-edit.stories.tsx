@@ -44,18 +44,7 @@ const perimetre: FeatureMultiPolygon = {
 const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'> = {
   geojsonImport(body, geoSystemeId) {
     geojsonImportAction(body, geoSystemeId)
-    const result: GeojsonInformations = {
-      superposition_alertes: [],
-      communes: [],
-      foretIds: [],
-      geojson4326_perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[12, 12]]]] } },
-      surface: km2Validator.parse(9),
-      geojson4326_points: null,
-      sdomZoneIds: [],
-      secteurMaritimeIds: [],
-    }
-
-    return Promise.resolve(result)
+    return Promise.reject(new Error('plop'))
   },
   uploadTempDocument(document) {
     uploadTempDocumentAction(document)
@@ -121,6 +110,7 @@ export const Heritage: StoryFn = () => (
 const etape: Props['etape'] = {
   ...etapeEmptyHeritage,
   geojson4326Perimetre: perimetre,
+  surface: km2Validator.parse(2),
   heritageProps: { perimetre: { actif: false } },
 }
 export const FilledNoHeritage: StoryFn = () => (

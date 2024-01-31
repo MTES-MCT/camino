@@ -130,6 +130,7 @@ export const CaminoRestRoutes = {
   },
   '/rest/entreprises/:entrepriseId/documents': {
     params: { entrepriseId: entrepriseIdValidator },
+    // TODO 2024-01-31 ne pas retourner une erreur, mais thrower une exception et la catcher plutôt ?
     post: { input: entrepriseDocumentInputValidator, output: z.union([entrepriseDocumentIdValidator, z.custom<Error>()]) },
     get: { output: z.array(entrepriseDocumentValidator) },
   },
@@ -146,7 +147,7 @@ export const CaminoRestRoutes = {
   '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: transformableGeoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
   '/rest/geojson/import/:geoSystemeId': {
     params: { geoSystemeId: transformableGeoSystemeIdValidator },
-    post: { input: geojsonImportBodyValidator, output: z.union([geojsonInformationsValidator, z.custom<Error>()]) },
+    post: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
