@@ -47,21 +47,21 @@ describe('getMostRecentValueProp', () => {
     }
 
     expect(
-      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [
+      getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', [
         {
           etapes: [dpu, dex],
           ordre: 1,
         },
       ])
-    ).toStrictEqual(dpu)
+    ).toStrictEqual(dpu.fondamentale.titulaires)
 
     expect(
-      getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', [
+      getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', [
         {
           etapes: [dex, dpu],
           ordre: 1,
         },
       ])
-    ).toStrictEqual(dpu)
+    ).toStrictEqual(dpu.fondamentale.titulaires)
   })
 })

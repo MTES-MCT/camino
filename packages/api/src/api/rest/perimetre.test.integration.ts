@@ -10,7 +10,7 @@ import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -213,10 +213,9 @@ describe('geojsonImport', () => {
   })
 
   test('shape MultiPolygon', async () => {
-
     const fileName = `existing_temp_file_${idGenerate()}.shp`
     mkdirSync(dir, { recursive: true })
-    copyFileSync(  join(__dirname, 'perimetre-multipolygon.shp'), `${dir}/${fileName}`)
+    copyFileSync(join(__dirname, 'perimetre-multipolygon.shp'), `${dir}/${fileName}`)
     const body: GeojsonImportBody = {
       titreSlug: titreSlugValidator.parse('mfr'),
       titreTypeId: 'arm',
@@ -297,10 +296,9 @@ describe('geojsonImport', () => {
   })
 
   test('shape Polygon', async () => {
-
     const fileName = `existing_temp_file_${idGenerate()}.shp`
     mkdirSync(dir, { recursive: true })
-    copyFileSync(  join(__dirname, 'perimetre-polygon.shp'), `${dir}/${fileName}`)
+    copyFileSync(join(__dirname, 'perimetre-polygon.shp'), `${dir}/${fileName}`)
     const body: GeojsonImportBody = {
       titreSlug: titreSlugValidator.parse('mfr'),
       titreTypeId: 'arm',

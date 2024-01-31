@@ -150,9 +150,10 @@ export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   return null
 }
 
-export const getDemarcheByIdOrSlugValidator = z.object({ 
-  demarche_id: demarcheIdValidator, 
-  demarche_slug: demarcheSlugValidator, 
-  titre_id: titreIdValidator })
+export const getDemarcheByIdOrSlugValidator = z.object({
+  demarche_id: demarcheIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  titre_id: titreIdValidator,
+})
 
 export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>

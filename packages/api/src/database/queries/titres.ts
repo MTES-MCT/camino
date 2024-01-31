@@ -61,11 +61,11 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 }
 
 const titresColonnes = {
-  nom: { id: 'nom', },
-  domaine: { id: raw(`right( titres.type_id, 1 )`), },
-  coordonnees: { id: 'coordonnees', },
+  nom: { id: 'nom' },
+  domaine: { id: raw(`right( titres.type_id, 1 )`) },
+  coordonnees: { id: 'coordonnees' },
   type: { id: 'type:type.nom', relation: 'type.type' },
-  statut: { id: 'titreStatutId'},
+  statut: { id: 'titreStatutId' },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',

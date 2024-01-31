@@ -50,7 +50,7 @@ const etape: EtapeFondamentale = {
         amodiataires: [],
         dateDebut: null,
         dateFin: undefined,
-        duree: undefined
+        duree: undefined,
       },
     },
     titulaires: {

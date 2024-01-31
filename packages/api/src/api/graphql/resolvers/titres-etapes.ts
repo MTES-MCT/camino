@@ -219,7 +219,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      const { communes, sdom, surface, forets, secteurs} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
       etape.surface = surface
 
       etape.communes = communes
@@ -406,8 +406,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
-      const { communes, sdom, surface, forets, secteurs} = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
-      
+      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+
       if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
         etape.surface = surface
       }

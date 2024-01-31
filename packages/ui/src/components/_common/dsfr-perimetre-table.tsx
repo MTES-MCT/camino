@@ -29,23 +29,23 @@ const labels = {
   gon: { x: 'longitude', y: 'latitude' },
 } as const satisfies Record<GeoSysteme['uniteId'], { x: string; y: string }>
 const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
-    return perimetre.geojson4326_points.features.map<TableRow<string>>((feature, index) => {
-      const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
-      const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
+  return perimetre.geojson4326_points.features.map<TableRow<string>>((feature, index) => {
+    const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
+    const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
 
-      return {
-        id: `${index}`,
-        link: null,
-        columns: {
-          description: { value: feature.properties.description ?? '' },
-          nom: { value: feature.properties.nom ?? '' },
-          x: { value: `${feature.geometry.coordinates[0]}` },
-          y: { value: `${feature.geometry.coordinates[1]}` },
-          x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
-          y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
-        },
-      }
-    })
+    return {
+      id: `${index}`,
+      link: null,
+      columns: {
+        description: { value: feature.properties.description ?? '' },
+        nom: { value: feature.properties.nom ?? '' },
+        x: { value: `${feature.geometry.coordinates[0]}` },
+        y: { value: `${feature.geometry.coordinates[1]}` },
+        x_deg: { value: `${x_deg.degres}°${Intl.NumberFormat('fr-FR').format(x_deg.minutes)}'` },
+        y_deg: { value: `${y_deg.degres}°${Intl.NumberFormat('fr-FR').format(y_deg.minutes)}'` },
+      },
+    }
+  })
 }
 
 export const TabCaminoTable = defineComponent<Props>(props => {
@@ -191,7 +191,6 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 TabCaminoTable.props = ['perimetre', 'apiClient', 'titreSlug', 'maxRows']
-
 
 export const transformMultipolygonToPoints = (geojson4326_perimetre: FeatureMultiPolygon): FeatureCollectionPoints => {
   const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []

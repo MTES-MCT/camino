@@ -90,11 +90,11 @@ export const up = async (knex: Knex) => {
   await knex.raw('alter table titres_etapes add column geojson4326_points JSONB')
   await knex.raw('CREATE INDEX titres_etapes_geom_idx  ON titres_etapes USING GIST (geojson4326_perimetre)')
 
-  await knex.raw('CREATE TABLE perimetre_reference (titre_etape_id character varying(255) NOT NULL, geo_systeme character varying(255) NOT NULL, opposable boolean default false, geojson_perimetre JSONB)')
+  await knex.raw(
+    'CREATE TABLE perimetre_reference (titre_etape_id character varying(255) NOT NULL, geo_systeme character varying(255) NOT NULL, opposable boolean default false, geojson_perimetre JSONB)'
+  )
   await knex.raw('ALTER TABLE perimetre_reference ADD CONSTRAINT perimetre_reference_pk PRIMARY KEY (titre_etape_id, geo_systeme)')
   await knex.raw('ALTER TABLE perimetre_reference ADD CONSTRAINT perimetre_reference_titre_etape_fk FOREIGN KEY (titre_etape_id) REFERENCES titres_etapes(id)')
-
-
 
   const etapes: { rows: { id: EtapeId; heritage_props: { points?: any; surface?: any; perimetre?: any } | null }[] } = await knex.raw('select * from titres_etapes')
 
@@ -132,17 +132,13 @@ export const up = async (knex: Knex) => {
     }
   }
 
-
   const titres: { rows: { id: TitreId; props_titre_etapes_ids: { surface: any } | null }[] } = await knex.raw('select * from titres')
   for (const titre of titres.rows) {
-
     if (isNotNullNorUndefined(titre.props_titre_etapes_ids)) {
       delete titre.props_titre_etapes_ids.surface
 
       await knex.raw(`update titres set props_titre_etapes_ids = ? where id = ?`, [titre.props_titre_etapes_ids, titre.id])
     }
-
-
   }
 
   await knex.raw('alter table titres drop column coordonnees')

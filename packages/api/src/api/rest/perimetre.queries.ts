@@ -111,10 +111,7 @@ export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: M
     throw new Error('On veut un seul résultat')
   }
 
-  return {...result[0], surface: numberTokm2(result[0].surface),
-  communes: result[0].communes.map(commune => ({...commune, surface: numberTokm2(commune.surface)}))
-  
-  }
+  return { ...result[0], surface: numberTokm2(result[0].surface), communes: result[0].communes.map(commune => ({ ...commune, surface: numberTokm2(commune.surface) })) }
 }
 
 const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
@@ -156,18 +153,18 @@ select
         where
             ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), sdom.geometry) is true) as sdom,
     (
-      select json_agg(communes_with_surface) from (
         select
-          c.id,
-          c.nom,
-          ST_Area(ST_INTERSECTION(ST_MAKEVALID(ST_GeomFromGeoJSON($ geojson4326_perimetre !)), commune.geometry), true) as surface
-        from
-          communes_postgis commune
-        join communes c on
-          c.id = commune.id
-        where
-          ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !),
-          commune.geometry) is true) as communes_with_surface) as communes,
+            json_agg(communes_with_surface)
+        from (
+            select
+                c.id,
+                c.nom,
+                ST_Area (ST_INTERSECTION (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), commune.geometry), true) as surface
+            from
+                communes_postgis commune
+                join communes c on c.id = commune.id
+            where
+                ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), commune.geometry) is true) as communes_with_surface) as communes,
     (
         select
             json_agg(foret.id) as forets

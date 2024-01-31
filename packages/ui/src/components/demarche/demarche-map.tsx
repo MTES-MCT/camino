@@ -240,14 +240,12 @@ export const DemarcheMap = defineComponent<Props>(props => {
   })
 
   const points = computed<FeatureCollectionPoints>(() => {
-      return {
-        type: 'FeatureCollection',
-        features: props.perimetre.geojson4326_points.features.map(feature => {
-          return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
-        }),
-      }
-
-
+    return {
+      type: 'FeatureCollection',
+      features: props.perimetre.geojson4326_points.features.map(feature => {
+        return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
+      }),
+    }
   })
 
   watch(

@@ -85,18 +85,16 @@ order by
     date desc
 `
 
-
-const getDemarcheByIdOrSlugValidator = z.object({ 
-    demarche_id: demarcheIdValidator, 
-    demarche_slug: demarcheSlugValidator, 
-    demarche_type_id: demarcheTypeIdValidator,
-    titre_id: titreIdValidator,
-    entreprises_lecture: z.boolean(),
-    public_lecture: z.boolean() 
+const getDemarcheByIdOrSlugValidator = z.object({
+  demarche_id: demarcheIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  demarche_type_id: demarcheTypeIdValidator,
+  titre_id: titreIdValidator,
+  entreprises_lecture: z.boolean(),
+  public_lecture: z.boolean(),
 })
-  
+
 type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
-  
 
 export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSlug): Promise<z.infer<typeof getDemarcheByIdOrSlugValidator>> => {
   return (await dbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator))[0]

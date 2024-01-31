@@ -63,19 +63,23 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
-        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[], etape_type_id: EtapeTypeId } = null
+        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[]; etape_type_id: EtapeTypeId } = null
         if (etapeIdOrSlugParsed.success) {
           const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
 
-
-          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [],  etape_type_id: myEtape.etape_type_id }
+          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [], etape_type_id: myEtape.etape_type_id }
         } else if (demarcheIdOrSlugParsed.success) {
           const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
           const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
 
           const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
           if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
-            etape = { demarche_id: demarche.demarche_id, geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre, sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [], etape_type_id: mostRecentEtapeFondamentale.etape_type_id }
+            etape = {
+              demarche_id: demarche.demarche_id,
+              geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre,
+              sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [],
+              etape_type_id: mostRecentEtapeFondamentale.etape_type_id,
+            }
           }
         } else {
           res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
@@ -93,12 +97,21 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
 
           const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
 
-          if(await canReadEtape(user, memoize(() => Promise.resolve(titre.titre_type_id)), administrationsLocales,  memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),  etape.etape_type_id, {...demarche, titre_public_lecture: titre.public_lecture})){
+          if (
+            await canReadEtape(
+              user,
+              memoize(() => Promise.resolve(titre.titre_type_id)),
+              administrationsLocales,
+              memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),
+              etape.etape_type_id,
+              { ...demarche, titre_public_lecture: titre.public_lecture }
+            )
+          ) {
             res.json({
               superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool),
               sdomZoneIds: etape.sdom_zones,
             })
-          }else{
+          } else {
             res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
           }
         }
@@ -153,14 +166,17 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             featureCollectionPoints = { type: 'FeatureCollection', features: points }
           }
         } else {
-          const shapeValidator = z.array(z.object({coordinates: polygonCoordinatesValidator, type: z.literal('Polygon')}).or(multiPolygonValidator)).max(1).min(1)
+          const shapeValidator = z
+            .array(z.object({ coordinates: polygonCoordinatesValidator, type: z.literal('Polygon') }).or(multiPolygonValidator))
+            .max(1)
+            .min(1)
           const shpParsed = shpjs.parseShp(buffer, 'EPSG:4326')
 
           const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
 
-          if( shapePolygonOrMultipolygon.type === 'MultiPolygon'){
+          if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
             coordinates = shapePolygonOrMultipolygon.coordinates
-          }else{
+          } else {
             coordinates = [shapePolygonOrMultipolygon.coordinates]
           }
         }

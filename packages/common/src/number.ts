@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const numberFormat = (number: number): string =>
   Intl.NumberFormat('FR-fr', {
@@ -32,7 +32,6 @@ export const toDegresMinutes = (value: number): { degres: number; minutes: numbe
     minutes: Number.parseFloat(minutes.toFixed(4)),
   }
 }
-
 
 export const km2Validator = z.number().brand('CAMINO_KM2')
 

@@ -7,7 +7,6 @@ import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
-import { indexToLetter } from 'camino-common/src/number'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export type TabId = 'carte' | 'points'
 type Props = {
@@ -27,37 +26,33 @@ const maxRows = 20
  *
  */
 export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
-
-  const geojson4326Points = computed<FeatureCollectionPoints>( () => {
-
-    if( isNotNullNorUndefined(props.perimetre.geojson4326_points)){
+  const geojson4326Points = computed<FeatureCollectionPoints>(() => {
+    if (isNotNullNorUndefined(props.perimetre.geojson4326_points)) {
       return props.perimetre.geojson4326_points
     }
-      return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
 
-    })
-
+    return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
+  })
 
   const vues = [
     {
       id: 'carte',
       icon: 'fr-icon-earth-fill',
       title: 'Carte',
-      renderContent: () => <TabCaminoMap {...props} perimetre={{...props.perimetre, geojson4326_points: geojson4326Points.value}} />,
+      renderContent: () => <TabCaminoMap {...props} perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value }} />,
     },
     {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable perimetre={{...props.perimetre, geojson4326_points: geojson4326Points.value}} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value }} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
-
 
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints }}
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints } }
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 

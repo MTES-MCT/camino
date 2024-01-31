@@ -6,8 +6,6 @@ import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.j
 import { exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
-
-
 const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
     return false
