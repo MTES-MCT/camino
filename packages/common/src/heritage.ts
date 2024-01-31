@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Expect, isTrue } from './typescript-tools'
 
 export const ETAPE_HERITAGE_PROPS = ['titulaires', 'amodiataires', 'dateDebut', 'dateFin', 'duree', 'substances', 'perimetre'] as const
 
@@ -19,6 +20,8 @@ export const mappingHeritagePropsNameEtapePropsName = {
     'substances':['substances'],
     'perimetre': ['geojson4326Perimetre', 'geojson4326Points', 'surface']
 } as const satisfies Record<EtapeHeritageProps, Readonly<string[]>>
+
+// isTrue<Expect<typeof mappingHeritagePropsNameEtapePropsName, keyof Etape>>
   
 export type MappingHeritagePropsNameEtapePropsName = typeof mappingHeritagePropsNameEtapePropsName
   

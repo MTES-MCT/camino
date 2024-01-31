@@ -11,10 +11,12 @@ import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
 
-const coordinatesValidator = z.tuple([z.number(), z.number()])
+export const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
+
+export const polygonCoordinatesValidator  = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
 export const multiPolygonValidator = z.object({
   type: z.literal('MultiPolygon'),
-  coordinates: z.array(z.array(z.array(coordinatesValidator).min(3)).min(1)).min(1),
+  coordinates: z.array(polygonCoordinatesValidator).min(1),
 })
 export type MultiPolygon = z.infer<typeof multiPolygonValidator>
 
@@ -29,7 +31,7 @@ const nullToEmptyObject = (val: null | NonNullable<unknown>): NonNullable<unknow
 export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.object({}).nullable().transform(nullToEmptyObject) })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
-const pointValidator = z.object({ type: z.literal('Point'), coordinates: coordinatesValidator })
+const pointValidator = z.object({ type: z.literal('Point'), coordinates: tupleCoordinateValidator })
 export type GeojsonPoint = z.infer<typeof pointValidator>
 const featurePointValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: z.object({ nom: z.string().nullish(), description: z.string().nullish() }) })
 

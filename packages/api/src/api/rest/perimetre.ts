@@ -6,7 +6,7 @@ import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User } from 'camino-common/src/roles.js'
 import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries.js'
 import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries.js'
 import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
@@ -20,17 +20,19 @@ import {
   featureCollectionValidator,
   featureMultiPolygonValidator,
   geojsonImportBodyValidator,
+  multiPolygonValidator,
+  polygonCoordinatesValidator,
 } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
 import { createReadStream } from 'node:fs'
 import shpjs from 'shpjs'
-import { Polygon } from 'geojson'
 import { Stream } from 'node:stream'
 import { isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { TitreSlug } from 'camino-common/src/validators/titres.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { z } from 'zod'
 
 export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -122,8 +124,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
   const user = req.auth
 
   const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
-  // FIXME qui a le droit d'appeler cette route ?
-  if (!user) {
+  if (!user || isDefault(user)) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else if (!geoSystemeId.success) {
     console.warn(`le geoSystemeId est obligatoire`)
@@ -152,8 +153,16 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             featureCollectionPoints = { type: 'FeatureCollection', features: points }
           }
         } else {
-          // @ts-ignore FIXME
-          coordinates = (shpjs.parseShp(buffer, 'EPSG:4326') as Polygon[]).map(p => p.coordinates)
+          const shapeValidator = z.array(z.object({coordinates: polygonCoordinatesValidator, type: z.literal('Polygon')}).or(multiPolygonValidator)).max(1).min(1)
+          const shpParsed = shpjs.parseShp(buffer, 'EPSG:4326')
+
+          const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
+
+          if( shapePolygonOrMultipolygon.type === 'MultiPolygon'){
+            coordinates = shapePolygonOrMultipolygon.coordinates
+          }else{
+            coordinates = [shapePolygonOrMultipolygon.coordinates]
+          }
         }
 
         const geojson: MultiPolygon = { type: 'MultiPolygon', coordinates }
