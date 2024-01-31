@@ -12,12 +12,13 @@ import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Alert } from '../_ui/alert'
 import { KM2 } from 'camino-common/src/number'
+import { EtapeWithHeritage, EtapeFondamentale } from 'camino-common/src/etape'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'>
   etape: {
     typeId: EtapeTypeId
-    heritageProps: { perimetre: EtapeEdit['heritageProps']['perimetre'] }
+    heritageProps: { perimetre: EtapeWithHeritage<'perimetre', Pick<EtapeFondamentale, 'geojson4326Perimetre' | 'surface' | 'geojson4326Points'| 'type' | 'date'>>['heritageProps']['perimetre'] }
     geojson4326Perimetre: FeatureMultiPolygon | null
     geojson4326Points: FeatureCollectionPoints | null
     surface: KM2 | null
@@ -99,11 +100,9 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
   // FIXME jouer avec les heritage props et la propId
   return () => (
     <div>
-      {JSON.stringify(props.etape.heritageProps.perimetre)}
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
-        
-        propId="geojson4326Perimetre"
+        propId="perimetre"
         write={() => (
           <>
             <DsfrButton onClick={openPopup} title="Importer depuis un fichier…" />

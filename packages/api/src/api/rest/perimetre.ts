@@ -8,7 +8,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from 'camino-common/src/roles.js'
 import { getDemarcheByIdOrSlug, getEtapesByDemarcheId } from './demarches.queries.js'
-import { getTitreByIdOrSlug } from './titres.queries.js'
+import { getAdministrationsLocalesByTitreId, getTitreByIdOrSlug, getTitulairesAmodiatairesByTitreId } from './titres.queries.js'
 import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
 import { getEtapeById } from './etapes.queries.js'
 import {
@@ -26,9 +26,11 @@ import { createReadStream } from 'node:fs'
 import shpjs from 'shpjs'
 import { Polygon } from 'geojson'
 import { Stream } from 'node:stream'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { TitreSlug } from 'camino-common/src/validators/titres.js'
+import { canReadEtape } from './permissions/etapes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -47,8 +49,6 @@ export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoReques
 }
 
 export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<PerimetreInformations>) => {
-  // on charge l’étape pour récupérer son périmètre et ses zones du sdom
-
   const user = req.auth
 
   if (!user) {
@@ -61,20 +61,19 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
       try {
-        // FIXME canRead etape
-
-        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[] } = null
+        let etape: null | { demarche_id: DemarcheId; geojson4326_perimetre: MultiPolygon | null; sdom_zones: SDOMZoneId[], etape_type_id: EtapeTypeId } = null
         if (etapeIdOrSlugParsed.success) {
           const myEtape = await getEtapeById(pool, etapeIdOrSlugParsed.data)
 
-          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [] }
+
+          etape = { demarche_id: myEtape.demarche_id, geojson4326_perimetre: myEtape.geojson4326_perimetre, sdom_zones: myEtape.sdom_zones ?? [],  etape_type_id: myEtape.etape_type_id }
         } else if (demarcheIdOrSlugParsed.success) {
           const demarche = await getDemarcheByIdOrSlug(pool, demarcheIdOrSlugParsed.data)
           const etapes = await getEtapesByDemarcheId(pool, demarche.demarche_id)
 
           const mostRecentEtapeFondamentale = getMostRecentEtapeFondamentaleValide([{ ordre: 1, etapes }])
           if (isNotNullNorUndefined(mostRecentEtapeFondamentale)) {
-            etape = { demarche_id: demarche.demarche_id, geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre, sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [] }
+            etape = { demarche_id: demarche.demarche_id, geojson4326_perimetre: mostRecentEtapeFondamentale.geojson4326_perimetre, sdom_zones: mostRecentEtapeFondamentale.sdom_zones ?? [], etape_type_id: mostRecentEtapeFondamentale.etape_type_id }
           }
         } else {
           res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
@@ -90,10 +89,16 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
           const demarche = await getDemarcheByIdOrSlug(pool, etape.demarche_id)
           const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
 
-          res.json({
-            superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool),
-            sdomZoneIds: etape.sdom_zones,
-          })
+          const administrationsLocales = memoize(() => getAdministrationsLocalesByTitreId(pool, demarche.titre_id))
+
+          if(await canReadEtape(user, memoize(() => Promise.resolve(titre.titre_type_id)), administrationsLocales,  memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),  etape.etape_type_id, {...demarche, titre_public_lecture: titre.public_lecture})){
+            res.json({
+              superposition_alertes: await getAlertesSuperposition(etape.geojson4326_perimetre, titre.titre_type_id, titre.titre_slug, user, pool),
+              sdomZoneIds: etape.sdom_zones,
+            })
+          }else{
+            res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+          }
         }
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)

@@ -256,33 +256,21 @@ describe('etapeCreer', () => {
           },
           substances: ['auru'],
           documentIds: [idDom, idFor, idJpa, idCar],
-          // FIXME geojson
-          points: [
-            {
-              groupe: 1,
-              contour: 1,
-              point: 1,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }],
+          geojson4326Perimetre: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
+                [
+                  [
+                    [1, 2],
+                    [2, 3],
+                  ],
+                ],
+              ],
             },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 2,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }],
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 3,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }],
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 4,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }],
-            },
-          ],
+          },
         },
       },
       userSuper

@@ -5,6 +5,7 @@ import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
+import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPoint',
@@ -25,7 +26,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'> = {
       communes: [],
       foretIds: [],
       geojson4326_perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[12, 12]]]] } },
-      surface: 9,
+      surface: km2Validator.parse(9),
       geojson4326_points: null,
       sdomZoneIds: [],
       secteurMaritimeIds: [],

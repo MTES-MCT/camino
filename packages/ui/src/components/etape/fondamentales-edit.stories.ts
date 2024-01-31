@@ -27,7 +27,6 @@ const etape: EtapeFondamentale = {
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
   notes: null,
-  perimetre: null,
   heritageProps: {
     dateDebut: {
       actif: false,
@@ -47,6 +46,11 @@ const etape: EtapeFondamentale = {
           nom: 'étape précédente',
         },
         substances: ['arge'],
+        titulaires: [],
+        amodiataires: [],
+        dateDebut: null,
+        dateFin: undefined,
+        duree: undefined
       },
     },
     titulaires: {

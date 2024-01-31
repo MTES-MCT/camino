@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
@@ -16,9 +16,10 @@ import { sectionValidator } from 'camino-common/src/static/titresTypes_demarches
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
-import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { featureCollectionPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres.js'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -84,6 +85,19 @@ order by
     date desc
 `
 
+
+const getDemarcheByIdOrSlugValidator = z.object({ 
+    demarche_id: demarcheIdValidator, 
+    demarche_slug: demarcheSlugValidator, 
+    demarche_type_id: demarcheTypeIdValidator,
+    titre_id: titreIdValidator,
+    entreprises_lecture: z.boolean(),
+    public_lecture: z.boolean() 
+})
+  
+type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
+  
+
 export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSlug): Promise<z.infer<typeof getDemarcheByIdOrSlugValidator>> => {
   return (await dbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator))[0]
 }
@@ -92,6 +106,9 @@ const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { id
 select
     id as demarche_id,
     slug as demarche_slug,
+    type_id as demarche_type_id,
+    entreprises_lecture,
+    public_lecture,
     titre_id
 from
     titres_demarches

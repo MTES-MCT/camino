@@ -3,7 +3,7 @@ import { dateFormat } from '@/utils'
 import { HTMLAttributes, computed, defineComponent } from 'vue'
 import { HeritageProp } from 'camino-common/src/etape'
 import { EtapeHeritage } from './heritage-edit.types'
-import { EtapeHeritageProps } from 'camino-common/src/heritage'
+import { EtapeHeritageProps, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 
 type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   prop: HeritageProp<T>
@@ -16,7 +16,7 @@ type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
 export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T>) => {
   const buttonText = computed<string>(() => (props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`))
   const hasHeritage = computed<boolean>(() => {
-    return hasValeurCheck(props.propId, props.prop.etape)
+    return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => hasValeurCheck(field, props.prop.etape))
   })
 
   return () => (

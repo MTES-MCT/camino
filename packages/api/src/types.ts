@@ -91,7 +91,6 @@ interface IColonne<T> {
 export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances'] as const
 type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
-// FIXME étrange cette prop
 type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets' | 'surface'
 
 type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut'
@@ -300,7 +299,6 @@ interface ITitre {
   communes?: ICommune[] | null
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
-  // FIXME rename to etapeWithPerimetre
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]

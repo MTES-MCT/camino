@@ -2,10 +2,10 @@
 import { sql } from '@pgtyped/runtime'
 import { TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
+import { IGetAdministrationsLocalesByTitreIdDbQuery, IGetDemarchesByTitreIdQueryDbQuery, IGetTitreByIdOrSlugDbQuery, IGetTitreInternalQuery, IGetTitulairesAmodiatairesByTitreIdDbQuery } from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
-import { Commune } from 'camino-common/src/static/communes.js'
+import { Commune, communeIdValidator, communeValidator } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { User } from 'camino-common/src/roles.js'
@@ -32,6 +32,10 @@ import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/ti
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'camino-common/src/validators/titres.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { IGetTitulairesAmodiatairesTitreActiviteQuery } from './activites.queries.types.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -335,6 +339,7 @@ order by
 const getTitreByIdOrSlugValidator = z.object({
   titre_slug: titreSlugValidator,
   titre_type_id: titreTypeIdValidator,
+  public_lecture: z.boolean()
 })
 type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>
 
@@ -345,10 +350,59 @@ export const getTitreByIdOrSlug = async (pool: Pool, idOrSlug: TitreIdOrSlug): P
 const getTitreByIdOrSlugDb = sql<Redefine<IGetTitreByIdOrSlugDbQuery, { idOrSlug: TitreIdOrSlug }, GetTitreByIdOrSlugValidator>>`
 select
     slug as titre_slug,
-    type_id as titre_type_id
+    type_id as titre_type_id,
+    public_lecture
 from
     titres
 where (id = $ idOrSlug !
     or slug = $ idOrSlug !)
 and archive is false
+`
+
+
+export const getTitulairesAmodiatairesByTitreId = async (pool: Pool, titreId: TitreId): Promise<EntrepriseId[]> => {
+  const result = await dbQueryAndValidate(getTitulairesAmodiatairesByTitreIdDb, {titreId}, pool, entrepriseIdObjectValidator)
+
+  return result.map(({id}) => id)
+}
+
+
+const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
+const getTitulairesAmodiatairesByTitreIdDb = sql<Redefine<IGetTitulairesAmodiatairesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof entrepriseIdObjectValidator>>>`
+select distinct
+    e.id
+from
+    entreprises e,
+    titres t
+    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
+where t.id = $ titreId !
+and (tt.entreprise_id = e.id or tta.entreprise_id = e.id)`
+
+export const getAdministrationsLocalesByTitreId = async (pool: Pool, titreId: TitreId): Promise<AdministrationId[]> => {
+  
+  const result = await dbQueryAndValidate(getAdministrationsLocalesByTitreIdDb, {titreId}, pool, getAdministrationsLocalesByTitreIdValidator)
+
+  if( result.length !== 1 ){
+    throw new Error('impossible de trouver le titre')
+  }
+  return getAdministrationsLocales(
+    result[0].communes.map(({ id }) => id),
+    result[0].secteurs_maritime
+  )
+} 
+
+const getAdministrationsLocalesByTitreIdValidator = z.object({
+  communes: z.array(z.object({id: communeIdValidator})),
+  secteurs_maritime: z.array(secteurMaritimeValidator)
+})
+
+const getAdministrationsLocalesByTitreIdDb = sql<Redefine<IGetAdministrationsLocalesByTitreIdDbQuery, {titreId: TitreId }, z.infer<typeof getAdministrationsLocalesByTitreIdValidator>>>
+`
+select
+te.communes,
+te.secteurs_maritime
+from titres t
+left join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
+where t.id = $ titreId !
 `

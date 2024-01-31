@@ -50,6 +50,9 @@ export interface IGetDemarcheByIdOrSlugDbParams {
 export interface IGetDemarcheByIdOrSlugDbResult {
   demarche_id: string;
   demarche_slug: string | null;
+  demarche_type_id: string;
+  entreprises_lecture: boolean;
+  public_lecture: boolean;
   titre_id: string;
 }
 

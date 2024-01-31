@@ -7,6 +7,7 @@ import { PointsEdit, Props } from './points-edit'
 import { toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
+import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
   title: 'Components/Etape/PointEdit',
@@ -48,7 +49,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
       communes: [],
       foretIds: [],
       geojson4326_perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[12, 12]]]] } },
-      surface: 9,
+      surface: km2Validator.parse(9),
       geojson4326_points: null,
       sdomZoneIds: [],
       secteurMaritimeIds: [],
@@ -80,7 +81,7 @@ const etapeNoHeritage: Props['etape'] = {
   heritageProps: { perimetre: { actif: false } },
   geojson4326Perimetre: null,
   geojson4326Points: null,
-  surface: 0,
+  surface: null,
 }
 
 const titreSlug = titreSlugValidator.parse('titre-slug')
@@ -90,7 +91,9 @@ export const EmptyNoHeritage: StoryFn = () => (
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
-  heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), type: EtapesTypes.mfr, perimetre: null } } },
+  heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), type: EtapesTypes.mfr,   geojson4326Perimetre: null,
+  geojson4326Points: null,
+  surface: null, } } },
 }
 export const EmptyHeritage: StoryFn = () => (
   <PointsEdit initTab="points" completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId="arm" titreSlug={titreSlug} />
@@ -104,15 +107,9 @@ const etapeHeritage: Props['etape'] = {
       etape: {
         date: toCaminoDate('2023-01-01'),
         type: EtapesTypes.mfr,
-        perimetre: {
-          communes: [],
-          forets: [],
-          sdom_zones: [],
-          secteurs_maritimes: [],
-          surface: 2,
-          geojson4326_perimetre: perimetre,
-          geojson4326_points: null,
-        },
+        surface: km2Validator.parse(2),
+        geojson4326Perimetre: perimetre,
+        geojson4326Points: null,
       },
     },
   },

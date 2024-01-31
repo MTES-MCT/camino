@@ -1,7 +1,7 @@
 import { CaminoDate } from './date.js'
 import { EtapePerimetre } from './demarche.js'
 import { EntrepriseId, documentIdValidator } from './entreprise.js'
-import { EtapeHeritageProps } from './heritage.js'
+import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
 import { etapeStatutIdValidator } from './static/etapesStatuts.js'
@@ -9,6 +9,8 @@ import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
 import { isExtends } from './typescript-tools.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
+import { KM2 } from './number.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -49,17 +51,24 @@ type EtapeBase = {
   documents?: CaminoDocument[]
   justificatifs?: unknown[]
   communes?: string[]
-  perimetre: EtapePerimetre | null
+
+  geojson4326Perimetre?: FeatureMultiPolygon | null
+  geojson4326Points?: FeatureCollectionPoints | null
+  surface?: KM2 | null
+
   notes: null | string
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
 
-export type EtapeWithHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
+
+export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
+
+export type EtapeWithHeritage<K extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'type' | 'date' | EtapePropsFromHeritagePropName<K>>> = T & {
   heritageProps: {
-    [key in isExtends<EtapeHeritageProps, keyof T>]: HeritageProp<Pick<T, 'type' | 'date' | key>>
+    [key in K]: HeritageProp<Pick<T, 'type' | 'date' | EtapePropsFromHeritagePropName<K>>>
   }
 }
 
-export type Etape = EtapeWithHeritage<EtapeBase>
+export type Etape = EtapeWithHeritage<keyof MappingHeritagePropsNameEtapePropsName, EtapeBase>
 export type EtapeFondamentale = Etape
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
