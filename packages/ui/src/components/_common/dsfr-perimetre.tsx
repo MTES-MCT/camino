@@ -1,4 +1,4 @@
-import { defineComponent, HTMLAttributes, defineAsyncComponent } from 'vue'
+import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
@@ -6,7 +6,9 @@ import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
-import { TabCaminoTable } from './dsfr-perimetre-table'
+import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
+import { indexToLetter } from 'camino-common/src/number'
+import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export type TabId = 'carte' | 'points'
 type Props = {
   perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
@@ -25,25 +27,38 @@ const maxRows = 20
  *
  */
 export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
+
+  const geojson4326Points = computed<FeatureCollectionPoints>( () => {
+
+    if( isNotNullNorUndefined(props.perimetre.geojson4326_points)){
+      return props.perimetre.geojson4326_points
+    }
+      return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
+
+    })
+
+
   const vues = [
     {
       id: 'carte',
       icon: 'fr-icon-earth-fill',
       title: 'Carte',
-      renderContent: () => <TabCaminoMap {...props} />,
+      renderContent: () => <TabCaminoMap {...props} perimetre={{...props.perimetre, geojson4326_points: geojson4326Points.value}} />,
     },
     {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable perimetre={props.perimetre} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable perimetre={{...props.perimetre, geojson4326_points: geojson4326Points.value}} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
+
 
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-const TabCaminoMap = defineComponent<Props>(props => {
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints }}
+const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 
   const DemarcheMap = defineAsyncComponent(async () => {
@@ -52,8 +67,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
     return DemarcheMap
   })
 
-  // FIXME normalement ici on doit retourner le geojson4326_perimetre et ses points associés
-  const geojson = { type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre] }
+  const geojson = { type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre, ...props.perimetre.geojson4326_points.features] }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -61,7 +75,7 @@ const TabCaminoMap = defineComponent<Props>(props => {
       <DsfrLink
         style={{ alignSelf: 'end' }}
         href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson))}`}
-        download={`points-${props.titreSlug}.geojson`}
+        download={`perimetre-${props.titreSlug}.geojson`}
         icon="fr-icon-download-line"
         buttonType="secondary"
         title="Télécharge le périmètre au format geojson"

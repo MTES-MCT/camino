@@ -13,7 +13,6 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { couleurParDomaine } from '../_common/domaine'
 import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
-import { indexToLetter } from 'camino-common/src/number'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -23,7 +22,7 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -241,44 +240,14 @@ export const DemarcheMap = defineComponent<Props>(props => {
   })
 
   const points = computed<FeatureCollectionPoints>(() => {
-    if (props.perimetre.geojson4326_points !== null) {
       return {
         type: 'FeatureCollection',
         features: props.perimetre.geojson4326_points.features.map(feature => {
           return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
         }),
       }
-    } else {
-      const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []
-      let index = 0
-      props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
-        topLevel.forEach((secondLevel, secondLevelIndex) =>
-          secondLevel.forEach(([x, y], currentLevelIndex) => {
-            // On ne rajoute pas le dernier point qui est égal au premier du contour...
-            if (props.perimetre.geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
-              currentPoints.push({
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: [x, y],
-                },
-                properties: {
-                  nom: `${indexToLetter(index)}`,
-                  latitude: `${y}`,
-                  longitude: `${x}`,
-                },
-              })
-              index++
-            }
-          })
-        )
-      )
 
-      return {
-        type: 'FeatureCollection',
-        features: currentPoints,
-      }
-    }
+
   })
 
   watch(
