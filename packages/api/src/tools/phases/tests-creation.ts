@@ -13,7 +13,7 @@ import { DemarcheId } from 'camino-common/src/demarche.js'
 import { newDemarcheId, newTitreId } from '../../database/models/_format/id-create.js'
 import { TitreDemarchePhaseFind, TitreEtapePhaseFind } from '../../business/rules/titre-phases-find.js'
 import { TitreId } from 'camino-common/src/validators/titres.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const writePhasesForTest = async () => {
   const demarches: {
@@ -42,10 +42,9 @@ const writePhasesForTest = async () => {
       date: CaminoDate
       duree: number | null
       statut_id: EtapeStatutId
-      count: number
+      geojson4326_perimetre: NonNullable<unknown> | null
     }[]
-  } = await knex.raw(`select te.titre_demarche_id, te.ordre, te.type_id as etape_type_id, te.date_fin, te.date_debut, te.date, te.duree, te.statut_id, count(tp.id) from titres_etapes te
-    left join titres_points tp on te.id = tp.titre_etape_id
+  } = await knex.raw(`select te.titre_demarche_id, te.ordre, te.type_id as etape_type_id, te.date_fin, te.date_debut, te.date, te.duree, te.statut_id, te.geojson4326_perimetre from titres_etapes te
     where te.archive is false
     group by te.id`)
 
@@ -76,7 +75,25 @@ const writePhasesForTest = async () => {
         dateDebut: etapeDb.date_debut,
         date: etapeDb.date,
         statutId: etapeDb.statut_id,
-        points: etapeDb.count > 0 ? [1, 2] : [],
+        geojson4326Perimetre: isNotNullNorUndefined(etapeDb.geojson4326_perimetre)
+          ? {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'MultiPolygon',
+                coordinates: [
+                  [
+                    [
+                      [1, 2],
+                      [1, 2],
+                      [1, 2],
+                      [1, 2],
+                    ],
+                  ],
+                ],
+              },
+            }
+          : null,
       }))
 
     acc[row.titre_id].demarches.push({

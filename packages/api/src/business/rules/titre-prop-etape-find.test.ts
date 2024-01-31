@@ -342,17 +342,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'mfr',
                 statutId: 'acc',
                 ordre: 1,
-                points: [
-                  {
-                    id: newEtapeId('id'),
-                    titreEtapeId: 'h-cx-courdemanges-1983-oct01-mfr01',
-                    groupe: 1,
-                    contour: 1,
-                    point: 1,
-                    references: [],
-                    coordonnees: { x: 0, y: 0 },
-                  },
-                ],
+                geojson4326Perimetre: { properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, type: 'Feature' },
               } as ITitreEtape,
             ],
           },
@@ -487,7 +477,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
         ],
         TitresStatutIds.ModificationEnInstance
       )
-    ).toBeNull()
+    ).toBe(null)
   })
 
   test.each(['points', 'surface', 'communes'] as IPropId[])(

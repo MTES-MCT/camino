@@ -20,8 +20,6 @@ export const tables = [
     name: 'titres_etapes_entreprises_documents',
     orderBy: ['titre_etape_id', 'document_id'],
   },
-  { name: 'titres_points', orderBy: ['id'] },
-  { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_types', orderBy: ['id'] },
   { name: 'titres_types_types', orderBy: ['id'] },
