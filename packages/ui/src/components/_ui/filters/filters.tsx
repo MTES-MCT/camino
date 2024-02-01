@@ -97,7 +97,6 @@ export const getInitialFiltres = (route: Pick<RouteLocationNormalizedLoaded, 'qu
     etapesExclues: caminoFiltres.etapesExclues.validator.parse(JSON.parse(routerQueryToString(route.query.etapesExclues, '[]'))),
     annees: caminoFiltres.annees.validator.parse(routerQueryToStringArray(route.query.annees)),
     nomsEntreprise: routerQueryToString(route.query.nomsEntreprise, ''),
-    titresTerritoires: routerQueryToString(route.query.titresTerritoires, ''),
   }
   allCaminoFiltres.forEach(filter => {
     if (!filters.includes(filter)) {

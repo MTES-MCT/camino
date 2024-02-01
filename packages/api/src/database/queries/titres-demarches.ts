@@ -61,7 +61,6 @@ const titresDemarchesFiltersQueryModify = (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     travaux,
   }: {
     typesIds?: string[] | null
@@ -76,7 +75,6 @@ const titresDemarchesFiltersQueryModify = (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     travaux?: boolean | null
   } = {},
   q: QueryBuilder<TitresDemarches, TitresDemarches[]>
@@ -123,7 +121,6 @@ const titresDemarchesFiltersQueryModify = (
       entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
-      territoires: titresTerritoires,
     },
     q,
     'titre',
@@ -155,7 +152,6 @@ export const titresDemarchesCount = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     travaux,
   }: {
     typesIds?: string[] | null
@@ -170,7 +166,6 @@ export const titresDemarchesCount = async (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     travaux?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
@@ -192,7 +187,6 @@ export const titresDemarchesCount = async (
       titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
-      titresTerritoires,
       travaux,
     },
     q
@@ -231,7 +225,6 @@ export const titresDemarchesGet = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     travaux,
   }: {
     intervalle?: number | null
@@ -250,7 +243,6 @@ export const titresDemarchesGet = async (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     travaux?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
@@ -272,7 +264,6 @@ export const titresDemarchesGet = async (
       titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
-      titresTerritoires,
       travaux,
     },
     q

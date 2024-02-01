@@ -5,7 +5,7 @@ const caminoEtapesFiltres = [caminoFiltres.etapesInclues, caminoFiltres.etapesEx
 export type EtapeCaminoFiltres = (typeof caminoEtapesFiltres)[number]['id']
 export const isEtapeCaminoFiltre = (value: CaminoFiltre): value is EtapeCaminoFiltres => caminoEtapesFiltresArrayIds.includes(value)
 
-const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise', 'titresTerritoires'] as const
+const caminoInputFiltresArrayIds = ['nomsAdministration', 'nomsUtilisateurs', 'emails', 'references', 'communes', 'nomsEntreprise'] as const
 export const caminoInputFiltres = [
   caminoFiltres.nomsAdministration,
   caminoFiltres.nomsUtilisateurs,
@@ -13,7 +13,6 @@ export const caminoInputFiltres = [
   caminoFiltres.references,
   caminoFiltres.communes,
   caminoFiltres.nomsEntreprise,
-  caminoFiltres.titresTerritoires,
 ] as const satisfies readonly { type: 'input' }[]
 export type InputCaminoFiltres = (typeof caminoInputFiltres)[number]['id']
 export const isInputCaminoFiltre = (value: CaminoFiltre): value is InputCaminoFiltres => caminoInputFiltresArrayIds.includes(value)

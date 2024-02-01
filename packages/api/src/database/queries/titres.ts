@@ -95,9 +95,7 @@ export const titresGet = async (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -117,9 +115,7 @@ export const titresGet = async (
     substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
-    entreprises?: string | null
     references?: string | null
-    territoires?: string | null
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
@@ -146,9 +142,7 @@ export const titresGet = async (
       substancesIds,
       entreprisesIds,
       noms,
-      entreprises,
       references,
-      territoires,
       communes,
       departements,
       regions,
@@ -200,9 +194,7 @@ export const titresCount = async (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -216,9 +208,7 @@ export const titresCount = async (
     substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
-    entreprises?: string | null
     references?: string | null
-    territoires?: string | null
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
@@ -239,9 +229,7 @@ export const titresCount = async (
       substancesIds,
       entreprisesIds,
       noms,
-      entreprises,
       references,
-      territoires,
       communes,
       departements,
       regions,

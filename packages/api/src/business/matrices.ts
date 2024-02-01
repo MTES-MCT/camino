@@ -18,6 +18,7 @@ import { Commune } from 'camino-common/src/static/communes.js'
 import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee } from 'camino-common/src/date.js'
 
 import { Decimal } from 'decimal.js'
+import { REGION_IDS, regions } from 'camino-common/src/static/region.js'
 
 const sips = {
   cayenne: {
@@ -397,7 +398,7 @@ export const matrices = async (annee: CaminoAnnee, pool: Pool) => {
 
   const titres = await titresGet(
     {
-      territoires: 'guyane',
+      regions: [REGION_IDS.Guyane],
     },
     {
       fields: {

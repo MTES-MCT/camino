@@ -153,8 +153,6 @@ export const titre =
 // TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
 const titresColonnes = ['nom', 'domaine', 'type', 'statut'] as const
 const titresValidator = generateValidator(titresFiltresNames, titresColonnes, titresDownloadFormats).extend({
-  // legacy pour le plugin qgis camino
-  territoires: z.string().optional(),
   // pour gérer les téléchargement quand on est sur la carte
   perimetre: z.array(z.coerce.number()).optional(),
 })
@@ -175,7 +173,6 @@ export const titres =
         entreprisesIds: params.entreprisesIds,
         substancesIds: params.substancesIds,
         references: params.references,
-        territoires: params.territoires,
         communes: params.communes,
         departements: params.departements,
         regions: params.regions,
@@ -216,7 +213,6 @@ export const titres =
         titresIds: params.titresIds,
         entreprisesIds: params.entreprisesIds,
         references: params.references,
-        territoires: params.territoires,
       })
         .filter(param => param[1] !== undefined)
         .map(param => param.join('='))
@@ -269,7 +265,6 @@ export const demarches =
         titresEntreprisesIds: params.entreprisesIds,
         titresSubstancesIds: params.substancesIds,
         titresReferences: params.references,
-        titresTerritoires: params.titresTerritoires,
         travaux: params.travaux,
       },
       {
@@ -333,7 +328,6 @@ export const activites =
         titresEntreprisesIds: params.entreprisesIds,
         titresSubstancesIds: params.substancesIds,
         titresReferences: params.references,
-        titresTerritoires: params.titresTerritoires,
         titresTypesIds: params.typesIds,
         titresDomainesIds: params.domainesIds,
         titresStatutsIds: params.statutsIds,

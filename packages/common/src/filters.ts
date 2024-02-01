@@ -173,14 +173,6 @@ export const caminoFiltres = {
     lazy: false,
     validator: z.array(caminoAnneeValidator),
   },
-
-  titresTerritoires: {
-    id: 'titresTerritoires',
-    type: 'input',
-    name: 'Territoires',
-    placeholder: 'Commune, département, région, …',
-    validator: z.string(),
-  },
   demarchesTypesIds: {
     id: 'demarchesTypesIds',
     name: 'Types de démarche',
@@ -248,7 +240,6 @@ export const demarchesFiltresNames = [
   'entreprisesIds',
   'substancesIds',
   'references',
-  'titresTerritoires',
   'demarchesTypesIds',
   'travauxTypesIds',
   'demarchesStatutsIds',
@@ -275,7 +266,6 @@ export const activitesFiltresNames = [
   'entreprisesIds',
   'substancesIds',
   'references',
-  'titresTerritoires',
   'domainesIds',
   'typesIds',
   'statutsIds',

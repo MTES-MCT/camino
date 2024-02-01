@@ -23,7 +23,6 @@ import { ActiviteId } from 'camino-common/src/activite.js'
  * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
- * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
  * @param titresTypesIds - tableau de type(s) de titre
  * @param titresDomainesIds - tableau de domaine(s)
  * @param titresStatutsIds - tableau de statut(s) de titre
@@ -39,7 +38,6 @@ const titresActivitesFiltersQueryModify = (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     titresDepartements,
     titresTypesIds,
     titresDomainesIds,
@@ -52,7 +50,6 @@ const titresActivitesFiltersQueryModify = (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     titresDepartements?: DepartementId[] | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
@@ -85,7 +82,6 @@ const titresActivitesFiltersQueryModify = (
       entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
-      territoires: titresTerritoires,
       departements: titresDepartements,
     },
     q,
@@ -205,7 +201,6 @@ const titresActivitesGet = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     titresDepartements,
     titresTypesIds,
     titresDomainesIds,
@@ -222,7 +217,6 @@ const titresActivitesGet = async (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     titresDepartements?: DepartementId[] | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
@@ -243,7 +237,6 @@ const titresActivitesGet = async (
       titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
-      titresTerritoires,
       titresDepartements,
       titresTypesIds,
       titresDomainesIds,
@@ -289,7 +282,6 @@ const titresActivitesGet = async (
  * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
- * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
  * @param titresTypesIds - tableau de type(s) de titre
  * @param titresDomainesIds - tableau de domaine(s)
  * @param titresStatutsIds - tableau de statut(s) de titre
@@ -308,7 +300,6 @@ const titresActivitesCount = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
@@ -320,7 +311,6 @@ const titresActivitesCount = async (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
@@ -339,7 +329,6 @@ const titresActivitesCount = async (
       titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
-      titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
       titresStatutsIds,

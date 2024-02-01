@@ -6,7 +6,7 @@ import { titresGet } from '../../../database/queries/titres.js'
 import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
-import { REGION_IDS } from 'camino-common/src/static/region.js'
+import { REGION_IDS, regions } from 'camino-common/src/static/region.js'
 import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceDepartementale, substanceFiscaleToInput } from '../../../tools/api-openfisca/index.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
@@ -43,7 +43,7 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
     {
       domainesIds: ['m'],
       typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx'],
-      territoires: 'FR',
+      regions: regions.filter(({paysId}) => paysId === 'FR').map(({id}) => id),
     },
     {
       fields: {

@@ -43,7 +43,6 @@ import { getSectionsWithValue } from 'camino-common/src/static/titresTypes_demar
  * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
- * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
  * @param titresTypesIds - tableau de type(s) de titre
  * @param titresDomainesIds - tableau de domaine(s)
  * @param titresStatutsIds - tableau de statut(s) de titre
@@ -118,7 +117,6 @@ export const activites = async (
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
-          titresTerritoires,
           statutsIds,
           titresTypesIds,
           titresDomainesIds,
@@ -135,7 +133,6 @@ export const activites = async (
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
-          titresTerritoires,
           statutsIds,
           titresTypesIds,
           titresDomainesIds,
