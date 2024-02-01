@@ -141,7 +141,7 @@ export default {
       }
 
       // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
-      if (['mfr', 'mcr'].includes(this.etapeType.id) && this.titre.typeId === 'axm') {
+      if (['mfr', 'mcr'].includes(this.etapeType?.id) && this.titre.typeId === 'axm') {
         const zoneId = this.sdomZoneIds.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
         if (zoneId) {
           alertes.push({ message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}` })
@@ -160,7 +160,7 @@ export default {
     },
 
     dateIsVisible() {
-      return !this.editedEtape.date
+      return !this.editedEtape?.date
     },
 
     loading() {
@@ -188,7 +188,7 @@ export default {
     },
 
     helpVisible() {
-      return !this.userIsAdmin && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType.id === 'mfr'
+      return !this.userIsAdmin && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
     },
   },
 
@@ -327,12 +327,14 @@ export default {
       this.superposition_alertes = infos.superposition_alertes
       this.sdomZoneIds = infos.sdomZoneIds
 
-      const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
+      if (isNotNullNorUndefined(this.etapeType)) {
+        const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
 
-      this.$store.commit('titreEtapeEdition/metasSet', {
-        sdomZonesDocumentTypeIds: documentTypeIds,
-      })
-      this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
+        this.$store.commit('titreEtapeEdition/metasSet', {
+          sdomZonesDocumentTypeIds: documentTypeIds,
+        })
+        this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
+      }
     },
 
     editChange() {
