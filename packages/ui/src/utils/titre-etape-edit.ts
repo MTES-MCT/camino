@@ -5,7 +5,7 @@ type CaminoDocumentEdit = CaminoDocument & {
   fichierNouveau: null
 }
 
-export type EtapeEdit = Omit<Etape, 'administrations' | 'documents'> & { documents: CaminoDocument[] }
+type EtapeEdit = Omit<Etape, 'administrations' | 'documents'> & { documents: CaminoDocument[] }
 export const etapeEditFormat = (etape: Etape): EtapeEdit => {
   const newEtape: Etape = cloneAndClean(etape)
 

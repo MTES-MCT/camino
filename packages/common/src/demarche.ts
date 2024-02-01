@@ -67,8 +67,6 @@ const etapePerimetreValidator = z.object({
   forets: z.array(foretIdValidator),
 })
 
-export type EtapePerimetre = z.infer<typeof etapePerimetreValidator>
-
 const demarcheEtapeFondamentaleValidator = z.intersection(
   z.object({
     etape_type_id: etapeTypeIdFondamentaleValidator,
