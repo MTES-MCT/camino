@@ -301,7 +301,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
           {item.utilisateurs.length ? (
             <div class="mb-xxl">
               <div class="line-neutral width-full mb-xxl" />
-              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value}  initialSort={'firstColumnAsc'} />
+              <TableAuto caption="Utilisateurs" class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignes.value} initialSort={'firstColumnAsc'} />
             </div>
           ) : null}
 

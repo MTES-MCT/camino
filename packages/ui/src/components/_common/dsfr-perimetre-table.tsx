@@ -174,7 +174,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
           displayItemInList: display,
         }}
       />
-      <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort='noSort' />
+      <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort="noSort" />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}

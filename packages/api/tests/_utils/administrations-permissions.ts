@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { IEtapeType, ITitre } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
@@ -232,7 +233,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
                 ],
               ],
             },
-          }
+          },
         },
       },
       {
