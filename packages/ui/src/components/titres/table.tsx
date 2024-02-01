@@ -20,7 +20,7 @@ export const TitresTable: FunctionalComponent<Props> = props => {
 
   return (
     <div class="dsfr">
-      <TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" />
+      <TableAuto caption={props.caption} columns={colonnes} rows={lignes} class="width-full-p" initialSort={'firstColumnAsc'} />
     </div>
   )
 }

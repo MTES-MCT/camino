@@ -340,6 +340,7 @@ export const CustomPoints: StoryFn = () => (
           type: 'FeatureCollection',
           features: [
             { type: 'Feature', properties: { nom: '1', description: 'Description du point 1' }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0] } },
+            { type: 'Feature', properties: { nom: '2', description: 'Description du point 2' }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][1] } },
           ],
         },
       }}

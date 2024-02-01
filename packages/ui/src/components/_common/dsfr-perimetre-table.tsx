@@ -64,7 +64,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
     if (isNotNullNorUndefined(uniteId)) {
       const alwaysPresentColumns: Column<string>[] = [
-        { id: 'nom', name: 'Point', sort: () => -1, noSort: true },
+        { id: 'nom', name: 'Point', noSort: true },
         { id: 'description', name: 'Description', noSort: true },
         { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
         { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
@@ -174,7 +174,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
           displayItemInList: display,
         }}
       />
-      <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort={{ colonne: 'nom', ordre: 'asc' }} />
+      <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort='noSort' />
 
       <DsfrLink
         style={{ alignSelf: 'end' }}

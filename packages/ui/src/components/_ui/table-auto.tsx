@@ -1,5 +1,5 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { reactive, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { InitialSort, TableRow, TableSortEvent, DisplayColumn } from './table'
 
 export interface Column<T = string> {
@@ -14,25 +14,31 @@ interface Props {
   caption: string
   rows: TableRow[]
   columns: readonly Column[]
-  initialSort?: InitialSort
+  initialSort: InitialSort | 'noSort' | 'firstColumnAsc'
 }
 export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'columns', 'initialSort'], props => {
-  const sort = reactive<TableSortEvent>({
-    colonne: props?.initialSort?.colonne ?? props.columns[0].id,
-    ordre: props?.initialSort?.ordre ?? 'asc',
+  const sort = ref<TableSortEvent | null>(props.initialSort === 'noSort' ? null : props.initialSort === 'firstColumnAsc' ? {
+    colonne: props.columns[0].id,
+    ordre: 'asc',
+  } : {
+    colonne: props.initialSort.colonne,
+    ordre: props.initialSort.ordre,
   })
 
   const myRows = reactive<TableRow[]>([...props.rows])
-  handleChange(sort)
+  handleChange(sort.value)
   watch(
     () => props.rows,
     () => {
       myRows.splice(0, myRows.length, ...props.rows)
-      handleChange(sort)
+      handleChange(sort.value)
     },
     { deep: true }
   )
-  function handleChange(event: TableSortEvent) {
+  function handleChange(event: TableSortEvent | null) {
+    if (event !== null) {
+
+    
     const column = props.columns.find(column => column.id === event.colonne)
     let sortFunction = (row1: TableRow, row2: TableRow): number => {
       const value1 = row1.columns[event.colonne].value
@@ -64,10 +70,26 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
       }
     }
     myRows.sort(sortFunction)
-    sort.colonne = event.colonne
-    sort.ordre = event.ordre
+    
+    if (sort.value !== null) {
+      sort.value.colonne = event.colonne
+      sort.value.ordre = event.ordre
+    }
+    }
   }
 
+
+  const handleChangeCurrentColonne = () => {
+    if (sort.value !== null) {
+      handleChange({ colonne: sort.value.colonne, ordre: sort.value.ordre === 'asc' ? 'desc' : 'asc' })
+    }
+  }
+  const handleChangeNewColonne = (id: string) => (event: MouseEvent) => {
+    event.stopPropagation()
+    if (sort.value !== null) {
+      handleChange({ colonne: id, ordre: sort.value.ordre })
+    }
+  }
   return () => (
     <div style={{ overflowX: 'auto' }}>
       <div class="fr-table">
@@ -79,12 +101,12 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
                 <th key={col.id} scope="col" class={[...(col.class ?? []), 'nowrap']}>
                   {col.noSort !== undefined && col.noSort ? (
                     <div class="fr-text--md">{col.name === '' ? '-' : col.name}</div>
-                  ) : sort.colonne === col.id ? (
+                  ) : sort.value !== null && sort.value.colonne === col.id ? (
                     <a
-                      class={['fr-link', 'fr-link--icon-right', sort.ordre === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
-                      onClick={() => handleChange({ colonne: sort.colonne, ordre: sort.ordre === 'asc' ? 'desc' : 'asc' })}
-                      title={sort.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
-                      aria-label={sort.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      class={['fr-link', 'fr-link--icon-right', sort.value.ordre === 'asc' ? 'fr-icon-arrow-down-fill' : 'fr-icon-arrow-up-fill']}
+                      onClick={handleChangeCurrentColonne}
+                      title={sort.value.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
+                      aria-label={sort.value.ordre === 'asc' ? `Trier par la colonne ${col.name} par ordre descendant` : `Trier par la colonne ${col.name} par ordre ascendant`}
                       href="#!"
                     >
                       {col.name}
@@ -92,10 +114,7 @@ export const TableAuto = caminoDefineComponent<Props>(['caption', 'rows', 'colum
                   ) : (
                     <a
                       class={['fr-link']}
-                      onClick={event => {
-                        event.stopPropagation()
-                        handleChange({ colonne: col.id, ordre: sort.ordre })
-                      }}
+                      onClick={handleChangeNewColonne(col.id)}
                       title={`Trier par la colonne ${col.name}`}
                       aria-label={`Trier par la colonne ${col.name}`}
                       href="#!"

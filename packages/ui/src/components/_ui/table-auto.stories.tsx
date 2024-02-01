@@ -88,5 +88,5 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
   }
 })
 
-export const TableAutoSimple: StoryFn = () => <TableAuto caption="simple" rows={rows} columns={columns} />
+export const TableAutoSimple: StoryFn = () => <TableAuto caption="simple" rows={rows} columns={columns} initialSort={'firstColumnAsc'} />
 export const TableAutoSortedByStatusAsc: StoryFn = () => <TableAuto caption="sorted by status asc" rows={rows} columns={columns} initialSort={{ colonne: 'statut', ordre: 'desc' }} />
