@@ -49,11 +49,8 @@ type Query {
     statutsIds: [ID]
     substancesIds: [ID]
     entreprisesIds: [ID]
-    substances: String
     noms: String
-    entreprises: String
     references: String
-    territoires: String
     communes: String
     departements: [String]
     regions: [String]
