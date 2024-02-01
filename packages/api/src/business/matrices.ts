@@ -18,7 +18,7 @@ import { Commune } from 'camino-common/src/static/communes.js'
 import { CaminoAnnee, caminoAnneeToNumber, anneePrecedente as previousYear, anneeSuivante, getCurrentAnnee } from 'camino-common/src/date.js'
 
 import { Decimal } from 'decimal.js'
-import { REGION_IDS, regions } from 'camino-common/src/static/region.js'
+import { REGION_IDS } from 'camino-common/src/static/region.js'
 
 const sips = {
   cayenne: {

@@ -65,7 +65,6 @@ export const activites = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
@@ -81,7 +80,6 @@ export const activites = async (
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
-    titresTerritoires?: string | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null

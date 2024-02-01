@@ -53,7 +53,6 @@ export const demarches = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     travaux,
   }: {
     page?: number | null

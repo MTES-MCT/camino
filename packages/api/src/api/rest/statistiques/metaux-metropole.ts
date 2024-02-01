@@ -43,7 +43,7 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
     {
       domainesIds: ['m'],
       typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx'],
-      regions: regions.filter(({paysId}) => paysId === 'FR').map(({id}) => id),
+      regions: regions.filter(({ paysId }) => paysId === 'FR').map(({ id }) => id),
     },
     {
       fields: {
