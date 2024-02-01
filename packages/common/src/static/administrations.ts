@@ -247,7 +247,7 @@ export const Administrations: {
       typeId: 'dea',
       nom: 'Direction Générale des Territoires et de la Mer de Guyane',
       abreviation: 'DGTM - Guyane',
-      url: 'http://www.guyane.developpement-durable.gouv.fr',
+      url: 'https://www.guyane.gouv.fr',
       telephone: '+594 5 94 39 80 00',
       adresse1: 'Route du Vieux-Port\n97300 Cayenne',
       adresse2: 'Adresse postale\nRoute du Vieux-Port\nCS 76003\n97306 Cayenne',
