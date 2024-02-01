@@ -14,7 +14,7 @@ import { secteurDbIdValidator } from 'camino-common/src/static/facades.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
-import { KM2, km2Validator } from 'camino-common/src/number.js'
+import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
 
 const precision = {
   met: 0.001,
@@ -111,7 +111,7 @@ export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: M
     throw new Error('On veut un seul résultat')
   }
 
-  return { ...result[0], surface: numberTokm2(result[0].surface), communes: result[0].communes.map(commune => ({ ...commune, surface: numberTokm2(commune.surface) })) }
+  return { ...result[0], surface: numberTokm2(result[0].surface), communes: result[0].communes.map(commune => ({ ...commune, surface: m2Validator.parse(commune.surface) })) }
 }
 
 const nullToEmptyArray = <Y>(val: null | Y[]): Y[] => {
@@ -126,7 +126,7 @@ const getGeojsonInformationValidator = z.object({
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
   forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
   communes: z
-    .array(z.object({ id: communeIdValidator, nom: z.string(), surface: km2Validator }))
+    .array(z.object({ id: communeIdValidator, nom: z.string(), surface: m2Validator }))
     .nullable()
     .transform(nullToEmptyArray),
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),

@@ -34,5 +34,10 @@ export const toDegresMinutes = (value: number): { degres: number; minutes: numbe
 }
 
 export const km2Validator = z.number().brand('CAMINO_KM2')
+export const m2Validator = z
+  .number()
+  .transform(value => parseInt(`${value}`))
+  .brand('CAMINO_M2')
 
 export type KM2 = z.infer<typeof km2Validator>
+export type M2 = z.infer<typeof m2Validator>

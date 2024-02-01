@@ -10,7 +10,7 @@ import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-
 import { getGeojsonInformation } from '../../api/rest/perimetre.queries.js'
 import type { Pool } from 'pg'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import { KM2 } from 'camino-common/src/number.js'
+import { M2 } from 'camino-common/src/number.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -75,8 +75,8 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
   }
 }
 
-async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: { id: CommuneId; surface: KM2 }[]) {
-  const communesNew: { id: CommuneId; surface: KM2 }[] = communes.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
+async function intersectCommunes(titreEtape: Pick<ITitreEtape, 'communes' | 'id' | 'geojson4326Perimetre'>, communes: { id: CommuneId; surface: M2 }[]) {
+  const communesNew: { id: CommuneId; surface: M2 }[] = communes.map(({ id, surface }) => ({ id: toCommuneId(id), surface })).sort((a, b) => a.id.localeCompare(b.id))
   if (titreEtape.communes?.length !== communesNew.length || titreEtape.communes.some((value, index) => value.id !== communesNew[index].id || value.surface !== communesNew[index].surface)) {
     console.info(`Mise à jour des communes sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.communes)}', nouveaux: '${JSON.stringify(communesNew)}'`)
     await knex('titres_etapes')
