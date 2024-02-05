@@ -124,7 +124,6 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
   etapes: F[]
 }
 
-// FIXME tests
 // FIXME faire plein de recette
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances',

@@ -38,7 +38,6 @@ import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
@@ -258,12 +257,13 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
 
-    if (isNotNullNorUndefined(etape.duree) && !canEditDuree(titreTypeId, titreDemarche.typeId)) {
-      throw new Error(`Il est interdit de modifier une durée pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+      etape.duree = null
     }
 
     if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-      throw new Error(`Il est interdit de modifier la date de début ou de fin pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+      etape.dateDebut = null
+      etape.dateFin = null
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)

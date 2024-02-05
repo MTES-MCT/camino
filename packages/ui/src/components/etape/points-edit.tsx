@@ -12,6 +12,7 @@ import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Alert } from '../_ui/alert'
 import { KM2 } from 'camino-common/src/number'
 import { EtapeWithHeritage, EtapeFondamentale } from 'camino-common/src/etape'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'>
@@ -32,7 +33,7 @@ export interface Props {
 type DisplayPerimetreProps = {
   apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>
   etape: {
-    geojson4326Perimetre: FeatureMultiPolygon | null
+    geojson4326Perimetre: FeatureMultiPolygon | null | undefined
     geojson4326Points: FeatureCollectionPoints | null
   }
   surface: KM2 | null
@@ -42,7 +43,7 @@ type DisplayPerimetreProps = {
 }
 
 const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
-  if (props.etape.geojson4326Perimetre !== null) {
+  if (isNotNullNorUndefined(props.etape.geojson4326Perimetre)) {
     return (
       <div>
         <DsfrPerimetre
