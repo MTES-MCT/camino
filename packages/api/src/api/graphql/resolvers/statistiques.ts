@@ -1,18 +1,16 @@
-import { formatUser, ITitre } from '../../../types.js'
+import { ITitre } from '../../../types.js'
 
 import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find.js'
 import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
 import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
 import { userSuper } from '../../../database/user-super.js'
 import { matomoData } from '../../../tools/api-matomo/index.js'
-import { Statistiques, StatistiquesUtilisateurs } from 'camino-common/src/statistiques.js'
-import Utilisateurs from '../../../database/models/utilisateurs.js'
-import { isAdministration, isEntrepriseOrBureauDetudeRole } from 'camino-common/src/roles.js'
-import { Administrations } from 'camino-common/src/static/administrations.js'
+import { Statistiques } from 'camino-common/src/statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { getAnnee, toCaminoDate } from 'camino-common/src/date.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -33,41 +31,8 @@ export const statistiquesGlobales = async (): Promise<Statistiques> => {
 
       return dateSaisie && dateSaisie.slice(0, 4) === new Date().getFullYear().toString()
     }).length
-    // TODO 2022-05-11 serait plus performant avec plusieurs petites requêtes sql ?
-    const utilisateursInDb = await Utilisateurs.query().whereNot('role', 'super').whereNotNull('email').withGraphFetched({
-      entreprises: {},
-    })
-
-    const utilisateurs: StatistiquesUtilisateurs = utilisateursInDb.map(formatUser).reduce<StatistiquesUtilisateurs>(
-      (previousValue, user) => {
-        if (user.email) {
-          if (isAdministration(user)) {
-            previousValue.rattachesAUnTypeDAdministration[Administrations[user.administrationId].typeId]++
-          } else if (isEntrepriseOrBureauDetudeRole(user.role)) {
-            previousValue.rattachesAUneEntreprise++
-          } else {
-            previousValue.visiteursAuthentifies++
-          }
-        }
-
-        return previousValue
-      },
-      {
-        rattachesAUnTypeDAdministration: {
-          aut: 0,
-          dea: 0,
-          dre: 0,
-          min: 0,
-          ope: 0,
-          pre: 0,
-        },
-        rattachesAUneEntreprise: 0,
-        visiteursAuthentifies: 0,
-      }
-    )
 
     return {
-      utilisateurs,
       titresActivitesBeneficesEntreprise,
       titresActivitesBeneficesAdministration,
       recherches,
@@ -114,7 +79,7 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
       acc.push({
         id: titre.id,
         typeId: titre.typeId,
-        surface: surface ? surface * 100 : 0, // conversion 1 km² = 100 ha
+        surface: isNotNullNorUndefined(surface) ? surface * 100 : 0, // conversion 1 km² = 100 ha
       })
 
       return acc
@@ -128,7 +93,7 @@ export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
     .reduce(
       (acc: { quantite: number; surface: number }, concession) => {
         acc.quantite++
-        acc.surface += concession.pointsEtape?.surface ? concession.pointsEtape.surface * 100 : 0
+        acc.surface += isNotNullNorUndefined(concession.pointsEtape) && isNotNullNorUndefined(concession.pointsEtape.surface) ? concession.pointsEtape.surface * 100 : 0
 
         return acc
       },

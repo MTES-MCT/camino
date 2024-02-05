@@ -1,22 +1,15 @@
 import { z } from 'zod'
-import { CaminoAnnee, caminoAnneeValidator } from './date.js'
+import { CaminoAnnee, caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { AdministrationTypeId } from './static/administrations.js'
 import { regionIdValidator } from './static/region.js'
 import { SDOMZoneIds } from './static/sdom.js'
 import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substancesFiscales.js'
 import { TitresTypes } from './static/titresTypes.js'
+import { CaminoStatistiquesDataGouvId } from './static/statistiques.js'
 
 export interface QuantiteParMois {
   mois: string
   quantite: number
-}
-
-type StatistiquesAdministrationsType = Record<AdministrationTypeId, number>
-
-export interface StatistiquesUtilisateurs {
-  rattachesAUneEntreprise: number
-  rattachesAUnTypeDAdministration: StatistiquesAdministrationsType
-  visiteursAuthentifies: number
 }
 
 export interface Statistiques {
@@ -30,7 +23,6 @@ export interface Statistiques {
   demarches: number
   signalements: number
   reutilisations: number
-  utilisateurs: StatistiquesUtilisateurs
 }
 
 export const substancesFiscalesStats = [
@@ -194,3 +186,30 @@ export const anneeCountStatistiqueValidator = z.object({
   count: z.coerce.number(),
 })
 export type AnneeCountStatistique = z.infer<typeof anneeCountStatistiqueValidator>
+
+export const indicateurByAdministrationId: Record<Exclude<AdministrationTypeId, 'ope'>, CaminoStatistiquesDataGouvId> = {
+  min: "Nombre d'utilisateurs rattachés à un ministère",
+  aut: "Nombre d'utilisateurs rattachés à une Autorité",
+  dre: "Nombre d'utilisateurs rattachés à une Dréal",
+  dea: "Nombre d'utilisateurs rattachés à une Déal",
+  pre: "Nombre d'utilisateurs rattachés à une préfecture",
+}
+
+export const statistiquesDataGouvValidator = z.object({
+  administration_rattachement: z.literal('DGALN'),
+  nom_service_public_numerique: z.literal('CAMINO'),
+  indicateur: z.string(),
+  valeur: z.number(),
+  unite_mesure: z.string(),
+  est_cible: z.boolean(),
+  frequence_monitoring: z.enum(['quotidienne', 'hebdomadaire', 'mensuelle', 'annuelle', 'trimestrielle', 'semestrielle', 'autre']),
+  date: caminoDateValidator,
+  est_periode: z.boolean(),
+  date_debut: caminoDateValidator.optional(),
+  est_automatise: z.boolean(),
+  source_collecte: z.literal('script'),
+  code_insee: z.string().optional(),
+  dataviz_wish: z.enum(['linechart', 'barchart', 'map', 'scatterplot', 'piechart']).optional(),
+  commentaires: z.string().optional(),
+})
+export type StatistiquesDataGouv = z.infer<typeof statistiquesDataGouvValidator>

@@ -6,22 +6,6 @@ type QuantiteParMois {
   quantite: Int
 }
 
-type UtilisateursAdministrationsStatistique {
-  aut: Int
-  dea: Int
-  dre: Int
-  min: Int
-  ope: Int
-  pre: Int
-}
-
-type UtilisateursStatistique {
-  rattachesAUnTypeDAdministration: UtilisateursAdministrationsStatistique
-  rattachesAUneEntreprise: Int
-  visiteursAuthentifies: Int
-  total: Int
-}
-
 type StatistiquesGlobales {
   titresActivitesBeneficesEntreprise: Int
   titresActivitesBeneficesAdministration: Int
@@ -33,5 +17,4 @@ type StatistiquesGlobales {
   demarches: Int
   signalements: Int
   reutilisations: Int
-  utilisateurs: UtilisateursStatistique
 }

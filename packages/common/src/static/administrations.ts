@@ -3,7 +3,7 @@ import { RegionId } from './region.js'
 import { DepartementId } from './departement.js'
 import { z } from 'zod'
 
-export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
+const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 
 export const ADMINISTRATION_TYPE_IDS = {
   AUTORITE: 'aut',
