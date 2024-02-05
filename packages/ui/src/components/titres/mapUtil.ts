@@ -20,7 +20,7 @@ const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
 export const zones = {
   fr: {
     id: 'fr',
-    name: 'Métropole',
+    name: 'Hexagone',
     type: 'LineString',
     coordinates: [
       [-5, 41],
