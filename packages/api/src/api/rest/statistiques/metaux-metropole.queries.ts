@@ -23,7 +23,8 @@ select
 from
     titres_activites
 where
-    titres_activites.contenu -> 'substancesFiscales' ? $ substanceFiscale
+    titres_activites.activite_statut_id = 'dep'
+    and titres_activites.contenu -> 'substancesFiscales' ? $ substanceFiscale
 `
 
 const substancesByAnneeByCommuneValidator = z.object({
@@ -38,20 +39,21 @@ export const getsubstancesByAnneeByCommune = async (pool: Pool, params: { substa
   dbQueryAndValidate(getsubstancesByAnneeByCommuneInternal, params, pool, substancesByAnneeByCommuneValidator)
 
 const getsubstancesByAnneeByCommuneInternal = sql<Redefine<IGetsubstancesByAnneeByCommuneInternalQuery, { substancesFiscales: readonly SubstanceFiscaleId[] }, substancesByAnneeByCommune>>`
-select distinct on ("titres"."slug", "titres_activites"."annee")
-    "titres_activites"."annee",
+select distinct on ("titres"."slug", ta."annee")
+    ta."annee",
     "te"."communes",
-    titres_activites.contenu -> 'substancesFiscales' as substances
+    ta.contenu -> 'substancesFiscales' as substances
 from
-    "titres_activites"
-    left join "titres" on "titres"."id" = "titres_activites"."titre_id"
+    "titres_activites" ta
+    left join "titres" on "titres"."id" = ta."titre_id"
     left join titres_etapes te on te.id = titres.props_titre_etapes_ids ->> 'points'
 where
-    EXISTS (
+    ta.activite_statut_id = 'dep'
+    and EXISTS (
         SELECT
             TRUE
         FROM
-            jsonb_object_keys(titres_activites.contenu -> 'substancesFiscales') substanceIds
+            jsonb_object_keys(ta.contenu -> 'substancesFiscales') substanceIds
         WHERE
             substanceIds IN $$ substancesFiscales)
 order by
@@ -108,10 +110,11 @@ from
     left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
     left join entreprises e_t on e_t.id = tt.entreprise_id
 where
-    ta.contenu -> 'substancesFiscales' ? $ bauxite
-    or ta.contenu -> 'substancesFiscales' ? $ selContenu
-    or ta.contenu -> 'substancesFiscales' ? $ selSondage
-    or ta.contenu -> 'substancesFiscales' ? $ selAbattage
+    ta.activite_statut_id = 'dep'
+    and (ta.contenu -> 'substancesFiscales' ? $ bauxite
+        or ta.contenu -> 'substancesFiscales' ? $ selContenu
+        or ta.contenu -> 'substancesFiscales' ? $ selSondage
+        or ta.contenu -> 'substancesFiscales' ? $ selAbattage)
 group by
     case when e_t.categorie = 'PME' then
         'pme'
