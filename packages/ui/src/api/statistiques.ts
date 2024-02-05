@@ -20,19 +20,6 @@ export const statistiquesGlobales = apiGraphQLFetch(gql`
       demarches
       signalements
       reutilisations
-      utilisateurs {
-        rattachesAUnTypeDAdministration {
-          aut
-          dea
-          dre
-          min
-          ope
-          pre
-        }
-        rattachesAUneEntreprise
-        visiteursAuthentifies
-        total
-      }
     }
   }
 `)

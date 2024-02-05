@@ -47,6 +47,7 @@ import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite }
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 import { geojsonImport, getGeojsonByGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
+import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 
 interface IRestResolverResult {
   nom: string
@@ -124,6 +125,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/statistiques/granulatsMarins': { get: getGranulatsMarinsStats },
   '/rest/statistiques/granulatsMarins/:annee': { get: getGranulatsMarinsStats },
   '/rest/statistiques/dgtm': { get: getDGTMStats },
+  '/rest/statistiques/datagouv': { get: getDataGouvStats },
   '/rest/demarches/:demarcheIdOrSlug': { get: getDemarcheByIdOrSlug },
   '/rest/utilisateur/generateQgisToken': { post: generateQgisToken },
   '/rest/utilisateurs/:id/permission': { post: updateUtilisateurPermission },

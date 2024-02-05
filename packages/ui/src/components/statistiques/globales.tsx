@@ -1,15 +1,16 @@
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { statistiquesGlobales } from '@/api/statistiques'
 import { defineComponent, onMounted, ref, FunctionalComponent } from 'vue'
-import { QuantiteParMois, Statistiques } from 'camino-common/src/statistiques'
+import { QuantiteParMois, Statistiques, indicateurByAdministrationId } from 'camino-common/src/statistiques'
 
 import type { ChartConfiguration } from 'chart.js'
 
-import { ADMINISTRATION_TYPE_IDS_ARRAY, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
+import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { ConfigurableChart } from '../_charts/configurable-chart'
 import { numberFormat } from 'camino-common/src/number'
 import styles from './statistiques.module.css'
-import { AsyncData } from '@/api/client-rest'
+import { AsyncData, getWithJson } from '@/api/client-rest'
+import { CaminoStatistiquesDataGouvId } from 'camino-common/src/static/statistiques'
 
 const pieConfiguration = (data: ChartConfiguration<'pie'>['data']): ChartConfiguration<'pie'> => ({
   type: 'pie',
@@ -65,13 +66,21 @@ const statsLineFormat = ({ stats, labelY }: { stats: QuantiteParMois[]; labelY: 
       ],
     }
   )
+
+type CaminoStats = Statistiques & Record<CaminoStatistiquesDataGouvId, number>
 export const Globales = defineComponent(() => {
-  const data = ref<AsyncData<Statistiques>>({ status: 'LOADING' })
+  const data = ref<AsyncData<CaminoStats>>({ status: 'LOADING' })
 
   onMounted(async () => {
     data.value = { status: 'LOADING' }
     try {
-      const statistiques = await statistiquesGlobales()
+      const [statsGlobales, statsUtilisateurs] = await Promise.all([statistiquesGlobales(), getWithJson('/rest/statistiques/datagouv', {})])
+
+      const statistiques = statsUtilisateurs.reduce((acc, value) => {
+        acc[value.indicateur] = value.valeur
+
+        return acc
+      }, statsGlobales)
 
       if (statistiques !== null) {
         data.value = { status: 'LOADED', value: statistiques }
@@ -88,7 +97,7 @@ export const Globales = defineComponent(() => {
 })
 
 interface Props {
-  statistiques: Statistiques
+  statistiques: CaminoStats
 }
 
 export const PureGlobales: FunctionalComponent<Props> = props => {
@@ -96,19 +105,21 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
 
   const recherches = recherchesStats[recherchesStats.length - 1].quantite
 
-  const utilisateursAdmin = Object.keys(props.statistiques.utilisateurs.rattachesAUnTypeDAdministration)
-    .filter((value: string): value is AdministrationTypeId => ADMINISTRATION_TYPE_IDS_ARRAY.includes(value))
-    .filter(value => value !== 'ope')
-    .reduce((value: number, adminTypeId: AdministrationTypeId) => value + props.statistiques.utilisateurs.rattachesAUnTypeDAdministration[adminTypeId], 0)
+  const utilisateursAdmin =
+    props.statistiques["Nombre d'utilisateurs rattachés à un ministère"] +
+    props.statistiques["Nombre d'utilisateurs rattachés à une Autorité"] +
+    props.statistiques["Nombre d'utilisateurs rattachés à une Dréal"] +
+    props.statistiques["Nombre d'utilisateurs rattachés à une Déal"] +
+    props.statistiques["Nombre d'utilisateurs rattachés à une préfecture"]
 
-  const totalUtilisateurs = utilisateursAdmin + props.statistiques.utilisateurs.rattachesAUneEntreprise + props.statistiques.utilisateurs.visiteursAuthentifies
+  const totalUtilisateurs = utilisateursAdmin + props.statistiques["Nombre d'utilisateurs affiliés à une entreprise"] + props.statistiques["Nombre d'utilisateurs sur la plateforme"]
 
   const utilisateurs = {
     labels: ['Utilisateurs avec un compte "Entreprise"', 'Utilisateurs avec un compte "Administration"', 'Utilisateurs par défaut'],
     datasets: [
       {
         label: 'Utilisateurs',
-        data: [props.statistiques.utilisateurs.rattachesAUneEntreprise, utilisateursAdmin, props.statistiques.utilisateurs.visiteursAuthentifies],
+        data: [props.statistiques["Nombre d'utilisateurs affiliés à une entreprise"], utilisateursAdmin, props.statistiques["Nombre d'utilisateurs sur la plateforme"]],
         backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
         hoverOffset: 4,
       },
@@ -117,7 +128,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
 
   const adminSansOperateurs = sortedAdministrationTypes.filter(({ id }) => id !== 'ope')
   const labelsAdministrations = adminSansOperateurs.map(admin => admin.nom)
-  const data = adminSansOperateurs.map(admin => props.statistiques.utilisateurs.rattachesAUnTypeDAdministration[admin.id])
+  const data = adminSansOperateurs.map(admin => (admin.id !== 'ope' ? props.statistiques[indicateurByAdministrationId[admin.id]] : 0))
   const utilisateursAdminChart = {
     labels: labelsAdministrations,
     datasets: [
@@ -179,7 +190,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
               <p class="bold text-center">utilisateurs sur la plateforme</p>
             </div>
             <div class="mb-xl mt">
-              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiques.utilisateurs.rattachesAUneEntreprise)}</p>
+              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiques["Nombre d'utilisateurs affiliés à une entreprise"])}</p>
               <p class="bold text-center">utilisateurs affiliés à une Entreprise</p>
             </div>
 

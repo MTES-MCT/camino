@@ -25,7 +25,13 @@ import {
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
-import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
+import {
+  statistiquesDGTMValidator,
+  statistiquesDataGouvValidator,
+  statistiquesGranulatsMarinsValidator,
+  statistiquesGuyaneDataValidator,
+  statistiquesMinerauxMetauxMetropoleValidator,
+} from './statistiques.js'
 import { fiscaliteValidator } from './validators/fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
@@ -55,6 +61,7 @@ const IDS = [
   '/rest/statistiques/guyane/:annee',
   '/rest/statistiques/granulatsMarins',
   '/rest/statistiques/granulatsMarins/:annee',
+  '/rest/statistiques/datagouv',
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
@@ -112,6 +119,7 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/guyane/:annee': { params: { annee: caminoAnneeValidator }, get: { output: statistiquesGuyaneDataValidator } },
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/statistiques/granulatsMarins/:annee': { params: { annee: caminoAnneeValidator }, get: { output: statistiquesGranulatsMarinsValidator } },
+  '/rest/statistiques/datagouv': { get: { output: z.array(statistiquesDataGouvValidator) } },
   '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
