@@ -396,7 +396,7 @@ const routes = [
         component: StatistiquesMinerauxMetauxMetropole,
         meta: {
           menuSection: null,
-          title: 'Statistiques minéraux métaux de la Métropole',
+          title: 'Statistiques minéraux métaux de l’Hexagone',
         },
       },
     ],

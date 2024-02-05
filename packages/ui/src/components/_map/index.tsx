@@ -312,7 +312,7 @@ export const CaminoMap = caminoDefineComponent<Props>(['maxMarkers', 'markerLaye
         onAdd() {
           const legend = L.DomUtil.create('div')
           legend.className = 'bg-warning px py-s color-bg mb-s h6 bold'
-          legend.innerHTML = 'Fond de carte visible <br /> aux niveaux de zoom 12 à 16 en métropole'
+          legend.innerHTML = 'Fond de carte visible <br /> aux niveaux de zoom 12 à 16 dans l’Hexagone'
           leafletComponentOnMounted.on('baselayerchange', layer => {
             if (isLayersControlEvent(layer)) {
               if (layer.name === brgmBaseLayerName) {

@@ -761,7 +761,7 @@ export default [
   },
   {
     code: '7344',
-    nom: 'Métropole',
+    nom: 'Hexagone',
   },
   {
     code: '7345',

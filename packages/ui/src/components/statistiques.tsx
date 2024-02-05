@@ -19,7 +19,7 @@ const tabs: NonEmptyArray<Tab<TabId>> = [
   },
   {
     id: 'mineraux-metaux-metropole',
-    title: 'Mineraux & métaux métropole',
+    title: 'Mineraux & métaux Hexagone',
     icon: 'fr-icon-account-circle-fill',
     renderContent: () => <RouterView />,
   },

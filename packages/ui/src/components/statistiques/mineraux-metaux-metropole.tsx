@@ -321,7 +321,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
   return () => (
     <div class="content">
       <div id="etat" class="mb-xxl mt">
-        <h2>État du domaine minier des substances non énergétiques, en métropole, en temps réel</h2>
+        <h2>État du domaine minier des substances non énergétiques, dans l’Hexagone, en temps réel</h2>
         <span class="separator" />
         <p>
           Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont susceptibles d’évoluer chaque jour au grès des décisions et de la fin de validité des titres et
@@ -522,7 +522,7 @@ export const PureMinerauxMetauxMetropole = caminoDefineComponent<Props>(['getSta
           <hr />
         </div>
         <div style="grid-column-end: span 2">
-          Pour les autres substances de mines exploitées en métropole, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance.
+          Pour les autres substances de mines exploitées dans l’Hexagone, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance.
           <br />
           <br />
           Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables.
