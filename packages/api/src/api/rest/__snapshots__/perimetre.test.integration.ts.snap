@@ -28,7 +28,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "2972": {
@@ -57,7 +57,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "2975": {
@@ -86,7 +86,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "4326": {
@@ -115,7 +115,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "4467": {
@@ -144,7 +144,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "4471": {
@@ -173,7 +173,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
   "5490": {
@@ -202,7 +202,7 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
       ],
       "type": "MultiPolygon",
     },
-    "properties": null,
+    "properties": {},
     "type": "Feature",
   },
 }

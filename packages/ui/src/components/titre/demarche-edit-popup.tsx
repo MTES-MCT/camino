@@ -7,7 +7,7 @@ import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 
 export interface Props {
   demarche: {

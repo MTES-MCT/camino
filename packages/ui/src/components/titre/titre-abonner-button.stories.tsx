@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreApiClient } from './titre-api-client'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { TitreAbonnerButton } from './titre-abonner-button'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 

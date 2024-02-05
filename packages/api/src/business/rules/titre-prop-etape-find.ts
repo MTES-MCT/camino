@@ -12,7 +12,7 @@ import { propValueFind } from '../utils/prop-value-find.js'
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: ITitreEtape, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
   const titreDemarche = titreDemarches.find(td => td.id === titreEtape.titreDemarcheId)
@@ -73,7 +73,7 @@ const titreDemarchePropTitreEtapeFind = (
 
     const prop = propValueFind(titreEtape, propId)
 
-    if (prop === null) return false
+    if (isNullOrUndefined(prop)) return false
 
     if (propId === 'amodiataires') {
       return etapeAmodiataireFind(date, titreEtape, titreDemarches)

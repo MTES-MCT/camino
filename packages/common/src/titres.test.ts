@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { getMostRecentValueProp, TitrePropTitreEtapeFindDemarcheEtape } from './titres'
+import { TitrePropTitreEtapeFindDemarcheEtape, getMostRecentValuePropFromEtapeFondamentaleValide } from './titres'
 import { toCaminoDate } from './date'
 import { entrepriseIdValidator } from './entreprise'
-describe('getMostRecentValueProp', () => {
+describe('getMostRecentValuePropFromEtapeFondamentaleValide', () => {
   test('retourne le dernier titulaire même si les étapes ne sont pas dans le bon ordre', () => {
     const dpu: TitrePropTitreEtapeFindDemarcheEtape = {
       etape_type_id: 'dpu',
@@ -47,39 +47,21 @@ describe('getMostRecentValueProp', () => {
     }
 
     expect(
-      getMostRecentValueProp('titulaires', [
+      getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', [
         {
           etapes: [dpu, dex],
-          demarche_type_id: 'mut',
-          demarche_statut_id: 'acc',
+          ordre: 1,
         },
       ])
-    ).toMatchInlineSnapshot(`
-      [
-        {
-          "id": "fr-791652399",
-          "nom": "AMAZONE GOLD",
-          "operateur": false,
-        },
-      ]
-    `)
+    ).toStrictEqual(dpu.fondamentale.titulaires)
 
     expect(
-      getMostRecentValueProp('titulaires', [
+      getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', [
         {
           etapes: [dex, dpu],
-          demarche_type_id: 'mut',
-          demarche_statut_id: 'acc',
+          ordre: 1,
         },
       ])
-    ).toMatchInlineSnapshot(`
-        [
-          {
-            "id": "fr-791652399",
-            "nom": "AMAZONE GOLD",
-            "operateur": false,
-          },
-        ]
-      `)
+    ).toStrictEqual(dpu.fondamentale.titulaires)
   })
 })

@@ -26,7 +26,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
 
 export const titresSlugsUpdate = async (titresIds?: string[]) => {
   console.info()
-  console.info('slugs de titres, démarches, étapes et sous-éléments…')
+  console.info('slugs de titres, démarches, étapes et activités')
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -35,7 +35,7 @@ export const titresSlugsUpdate = async (titresIds?: string[]) => {
         type: { type: { id: {} } },
         demarches: {
           etapes: {
-            points: { references: { id: {} } },
+            id: {},
           },
         },
         activites: { id: {} },

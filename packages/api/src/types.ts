@@ -2,7 +2,6 @@ import { FileUpload } from 'graphql-upload'
 import { AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
 import { CodePostal, DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
-import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
@@ -28,9 +27,11 @@ import { Section, SectionElement } from 'camino-common/src/static/titresTypes_de
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
-import { TitreId, TitreSlug } from 'camino-common/src/titres.js'
+import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
-import { ActiviteId } from 'camino-common/src/activite'
+import { ActiviteId } from 'camino-common/src/activite.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre.js'
+import { EtapeHeritageProps } from 'camino-common/src/heritage'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -87,12 +88,12 @@ interface IColonne<T> {
   groupBy?: boolean | string[]
 }
 
-export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
+export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances'] as const
 type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
-type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
+type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets' | 'surface'
 
-type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | 'titulaires'
+type ITitreColonneId = 'nom' | 'domaine' | 'type' | 'statut'
 
 type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
@@ -134,16 +135,16 @@ interface IContenusTitreEtapesIds {
   [sectionId: string]: { [key: string]: string }
 }
 
-interface IHeritageProps {
-  [elementId: string]: {
-    actif: boolean
-    etapeId?: string | null
-    etape?: ITitreEtape
-  }
+export interface IHeritageElement {
+  actif: boolean
+  etapeId?: EtapeId | null
+  etape?: ITitreEtape
 }
 
+type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
+
 interface IHeritageContenu {
-  [sectionId: string]: IHeritageProps
+  [sectionId: string]: { [elementId: string]: IHeritageElement }
 }
 
 interface IActiviteType {
@@ -182,11 +183,6 @@ interface IAdministration {
 interface ICommune {
   id: CommuneId
   surface?: number | null
-}
-
-interface ICoordonnees {
-  x: number
-  y: number
 }
 
 interface IDemarcheType {
@@ -267,27 +263,6 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-type IGeoJsonProperties = Index<string | number | undefined | null | ITitrePointReference[]>
-
-interface IGeoJson {
-  type: string
-  geometry?: IGeometry | null
-  bbox?: number[] | null
-  properties: IGeoJsonProperties | null
-  features?: IGeoJson[] | null
-}
-
-interface IGeoJsonCentre {
-  type: string
-  geometry?: IGeometry | null
-  properties: { etapeId?: string | null }
-}
-
-interface IGeometry {
-  type: string
-  coordinates: number[] | number[][] | number[][][] | number[][][][]
-}
-
 interface IAdministrationActiviteTypeEmail {
   administrationId: AdministrationId
   activiteTypeId: string
@@ -311,16 +286,10 @@ interface ITitre {
   activitesAbsentes?: number | null
   substancesEtape?: ITitreEtape | null
   substances?: SubstanceLegaleId[] | null
-  points?: ITitrePoint[] | null
-  coordonnees?: ICoordonnees | null
-  geojsonMultiPolygon?: IGeoJson | null
-  geojsonPoints?: IGeoJson | null
-  geojsonCentre?: IGeoJsonCentre | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
   administrations?: AdministrationId[] | null
-  surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
   forets?: ForetId[] | null
@@ -335,6 +304,9 @@ interface ITitre {
   propsTitreEtapesIds: IPropsTitreEtapesIds
   doublonTitreId?: string | null
   confidentiel?: boolean | null
+
+  geojson4326Centre?: GeojsonPoint | null
+  geojson4326Perimetre?: FeatureMultiPolygon | null
 }
 
 interface ITitreActivite {
@@ -408,9 +380,6 @@ interface ITitreEtape {
   dateDebut?: CaminoDate | null
   dateFin?: CaminoDate | null
   substances?: SubstanceLegaleId[] | null
-  points?: ITitrePoint[] | null
-  geojsonMultiPolygon?: IGeoJson | null
-  geojsonPoints?: IGeoJson | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
@@ -425,6 +394,8 @@ interface ITitreEtape {
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
+  geojson4326Perimetre?: FeatureMultiPolygon | null
+  geojson4326Points?: FeatureCollectionPoints | null
 }
 
 interface ITitreEtapeFiltre {
@@ -432,30 +403,6 @@ interface ITitreEtapeFiltre {
   statutId?: string
   dateDebut?: string
   dateFin?: string
-}
-
-interface ITitrePoint {
-  id: string
-  slug?: string
-  titreEtapeId: string
-  nom?: string | null
-  description?: string | null
-  groupe: number
-  contour: number
-  point: number
-  references: ITitrePointReference[]
-  coordonnees: ICoordonnees
-  lot?: number | null
-  subsidiaire?: boolean | null
-}
-
-interface ITitrePointReference {
-  id: string
-  slug?: string
-  titrePointId: string
-  geoSystemeId: GeoSystemeId
-  coordonnees: ICoordonnees
-  opposable?: boolean | null
 }
 
 type ICacheId = 'matomo'
@@ -584,14 +531,12 @@ export {
   IContenuElement,
   IContenuValeur,
   IContenusTitreEtapesIds,
-  ICoordonnees,
   IDemarcheType,
   IDocumentRepertoire,
   IDomaine,
   IEntreprise,
   IEntrepriseEtablissement,
   IEtapeType,
-  IGeoJson,
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
@@ -599,8 +544,6 @@ export {
   IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
-  ITitrePoint,
-  ITitrePointReference,
   ITitreType,
   ITitreTypeType,
   ITitreEntreprise,

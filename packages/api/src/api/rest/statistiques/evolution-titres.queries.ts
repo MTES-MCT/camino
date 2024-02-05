@@ -86,15 +86,13 @@ interface GetSurfaceProps {
   titreTypeId?: TitreTypeId
 }
 export const getSurface = async (pool: Pool, params: GetSurfaceProps) => dbQueryAndValidate(getSurfaceDb, params, pool, anneeCountStatistiqueValidator)
-
 const getSurfaceDb = sql<Redefine<IGetSurfaceDbQuery, GetSurfaceProps, AnneeCountStatistique>>`
 select
     substring(td. "demarche_date_debut", 0, 5) as annee,
-    sum(t_surface.surface * 100) as count
+    sum(t_points.surface * 100) as count
 from
     titres_demarches td
     join titres t on t.id = td.titre_id
-    join titres_etapes t_surface on t_surface.id = t.props_titre_etapes_ids ->> 'surface'
     join titres_etapes t_points on t_points.id = t.props_titre_etapes_ids ->> 'points'
 where
     td.type_id in $$ demarcheTypeIds

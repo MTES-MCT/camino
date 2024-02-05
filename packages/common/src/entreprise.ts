@@ -8,8 +8,8 @@ import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { TitreReference } from './titres-references.js'
 import { CommuneId } from './static/communes.js'
-import { TitreId } from './titres.js'
 import { tempDocumentNameValidator } from './document.js'
+import type { TitreId } from './validators/titres.js'
 
 export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof entrepriseIdValidator>

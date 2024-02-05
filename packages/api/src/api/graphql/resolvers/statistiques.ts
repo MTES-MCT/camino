@@ -128,7 +128,7 @@ export const concessionsValidesBuild = (titres: ITitre[], annee: number) => {
     .reduce(
       (acc: { quantite: number; surface: number }, concession) => {
         acc.quantite++
-        acc.surface += concession.surfaceEtape?.surface ? concession.surfaceEtape.surface * 100 : 0
+        acc.surface += concession.pointsEtape?.surface ? concession.pointsEtape.surface * 100 : 0
 
         return acc
       },

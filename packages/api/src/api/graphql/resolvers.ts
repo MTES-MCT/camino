@@ -43,7 +43,6 @@ import { activites, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
-import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from './resolvers/points.js'
 import { journaux } from './resolvers/journaux.js'
 
 export default {
@@ -89,9 +88,6 @@ export default {
   activitesTypes,
   activitesStatuts,
   pays,
-  pointsImporter,
-  perimetreInformations,
-  titreEtapePerimetreInformations,
   journaux,
 
   // mutations

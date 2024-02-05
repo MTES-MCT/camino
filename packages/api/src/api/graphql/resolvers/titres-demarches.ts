@@ -53,7 +53,6 @@ export const demarches = async (
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
-    titresTerritoires,
     travaux,
   }: {
     page?: number | null
@@ -107,7 +106,6 @@ export const demarches = async (
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
-          titresTerritoires,
           travaux,
         },
         { fields: fields.elements },
@@ -126,7 +124,6 @@ export const demarches = async (
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
-          titresTerritoires,
           travaux,
         },
         { fields: {} },

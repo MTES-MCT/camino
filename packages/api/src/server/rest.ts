@@ -46,7 +46,7 @@ import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
-import { getGeojsonByGeoSystemeId } from '../api/rest/perimetre.js'
+import { geojsonImport, getGeojsonByGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
 
 interface IRestResolverResult {
   nom: string
@@ -134,12 +134,15 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
+  '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
+  '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId': { delete: deleteEtape },
   '/rest/etapes/:etapeId/depot': { put: deposeEtape },
   '/rest/etapes/:etapeId/entrepriseDocuments': { get: getEtapeEntrepriseDocuments },
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/:geoSystemeId': { post: getGeojsonByGeoSystemeId },
+  '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },
 } as const

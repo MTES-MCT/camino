@@ -11,7 +11,7 @@ import { entrepriseFormat } from '../_format/entreprises.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
 
-import { titresGeojsonFormat, titreGeojsonFormat, titresTableFormat } from './format/titres.js'
+import { titreGeojsonPropertiesFormat, titresGeojsonFormat, titresTableFormat } from './format/titres.js'
 import { titresDemarchesFormatTable } from './format/titres-demarches.js'
 import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
@@ -33,7 +33,9 @@ import {
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { getCommunesIndex } from '../../database/queries/communes.js'
+import { FeatureCollection, GeojsonFeaturePoint } from 'camino-common/src/perimetre.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -46,13 +48,10 @@ const titreFields = {
   substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },
-  surfaceEtape: { id: {} },
-  points: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
     type: { id: {} },
     etapes: {
-      points: { id: {} },
       type: { id: {} },
     },
   },
@@ -125,7 +124,24 @@ export const titre =
 
     const titreFormatted = titreFormat(titre)
 
-    const titreGeojson = await titreGeojsonFormat(pool, titreFormatted)
+    const communesIndex = await getCommunesIndex(pool, titreFormatted.communes?.map(({ id }) => id) ?? [])
+
+    if (titreFormatted.pointsEtape === undefined) {
+      throw new Error('Le périmètre du titre n’est pas chargé')
+    }
+
+    if (titreFormatted.pointsEtape === null || isNullOrUndefined(titreFormatted.pointsEtape.geojson4326Perimetre)) {
+      throw new Error('Il n’y a pas de périmètre pour ce titre')
+    }
+
+    const geojson4326Points: GeojsonFeaturePoint[] = titreFormatted.pointsEtape.geojson4326Points?.features ?? []
+
+    const titreGeojson: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [titreFormatted.pointsEtape.geojson4326Perimetre, ...geojson4326Points],
+
+      properties: titreGeojsonPropertiesFormat(communesIndex, titreFormatted),
+    }
 
     return {
       nom: fileNameCreate(titre.id, format),
@@ -135,10 +151,8 @@ export const titre =
   }
 
 // TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const titresColonnes = ['nom', 'domaine', 'coordonnees', 'type', 'statut', 'titulaires'] as const
+const titresColonnes = ['nom', 'domaine', 'type', 'statut'] as const
 const titresValidator = generateValidator(titresFiltresNames, titresColonnes, titresDownloadFormats).extend({
-  // legacy pour le plugin qgis camino
-  territoires: z.string().optional(),
   // pour gérer les téléchargement quand on est sur la carte
   perimetre: z.array(z.coerce.number()).optional(),
 })
@@ -159,7 +173,6 @@ export const titres =
         entreprisesIds: params.entreprisesIds,
         substancesIds: params.substancesIds,
         references: params.references,
-        territoires: params.territoires,
         communes: params.communes,
         departements: params.departements,
         regions: params.regions,
@@ -200,7 +213,6 @@ export const titres =
         titresIds: params.titresIds,
         entreprisesIds: params.entreprisesIds,
         references: params.references,
-        territoires: params.territoires,
       })
         .filter(param => param[1] !== undefined)
         .map(param => param.join('='))
@@ -253,7 +265,6 @@ export const demarches =
         titresEntreprisesIds: params.entreprisesIds,
         titresSubstancesIds: params.substancesIds,
         titresReferences: params.references,
-        titresTerritoires: params.titresTerritoires,
         travaux: params.travaux,
       },
       {
@@ -265,7 +276,6 @@ export const demarches =
             amodiataires: { id: {} },
           },
           etapes: {
-            points: { id: {} },
             type: {
               id: {},
             },
@@ -318,7 +328,6 @@ export const activites =
         titresEntreprisesIds: params.entreprisesIds,
         titresSubstancesIds: params.substancesIds,
         titresReferences: params.references,
-        titresTerritoires: params.titresTerritoires,
         titresTypesIds: params.typesIds,
         titresDomainesIds: params.domainesIds,
         titresStatutsIds: params.statutsIds,

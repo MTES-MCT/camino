@@ -1,6 +1,5 @@
 import { ITitreEtape, ITitreDemarche, ITitre, IDocument, ITitreEntreprise } from '../../types.js'
 
-import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
 import { propsNumbersCheck } from './utils/props-numbers-check.js'
@@ -127,14 +126,6 @@ const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarc
   const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
   if (demarcheUpdatedErrors.length) {
     errors.push(...demarcheUpdatedErrors)
-  }
-
-  // 2. les références de points sont bien renseignées
-  if (titreEtape.points) {
-    const error = titreEtapePointsValidate(titreEtape.points)
-    if (error) {
-      errors.push(error)
-    }
   }
 
   return errors

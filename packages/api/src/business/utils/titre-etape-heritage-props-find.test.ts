@@ -1,17 +1,19 @@
-import { IEntreprise, IHeritageProps, ITitreEtape, ITitrePoint } from '../../types.js'
+import { IEntreprise, IHeritageProps, ITitreEtape } from '../../types.js'
 
-import { titreEtapeHeritagePropsFind, titreEtapePropsIds } from './titre-etape-heritage-props-find.js'
+import { titreEtapeHeritagePropsFind } from './titre-etape-heritage-props-find.js'
 
 import { objectClone } from '../../tools/index.js'
 import { describe, test, expect } from 'vitest'
 import { newEtapeId } from '../../database/models/_format/id-create.js'
+
+import { ETAPE_HERITAGE_PROPS, EtapeHeritageProps } from 'camino-common/src/heritage.js'
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
     const titreEtape = {
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -24,15 +26,14 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test.each<[keyof ITitreEtape, any, any]>([
-    ['surface', 3, 2],
+  test.each<[EtapeHeritageProps, any, any]>([
     ['duree', 10, 20],
     ['dateDebut', '2020-01-01', '2023-01-01'],
     ['dateFin', '2021-01-01', '2021-03-01'],
   ])('l’étape est modifiée si elle a une étape précédente et qu’elle au moins un héritage non renseigné', (propId, heritageValeur, etapeValeur) => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -50,7 +51,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
     // @ts-ignore
     titreEtapeNew[propId] = heritageValeur
-    titreEtapePropsIds.forEach(prop => (titreEtapeNew.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtapeNew.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
@@ -62,7 +63,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
       titulaires: [{ id: 'toto' }, { id: 'tata' }] as IEntreprise[],
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -72,7 +73,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps!.titulaires.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: false,
@@ -80,10 +81,10 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test.each(['titulaires', 'amodiataires'])('l’étape est modifiée si changement sur les $propId', propId => {
+  test.each<EtapeHeritageProps>(['titulaires', 'amodiataires'])('l’étape est modifiée si changement sur les $propId', propId => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -95,7 +96,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps![propId].actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
     // @ts-ignore
     titreEtape[propId] = [{ id: 'haha' }, { id: 'toto' }]
 
@@ -112,7 +113,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’étape est modifiée si changement sur les substances', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -123,7 +124,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps!.substances.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
     titreEtape.substances = ['nacl', 'arge']
 
     const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
@@ -139,7 +140,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
       titulaires: [{ id: 'toto' }] as IEntreprise[],
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -150,7 +151,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     titreEtape.heritageProps!.titulaires.actif = true
     titreEtape.titulaires = [{ id: 'haha' }, { id: 'toto' }] as IEntreprise[]
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
     titreEtapeNew.titulaires = [{ id: 'toto' }] as IEntreprise[]
@@ -165,8 +166,8 @@ describe('retourne l’étape en fonction de son héritage', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
       titulaires: [{ id: 'toto' }, { id: 'tata' }] as IEntreprise[],
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: true, etapeId: 'premiereEtapeId' }
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
+        acc[prop] = { actif: true, etapeId: newEtapeId('premiereEtapeId') }
 
         return acc
       }, {} as IHeritageProps),
@@ -174,10 +175,10 @@ describe('retourne l’étape en fonction de son héritage', () => {
 
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
-    titreEtapePropsIds.forEach(prop => (titreEtapeNew.heritageProps![prop].etapeId = 'premiereEtapeId'))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtapeNew.heritageProps![prop].etapeId = newEtapeId('premiereEtapeId')))
 
     expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
@@ -185,11 +186,11 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test('l’étape n’est pas modifiée si pas de changement sur les points', () => {
+  test('l’étape n’est pas modifiée si pas de changement sur le perimetre', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      points: [{ coordonnees: { x: 1, y: 2 } }, { coordonnees: { x: 2, y: 3 } }] as unknown as ITitrePoint[],
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -197,9 +198,9 @@ describe('retourne l’étape en fonction de son héritage', () => {
     } as ITitreEtape
 
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
-    titreEtape.heritageProps!.points.actif = true
+    titreEtape.heritageProps!.perimetre.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     expect(titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: false,
@@ -207,14 +208,11 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test('l’étape est modifiée si changement sur les points', () => {
+  test('l’étape est modifiée si changement sur le perimetre', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      points: [
-        { id: '1', coordonnees: { x: 1, y: 2 }, references: [{ id: '23' }] },
-        { id: '2', coordonnees: { x: 2, y: 3 }, references: [] },
-      ] as unknown as ITitrePoint[],
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -222,36 +220,45 @@ describe('retourne l’étape en fonction de son héritage', () => {
     } as ITitreEtape
 
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
-    titreEtape.heritageProps!.points.actif = true
+    titreEtape.heritageProps!.perimetre.actif = true
     titreEtape.id = newEtapeId('titreEtapeId')
-    titreEtape.points = [
-      { id: '3', coordonnees: { x: 1, y: 2 } },
-      { id: '4', coordonnees: { x: 2, y: 4 } },
-    ] as unknown as ITitrePoint[]
-    titreEtapePropsIds.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
+    titreEtape.geojson4326Perimetre = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [1, 2],
+              [3, 4],
+            ],
+          ],
+        ],
+      },
+    }
+    ETAPE_HERITAGE_PROPS.forEach(prop => (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id))
 
     const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.points = objectClone(titreEtapePrecedente.points)
+    newTitreEtape.geojson4326Perimetre = objectClone(titreEtapePrecedente.geojson4326Perimetre)
 
     const result = titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
 
     expect(result.hasChanged).toBeTruthy()
-    expect(result.titreEtape.points![0].id).not.toEqual(newTitreEtape.points![0].id)
-    expect(result.titreEtape.points![0].references[0].id).not.toEqual(newTitreEtape.points![0].references[0].id)
   })
 
   test('l’héritage est désactivé si l’étape précédente n’existe plus', () => {
     const titreEtape = {
       id: 'titreEtapeId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
-        acc[prop] = { actif: true, etapeId: 'prevTitreEtapeId' }
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
+        acc[prop] = { actif: true, etapeId: newEtapeId('prevTitreEtapeId') }
 
         return acc
       }, {} as IHeritageProps),
     } as ITitreEtape
 
     const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.heritageProps = titreEtapePropsIds.reduce((acc, prop) => {
+    newTitreEtape.heritageProps = ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
       acc[prop] = { actif: false, etapeId: undefined }
 
       return acc
@@ -266,7 +273,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
   test('l’héritage est réinitialisé si l’héritage n’existe pas', () => {
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+      heritageProps: ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
         acc[prop] = { actif: false, etapeId: null }
 
         return acc
@@ -278,7 +285,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     } as ITitreEtape
 
     const newTitreEtape = objectClone(titreEtape) as ITitreEtape
-    newTitreEtape.heritageProps = titreEtapePropsIds.reduce((acc, prop) => {
+    newTitreEtape.heritageProps = ETAPE_HERITAGE_PROPS.reduce((acc, prop) => {
       acc[prop] = { actif: false, etapeId: titreEtapePrecedente.id }
 
       return acc

@@ -10,7 +10,6 @@ export const filtres = [
   'entreprisesIds',
   'substancesIds',
   'references',
-  'titresTerritoires',
   'demarchesTypesIds',
   'demarchesStatutsIds',
   'etapesInclues',

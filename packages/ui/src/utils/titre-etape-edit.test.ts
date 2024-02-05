@@ -16,9 +16,7 @@ describe('etapeEditFormat', () => {
       id: 'etape-id',
       amodiataires: [],
       titulaires: [],
-      geoSystemeIds: [],
-      geoSystemeOpposableId: null,
-      groupes: [],
+
       substances: [],
       contenu: {},
       documents: [],
@@ -28,46 +26,12 @@ describe('etapeEditFormat', () => {
       // @ts-ignore
       etapeEditFormat({
         id: etapeIdValidator.parse('etape-id'),
-        points: [
-          {
-            id: 'point-id-111',
-            groupe: 1,
-            contour: 1,
-            point: 1,
-            references: [
-              {
-                opposable: true,
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 1 },
-                id: 'ref',
-              },
-            ],
-          },
-        ],
         justificatifs: [{ id: 'toto', nom: 'name' }],
       })
     ).toEqual({
       id: 'etape-id',
       amodiataires: [],
       titulaires: [],
-      geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
-      geoSystemeOpposableId: GEO_SYSTEME_IDS.WGS84,
-      groupes: [
-        [
-          [
-            {
-              id: 'point-id-111',
-              description: undefined,
-              nom: undefined,
-              references: {
-                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 },
-              },
-              lot: undefined,
-              subsidiaire: undefined,
-            },
-          ],
-        ],
-      ],
       substances: [],
       contenu: {},
       documents: [],
@@ -83,50 +47,6 @@ describe('etapeEditFormat', () => {
         duree: 240,
         administrations: ['aut-97300-01'],
         titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
-        points: [
-          {
-            id: 'point-id-111',
-            groupe: 1,
-            contour: 1,
-            point: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 1 },
-                id: 'ref',
-              },
-            ],
-          },
-          {
-            id: 'point-id-113',
-            groupe: 1,
-            contour: 1,
-            point: 3,
-            lot: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-                coordonnees: { x: 1.5, y: 3 },
-                id: 'ref3',
-              },
-            ],
-          },
-          {
-            id: 'point-id-114',
-            groupe: 1,
-            contour: 1,
-            point: 4,
-            lot: 1,
-            references: [
-              {
-                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
-
-                coordonnees: { x: 1.5, y: 4 },
-                id: 'ref2',
-              },
-            ],
-          },
-        ],
         contenu: { 'prop-id': 'prop-value' },
         substances: ['auru'],
         documents: [{ typeId: 'aac' }],
@@ -138,34 +58,6 @@ describe('etapeEditFormat', () => {
       duree: 240,
       amodiataires: [],
       titulaires: [{ id: 'titulaire-id', operateur: false }],
-      geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
-      geoSystemeOpposableId: undefined,
-      groupes: [
-        [
-          [
-            {
-              id: 'point-id-111',
-              description: undefined,
-              nom: undefined,
-              references: {
-                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 },
-              },
-              lot: undefined,
-              subsidiaire: undefined,
-            },
-            {
-              id: 'point-id-113',
-              description: undefined,
-              references: [
-                { id: 'ref3', x: 1.5, y: 3 },
-                { id: 'ref2', x: 1.5, y: 4 },
-              ],
-              lot: 1,
-              subsidiaire: undefined,
-            },
-          ],
-        ],
-      ],
       substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
       documents: [{ fichierNouveau: null, typeId: 'aac' }],

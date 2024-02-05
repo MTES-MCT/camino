@@ -5,19 +5,11 @@ import { caminoDateValidator } from './date.js'
 import { TitreTypeId, titreTypeIdValidator } from './static/titresTypes.js'
 import { z } from 'zod'
 import { administrationIdValidator } from './static/administrations.js'
-import { DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheEtapeValidator, demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
+import { DemarcheEtape, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheEtapeValidator, demarcheIdValidator, demarcheSlugValidator } from './demarche.js'
 import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
+import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
-
-export const titreIdValidator = z.string().brand<'TitreId'>()
-export type TitreId = z.infer<typeof titreIdValidator>
-
-export const titreSlugValidator = z.string().brand<'TitreSlug'>()
-export type TitreSlug = z.infer<typeof titreSlugValidator>
-
-export const titreIdOrSlugValidator = z.union([titreSlugValidator, titreIdValidator])
-export type TitreIdOrSlug = z.infer<typeof titreIdOrSlugValidator>
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -128,15 +120,19 @@ export const utilisateurTitreAbonneValidator = z.object({ abonne: z.boolean() })
 export type TitrePropTitreEtapeFindDemarcheEtape =
   | Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>
   | Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'fondamentale' | 'ordre'>
-type TitrePropTitreEtapeFindDemarche = Pick<TitreGetDemarche, 'demarche_type_id' | 'demarche_statut_id'> & {
-  etapes: TitrePropTitreEtapeFindDemarcheEtape[]
+export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape_statut_id' | 'etape_type_id' | 'ordre'>> = Pick<TitreGetDemarche, 'ordre'> & {
+  etapes: F[]
 }
 
-export const getMostRecentValueProp = <P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances'>(
+export const getMostRecentValuePropFromEtapeFondamentaleValide = <
+  P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances',
+  F extends Pick<DemarcheEtapeFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre' | 'fondamentale'>,
+  NF extends Pick<DemarcheEtapeNonFondamentale, 'etape_statut_id' | 'etape_type_id' | 'ordre'>
+>(
   propId: P,
-  titreDemarchesAsc: TitrePropTitreEtapeFindDemarche[]
+  titreDemarches: TitrePropTitreEtapeFindDemarche<F | NF>[]
 ): DemarcheEtapeFondamentale['fondamentale'][P] | null => {
-  const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche[] = [...titreDemarchesAsc].reverse()
+  const titreDemarchesDesc: TitrePropTitreEtapeFindDemarche<F | NF>[] = [...titreDemarches].sort((a, b) => b.ordre - a.ordre)
 
   for (const titreDemarche of titreDemarchesDesc) {
     const titreEtapeDesc = [...titreDemarche.etapes].sort((a, b) => b.ordre - a.ordre)
@@ -153,6 +149,10 @@ export const getMostRecentValueProp = <P extends 'titulaires' | 'amodiataires' |
   return null
 }
 
-export const getDemarcheByIdOrSlugValidator = z.object({ demarche_slug: demarcheSlugValidator, titre_id: titreIdValidator })
+export const getDemarcheByIdOrSlugValidator = z.object({
+  demarche_id: demarcheIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  titre_id: titreIdValidator,
+})
 
 export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>

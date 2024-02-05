@@ -1,11 +1,17 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, TitreId, TitreIdOrSlug, getMostRecentValueProp, titreGetValidator, titreIdValidator, titreSlugValidator } from 'camino-common/src/titres.js'
+import { TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
-import { IGetDemarchesByTitreIdQueryDbQuery, IGetTitreInternalQuery } from './titres.queries.types.js'
+import {
+  IGetAdministrationsLocalesByTitreIdDbQuery,
+  IGetDemarchesByTitreIdQueryDbQuery,
+  IGetTitreByIdOrSlugDbQuery,
+  IGetTitreInternalQuery,
+  IGetTitulairesAmodiatairesByTitreIdDbQuery,
+} from './titres.queries.types.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { z } from 'zod'
-import { Commune } from 'camino-common/src/static/communes.js'
+import { Commune, communeIdValidator } from 'camino-common/src/static/communes.js'
 import { Pool } from 'pg'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { User } from 'camino-common/src/roles.js'
@@ -14,21 +20,14 @@ import { titreReferenceValidator } from 'camino-common/src/titres-references.js'
 import { DemarcheEtape, DemarcheEtapeCommon, DemarcheEtapeFondamentale, DemarcheEtapeNonFondamentale, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
-import { getEtapesByDemarcheIdDb, getEtapesByDemarcheIdDbValidator } from './demarches.queries.js'
+import { getEtapesByDemarcheId } from './demarches.queries.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { canReadDemarche } from './permissions/demarches.js'
 import { SectionWithValue } from 'camino-common/src/sections.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { OmitDistributive, isNonEmptyArray, isNotNullNorUndefined, memoize } from 'camino-common/src/typescript-tools.js'
-import {
-  getEntrepriseDocumentIdsByEtapeId,
-  getDocumentsByEtapeId,
-  getPointsByEtapeIdQuery,
-  getTitulairesByEtapeIdQuery,
-  getAmodiatairesByEtapeIdQuery,
-} from '../../database/queries/titres-etapes.queries.js'
-import { geojsonFeatureMultiPolygon } from '../../tools/geojson.js'
+import { getEntrepriseDocumentIdsByEtapeId, getDocumentsByEtapeId, getTitulairesByEtapeIdQuery, getAmodiatairesByEtapeIdQuery } from '../../database/queries/titres-etapes.queries.js'
 import { getAdministrationsLocales } from 'camino-common/src/administrations.js'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { isEtapeTypeIdFondamentale } from 'camino-common/src/static/etapesTypes.js'
@@ -37,6 +36,11 @@ import { EtapeDocument } from 'camino-common/src/etape.js'
 import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
+import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'camino-common/src/validators/titres.js'
+import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
+import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 
 type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
@@ -57,7 +61,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
     const superDemarches: SuperDemarcheTitreGet[] = []
     for (const demarche of demarchesFromDatabase) {
-      const etapes = await dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId: demarche.id }, pool, getEtapesByDemarcheIdDbValidator)
+      const etapes = await getEtapesByDemarcheId(pool, demarche.id)
 
       const formatedEtapes: SuperEtapeDemarcheTitreGet[] = []
       for (const etape of etapes) {
@@ -88,10 +92,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         }
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
-          if (!(etape.heritage_props?.points?.actif ?? false)) {
-            const etapePoints = await getPointsByEtapeIdQuery(etape.id, pool)
-
-            if (etapePoints.length > 0) {
+          if (!(etape.heritage_props?.perimetre?.actif ?? false)) {
+            if (isNotNullNorUndefined(etape.geojson4326_perimetre)) {
               const communes: Commune[] = []
               if (isNonEmptyArray(etape.communes)) {
                 const ids = etape.communes.map(({ id }) => id)
@@ -101,11 +103,16 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
               }
 
               perimetre = {
-                geojsonMultiPolygon: geojsonFeatureMultiPolygon(etapePoints),
+                geojson4326_perimetre: {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: etape.geojson4326_perimetre,
+                },
+                geojson4326_points: etape.geojson4326_points,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],
-                surface: etape.surface,
+                surface: etape.surface ?? 0,
                 forets: etape.forets ?? [],
               }
             }
@@ -134,8 +141,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             fondamentale: {
               amodiataires,
               titulaires,
-              date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.date_debut?.actif ?? false) ? etape.date_debut : null,
-              date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.date_fin?.actif ?? false) ? etape.date_fin : null,
+              date_debut: isNotNullNorUndefined(etape.date_debut) && !(etape.heritage_props?.dateDebut?.actif ?? false) ? etape.date_debut : null,
+              date_fin: isNotNullNorUndefined(etape.date_fin) && !(etape.heritage_props?.dateFin?.actif ?? false) ? etape.date_fin : null,
               duree: isNotNullNorUndefined(etape.duree) && !(etape.heritage_props?.duree?.actif ?? false) ? etape.duree : null,
               substances: isNotNullNorUndefined(etape.substances) && !(etape.heritage_props?.substances?.actif ?? false) ? etape.substances : null,
               perimetre,
@@ -169,18 +176,23 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
-    const perimetre = getMostRecentValueProp('perimetre', superDemarches)
+    const latestEtapeFondamentaleValide = getMostRecentEtapeFondamentaleValide(superDemarches)
+
+    let fondamentale: null | DemarcheEtapeFondamentale['fondamentale'] = null
+    if (latestEtapeFondamentaleValide !== null && 'fondamentale' in latestEtapeFondamentaleValide) {
+      fondamentale = latestEtapeFondamentaleValide.fondamentale
+    }
     const administrationsLocales = memoize(() => {
       return Promise.resolve(
         getAdministrationsLocales(
-          perimetre?.communes.map(({ id }) => id),
-          perimetre?.secteurs_maritimes
+          fondamentale?.perimetre?.communes.map(({ id }) => id),
+          fondamentale?.perimetre?.secteurs_maritimes
         )
       )
     })
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
-      const titulaires = getMostRecentValueProp('titulaires', superDemarches) ?? []
-      const amodiataires = getMostRecentValueProp('amodiataires', superDemarches) ?? []
+      const titulaires = fondamentale?.titulaires ?? []
+      const amodiataires = fondamentale?.amodiataires ?? []
 
       return Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)])
     })
@@ -223,7 +235,12 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     let nb_activites_to_do: number | null = null
 
     if (
-      canHaveActivites({ titreTypeId: titre.titre_type_id, communes: perimetre?.communes ?? [], demarches: formattedDemarches, secteursMaritime: perimetre?.secteurs_maritimes ?? [] }) &&
+      canHaveActivites({
+        titreTypeId: titre.titre_type_id,
+        communes: fondamentale?.perimetre?.communes ?? [],
+        demarches: formattedDemarches,
+        secteursMaritime: fondamentale?.perimetre?.secteurs_maritimes ?? [],
+      }) &&
       (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
       nb_activites_to_do = titre.nb_activites_to_do
@@ -322,4 +339,77 @@ where
     and d.archive is false
 order by
     ordre
+`
+
+const getTitreByIdOrSlugValidator = z.object({
+  titre_slug: titreSlugValidator,
+  titre_type_id: titreTypeIdValidator,
+  public_lecture: z.boolean(),
+})
+type GetTitreByIdOrSlugValidator = z.infer<typeof getTitreByIdOrSlugValidator>
+
+export const getTitreByIdOrSlug = async (pool: Pool, idOrSlug: TitreIdOrSlug): Promise<z.infer<typeof getTitreByIdOrSlugValidator>> => {
+  return (await dbQueryAndValidate(getTitreByIdOrSlugDb, { idOrSlug }, pool, getTitreByIdOrSlugValidator))[0]
+}
+
+const getTitreByIdOrSlugDb = sql<Redefine<IGetTitreByIdOrSlugDbQuery, { idOrSlug: TitreIdOrSlug }, GetTitreByIdOrSlugValidator>>`
+select
+    slug as titre_slug,
+    type_id as titre_type_id,
+    public_lecture
+from
+    titres
+where (id = $ idOrSlug !
+    or slug = $ idOrSlug !)
+and archive is false
+`
+
+export const getTitulairesAmodiatairesByTitreId = async (pool: Pool, titreId: TitreId): Promise<EntrepriseId[]> => {
+  const result = await dbQueryAndValidate(getTitulairesAmodiatairesByTitreIdDb, { titreId }, pool, entrepriseIdObjectValidator)
+
+  return result.map(({ id }) => id)
+}
+
+const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
+const getTitulairesAmodiatairesByTitreIdDb = sql<Redefine<IGetTitulairesAmodiatairesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof entrepriseIdObjectValidator>>>`
+select distinct
+    e.id
+from
+    entreprises e,
+    titres t
+    left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
+    left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
+where
+    t.id = $ titreId !
+    and (tt.entreprise_id = e.id
+        or tta.entreprise_id = e.id)
+`
+
+export const getAdministrationsLocalesByTitreId = async (pool: Pool, titreId: TitreId): Promise<AdministrationId[]> => {
+  const result = await dbQueryAndValidate(getAdministrationsLocalesByTitreIdDb, { titreId }, pool, getAdministrationsLocalesByTitreIdValidator)
+
+  if (result.length !== 1) {
+    throw new Error('impossible de trouver le titre')
+  }
+
+  return getAdministrationsLocales(
+    result[0].communes.map(({ id }) => id),
+    result[0].secteurs_maritime
+  )
+}
+
+const getAdministrationsLocalesByTitreIdValidator = z.object({
+  communes: z.array(z.object({ id: communeIdValidator })),
+  secteurs_maritime: z.array(secteurMaritimeValidator),
+})
+
+const getAdministrationsLocalesByTitreIdDb = sql<Redefine<IGetAdministrationsLocalesByTitreIdDbQuery, { titreId: TitreId }, z.infer<typeof getAdministrationsLocalesByTitreIdValidator>>>`
+select
+    te.communes,
+    te.secteurs_maritime
+from
+    titres t
+    left join titres_etapes te on te.id = t.props_titre_etapes_ids ->> 'points'
+where
+    t.id = $ titreId !
 `

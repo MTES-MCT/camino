@@ -7,7 +7,7 @@ import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes.js'
 import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
 import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
 import { User, UserNotNull } from 'camino-common/src/roles'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
 
 const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {

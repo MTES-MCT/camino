@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { LinkableTitre } from '@/components/titre/titres-link-form-api-client'
 import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',

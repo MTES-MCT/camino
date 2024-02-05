@@ -16,7 +16,7 @@ import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_fo
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { insertCommune } from '../../database/queries/communes.queries.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../database/models/titres-demarches.js'
 import TitresEtapes from '../../database/models/titres-etapes.js'
 import Titres from '../../database/models/titres.js'

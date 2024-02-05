@@ -9,7 +9,7 @@ export const SDOMZoneIds = {
   Zone2: '2',
 } as const satisfies Record<string, (typeof IDS)[number]>
 
-export type SDOMZone<T = SDOMZoneId> = Pick<Definition<T>, 'id' | 'nom'>
+type SDOMZone<T = SDOMZoneId> = Pick<Definition<T>, 'id' | 'nom'>
 
 export const SDOMZones: { [key in SDOMZoneId]: Pick<SDOMZone<key>, 'id' | 'nom'> } = {
   '0': {

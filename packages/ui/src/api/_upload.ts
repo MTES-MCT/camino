@@ -39,6 +39,7 @@ export const uploadCall = async (file: File, progressCb: (progress: number) => v
       }
 
       const [{ uploadURL }] = successful
+      console.log(successful)
       resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
     })
   })

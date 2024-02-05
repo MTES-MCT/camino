@@ -2,7 +2,6 @@ import { dbManager } from '../../../tests/db-manager.js'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreCreate } from '../../database/queries/titres.js'
-import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find.js'
 import Titres from '../../database/models/titres.js'
 import { documentCreate } from '../../database/queries/documents.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
@@ -13,6 +12,7 @@ import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vit
 import { toCaminoDate } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
 import { newDocumentId } from '../../database/models/_format/id-create.js'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -238,7 +238,7 @@ describe('etapeCreer', () => {
           titreDemarcheId,
           date: '2018-01-01',
           duree: 10,
-          heritageProps: titreEtapePropsIds.reduce(
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
 
@@ -256,32 +256,21 @@ describe('etapeCreer', () => {
           },
           substances: ['auru'],
           documentIds: [idDom, idFor, idJpa, idCar],
-          points: [
-            {
-              groupe: 1,
-              contour: 1,
-              point: 1,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }],
+          geojson4326Perimetre: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
+                [
+                  [
+                    [1, 2],
+                    [2, 3],
+                  ],
+                ],
+              ],
             },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 2,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }],
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 3,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }],
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 4,
-              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }],
-            },
-          ],
+          },
         },
       },
       userSuper
@@ -303,7 +292,7 @@ describe('etapeCreer', () => {
           statutId: 'aco',
           titreDemarcheId,
           date: '2018-01-01',
-          heritageProps: titreEtapePropsIds.reduce(
+          heritageProps: ETAPE_HERITAGE_PROPS.reduce(
             (acc, prop) => {
               acc[prop] = { actif: false }
 

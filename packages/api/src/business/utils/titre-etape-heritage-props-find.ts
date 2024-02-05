@@ -1,25 +1,10 @@
-import { ITitreEtape, IEntreprise, ITitrePoint, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, IEntreprise, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
-import { idGenerate } from '../../database/models/_format/id-create.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-
-const titreEtapePropsIds: (keyof ITitreEtape)[] = ['points', 'titulaires', 'amodiataires', 'substances', 'surface', 'dateFin', 'dateDebut', 'duree']
-
-const titrePointsIdsUpdate = (titrePoints: ITitrePoint[], newTitreEtapeId: string) =>
-  titrePoints.map(p => {
-    p.id = idGenerate()
-    p.titreEtapeId = newTitreEtapeId
-
-    p.references = p.references.map(r => {
-      r.id = idGenerate()
-      r.titrePointId = p.id
-
-      return r
-    })
-
-    return p
-  })
+import { FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
+import { exhaustiveCheck, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
@@ -27,11 +12,7 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
   }
 
   if (prevValue?.length && newValue?.length) {
-    if (propId === 'points') {
-      const comparator = ({ coordonnees }: ITitrePoint) => `(${coordonnees.x}, ${coordonnees.y})`
-
-      return (newValue as ITitrePoint[]).map(comparator).sort().toString() === (prevValue as ITitrePoint[]).map(comparator).sort().toString()
-    } else if (propId === 'substances') {
+    if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
       const comparator = (propValueArray: ITitreEntreprise) => propValueArray.id + propValueArray.operateur
@@ -43,30 +24,42 @@ const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArra
   return true
 }
 
-type IPropValueArray = undefined | null | IEntreprise[] | ITitrePoint[] | SubstanceLegaleId[]
+type IPropValueArray = undefined | null | IEntreprise[] | SubstanceLegaleId[]
 
-type IPropValue = number | string | IPropValueArray
+type IPropValue = number | string | IPropValueArray | FeatureMultiPolygon
 
 const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
-  if (['titulaires', 'amodiataires', 'substances', 'points'].includes(propId)) {
+  if (['titulaires', 'amodiataires', 'substances'].includes(propId)) {
     return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
+  }
+
+  if (propId === 'perimetre' && isNotNullNorUndefined(oldValue) && isNotNullNorUndefined(newValue)) {
+    return equalGeojson((newValue as FeatureMultiPolygon).geometry, (oldValue as FeatureMultiPolygon).geometry)
   }
 
   return oldValue === newValue
 }
 
-const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
+export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
   let hasChanged = false
 
   let newTitreEtape = titreEtape
 
   if (!titreEtape.heritageProps) {
     newTitreEtape = objectClone(newTitreEtape)
-    newTitreEtape.heritageProps = {}
+    newTitreEtape.heritageProps = {
+      amodiataires: { actif: false, etapeId: null },
+      dateDebut: { actif: false, etapeId: null },
+      dateFin: { actif: false, etapeId: null },
+      duree: { actif: false, etapeId: null },
+      perimetre: { actif: false, etapeId: null },
+      substances: { actif: false, etapeId: null },
+      titulaires: { actif: false, etapeId: null },
+    }
     hasChanged = true
   }
 
-  titreEtapePropsIds.forEach(propId => {
+  ETAPE_HERITAGE_PROPS.forEach(propId => {
     const heritage = newTitreEtape.heritageProps![propId]
 
     if (!heritage) {
@@ -81,23 +74,35 @@ const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: I
 
     if (heritage?.actif) {
       if (prevTitreEtape) {
-        const oldValue = titreEtape[propId] as IPropValue | undefined | null
-        const newValue = prevTitreEtape[propId] as IPropValue | undefined | null
+        const oldValue = (propId === 'perimetre' ? titreEtape.geojson4326Perimetre : titreEtape[propId]) as IPropValue | undefined | null
+        const newValue = (propId === 'perimetre' ? prevTitreEtape.geojson4326Perimetre : prevTitreEtape[propId]) as IPropValue | undefined | null
 
         if (!titreEtapePropCheck(propId, oldValue, newValue)) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
 
-          if (propId === 'points') {
-            newTitreEtape.points = titrePointsIdsUpdate(newValue as ITitrePoint[], newTitreEtape.id)
-          } else if (propId === 'amodiataires' || propId === 'titulaires') {
-            newTitreEtape[propId] = newValue as IEntreprise[]
-          } else if (propId === 'substances') {
-            newTitreEtape[propId] = newValue as SubstanceLegaleId[]
-          } else if (propId === 'dateDebut' || propId === 'dateFin') {
-            newTitreEtape[propId] = newValue as CaminoDate
-          } else if (propId === 'duree' || propId === 'surface') {
-            newTitreEtape[propId] = newValue as number
+          switch (propId) {
+            case 'perimetre':
+              newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre
+              newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points
+              newTitreEtape.surface = prevTitreEtape.surface
+              break
+            case 'amodiataires':
+            case 'titulaires':
+              newTitreEtape[propId] = newValue as IEntreprise[]
+              break
+            case 'substances':
+              newTitreEtape[propId] = newValue as SubstanceLegaleId[]
+              break
+            case 'dateDebut':
+            case 'dateFin':
+              newTitreEtape[propId] = newValue as CaminoDate
+              break
+            case 'duree':
+              newTitreEtape[propId] = newValue as number
+              break
+            default:
+              exhaustiveCheck(propId)
           }
         }
       } else {
@@ -117,5 +122,3 @@ const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: I
 
   return { hasChanged, titreEtape: newTitreEtape }
 }
-
-export { titreEtapeHeritagePropsFind, titreEtapePropsIds }

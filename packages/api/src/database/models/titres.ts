@@ -4,14 +4,13 @@ import { ITitre } from '../../types.js'
 import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
-import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
-import { titreInsertFormat } from './_format/titre-insert.js'
 import { idGenerate } from './_format/id-create.js'
 import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -33,10 +32,6 @@ class Titres extends Model {
       titreStatutId: { type: 'string', maxLength: 3 },
       contenusTitreEtapesIds: { type: ['object', 'null'] },
       propsTitreEtapesIds: { type: 'object' },
-      coordonnees: {
-        type: ['object', 'null'],
-        properties: { x: { type: 'number' }, y: { type: 'number' } },
-      },
       doublonTitreId: { type: ['string', 'null'] },
       archive: { type: 'boolean' },
       references: { type: ['array', 'null'] },
@@ -56,30 +51,12 @@ class Titres extends Model {
       join: { from: 'titres.id', to: 'titresDemarches.titreId' },
     },
 
-    surfaceEtape: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: TitresEtapes,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:surface').castText(),
-        to: 'titresEtapes.id',
-      },
-    },
-
     substancesEtape: {
       relation: Model.BelongsToOneRelation,
       modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
         to: 'titresEtapes.id',
-      },
-    },
-
-    points: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresPoints,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titresPoints.titreEtapeId',
       },
     },
 
@@ -125,20 +102,14 @@ class Titres extends Model {
       modelClass: TitresActivites,
       join: { from: 'titres.id', to: 'titresActivites.titreId' },
     },
-
-    doublonTitre: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Titres,
-      join: { from: 'titres.doublonTitreId', to: 'titres.id' },
-    },
   })
 
   async $beforeInsert(context: QueryContext) {
-    if (!this.id) {
+    if (isNullOrUndefined(this.id)) {
       this.id = idGenerate()
     }
 
-    if (!this.slug && this.typeId && this.nom) {
+    if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.typeId) && isNotNullNorUndefined(this.nom)) {
       this.slug = titreSlugValidator.parse(`${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${idGenerate(4)}`)
     }
 
@@ -184,15 +155,24 @@ class Titres extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    if (json.coordonnees) {
-      json.coordonnees = `${json.coordonnees.x},${json.coordonnees.y}`
-    }
-
     json = titreInsertFormat(json)
     json = super.$formatDatabaseJson(json)
 
     return json
   }
+}
+
+const titreInsertFormat = (json: Pojo) => {
+  delete json.communes
+  delete json.surface
+  delete json.contenu
+  delete json.activitesAbsentes
+  delete json.activitesEnConstruction
+  delete json.abonnement
+  delete json.geojson4326Centre
+  delete json.geojson4326Perimetre
+
+  return json
 }
 
 export default Titres

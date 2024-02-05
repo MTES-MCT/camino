@@ -45,8 +45,6 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
   YT: { id: 'YT', nom: 'Département de Mayotte' },
 }
 
-export const isPaysId = (value: string): value is PaysId => paysIdValidator.safeParse(value).success
-
 export const isGuyane = (pays: PaysId | null): boolean => pays === 'GF'
 export const isMetropole = (pays: PaysId | null): boolean => pays === 'FR'
 export const isOutreMer = (pays: PaysId | null): boolean => pays !== null && !isMetropole(pays)

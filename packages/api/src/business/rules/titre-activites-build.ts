@@ -11,7 +11,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { ActiviteSection, ActiviteSectionElement, ActivitesTypes, ActivitesTypesId, isSubstancesFiscales } from 'camino-common/src/static/activitesTypes.js'
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 
 const substancesFiscalesFind = (substances: SubstanceLegaleId[]): SubstanceFiscale[] => substances.filter(s => !!s).flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 

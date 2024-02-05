@@ -93,22 +93,6 @@ describe('étapes', () => {
     expect(mutations.loadingRemove).toHaveBeenCalled()
   })
 
-  test("retourne une erreur si on n'a pas les droits", async () => {
-    const apiMockEtape = api.etape.mockResolvedValue({
-      id: 'etape-id',
-      titreDemarcheId: 'demarche-id',
-      date: '2020-01-01',
-    })
-
-    await store.dispatch('titreEtapeEdition/init', {
-      id: 'etape-id',
-      titreDemarcheId: 'demarche-id',
-    })
-
-    expect(apiMockEtape).toHaveBeenCalled()
-    expect(actions.pageError).toHaveBeenCalled()
-  })
-
   test('récupère les métas pour créer une étape', async () => {
     const apiMockMetas = api.titreEtapeMetas.mockResolvedValue(titreEtapeMetas)
 

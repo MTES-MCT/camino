@@ -9,7 +9,7 @@ import { DemarcheTypeId, demarcheTypeIdValidator } from 'camino-common/src/stati
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
-import { TitreId, titreIdValidator } from 'camino-common/src/titres.js'
+import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { etapeIdValidator } from 'camino-common/src/etape.js'
 import { z } from 'zod'
 import { Pool } from 'pg'

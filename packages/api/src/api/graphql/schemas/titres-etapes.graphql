@@ -3,7 +3,6 @@
 # import * from 'substances.graphql'
 # import * from 'geojsons.graphql'
 # import * from 'metas.graphql'
-# import * from 'points.graphql'
 # import * from 'territoires.graphql'
 # import * from 'documents.graphql'
 # import * from 'titres-demarches.graphql'
@@ -56,15 +55,6 @@ type Etape {
   "Substances concernées par le titre"
   substances: [String!]
 
-  "Coordonnées des points du périmètre géographique du titre"
-  points: [Point]
-
-  "Geojson du contour du périmètre géographique du titre"
-  geojsonMultiPolygon: GeojsonMultiPolygon
-
-  "Geojson de la liste de points du périmètre géographique du titre"
-  geojsonPoints: GeojsonPoints
-
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
 
@@ -94,6 +84,10 @@ type Etape {
   decisionsAnnexesContenu: Json
 
   notes: String
+
+  "Périmètre géographique du titre"
+  geojson4326Perimetre: Json
+  geojson4326Points: Json
 }
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -117,8 +111,10 @@ type EtapeHeritage {
   "Substances concernées par le titre"
   substances: [String!]
 
-  "Coordonnées des points du périmètre géographique du titre"
-  points: [Point]
+  "Périmètre géographique du titre"
+  geojson4326Perimetre: Json
+
+  geojson4326Points: Json
 
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
@@ -141,8 +137,7 @@ type HeritageProps {
   dateDebut: HeritageProp
   dateFin: HeritageProp
   duree: HeritageProp
-  surface: HeritageProp
-  points: HeritageProp
+  perimetre: HeritageProp
   substances: HeritageProp
   titulaires: HeritageProp
   amodiataires: HeritageProp
@@ -162,9 +157,9 @@ input InputEtapeCreation {
   duree: Int
   dateDebut: String
   dateFin: String
-  surface: Float
   substances: [String!]
-  points: [InputPoint]
+  geojson4326Perimetre: Json
+  geojson4326Points: Json
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
   heritageProps: InputHeritageProps
@@ -185,9 +180,7 @@ input InputEtapeModification {
   duree: Int
   dateDebut: String
   dateFin: String
-  surface: Float
   substances: [String!]
-  points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
   heritageProps: InputHeritageProps
@@ -197,6 +190,8 @@ input InputEtapeModification {
   entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
   notes: String
+  geojson4326Perimetre: Json
+  geojson4326Points: Json
 }
 
 input InputEtapeFiltre {
@@ -210,8 +205,7 @@ input InputHeritageProps {
   dateDebut: InputHeritageProp
   dateFin: InputHeritageProp
   duree: InputHeritageProp
-  surface: InputHeritageProp
-  points: InputHeritageProp
+  perimetre: InputHeritageProp
   substances: InputHeritageProp
   titulaires: InputHeritageProp
   amodiataires: InputHeritageProp

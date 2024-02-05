@@ -3,7 +3,7 @@ import { titresActivitesUpsert } from '../../database/queries/titres-activites.j
 import { titresGet } from '../../database/queries/titres.js'
 import { titreValideCheck } from '../utils/titre-valide-check.js'
 import { vi, describe, expect, test, afterEach } from 'vitest'
-import { titreIdValidator } from 'camino-common/src/titres.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { activiteIdValidator } from 'camino-common/src/activite.js'

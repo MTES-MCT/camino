@@ -1,4 +1,4 @@
-import { ITitreDemarche, IPropId, ITitreEtape, ITitrePoint, ICommune } from '../../types.js'
+import { ITitreDemarche, IPropId, ITitreEtape, ICommune } from '../../types.js'
 
 import { titreContenuTitreEtapeFind, titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create.js'
@@ -11,7 +11,7 @@ import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 const currentDate = toCaminoDate('2023-04-06')
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
-  test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'points'", () => {
+  test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'geojson4326Perimetre'", () => {
     expect(
       titrePropTitreEtapeFind(
         currentDate,
@@ -29,7 +29,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1989-01-02'),
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1989-oct01-dex01'),
@@ -89,7 +89,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1989-01-02'),
-                points: [],
+                geojson4326Perimetre: null,
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
@@ -149,7 +149,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1986-02-02'),
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1986-mut01-dex01'),
@@ -208,7 +208,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'dpu',
                 statutId: 'acc',
                 ordre: 2,
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                 date: toCaminoDate('1986-02-02'),
               },
               {
@@ -246,7 +246,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1985-01-01'),
                 ordre: 2,
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1985-mut01-dex01'),
@@ -270,7 +270,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 ordre: 2,
                 date: toCaminoDate('1985-02-02'),
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1985-oct01-dex01'),
@@ -306,7 +306,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'rej',
                 ordre: 2,
                 date: toCaminoDate('1984-01-01'),
-                points: [1, 2, 3] as unknown as undefined,
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
               {
                 id: newEtapeId('h-cx-courdemanges-1984-oct01-dex01'),
@@ -342,17 +342,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'mfr',
                 statutId: 'acc',
                 ordre: 1,
-                points: [
-                  {
-                    id: newEtapeId('id'),
-                    titreEtapeId: 'h-cx-courdemanges-1983-oct01-mfr01',
-                    groupe: 1,
-                    contour: 1,
-                    point: 1,
-                    references: [],
-                    coordonnees: { x: 0, y: 0 },
-                  },
-                ],
+                geojson4326Perimetre: { properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] }, type: 'Feature' },
               } as ITitreEtape,
             ],
           },
@@ -380,7 +370,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
             ],
           },
@@ -465,7 +455,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
               },
             ],
           },
@@ -487,7 +477,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
         ],
         TitresStatutIds.ModificationEnInstance
       )
-    ).toBeNull()
+    ).toBe(null)
   })
 
   test.each(['points', 'surface', 'communes'] as IPropId[])(
@@ -511,7 +501,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                   typeId: 'aac',
                   statutId: 'acc',
                   ordre: 1,
-                  points: [1, 2, 3] as unknown as ITitrePoint[],
+                  geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                   surface: 3.2,
                   substances: ['auru'],
                   communes: ['paris' as unknown as ICommune],
@@ -531,7 +521,21 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                   statutId: 'acc',
                   ordre: 1,
                   date: toCaminoDate('1981-01-01'),
-                  points: [1, 2] as unknown as ITitrePoint[],
+                  geojson4326Perimetre: {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'MultiPolygon',
+                      coordinates: [
+                        [
+                          [
+                            [1, 2],
+                            [2, 3],
+                          ],
+                        ],
+                      ],
+                    },
+                  },
                   surface: 3,
                   substances: ['arge'],
                   communes: ['tours'] as unknown as ICommune[],
@@ -564,7 +568,7 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 typeId: 'aac',
                 statutId: 'acc',
                 ordre: 1,
-                points: [1, 2, 3] as unknown as ITitrePoint[],
+                geojson4326Perimetre: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[1, 2]]]] } },
                 surface: 3.2,
                 substances: ['auru'],
                 titulaires: [{ id: newEntrepriseId('titulaire2') }],
@@ -585,7 +589,21 @@ describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
                 statutId: 'acc',
                 date: toCaminoDate('1981-01-01'),
                 ordre: 1,
-                points: [1, 2] as unknown as ITitrePoint[],
+                geojson4326Perimetre: {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'MultiPolygon',
+                    coordinates: [
+                      [
+                        [
+                          [1, 2],
+                          [2, 3],
+                        ],
+                      ],
+                    ],
+                  },
+                },
                 surface: 3,
                 substances: ['arge'],
                 titulaires: [{ id: newEntrepriseId('titulaire1') }],

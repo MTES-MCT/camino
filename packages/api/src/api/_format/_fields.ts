@@ -1,8 +1,6 @@
 import { IFields } from '../../types.js'
 
 export const titreEtapeFormatFields = {
-  geojsonMultiPolygon: {},
-  geojsonPoints: {},
   sections: {},
 } as IFields
 
@@ -12,8 +10,6 @@ export const titreDemarcheFormatFields = {
 
 export const titreFormatFields = {
   surface: {},
-  geojsonMultiPolygon: {},
-  geojsonPoints: {},
   demarches: titreDemarcheFormatFields,
   activites: {
     sections: {},

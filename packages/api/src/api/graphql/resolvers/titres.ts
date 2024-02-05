@@ -48,9 +48,7 @@ export const titres = async (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -70,9 +68,7 @@ export const titres = async (
     entreprisesIds: string[]
     substances: string
     noms: string
-    entreprises: string
     references: string
-    territoires: string
     communes: string
     departements: DepartementId[]
     regions: RegionId[]
@@ -100,9 +96,7 @@ export const titres = async (
           substancesIds,
           entreprisesIds,
           noms,
-          entreprises,
           references,
-          territoires,
           communes,
           departements,
           regions,
@@ -121,9 +115,7 @@ export const titres = async (
           substancesIds,
           entreprisesIds,
           noms,
-          entreprises,
           references,
-          territoires,
           communes,
           departements,
           regions,

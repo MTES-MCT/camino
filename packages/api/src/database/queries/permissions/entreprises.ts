@@ -13,19 +13,9 @@ import { User } from 'camino-common/src/roles.js'
 export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
   q.select('entreprises.*')
 
-  q.modifyGraph('titulaireTitres', a =>
-    titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)
-      // on group by entrepriseId au cas où il y a une aggrégation
-      // dans la requête de titre (ex : calc activités)
-      .groupBy('titres.id', 'titresTitulaires.entrepriseId')
-  )
+  q.modifyGraph('titulaireTitres', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
 
-  q.modifyGraph('amodiataireTitres', a =>
-    titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)
-      // on group by entrepriseId au cas où il y a une aggrégation
-      // dans la requête de titre (ex : calc activités)
-      .groupBy('titres.id', 'titresAmodiataires.entrepriseId')
-  )
+  q.modifyGraph('amodiataireTitres', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
 
   q.modifyGraph('utilisateurs', b => {
     utilisateursQueryModify(b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user)
@@ -37,20 +27,20 @@ export const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises 
 export const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string, { isTitulaire, isAmodiataire }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}) => {
   const q = Entreprises.query().whereIn('entreprises.id', entreprisesIds)
 
-  if (isTitulaire) {
+  if (isTitulaire ?? false) {
     q.modify(entreprisesTitulairesModify, entreprisesIds, titreAlias)
   }
 
-  if (isAmodiataire) {
+  if (isAmodiataire ?? false) {
     q.modify(entreprisesAmodiatairesModify, entreprisesIds, titreAlias)
   }
 
   q.where(c => {
-    if (isTitulaire) {
+    if (isTitulaire ?? false) {
       c.orWhereNotNull('t_t.entrepriseId')
     }
 
-    if (isAmodiataire) {
+    if (isAmodiataire ?? false) {
       c.orWhereNotNull('t_a.entrepriseId')
     }
   })

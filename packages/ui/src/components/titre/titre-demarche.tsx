@@ -1,5 +1,5 @@
 import { FunctionalComponent, capitalize, computed, defineComponent, ref } from 'vue'
-import { getMostRecentValueProp, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
+import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche } from 'camino-common/src/titres'
 import { DemarcheEtapeFondamentale, DemarcheSlug, EntreprisesByEtapeId, getDemarcheContenu } from 'camino-common/src/demarche'
 import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTypes'
 import { DemarcheStatut } from '@/components/_common/demarche-statut'
@@ -60,7 +60,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
   const demarche = computed<TitreGetDemarche | null>(() => (demarchesAsc.value.length > 0 ? demarchesAsc.value[demarchesAsc.value.length - 1] : null))
 
   const perimetre = computed<null | DemarcheEtapeFondamentale['fondamentale']['perimetre']>(() => {
-    return getMostRecentValueProp('perimetre', demarchesAsc.value)
+    return getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', demarchesAsc.value)
   })
 
   const administrations = computed<AdministrationId[]>(() => {
@@ -83,15 +83,15 @@ export const TitreDemarche = defineComponent<Props>(props => {
   })
 
   const titulaires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValueProp('titulaires', demarchesAsc.value)
+    return getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', demarchesAsc.value)
   })
 
   const amodiataires = computed<EntreprisesByEtapeId[] | null>(() => {
-    return getMostRecentValueProp('amodiataires', demarchesAsc.value)
+    return getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', demarchesAsc.value)
   })
 
   const substances = computed<SubstanceLegaleId[] | null>(() => {
-    return getMostRecentValueProp('substances', demarchesAsc.value)
+    return getMostRecentValuePropFromEtapeFondamentaleValide('substances', demarchesAsc.value)
   })
 
   const addDemarchePopup = ref<boolean>(false)
@@ -170,13 +170,13 @@ export const TitreDemarche = defineComponent<Props>(props => {
             </div>
           </div>
 
-          {isNotNullNorUndefined(perimetre.value) && isNotNullNorUndefined(perimetre.value.geojsonMultiPolygon) ? (
+          {isNotNullNorUndefined(perimetre.value) && isNotNullNorUndefined(perimetre.value.geojson4326_perimetre) ? (
             <DsfrPerimetre
               class="fr-pt-3w"
               titreSlug={props.titre.slug}
               apiClient={props.apiClient}
               calculateNeighbours={true}
-              geojsonMultiPolygon={perimetre.value.geojsonMultiPolygon}
+              perimetre={{ geojson4326_perimetre: perimetre.value.geojson4326_perimetre, geojson4326_points: perimetre.value.geojson4326_points }}
               router={props.router}
               initTab={props.initTab}
             />

@@ -1,10 +1,9 @@
-import { documentEtapeFormat, etapeEditFormat, etapePointsFormat } from '../utils/titre-etape-edit'
-import { etapeSaveFormat, pointsBuild } from '../utils/titre-etape-save'
+import { documentEtapeFormat, etapeEditFormat } from '../utils/titre-etape-edit'
+import { etapeSaveFormat } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
 import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
 import { documentsRequiredAdd } from '../utils/documents'
-import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from '../api/geojson'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const state = {
@@ -14,7 +13,6 @@ const state = {
     entreprises: [],
     documentsTypes: [],
     sdomZonesDocumentTypeIds: [],
-    alertes: [],
   },
   heritageLoaded: false,
   loaded: false,
@@ -71,17 +69,6 @@ const actions = {
 
       if (id) {
         await dispatch('dateUpdate', { date: state.element.date })
-
-        const { documentTypeIds, alertes } = await titreEtapePerimetreInformations({
-          titreEtapeId: id,
-        })
-
-        commit('metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes,
-        })
-
-        await dispatch('documentInit', state.element.documents)
       }
 
       commit('load')
@@ -129,15 +116,6 @@ const actions = {
 
       commit('heritageSet', { etape: newEtape })
       await dispatch('documentInit', state.element.documents)
-
-      const { alertes } = await perimetreInformations({
-        points: [],
-        demarcheId: state.metas.demarche.id,
-        etapeTypeId,
-      })
-      commit('metasSet', {
-        alertes,
-      })
 
       commit('heritageLoaded', true)
     } catch (e) {
@@ -199,92 +177,6 @@ const actions = {
       commit('loadingRemove', 'titreEtapeUpdate', { root: true })
     }
   },
-
-  async pointsImport({ state, commit, dispatch }, { file, geoSystemeId }) {
-    try {
-      commit('loadingAdd', 'pointsImport', { root: true })
-
-      const { points, surface, documentTypeIds, alertes } = await pointsImporter({
-        file,
-        geoSystemeId,
-        demarcheId: state.metas.demarche.id,
-        etapeTypeId: state.element.type.id,
-      })
-      const { groupes, geoSystemeIds, geoSystemeOpposableId } = etapePointsFormat(points)
-      state.element.groupes = groupes
-      state.element.geoSystemeIds = geoSystemeIds
-      state.element.geoSystemeOpposableId = geoSystemeOpposableId
-      // pour modifier la surface, on doit désactiver l’héritage
-      state.element.heritageProps.surface.actif = false
-      state.element.surface = surface
-      commit('set', state.element)
-
-      commit('metasSet', {
-        sdomZonesDocumentTypeIds: documentTypeIds,
-        alertes,
-      })
-      await dispatch('documentInit', state.element.documents)
-      commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        {
-          value: `${points.length} points ont été importés avec succès`,
-          type: 'success',
-        },
-        { root: true }
-      )
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'pointsImport', { root: true })
-    }
-  },
-
-  async surfaceRefresh({ state, commit, dispatch }, etape) {
-    try {
-      commit('loadingAdd', 'surfaceRefresh', { root: true })
-
-      if (etape.geoSystemeIds && etape.geoSystemeIds.length && etape.groupes.length) {
-        const points = pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
-        const { surface, documentTypeIds, alertes } = await perimetreInformations({
-          points,
-          demarcheId: state.metas.demarche.id,
-          etapeTypeId: etape.type.id,
-        })
-        state.element.surface = surface
-        commit('set', state.element)
-
-        commit('metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes,
-        })
-        await dispatch('documentInit', state.element.documents)
-
-        commit('popupClose', null, { root: true })
-        dispatch(
-          'messageAdd',
-          {
-            value: `la surface a été recalculée à partir du périmètre`,
-            type: 'success',
-          },
-          { root: true }
-        )
-      } else {
-        dispatch(
-          'messageAdd',
-          {
-            value: `la surface ne peut-être calculée car le périmètre est invalide`,
-            type: 'warning',
-          },
-          { root: true }
-        )
-      }
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'surfaceRefresh', { root: true })
-    }
-  },
 }
 
 const mutations = {
@@ -307,7 +199,6 @@ const mutations = {
       entreprises: [],
       documentsTypes: [],
       sdomZonesDocumentTypeIds: [],
-      alertes: [],
     }
     state.heritageLoaded = false
     state.loaded = false

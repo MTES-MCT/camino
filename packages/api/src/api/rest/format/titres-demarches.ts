@@ -53,7 +53,7 @@ export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: IT
 
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
 
-    const etapeWithPoints = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(etape => etape.points?.length) : undefined
+    const etapeWithPoints = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(etape => isNotNullNorUndefined(etape.geojson4326Perimetre)) : undefined
 
     const titreDemarcheNew = {
       titre_id: titre.slug,

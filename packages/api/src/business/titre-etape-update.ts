@@ -18,7 +18,6 @@ import { titresContenusEtapesIdsUpdate } from './processes/titres-contenus-etape
 import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
 import { titresPublicUpdate } from './processes/titres-public-update.js'
 import { logsUpdate } from './_logs-update.js'
-import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.js'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create.js'
@@ -58,7 +57,7 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
-      await titresEtapesAreasUpdate([titreEtapeId])
+      await titresEtapesAreasUpdate(pool, [titreEtapeId])
     }
 
     const { titresEtapesAdministrationsLocalesUpdated = [] } = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
@@ -67,7 +66,6 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
 
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
 
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
 
@@ -86,7 +84,6 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
       titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
-      titresCoordonneesUpdated,
       titresActivitesCreated,
       titresActivitesPropsUpdated,
       titresUpdatedIndex,

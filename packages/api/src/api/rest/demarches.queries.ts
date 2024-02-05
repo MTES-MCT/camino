@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
@@ -16,9 +16,12 @@ import { sectionValidator } from 'camino-common/src/static/titresTypes_demarches
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
-import { GetDemarcheByIdOrSlugValidator, getDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
+import { featureCollectionPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
+import { titreIdValidator } from 'camino-common/src/validators/titres.js'
+import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
 
-export const getEtapesByDemarcheIdDbValidator = z.object({
+const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
   date: caminoDateValidator,
@@ -29,7 +32,7 @@ export const getEtapesByDemarcheIdDbValidator = z.object({
   substances: z.array(substanceLegaleIdValidator).nullable(),
   etape_type_id: etapeTypeIdValidator,
   etape_statut_id: etapeStatutIdValidator,
-  heritage_props: z.record(z.string(), z.object({ actif: z.boolean() })).nullable(),
+  heritage_props: z.record(etapeHeritagePropsValidator, z.object({ actif: z.boolean() })).nullable(),
   heritage_contenu: z.record(z.string(), z.record(z.string(), z.object({ actif: z.boolean() }))).nullable(),
   date_debut: caminoDateValidator.nullable(),
   date_fin: caminoDateValidator.nullable(),
@@ -40,9 +43,15 @@ export const getEtapesByDemarcheIdDbValidator = z.object({
   forets: z.array(foretIdValidator).nullable(),
   decisions_annexes_contenu: contenuValidator.nullable(),
   decisions_annexes_sections: z.array(sectionValidator).nullable(),
+  geojson4326_perimetre: multiPolygonValidator.nullable(),
+  geojson4326_points: featureCollectionPointsValidator.nullable(),
 })
+
+export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
+  return dbQueryAndValidate(getEtapesByDemarcheIdDb, { demarcheId }, pool, getEtapesByDemarcheIdDbValidator)
+}
 type GetEtapesByDemarcheIdDb = z.infer<typeof getEtapesByDemarcheIdDbValidator>
-export const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
+const getEtapesByDemarcheIdDb = sql<Redefine<IGetEtapesByDemarcheIdDbQuery, { demarcheId: DemarcheId }, GetEtapesByDemarcheIdDb>>`
 select
     e.id,
     e.date,
@@ -64,7 +73,9 @@ select
     e.sdom_zones,
     e.forets,
     e.decisions_annexes_contenu,
-    e.decisions_annexes_sections
+    e.decisions_annexes_sections,
+    ST_AsGeoJSON (e.geojson4326_perimetre)::json as geojson4326_perimetre,
+    e.geojson4326_points as geojson4326_points
 from
     titres_etapes e
 where
@@ -74,13 +85,28 @@ order by
     date desc
 `
 
+const getDemarcheByIdOrSlugValidator = z.object({
+  demarche_id: demarcheIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  demarche_type_id: demarcheTypeIdValidator,
+  titre_id: titreIdValidator,
+  entreprises_lecture: z.boolean(),
+  public_lecture: z.boolean(),
+})
+
+type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
+
 export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSlug): Promise<z.infer<typeof getDemarcheByIdOrSlugValidator>> => {
   return (await dbQueryAndValidate(getDemarcheByIdOrSlugDb, { idOrSlug }, pool, getDemarcheByIdOrSlugValidator))[0]
 }
 
 const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
 select
+    id as demarche_id,
     slug as demarche_slug,
+    type_id as demarche_type_id,
+    entreprises_lecture,
+    public_lecture,
     titre_id
 from
     titres_demarches

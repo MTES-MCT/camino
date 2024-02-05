@@ -56,6 +56,5 @@ export const Forets = {
 
 export const foretIdValidator = z.enum(IDS)
 export type ForetId = z.infer<typeof foretIdValidator>
-export const isForetId = (value: string): value is ForetId => foretIdValidator.safeParse(value).success
 
 export const ForetIds = IDS

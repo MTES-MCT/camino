@@ -6,7 +6,7 @@ import { ITitre } from '../../types.js'
 import Titres from '../../database/models/titres.js'
 import { objectClone } from '../../tools/index.js'
 import { expect, test, describe, afterAll, beforeAll } from 'vitest'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 beforeAll(async () => {
   await dbManager.populateDb()
 })
@@ -21,7 +21,7 @@ const titreAdd = async (titre: ITitre) =>
       type: { type: { id: {} } },
       demarches: {
         etapes: {
-          points: { references: { id: {} } },
+          id: {},
         },
       },
       activites: { id: {} },

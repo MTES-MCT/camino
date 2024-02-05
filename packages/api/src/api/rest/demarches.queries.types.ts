@@ -21,6 +21,8 @@ export interface IGetEtapesByDemarcheIdDbResult {
   etape_statut_id: string;
   etape_type_id: string;
   forets: Json;
+  geojson4326_perimetre: Json | null;
+  geojson4326_points: Json | null;
   heritage_contenu: Json | null;
   heritage_props: Json | null;
   id: string;
@@ -46,7 +48,11 @@ export interface IGetDemarcheByIdOrSlugDbParams {
 
 /** 'GetDemarcheByIdOrSlugDb' return type */
 export interface IGetDemarcheByIdOrSlugDbResult {
+  demarche_id: string;
   demarche_slug: string | null;
+  demarche_type_id: string;
+  entreprises_lecture: boolean;
+  public_lecture: boolean;
   titre_id: string;
 }
 

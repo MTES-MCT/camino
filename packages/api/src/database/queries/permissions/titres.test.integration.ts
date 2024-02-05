@@ -247,7 +247,7 @@ describe('titresQueryModify', () => {
         },
       ])
 
-      const q = Titres.query().whereIn('id', [archivedTitreId, titreId])
+      const q = Titres.query().whereIn('titres.id', [archivedTitreId, titreId])
       titresQueryModify(q, userSuper)
 
       const titres = await q

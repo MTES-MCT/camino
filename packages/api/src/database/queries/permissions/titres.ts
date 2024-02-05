@@ -59,7 +59,7 @@ export const titresConfidentielSelect = (q: QueryBuilder<Titres, Titres | Titres
       .as('confidentiel')
   )
 
-const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null) => {
+export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User, demandeEnCours?: boolean | null) => {
   q.select('titres.*').where('titres.archive', false)
 
   // si
@@ -112,6 +112,11 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
     }
   }
 
+  // {"type":"Point","coordinates":[5.636779897,43.389000571]}
+  q.joinRaw("left join titres_etapes teGeojsonCentre on teGeojsonCentre.id = titres.props_titre_etapes_ids ->> 'points'")
+  q.select(raw('ST_AsGeoJSON(ST_Centroid(teGeojsonCentre.geojson4326_perimetre))::json as geojson4326_centre'))
+  q.select(raw('ST_AsGeoJSON(teGeojsonCentre.geojson4326_perimetre)::json as geojson4326_perimetre'))
+
   // visibilité des étapes
   q.modifyGraph('demarches', b => {
     titresDemarchesQueryModify(b as QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user)
@@ -130,12 +135,5 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
     entreprisesQueryModify(b as QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user).select('titresAmodiataires.operateur')
   })
 
-  // visibilité du doublonTitre
-  q.modifyGraph('doublonTitre', b => {
-    titresQueryModify(b as QueryBuilder<Titres, Titres | Titres[]>, user)
-  })
-
   return q
 }
-
-export { titresQueryModify }

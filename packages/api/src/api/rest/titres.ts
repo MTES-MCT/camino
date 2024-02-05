@@ -14,8 +14,6 @@ import {
   titreOnfValidator,
   titreLinksValidator,
   utilisateurTitreAbonneValidator,
-  titreIdValidator,
-  titreIdOrSlugValidator,
 } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind } from '../../business/rules-demarches/definitions.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
@@ -40,6 +38,7 @@ import type { Pool } from 'pg'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries.js'
+import { titreIdValidator, titreIdOrSlugValidator } from 'camino-common/src/validators/titres.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,

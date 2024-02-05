@@ -1,7 +1,5 @@
 import gql from 'graphql-tag'
 import { fragmentTitreEntreprises } from './entreprises'
-import { fragmentPoint } from './point'
-import { fragmentGeojsonMultiPolygon } from './geojson'
 import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
@@ -28,16 +26,13 @@ const fragmentHeritageEtape = gql`
     amodiataires {
       ...titreEntreprises
     }
-    points {
-      ...point
-    }
+    geojson4326Perimetre
+    geojson4326Points
     substances
     contenu
   }
 
   ${fragmentTitreEntreprises}
-
-  ${fragmentPoint}
 `
 
 const fragmentHeritageProps = gql`
@@ -51,10 +46,7 @@ const fragmentHeritageProps = gql`
     duree {
       ...heritageProp
     }
-    surface {
-      ...heritageProp
-    }
-    points {
+    perimetre {
       ...heritageProp
     }
     substances {
@@ -100,9 +92,8 @@ const fragmentEtapeHeritage = gql`
       ...titreEntreprises
     }
 
-    points {
-      ...point
-    }
+    geojson4326Perimetre
+    geojson4326Points
 
     substances
 
@@ -116,8 +107,6 @@ const fragmentEtapeHeritage = gql`
   }
 
   ${fragmentTitreEntreprises}
-
-  ${fragmentPoint}
 
   ${fragmentHeritageProps}
 
@@ -160,12 +149,8 @@ const fragmentEtape = gql`
     amodiataires {
       ...titreEntreprises
     }
-    points {
-      ...point
-    }
-    geojsonMultiPolygon {
-      ...geojsonMultiPolygon
-    }
+    geojson4326Perimetre
+    geojson4326Points
     substances
     documents {
       ...document
@@ -181,10 +166,6 @@ const fragmentEtape = gql`
   }
 
   ${fragmentTitreEntreprises}
-
-  ${fragmentPoint}
-
-  ${fragmentGeojsonMultiPolygon}
 
   ${fragmentDocument}
 

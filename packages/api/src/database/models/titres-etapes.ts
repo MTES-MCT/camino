@@ -1,12 +1,11 @@
-import { Model, Pojo, QueryContext } from 'objection'
+import { Model, ModelOptions, Pojo, QueryContext } from 'objection'
 
-import { ITitreEtape, ITitrePoint } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
 import { idGenerate } from './_format/id-create.js'
 import EtapesTypes from './etapes-types.js'
 import TitresDemarches from './titres-demarches.js'
-import TitresPoints from './titres-points.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Journaux from './journaux.js'
@@ -51,6 +50,7 @@ class TitresEtapes extends Model {
       administrationsLocales: { type: ['array', 'null'] },
       sdomZones: { type: ['array', 'null'] },
       notes: { type: ['string', 'null'] },
+      geojson4326Perimetre: { type: ['object', 'null'] },
     },
   }
 
@@ -70,15 +70,6 @@ class TitresEtapes extends Model {
       join: {
         from: 'titresEtapes.titreDemarcheId',
         to: 'titresDemarches.id',
-      },
-    },
-
-    points: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresPoints,
-      join: {
-        from: 'titresEtapes.id',
-        to: 'titresPoints.titreEtapeId',
       },
     },
 
@@ -141,16 +132,38 @@ class TitresEtapes extends Model {
       this.notes = null
     }
 
+    if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
+      const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
+      this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
+    }
+
     return super.$beforeInsert(context)
   }
 
-  async $afterFind(context: any) {
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext) {
+    if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
+      const rawLine = await context.transaction.raw(`select ST_GeomFromGeoJSON('${JSON.stringify(this.geojson4326Perimetre.geometry)}'::text)`)
+      this.geojson4326Perimetre = rawLine.rows[0].st_geomfromgeojson
+    }
+
+    return super.$beforeUpdate(opt, context)
+  }
+
+  async $afterFind(context: QueryContext) {
     if (context.fetchHeritage && this.heritageProps) {
       this.heritageProps = await heritagePropsFormat(this.heritageProps)
     }
 
     if (context.fetchHeritage && this.heritageContenu) {
       this.heritageContenu = await heritageContenuFormat(this.heritageContenu)
+    }
+
+    if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+      // eslint-disable-next-line sql/no-unsafe-query
+      const rawLine = await context.transaction.raw(`select ST_AsGeoJSON('${this.geojson4326Perimetre}'::text)::json`)
+      this.geojson4326Perimetre = { type: 'Feature', properties: {}, geometry: rawLine.rows[0].st_asgeojson }
     }
 
     return this
@@ -165,12 +178,6 @@ class TitresEtapes extends Model {
   }
 
   public $parseJson(json: Pojo) {
-    if (json.points) {
-      json.points.forEach((point: ITitrePoint) => {
-        point.titreEtapeId = json.id
-      })
-    }
-
     if (json.amodiatairesIds) {
       json.amodiataires = json.amodiatairesIds.map((id: string) => ({ id }))
       delete json.amodiatairesIds
@@ -187,8 +194,6 @@ class TitresEtapes extends Model {
       delete json.substancesIds
     }
 
-    delete json.geojsonMultiPolygon
-    delete json.geojsonPoints
     delete json.modification
     delete json.suppression
     json = super.$parseJson(json)

@@ -11,29 +11,29 @@ import {
   entrepriseTypeValidator,
   sirenValidator,
 } from './entreprise.js'
-import { demarcheIdOrSlugValidator, demarcheIdValidator, featureMultiPolygonValidator } from './demarche.js'
+import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
   titreAdministrationValidator,
   titreGetValidator,
-  titreIdOrSlugValidator,
-  titreIdValidator,
   titreLinksValidator,
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
 import { userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import { statistiquesDGTMValidator, statistiquesGranulatsMarinsValidator, statistiquesGuyaneDataValidator, statistiquesMinerauxMetauxMetropoleValidator } from './statistiques.js'
 import { fiscaliteValidator } from './validators/fiscalite.js'
 import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
-import { geoSystemeIdValidator } from './static/geoSystemes.js'
+import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
+import { featureMultiPolygonValidator, geojsonImportBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
+import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -69,11 +69,14 @@ const IDS = [
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
   '/rest/utilisateur/generateQgisToken',
   '/rest/etapesTypes/:demarcheId/:date',
+  '/rest/demarches/:demarcheId/geojson',
+  '/rest/etapes/:etapeId/geojson',
   '/rest/etapes/:etapeId/entrepriseDocuments',
   '/rest/etapes/:etapeId',
   '/rest/etapes/:etapeId/depot',
   '/rest/activites/:activiteId',
   '/rest/geojson/:geoSystemeId',
+  '/rest/geojson/import/:geoSystemeId',
   '/rest/communes',
   '/deconnecter',
   '/changerMotDePasse',
@@ -127,18 +130,25 @@ export const CaminoRestRoutes = {
   },
   '/rest/entreprises/:entrepriseId/documents': {
     params: { entrepriseId: entrepriseIdValidator },
+    // TODO 2024-01-31 ne pas retourner une erreur, mais thrower une exception et la catcher plutôt ?
     post: { input: entrepriseDocumentInputValidator, output: z.union([entrepriseDocumentIdValidator, z.custom<Error>()]) },
     get: { output: z.array(entrepriseDocumentValidator) },
   },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: { entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }, delete: true },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
+  '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
+  '/rest/etapes/:etapeId/geojson': { params: { etapeId: etapeIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },
   '/rest/etapes/:etapeId/entrepriseDocuments': { params: { etapeId: etapeIdValidator }, get: { output: z.array(etapeEntrepriseDocumentValidator) } },
   '/rest/etapes/:etapeId': { params: { etapeId: etapeIdValidator }, delete: true },
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
-  '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
+  '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: transformableGeoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
+  '/rest/geojson/import/:geoSystemeId': {
+    params: { geoSystemeId: transformableGeoSystemeIdValidator },
+    post: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
+  },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
   '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },

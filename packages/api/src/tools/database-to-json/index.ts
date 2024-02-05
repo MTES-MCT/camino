@@ -1,6 +1,5 @@
 import { rmSync, writeFileSync, mkdirSync } from 'fs'
 
-import { ICoordonnees } from '../../types.js'
 import { simpleKnexConfig } from '../../knex/config.js'
 import knex from 'knex'
 import { tables } from './tables.js'
@@ -43,19 +42,9 @@ const format = (elements: IFields[]) =>
   elements.map(e =>
     Object.keys(e).reduce((acc: IFields, k: string) => {
       if (e[k]) {
-        acc[k] = fieldFormat(e, k)
+        acc[k] = e[k]
       }
 
       return acc
     }, {})
   )
-
-const fieldFormat = (field: IFields, key: string) => {
-  if (key === 'coordonnees') {
-    const coordonnees = field[key] as unknown as ICoordonnees
-
-    return `${coordonnees.x},${coordonnees.y}`
-  }
-
-  return field[key]
-}

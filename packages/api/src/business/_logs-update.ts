@@ -10,11 +10,9 @@ export const logsUpdate = ({
   titresStatutIdUpdated,
   titresPublicUpdated,
   titresDemarchesDatesUpdated,
-  pointsReferencesCreated,
   titresEtapesAdministrationsLocalesUpdated,
   titresPropsEtapesIdsUpdated,
   titresContenusEtapesIdsUpdated,
-  titresCoordonneesUpdated,
   titresActivitesCreated,
   titresActivitesRelanceSent,
   titresActivitesStatutIdsUpdated,
@@ -33,11 +31,9 @@ export const logsUpdate = ({
   titresStatutIdUpdated?: string[]
   titresPublicUpdated?: string[]
   titresDemarchesDatesUpdated?: string[]
-  pointsReferencesCreated?: string[]
   titresEtapesAdministrationsLocalesUpdated?: string[]
   titresPropsEtapesIdsUpdated?: string[]
   titresContenusEtapesIdsUpdated?: string[]
-  titresCoordonneesUpdated?: string[]
   titresActivitesCreated?: string[]
   titresActivitesRelanceSent?: string[]
   titresActivitesStatutIdsUpdated?: string[]
@@ -87,10 +83,6 @@ export const logsUpdate = ({
     console.info(`mise à jour: ${titresDemarchesDatesUpdated.length} titre(s) (phases mises à jour)`)
   }
 
-  if (pointsReferencesCreated?.length) {
-    console.info(`création: ${pointsReferencesCreated.length} référence(s) de points`)
-  }
-
   if (titresEtapesAdministrationsLocalesUpdated?.length) {
     console.info(`mise à jour: ${titresEtapesAdministrationsLocalesUpdated.length} administration(s) locale(s) modifiée(s) dans des étapes`)
   }
@@ -101,10 +93,6 @@ export const logsUpdate = ({
 
   if (titresContenusEtapesIdsUpdated?.length) {
     console.info(`mise à jour: ${titresContenusEtapesIdsUpdated.length} titres(s) (contenu)`)
-  }
-
-  if (titresCoordonneesUpdated?.length) {
-    console.info(`mise à jour: ${titresCoordonneesUpdated.length} titres(s) (coordonnées)`)
   }
 
   if (titresActivitesCreated?.length) {

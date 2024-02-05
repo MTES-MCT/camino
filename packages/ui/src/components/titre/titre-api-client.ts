@@ -1,4 +1,5 @@
-import { EditableTitre, TitreGet, TitreId, TitreIdOrSlug } from 'camino-common/src/titres'
+import { EditableTitre, TitreGet } from 'camino-common/src/titres'
+import { TitreId, TitreIdOrSlug } from 'camino-common/src/validators/titres'
 import { deleteWithJson, getWithJson, postWithJson } from '../../api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { CommuneId } from 'camino-common/src/static/communes'
@@ -21,10 +22,6 @@ export type TitreForTable = {
   slug: string
   nom: string
   typeId: TitreTypeId
-  coordonnees?: {
-    x: number
-    y: number
-  }
   titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
   activitesEnConstruction: number | null
@@ -180,10 +177,6 @@ export const titreApiClient: TitreApiClient = {
               slug
               nom
               typeId
-              coordonnees {
-                x
-                y
-              }
               titreStatutId
               substances
               activitesEnConstruction
@@ -255,12 +248,7 @@ export const titreApiClient: TitreApiClient = {
                 id
                 nom
               }
-
-              geojsonCentre {
-                geometry {
-                  coordinates
-                }
-              }
+              geojson4326Centre
             }
             total
           }
@@ -316,18 +304,8 @@ export const titreApiClient: TitreApiClient = {
                 nom
               }
 
-              geojsonCentre {
-                geometry {
-                  coordinates
-                }
-              }
-              geojsonMultiPolygon {
-                type
-                geometry {
-                  type
-                  coordinates
-                }
-              }
+              geojson4326Centre
+              geojson4326Perimetre
             }
             total
           }

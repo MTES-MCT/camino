@@ -1,4 +1,4 @@
-import { TitreId } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
 import { getLinkConfig } from 'camino-common/src/permissions/titres.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'

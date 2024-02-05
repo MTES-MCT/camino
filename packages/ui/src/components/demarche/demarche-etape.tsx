@@ -12,7 +12,7 @@ import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapePropEntreprisesItem, EtapePropItem } from '../etape/etape-prop-item'
 import { DemarcheEtape as CommonDemarcheEtape, EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { DsfrPerimetre, TabId } from '../_common/dsfr-perimetre'
-import { TitreSlug } from 'camino-common/src/titres'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { numberFormat } from 'camino-common/src/number'
 import { OmitDistributive, getValues, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -114,7 +114,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             sectionsWithValue: props.etape.sections_with_values,
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
-            points: props.etape.fondamentale.perimetre?.geojsonMultiPolygon?.geometry.coordinates[0][0] ?? [],
+            geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
             decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
             decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
@@ -237,15 +237,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         </>
       ) : null}
 
-      {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojsonMultiPolygon) ? (
+      {fondamentalePropsName in props.etape && isNotNullNorUndefined(props.etape.fondamentale.perimetre) && isNotNullNorUndefined(props.etape.fondamentale.perimetre.geojson4326_perimetre) ? (
         <DsfrPerimetre
           class="fr-pt-2w"
           initTab={props.initTab}
           titreSlug={props.titre.slug}
           apiClient={props.apiClient}
           calculateNeighbours={false}
-          geojsonMultiPolygon={props.etape.fondamentale.perimetre.geojsonMultiPolygon}
-          router={props.router}
+          perimetre={{ geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre, geojson4326_points: props.etape.fondamentale.perimetre.geojson4326_points }}
         />
       ) : null}
 

@@ -130,7 +130,7 @@ export const Preview = defineComponent<Props>(props => {
               {documentRows.length > 0 ? (
                 <div class="border-b-s px-m pt-m">
                   <div class="dsfr">
-                    <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} />
+                    <TableAuto caption={'Documents de l’activité'} columns={documentColumns} rows={documentRows} initialSort={'firstColumnAsc'} />
                   </div>
                 </div>
               ) : null}

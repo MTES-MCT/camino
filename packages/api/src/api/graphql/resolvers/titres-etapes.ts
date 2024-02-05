@@ -20,13 +20,12 @@ import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathG
 import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
-import { geojsonFeatureMultiPolygon, geojsonIntersectsCommunes } from '../../../tools/geojson.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
@@ -35,12 +34,15 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { EtapeId } from 'camino-common/src/etape.js'
-import { getSDOMZoneByPoints } from './points.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
-import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
+import { equalGeojson } from 'camino-common/src/perimetre.js'
+
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
@@ -139,7 +141,6 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
             type: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
-            points: { references: { id: {} } },
           },
         },
       },
@@ -207,7 +208,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
     etape.date = date
-    etape.surface = etape.surface ?? null
 
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
@@ -216,18 +216,23 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
-    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
+    const sdomZones: SDOMZoneId[] = []
+    if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
+      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
+      etape.surface = surface
 
-    if (isNotNullNorUndefinedNorEmpty(etape.points)) {
-      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
+      etape.communes = communes
+      etape.forets = forets
+      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
+      etape.sdomZones = sdom
 
-      const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
-      if (titreEtapeCommu.fallback) {
-        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
-      }
-      etape.communes = titreEtapeCommu.data
+      sdomZones.push(...sdom)
     } else {
       etape.communes = []
+      etape.forets = []
+      etape.secteursMaritime = []
+      etape.sdomZones = []
+      etape.surface = null
     }
 
     const titreTypeId = titreDemarche?.titre?.typeId
@@ -247,21 +252,18 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    if (isNotNullNorUndefined(titreEtapePoints)) {
-      etape.points = titreEtapePoints
-    }
-
     const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
 
-    if (isNotNullNorUndefined(etape.duree) && !canEditDuree(titreTypeId, titreDemarche.typeId)) {
-      throw new Error(`Il est interdit de modifier une durée pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+    if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
+      etape.duree = null
     }
 
     if (!canEditDates(titreTypeId, titreDemarche.typeId, etape.typeId, user) && (isNotNullNorUndefined(etape.dateDebut) || isNotNullNorUndefined(etape.dateFin))) {
-      throw new Error(`Il est interdit de modifier la date de début ou de fin pour une étape d'une démarche ${DemarchesTypes[titreDemarche.typeId].nom} d'un titre ${titreTypeId}`)
+      etape.dateDebut = null
+      etape.dateFin = null
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
@@ -402,19 +404,28 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
-    const { sdomZones, titreEtapePoints } = await getSDOMZoneByPoints(titreDemarche.id, etape.points)
+    const sdomZones: SDOMZoneId[] = []
+    if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
+      const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
 
-    if (isNotNullNorUndefinedNorEmpty(etape.points)) {
-      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints)
-
-      const titreEtapeCommu = await geojsonIntersectsCommunes(geojsonFeatures)
-      if (titreEtapeCommu.fallback) {
-        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
+        etape.surface = surface
       }
-      etape.communes = titreEtapeCommu.data
+
+      etape.communes = communes
+      etape.forets = forets
+      etape.secteursMaritime = secteurs.map(id => getSecteurMaritime(id))
+      etape.sdomZones = sdom
+
+      sdomZones.push(...sdom)
     } else {
       etape.communes = []
+      etape.forets = []
+      etape.secteursMaritime = []
+      etape.sdomZones = []
+      etape.surface = null
     }
+
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
@@ -426,9 +437,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       throw new Error(rulesErrors.join(', '))
     }
 
-    if (isNotNullNorUndefined(titreEtapePoints)) {
-      etape.points = titreEtapePoints
-    }
     await documentsLier(context, documentIds, etape.id, titreEtapeOld)
 
     const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
@@ -497,7 +505,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
       throw new Error("l'étape n'existe pas")
     }
 
-    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} }, points: { references: { id: {} } } } }, user)
+    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} } } }, user)
 
     if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
@@ -517,7 +525,12 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
     if (titreDemarche.titre.administrationsLocales === undefined) throw new Error('les administrations locales du titre ne sont pas chargées')
     if (titreDemarche.titre.titulaires === undefined) throw new Error('les titulaires du titre ne sont pas chargés')
 
-    const { sdomZones } = await getSDOMZoneByPoints(titreDemarche.id, titreEtape.points)
+    const sdomZones: SDOMZoneId[] = []
+    if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
+      const { sdom } = await getGeojsonInformation(pool, titreEtape.geojson4326Perimetre.geometry)
+
+      sdomZones.push(...sdom)
+    }
 
     const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
     // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titreDemarche.titre

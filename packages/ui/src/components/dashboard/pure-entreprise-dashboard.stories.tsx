@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { TitreEntreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { vueRouter } from 'storybook-vue3-router'
 
 const meta: Meta = {
@@ -25,10 +25,6 @@ const titres: TitreEntreprise[] = [
     slug: 'm-cx-aachen-1810',
     nom: 'Aachen',
     typeId: 'cxm',
-    coordonnees: {
-      x: 6.049336777414595,
-      y: 49.45057350532248,
-    },
     titreStatutId: 'ech',
     substances: ['ferx'],
     activitesEnConstruction: 2,

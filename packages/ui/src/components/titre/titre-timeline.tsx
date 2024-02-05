@@ -6,7 +6,8 @@ import { DemarchesTypes, isTravaux } from 'camino-common/src/static/demarchesTyp
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { CaminoDate, CaminoDateFormated, dateFormat } from 'camino-common/src/date'
 import { HTMLAttributes } from 'vue/dist/vue'
-import { TitreGetDemarche, TitreSlug } from 'camino-common/src/titres'
+import { TitreGetDemarche } from 'camino-common/src/titres'
+import { TitreSlug } from 'camino-common/src/validators/titres'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { TravauxIcone } from './travaux-icone'
 

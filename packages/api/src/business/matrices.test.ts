@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCommuneId } from 'camino-common/src/static/communes.js'
 import { newTitreId } from '../database/models/_format/id-create.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {

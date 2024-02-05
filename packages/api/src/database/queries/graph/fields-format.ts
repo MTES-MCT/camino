@@ -1,9 +1,7 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
-const fieldsOrderAsc = ['domaines', 'points', 'references', 'titresTypes']
-const fieldsToRemove = ['coordonnees', 'heritageProps', 'communes']
-const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
-const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
-const titrePropsEtapesFields = ['surface', 'substances']
+const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
+const fieldsToRemove = ['heritageProps', 'communes']
+const titreFieldsToRemove: string[] = ['geojson4326Centre', 'references']
 
 interface IFields {
   [key: string]: IFields
@@ -38,19 +36,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     fields.activites.type = { id: {} }
   }
 
-  // si `geojsonPoints` ou `geojsonMultiPolygon` sont présentes
-  // - ajoute la propriété `points`
-  // - supprime les propriété `geojsonPoints` ou `geojsonMultiPolygon`
-  geoFieldsToReplace.forEach(key => {
-    if (fields[key]) {
-      if (!fields.points) {
-        fields.points = { id: {} }
-      }
-
-      delete fields[key]
-    }
-  })
-
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {
     if (fields[key]) {
@@ -77,14 +62,17 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // sur les titres
   if (isParentTitre) {
     // si la propriété `surface` est présente
-    // - la remplace par `surfaceEtape`
-    titrePropsEtapesFields.forEach(key => {
-      if (fields[key]) {
-        fields[`${key}Etape`] = { id: {} }
+    // - la remplace par `pointsEtape`
+    if (fields.surface) {
+      fields.pointsEtape = { id: {} }
 
-        delete fields[key]
-      }
-    })
+      delete fields.surface
+    }
+    if (fields.substances) {
+      fields.substancesEtape = { id: {} }
+
+      delete fields.substances
+    }
 
     // supprime certaines propriétés
     titreFieldsToRemove.forEach(key => {
@@ -133,10 +121,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
     if (!fields.demarche.titre) {
       fields.demarche.titre = { id: {} }
-    }
-
-    if (!fields.points) {
-      fields.points = { id: {} }
     }
   }
 

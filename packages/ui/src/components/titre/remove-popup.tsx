@@ -4,7 +4,7 @@ import { FunctionalComponent } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { Alert } from '@/components/_ui/alert'
 import { TitreApiClient } from './titre-api-client'
-import { TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 interface Props {
   titreId: TitreId
   titreNom: string

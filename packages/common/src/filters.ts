@@ -7,7 +7,7 @@ import { SubstancesLegales, substanceLegaleIdValidator } from './static/substanc
 import { domaineIdValidator, sortedDomaines } from './static/domaines.js'
 import { titresStatutsArray, titreStatutIdValidator } from './static/titresStatuts.js'
 import { sortedTitreTypesTypes, titreTypeTypeIdValidator } from './static/titresTypesTypes.js'
-import { titreIdValidator } from './titres.js'
+import { titreIdValidator } from './validators/titres.js'
 import { z, ZodType } from 'zod'
 import { entrepriseIdValidator, Entreprise } from './entreprise.js'
 import { activiteTypeIdValidator, sortedActivitesTypes } from './static/activitesTypes.js'
@@ -173,14 +173,6 @@ export const caminoFiltres = {
     lazy: false,
     validator: z.array(caminoAnneeValidator),
   },
-
-  titresTerritoires: {
-    id: 'titresTerritoires',
-    type: 'input',
-    name: 'Territoires',
-    placeholder: 'Commune, département, région, …',
-    validator: z.string(),
-  },
   demarchesTypesIds: {
     id: 'demarchesTypesIds',
     name: 'Types de démarche',
@@ -248,7 +240,6 @@ export const demarchesFiltresNames = [
   'entreprisesIds',
   'substancesIds',
   'references',
-  'titresTerritoires',
   'demarchesTypesIds',
   'travauxTypesIds',
   'demarchesStatutsIds',
@@ -275,7 +266,6 @@ export const activitesFiltresNames = [
   'entreprisesIds',
   'substancesIds',
   'references',
-  'titresTerritoires',
   'domainesIds',
   'typesIds',
   'statutsIds',

@@ -5,7 +5,6 @@
 # import * from 'geojsons.graphql'
 # import * from 'metas-activites.graphql'
 # import * from 'metas.graphql'
-# import * from 'points.graphql'
 # import * from 'statistiques.graphql'
 # import * from 'substances.graphql'
 # import * from 'territoires.graphql'
@@ -50,11 +49,8 @@ type Query {
     statutsIds: [ID]
     substancesIds: [ID]
     entreprisesIds: [ID]
-    substances: String
     noms: String
-    entreprises: String
     references: String
-    territoires: String
     communes: String
     departements: [String]
     regions: [String]
@@ -175,15 +171,6 @@ type Query {
   definitions: [Definition]
 
   pays: [Pays]
-
-  "Retourne des points et les informations du périmètre à partir d’un fichier GeoJson ou Shape"
-  pointsImporter(fileUpload: FileUpload!, geoSystemeId: String!, demarcheId: String!, etapeTypeId: String!): PointsImport
-
-  "Calcule les informations relatives au périmètre d’une nouvelle étape"
-  perimetreInformations(points: [InputPoint]!, demarcheId: String!, etapeTypeId: String!): PerimetreInformations
-
-  "Calcule les informations relatives au périmètre d’une étape existante"
-  titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
   journaux(page: Int!, recherche: String, titresIds: [String]): Journaux
 }

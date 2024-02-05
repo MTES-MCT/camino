@@ -6,7 +6,7 @@ import { titresGet } from '../../../database/queries/titres.js'
 import { isTitreValide, TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from 'camino-common/src/static/substancesFiscales.js'
 import { Departements, departementsMetropole, toDepartementId } from 'camino-common/src/static/departement.js'
-import { REGION_IDS } from 'camino-common/src/static/region.js'
+import { REGION_IDS, regions } from 'camino-common/src/static/region.js'
 import { apiOpenfiscaCalculate, OpenfiscaRequest, redevanceCommunale, redevanceDepartementale, substanceFiscaleToInput } from '../../../tools/api-openfisca/index.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
@@ -43,11 +43,10 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
     {
       domainesIds: ['m'],
       typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx'],
-      territoires: 'FR',
+      regions: regions.filter(({ paysId }) => paysId === 'FR').map(({ id }) => id),
     },
     {
       fields: {
-        surfaceEtape: { id: {} },
         demarches: {
           etapes: { id: {} },
           type: { id: {} },
@@ -62,17 +61,17 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = async (): Promise<Statis
       const isValide = isTitreValide(titre.titreStatutId)
       const instructionEnCours = [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire].includes(titre.titreStatutId)
       if (isValide || titre.titreStatutId === TitresStatutIds.DemandeInitiale) {
-        if (!titre.surfaceEtape) {
+        if (!titre.pointsEtape) {
           console.warn(`ce titre ${titre.slug} n'a pas de surface`)
         }
         if (['arm', 'apm', 'prm'].includes(titre.typeId!)) {
-          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
+          acc.surfaceExploration += titre.pointsEtape?.surface ?? 0
           if (instructionEnCours) {
             acc.titres.instructionExploration++
           }
         } else {
           if (isValide) {
-            acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
+            acc.surfaceExploitation += titre.pointsEtape?.surface ?? 0
           }
           if (instructionEnCours) {
             acc.titres.instructionExploitation++

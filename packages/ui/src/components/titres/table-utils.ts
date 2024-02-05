@@ -3,7 +3,6 @@ import { List } from '../_ui/list'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
 import { TitreNom } from '../_common/titre-nom'
 import { TitreTypeTypeNom } from '../_common/titre-type-type-nom'
-import { CoordonneesIcone } from '../_common/coordonnees-icone'
 import { ActivitesPills } from '../activites/activites-pills'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { Departement, Departements, toDepartementId } from 'camino-common/src/static/departement'
@@ -83,6 +82,7 @@ export const referencesColumn: Column<'references'> = {
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
+  noSort: true,
 }
 export const titresColonnes = [
   nomColumn,
@@ -180,11 +180,6 @@ export const titresLignesBuild = (titres: TitreForTable[], activitesCol: boolean
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),
       domaine: domaineCell({ domaineId: getDomaineId(titre.typeId) }),
-      coordonnees: {
-        component: markRaw(CoordonneesIcone),
-        props: { coordonnees: titre.coordonnees },
-        value: titre.coordonnees ? '·' : '',
-      },
       type: typeCell(titre.typeId),
       statut: statutCell({ titre_statut_id: titre.titreStatutId }),
       substances: {

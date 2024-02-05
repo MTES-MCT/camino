@@ -37,9 +37,6 @@ export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTy
     newEtape.titulaires = apiEtape.titulaires
     newEtape.amodiataires = apiEtape.amodiataires
     newEtape.substances = apiEtape.substances
-    newEtape.groupes = apiEtape.groupes
-    newEtape.geoSystemeIds = apiEtape.geoSystemeIds
-    newEtape.geoSystemeOpposableId = apiEtape.geoSystemeOpposableId
   }
   // si on change le type d'étape (fondamentale -> fondamentale)
   // alors on garde les propriétés actuelles
@@ -52,9 +49,6 @@ export const etapeHeritageBuild = (stateEtape, apiEtape, titreTypeId, demarcheTy
     newEtape.titulaires = stateEtape.titulaires
     newEtape.amodiataires = stateEtape.amodiataires
     newEtape.substances = stateEtape.substances
-    newEtape.groupes = stateEtape.groupes
-    newEtape.geoSystemeIds = stateEtape.geoSystemeIds
-    newEtape.geoSystemeOpposableId = stateEtape.geoSystemeOpposableId
   }
 
   if (apiEtape.heritageContenu && Object.keys(apiEtape.heritageContenu).length) {

@@ -7,7 +7,7 @@ import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { toCommuneId } from 'camino-common/src/static/communes'
 import { toUtilisateurId } from 'camino-common/src/roles'
-import { titreIdValidator } from 'camino-common/src/titres'
+import { titreIdValidator } from 'camino-common/src/validators/titres'
 import { vueRouter } from 'storybook-vue3-router'
 import { ApiClient } from '@/api/api-client'
 
@@ -183,10 +183,6 @@ const completeEntreprise: EntrepriseType = {
       slug: 'slugTitre1',
       nom: 'titre 1 nom',
       typeId: 'arm',
-      coordonnees: {
-        x: -52.2567292479798,
-        y: 4.21739209644104,
-      },
       titreStatutId: 'ech',
       substances: ['auru'],
       activitesEnConstruction: null,
@@ -208,10 +204,6 @@ const completeEntreprise: EntrepriseType = {
       slug: 'slugtitre',
       nom: 'NomTitre',
       typeId: 'axm',
-      coordonnees: {
-        x: -52.501264330237845,
-        y: 4.270507245123385,
-      },
       titreStatutId: 'ech',
       substances: ['auru'],
       activitesEnConstruction: 0,
@@ -239,10 +231,6 @@ const completeEntreprise: EntrepriseType = {
       slug: 'slug3',
       nom: 'Nom titre 3',
       typeId: 'arm',
-      coordonnees: {
-        x: -52.2331344122413,
-        y: 4.225520523981365,
-      },
       titreStatutId: 'ech',
       substances: ['auru'],
       activitesEnConstruction: null,
@@ -266,10 +254,6 @@ const completeEntreprise: EntrepriseType = {
       slug: 'slug3',
       nom: 'Nom titre 3',
       typeId: 'arm',
-      coordonnees: {
-        x: -52.2331344122413,
-        y: 4.225520523981365,
-      },
       titreStatutId: 'ech',
       substances: ['auru'],
       activitesEnConstruction: null,

@@ -17,6 +17,7 @@ import { TITRES_TYPES_TYPES_IDS } from './static/titresTypesTypes.js'
 import { UniteId, uniteIdValidator, UNITE_IDS, Unites } from './static/unites.js'
 import { capitalize } from './strings.js'
 import { foretIdValidator } from './static/forets.js'
+import { featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -34,16 +35,6 @@ export const entreprisesByEtapeIdValidator = z.object({
 })
 
 export type EntreprisesByEtapeId = z.infer<typeof entreprisesByEtapeIdValidator>
-
-const multipolygonPositionValidator = z.tuple([z.number(), z.number()])
-export const multiPolygonValidator = z.object({
-  type: z.literal('MultiPolygon'),
-  coordinates: z.array(z.array(z.array(multipolygonPositionValidator))),
-})
-export type MultiPolygon = z.infer<typeof multiPolygonValidator>
-
-export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.null() })
-export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
 /**
  * @deprecated don't expose, don't use
@@ -66,6 +57,16 @@ const demarcheEtapeCommonValidator = z.object({
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
 
+const etapePerimetreValidator = z.object({
+  geojson4326_perimetre: featureMultiPolygonValidator,
+  geojson4326_points: featureCollectionPointsValidator.nullable(),
+  surface: z.number(),
+  communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
+  secteurs_maritimes: z.array(secteurMaritimeValidator),
+  sdom_zones: z.array(sdomZoneIdValidator),
+  forets: z.array(foretIdValidator),
+})
+
 const demarcheEtapeFondamentaleValidator = z.intersection(
   z.object({
     etape_type_id: etapeTypeIdFondamentaleValidator,
@@ -76,16 +77,7 @@ const demarcheEtapeFondamentaleValidator = z.intersection(
       substances: z.array(substanceLegaleIdValidator).nullable(),
       titulaires: z.array(entreprisesByEtapeIdValidator).nullable(),
       amodiataires: z.array(entreprisesByEtapeIdValidator).nullable(),
-      perimetre: z
-        .object({
-          geojsonMultiPolygon: featureMultiPolygonValidator.nullable(),
-          surface: z.number().nullable(),
-          communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
-          secteurs_maritimes: z.array(secteurMaritimeValidator),
-          sdom_zones: z.array(sdomZoneIdValidator),
-          forets: z.array(foretIdValidator),
-        })
-        .nullable(),
+      perimetre: etapePerimetreValidator.nullable(),
     }),
   }),
   demarcheEtapeCommonValidator

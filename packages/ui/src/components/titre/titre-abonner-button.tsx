@@ -1,5 +1,5 @@
 import { HTMLAttributes, defineComponent, onMounted, ref } from 'vue'
-import { TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { User } from 'camino-common/src/roles'
 import { DsfrButton } from '../_ui/dsfr-button'

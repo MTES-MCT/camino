@@ -46,12 +46,20 @@ const etape: EtapeFondamentale = {
           nom: 'étape précédente',
         },
         substances: ['arge'],
+        titulaires: [],
+        amodiataires: [],
+        dateDebut: null,
+        dateFin: undefined,
+        duree: undefined,
       },
     },
     titulaires: {
       actif: false,
     },
     amodiataires: {
+      actif: false,
+    },
+    perimetre: {
       actif: false,
     },
   },

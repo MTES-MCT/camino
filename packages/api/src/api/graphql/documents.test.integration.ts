@@ -10,7 +10,7 @@ import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, afterEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { newDocumentId } from '../../database/models/_format/id-create.js'
-import { titreSlugValidator } from 'camino-common/src/titres.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 console.info = vi.fn()
 console.error = vi.fn()

@@ -10,7 +10,6 @@ import { titresDemarchesOrdreUpdate } from './processes/titres-demarches-ordre-u
 import { titresPublicUpdate } from './processes/titres-public-update.js'
 import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
 import { logsUpdate } from './_logs-update.js'
-import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.js'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 import type { Pool } from 'pg'
@@ -41,7 +40,6 @@ export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | 
     const titresPublicUpdated = await titresPublicUpdate([titreId])
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
-    const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
 
@@ -55,7 +53,6 @@ export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | 
       titresDemarchesDatesUpdated,
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
-      titresCoordonneesUpdated,
       titresActivitesCreated,
       titresActivitesPropsUpdated,
       titresUpdatedIndex,

@@ -8,10 +8,6 @@ const fragmentTitres = gql`
     slug
     nom
     typeId
-    coordonnees {
-      x
-      y
-    }
     titreStatutId
     substances
     activitesEnConstruction

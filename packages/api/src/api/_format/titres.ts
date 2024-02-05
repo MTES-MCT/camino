@@ -1,13 +1,11 @@
-import { ITitre, IGeoJson, IFields, ITitreDemarche } from '../../types.js'
-
-import { geojsonFeatureMultiPolygon, geojsonFeatureCollectionPoints } from '../../tools/geojson.js'
+import { ITitre, IFields, ITitreDemarche } from '../../types.js'
 
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
@@ -22,7 +20,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
       titreStatutId: t.titreStatutId,
       typeId: t.typeId,
       type: t.type,
-      points: t.points,
       secteursMaritime: t.secteursMaritime,
       forets: t.forets,
       communes: t.communes,
@@ -32,31 +29,12 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
 
   if (isNullOrUndefined(fields)) return t
 
-  if (isNotNullNorUndefined(fields.geojsonMultiPolygon) && t.points?.length) {
-    t.geojsonMultiPolygon = geojsonFeatureMultiPolygon(t.points)
-  }
-
-  if (fields.geojsonPoints && t.points?.length) {
-    t.geojsonPoints = geojsonFeatureCollectionPoints(t.points) as IGeoJson
-  }
-
-  if (fields.geojsonCentre && t.coordonnees && t.propsTitreEtapesIds.points) {
-    t.geojsonCentre = {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [t.coordonnees.x, t.coordonnees.y],
-      },
-      properties: { etapeId: t.propsTitreEtapesIds.points },
-    }
-  }
-
   if (fields.demarches && t.demarches?.length) {
     t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))
   }
 
-  if (fields.surface && t.surfaceEtape) {
-    t.surface = t.surfaceEtape.surface
+  if (fields.surface && t.pointsEtape) {
+    t.surface = t.pointsEtape.surface
   }
 
   if (fields.activites && t.activites?.length) {

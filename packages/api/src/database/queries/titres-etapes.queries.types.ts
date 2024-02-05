@@ -1,5 +1,4 @@
 /** Types generated for queries found in "src/database/queries/titres-etapes.queries.ts" */
-export type numberArray = (number)[];
 
 /** 'InsertTitreEtapeEntrepriseDocumentInternal' parameters type */
 export interface IInsertTitreEtapeEntrepriseDocumentInternalParams {
@@ -85,28 +84,6 @@ export interface IGetTitulairesByEtapeIdQueryDbResult {
 export interface IGetTitulairesByEtapeIdQueryDbQuery {
   params: IGetTitulairesByEtapeIdQueryDbParams;
   result: IGetTitulairesByEtapeIdQueryDbResult;
-}
-
-/** 'GetPointsByEtapeIdQueryDb' parameters type */
-export interface IGetPointsByEtapeIdQueryDbParams {
-  etapeId: string;
-}
-
-/** 'GetPointsByEtapeIdQueryDb' return type */
-export interface IGetPointsByEtapeIdQueryDbResult {
-  contour: number;
-  coordonnees: numberArray;
-  description: string | null;
-  groupe: number;
-  id: string;
-  nom: string | null;
-  point: number;
-}
-
-/** 'GetPointsByEtapeIdQueryDb' query type */
-export interface IGetPointsByEtapeIdQueryDbQuery {
-  params: IGetPointsByEtapeIdQueryDbParams;
-  result: IGetPointsByEtapeIdQueryDbResult;
 }
 
 /** 'GetAmodiatairesByEtapeIdQueryDb' parameters type */

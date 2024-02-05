@@ -1,4 +1,4 @@
-import { QueryBuilder, raw } from 'objection'
+import { QueryBuilder } from 'objection'
 
 import { stringSplit } from './_utils.js'
 
@@ -6,10 +6,9 @@ import Titres from '../models/titres.js'
 import TitresDemarches from '../models/titres-demarches.js'
 import TitresActivites from '../models/titres-activites.js'
 import { DepartementId, departements as departementsStatic, isDepartementId } from 'camino-common/src/static/departement.js'
-import { RegionId, regions as regionsStatic } from 'camino-common/src/static/region.js'
-import { isPaysId } from 'camino-common/src/static/pays.js'
+import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes, getSecteurs } from 'camino-common/src/static/facades.js'
-import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, onlyUnique } from 'camino-common/src/typescript-tools.js'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'
@@ -32,9 +31,7 @@ export const titresFiltersQueryModify = (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -48,9 +45,7 @@ export const titresFiltersQueryModify = (
     substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
-    entreprises?: string | null
     references?: string | null
-    territoires?: string | null
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
@@ -60,17 +55,16 @@ export const titresFiltersQueryModify = (
   name: ITitreTableName = 'titres',
   root: ITitreRootName = 'titres'
 ) => {
-  if (ids && ids.length > 0) {
+  if (isNotNullNorUndefinedNorEmpty(ids)) {
     q.whereIn(`${name}.id`, ids)
   }
 
-  if (perimetre?.length === 4) {
-    q.leftJoinRelated(jointureFormat(name, 'points'))
-    q.whereRaw(`('(' || ? || ',' || ? || '),(' || ? || ',' || ? || ')')::box @> ?? `, [...perimetre, 'points.coordonnees'])
-    q.groupBy('titres.id')
+  if (isNotNullNorUndefinedNorEmpty(perimetre) && perimetre.length === 4) {
+    q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
+    q.whereRaw(`ST_INTERSECTS(??, st_setsrid('BOX(${perimetre[0]} ${perimetre[1]}, ${perimetre[2]} ${perimetre[3]})'::box2d, 4326)) is true`, ['pointsEtape.geojson4326_perimetre'])
   }
 
-  if (domainesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(domainesIds)) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -78,11 +72,11 @@ export const titresFiltersQueryModify = (
     q.whereRaw(`right(${name}.type_id, 1 ) in (${domainesIds.map(() => '?').join(',')})`, domainesIds)
   }
 
-  if (typesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(typesIds)) {
     q.whereRaw(`left( ${name}.type_id, 2 ) in (${typesIds.map(() => '?').join(',')})`, typesIds)
   }
 
-  if (statutsIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(statutsIds)) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -90,7 +84,7 @@ export const titresFiltersQueryModify = (
     q.whereIn(`${name}.titreStatutId`, statutsIds)
   }
 
-  if (substancesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(substancesIds)) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -104,7 +98,7 @@ export const titresFiltersQueryModify = (
     })
   }
 
-  if (entreprisesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(entreprisesIds)) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -116,7 +110,7 @@ export const titresFiltersQueryModify = (
     })
   }
 
-  if (noms) {
+  if (isNotNullNorUndefined(noms) && noms !== '') {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
@@ -126,31 +120,7 @@ export const titresFiltersQueryModify = (
     })
   }
 
-  if (entreprises) {
-    const entreprisesArray = stringSplit(entreprises)
-
-    let fields = ['titulaires:etablissements.nom', 'titulaires.nom', 'titulaires.id', 'amodiataires:etablissements.nom', 'amodiataires.nom', 'amodiataires.id']
-
-    if (name === 'titre') {
-      fields = fields.map(field => fieldFormat(name, field))
-    }
-
-    q.leftJoinRelated(jointureFormat(name, '[titulaires.etablissements, amodiataires.etablissements]'))
-      .where(b => {
-        entreprisesArray.forEach(s => {
-          fields.forEach(f => {
-            b.orWhereRaw(`lower(??) like ?`, [f, `%${s.toLowerCase()}%`])
-          })
-        })
-      })
-      .groupBy(`${root}.id`)
-      .havingRaw(
-        `(${entreprisesArray.map(() => 'count(*) filter (where ' + fields.map(() => 'lower(??) like ?').join(' or ') + ') > 0').join(') and (')})`,
-        entreprisesArray.flatMap(e => fields.flatMap(f => [f, `%${e.toLowerCase()}%`]))
-      )
-  }
-
-  if (references) {
+  if (isNotNullNorUndefined(references) && references !== '') {
     const referencesArray = stringSplit(references).map(s => s.toLowerCase())
 
     let field: string
@@ -160,90 +130,41 @@ export const titresFiltersQueryModify = (
       field = 'titre.references'
     }
 
-    q.crossJoin(raw(`jsonb_array_elements(${field}) as titreRefs`))
-    q.where(b => {
-      referencesArray.forEach(s => {
-        b.orWhereRaw("lower(titreRefs->>'nom') like ?", [`%${s}%`])
-      })
-    })
-    q.groupBy(`${root}.id`)
+    q.whereRaw(`exists (select 1 from jsonb_array_elements(${field}) titreRefs where ${referencesArray.map(() => "lower(titreRefs->>'nom') like ?").join(' or ')})`, [
+      ...referencesArray.map(s => `%${s}%`),
+    ])
   }
 
-  // TODO 2023-03-01: demander à didier leclerc de mettre à jour le plugin camino qgis pour utiliser le split communes/regions/departements...
-  if (territoires) {
-    const territoiresArray = stringSplit(territoires)
-
-    const departementIds: DepartementId[] = territoiresArray.flatMap(territoire => {
-      const result: DepartementId[] = []
-      if (isPaysId(territoire)) {
-        result.push(...regionsStatic.filter(({ paysId }) => paysId === territoire).flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id)))
-      } else {
-        result.push(
-          ...regionsStatic
-            .filter(({ nom }) => nom.toLowerCase().includes(territoire.toLowerCase()))
-            .flatMap(({ id }) => departementsStatic.filter(({ regionId }) => id === regionId).map(({ id }) => id))
-        )
-
-        result.push(...departementsStatic.filter(({ nom, id }) => nom.toLowerCase().includes(territoire.toLowerCase()) || id === territoire).map(({ id }) => id))
-      }
-
-      return result
-    })
-
-    q.joinRaw(`join titres_etapes as territoires_points_etapes on territoires_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
-    q.joinRaw(`join jsonb_array_elements(territoires_points_etapes.communes) as c on true`)
-    q.joinRaw(`join communes on c->>'id' = communes.id`)
-      .where(b => {
-        territoiresArray.forEach(t => {
-          b.orWhereRaw('lower(communes.nom) like ? OR communes.id = ?', [`%${t.toLowerCase()}%`, t])
-        })
-        if (departementIds.length) {
-          b.orWhereRaw(
-            `((substring(c ->> 'id', 1, 2) != '97' and substring(c ->> 'id', 1, 2) in (${departementIds.map(() => '?').join(',')})) or substring(c ->> 'id', 1, 3) in (${departementIds
-              .map(() => '?')
-              .join(',')}))`,
-            [...departementIds, ...departementIds]
-          )
-        }
-      })
-      .groupBy(`${root}.id`)
-  }
-
-  if (communes) {
+  if (isNotNullNorUndefined(communes) && communes !== '') {
     const communesArray = stringSplit(communes)
 
     q.joinRaw(`join titres_etapes as communes_points_etapes on communes_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
-    q.joinRaw(`join jsonb_array_elements(communes_points_etapes.communes) as communes_filter_communes on true`)
-    q.joinRaw(`join communes as communes_filter_communes_communes on communes_filter_communes->>'id' = communes_filter_communes_communes.id`)
-
-      .where(b => {
-        communesArray.forEach(t => {
-          b.orWhereRaw('lower(communes_filter_communes_communes.nom) like ? OR communes_filter_communes_communes.id = ?', [`%${t.toLowerCase()}%`, t])
-        })
-      })
-      .groupBy(`${root}.id`)
+    q.whereRaw(
+      `exists (select 1 
+        from jsonb_array_elements(communes_points_etapes.communes) communes_filter_communes 
+        join communes as communes_filter_communes_communes on communes_filter_communes->>'id' = communes_filter_communes_communes.id
+      where ${communesArray.map(() => 'lower(communes_filter_communes_communes.nom) like ? OR communes_filter_communes_communes.id = ?').join(' or ')})`,
+      [...communesArray.flatMap(t => [`%${t.toLowerCase()}%`, t])]
+    )
   }
   let departementIds: DepartementId[] = []
   if (departements) {
     departementIds.push(...departements)
   }
 
-  if (regions?.length) {
+  if (isNotNullNorUndefinedNorEmpty(regions)) {
     departementIds.push(...departementsStatic.filter(({ regionId }) => regions.includes(regionId)).map(({ id }) => id))
   }
 
   departementIds = departementIds.filter(onlyUnique).filter(isDepartementId)
 
   if (departementIds.length > 0) {
-    q.joinRaw(`join titres_etapes as departements_points_etapes on departements_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`)
-      .joinRaw(`join jsonb_array_elements(departements_points_etapes.communes) as departements_filter_communes on true`)
-      .whereRaw(
-        `((substring(departements_filter_communes ->> 'id', 1, 2) != '97' and substring(departements_filter_communes ->> 'id', 1, 2) in (${departementIds
-          .map(() => '?')
-          .join(',')})) or substring(departements_filter_communes ->> 'id', 1, 3) in (${departementIds.map(() => '?').join(',')}))`,
-        [...departementIds, ...departementIds]
-      )
-      .groupBy(`${root}.id`)
+    q.joinRaw(`join titres_etapes as departements_points_etapes on departements_points_etapes.id = ${name}."props_titre_etapes_ids" #>> '{points}'`).whereRaw(
+      `exists (select 1 from jsonb_array_elements(departements_points_etapes.communes) departements_filter_communes where substring(departements_filter_communes ->> 'id', 1, 2) in (${departementIds
+        .map(() => '?')
+        .join(',')}) or substring(departements_filter_communes ->> 'id', 1, 3) in (${departementIds.map(() => '?').join(',')}))`,
+      [...departementIds, ...departementIds]
+    )
   }
 
   if (facadesMaritimes && facadesMaritimes.length > 0) {

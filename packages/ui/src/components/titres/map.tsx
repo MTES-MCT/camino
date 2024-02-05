@@ -9,7 +9,7 @@ import { getEntriesHardcore, getKeys, isNotNullNorUndefined } from 'camino-commo
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { routerQueryToNumber, routerQueryToNumberArray } from '@/router/camino-router-link'
-import { TitreId } from 'camino-common/src/titres'
+import { TitreId } from 'camino-common/src/validators/titres'
 export type TitreCarteParams = {
   zoom: number
   centre: [number, number]

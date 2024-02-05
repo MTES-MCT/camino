@@ -16,7 +16,8 @@ import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
-import { EditableTitre, TitreId } from 'camino-common/src/titres.js'
+import { EditableTitre } from 'camino-common/src/titres.js'
+import { TitreId } from 'camino-common/src/validators/titres.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -60,15 +61,14 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 }
 
 const titresColonnes = {
-  nom: { id: 'nom', groupBy: ['titres.nom'] },
-  domaine: { id: raw(`right( titres.type_id, 1 )`), groupBy: [] },
-  coordonnees: { id: 'coordonnees', groupBy: [] },
+  nom: { id: 'nom' },
+  domaine: { id: raw(`right( titres.type_id, 1 )`) },
+  coordonnees: { id: 'coordonnees' },
   type: { id: 'type:type.nom', relation: 'type.type' },
-  statut: { id: 'titreStatutId', groupBy: ['titres.titreStatutId'] },
+  statut: { id: 'titreStatutId' },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
-    groupBy: [],
   },
 } as Index<IColonne<string | RawBuilder>>
 
@@ -95,9 +95,7 @@ export const titresGet = async (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -117,9 +115,7 @@ export const titresGet = async (
     substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
-    entreprises?: string | null
     references?: string | null
-    territoires?: string | null
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
@@ -146,9 +142,7 @@ export const titresGet = async (
       substancesIds,
       entreprisesIds,
       noms,
-      entreprises,
       references,
-      territoires,
       communes,
       departements,
       regions,
@@ -162,23 +156,7 @@ export const titresGet = async (
       q.leftJoinRelated(titresColonnes[colonne].relation!)
     }
 
-    const groupBy = titresColonnes[colonne].groupBy as string[]
-
-    q.groupBy('titres.id')
-
-    if (groupBy) {
-      groupBy.forEach(gb => {
-        q.groupBy(gb)
-      })
-    } else {
-      q.groupBy(titresColonnes[colonne].id)
-    }
-
-    if (colonne === 'coordonnees') {
-      q.orderByRaw(`"coordonnees" notnull ${ordre}`)
-    } else {
-      q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
-    }
+    q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
   } else {
     if (noms?.length) {
       q.orderByRaw('case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom', [`${noms}%`])
@@ -216,9 +194,7 @@ export const titresCount = async (
     substancesIds,
     entreprisesIds,
     noms,
-    entreprises,
     references,
-    territoires,
     communes,
     departements,
     regions,
@@ -232,9 +208,7 @@ export const titresCount = async (
     substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
-    entreprises?: string | null
     references?: string | null
-    territoires?: string | null
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
@@ -255,9 +229,7 @@ export const titresCount = async (
       substancesIds,
       entreprisesIds,
       noms,
-      entreprises,
       references,
-      territoires,
       communes,
       departements,
       regions,

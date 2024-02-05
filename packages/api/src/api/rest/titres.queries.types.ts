@@ -51,3 +51,54 @@ export interface IGetDemarchesByTitreIdQueryDbQuery {
   result: IGetDemarchesByTitreIdQueryDbResult;
 }
 
+/** 'GetTitreByIdOrSlugDb' parameters type */
+export interface IGetTitreByIdOrSlugDbParams {
+  idOrSlug: string;
+}
+
+/** 'GetTitreByIdOrSlugDb' return type */
+export interface IGetTitreByIdOrSlugDbResult {
+  public_lecture: boolean;
+  titre_slug: string;
+  titre_type_id: string;
+}
+
+/** 'GetTitreByIdOrSlugDb' query type */
+export interface IGetTitreByIdOrSlugDbQuery {
+  params: IGetTitreByIdOrSlugDbParams;
+  result: IGetTitreByIdOrSlugDbResult;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' parameters type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' return type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbResult {
+  id: string;
+}
+
+/** 'GetTitulairesAmodiatairesByTitreIdDb' query type */
+export interface IGetTitulairesAmodiatairesByTitreIdDbQuery {
+  params: IGetTitulairesAmodiatairesByTitreIdDbParams;
+  result: IGetTitulairesAmodiatairesByTitreIdDbResult;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' parameters type */
+export interface IGetAdministrationsLocalesByTitreIdDbParams {
+  titreId: string;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' return type */
+export interface IGetAdministrationsLocalesByTitreIdDbResult {
+  communes: Json;
+  secteurs_maritime: Json;
+}
+
+/** 'GetAdministrationsLocalesByTitreIdDb' query type */
+export interface IGetAdministrationsLocalesByTitreIdDbQuery {
+  params: IGetAdministrationsLocalesByTitreIdDbParams;
+  result: IGetAdministrationsLocalesByTitreIdDbResult;
+}
+
