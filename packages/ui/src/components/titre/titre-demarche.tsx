@@ -123,7 +123,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
   return () => (
     <>
       {demarche.value !== null ? (
-        <>
+        <div>
           <div class="fr-grid-row fr-grid-row--middle">
             <h2 style={{ margin: 0 }}>{`${capitalize(DemarchesTypes[demarche.value.demarche_type_id].nom)}`}</h2>
             <DemarcheStatut class="fr-ml-2w" demarcheStatutId={demarche.value.demarche_statut_id} />
@@ -140,7 +140,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
 
           {demarche.value.description !== null && demarche.value.description !== '' ? <div class="fr-grid-row fr-mt-3w">{demarche.value.description} </div> : null}
 
-          <h4 class="fr-mt-3w fr-mb-0">Résumé</h4>
+          <h3 class="fr-mt-3w fr-mb-0">Résumé</h3>
 
           <div class="fr-pt-2w">
             <div class="fr-grid-row">
@@ -256,7 +256,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
               reload={props.demarcheDeleted}
             />
           ) : null}
-        </>
+        </div>
       ) : null}
     </>
   )
