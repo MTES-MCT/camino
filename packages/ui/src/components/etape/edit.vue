@@ -26,7 +26,7 @@
       />
     </Accordion>
 
-    <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
+    <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="true" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
       <PointsEdit :etape="etape" :titreTypeId="titreTypeId" :titreSlug="titreSlug" :apiClient="apiClient" :onEtapeChange="onEtapePerimetreChange" :completeUpdate="perimetreCompleteUpdate" />
     </Accordion>
 

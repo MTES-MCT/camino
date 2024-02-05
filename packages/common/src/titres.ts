@@ -125,7 +125,6 @@ export type TitrePropTitreEtapeFindDemarche<F extends Pick<DemarcheEtape, 'etape
 }
 
 // FIXME tests
-// FIXME le cadre d'affichage du périmètre dans l'héritage est cassé
 // FIXME faire plein de recette
 export const getMostRecentValuePropFromEtapeFondamentaleValide = <
   P extends 'titulaires' | 'amodiataires' | 'perimetre' | 'substances',
