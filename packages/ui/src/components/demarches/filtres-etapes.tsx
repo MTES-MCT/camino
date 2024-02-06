@@ -154,7 +154,7 @@ type EtapeTypeSearchProps = {
   class?: HTMLAttributes['class']
 }
 const EtapeTypeSearch = defineComponent<EtapeTypeSearchProps>(props => {
-  const overrideItems = computed(() => (props.initialEtapeTypeId !== null ? [EtapesTypes[props.initialEtapeTypeId]] : []))
+  const overrideItem = computed(() => (props.initialEtapeTypeId !== null ? EtapesTypes[props.initialEtapeTypeId] : null))
   const etapeTypeSearch = ref<string>('')
 
   const onInputSearchEtapeType = (searchTerm: string) => {
@@ -178,7 +178,7 @@ const EtapeTypeSearch = defineComponent<EtapeTypeSearchProps>(props => {
 
   return () => (
     <TypeAheadSingle
-      overrideItems={overrideItems.value}
+      overrideItem={overrideItem.value}
       props={{
         id: `select-etape-type-${props.index}`,
         placeholder: "Type d'étape",

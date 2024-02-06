@@ -50,7 +50,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
     search.value = item.toLowerCase()
   }
 
-  const overrideItems = [GeoSystemes[systemeGeographique.value]]
+  const overrideItem = GeoSystemes[systemeGeographique.value]
 
   const content = () => (
     <form>
@@ -61,7 +61,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
               Système géographique
             </label>
             <TypeAheadSingle
-              overrideItems={overrideItems}
+              overrideItem={overrideItem}
               props={{
                 id: 'geographic-system',
                 itemKey: 'id',

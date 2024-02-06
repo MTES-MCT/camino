@@ -24,6 +24,24 @@ const items: Item[] = [
 
 export const Single: StoryFn = () => (
   <TypeAheadSingle
+    overrideItem={null}
+    props={{
+      id: 'ello',
+      itemKey: 'id',
+      items,
+      placeholder: 'placeholder',
+      minInputLength: 3,
+      itemChipLabel: item => item.titre,
+      onInput,
+      onSelectItem: selectItem,
+    }}
+  />
+)
+
+export const SingleDisabled: StoryFn = () => (
+  <TypeAheadSingle
+    overrideItem={{ id: 'id1' }}
+    disabled={true}
     props={{
       id: 'ello',
       itemKey: 'id',
@@ -39,7 +57,7 @@ export const Single: StoryFn = () => (
 
 export const SingleWithInitialItem: StoryFn = () => (
   <TypeAheadSingle
-    overrideItems={[{ id: 'id1' }]}
+    overrideItem={{ id: 'id1' }}
     props={{
       id: 'ello',
       itemKey: 'id',

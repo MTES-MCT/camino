@@ -10,7 +10,6 @@ import { EtapeApiClient } from './etape-api-client'
 const meta: Meta = {
   title: 'Components/Etape/TypeEdit',
   component: TypeEdit,
-  argTypes: {},
 }
 export default meta
 
