@@ -3,7 +3,7 @@ import xlsx from 'xlsx'
 
 import { Index } from '../../types.js'
 
-const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisateurs' | 'entreprises', elements: Index<any>[], format: DownloadFormat) => {
+export const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisateurs' | 'entreprises', elements: Index<any>[], format: DownloadFormat) => {
   let contenu = ''
 
   const sheet = xlsx.utils.json_to_sheet(elements as Index<any>[])
@@ -29,5 +29,3 @@ const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisate
 
   return contenu
 }
-
-export { tableConvert }

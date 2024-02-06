@@ -7,6 +7,8 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { CaminoStatistiquesDataGouv, CaminoStatistiquesDataGouvId } from 'camino-common/src/static/statistiques.js'
 import { getCurrent } from 'camino-common/src/date.js'
+import xlsx from 'xlsx'
+import { contentTypes } from 'camino-common/src/rest.js'
 
 const commonIndicateurValues: Pick<
   StatistiquesDataGouv,
@@ -62,7 +64,17 @@ export const getDataGouvStats =
 
         result.push({ ...stat, ...commonIndicateurValues, valeur: utilisateurs[indicateur], date: getCurrent() })
       }
-      res.json(result)
+
+      if (req.query.format === 'csv') {
+        const sheet = xlsx.utils.json_to_sheet(result)
+        const response = xlsx.utils.sheet_to_csv(sheet)
+
+        res.header('Content-disposition', `inline; filename=camino_statistiques.csv`)
+        res.header('Content-Type', contentTypes.csv)
+        res.send(response)
+      } else {
+        res.json(result)
+      }
     } catch (e) {
       console.error(e)
 
