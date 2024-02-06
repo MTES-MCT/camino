@@ -366,6 +366,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     )
       throw new Error('droits insuffisants')
 
+    if (titreEtapeOld.typeId !== etape.typeId) throw new Error("Il est interdit d'éditer le type d'étape")
+
     if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId) throw new Error("la démarche n'existe pas")
 
     const titreDemarche = await titreDemarcheGet(

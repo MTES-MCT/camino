@@ -69,13 +69,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
       return true
     }
 
+    const hasSectionWithValue = props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
+    if (hasSectionWithValue) {
+      return true
+    }
     if (fondamentalePropsName in props.etape) {
       const { perimetre: _perimetre, ...fondamentale } = props.etape.fondamentale
 
-      return (
-        getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0)) ||
-        props.etape.sections_with_values.some(section => section.elements.filter(element => valeurFind(element) !== '–').length > 0)
-      )
+      return getValues(fondamentale).some(v => isNotNullNorUndefined(v) && (!Array.isArray(v) || v.length > 0))
     }
 
     return false
