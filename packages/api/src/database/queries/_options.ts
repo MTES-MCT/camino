@@ -97,7 +97,7 @@ const titresDemarches = {
   },
 }
 
-const titresActivitesRelateTrue = ['type', 'utilisateur']
+const titresActivitesRelateTrue = ['utilisateur']
 
 const titresActivites = {
   graph: `[utilisateur]`,

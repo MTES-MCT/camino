@@ -30,12 +30,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     fields.demarches.type = { id: {} }
   }
 
-  // ajoute la propriété `type` sur les activités
-  // pour savoir si une activité est liée à une administration
-  if (fields.activites && !fields.activites.type) {
-    fields.activites.type = { id: {} }
-  }
-
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {
     if (fields[key]) {
@@ -87,12 +81,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     }
 
     // ajouter titulaires et amodiataires
-  }
-
-  if (['activites', 'activite'].includes(parent)) {
-    if (!fields.type) {
-      fields.type = { id: {} }
-    }
   }
 
   // on a besoin des activités si elles sont absentes

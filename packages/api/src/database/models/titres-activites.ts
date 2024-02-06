@@ -2,7 +2,6 @@ import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
 import { ITitreActivite } from '../../types.js'
 import { idGenerate } from './_format/id-create.js'
-import ActivitesTypes from './activites-types.js'
 import Titres from './titres.js'
 import Utilisateurs from './utilisateurs.js'
 
@@ -33,15 +32,6 @@ class TitresActivites extends Model {
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: ActivitesTypes,
-      join: {
-        from: 'titresActivites.typeId',
-        to: 'activitesTypes.id',
-      },
-    },
-
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,

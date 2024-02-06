@@ -27,11 +27,6 @@ export const fieldsTitreAdd = (fields: IFields) => {
 // ajoute les démarches et les étapes sur une requête de titre
 // pour calculer ses sections en fonction des sections des étapes
 export const titresFieldsAdd = (fields: IFields) => {
-  if (fields.activites) {
-    if (!fields.activites.type) {
-      fields.activites.type = { id: {} }
-    }
-  }
 
   if (fields.substances) {
     if (!fields.substancesEtape) {

@@ -3,7 +3,6 @@ import { Model } from 'objection'
 import { IAdministration } from '../../types.js'
 
 import Utilisateurs from './utilisateurs.js'
-import ActivitesTypes from './activites-types.js'
 
 interface Administrations extends IAdministration {}
 
@@ -27,21 +26,7 @@ class Administrations extends Model {
         from: 'administrations.id',
         to: 'utilisateurs.administrationId',
       },
-    },
-
-    activitesTypesEmails: {
-      relation: Model.ManyToManyRelation,
-      modelClass: ActivitesTypes,
-      join: {
-        from: 'administrations.id',
-        through: {
-          from: 'administrations__activitesTypes__emails.administrationId',
-          to: 'administrations__activitesTypes__emails.activiteTypeId',
-          extra: ['email'],
-        },
-        to: 'activitesTypes.id',
-      },
-    },
+    }
   })
 }
 
