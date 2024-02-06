@@ -1,7 +1,7 @@
 import { ref, Ref, computed, onMounted, watch } from 'vue'
 import { CaminoMap } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import { clustersBuild, layersBuild, zones, TitreWithPoint, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
+import { clustersBuild, layersBuild, zones, TitreWithPerimetre, CaminoMarkerClusterGroup, LayerWithTitreId } from './mapUtil'
 import { DomaineId, isDomaineId } from 'camino-common/src/static/domaines'
 import { Router, onBeforeRouteLeave } from 'vue-router'
 import { Layer, LayerGroup, Marker, layerGroup } from 'leaflet'
@@ -16,7 +16,7 @@ export type TitreCarteParams = {
   perimetre: [number, number, number, number]
 } | null
 interface Props {
-  titres: { hash: string; titres: TitreWithPoint[] }
+  titres: { hash: string; titres: TitreWithPerimetre[] }
   updateCarte: (params: TitreCarteParams) => void
   router: Router
   loading: boolean
@@ -78,7 +78,7 @@ export const CaminoTitresMap = caminoDefineComponent<Props>(['titres', 'updateCa
   const layerIdToTitreIdDisplayed = ref<Record<TitreId, TitreId>>({})
 
   const previoushash = ref<string | null>(null)
-  const titresInit = ({ hash, titres }: { hash: string; titres: TitreWithPoint[] }) => {
+  const titresInit = ({ hash, titres }: { hash: string; titres: TitreWithPerimetre[] }) => {
     const titreIdsToBeOnMap = titres.map(({ id }) => id)
     const markersTitreIdsAlreadyInMap = Object.values(layerIdToTitreIdDisplayed.value)
     const geojsonsTitreIdsAlreadyInMap = Object.keys(geojsons.value) as TitreId[]

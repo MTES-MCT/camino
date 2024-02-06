@@ -15,7 +15,7 @@ import { DepartementId } from 'camino-common/src/static/departement'
 import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
-import { TitreWithPoint } from '../titres/mapUtil'
+import { TitreWithPerimetre } from '../titres/mapUtil'
 
 export type TitreForTable = {
   id: TitreId
@@ -82,7 +82,7 @@ export interface TitreApiClient {
     regions: RegionId[]
     facadesMaritimes: FacadesMaritimes[]
     perimetre?: [number, number, number, number]
-  }) => Promise<{ elements: TitreWithPoint[]; total: number }>
+  }) => Promise<{ elements: TitreWithPerimetre[]; total: number }>
   getTitresWithPerimetreForCarte: (params: {
     page?: number
     colonne?: string
@@ -100,7 +100,7 @@ export interface TitreApiClient {
     regions: RegionId[]
     facadesMaritimes: FacadesMaritimes[]
     perimetre?: [number, number, number, number]
-  }) => Promise<{ elements: TitreWithPoint[]; total: number }>
+  }) => Promise<{ elements: TitreWithPerimetre[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
   getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
 }
