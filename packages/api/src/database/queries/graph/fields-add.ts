@@ -2,7 +2,7 @@ import { FieldsTitre } from '../_options'
 
 // ajoute les champs nécessaire pour obtenir le sous-objet titre
 // pour vérifier si l'utilisateur a les droits sur les titres
-export const fieldsTitreAdd = <T extends {titre?: FieldsTitre}>(fields: T): T => {
+export const fieldsTitreAdd = <T extends { titre?: FieldsTitre }>(fields: T): T => {
   if (!fields.titre) {
     fields.titre = {
       id: {},
@@ -27,7 +27,6 @@ export const fieldsTitreAdd = <T extends {titre?: FieldsTitre}>(fields: T): T =>
 // ajoute les démarches et les étapes sur une requête de titre
 // pour calculer ses sections en fonction des sections des étapes
 export const titresFieldsAdd = (fields: FieldsTitre) => {
-
   if (fields.substances) {
     if (!fields.substancesEtape) {
       fields.substancesEtape = { id: {} }

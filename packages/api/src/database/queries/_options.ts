@@ -166,7 +166,7 @@ export default {
   journaux,
 }
 
-export type FieldId = {id?: Record<string, never>}
+export type FieldId = { id?: Record<string, never> }
 export type FieldsEntreprise = FieldId & {
   utilisateurs?: FieldsUtilisateur
   etablissements?: FieldId
@@ -210,9 +210,9 @@ export type FieldsDemarche = FieldId & {
   type?: FieldId
 }
 
-export type FieldsEtape = FieldId &{
-  titulaires?: FieldsEntreprise,
-  amodiataires?: FieldsEntreprise,
+export type FieldsEtape = FieldId & {
+  titulaires?: FieldsEntreprise
+  amodiataires?: FieldsEntreprise
   demarche?: FieldsDemarche
   type?: FieldId
   documents?: FieldsDocument
@@ -224,5 +224,4 @@ export type FieldsActivite = FieldId & {
 
 export type FieldsUtilisateurTitre = FieldId & {
   utilisateur?: FieldsUtilisateur
-
 }

@@ -26,7 +26,7 @@ class Administrations extends Model {
         from: 'administrations.id',
         to: 'utilisateurs.administrationId',
       },
-    }
+    },
   })
 }
 

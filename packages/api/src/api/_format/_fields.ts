@@ -1,7 +1,6 @@
 import { FieldsDemarche, FieldsEtape, FieldsTitre } from '../../database/queries/_options'
 
-export const titreEtapeFormatFields: FieldsEtape = {
-}
+export const titreEtapeFormatFields: FieldsEtape = {}
 
 export const titreDemarcheFormatFields: FieldsDemarche = {
   etapes: titreEtapeFormatFields,
