@@ -105,7 +105,7 @@ export const clustersBuild = () =>
     return clusters
   }, {})
 
-export interface TitreWithPoint extends CommonTitre {
+export interface TitreWithPerimetre extends CommonTitre {
   geojson4326Perimetre?: FeatureMultiPolygon
   geojson4326Centre?: GeojsonPoint
 }
@@ -127,7 +127,7 @@ const svgDomaineAnchor = (domaineId: DomaineId): string => {
 }
 
 export type LayerWithTitreId = Layer & { titreId: TitreId }
-export const layersBuild = (titres: TitreWithPoint[], router: Pick<Router, 'push'>, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
+export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, 'push'>, markersAlreadyInMap: TitreId[] = [], geojsonAlreadyInMap: TitreId[] = []) => {
   const div = document.createElement('div')
   const titleName = document.createElement('div')
   const listeTitulaires = document.createElement('ul')

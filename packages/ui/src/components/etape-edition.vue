@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky">
+    <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky" style="z-index: 100000">
       <div class="tablet-blob-1-3" />
       <FormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" @save="save" @depose="depose" />
     </div>

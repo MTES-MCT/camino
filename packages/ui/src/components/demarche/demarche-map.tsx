@@ -8,7 +8,7 @@ import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
-import { TitreWithPoint } from '../titres/mapUtil'
+import { TitreWithPerimetre } from '../titres/mapUtil'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
 import { getDomaineId } from 'camino-common/src/static/titresTypes'
@@ -33,7 +33,7 @@ type Props = {
   } | null
 }
 
-type TitreValideProperties = Pick<TitreWithPoint, 'nom' | 'slug' | 'typeId' | 'titreStatutId'> & { domaineColor: string }
+type TitreValideProperties = Pick<TitreWithPerimetre, 'nom' | 'slug' | 'typeId' | 'titreStatutId'> & { domaineColor: string }
 
 const baseMapNames = {
   'OSM / fr': 'osm',
@@ -267,7 +267,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       const bounds = map.value.getBounds()
 
       try {
-        const res: { elements: TitreWithPoint[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
+        const res: { elements: TitreWithPerimetre[] } = await props.neighbours.apiClient.getTitresWithPerimetreForCarte({
           statutsIds: [TitresStatutIds.Valide, TitresStatutIds.ModificationEnInstance, TitresStatutIds.SurvieProvisoire],
           perimetre: [...bounds.getNorthWest().toArray(), ...bounds.getSouthEast().toArray()],
           communes: '',
@@ -346,6 +346,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     } else {
       const mapLibre: Map = new Map({
         container: mapRef.value,
+        cooperativeGestures: true,
         style,
         center: bounds.getCenter().toArray(),
         zoom: 16,

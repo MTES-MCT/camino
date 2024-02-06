@@ -10,7 +10,7 @@ import { AsyncData } from '@/api/client-rest'
 import { LocationQuery, useRouter } from 'vue-router'
 import { routerQueryToString } from '@/router/camino-router-link'
 import { titresColonnes, titresLignesBuild } from './titres/table-utils'
-import type { TitreWithPoint } from './titres/mapUtil'
+import type { TitreWithPerimetre } from './titres/mapUtil'
 import { displayPerimeterZoomMaxLevel } from './_map/util'
 import { apiClient } from '../api/api-client'
 import { TablePagination, getInitialParams } from './_ui/table-pagination'
@@ -45,7 +45,7 @@ export const Titres = defineComponent({
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
-    const titresForCarte = ref<{ hash: string; titres: TitreWithPoint[] }>({ hash: '', titres: [] })
+    const titresForCarte = ref<{ hash: string; titres: TitreWithPerimetre[] }>({ hash: '', titres: [] })
     const total = ref<number>(0)
 
     const paramsForTable = ref<TitresTablePaginationParams>(getInitialParams(router.currentRoute.value, titresColonnes))
