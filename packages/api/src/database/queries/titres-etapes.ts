@@ -1,5 +1,5 @@
-import { ITitreEtape, IFields } from '../../types.js'
-import options from './_options.js'
+import { ITitreEtape } from '../../types.js'
+import options, { FieldsEtape } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
@@ -10,7 +10,7 @@ import { User, UserNotNull } from 'camino-common/src/roles'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeIdOrSlug } from 'camino-common/src/etape.js'
 
-const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const titresEtapesQueryBuild = ({ fields }: { fields?: FieldsEtape }, user: User) => {
   const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : options.titresEtapes.graph
 
   const q = TitresEtapes.query().withGraphFetched(graph)
@@ -23,7 +23,7 @@ const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) =>
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
+const titreEtapeGet = async (titreEtapeId: EtapeIdOrSlug, { fields, fetchHeritage }: { fields?: FieldsEtape; fetchHeritage?: boolean }, user: User) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -47,7 +47,7 @@ const titresEtapesGet = async (
     etapesTypesIds?: string[] | null
     titresDemarchesIds?: string[] | null
   } = {},
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsEtape },
   user: User
 ): Promise<ITitreEtape[]> => {
   const q = titresEtapesQueryBuild({ fields }, user)

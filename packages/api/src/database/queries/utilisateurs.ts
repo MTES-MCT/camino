@@ -1,8 +1,8 @@
 import { RawBuilder, QueryBuilder } from 'objection'
 
-import { IFields, IUtilisateursColonneId, IColonne, IUtilisateurTitre, IUtilisateur, formatUser } from '../../types.js'
+import { IUtilisateursColonneId, IColonne, IUtilisateurTitre, IUtilisateur, formatUser } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsUtilisateur, FieldsUtilisateurTitre } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import { stringSplit } from './_utils.js'
@@ -35,7 +35,7 @@ const userGet = async (userId?: string): Promise<User> => {
   return undefined
 }
 
-const utilisateursQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const utilisateursQueryBuild = ({ fields }: { fields?: FieldsUtilisateur }, user: User) => {
   const graph = fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph
 
   const q = Utilisateurs.query().withGraphFetched(graph)
@@ -143,7 +143,7 @@ export const userByKeycloakIdGet = async (keycloakId: string | null | undefined)
   return undefined
 }
 
-const utilisateurGet = async (id: string, { fields }: { fields?: IFields } = {}, user: User) => {
+const utilisateurGet = async (id: string, { fields }: { fields?: FieldsUtilisateur } = {}, user: User) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
   return q.findById(id)
@@ -182,7 +182,7 @@ const utilisateursGet = async (
     noms?: string | null
     emails?: string | null
   },
-  { fields }: { fields?: IFields } = {},
+  { fields }: { fields?: FieldsUtilisateur } = {},
   user: User
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
@@ -232,7 +232,7 @@ const utilisateursCount = async (
     noms?: string | null
     emails?: string | null
   },
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsUtilisateur },
   user: User
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
@@ -242,7 +242,7 @@ const utilisateursCount = async (
   return q.resultSize()
 }
 
-const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields?: IFields }) =>
+const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields?: FieldsUtilisateur }) =>
   Utilisateurs.query()
     .insertGraph(utilisateur, options.utilisateurs.update)
     .withGraphFetched(fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph)
@@ -254,7 +254,7 @@ const utilisateurTitreCreate = async (utilisateurTitre: IUtilisateurTitre) => Ut
 
 const utilisateurTitreDelete = async (utilisateurId: string, titreId: string) => UtilisateursTitres.query().deleteById([utilisateurId, titreId])
 
-const utilisateursTitresGet = async (titreId: string, { fields }: { fields?: IFields }) =>
+const utilisateursTitresGet = async (titreId: string, { fields }: { fields?: FieldsUtilisateurTitre }) =>
   UtilisateursTitres.query()
     .where('titreId', titreId)
     .withGraphFetched(fields ? graphBuild(fields, 'utilisateursTitres', fieldsFormat) : options.utilisateursTitres.graph)

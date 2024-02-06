@@ -1,15 +1,15 @@
-import { IAdministrationActiviteTypeEmail, IFields } from '../../types.js'
+import { IAdministrationActiviteTypeEmail } from '../../types.js'
 
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
-import options from './_options.js'
+import options, { FieldsAdministration } from './_options.js'
 
 import Administrations from '../models/administrations.js'
 import { administrationsQueryModify } from './permissions/administrations.js'
 import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails.js'
 import { User } from 'camino-common/src/roles'
 
-const administrationsQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const administrationsQueryBuild = ({ fields }: { fields?: FieldsAdministration }, user: User) => {
   const graph = fields ? graphBuild(fields, 'administrations', fieldsFormat) : options.administrations.graph
 
   const q = Administrations.query().withGraphFetched(graph)
@@ -19,13 +19,13 @@ const administrationsQueryBuild = ({ fields }: { fields?: IFields }, user: User)
   return q
 }
 
-const administrationGet = async (id: string, { fields }: { fields?: IFields }, user: User) => {
+const administrationGet = async (id: string, { fields }: { fields?: FieldsAdministration }, user: User) => {
   const q = administrationsQueryBuild({ fields }, user)
 
   return q.findById(id)
 }
 
-const administrationsGet = async ({ fields }: { fields?: IFields }, user: User) => {
+const administrationsGet = async ({ fields }: { fields?: FieldsAdministration }, user: User) => {
   return administrationsQueryBuild({ fields }, user)
 }
 

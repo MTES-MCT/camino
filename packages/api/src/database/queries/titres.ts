@@ -1,8 +1,8 @@
 import { raw, RawBuilder } from 'objection'
 
-import { IColonne, IFields, Index, ITitre, ITitreColonneId } from '../../types.js'
+import { IColonne, Index, ITitre, ITitreColonneId } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsTitre } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import { titresFieldsAdd } from './graph/fields-add.js'
@@ -28,7 +28,7 @@ import { TitreId } from 'camino-common/src/validators/titres.js'
  * @returns la requête
  *
  */
-const titresQueryBuild = ({ fields }: { fields?: IFields }, user: User, demandeEnCours?: boolean | null) => {
+const titresQueryBuild = ({ fields }: { fields?: FieldsTitre }, user: User, demandeEnCours?: boolean | null) => {
   const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   const q = Titres.query().withGraphFetched(graph)
@@ -47,7 +47,7 @@ const titresQueryBuild = ({ fields }: { fields?: IFields }, user: User, demandeE
  * @returns un titre
  *
  */
-export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User): Promise<DBTitre | undefined> => {
+export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: FieldsTitre; fetchHeritage?: boolean }, user: User): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -123,7 +123,7 @@ export const titresGet = async (
     slugs?: string[] | null
     demandeEnCours?: boolean | null
   } = {},
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsTitre },
   user: User
 ): Promise<ITitre[]> => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
@@ -215,7 +215,7 @@ export const titresCount = async (
     facadesMaritimes?: FacadesMaritimes[] | null
     demandeEnCours?: boolean | null
   } = {},
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsTitre },
   user: User
 ) => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
@@ -250,7 +250,7 @@ export const titresCount = async (
  * @returns le nouveau titre
  *
  */
-export const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: IFields }): Promise<DBTitre> => {
+export const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: FieldsTitre }): Promise<DBTitre> => {
   const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   return Titres.query().withGraphFetched(graph).insertGraph(titre, options.titres.update)

@@ -73,7 +73,7 @@ enum TitreEtapesTravauxTypes {
   PorterAConnaissance = 'wpb',
 }
 
-interface IFields {
+export interface IFields {
   [key: string]: IFields
 }
 
@@ -510,7 +510,6 @@ interface IJournaux {
 export {
   TitreEtapesTravauxTypes,
   Index,
-  IFields,
   IAdministration,
   ICommune,
   IContenu,

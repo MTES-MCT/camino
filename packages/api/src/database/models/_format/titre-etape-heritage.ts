@@ -1,15 +1,16 @@
-import { IHeritageProps, IFields, IHeritageContenu } from '../../../types.js'
+import { IHeritageProps, IHeritageContenu } from '../../../types.js'
 import { userSuper } from '../../user-super.js'
 import { titreEtapeGet } from '../../queries/titres-etapes.js'
 import { newEtapeId } from './id-create.js'
 import { isHeritageProps } from 'camino-common/src/heritage.js'
 import { getKeys } from 'camino-common/src/typescript-tools.js'
+import { FieldsEtape } from '../../queries/_options'
 
 export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of getKeys(heritageProps, isHeritageProps)) {
     if (heritageProps[propId]?.etapeId) {
-      const fields = { type: { id: {} } } as IFields
-      if (['titulaires', 'amodiataires'].includes(propId)) {
+      const fields: FieldsEtape = { type: { id: {} } }
+      if (propId === 'titulaires' || propId === 'amodiataires') {
         fields[propId] = { id: {} }
       }
 
@@ -23,7 +24,7 @@ export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
 }
 
 export const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
-  const fields = { type: { id: {} } } as IFields
+  const fields: FieldsEtape = { type: { id: {} } }
   for (const sectionId of Object.keys(heritageContenu)) {
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {

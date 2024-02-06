@@ -2,10 +2,10 @@ import Journaux from '../models/journaux.js'
 import { create } from 'jsondiffpatch'
 import { Model, PartialModelGraph, RelationExpression, UpsertGraphOptions } from 'objection'
 import { journauxQueryModify } from './permissions/journaux.js'
-import { IFields, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
-import options from './_options.js'
+import options, { FieldId } from './_options.js'
 import { User } from 'camino-common/src/roles'
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import { JournauxQueryParams } from 'camino-common/src/journaux.js'
@@ -18,7 +18,7 @@ const diffPatcher = create({
   propertyFilter: (name: string) => !['slug', 'ordre', 'demarche', 'heritageProps'].includes(name),
 })
 
-export const journauxGet = async (params: JournauxQueryParams, { fields }: { fields?: IFields }, user: User) => {
+export const journauxGet = async (params: JournauxQueryParams, { fields }: { fields?: FieldId }, user: User) => {
   const graph = fields ? graphBuild(fields, 'journaux', fieldsFormat) : options.journaux.graph
 
   const q = Journaux.query().withGraphFetched(graph)

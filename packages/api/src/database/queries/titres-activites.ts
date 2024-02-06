@@ -1,8 +1,8 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import { ITitreActivite, IFields, ITitreActiviteColonneId, Index, IColonne } from '../../types.js'
+import { ITitreActivite, ITitreActiviteColonneId, Index, IColonne } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsActivite } from './_options.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import { fieldsTitreAdd } from './graph/fields-add.js'
 import graphBuild from './graph/build.js'
@@ -99,7 +99,7 @@ const titresActivitesFiltersQueryModify = (
  *
  */
 
-const titreActivitesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const titreActivitesQueryBuild = ({ fields }: { fields?: FieldsActivite }, user: User) => {
   const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
 
   const q = TitresActivites.query().withGraphFetched(graph)
@@ -124,7 +124,7 @@ const titreActivitesQueryBuild = ({ fields }: { fields?: IFields }, user: User) 
  *
  */
 
-const titreActiviteGet = async (id: string, { fields }: { fields?: IFields }, user: User) => {
+const titreActiviteGet = async (id: string, { fields }: { fields?: FieldsActivite }, user: User) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
   if (!q) return undefined
@@ -223,7 +223,7 @@ const titresActivitesGet = async (
     titresStatutsIds?: string[] | null
     titresIds?: string[] | null
   },
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsActivite },
   user: User
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
@@ -315,7 +315,7 @@ const titresActivitesCount = async (
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
   },
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsActivite },
   user: User
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)

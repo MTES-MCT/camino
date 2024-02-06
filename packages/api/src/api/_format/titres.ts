@@ -1,4 +1,4 @@
-import { ITitre, IFields, ITitreDemarche } from '../../types.js'
+import { ITitre, ITitreDemarche } from '../../types.js'
 
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
@@ -8,12 +8,13 @@ import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import { FieldsTitre } from '../../database/queries/_options'
 
 // optimisation possible pour un expert SQL
 // remplacer le contenu de ce fichier
 // par des requêtes SQL (dans /database/queries/titres)
 // qui retournent les données directement formatées
-export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
+export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) => {
   if ((t.confidentiel ?? false) === true) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
