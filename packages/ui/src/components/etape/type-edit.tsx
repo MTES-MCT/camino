@@ -8,7 +8,7 @@ import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 
@@ -105,43 +105,40 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                   <h5>Type</h5>
                 </div>
                 <div class="mb tablet-blob-2-3">
-                  {isNullOrUndefined(props.etape.typeId) ? (
-                    <TypeAheadSingle
-                      overrideItem={etapeTypeExistante.value}
-                      props={{
-                        id: 'select-etape-type',
-                        placeholder: '',
-                        items: [...items]
-                          .sort((a, _b) => (a.mainStep ? -1 : 1))
-                          .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
-                          .filter(({ nom }) => {
-                            return nom.toLowerCase().includes(etapeTypeSearch.value)
-                          })
-                          .filter(onlyUnique),
-                        minInputLength: 0,
-                        itemKey: 'id',
-                        itemChipLabel: item => item.nom,
-                        displayItemInList: item => displayItemInList(item, items),
-                        onSelectItem: (type: EtapeType | undefined) => {
-                          if (type) {
-                            etapeTypeSearch.value = ''
-                            possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
-                            if (possibleStatuts.value.length === 1) {
-                              etapeStatutId.value = possibleStatuts.value[0]
-                            } else {
-                              etapeStatutId.value = null
-                            }
-
-                            etapeTypeId.value = type.id
-                            props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                  <TypeAheadSingle
+                    overrideItem={etapeTypeExistante.value}
+                    disabled={isNotNullNorUndefined(props.etape.typeId)}
+                    props={{
+                      id: 'select-etape-type',
+                      placeholder: '',
+                      items: [...items]
+                        .sort((a, _b) => (a.mainStep ? -1 : 1))
+                        .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
+                        .filter(({ nom }) => {
+                          return nom.toLowerCase().includes(etapeTypeSearch.value)
+                        })
+                        .filter(onlyUnique),
+                      minInputLength: 0,
+                      itemKey: 'id',
+                      itemChipLabel: item => item.nom,
+                      displayItemInList: item => displayItemInList(item, items),
+                      onSelectItem: (type: EtapeType | undefined) => {
+                        if (type) {
+                          etapeTypeSearch.value = ''
+                          possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
+                          if (possibleStatuts.value.length === 1) {
+                            etapeStatutId.value = possibleStatuts.value[0]
+                          } else {
+                            etapeStatutId.value = null
                           }
-                        },
-                        onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
-                      }}
-                    />
-                  ) : (
-                    <>{props.etape.typeId}</>
-                  )}
+
+                          etapeTypeId.value = type.id
+                          props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                        }
+                      },
+                      onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
+                    }}
+                  />
                 </div>
               </div>
               <hr />
