@@ -90,9 +90,9 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
     }
   }
 
-  const overrideItems = ref<TitreForTitresRerchercherByNom[]>([])
+  const overrideItem = ref<TitreForTitresRerchercherByNom | null>(null)
   const selectItem = (item: TitreForTitresRerchercherByNom | undefined) => {
-    overrideItems.value = []
+    overrideItem.value = null
     props.onSelectedTitre(item)
   }
 
@@ -104,7 +104,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres'
         Rechercher
       </label>
       <TypeAheadSingle
-        overrideItems={overrideItems.value}
+        overrideItem={overrideItem.value}
         props={{
           id: props.id,
           itemKey: 'id',

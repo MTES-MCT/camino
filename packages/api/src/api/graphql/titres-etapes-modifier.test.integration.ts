@@ -12,6 +12,8 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -44,7 +46,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-async function etapeCreate() {
+async function etapeCreate(typeId?: EtapeTypeId) {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
@@ -61,7 +63,7 @@ async function etapeCreate() {
 
   const titreEtape = await titreEtapeCreate(
     {
-      typeId: 'mfr',
+      typeId: isNotNullNorUndefined(typeId) ? typeId : 'mfr',
       statutId: 'fai',
       ordre: 1,
       titreDemarcheId: titreDemarche.id,
@@ -155,7 +157,7 @@ describe('etapeModifier', () => {
   })
 
   test('peut modifier une étape mia avec un statut fai (utilisateur super)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate()
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('mia')
 
     const res = await graphQLCall(
       dbPool,
@@ -176,7 +178,7 @@ describe('etapeModifier', () => {
   })
 
   test('ne peut pas modifier une étape mia avec un statut fav (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate()
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('mia')
 
     const res = await graphQLCall(
       dbPool,
@@ -196,11 +198,11 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('statut de l\'étape "fav" invalide pour une type d\'étape mia pour une démarche de type octroi')
+    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 
   test('peut modifier une étape MEN sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate()
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('men')
     const res = await graphQLCall(
       dbPool,
       etapeModifierQuery,
@@ -210,7 +212,7 @@ describe('etapeModifier', () => {
           typeId: 'men',
           statutId: 'fai',
           titreDemarcheId,
-          date: '2018-01-01',
+          date: '2016-01-01',
         },
       },
       {
@@ -223,8 +225,7 @@ describe('etapeModifier', () => {
   })
 
   test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate()
-
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate('ede')
     const res = await graphQLCall(
       dbPool,
       etapeModifierQuery,
@@ -247,7 +248,7 @@ describe('etapeModifier', () => {
       }
     )
 
-    expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
+    expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
 })
 

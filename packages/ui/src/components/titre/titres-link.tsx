@@ -7,6 +7,7 @@ import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-
 import { TitreStatut } from '../_common/titre-statut'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   config: TitresLinkConfig
@@ -31,6 +32,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
   const selectedTitres = ref<TitreLink[]>([])
   const data = ref<AsyncData<LinkableTitre[]>>({ status: 'LOADING' })
 
+  const selectedTitre = computed<TitreLink | null>(() => (isNotNullNorUndefinedNorEmpty(selectedTitres.value) ? selectedTitres.value[0] : null))
   const init = async () => {
     try {
       data.value = { status: 'LOADING' }
@@ -95,7 +97,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
         <>
           {props.config.type === 'single' ? (
             <TypeAheadSingle
-              overrideItems={selectedTitres.value}
+              overrideItem={selectedTitre.value}
               props={{
                 id: 'titre-link-typeahead',
                 itemKey: 'id',

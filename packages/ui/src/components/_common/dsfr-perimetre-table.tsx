@@ -146,7 +146,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
       )
     }
   }
-  const overrideItems = [GeoSystemes[4326]]
+  const overrideItem = GeoSystemes[4326]
 
   const display = (geosystem: GeoSysteme<TransformableGeoSystemeId>) => {
     return (
@@ -162,7 +162,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <TypeAheadSingle
-        overrideItems={overrideItems}
+        overrideItem={overrideItem}
         props={{
           items: geoSystemeFiltered.value,
           itemChipLabel: item => `${item.nom} - (${item.id})`,

@@ -10,7 +10,6 @@ import { EtapeApiClient } from './etape-api-client'
 const meta: Meta = {
   title: 'Components/Etape/TypeEdit',
   component: TypeEdit,
-  argTypes: {},
 }
 export default meta
 
@@ -18,11 +17,11 @@ const onEtapeChange = action('onEtapeChange')
 const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
   getEtapesTypesEtapesStatuts: () => {
     return Promise.resolve([
-      { etapeStatutId: 'fai', etapeTypeId: 'mfr', mainStep: false },
-      { etapeStatutId: 'aco', etapeTypeId: 'mfr', mainStep: false },
-      { etapeStatutId: 'fai', etapeTypeId: 'css', mainStep: false },
-      { etapeStatutId: 'fai', etapeTypeId: 'mdp', mainStep: true },
-      { etapeStatutId: 'fai', etapeTypeId: 'apd', mainStep: true },
+      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: ETAPES_TYPES.demande, mainStep: false },
+      { etapeStatutId: 'aco', etapeTypeId: ETAPES_TYPES.demande, mainStep: false },
+      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'css', mainStep: false },
+      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'mdp', mainStep: true },
+      { etapeStatutId: ETAPES_STATUTS.FAIT, etapeTypeId: 'apd', mainStep: true },
     ])
   },
 }
@@ -105,6 +104,40 @@ export const Empty: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
+    }}
+  />
+)
+
+export const NoEtape: StoryFn = () => (
+  <TypeEdit
+    onEtapeChange={onEtapeChange}
+    etapeDate={toCaminoDate('2022-01-01')}
+    apiClient={{
+      getEtapesTypesEtapesStatuts: () => {
+        return Promise.resolve([])
+      },
+    }}
+    demarcheId={demarcheIdValidator.parse('demarcheID')}
+    etape={{
+      statutId: null,
+      typeId: 'mfr',
+    }}
+  />
+)
+
+export const SelectedEtapeNotPossible: StoryFn = () => (
+  <TypeEdit
+    onEtapeChange={onEtapeChange}
+    etapeDate={toCaminoDate('2022-01-01')}
+    apiClient={{
+      getEtapesTypesEtapesStatuts: () => {
+        return Promise.resolve([{ etapeTypeId: 'mcd', etapeStatutId: 'fai', mainStep: false }])
+      },
+    }}
+    demarcheId={demarcheIdValidator.parse('demarcheID')}
+    etape={{
+      statutId: null,
+      typeId: 'mfr',
     }}
   />
 )

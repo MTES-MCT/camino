@@ -6,8 +6,8 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 type TypeAheadRecord = Record<string | symbol | number, any>
 
 type Props<T extends TypeAheadRecord, K extends keyof T> = {
-  // TODO 2024-01-17 ça devrait être overrideItem, il ne peut y avoir qu'une seule valeur ici
-  overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
+  overrideItem: (Pick<T, K> & Partial<Omit<T, K>>) | null
+  disabled?: boolean
   props: {
     id?: string
     itemKey: K
@@ -25,16 +25,19 @@ type Props<T extends TypeAheadRecord, K extends keyof T> = {
 export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>) => {
   const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
   const wrapperId = computed(() => `${id}_wrapper`)
-  const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.props.items.find(i => i[props.props.itemKey] === o[props.props.itemKey])).filter(isNotNullNorUndefined)
-  const selectedItems = ref<T[]>(getItems(props.overrideItems ?? [])) as Ref<T[]>
+  const getItem = (item: (Pick<T, K> & Partial<Omit<T, K>>) | null): T | null => props.props.items.find(i => i[props.props.itemKey] === item?.[props.props.itemKey]) ?? null
+  const selectedItem: Ref<T | null> = ref<T | null>(getItem(props.overrideItem))
 
-  const input = ref<string>(isNotNullNorUndefinedNorEmpty(props.overrideItems) ? props.props.itemChipLabel(getItems(props.overrideItems)[0]) : '')
+  const initItem = getItem(props.overrideItem)
+  const input = ref<string>(initItem !== null ? props.props.itemChipLabel(initItem) : '')
 
   watch(
-    () => props.overrideItems,
-    newItems => {
-      selectedItems.value = getItems(newItems ?? [])
-      input.value = isNotNullNorUndefinedNorEmpty(newItems) ? props.props.itemChipLabel(getItems(newItems)[0]) : ''
+    () => props.overrideItem,
+    newItem => {
+      selectedItem.value = getItem(newItem)
+      const newItemTranslate = getItem(props.overrideItem)
+
+      input.value = isNotNullNorUndefined(newItemTranslate) ? props.props.itemChipLabel(newItemTranslate) : ''
     },
     { deep: true }
   )
@@ -86,16 +89,14 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     }
     scrollSelectionIntoView()
   }
-  const deleteLastSelected = () => {
-    if (input.value === '') {
-      selectedItems.value.pop()
-      props.props.onSelectItem(undefined)
-    }
+  const deleteSelection = () => {
+    selectedItem.value = null
+    props.props.onSelectItem(undefined)
   }
   const notSelectedItems = computed(() => {
-    const selectItemKeys = selectedItems.value.map(i => i[props.props.itemKey])
+    const selectItemKey = selectedItem.value?.[props.props.itemKey]
 
-    return props.props.items.filter(item => !selectItemKeys.includes(item[props.props.itemKey]))
+    return props.props.items.filter(item => selectItemKey !== item[props.props.itemKey])
   })
   const currentSelection = computed(() => {
     return isListVisible.value && currentSelectionIndex.value < notSelectedItems.value.length ? notSelectedItems.value[currentSelectionIndex.value] : undefined
@@ -106,7 +107,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
     currentSelectionIndex.value = 0
     document.getElementById(id)?.blur()
 
-    selectedItems.value = [item]
+    selectedItem.value = item
 
     props.props.onSelectItem(item)
   }
@@ -128,6 +129,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
           value={input.value}
           type="text"
           name={id}
+          disabled={props.disabled}
           class={[styles['typeahead-input'], 'fr-input']}
           placeholder={props.props.placeholder}
           autocomplete="off"
@@ -139,7 +141,7 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
             // Oui --> https://github.com/Moh-Snoussi/keyboard-event-key-type
             // Underlying issue: https://github.com/microsoft/TypeScript/issues/38886
             if (payload.key === 'Backspace') {
-              deleteLastSelected()
+              deleteSelection()
             }
             if (payload.key === 'ArrowDown') {
               onArrowDown()
@@ -185,4 +187,4 @@ export const TypeAheadSingle = defineComponent(<T extends TypeAheadRecord, K ext
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TypeAheadSingle.props = ['overrideItems', 'props']
+TypeAheadSingle.props = ['overrideItem', 'props', 'disabled']

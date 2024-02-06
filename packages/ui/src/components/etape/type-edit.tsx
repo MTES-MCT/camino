@@ -8,7 +8,7 @@ import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 
@@ -85,7 +85,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
     { immediate: true }
   )
 
-  const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() => (etapeTypeId.value ? [{ id: etapeTypeId.value }] : []))
+  const etapeTypeExistante = computed<Pick<EtapeType, 'id'> | null>(() => (etapeTypeId.value ? { id: etapeTypeId.value } : null))
 
   const displayItemInList = (item: EtapeType, etapeTypeEtapeStatutWithMainStep: EtapeTypeEtapeStatutWithMainStep[]): JSX.Element => {
     const isMainStep = etapeTypeEtapeStatutWithMainStep.some(({ etapeTypeId, mainStep }) => etapeTypeId === item.id && mainStep)
@@ -93,12 +93,29 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
     return isMainStep ? <strong>{item.nom}</strong> : <>{item.nom}</>
   }
 
+  const noItemsText = computed<string | null>(() => {
+    if (possibleEtapes.value.status === 'LOADED') {
+      if (isNullOrUndefinedOrEmpty(possibleEtapes.value.value)) {
+        if (isNotNullNorUndefined(props.etape.typeId)) {
+          return `L'étape ${EtapesTypes[props.etape.typeId].nom} n'est pas possible à cette date`
+        }
+
+        return 'Il n’y a aucune étape possible à cette date.'
+      }
+      if (isNotNullNorUndefined(props.etape.typeId) && !possibleEtapes.value.value.some(({ etapeTypeId }) => etapeTypeId === props.etape.typeId)) {
+        return `L'étape ${EtapesTypes[props.etape.typeId].nom} n'est pas possible à cette date`
+      }
+    }
+
+    return null
+  })
+
   return () => (
     <LoadingElement
       data={possibleEtapes.value}
       renderItem={items => (
         <>
-          {items.length > 0 ? (
+          {noItemsText.value === null ? (
             <>
               <div class="tablet-blobs">
                 <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -106,7 +123,8 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                 </div>
                 <div class="mb tablet-blob-2-3">
                   <TypeAheadSingle
-                    overrideItems={etapeTypeExistante.value}
+                    overrideItem={etapeTypeExistante.value}
+                    disabled={isNotNullNorUndefined(props.etape.typeId)}
                     props={{
                       id: 'select-etape-type',
                       placeholder: '',
@@ -157,7 +175,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
             <div class="dsfr tablet-blobs">
               <div class="tablet-blob-1-3"></div>
               <div class="mb tablet-blob-2-3">
-                <Alert type="warning" title="Il n’y a aucune étape possible à cette date." description="Veuillez modifier la date pour pouvoir choisir une étape." />
+                <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
               </div>
             </div>
           )}

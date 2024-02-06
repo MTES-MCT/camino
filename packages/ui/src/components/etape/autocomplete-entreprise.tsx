@@ -14,7 +14,7 @@ interface Props {
   onEntreprisesUpdate: (entreprise: EtapeEntreprise[]) => void
 }
 export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntreprisesUpdate', 'nonSelectableEntities', 'selectedEntities', 'allEntities', 'placeholder'], props => {
-  const overrideItems = ref<{ id: EntrepriseId }[]>([])
+  const overrideItem = ref<{ id: EntrepriseId } | null>(null)
 
   const mySelectedEntities = ref<EtapeEntreprise[]>([])
   const inputValue = ref<string>('')
@@ -37,7 +37,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
   const addEntity = (entity: Entreprise | undefined) => {
     if (entity) {
       mySelectedEntities.value.push({ id: entity.id, operateur: false })
-      overrideItems.value = []
+      overrideItem.value = null
 
       props.onEntreprisesUpdate(mySelectedEntities.value)
     }
@@ -86,7 +86,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
         </div>
       ))}
 
-      <TypeAheadSingle props={typeAheadProps.value} overrideItems={overrideItems.value} />
+      <TypeAheadSingle props={typeAheadProps.value} overrideItem={overrideItem.value} />
     </div>
   )
 })

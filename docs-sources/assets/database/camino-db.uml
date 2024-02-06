@@ -182,6 +182,14 @@ entity "**knex_migrations_lock**" {
   ""is_locked"": //integer //
 }
 
+entity "**perimetre_reference**" {
+  + ""titre_etape_id"": //character varying(255) [PK][FK]//
+  + ""geo_systeme"": //character varying(255) [PK]//
+  --
+  ""opposable"": //boolean //
+  ""geojson_perimetre"": //jsonb //
+}
+
 entity "**sdom_zones_postgis**" {
   + ""id"": //character varying(30) [PK]//
   --
@@ -213,7 +221,6 @@ entity "**titres**" {
   *""entreprises_lecture"": //boolean //
   ""doublon_titre_id"": //character varying(128) //
   ""contenus_titre_etapes_ids"": //jsonb //
-  ""coordonnees"": //point //
   ""props_titre_etapes_ids"": //jsonb //
   *""slug"": //character varying(255) //
   *""archive"": //boolean //
@@ -258,7 +265,7 @@ entity "**titres_demarches**" {
   *""statut_id"": //character varying(3) //
   *""public_lecture"": //boolean //
   *""entreprises_lecture"": //boolean //
-  ""ordre"": //integer //
+  *""ordre"": //integer //
   ""slug"": //character varying(255) //
   ""description"": //character varying(255) //
   *""archive"": //boolean //
@@ -279,7 +286,6 @@ entity "**titres_etapes**" {
   ""duree"": //integer //
   ""surface"": //real //
   ""contenu"": //jsonb //
-  ""incertitudes"": //jsonb //
   ""heritage_props"": //jsonb //
   ""heritage_contenu"": //jsonb //
   ""slug"": //character varying(255) //
@@ -287,42 +293,20 @@ entity "**titres_etapes**" {
   ""decisions_annexes_contenu"": //json //
   *""archive"": //boolean //
   *""substances"": //jsonb //
-  ""secteurs_maritime"": //jsonb //
-  ""administrations_locales"": //jsonb //
-  ""sdom_zones"": //jsonb //
+  *""secteurs_maritime"": //jsonb //
+  *""administrations_locales"": //jsonb //
+  *""sdom_zones"": //jsonb //
   *""forets"": //jsonb //
   *""communes"": //jsonb //
+  ""notes"": //text //
+  ""geojson4326_perimetre"": //geometry(MultiPolygon,4326) //
+  ""geojson4326_points"": //jsonb //
 }
 
 entity "**titres_etapes_entreprises_documents**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""entreprise_document_id"": //character varying(255) [PK][FK]//
   --
-}
-
-entity "**titres_points**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  *""titre_etape_id"": //character varying(128) [FK]//
-  *""coordonnees"": //point //
-  *""groupe"": //integer //
-  *""contour"": //integer //
-  *""point"": //integer //
-  ""nom"": //character varying(255) //
-  ""description"": //text //
-  ""subsidiaire"": //boolean //
-  ""lot"": //integer //
-  ""slug"": //character varying(255) //
-}
-
-entity "**titres_points_references**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  ""titre_point_id"": //character varying(255) [FK]//
-  *""geo_systeme_id"": //character varying(5) //
-  *""coordonnees"": //point //
-  ""opposable"": //boolean //
-  ""slug"": //character varying(255) //
 }
 
 entity "**titres_titulaires**" {
@@ -396,6 +380,8 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
+"**perimetre_reference**"   }--  "**titres_etapes**"
+
 "**titres**"   }--  "**titres_types**"
 
 "**titres__titres**"   }--  "**titres**"
@@ -435,10 +421,6 @@ entity "**utilisateurs__titres**" {
 "**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
 
 "**titres_etapes_entreprises_documents**"   }--  "**titres_etapes**"
-
-"**titres_points**"   }--  "**titres_etapes**"
-
-"**titres_points_references**"   }--  "**titres_points**"
 
 "**titres_titulaires**"   }--  "**entreprises**"
 
