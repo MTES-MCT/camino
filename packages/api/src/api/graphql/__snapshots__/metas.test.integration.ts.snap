@@ -547,20 +547,8 @@ exports[`statuts > peut voir tous les statuts 1`] = `
   ],
   "domaines": [
     {
-      "id": "m",
-      "nom": "minéraux et métaux",
-    },
-    {
-      "id": "w",
-      "nom": "granulats marins",
-    },
-    {
       "id": "c",
       "nom": "carrières",
-    },
-    {
-      "id": "h",
-      "nom": "hydrocarbures liquides ou gazeux",
     },
     {
       "id": "f",
@@ -573,6 +561,18 @@ exports[`statuts > peut voir tous les statuts 1`] = `
     {
       "id": "g",
       "nom": "géothermie",
+    },
+    {
+      "id": "w",
+      "nom": "granulats marins",
+    },
+    {
+      "id": "h",
+      "nom": "hydrocarbures liquides ou gazeux",
+    },
+    {
+      "id": "m",
+      "nom": "minéraux et métaux",
     },
     {
       "id": "s",
@@ -907,6 +907,10 @@ exports[`statuts > peut voir tous les statuts 1`] = `
   ],
   "types": [
     {
+      "id": "ax",
+      "nom": "autorisation d'exploitation",
+    },
+    {
       "id": "ap",
       "nom": "autorisation de prospections préalables",
     },
@@ -915,28 +919,24 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "nom": "autorisation de recherches",
     },
     {
-      "id": "pr",
-      "nom": "permis exclusif de recherches",
-    },
-    {
-      "id": "ax",
-      "nom": "autorisation d'exploitation",
-    },
-    {
-      "id": "pc",
-      "nom": "permis exclusif de carrières",
-    },
-    {
-      "id": "px",
-      "nom": "permis d'exploitation",
-    },
-    {
       "id": "cx",
       "nom": "concession",
     },
     {
       "id": "in",
       "nom": "indéterminé",
+    },
+    {
+      "id": "px",
+      "nom": "permis d'exploitation",
+    },
+    {
+      "id": "pc",
+      "nom": "permis exclusif de carrières",
+    },
+    {
+      "id": "pr",
+      "nom": "permis exclusif de recherches",
     },
   ],
   "unites": [

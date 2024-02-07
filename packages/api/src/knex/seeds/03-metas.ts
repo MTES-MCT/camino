@@ -1,14 +1,19 @@
+import { sortedDomaines } from 'camino-common/src/static/domaines.js'
 import seeding from '../seeding.js'
-import { createRequire } from 'node:module'
-const require = createRequire(import.meta.url)
+import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
+import { TitresTypes } from 'camino-common/src/static/titresTypes.js'
 
-const domaines = require('../../../sources/domaines.json')
-const titresTypesTypes = require('../../../sources/titres-types-types.json')
-const titresTypes = require('../../../sources/titres-types.json')
-const demarchesTypes = require('../../../sources/demarches-types.json')
-const etapesTypes = require('../../../sources/etapes-types.json')
-const documentsTypes = require('../../../sources/documents-types.json')
+const addOrdre = (value: object, index: number) => ({ ...value, ordre: index })
 
+const domaines = sortedDomaines.map(addOrdre)
+const titresTypesTypes = sortedTitreTypesTypes.map(addOrdre)
+const demarchesTypes = sortedDemarchesTypes.map(addOrdre)
+const etapesTypes = Object.values(EtapesTypes).map(addOrdre)
+const documentsTypes = Object.values(DocumentsTypes)
+const titresTypes = Object.values(TitresTypes)
 export const seed = seeding(async ({ insert }) => {
   await Promise.all([
     insert('domaines', domaines),

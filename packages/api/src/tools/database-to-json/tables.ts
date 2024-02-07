@@ -3,13 +3,9 @@ export const tables = [
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },
   { name: 'communes', orderBy: ['id'] },
-  { name: 'demarches_types', orderBy: ['id'] },
   { name: 'documents', orderBy: ['id'] },
-  { name: 'documents_types', orderBy: ['id'] },
-  { name: 'domaines', orderBy: ['id'] },
   { name: 'entreprises', orderBy: ['id'] },
   { name: 'entreprises_etablissements', orderBy: ['id'] },
-  { name: 'etapes_types', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   { name: 'titres_amodiataires', orderBy: ['titre_etape_id', 'entreprise_id'] },
@@ -20,8 +16,6 @@ export const tables = [
     orderBy: ['titre_etape_id', 'document_id'],
   },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },
-  { name: 'titres_types', orderBy: ['id'] },
-  { name: 'titres_types_types', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {
     name: 'utilisateurs__entreprises',
