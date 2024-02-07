@@ -17,9 +17,9 @@ import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
 
 const precision = {
-  met: 0.001,
-  deg: 0.0001,
-  gon: 0.0001,
+  met: 3,
+  deg: 4,
+  gon: 4,
 } as const satisfies Record<GeoSysteme['uniteId'], number>
 
 export const getGeojsonByGeoSystemeId = async (
@@ -54,7 +54,7 @@ const getGeojsonByGeoSystemeIdDb = sql<
   Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: TransformableGeoSystemeId; toGeoSystemeId: TransformableGeoSystemeId; geojson: string; precision: number }, { geojson: MultiPolygon }>
 >`
 select
-    ST_AsGeoJSON (ST_Multi (ST_ReducePrecision (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer), $ precision !)))::json as geojson
+    ST_AsGeoJSON (ST_Multi (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer)), $ precision !)::json as geojson
 LIMIT 1
 `
 

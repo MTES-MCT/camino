@@ -8,6 +8,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              -6508915.664,
+              4155227.249,
+            ],
+            [
               -6509838.38,
               4156321.503,
             ],
@@ -18,10 +22,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               -6508915.664,
               4155227.249,
-            ],
-            [
-              -6509838.38,
-              4156321.503,
             ],
           ],
         ],
@@ -37,6 +37,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              329078.146,
+              466912.757,
+            ],
+            [
               327968.368,
               467101.879,
             ],
@@ -47,10 +51,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               329078.146,
               466912.757,
-            ],
-            [
-              327968.368,
-              467101.879,
             ],
           ],
         ],
@@ -66,6 +66,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              -10635907.53,
+              28583935.69,
+            ],
+            [
               -10632537.838,
               28584100.036,
             ],
@@ -76,10 +80,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               -10635907.53,
               28583935.69,
-            ],
-            [
-              -10632537.838,
-              28584100.036,
             ],
           ],
         ],
@@ -124,6 +124,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              995446.594,
+              468165.655,
+            ],
+            [
               994332.422,
               468346.681,
             ],
@@ -134,10 +138,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               995446.594,
               468165.655,
-            ],
-            [
-              994332.422,
-              468346.681,
             ],
           ],
         ],
@@ -153,6 +153,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              -16143544.355,
+              26292802.746,
+            ],
+            [
               -16136616.095,
               26296480.296,
             ],
@@ -163,10 +167,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               -16143544.355,
               26292802.746,
-            ],
-            [
-              -16136616.095,
-              26296480.296,
             ],
           ],
         ],
@@ -182,6 +182,10 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
         [
           [
             [
+              1667272.177,
+              474656.113,
+            ],
+            [
               1666141.191,
               474830.764,
             ],
@@ -192,10 +196,6 @@ exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
             [
               1667272.177,
               474656.113,
-            ],
-            [
-              1666141.191,
-              474830.764,
             ],
           ],
         ],
