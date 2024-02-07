@@ -11,6 +11,7 @@ import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
 
+// [longitude, latitude]
 const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
 
 export const polygonCoordinatesValidator = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
