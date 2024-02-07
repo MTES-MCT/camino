@@ -3,16 +3,19 @@ import { userSuper } from '../../database/user-super.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
-import { anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
+import { CaminoDate, anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
+import { ITitreActivite } from '../../types.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const ACTIVITES_DELAI_RELANCE_JOURS = 14
+
+const statutsIds = ['abs', 'enc']
+const typesIds = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
 
 export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
   console.info()
   console.info('relance des activités des titres…')
 
-  const statutsIds = ['abs', 'enc']
-  const typesIds = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
   const activites = await titresActivitesGet(
     { statutsIds, typesIds },
     {
@@ -23,6 +26,11 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
     userSuper
   )
 
+  return checkDateAndSendEmail(aujourdhui, activites)
+}
+
+// Visible only for tests
+export const checkDateAndSendEmail = async (aujourdhui: CaminoDate, activites: ITitreActivite[]) => {
   const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
 
   const titresActivitesRelanceToSend = activites.filter(({ date }) => dateDelai === dateAddMonths(date, 3))
@@ -33,7 +41,7 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
       const titre = activite.titre!
       titre.titulaires?.forEach(titulaire =>
         titulaire.utilisateurs?.forEach(({ email }) => {
-          if (email) {
+          if (isNotNullNorUndefined(email)) {
             emails.add(email)
           }
         })
