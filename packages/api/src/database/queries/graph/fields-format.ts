@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
 const fieldsToRemove = ['heritageProps', 'communes']
@@ -5,14 +7,6 @@ const titreFieldsToRemove: string[] = ['geojson4326Centre', 'references']
 
 interface IFields {
   [key: string]: IFields
-}
-
-const graphTitreAdministrationsFormat = (fields: IFields, type: string) => {
-  if (!fields.administrations) return
-
-  fields[`administrations${type}`] = {
-    ...fields.administrations,
-  }
 }
 
 // ajoute des propriétés requises par /database/queries/_format
@@ -46,11 +40,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // ajoute `(orderAsc)` à certaine propriétés
   if (fieldsOrderAsc.includes(parent)) {
     fields.$modifier = 'orderAsc' as unknown as IFields
-  }
-
-  if (isParentTitre && fields.administrations) {
-    graphTitreAdministrationsFormat(fields, 'Gestionnaires')
-    delete fields.administrations
   }
 
   // sur les titres

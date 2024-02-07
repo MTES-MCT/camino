@@ -1,37 +1,9 @@
-import { GraphQLResolveInfo } from 'graphql'
-
 import { IAdministrationActiviteTypeEmail, Context } from '../../../types.js'
-
-import { administrationGet, administrationsGet, administrationActiviteTypeEmailCreate, administrationActiviteTypeEmailDelete } from '../../../database/queries/administrations.js'
-
-import { fieldsBuild } from './_fields-build.js'
-
-import { administrationFormat } from '../../_format/administrations.js'
+import { administrationActiviteTypeEmailCreate, administrationActiviteTypeEmailDelete } from '../../../database/queries/administrations.js'
 import { emailCheck } from '../../../tools/email-check.js'
-import { canReadActivitesTypesEmails, canReadAdministrations, canEditEmails } from 'camino-common/src/permissions/administrations.js'
+import { canReadActivitesTypesEmails, canEditEmails } from 'camino-common/src/permissions/administrations.js'
 import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
-import { isAdministrationId } from 'camino-common/src/static/administrations.js'
-
-const administration = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!canReadAdministrations(user)) {
-      return null
-    }
-    const fields = fieldsBuild(info)
-
-    const administration = await administrationGet(id, { fields }, user)
-
-    if (!administration) {
-      return null
-    }
-
-    return administrationFormat(administration)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+import { administrationIdValidator, isAdministrationId } from 'camino-common/src/static/administrations.js'
 
 export const administrationActivitesTypesEmails = async ({ id }: { id: string }, { user }: Context): Promise<IAdministrationActiviteTypeEmail[]> => {
   try {
@@ -51,38 +23,14 @@ export const administrationActivitesTypesEmails = async ({ id }: { id: string },
   }
 }
 
-const administrations = async (_: unknown, { user }: Context, info: GraphQLResolveInfo) => {
+export const administrationActiviteTypeEmailCreer = async ({ administrationActiviteTypeEmail }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail }, { user }: Context) => {
   try {
-    if (!canReadAdministrations(user)) {
-      return []
-    }
-    const fields = fieldsBuild(info)
+    const administrationIdParsed = administrationIdValidator.safeParse(administrationActiviteTypeEmail.administrationId)
 
-    const administrations = await administrationsGet({ fields }, user)
-
-    if (!administrations.length) return []
-
-    return administrations.map(administrationFormat)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const administrationActiviteTypeEmailCreer = async (
-  { administrationActiviteTypeEmail }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const administration = await administrationGet(administrationActiviteTypeEmail.administrationId, { fields: { id: {} } }, user)
-
-    if (!administration || !canEditEmails(user, administration.id)) {
+    if (!administrationIdParsed.success || !canEditEmails(user, administrationIdParsed.data)) {
       throw new Error('droits insuffisants')
     }
 
-    const fields = fieldsBuild(info)
     const email = administrationActiviteTypeEmail.email?.toLowerCase()
     if (!email || !emailCheck(email)) throw new Error('email invalide')
 
@@ -91,7 +39,7 @@ const administrationActiviteTypeEmailCreer = async (
       email,
     })
 
-    return await administrationGet(administrationActiviteTypeEmail.administrationId, { fields }, user)
+    return administrationsActivitesTypesEmails.query().where('administrationId', administrationIdParsed.data)
   } catch (e) {
     console.error(e)
 
@@ -104,19 +52,13 @@ const administrationActiviteTypeEmailCreer = async (
   }
 }
 
-const administrationActiviteTypeEmailSupprimer = async (
-  { administrationActiviteTypeEmail }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+export const administrationActiviteTypeEmailSupprimer = async ({ administrationActiviteTypeEmail }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail }, { user }: Context) => {
   try {
-    const administration = await administrationGet(administrationActiviteTypeEmail.administrationId, { fields: { id: {} } }, user)
-
-    if (!administration || !canEditEmails(user, administration.id)) {
+    const administrationIdParsed = administrationIdValidator.safeParse(administrationActiviteTypeEmail.administrationId)
+    if (!administrationIdParsed.success || !canEditEmails(user, administrationIdParsed.data)) {
       throw new Error('droits insuffisants')
     }
 
-    const fields = fieldsBuild(info)
     const email = administrationActiviteTypeEmail.email?.toLowerCase()
     if (!email || !emailCheck(email)) throw new Error('email invalide')
 
@@ -125,12 +67,10 @@ const administrationActiviteTypeEmailSupprimer = async (
       email,
     })
 
-    return await administrationGet(administrationActiviteTypeEmail.administrationId, { fields }, user)
+    return administrationsActivitesTypesEmails.query().where('administrationId', administrationIdParsed.data)
   } catch (e) {
     console.error(e)
 
     throw e
   }
 }
-
-export { administration, administrations, administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer }

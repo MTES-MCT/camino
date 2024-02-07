@@ -1,7 +1,6 @@
 import { FileUpload } from 'graphql-upload'
-import { AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
-import { CodePostal, DepartementId } from 'camino-common/src/static/departement.js'
-import { RegionId } from 'camino-common/src/static/region.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { CodePostal } from 'camino-common/src/static/departement.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
@@ -144,27 +143,6 @@ type IHeritageProps = Record<EtapeHeritageProps, IHeritageElement>
 
 interface IHeritageContenu {
   [sectionId: string]: { [elementId: string]: IHeritageElement }
-}
-
-interface IAdministration {
-  id: AdministrationId
-  typeId: AdministrationTypeId
-  nom?: string
-  service?: string | null
-  url?: string | null
-  email?: string | null
-  telephone?: string | null
-  adresse1?: string | null
-  adresse2?: string | null
-  codePostal?: string | null
-  commune?: string | null
-  cedex?: string | null
-  departementId?: DepartementId | null
-  regionId?: RegionId | null
-  abreviation?: string | null
-  utilisateurs?: IUtilisateur[] | null
-  associee?: boolean | null
-  modification?: boolean | null
 }
 
 interface ICommune {
@@ -510,7 +488,6 @@ interface IJournaux {
 export {
   TitreEtapesTravauxTypes,
   Index,
-  IAdministration,
   ICommune,
   IContenu,
   IContenuElement,

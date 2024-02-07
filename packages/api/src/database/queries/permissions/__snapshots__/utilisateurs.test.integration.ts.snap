@@ -2,9 +2,6 @@
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 1`] = `
 {
-  "administration": {
-    "id": "aut-97300-01",
-  },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
@@ -22,9 +19,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 2`] = `
 {
-  "administration": {
-    "id": "aut-97300-01",
-  },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
@@ -42,9 +36,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 3`] = `
 {
-  "administration": {
-    "id": "aut-97300-01",
-  },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
@@ -62,9 +53,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 4`] = `
 {
-  "administration": {
-    "id": "aut-97300-01",
-  },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
@@ -82,9 +70,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 5`] = `
 {
-  "administration": {
-    "id": "aut-97300-01",
-  },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",

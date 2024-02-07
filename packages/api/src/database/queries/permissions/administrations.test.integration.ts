@@ -35,12 +35,10 @@ describe('administrationsTitresQuery', () => {
 
     await Titres.query().insertGraph(mockTitre)
 
-    const administrationQuery = administrationsTitresQuery(administrationId, 'titres', {
-      isGestionnaire: true,
-      isAssociee: true,
-    })
-
-    const q = Titres.query().where('id', 'monTitreId').andWhereRaw('exists(?)', [administrationQuery])
+    const q = Titres.query()
+      .joinRaw(`left join titres_etapes as t_e on t_e.id = "titres"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`)
+      .modify(administrationsTitresQuery, administrationId, 'titres', 'and', 't_e')
+      .where('titres.id', 'monTitreId')
 
     const titreRes = await q.first()
     if (visible) {
