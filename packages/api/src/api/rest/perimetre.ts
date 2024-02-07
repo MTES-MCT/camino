@@ -133,6 +133,8 @@ const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   })
 }
 
+const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
+const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -182,6 +184,8 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         }
 
         const geojson: MultiPolygon = { type: 'MultiPolygon', coordinates }
+
+        z.array(polygon4326CoordinatesValidator).min(1).parse(coordinates)
 
         const geoInfo = await getGeojsonInformation(pool, geojson)
         const result: GeojsonInformations = {
