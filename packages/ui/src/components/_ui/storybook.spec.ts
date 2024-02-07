@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/vue3'
 import { render } from '@testing-library/vue'
 import { composeStories } from '@storybook/testing-vue3'
 import { h } from 'vue'
-import { setSeed } from './utils/vue-tsx-utils'
+import { setSeed } from '@/utils/vue-tsx-utils'
 
 type StoryFile = {
   default: Meta
@@ -33,11 +33,8 @@ const compose = (entry: StoryFile): ReturnType<typeof composeStories<StoryFile>>
     throw new Error(`Un fichier est probablement mal formaté ${JSON.stringify(entry)}, ${e}`)
   }
 }
-describe('Storybook Tests', async () => {
-  const modules = Object.entries(import.meta.glob<StoryFile>(['../**/*.stories.ts(x)?', '!../**/_ui/**', '!../**/_common/**'], { eager: true })).map(([filePath, storyFile]) => ({
-    filePath,
-    storyFile,
-  }))
+describe('UI Storybook Tests', async () => {
+  const modules = Object.entries(import.meta.glob<StoryFile>(['./**/*.stories.ts(x)?'], { eager: true })).map(([filePath, storyFile]) => ({ filePath, storyFile }))
   describe.each(
     modules.map(({ filePath, storyFile }) => {
       return { name: storyFile.default.title, storyFile, filePath }
