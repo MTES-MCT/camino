@@ -72,7 +72,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
     // TODO 2023-11-28 ici on interdit le teleport dans le cas de vitest pour que les snapshots soient présentes. On a pas trouvé mieux à cette date
     <Teleport to="body" disabled={process.env.VITEST === 'true'}>
       <div class="dsfr">
-        <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close}>
+        <dialog id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close} style={{ zIndex: 1000001 }}>
           <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
             <div class="fr-grid-row fr-grid-row--center">
               <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
