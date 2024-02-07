@@ -1,20 +1,16 @@
-import { IFields } from '../../types.js'
+import { FieldsDemarche, FieldsEtape, FieldsTitre } from '../../database/queries/_options'
 
-export const titreEtapeFormatFields = {
-  sections: {},
-} as IFields
+export const titreEtapeFormatFields: FieldsEtape = {}
 
-export const titreDemarcheFormatFields = {
+export const titreDemarcheFormatFields: FieldsDemarche = {
   etapes: titreEtapeFormatFields,
-} as IFields
+}
 
-export const titreFormatFields = {
+export const titreFormatFields: FieldsTitre = {
   surface: {},
   demarches: titreDemarcheFormatFields,
-  activites: {
-    sections: {},
-  },
+  activites: {},
   administrations: {},
-} as IFields
+}
 
 titreDemarcheFormatFields.titre = titreFormatFields

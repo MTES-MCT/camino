@@ -17,7 +17,6 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
     { statutsIds, typesIds },
     {
       fields: {
-        type: { id: {} },
         titre: { titulaires: { utilisateurs: { id: {} } } },
       },
     },

@@ -1,8 +1,8 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IEntreprise, IFields, IEntrepriseColonneId } from '../../types.js'
+import { IEntreprise, IEntrepriseColonneId } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsEntreprise } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import { stringSplit } from './_utils.js'
@@ -49,7 +49,7 @@ const entreprisesFiltersQueryModify = (
   }
 }
 
-const entreprisesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const entreprisesQueryBuild = ({ fields }: { fields?: FieldsEntreprise }, user: User) => {
   const graph = fields ? graphBuild(fields, 'entreprises', fieldsFormat) : options.entreprises.graph
 
   const q = Entreprises.query().withGraphFetched(graph)
@@ -67,7 +67,7 @@ export const entreprisesCount = async (
     noms?: string | null
     archive?: boolean | null
   },
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsEntreprise },
   user: User
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
@@ -77,7 +77,7 @@ export const entreprisesCount = async (
   return q.resultSize()
 }
 
-export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: IFields }, user: User): Promise<IEntreprise | undefined> => {
+export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: FieldsEntreprise }, user: User): Promise<IEntreprise | undefined> => {
   const q = entreprisesQueryBuild({ fields }, user)
 
   return (await q.findById(id)) as IEntreprise
@@ -99,7 +99,7 @@ export const entreprisesGet = async (
     noms?: string | null
     archive?: boolean | null
   },
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsEntreprise },
   user: User
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
@@ -134,7 +134,7 @@ export const entreprisesUpsert = async (entreprises: IEntreprise[]) => Entrepris
 
 export const entrepriseUpsert = async (entreprise: IEntreprise) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')
 
-export const titreDemandeEntreprisesGet = async ({ fields }: { fields?: IFields }, user: User) => {
+export const titreDemandeEntreprisesGet = async ({ fields }: { fields?: FieldsEntreprise }, user: User) => {
   if (!user) return []
 
   if (isSuper(user)) {

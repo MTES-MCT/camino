@@ -1,9 +1,9 @@
 import { QueryBuilder, RawBuilder, raw } from 'objection'
 
 import { DemarcheId } from 'camino-common/src/demarche.js'
-import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, IFields, Index } from '../../types.js'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, Index } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsDemarche } from './_options.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import graphBuild from './graph/build.js'
 import { fieldsTitreAdd } from './graph/fields-add.js'
@@ -128,7 +128,7 @@ const titresDemarchesFiltersQueryModify = (
   )
 }
 
-const titresDemarchesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+const titresDemarchesQueryBuild = ({ fields }: { fields?: FieldsDemarche }, user: User) => {
   const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'demarches', fieldsFormat) : options.titresDemarches.graph
 
   const q = TitresDemarches.query().withGraphFetched(graph)
@@ -168,7 +168,7 @@ export const titresDemarchesCount = async (
     titresReferences?: string | null
     travaux?: boolean | null
   } = {},
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsDemarche },
   user: User
 ) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
@@ -245,7 +245,7 @@ export const titresDemarchesGet = async (
     titresReferences?: string | null
     travaux?: boolean | null
   } = {},
-  { fields }: { fields?: IFields },
+  { fields }: { fields?: FieldsDemarche },
   user: User
 ) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
@@ -304,7 +304,7 @@ export const titresDemarchesGet = async (
   return q
 }
 
-export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: IFields }, user: User) => {
+export const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: FieldsDemarche }, user: User) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   return q

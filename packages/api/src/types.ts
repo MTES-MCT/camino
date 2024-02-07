@@ -10,7 +10,6 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
-import { FrequenceId } from 'camino-common/src/static/frequence.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
@@ -74,7 +73,7 @@ enum TitreEtapesTravauxTypes {
   PorterAConnaissance = 'wpb',
 }
 
-interface IFields {
+export interface IFields {
   [key: string]: IFields
 }
 
@@ -147,17 +146,6 @@ interface IHeritageContenu {
   [sectionId: string]: { [elementId: string]: IHeritageElement }
 }
 
-interface IActiviteType {
-  id: ActivitesTypesId
-  nom: string
-  description?: string
-  frequenceId: FrequenceId
-  dateDebut: string
-  delaiMois: number
-  email?: string | null
-  modification?: boolean | null
-}
-
 interface IAdministration {
   id: AdministrationId
   typeId: AdministrationTypeId
@@ -177,7 +165,6 @@ interface IAdministration {
   utilisateurs?: IUtilisateur[] | null
   associee?: boolean | null
   modification?: boolean | null
-  activitesTypesEmails?: (IActiviteType & { email: string })[]
 }
 
 interface ICommune {
@@ -523,8 +510,6 @@ interface IJournaux {
 export {
   TitreEtapesTravauxTypes,
   Index,
-  IFields,
-  IActiviteType,
   IAdministration,
   ICommune,
   IContenu,

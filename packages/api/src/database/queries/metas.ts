@@ -1,10 +1,10 @@
 import { raw } from 'objection'
 
-import { IFields, IDocumentRepertoire } from '../../types.js'
+import { IDocumentRepertoire } from '../../types.js'
 
 import { knex } from '../../knex.js'
 
-import options from './_options.js'
+import options, { FieldId } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
@@ -20,13 +20,13 @@ import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes
 
 export const titresTypesTypesGet = async () => TitresTypesTypes.query().orderBy('ordre')
 
-export const domainesGet = async (_: never, { fields }: { fields?: IFields }) => {
+export const domainesGet = async (_: never, { fields }: { fields?: FieldId }) => {
   const graph = fields ? graphBuild(fields, 'titre', fieldsFormat) : options.domaines.graph
 
   return Domaines.query().withGraphFetched(graph).orderBy('ordre')
 }
 
-export const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
+export const titresTypesGet = async (_: never, { fields }: { fields?: FieldId }) => {
   const graph = fields ? graphBuild(fields, 'titresTypes', fieldsFormat) : options.titresTypes.graph
 
   return TitresTypes.query().withGraphFetched(graph).orderBy('id')
@@ -36,7 +36,7 @@ export const etapesTypesDocumentsTypesGet = () => toDocuments()
 
 export const demarchesStatutsGet = () => sortedDemarchesStatuts
 
-export const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
+export const etapeTypeGet = async (id: string, { fields }: { fields?: FieldId }) => {
   const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 
   return EtapesTypes.query().withGraphFetched(graph).findById(id)

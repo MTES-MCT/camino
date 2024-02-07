@@ -42,6 +42,7 @@ import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
 import { equalGeojson } from 'camino-common/src/perimetre.js'
+import { FieldsEtape } from '../../../database/queries/_options'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -64,7 +65,7 @@ const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { d
 
 const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
-    const fields = fieldsBuild(info)
+    const fields: FieldsEtape = fieldsBuild(info)
 
     if (isNullOrUndefined(fields.type)) {
       fields.type = { id: {} }

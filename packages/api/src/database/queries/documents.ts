@@ -1,8 +1,8 @@
 import { Transaction } from 'objection'
 
-import { IDocument, IFields } from '../../types.js'
+import { IDocument } from '../../types.js'
 
-import options from './_options.js'
+import options, { FieldsDocument } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
@@ -11,7 +11,7 @@ import { documentsQueryModify } from './permissions/documents.js'
 import { User } from 'camino-common/src/roles'
 import { DocumentId } from 'camino-common/src/entreprise.js'
 
-export const documentGet = async (documentId: string, { fields }: { fields?: IFields }, user: User): Promise<IDocument | null> => {
+export const documentGet = async (documentId: string, { fields }: { fields?: FieldsDocument }, user: User): Promise<IDocument | null> => {
   const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)
@@ -23,7 +23,7 @@ export const documentGet = async (documentId: string, { fields }: { fields?: IFi
   return document as IDocument | null
 }
 
-export const documentsGet = async ({ ids }: { ids?: string[] }, { fields }: { fields?: IFields }, user: User) => {
+export const documentsGet = async ({ ids }: { ids?: string[] }, { fields }: { fields?: FieldsDocument }, user: User) => {
   const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)

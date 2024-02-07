@@ -334,7 +334,6 @@ export const activites =
       },
       {
         fields: {
-          type: { id: {} },
           titre: { pointsEtape: { id: {} } },
         },
       },

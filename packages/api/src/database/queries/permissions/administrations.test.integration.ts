@@ -1,17 +1,11 @@
 import { dbManager } from '../../../../tests/db-manager.js'
-import { IUtilisateur, IAdministration, ITitre, formatUser } from '../../../types.js'
+import { ITitre } from '../../../types.js'
 
 import Titres from '../../models/titres.js'
-import Utilisateurs from '../../models/utilisateurs.js'
-import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails.js'
-import Administrations from '../../models/administrations.js'
-import { AdministrationId, Administrations as CommonAdministrations } from 'camino-common/src/static/administrations.js'
-import { administrationsTitresQuery, administrationsQueryModify } from './administrations.js'
-import { idGenerate } from '../../models/_format/id-create.js'
-import options from '../_options.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { administrationsTitresQuery } from './administrations.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
-import { testBlankUser } from 'camino-common/src/tests-utils.js'
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -54,40 +48,5 @@ describe('administrationsTitresQuery', () => {
     } else {
       expect(titreRes).toBe(undefined)
     }
-  })
-})
-
-describe('administrationsQueryModify', () => {
-  test('vérifie que le bon nombre de couple types activites + email est retourné par une requête', async () => {
-    const mockAdministration = CommonAdministrations['pre-01053-01']
-
-    const email = `${idGenerate()}@bar.com`
-    await AdministrationsActivitesTypesEmails.query().delete()
-    await AdministrationsActivitesTypesEmails.query().insert({
-      administrationId: mockAdministration.id,
-      email,
-      activiteTypeId: 'grx',
-    })
-
-    await AdministrationsActivitesTypesEmails.query().insert({
-      administrationId: mockAdministration.id,
-      email: 'foo@bar.cc',
-      activiteTypeId: 'grx',
-    })
-
-    const mockUser: IUtilisateur = {
-      ...testBlankUser,
-      id: idGenerate(),
-      role: 'super',
-      email: 'email' + idGenerate(),
-      keycloakId: 'keycloakId' + idGenerate(),
-      dateCreation: '2022-05-12',
-    }
-
-    await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
-
-    const q = administrationsQueryModify(Administrations.query().where('id', mockAdministration.id), formatUser(mockUser))
-    const res = (await q.withGraphFetched({ activitesTypesEmails: {} }).first()) as IAdministration
-    expect(res.activitesTypesEmails).toHaveLength(2)
   })
 })

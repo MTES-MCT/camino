@@ -2,9 +2,9 @@ import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
 import { ITitreActivite } from '../../types.js'
 import { idGenerate } from './_format/id-create.js'
-import ActivitesTypes from './activites-types.js'
 import Titres from './titres.js'
 import Utilisateurs from './utilisateurs.js'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 interface TitresActivites extends ITitreActivite {}
 
@@ -33,15 +33,6 @@ class TitresActivites extends Model {
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: ActivitesTypes,
-      join: {
-        from: 'titresActivites.typeId',
-        to: 'activitesTypes.id',
-      },
-    },
-
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
@@ -63,15 +54,15 @@ class TitresActivites extends Model {
 
   public static modifiers: Modifiers = {
     orderDesc: builder => {
-      builder.joinRelated('type').orderByRaw("date desc, array_position(array['ann','tri','men']::varchar[], type.frequence_id), type.ordre")
+      builder.orderByRaw('date desc')
     },
   }
 
   async $beforeInsert(context: QueryContext) {
-    if (!this.id) {
+    if (isNullOrUndefined(this.id)) {
       this.id = idGenerate()
     }
-    if (!this.slug && this.titreId && this.typeId && this.periodeId) {
+    if (isNullOrUndefined(this.slug) && isNotNullNorUndefined(this.titreId) && isNotNullNorUndefined(this.typeId) && isNotNullNorUndefined(this.periodeId)) {
       this.slug = `${this.titreId}-${this.typeId}-${this.annee}-${this.periodeId.toString().padStart(2, '0')}`
     }
 

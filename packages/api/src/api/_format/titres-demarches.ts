@@ -1,10 +1,11 @@
-import { IFields, ITitreDemarche } from '../../types.js'
+import { ITitreDemarche } from '../../types.js'
 
 import { titreEtapeFormat } from './titres-etapes.js'
 import { titreFormat } from './titres.js'
 import { titreDemarcheFormatFields } from './_fields.js'
+import { FieldsDemarche } from '../../database/queries/_options'
 
-export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: IFields = titreDemarcheFormatFields) => {
+export const titreDemarcheFormat = (titreDemarche: ITitreDemarche, fields: FieldsDemarche = titreDemarcheFormatFields) => {
   if (!fields) return titreDemarche
 
   if (fields.titre && titreDemarche.titre) {
