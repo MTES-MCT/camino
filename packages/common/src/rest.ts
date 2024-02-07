@@ -22,7 +22,7 @@ import {
   titreOnfValidator,
   utilisateurTitreAbonneValidator,
 } from './titres.js'
-import { userValidator } from './roles.js'
+import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
 import { etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import {
@@ -40,6 +40,7 @@ import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlug
 import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
 import { featureCollectionPointsValidator, geojsonImportBodyValidator, geojsonImportPointBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
+import { administrationIdValidator } from './static/administrations.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -74,6 +75,7 @@ const IDS = [
   '/rest/entreprises/:entrepriseId',
   '/rest/entreprises/:entrepriseId/documents',
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
+  '/rest/administrations/:administrationId/utilisateurs',
   '/rest/utilisateur/generateQgisToken',
   '/rest/etapesTypes/:demarcheId/:date',
   '/rest/demarches/:demarcheId/geojson',
@@ -144,6 +146,7 @@ export const CaminoRestRoutes = {
     get: { output: z.array(entrepriseDocumentValidator) },
   },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: { entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }, delete: true },
+  '/rest/administrations/:administrationId/utilisateurs': { params: { administrationId: administrationIdValidator }, get: { output: z.array(adminUserNotNullValidator) } },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },

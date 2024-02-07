@@ -217,9 +217,9 @@ type Mutation {
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
 
-  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): [ActiviteTypeEmail]
+  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 
-  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): [ActiviteTypeEmail]
+  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 
   titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds
 }

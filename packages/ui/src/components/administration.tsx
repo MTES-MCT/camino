@@ -11,7 +11,7 @@ import { ActivitesTypesEmails } from './administration/activites-types-emails'
 
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ADMINISTRATION_TYPES, Administrations, AdministrationId, Administration as Adm, AdministrationType, isAdministrationId } from 'camino-common/src/static/administrations'
-import { isSuper, User } from 'camino-common/src/roles'
+import { AdminUserNotNull, isSuper, User } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails, canReadAdministrations } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
@@ -19,7 +19,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { ActiviteTypeEmail } from './administration/administration-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { Utilisateur } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const Administration = defineComponent(() => {
   const store = useStore()
@@ -63,7 +63,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
   const activitesTypesEmails = ref<AsyncData<ActiviteTypeEmail[]>>({
     status: 'LOADING',
   })
-  const utilisateurs = ref<AsyncData<Utilisateur[]>>({ status: 'LOADING' })
+  const utilisateurs = ref<AsyncData<AdminUserNotNull[]>>({ status: 'LOADING' })
 
   const loadActivitesTypesEmails = async () => {
     if (canReadActivitesTypesEmails(props.user, props.administrationId)) {
@@ -120,7 +120,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               </div>
             </div>
 
-            {administration.value.service ? (
+            {isNotNullNorUndefined(administration.value.service) ? (
               <div class="tablet-blobs">
                 <div class="tablet-blob-1-4">
                   <h5>Service</h5>
@@ -138,7 +138,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               <div class="tablet-blob-3-4">
                 <p>
                   {administration.value.adresse1}
-                  {administration.value.adresse2 ? (
+                  {isNotNullNorUndefined(administration.value.adresse2) ? (
                     <span>
                       <br />
                       {administration.value.adresse2}
@@ -167,7 +167,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               </div>
               <div class="tablet-blob-3-4">
                 <p class="word-break">
-                  {administration.value.email ? (
+                  {isNotNullNorUndefined(administration.value.email) ? (
                     <a href={`mailto:${administration.value.email}`} class="btn small bold py-xs px-s rnd">
                       {administration.value.email}
                     </a>
@@ -184,7 +184,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               </div>
               <div class="tablet-blob-3-4">
                 <p class="word-break">
-                  {administration.value.url ? (
+                  {isNotNullNorUndefined(administration.value.url) ? (
                     <a href={administration.value.url} class="btn small bold py-xs px-s rnd">
                       {administration.value.url}
                     </a>
@@ -217,7 +217,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
               </div>
             ) : null}
 
-            {isSuper(props.user) && (region.value || departement) ? (
+            {isSuper(props.user) && (isNotNullNorUndefined(region.value) || isNotNullNorUndefined(departement)) ? (
               <div class="tablet-blobs">
                 <div class="tablet-blob-1-4" />
                 <div class="tablet-blob-3-4">
@@ -264,6 +264,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
                   loadActivitesTypesEmails()
                 }}
                 emailDelete={(administrationId, activiteTypeId, email) => {
+                  console.log('coucou')
                   props.apiClient.administrationActiviteTypeEmailDelete({
                     activiteTypeId,
                     email,

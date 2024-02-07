@@ -2,7 +2,8 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import { apiGraphQLFetch } from '@/api/_client'
 import gql from 'graphql-tag'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
-import { Utilisateur } from 'camino-common/src/entreprise'
+import { AdminUserNotNull } from 'camino-common/src/roles'
+import { getWithJson } from '../../api/client-rest'
 
 export type ActiviteTypeEmail = {
   email: string
@@ -11,17 +12,17 @@ export type ActiviteTypeEmail = {
 
 export interface AdministrationApiClient {
   administrationActivitesTypesEmails: (administrationId: AdministrationId) => Promise<ActiviteTypeEmail[]>
-  administrationUtilisateurs: (administrationId: AdministrationId) => Promise<Utilisateur[]>
+  administrationUtilisateurs: (administrationId: AdministrationId) => Promise<AdminUserNotNull[]>
   administrationActiviteTypeEmailUpdate: (
     activiteTypeEmail: ActiviteTypeEmail & {
       administrationId: AdministrationId
     }
-  ) => Promise<void>
+  ) => Promise<ActiviteTypeEmail[]>
   administrationActiviteTypeEmailDelete: (
     activiteTypeEmail: ActiviteTypeEmail & {
       administrationId: AdministrationId
     }
-  ) => Promise<void>
+  ) => Promise<ActiviteTypeEmail[]>
 }
 
 export const administrationApiClient: AdministrationApiClient = {
@@ -36,26 +37,7 @@ export const administrationApiClient: AdministrationApiClient = {
     `)({ id: administrationId }),
 
   administrationUtilisateurs: async (administrationId: AdministrationId) => {
-    const result = await apiGraphQLFetch(gql`
-      query AdministrationUtilisateurs($id: ID!) {
-        administration(id: $id) {
-          utilisateurs {
-            id
-            nom
-            prenom
-            role
-            email
-            administrationId
-            entreprises {
-              id
-            }
-          }
-        }
-      }
-    `)({
-      id: administrationId,
-    })
-    return result ? result.utilisateurs : []
+    return getWithJson('/rest/administrations/:administrationId/utilisateurs', { administrationId })
   },
   administrationActiviteTypeEmailUpdate: async (
     activiteTypeEmail: ActiviteTypeEmail & {
@@ -64,9 +46,7 @@ export const administrationApiClient: AdministrationApiClient = {
   ) =>
     await apiGraphQLFetch(gql`
       mutation AdministrationActiviteTypeEmailCreer($administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!) {
-        administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: $administrationActiviteTypeEmail) {
-          id
-        }
+        administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: $administrationActiviteTypeEmail)
       }
     `)({ administrationActiviteTypeEmail: activiteTypeEmail }),
 
@@ -77,9 +57,7 @@ export const administrationApiClient: AdministrationApiClient = {
   ) =>
     await apiGraphQLFetch(gql`
       mutation AdministrationActiviteTypeEmailSupprimer($administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!) {
-        administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: $administrationActiviteTypeEmail) {
-          id
-        }
+        administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: $administrationActiviteTypeEmail)
       }
     `)({ administrationActiviteTypeEmail: activiteTypeEmail }),
 }

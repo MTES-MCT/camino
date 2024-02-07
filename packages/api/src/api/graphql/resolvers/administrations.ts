@@ -39,7 +39,7 @@ export const administrationActiviteTypeEmailCreer = async ({ administrationActiv
       email,
     })
 
-    return administrationsActivitesTypesEmails.query().where('administrationId', administrationIdParsed.data)
+    return true
   } catch (e) {
     console.error(e)
 
@@ -67,7 +67,7 @@ export const administrationActiviteTypeEmailSupprimer = async ({ administrationA
       email,
     })
 
-    return administrationsActivitesTypesEmails.query().where('administrationId', administrationIdParsed.data)
+    return true
   } catch (e) {
     console.error(e)
 

@@ -31,7 +31,6 @@ export const canReadActivitesTypesEmails = (user: User, administrationId: Admini
   return false
 }
 
-// FIXME peut voir les utilisateurs
 export const canReadAdministrations = (user: User) => isSuper(user) || isAdministration(user)
 
 export const canEditEmails = (user: User, administrationId: AdministrationId): boolean => {
