@@ -13,13 +13,11 @@ import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
 import { getEtapeById } from './etapes.queries.js'
 import {
   FeatureCollectionPoints,
-  FeatureMultiPolygon,
   GeojsonInformations,
   MultiPolygon,
   PerimetreInformations,
   featureCollectionPointsValidator,
   featureCollectionValidator,
-  featureMultiPolygonValidator,
   geojsonImportBodyValidator,
   geojsonImportPointBodyValidator,
   multiPolygonValidator,
@@ -36,15 +34,15 @@ import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { z } from 'zod'
 
-export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
+export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
-  const geojsonParsed = featureMultiPolygonValidator.safeParse(req.body)
+  const geojsonParsed = featureCollectionPointsValidator.safeParse(req.body)
 
   if (!geoSystemeIdParsed.success || !geojsonParsed.success) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      res.json(await getGeojsonByGeoSystemeIdQuery(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data))
+      res.json(await convertPoints(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data))
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)

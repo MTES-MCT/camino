@@ -4,7 +4,7 @@ import { restPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { FeatureCollection, FeatureCollectionPoints, FeatureMultiPolygon, featureMultiPolygonValidator, GeojsonImportBody, GeojsonImportPointsBody } from 'camino-common/src/perimetre.js'
+import { FeatureCollection, FeatureCollectionPoints, featureCollectionPointsValidator, FeatureMultiPolygon, GeojsonImportBody, GeojsonImportPointsBody } from 'camino-common/src/perimetre.js'
 import { GEO_SYSTEME_IDS, TransformableGeoSystemeId, transformableGeoSystemeIds } from 'camino-common/src/static/geoSystemes.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
@@ -45,18 +45,27 @@ const value: FeatureMultiPolygon = {
   },
 }
 
-describe('getGeojsonByGeoSystemeId', () => {
+const points: FeatureCollectionPoints = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', properties: { nom: '8', description: 'description point 8' }, geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] } },
+    { type: 'Feature', properties: { nom: 'W', description: 'description point W' }, geometry: { type: 'Point', coordinates: [-52.55, 4.22438936251509] } },
+    { type: 'Feature', properties: { nom: '*', description: 'description point *' }, geometry: { type: 'Point', coordinates: [-52.55, 4.24113309117193] } },
+  ],
+}
+
+describe('convertGeojsonPointsToGeoSystemeId', () => {
   test('pas de conversion 4326', async () => {
-    const tested = await restPostCall(dbPool, '/rest/geojson/:geoSystemeId', { geoSystemeId: '4326' }, userSuper, featureMultiPolygonValidator.parse(value))
+    const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: '4326' }, userSuper, featureCollectionPointsValidator.parse(points))
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-    expect(tested.body).toStrictEqual(value)
+    expect(tested.body).toStrictEqual(points)
   })
 
   test('toutes les conversions', async () => {
     const result: { [key in TransformableGeoSystemeId]?: unknown } = {}
     for (const geoSysteme of transformableGeoSystemeIds) {
-      const tested = await restPostCall(dbPool, '/rest/geojson/:geoSystemeId', { geoSystemeId: geoSysteme }, userSuper, featureMultiPolygonValidator.parse(value))
+      const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: geoSysteme }, userSuper, featureCollectionPointsValidator.parse(points))
 
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
       result[geoSysteme] = tested.body
