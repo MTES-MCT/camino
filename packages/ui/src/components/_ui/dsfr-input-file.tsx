@@ -50,7 +50,9 @@ export const InputFile = caminoDefineComponent<Props>(['accept', 'uploadFile'], 
     <div class="fr-upload-group" style={{ opacity: dragHover.value ? '20%' : '100%' }} onDragover={onDragHover} onDragleave={onDragLeave} onDrop={dropFile}>
       <label class="fr-label" for="file-upload">
         Ajouter un fichier
-        <span class="fr-hint-text">Taille maximale : 100 Mo. Formats supportés : {props.accept.join(', ')}.</span>
+        <span class="fr-hint-text">
+          Taille maximale : 100 Mo. Format{props.accept.length > 1 ? 's' : null} supporté{props.accept.length > 1 ? 's' : null} : {props.accept.join(', ')}.
+        </span>
       </label>
       {/* @ts-ignore files n'est pas reconnu par le typage... */}
       <input files={inputValue.value} class="fr-upload" type="file" id="file-upload" name="file-upload" accept={props.accept.map(a => `.${a}`).join(',')} onChange={uploadFile} />

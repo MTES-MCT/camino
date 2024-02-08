@@ -1,7 +1,6 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { HeritageEdit } from './heritage-edit'
 import { PerimetreImportPopup } from './perimetre-import-popup'
-import { FunctionalComponent, HTMLAttributes, computed, onMounted, ref, watch } from 'vue'
+import { FunctionalComponent, HTMLAttributes, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -13,9 +12,10 @@ import { Alert } from '../_ui/alert'
 import { KM2 } from 'camino-common/src/number'
 import { EtapeWithHeritage, EtapeFondamentale } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { PointsImportPopup } from './points-import-popup'
 
 export interface Props {
-  apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'>
+  apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport'>
   etape: {
     typeId: EtapeTypeId
     heritageProps: { perimetre: EtapeWithHeritage<'perimetre', Pick<EtapeFondamentale, 'geojson4326Perimetre' | 'surface' | 'geojson4326Points' | 'type' | 'date'>>['heritageProps']['perimetre'] }
@@ -27,6 +27,7 @@ export interface Props {
   titreSlug: TitreSlug
   completeUpdate: (complete: boolean) => void
   onEtapeChange: (geojsonInformations: GeojsonInformations) => void
+  onPointsChange: (geojson4326Points: FeatureCollectionPoints) => void
   initTab?: 'points' | 'carte'
 }
 
@@ -62,8 +63,9 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
   return null
 }
 
-export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab'], props => {
-  const importPopup = ref<boolean>(false)
+export const PerimetreEdit = defineComponent<Props>(props => {
+  const importPerimetrePopup = ref<boolean>(false)
+  const importPointsPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
   const complete = computed(() => {
@@ -80,12 +82,19 @@ export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient',
     completeUpdate()
   })
 
-  const openPopup = () => {
-    importPopup.value = true
+  const openPerimetrePopup = () => {
+    importPerimetrePopup.value = true
   }
 
-  const closePopup = () => {
-    importPopup.value = false
+  const closePerimetrePopup = () => {
+    importPerimetrePopup.value = false
+  }
+  const openPointsPopup = () => {
+    importPointsPopup.value = true
+  }
+
+  const closePointsPopup = () => {
+    importPointsPopup.value = false
   }
 
   const surface = ref<KM2 | null>(props.etape.surface)
@@ -101,6 +110,16 @@ export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient',
     }
   }
 
+  const resultPoints = (value: FeatureCollectionPoints | Error) => {
+    if ('type' in value) {
+      importError.value = false
+      props.onPointsChange(value)
+    } else {
+      importError.value = true
+      console.error(value)
+    }
+  }
+
   return () => (
     <div class="dsfr">
       <HeritageEdit
@@ -108,7 +127,9 @@ export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient',
         propId="perimetre"
         write={() => (
           <div>
-            <DsfrButton onClick={openPopup} title="Importer depuis un fichier…" />
+            <DsfrButton onClick={openPerimetrePopup} title="Importer depuis un fichier…" />
+            {isNotNullNorUndefined(props.etape.geojson4326Perimetre) ? <DsfrButton class="fr-ml-2w" onClick={openPointsPopup} buttonType="secondary" title="Éditer les points" /> : null}
+
             {importError.value ? <Alert class="fr-mt-2w" title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
 
             <DisplayPerimetre class="fr-mt-2w" apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} surface={surface.value} />
@@ -125,7 +146,12 @@ export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient',
         )}
       />
 
-      {importPopup.value ? <PerimetreImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
+      {importPerimetrePopup.value ? <PerimetreImportPopup close={closePerimetrePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
+
+      {importPointsPopup.value ? <PointsImportPopup close={closePointsPopup} result={resultPoints} apiClient={props.apiClient} /> : null}
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab', 'onPointsChange']

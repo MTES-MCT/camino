@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { ApiClient } from '@/api/api-client'
-import { FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
+import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { PerimetreEdit, Props } from './perimetre-edit'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -11,6 +11,7 @@ import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
   title: 'Components/Etape/PerimetreEdit',
+  // @ts-ignore
   component: PerimetreEdit,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
@@ -21,6 +22,7 @@ const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const completeUpdateAction = action('completeUpdate')
 const onEtapeChangeAction = action('onEtapeChange')
+const onPointsChangeAction = action('onPointsChange')
 
 const perimetre: FeatureMultiPolygon = {
   type: 'Feature',
@@ -41,8 +43,13 @@ const perimetre: FeatureMultiPolygon = {
   },
 }
 
-const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId'> = {
+const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport'> = {
   geojsonImport(body, geoSystemeId) {
+    geojsonImportAction(body, geoSystemeId)
+
+    return Promise.reject(new Error('plop'))
+  },
+  geojsonPointsImport(body, geoSystemeId) {
     geojsonImportAction(body, geoSystemeId)
 
     return Promise.reject(new Error('plop'))
@@ -66,6 +73,9 @@ const completeUpdate = (value: boolean) => {
 const onEtapeChange = (geojsonInformations: GeojsonInformations) => {
   onEtapeChangeAction(geojsonInformations)
 }
+const onPointsChange = (geojson4326Points: FeatureCollectionPoints) => {
+  onPointsChangeAction(geojson4326Points)
+}
 const etapeNoHeritage: Props['etape'] = {
   typeId: 'mfr',
   heritageProps: { perimetre: { actif: false } },
@@ -76,7 +86,16 @@ const etapeNoHeritage: Props['etape'] = {
 
 const titreSlug = titreSlugValidator.parse('titre-slug')
 export const EmptyNoHeritage: StoryFn = () => (
-  <PerimetreEdit initTab="points" apiClient={apiClient} etape={etapeNoHeritage} titreTypeId="arm" titreSlug={titreSlug} completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} />
+  <PerimetreEdit
+    initTab="points"
+    apiClient={apiClient}
+    etape={etapeNoHeritage}
+    titreTypeId="arm"
+    titreSlug={titreSlug}
+    completeUpdate={completeUpdate}
+    onEtapeChange={onEtapeChange}
+    onPointsChange={onPointsChange}
+  />
 )
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
@@ -84,7 +103,16 @@ const etapeEmptyHeritage: Props['etape'] = {
   heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), type: EtapesTypes.mfr, geojson4326Perimetre: null, geojson4326Points: null, surface: null } } },
 }
 export const EmptyHeritage: StoryFn = () => (
-  <PerimetreEdit initTab="points" completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeEmptyHeritage} titreTypeId="arm" titreSlug={titreSlug} />
+  <PerimetreEdit
+    initTab="points"
+    completeUpdate={completeUpdate}
+    onEtapeChange={onEtapeChange}
+    apiClient={apiClient}
+    etape={etapeEmptyHeritage}
+    titreTypeId="arm"
+    titreSlug={titreSlug}
+    onPointsChange={onPointsChange}
+  />
 )
 
 const etapeHeritage: Props['etape'] = {
@@ -103,7 +131,16 @@ const etapeHeritage: Props['etape'] = {
   },
 }
 export const Heritage: StoryFn = () => (
-  <PerimetreEdit initTab="points" completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etapeHeritage} titreTypeId="arm" titreSlug={titreSlug} />
+  <PerimetreEdit
+    initTab="points"
+    completeUpdate={completeUpdate}
+    onEtapeChange={onEtapeChange}
+    apiClient={apiClient}
+    etape={etapeHeritage}
+    titreTypeId="arm"
+    titreSlug={titreSlug}
+    onPointsChange={onPointsChange}
+  />
 )
 
 const etape: Props['etape'] = {
@@ -113,5 +150,14 @@ const etape: Props['etape'] = {
   heritageProps: { perimetre: { actif: false } },
 }
 export const FilledNoHeritage: StoryFn = () => (
-  <PerimetreEdit initTab="points" completeUpdate={completeUpdate} onEtapeChange={onEtapeChange} apiClient={apiClient} etape={etape} titreTypeId="arm" titreSlug={titreSlug} />
+  <PerimetreEdit
+    initTab="points"
+    completeUpdate={completeUpdate}
+    onEtapeChange={onEtapeChange}
+    apiClient={apiClient}
+    etape={etape}
+    titreTypeId="arm"
+    titreSlug={titreSlug}
+    onPointsChange={onPointsChange}
+  />
 )
