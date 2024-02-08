@@ -20,7 +20,7 @@ interface Props {
 }
 
 const defaultGeoSystemeId = GeoSystemes[4326].id
-export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'titreTypeId', 'titreSlug'], props => {
+export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'titreTypeId', 'titreSlug'], props => {
   const systemeGeographique = ref<TransformableGeoSystemeId>(defaultGeoSystemeId)
 
   const importFile = ref<File | null>(null)

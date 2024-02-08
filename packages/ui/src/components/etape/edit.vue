@@ -27,7 +27,7 @@
     </Accordion>
 
     <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="true" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
-      <PointsEdit :etape="etape" :titreTypeId="titreTypeId" :titreSlug="titreSlug" :apiClient="apiClient" :onEtapeChange="onEtapePerimetreChange" :completeUpdate="perimetreCompleteUpdate" />
+      <PerimetreEdit :etape="etape" :titreTypeId="titreTypeId" :titreSlug="titreSlug" :apiClient="apiClient" :onEtapeChange="onEtapePerimetreChange" :completeUpdate="perimetreCompleteUpdate" />
     </Accordion>
 
     <Accordion v-if="stepSections" id="step-sections" :step="stepSections" :opened="opened['sections']" :complete="stepSectionsComplete" :enConstruction="enConstruction" @toggle="toggle('sections')">
@@ -94,7 +94,7 @@ import Accordion from './accordion.vue'
 import { TypeEdit } from './type-edit'
 import { DateEdit } from './date-edit'
 import { FondamentalesEdit } from './fondamentales-edit'
-import { PointsEdit } from './points-edit'
+import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
@@ -109,7 +109,7 @@ export default {
     Accordion,
     TypeEdit,
     FondamentalesEdit,
-    PointsEdit,
+    PerimetreEdit,
     SectionsEdit,
     DocumentsEdit,
     EntrepriseDocumentsEdit,

@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { PointsImportPopup } from './points-import-popup'
+import { PerimetreImportPopup } from './perimetre-import-popup'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
@@ -8,8 +8,8 @@ import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
 
 const meta: Meta = {
-  title: 'Components/Etape/ImportPoint',
-  component: PointsImportPopup,
+  title: 'Components/Etape/ImportPerimetre',
+  component: PerimetreImportPopup,
 }
 export default meta
 
@@ -41,4 +41,4 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'> = {
   },
 }
 
-export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} titreSlug={titreSlugValidator.parse('titreslug')} titreTypeId="arm" />
+export const Default: StoryFn = () => <PerimetreImportPopup close={close} apiClient={apiClient} result={resultAction} titreSlug={titreSlugValidator.parse('titreslug')} titreTypeId="arm" />

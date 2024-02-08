@@ -1,6 +1,6 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { HeritageEdit } from './heritage-edit'
-import { PointsImportPopup } from './points-import-popup'
+import { PerimetreImportPopup } from './perimetre-import-popup'
 import { FunctionalComponent, HTMLAttributes, computed, onMounted, ref, watch } from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
@@ -62,7 +62,7 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
   return null
 }
 
-export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab'], props => {
+export const PerimetreEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab'], props => {
   const importPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
@@ -97,7 +97,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
       props.onEtapeChange(value)
     } else {
       importError.value = true
-      console.log('coucou', value)
+      console.error(value)
     }
   }
 
@@ -125,7 +125,7 @@ export const PointsEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 't
         )}
       />
 
-      {importPopup.value ? <PointsImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
+      {importPopup.value ? <PerimetreImportPopup close={closePopup} result={result} apiClient={props.apiClient} titreTypeId={props.titreTypeId} titreSlug={props.titreSlug} /> : null}
     </div>
   )
 })
