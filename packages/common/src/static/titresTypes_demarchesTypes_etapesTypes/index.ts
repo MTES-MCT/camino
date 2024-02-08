@@ -120,6 +120,7 @@ const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongations = {
   ],
   [DEMARCHES_TYPES_IDS.Prolongation1]: [
     ETAPES_TYPES.demande,
+    ETAPES_TYPES.saisineDesServices,
     ETAPES_TYPES.depotDeLaDemande,
     ETAPES_TYPES.saisineDuPrefet,
     ETAPES_TYPES.desistementDuDemandeur,
