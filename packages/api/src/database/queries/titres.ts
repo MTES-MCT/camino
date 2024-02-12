@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import { raw, RawBuilder } from 'objection'
 
-import { IColonne, Index, ITitre, ITitreColonneId } from '../../types.js'
+import { IColonne, ITitre, ITitreColonneId } from '../../types.js'
 
 import options, { FieldsTitre } from './_options.js'
 import graphBuild from './graph/build.js'
@@ -63,14 +65,9 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 const titresColonnes = {
   nom: { id: 'nom' },
   domaine: { id: raw(`right( titres.type_id, 1 )`) },
-  coordonnees: { id: 'coordonnees' },
   type: { id: 'type:type.nom', relation: 'type.type' },
   statut: { id: 'titreStatutId' },
-  titulaires: {
-    id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
-    relation: 'titulaires',
-  },
-} as Index<IColonne<string | RawBuilder>>
+} as const satisfies Record<ITitreColonneId, IColonne<string | RawBuilder>>
 
 /**
  * Retourne des titres en fonction de filtres
@@ -152,11 +149,12 @@ export const titresGet = async (
   )
 
   if (colonne) {
-    if (titresColonnes[colonne].relation) {
-      q.leftJoinRelated(titresColonnes[colonne].relation!)
+    const myColonne = titresColonnes[colonne]
+    if ('relation' in myColonne) {
+      q.leftJoinRelated(myColonne.relation)
     }
 
-    q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
+    q.orderBy(myColonne.id, ordre || 'asc')
   } else {
     if (noms?.length) {
       q.orderByRaw('case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom', [`${noms}%`])
