@@ -39,19 +39,19 @@ export const Default: StoryFn = () => (
             nom: 'Michel',
             email: 'jean.michel@gmail.com',
             id: toUtilisateurId('jeanmichel'),
-            role: 'super',
-            administrationId: undefined,
+            role: 'admin',
+            administrationId: ADMINISTRATION_IDS.BRGM,
           },
         ]),
       administrationActiviteTypeEmailUpdate: () => {
         administrationActiviteTypeEmailUpdateAction()
 
-        return Promise.resolve()
+        return Promise.resolve([])
       },
       administrationActiviteTypeEmailDelete: () => {
         administrationActiviteTypeEmailDeleteAction()
 
-        return Promise.resolve()
+        return Promise.resolve([])
       },
     }}
   />

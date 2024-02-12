@@ -68,6 +68,13 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
   // alors il ne voit que les titres publics et ceux auxquels son entité est reliée
 
   if (!isSuper(user)) {
+    const etapePointAlias = 't_e'
+    if (isAdministration(user)) {
+      q.joinRaw(
+        `left join titres_etapes ${etapePointAlias} on (${etapePointAlias}.id = "titres"."props_titre_etapes_ids" ->> 'points' and ${etapePointAlias}.administrations_locales @> '"${user.administrationId}"'::jsonb)`
+      )
+    }
+
     q.where(b => {
       b.where('titres.publicLecture', true)
 
@@ -92,13 +99,7 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
         // - ou administrationsLocale
         // - ou administration associée
 
-        b.orWhereExists(
-          administrationsTitresQuery(user.administrationId, 'titres', {
-            isGestionnaire: true,
-            isAssociee: true,
-            isLocale: true,
-          })
-        )
+        b.modify(administrationsTitresQuery, user.administrationId, 'titres', 'or', etapePointAlias)
       }
     })
   }

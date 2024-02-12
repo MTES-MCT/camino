@@ -16,17 +16,17 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
   if (!isSuper(user)) {
     q.whereExists(titresQueryModify((TitresDemarches.relatedQuery('titre') as QueryBuilder<Titres, Titres | Titres[]>).alias('titres'), user))
 
+    const etapePointAlias = 't_e'
+    if (isAdministration(user)) {
+      q.joinRaw(
+        `left join titres_etapes ${etapePointAlias} on ${etapePointAlias}.id = "titre"."props_titre_etapes_ids" ->> 'points' and ${etapePointAlias}.administrations_locales @> '"${user.administrationId}"'::jsonb`
+      )
+    }
     q.where(b => {
       b.orWhere('titresDemarches.publicLecture', true)
 
       if (isAdministration(user)) {
-        const administrationTitre = administrationsTitresQuery(user.administrationId, 'titre', {
-          isGestionnaire: true,
-          isAssociee: true,
-          isLocale: true,
-        })
-
-        b.orWhereExists(administrationTitre)
+        b.modify(administrationsTitresQuery, user.administrationId, 'titre', 'or', etapePointAlias)
       } else if ((isEntreprise(user) || isBureauDEtudes(user)) && user.entreprises?.length) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 

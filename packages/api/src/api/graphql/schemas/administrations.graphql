@@ -5,26 +5,6 @@
 # import * from 'metas.graphql'
 # import * from 'territoires.graphql'
 
-type Administration {
-  id: ID!
-  nom: String
-  typeId: String
-  departementId: String
-  regionId: String
-  abreviation: String
-  service: String
-  url: String
-  email: String
-  telephone: String
-  adresse1: String
-  adresse2: String
-  codePostal: String
-  commune: String
-  cedex: String
-  utilisateurs: [Utilisateur]
-  modification: Boolean
-}
-
 type ActiviteTypeEmail {
   activiteTypeId: String
   email: String

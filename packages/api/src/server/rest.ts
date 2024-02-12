@@ -48,6 +48,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
+import { getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 
 interface IRestResolverResult {
   nom: string
@@ -136,6 +137,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
   '/rest/entreprises': { post: creerEntreprise },
+  '/rest/administrations/:administrationId/utilisateurs': { get: getAdministrationUtilisateurs },
   '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId': { delete: deleteEtape },

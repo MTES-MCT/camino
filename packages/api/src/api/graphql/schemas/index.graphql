@@ -155,14 +155,8 @@ type Query {
 
   entreprisesTitresCreation: [Entreprise]
 
-  "Administration en fonction de son id"
-  administration(id: ID!): Administration
-
   "Les emails à notifier pour un type d’activité"
   administrationActivitesTypesEmails(id: ID!): [ActiviteTypeEmail]
-
-  "Liste des administrations"
-  administrations: [Administration]
 
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
@@ -223,9 +217,9 @@ type Mutation {
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
 
-  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
+  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 
-  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
+  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 
   titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds
 }

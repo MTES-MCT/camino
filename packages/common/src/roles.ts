@@ -36,7 +36,7 @@ const administrationRoleValidator = z.enum(ADMINISTRATION_ROLES)
  */
 export type AdministrationRole = z.infer<typeof administrationRoleValidator>
 
-const adminUserNotNullValidator = baseUserNotNullValidator.extend({ role: administrationRoleValidator, administrationId: administrationIdValidator })
+export const adminUserNotNullValidator = baseUserNotNullValidator.extend({ role: administrationRoleValidator, administrationId: administrationIdValidator })
 export type AdminUserNotNull = z.infer<typeof adminUserNotNullValidator>
 
 const ENTREPRISE_ROLES = ['entreprise', 'bureau d’études'] as const satisfies readonly Role[]

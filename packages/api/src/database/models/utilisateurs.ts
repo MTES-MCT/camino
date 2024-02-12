@@ -2,7 +2,6 @@ import { Model, Pojo } from 'objection'
 
 import { IUtilisateur } from '../../types.js'
 import Entreprises from './entreprises.js'
-import Administrations from './administrations.js'
 
 interface Utilisateurs extends IUtilisateur {}
 
@@ -37,15 +36,6 @@ class Utilisateurs extends Model {
           to: 'utilisateurs__entreprises.entrepriseId',
         },
         to: 'entreprises.id',
-      },
-    },
-
-    administration: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Administrations,
-      join: {
-        from: 'utilisateurs.administrationId',
-        to: 'administrations.id',
       },
     },
   })

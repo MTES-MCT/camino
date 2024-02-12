@@ -33,7 +33,7 @@ const utilisateursRelateTrue = ['entreprises']
 const utilisateursRelateFalse = ['entreprises']
 
 const utilisateurs = {
-  graph: `[administration, entreprises.etablissements]`,
+  graph: `[entreprises.etablissements]`,
   update: {
     relate: utilisateursRelateTrue,
     unrelate: utilisateursRelateTrue,
@@ -43,13 +43,6 @@ const utilisateurs = {
 
 const utilisateursTitres = {
   graph: `[utilisateur]`,
-}
-
-const administrations = {
-  graph: `[utilisateurs]`,
-  update: {
-    insertMissing: true,
-  },
 }
 
 const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires']
@@ -151,7 +144,6 @@ const journaux = {
 }
 
 export default {
-  administrations,
   domaines,
   documents,
   entreprises,
@@ -182,8 +174,6 @@ export type FieldsDocument = FieldId & {
 export type FieldsUtilisateur = FieldId & {
   entreprises?: FieldsEntreprise
 }
-export type FieldsAdministration = FieldId
-
 export type FieldsTitre = FieldId & {
   type?: FieldId & {
     type?: FieldId
