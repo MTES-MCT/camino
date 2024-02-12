@@ -168,7 +168,7 @@ ifndef GIT_SHA
 	@exit 1
 endif
 	@echo 'on déploie sur ${DEPLOY_URL} la version ${GIT_SHA}'
-	@curl http://${DEPLOY_URL}:3030/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
+	@curl --fail-with-body http://${DEPLOY_URL}:3030/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
 
 deploy/dev:
 	$(MAKE) DEPLOY_URL=dev.camino.beta.gouv.fr _deploy
