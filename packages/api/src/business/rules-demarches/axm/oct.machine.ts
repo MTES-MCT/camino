@@ -46,7 +46,6 @@ type AXMOctXStateEvent =
   | { type: 'PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL' }
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
-  | { type: 'RENDRE_DECISION_RETRAIT' }
   | { type: 'RENDRE_AVIS_DGTMAUCL' }
   | {
       type: 'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI'
@@ -158,7 +157,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: ETES.publicationDansUnJournalLocalOuNational, mainStep: true },
   NOTIFIER_COLLECTIVITES_LOCALES: { db: ETES.notificationDesCollectivitesLocales, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
-  RENDRE_DECISION_RETRAIT: { db: ETES.retraitDeLaDecision, mainStep: false },
   RENDRE_AVIS_DGTMAUCL: { db: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_, mainStep: false },
   RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: { db: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi, mainStep: false },
   RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: { db: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet, mainStep: false },
@@ -670,7 +668,6 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
     decisionAdministrationRendue: {
       on: {
         RENDRE_DECISION_ABROGATION: 'decisionAbrogationFaite',
-        RENDRE_DECISION_RETRAIT: 'decisionRetraitFaite',
         RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: {
           target: 'decisionAnnulationParJugeAdministratifRendu',
         },
@@ -766,7 +763,6 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
       },
     },
     decisionAbrogationFaite: { type: 'final' },
-    decisionRetraitFaite: { type: 'final' },
     decisionAnnulationParJugeAdministratifRendu: {
       type: 'final',
       entry: assign<AxmContext>({ demarcheStatut: DemarchesStatutsIds.Rejete }),

@@ -530,7 +530,6 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesDeLaConcession,
-      [ETAPES_TYPES.retraitDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.abrogationDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
       [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,

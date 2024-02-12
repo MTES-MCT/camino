@@ -151,7 +151,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
 
     expect(() => orderAndInterpretMachine(prmOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-06-01\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"spp_fai\\",\\"mcr_fav\\",\\"anf_fai\\",\\"ssr_fai\\",\\"aof_fav\\",\\"ppu_fai\\",\\"ppc_ter\\",\\"apd_fav\\",\\"app_fav\\",\\"cac_fai\\",\\"scg_fai\\",\\"rcg_fav\\",\\"acg_fav\\",\\"sas_fai\\",\\"dex_rej\\",\\"npp_fai\\",\\"mno_fai\\"]\'. The event {\\"type\\":\\"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS\\"} should be one of \'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF,RENDRE_DECISION_ABROGATION,RENDRE_DECISION_RETRAIT\'"'
+      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-06-01\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"spp_fai\\",\\"mcr_fav\\",\\"anf_fai\\",\\"ssr_fai\\",\\"aof_fav\\",\\"ppu_fai\\",\\"ppc_ter\\",\\"apd_fav\\",\\"app_fav\\",\\"cac_fai\\",\\"scg_fai\\",\\"rcg_fav\\",\\"acg_fav\\",\\"sas_fai\\",\\"dex_rej\\",\\"npp_fai\\",\\"mno_fai\\"]\'. The event {\\"type\\":\\"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS\\"} should be one of \'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF,RENDRE_DECISION_ABROGATION\'"'
     )
   })
 

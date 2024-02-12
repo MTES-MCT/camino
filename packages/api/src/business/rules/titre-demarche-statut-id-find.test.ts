@@ -328,10 +328,6 @@ describe("statut d'une démarche", () => {
     expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'spp' }]), 'pxm', newDemarcheId())).toEqual('ind')
   })
 
-  test("une démarche dont l'étape la plus récente est de type “retrait de la décision” a le statut “en instruction”", () => {
-    expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rtd' }]), 'pxm', newDemarcheId())).toEqual('ins')
-  })
-
   test("une démarche dont l'étape la plus récente est de type “abrogation de la décision” a le statut “en instruction”", () => {
     expect(titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'abd' }]), 'pxm', newDemarcheId())).toEqual('ins')
   })
