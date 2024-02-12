@@ -1,14 +1,15 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { DeepReadonly, computed, ref } from 'vue'
-import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { perimetreFileUploadTypeValidator } from 'camino-common/src/static/documentsTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
+import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'>
@@ -28,29 +29,13 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
     importFile.value = file
   }
 
-  const itemChipLabel = (item: GeoSysteme): string => item?.nom
-  const onSelectGeographicSystem = (item: DeepReadonly<GeoSysteme<TransformableGeoSystemeId>> | undefined) => {
-    if (item !== undefined) {
-      systemeGeographique.value = item.id
+  const onSelectGeographicSystem = (geoSystemeId: TransformableGeoSystemeId | null) => {
+    if (isNotNullNorUndefined(geoSystemeId)) {
+      systemeGeographique.value = geoSystemeId
     } else {
       systemeGeographique.value = defaultGeoSystemeId
     }
   }
-
-  const search = ref<string | null>(null)
-  const geoSystemesToDisplay = computed<GeoSysteme<TransformableGeoSystemeId>[]>(() => {
-    const value = search.value
-
-    return transformableGeoSystemes.filter(({ id, nom }) => {
-      return value !== null ? id.toLowerCase().includes(value) || nom.toLowerCase().includes(value) : true
-    })
-  })
-
-  const searchReduceGeoSystem = (item: string) => {
-    search.value = item.toLowerCase()
-  }
-
-  const overrideItem = GeoSystemes[systemeGeographique.value]
 
   const content = () => (
     <form>
@@ -60,19 +45,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <TypeAheadSingle
-              overrideItem={overrideItem}
-              props={{
-                id: 'geographic-system',
-                itemKey: 'id',
-                itemChipLabel,
-                items: geoSystemesToDisplay.value,
-                minInputLength: 1,
-                placeholder: '',
-                onSelectItem: onSelectGeographicSystem,
-                onInput: searchReduceGeoSystem,
-              }}
-            />
+            <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} />
           </div>
         </div>
       </fieldset>

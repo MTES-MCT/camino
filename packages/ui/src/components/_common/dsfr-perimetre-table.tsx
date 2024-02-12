@@ -1,17 +1,17 @@
 import { AsyncData } from '@/api/client-rest'
 import { contentTypes } from 'camino-common/src/rest'
-import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { defineComponent, ref, watch, computed } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { TableRow, TextColumnData } from '../_ui/table'
 import { TableAuto, Column } from '../_ui/table-auto'
-import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { PerimetreApiClient } from '../titre/perimetre-api-client'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { capitalize } from 'camino-common/src/strings'
 import { indexToLetter, toDegresMinutes } from 'camino-common/src/number'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { GeoSystemeTypeahead } from './geosysteme-typeahead'
 
 interface Props {
   perimetre: {
@@ -113,67 +113,33 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     return []
   })
 
-  const geoSystemSelected = ref<GeoSysteme<TransformableGeoSystemeId> | undefined>(GeoSystemes[4326])
-  const geoSystemUpdate = async (geoSysteme: GeoSysteme<TransformableGeoSystemeId> | undefined) => {
-    geoSystemSelected.value = geoSysteme
-    if (geoSysteme !== undefined) {
-      try {
-        currentRows.value = { status: 'LOADING' }
+  const geoSystemSelected = ref<GeoSysteme<TransformableGeoSystemeId> | null>(GeoSystemes[4326])
+  const geoSystemUpdate = async (geoSystemeId: TransformableGeoSystemeId | null) => {
+    if (isNotNullNorUndefined(geoSystemeId)) {
+      if (geoSystemeId !== geoSystemSelected.value?.id) {
+        geoSystemSelected.value = GeoSystemes[geoSystemeId]
+        try {
+          currentRows.value = { status: 'LOADING' }
 
-        const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_perimetre, geoSysteme.id)
-        // TODO 2024-01-29 on perd les points qu'on a mis à la main
-        currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: newGeojson, geojson4326_points: transformMultipolygonToPoints(newGeojson) }) }
-      } catch (e: any) {
-        console.error('error', e)
-        currentRows.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
+          const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_perimetre, geoSystemeId)
+          // TODO 2024-01-29 on perd les points qu'on a mis à la main
+          currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: newGeojson, geojson4326_points: transformMultipolygonToPoints(newGeojson) }) }
+        } catch (e: any) {
+          console.error('error', e)
+          currentRows.value = {
+            status: 'ERROR',
+            message: e.message ?? "Une erreur s'est produite",
+          }
         }
       }
-    }
-  }
-
-  const geoSystemeFiltered = ref<GeoSysteme<TransformableGeoSystemeId>[]>(transformableGeoSystemes)
-  const geoSystemeOnInput = (search: string) => {
-    const formatedSearch = search.trim().toLowerCase()
-
-    if (formatedSearch.length === 0) {
-      geoSystemeFiltered.value = transformableGeoSystemes
     } else {
-      geoSystemeFiltered.value = transformableGeoSystemes.filter(
-        ({ nom, id, zone }) =>
-          id.toLowerCase().includes(formatedSearch) || nom.toLowerCase().includes(formatedSearch) || zone.toLowerCase().includes(formatedSearch) || id === geoSystemSelected.value?.id
-      )
+      geoSystemSelected.value = null
     }
-  }
-  const overrideItem = GeoSystemes[4326]
-
-  const display = (geosystem: GeoSysteme<TransformableGeoSystemeId>) => {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-pl-2w">
-        <span class="fr-text--bold">
-          {capitalize(geosystem.nom)} - ({geosystem.id})
-        </span>
-        <span class="fr-text">{capitalize(geosystem.zone)}</span>
-      </div>
-    )
   }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TypeAheadSingle
-        overrideItem={overrideItem}
-        props={{
-          items: geoSystemeFiltered.value,
-          itemChipLabel: item => `${item.nom} - (${item.id})`,
-          itemKey: 'id',
-          placeholder: '',
-          minInputLength: 1,
-          onSelectItem: geoSystemUpdate,
-          onInput: geoSystemeOnInput,
-          displayItemInList: display,
-        }}
-      />
+      <GeoSystemeTypeahead geoSystemeSelected={geoSystemUpdate} />
       <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort="noSort" />
 
       <DsfrLink
