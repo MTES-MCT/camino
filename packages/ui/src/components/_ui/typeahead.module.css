@@ -27,7 +27,7 @@ input.typeahead-input:focus {
   max-height: 400px;
   overflow-y: auto;
   border-bottom: 1px solid var(--grey-900-175);
-  z-index: 509;
+  z-index: 100001;
 }
 .typeahead .typeahead-list .typeahead-list-item {
   cursor: pointer;
