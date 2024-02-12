@@ -22,6 +22,7 @@ import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Forets } from 'camino-common/src/static/forets'
 import { SDOMZones } from 'camino-common/src/static/sdom'
 import { isDemarcheStatutNonStatue, isDemarcheStatutNonValide } from 'camino-common/src/static/demarchesStatuts'
+import { numberFormat } from 'camino-common/src/number'
 
 type Props = {
   titre: Pick<TitreGet, 'id' | 'slug' | 'titre_type_id' | 'titre_statut_id' | 'nom'>
@@ -295,6 +296,7 @@ const DisplayLocalisation: FunctionalComponent<Pick<DemarcheEtapeFondamentale['f
       {isNonEmptyArray(communes) ? (
         <EtapePropItem style={{ gridColumn: communes.length > 3 ? '1 / -1' : 'unset' }} title={`Commune${communes.length > 1 ? 's' : ''}`} text={communes.map(({ nom }) => nom).join(', ')} />
       ) : null}
+      {isNotNullNorUndefined(props.perimetre.surface) && props.perimetre.surface > 0 ? <EtapePropItem title="Surface" text={`${numberFormat(props.perimetre.surface)} km² environ`} /> : null}
     </>
   )
 }
