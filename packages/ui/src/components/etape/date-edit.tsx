@@ -16,8 +16,6 @@ export const DateEdit: FunctionalComponent<Props> = props => {
       <div class="tablet-blob-2-3">
         <InputDate dateChanged={props.onDateChanged} initialValue={props.date} class="mb-s" />
       </div>
-
-      <hr />
     </div>
   )
 }

@@ -32,8 +32,6 @@
         <p v-if="element.description" class="h6" v-html="element.description" />
       </SectionElementHeritageEdit>
     </div>
-
-    <hr />
   </div>
 </template>
 

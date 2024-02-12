@@ -5,7 +5,7 @@ import { Tag } from '../_ui/tag'
 import { computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { getEntries, getKeys } from 'camino-common/src/typescript-tools'
+import { getEntries, getKeys, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -226,7 +226,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
 
       getKeys(entreprisesEntrepriseDocumentsIndex.value, isEntrepriseId).forEach(eId => {
         entreprisesEntrepriseDocumentsIndex.value[eId].entreprisedocuments.forEach(({ id }) => {
-          if (!id) return
+          if (isNullOrUndefined(id) || id === '') return
 
           etapeEntrepriseDocumentIds.value.push(id)
         })
@@ -258,12 +258,11 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                   <h4>{entreprisesNoms.value[eId]}</h4>
                 </div>
 
-                <hr class="mb-s" />
                 {e.entreprisedocuments.map((j, index) => (
                   <div key={j.id}>
                     <div class="tablet-blobs">
                       <div class="tablet-blob-1-3 flex flex-center">
-                        {j.id ? (
+                        {isNotNullNorUndefined(j.id) && j.id !== '' ? (
                           <a
                             class="mt-s"
                             href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })}
@@ -275,8 +274,12 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                         ) : (
                           <h5 class="mt-s">{j.entrepriseDocumentType.nom}</h5>
                         )}
-                        <span>{j.entrepriseDocumentType?.description ? <HelpTooltip text={j.entrepriseDocumentType?.description} class="ml-xs" /> : null}</span>
-                        {j.id ? null : <Tag mini color="bg-warning" class="ml-xs" text="Manquant" />}
+                        <span>
+                          {isNotNullNorUndefined(j.entrepriseDocumentType) && isNotNullNorUndefined(j.entrepriseDocumentType.description) ? (
+                            <HelpTooltip text={j.entrepriseDocumentType.description} class="ml-xs" />
+                          ) : null}
+                        </span>
+                        {isNotNullNorUndefined(j.id) && j.id !== '' ? null : <Tag mini color="bg-warning" class="ml-xs" text="Manquant" />}
                       </div>
                       <div class="tablet-blob-2-3">
                         <div class="flex mb-s">
@@ -295,7 +298,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                             <option value="newDocument">Ajouter un nouveau document d'entreprise</option>
                           </select>
 
-                          {j.id ? (
+                          {isNotNullNorUndefined(j.id) && j.id !== '' ? (
                             <div class="flex-right flex flex-center ml-s">
                               <ButtonIcon class="btn-border py-s px-m rnd-xs" onClick={() => entreprisedocumentRemove(eId, index)} icon="delete" title="Supprime le document d’entreprise" />
                             </div>
@@ -305,7 +308,6 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                     </div>
                   </div>
                 ))}
-                <hr class="mt-s mb-s" />
                 <div>
                   <div class="tablet-blobs">
                     <div class="tablet-blob-1-3">
