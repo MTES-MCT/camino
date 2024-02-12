@@ -3,7 +3,7 @@ import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
 import { GEO_SYSTEME_IDS, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
+import { convertPoints, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User } from 'camino-common/src/roles.js'
@@ -13,13 +13,13 @@ import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
 import { getEtapeById } from './etapes.queries.js'
 import {
   FeatureCollectionPoints,
-  FeatureMultiPolygon,
   GeojsonInformations,
   MultiPolygon,
   PerimetreInformations,
+  featureCollectionPointsValidator,
   featureCollectionValidator,
-  featureMultiPolygonValidator,
   geojsonImportBodyValidator,
+  geojsonImportPointBodyValidator,
   multiPolygonValidator,
   polygonCoordinatesValidator,
 } from 'camino-common/src/perimetre.js'
@@ -34,15 +34,15 @@ import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { z } from 'zod'
 
-export const getGeojsonByGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureMultiPolygon>) => {
+export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
   const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
-  const geojsonParsed = featureMultiPolygonValidator.safeParse(req.body)
+  const geojsonParsed = featureCollectionPointsValidator.safeParse(req.body)
 
   if (!geoSystemeIdParsed.success || !geojsonParsed.success) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      res.json(await getGeojsonByGeoSystemeIdQuery(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data))
+      res.json(await convertPoints(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data))
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)
@@ -135,6 +135,10 @@ const stream2buffer = async (stream: Stream): Promise<Buffer> => {
 
 const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
 const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
+const shapeValidator = z
+  .array(z.object({ coordinates: polygonCoordinatesValidator, type: z.literal('Polygon') }).or(multiPolygonValidator))
+  .max(1)
+  .min(1)
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -168,10 +172,6 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             featureCollectionPoints = { type: 'FeatureCollection', features: points }
           }
         } else {
-          const shapeValidator = z
-            .array(z.object({ coordinates: polygonCoordinatesValidator, type: z.literal('Polygon') }).or(multiPolygonValidator))
-            .max(1)
-            .min(1)
           const shpParsed = shpjs.parseShp(buffer, 'EPSG:4326')
 
           const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
@@ -200,6 +200,40 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         }
 
         res.json(result)
+      } catch (e: any) {
+        console.error(e)
+        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)
+      }
+    } else {
+      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(geojsonImportInput.error)
+    }
+  }
+}
+
+export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
+  const user = req.auth
+
+  const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+  if (!user || isDefault(user)) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  } else if (!geoSystemeId.success) {
+    console.warn(`le geoSystemeId est obligatoire`)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const geojsonImportInput = geojsonImportPointBodyValidator.safeParse(req.body)
+
+    if (geojsonImportInput.success) {
+      try {
+        const filename = geojsonImportInput.data.tempDocumentName
+
+        const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
+        const fileStream = createReadStream(pathFrom)
+
+        const buffer = await stream2buffer(fileStream)
+
+        const features = featureCollectionPointsValidator.parse(JSON.parse(buffer.toString()))
+        const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
+        res.json(conversion)
       } catch (e: any) {
         console.error(e)
         res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)

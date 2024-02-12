@@ -21,6 +21,12 @@ export const multiPolygonValidator = z.object({
 })
 export type MultiPolygon = z.infer<typeof multiPolygonValidator>
 
+export const multiPointsValidator = z.object({
+  type: z.literal('MultiPoint'),
+  coordinates: z.array(tupleCoordinateValidator).min(1),
+})
+export type MultiPoint = z.infer<typeof multiPointsValidator>
+
 const nullToEmptyObject = (val: null | NonNullable<unknown>): NonNullable<unknown> => {
   if (isNullOrUndefined(val)) {
     return {}
@@ -75,6 +81,9 @@ export const geojsonImportBodyValidator = z.object({
 })
 
 export type GeojsonImportBody = z.infer<typeof geojsonImportBodyValidator>
+
+export const geojsonImportPointBodyValidator = geojsonImportBodyValidator.pick({ tempDocumentName: true })
+export type GeojsonImportPointsBody = z.infer<typeof geojsonImportPointBodyValidator>
 
 const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
   for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {

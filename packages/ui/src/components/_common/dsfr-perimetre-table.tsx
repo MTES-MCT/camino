@@ -121,9 +121,8 @@ export const TabCaminoTable = defineComponent<Props>(props => {
         try {
           currentRows.value = { status: 'LOADING' }
 
-          const newGeojson = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_perimetre, geoSystemeId)
-          // TODO 2024-01-29 on perd les points qu'on a mis à la main
-          currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: newGeojson, geojson4326_points: transformMultipolygonToPoints(newGeojson) }) }
+          const newGeojsonPoints = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_points, geoSystemeId)
+          currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: props.perimetre.geojson4326_perimetre, geojson4326_points: newGeojsonPoints }) }
         } catch (e: any) {
           console.error('error', e)
           currentRows.value = {
@@ -132,8 +131,6 @@ export const TabCaminoTable = defineComponent<Props>(props => {
           }
         }
       }
-    } else {
-      geoSystemSelected.value = null
     }
   }
 

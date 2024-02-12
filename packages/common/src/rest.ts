@@ -38,7 +38,7 @@ import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
 import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
-import { featureMultiPolygonValidator, geojsonImportBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
+import { featureCollectionPointsValidator, geojsonImportBodyValidator, geojsonImportPointBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
@@ -82,8 +82,9 @@ const IDS = [
   '/rest/etapes/:etapeId',
   '/rest/etapes/:etapeId/depot',
   '/rest/activites/:activiteId',
-  '/rest/geojson/:geoSystemeId',
   '/rest/geojson/import/:geoSystemeId',
+  '/rest/geojson_points/:geoSystemeId',
+  '/rest/geojson_points/import/:geoSystemeId',
   '/rest/communes',
   '/deconnecter',
   '/changerMotDePasse',
@@ -152,10 +153,14 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
-  '/rest/geojson/:geoSystemeId': { params: { geoSystemeId: transformableGeoSystemeIdValidator }, post: { input: featureMultiPolygonValidator, output: featureMultiPolygonValidator } },
+  '/rest/geojson_points/:geoSystemeId': { params: { geoSystemeId: transformableGeoSystemeIdValidator }, post: { input: featureCollectionPointsValidator, output: featureCollectionPointsValidator } },
   '/rest/geojson/import/:geoSystemeId': {
     params: { geoSystemeId: transformableGeoSystemeIdValidator },
     post: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
+  },
+  '/rest/geojson_points/import/:geoSystemeId': {
+    params: { geoSystemeId: transformableGeoSystemeIdValidator },
+    post: { input: geojsonImportPointBodyValidator, output: featureCollectionPointsValidator },
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },

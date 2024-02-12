@@ -1,6 +1,25 @@
 /** Types generated for queries found in "src/api/rest/perimetre.queries.ts" */
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
+/** 'ConvertMultiPointDb' parameters type */
+export interface IConvertMultiPointDbParams {
+  fromGeoSystemeId: number;
+  geojson: string;
+  precision: number;
+  toGeoSystemeId: number;
+}
+
+/** 'ConvertMultiPointDb' return type */
+export interface IConvertMultiPointDbResult {
+  geojson: Json | null;
+}
+
+/** 'ConvertMultiPointDb' query type */
+export interface IConvertMultiPointDbQuery {
+  params: IConvertMultiPointDbParams;
+  result: IConvertMultiPointDbResult;
+}
+
 /** 'GetGeojsonByGeoSystemeIdDb' parameters type */
 export interface IGetGeojsonByGeoSystemeIdDbParams {
   fromGeoSystemeId: number;

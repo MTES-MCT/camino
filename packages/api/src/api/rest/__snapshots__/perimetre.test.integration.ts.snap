@@ -1,209 +1,335 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`getGeojsonByGeoSystemeId > toutes les conversions 1`] = `
+exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
 {
   "2154": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              -6508915.664,
-              4155227.249,
-            ],
-            [
-              -6509838.38,
-              4156321.503,
-            ],
-            [
-              -6508315.744,
-              4158116.457,
-            ],
-            [
-              -6508915.664,
-              4155227.249,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6508915.664,
+            4155227.249,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6509838.38,
+            4156321.503,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6508315.744,
+            4158116.457,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "2972": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              329078.146,
-              466912.757,
-            ],
-            [
-              327968.368,
-              467101.879,
-            ],
-            [
-              327972.066,
-              468953.34,
-            ],
-            [
-              329078.146,
-              466912.757,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            329078.146,
+            466912.757,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            327968.368,
+            467101.879,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            327972.066,
+            468953.34,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "2975": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              -10635907.53,
-              28583935.69,
-            ],
-            [
-              -10632537.838,
-              28584100.036,
-            ],
-            [
-              -10631349.492,
-              28578682.388,
-            ],
-            [
-              -10635907.53,
-              28583935.69,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -10635907.53,
+            28583935.69,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -10632537.838,
+            28584100.036,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -10631349.492,
+            28578682.388,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "4326": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              -52.54,
-              4.22269896902571,
-            ],
-            [
-              -52.55,
-              4.22438936251509,
-            ],
-            [
-              -52.55,
-              4.24113309117193,
-            ],
-            [
-              -52.54,
-              4.22269896902571,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.22269896902571,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.22438936251509,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.24113309117193,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "4467": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              995446.594,
-              468165.655,
-            ],
-            [
-              994332.422,
-              468346.681,
-            ],
-            [
-              994321.759,
-              470203.04,
-            ],
-            [
-              995446.594,
-              468165.655,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            995446.594,
+            468165.655,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994332.422,
+            468346.681,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994321.759,
+            470203.04,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "4471": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              -16143544.355,
-              26292802.746,
-            ],
-            [
-              -16136616.095,
-              26296480.296,
-            ],
-            [
-              -16128766.302,
-              26286263.401,
-            ],
-            [
-              -16143544.355,
-              26292802.746,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -16143544.355,
+            26292802.746,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -16136616.095,
+            26296480.296,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -16128766.302,
+            26286263.401,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
   "5490": {
-    "geometry": {
-      "coordinates": [
-        [
-          [
-            [
-              1667272.177,
-              474656.113,
-            ],
-            [
-              1666141.191,
-              474830.764,
-            ],
-            [
-              1666115.568,
-              476712.631,
-            ],
-            [
-              1667272.177,
-              474656.113,
-            ],
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            1667272.177,
+            474656.113,
           ],
-        ],
-      ],
-      "type": "MultiPolygon",
-    },
-    "properties": {},
-    "type": "Feature",
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666141.191,
+            474830.764,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666115.568,
+            476712.631,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
   },
 }
 `;

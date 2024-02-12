@@ -5,7 +5,7 @@ import { DsfrPerimetre } from './dsfr-perimetre'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
-import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
@@ -34,6 +34,15 @@ const geojson4326_perimetre: FeatureMultiPolygon = {
   },
 }
 
+const geojson4326_points: FeatureCollectionPoints = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
+    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
+    { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [-52.5660583466962, 4.23944263425535] } },
+  ],
+}
+
 const pushAction = action('push')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const getTitresWithPerimetreForCarteAction = action('getGeojsonByGeoSystemeId')
@@ -42,7 +51,7 @@ const apiClientMock: Pick<ApiClient, 'getTitresWithPerimetreForCarte' | 'getGeoj
   getGeojsonByGeoSystemeId: (geojson, geoSystemeId) => {
     getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
 
-    return Promise.resolve(geojson4326_perimetre)
+    return Promise.resolve(geojson4326_points)
   },
   getTitresWithPerimetreForCarte: carte => {
     getTitresWithPerimetreForCarteAction(carte)

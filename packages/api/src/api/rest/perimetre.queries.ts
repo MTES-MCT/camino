@@ -4,8 +4,8 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import { FeatureMultiPolygon, MultiPolygon, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
-import { IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { IConvertMultiPointDbQuery, IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreSlug, titreSlugValidator } from 'camino-common/src/validators/titres.js'
@@ -21,6 +21,41 @@ const precision = {
   deg: 4,
   gon: 4,
 } as const satisfies Record<GeoSysteme['uniteId'], number>
+
+export const convertPoints = async (
+  pool: Pool,
+  fromGeoSystemeId: TransformableGeoSystemeId,
+  toGeoSystemeId: TransformableGeoSystemeId,
+  geojsonPoints: FeatureCollectionPoints
+): Promise<FeatureCollectionPoints> => {
+  if (fromGeoSystemeId === toGeoSystemeId) {
+    return geojsonPoints
+  }
+
+  const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
+
+  const result = await dbQueryAndValidate(
+    convertMultiPointDb,
+    { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(multiPoint), precision: precision[GeoSystemes[toGeoSystemeId].uniteId] },
+    pool,
+    z.object({ geojson: multiPointsValidator })
+  )
+
+  return {
+    type: 'FeatureCollection',
+    features: geojsonPoints.features.map((feature, index) => {
+      return { ...feature, geometry: { type: 'Point', coordinates: result[0].geojson.coordinates[index] } }
+    }),
+  }
+}
+
+const convertMultiPointDb = sql<
+  Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: TransformableGeoSystemeId; toGeoSystemeId: TransformableGeoSystemeId; geojson: string; precision: number }, { geojson: MultiPoint }>
+>`
+select
+    ST_AsGeoJSON (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer), $ precision !)::json as geojson
+LIMIT 1
+`
 
 export const getGeojsonByGeoSystemeId = async (
   pool: Pool,

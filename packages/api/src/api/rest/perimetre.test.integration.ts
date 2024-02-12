@@ -4,7 +4,7 @@ import { restPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { FeatureCollection, FeatureMultiPolygon, featureMultiPolygonValidator, GeojsonImportBody } from 'camino-common/src/perimetre.js'
+import { FeatureCollection, FeatureCollectionPoints, featureCollectionPointsValidator, FeatureMultiPolygon, GeojsonImportBody, GeojsonImportPointsBody } from 'camino-common/src/perimetre.js'
 import { GEO_SYSTEME_IDS, TransformableGeoSystemeId, transformableGeoSystemeIds } from 'camino-common/src/static/geoSystemes.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
@@ -45,18 +45,27 @@ const value: FeatureMultiPolygon = {
   },
 }
 
-describe('getGeojsonByGeoSystemeId', () => {
+const points: FeatureCollectionPoints = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', properties: { nom: '8', description: 'description point 8' }, geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] } },
+    { type: 'Feature', properties: { nom: 'W', description: 'description point W' }, geometry: { type: 'Point', coordinates: [-52.55, 4.22438936251509] } },
+    { type: 'Feature', properties: { nom: '*', description: 'description point *' }, geometry: { type: 'Point', coordinates: [-52.55, 4.24113309117193] } },
+  ],
+}
+
+describe('convertGeojsonPointsToGeoSystemeId', () => {
   test('pas de conversion 4326', async () => {
-    const tested = await restPostCall(dbPool, '/rest/geojson/:geoSystemeId', { geoSystemeId: '4326' }, userSuper, featureMultiPolygonValidator.parse(value))
+    const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: '4326' }, userSuper, featureCollectionPointsValidator.parse(points))
 
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-    expect(tested.body).toStrictEqual(value)
+    expect(tested.body).toStrictEqual(points)
   })
 
   test('toutes les conversions', async () => {
     const result: { [key in TransformableGeoSystemeId]?: unknown } = {}
     for (const geoSysteme of transformableGeoSystemeIds) {
-      const tested = await restPostCall(dbPool, '/rest/geojson/:geoSystemeId', { geoSystemeId: geoSysteme }, userSuper, featureMultiPolygonValidator.parse(value))
+      const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: geoSysteme }, userSuper, featureCollectionPointsValidator.parse(points))
 
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
       result[geoSysteme] = tested.body
@@ -374,6 +383,96 @@ describe('geojsonImport', () => {
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
         "surface": 24.77,
+      }
+    `)
+  })
+})
+
+describe('geojsonImportPoints', () => {
+  test('fichier invalide', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    const body: GeojsonImportPointsBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test('fichier valide sans conversion', async () => {
+    const feature: FeatureCollectionPoints = {
+      type: 'FeatureCollection',
+      features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] }, properties: { nom: 'A', description: 'Une description du point A' } }],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportPointsBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [
+                -52.54,
+                4.22269896902571,
+              ],
+              "type": "Point",
+            },
+            "properties": {
+              "description": "Une description du point A",
+              "nom": "A",
+            },
+            "type": "Feature",
+          },
+        ],
+        "type": "FeatureCollection",
+      }
+    `)
+  })
+
+  test('valide avec conversion', async () => {
+    const feature: FeatureCollectionPoints = {
+      type: 'FeatureCollection',
+      features: [
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [1051195.108314365847036, 6867800.046355471946299] }, properties: { nom: 'A', description: 'Une description du point A' } },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportPointsBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [
+                7.7854,
+                48.8145,
+              ],
+              "type": "Point",
+            },
+            "properties": {
+              "description": "Une description du point A",
+              "nom": "A",
+            },
+            "type": "Feature",
+          },
+        ],
+        "type": "FeatureCollection",
       }
     `)
   })
