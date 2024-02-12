@@ -121,18 +121,18 @@ export const TabCaminoTable = defineComponent<Props>(props => {
         try {
           currentRows.value = { status: 'LOADING' }
 
-        const newGeojsonPoints = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_points, geoSystemeId)
-        currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: props.perimetre.geojson4326_perimetre, geojson4326_points: newGeojsonPoints }) }
-      } catch (e: any) {
-        console.error('error', e)
-        currentRows.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
+          const newGeojsonPoints = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_points, geoSystemeId)
+          currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: props.perimetre.geojson4326_perimetre, geojson4326_points: newGeojsonPoints }) }
+        } catch (e: any) {
+          console.error('error', e)
+          currentRows.value = {
+            status: 'ERROR',
+            message: e.message ?? "Une erreur s'est produite",
+          }
         }
       }
     }
   }
-}
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
