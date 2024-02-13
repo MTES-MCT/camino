@@ -176,6 +176,7 @@
         owner: camino
         group: users
         mode: u=rwx,g=rwx,o=rx
+      register: cd
       become: True
     - name: Lance le service
       ansible.builtin.systemd:
@@ -183,3 +184,10 @@
         enabled: yes
         name: cd
       become: True
+    - name: Redémarre le service
+      ansible.builtin.systemd:
+        state: restarted
+        enabled: yes
+        name: cd
+      become: True
+      when: cd.changed
