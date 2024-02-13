@@ -21,7 +21,6 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "paths": {
-      "geojson-rewind": ["./src/@types/geojson-rewind"],
       "graphql-fields": ["./src/@types/graphql-fields"],
       "html-to-text": ["./src/@types/html-to-text"],
       "matomo-tracker": ["./src/@types/matomo-tracker"]
