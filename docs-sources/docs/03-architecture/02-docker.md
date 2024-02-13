@@ -8,7 +8,7 @@ Pour développer sans installer PostgreSQL localement.
 # démarre l'application et la base de données dans des conteneurs Docker
 # en mode `development`
 # accessible à http://localhost:PORT
-docker-compose -f ./docker-compose.localhost.yml up --build
+docker compose -f ./docker-compose.localhost.yml up --build
 ```
 
 ## Environnement de test
@@ -25,7 +25,7 @@ Pré-requis:
 # démarre l'application et la base de données dans des containers Docker
 # en mode `production`
 # accessible à https://api.camino.local
-docker-compose -f ./docker-compose.local.yml up --build
+docker compose -f ./docker-compose.local.yml up --build
 ```
 
 ## Environnement de production
@@ -39,5 +39,5 @@ Pré-requis:
 # démarre l'application et la base de données dans des containers Docker
 # en mode `production`
 # accessible à http://api.camino.beta.gouv.fr
-docker-compose -f ./docker-compose.yml up -d --build
+docker compose -f ./docker-compose.yml up -d --build
 ```

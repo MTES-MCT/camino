@@ -55,15 +55,6 @@
         name: docker-ce-cli
         state: latest
       become: True
-- name: Install docker compose
-  ansible.builtin.get_url:
-    url: https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-linux-x86_64
-    checksum: sha256:1178848502b0771b96895febeb4b1736acd5019c4ed71a8efbabf6915185fe8a
-    dest: /usr/local/bin/docker-compose
-    mode: u=rwx,g=rx,o=rx
-    owner: camino
-    group: users
-  become: True
 - name: Ajoute les variables liées au bon environnement
   ansible.builtin.include_vars:
     file: "{{ env }}.yml"
