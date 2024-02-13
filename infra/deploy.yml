@@ -14,4 +14,10 @@
     - role: camino
     - role: prod
       when: env == 'prod'
+  tasks:
+    - name: Remove old docker-compose (remove this once run through the prod)
+      ansible.builtin.file:
+        path: /usr/local/bin/docker-compose
+        state: absent
+      become: True
 

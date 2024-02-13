@@ -9,7 +9,7 @@ STORYBOOK_PORT=80
 OAUTH_PORT=4180
 KEYCLOAK_PORT=8080
 
-# url du serveur (docker-compose)
+# url du serveur (docker compose)
 API_HOST=api.{{ base_host }}
 API_URL=https://api.{{ base_host }}
 
@@ -40,7 +40,7 @@ API_OPENFISCA_URL="http://openfisca:8000"
 
 STORYBOOK_HOST=storybook.{{ base_host }}
 
-# certificat ssh (docker-compose)
+# certificat ssh (docker compose)
 LETSENCRYPT_EMAIL=camino@beta.gouv.fr
 
 # postgres

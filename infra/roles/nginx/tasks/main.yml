@@ -34,4 +34,4 @@
 - name: Create and start services
   shell:
     chdir: /srv/www/nginx-proxy
-    cmd: "docker-compose up -d"
+    cmd: "docker compose up -d"

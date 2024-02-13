@@ -10,7 +10,7 @@
 # démarre l'application dans un conteneur Docker
 # avec webpack-dev-server en mode `development`
 # accessible à http://localhost:PORT
-docker-compose -f ./docker-compose.localhost.yml up --build
+docker compose -f ./docker-compose.localhost.yml up --build
 ```
 
 ### Tester l'application en local dans un environement de production
@@ -25,7 +25,7 @@ Pré-requis:
 # Démarre l'application dans un container Docker
 # avec un serveur express.js en mode `production`
 # accessible à https://camino.local
-docker-compose -f ./docker-compose.local.yml up --build
+docker compose -f ./docker-compose.local.yml up --build
 ```
 
 ### Serveur de production
@@ -39,5 +39,5 @@ Pré-requis:
 # démarre l'application dans un container Docker
 # en mode `production`
 # accessible à https://{URL}
-docker-compose up --build
+docker compose up --build
 ```
