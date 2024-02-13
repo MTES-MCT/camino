@@ -26,6 +26,8 @@ export const All: StoryFn = () => (
   </div>
 )
 
+export const ButtonWithTextAndIcon: StoryFn = () => <DsfrButton title="Mon title" onClick={onClick} icon='fr-icon-alert-fill' />
+
 export const AllIcon: StoryFn = () => (
   <div style={{ display: 'flex', flexDirection: 'column' }}>
     {buttonTypes.map(buttonType => (

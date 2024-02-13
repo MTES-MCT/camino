@@ -1,112 +1,80 @@
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { User } from 'camino-common/src/roles'
 import { DomaineId, isDomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
-import { getDomaineId, getTitreTypeTypeByDomaineId, TitreTypeId, toTitreTypeId } from 'camino-common/src/static/titresTypes'
-import { TitresTypesTypes, TitreTypeType } from 'camino-common/src/static/titresTypesTypes'
-import { computed, onMounted, ref } from 'vue'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { getDomaineId, getTitreTypeType, getTitreTypeTypeByDomaineId, TitreTypeId, toTitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TitresTypesTypes, TitreTypeType, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { DsfrSelect } from '../_ui/dsfr-select'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
-  element: {
-    typeId: TitreTypeId | undefined | null
-  }
-  domaineId: DomaineId | undefined
+  titreTypeId: TitreTypeId | null
   user: User
+  onUpdateTitreTypeId: (titreTypeId: TitreTypeId | null) => void
 }
 
-type Domaine = {
-  id: DomaineId
-  nom: string
-}
+export const TitreTypeSelect = caminoDefineComponent<Props>(['titreTypeId', 'user', 'onUpdateTitreTypeId'], props => {
+  const domaineRef = ref<DomaineId | null>(props.titreTypeId ? getDomaineId(props.titreTypeId) : null)
+  const titreTypeType = ref<TitreTypeTypeId | null>(props.titreTypeId ? getTitreTypeType(props.titreTypeId) : null)
 
-const titresTypeTypes = (user: Props['user'], domaineId: DomaineId | undefined): undefined | TitreTypeType[] => {
-  if (domaineId) {
-    return getTitreTypeTypeByDomaineId(domaineId)
-      .filter(titreTypeTypeId => canCreateTitre(user, toTitreTypeId(titreTypeTypeId, domaineId)))
-      .map(titreTypeTypeId => TitresTypesTypes[titreTypeTypeId])
-  }
+  const domainesFiltered = computed<NonEmptyArray<{id: DomaineId, label: string}> | null>(() =>
+    {
+      const values = sortedDomaines.filter(d => getTitreTypeTypeByDomaineId(d.id).some(titreTypeTypeId => canCreateTitre(props.user, toTitreTypeId(titreTypeTypeId, d.id)))).map(({id, nom}) => ({id, label: nom}))
+    
+      if (isNonEmptyArray(values)) {
+        return values
+      }
+      return null
+    }
+  )
 
-  return undefined
-}
-
-const TypeSelect = ({ user, element, domaineId }: Props): JSX.Element | null => {
-  if (isDomaineId(domaineId)) {
-    return (
-      <>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Type</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <select v-model={element.typeId} class="p-s mr" disabled={!titresTypeTypes}>
-              {titresTypeTypes(user, domaineId)?.map(titreTypeType => {
-                return (
-                  <option key={titreTypeType.id} value={toTitreTypeId(titreTypeType.id, domaineId)}>
-                    {titreTypeType.nom}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-        </div>
-        <hr />
-      </>
-    )
+const titresTypeTypes = computed<NonEmptyArray<{id: TitreTypeTypeId, label: string}> | null>(() => {
+  const domaineId = domaineRef.value
+  if (isNotNullNorUndefined(domaineId)) {
+    const value = getTitreTypeTypeByDomaineId(domaineId)
+      .filter(titreTypeTypeId => canCreateTitre(props.user, toTitreTypeId(titreTypeTypeId, domaineId)))
+      .map(titreTypeTypeId => ({id: titreTypeTypeId, label: TitresTypesTypes[titreTypeTypeId].nom}))
+      if (isNonEmptyArray(value)) {
+        return value
+      }
   }
 
   return null
-}
+})
 
-export const TitreTypeSelect = caminoDefineComponent<Props>(['element', 'domaineId', 'user'], props => {
-  const domaineRef = ref<Props['domaineId']>(props.element.typeId ? getDomaineId(props.element.typeId) : props.domaineId)
+  const domaineUpdate = (domaineId: DomaineId | null) => {
+    domaineRef.value = domaineId    
+    props.onUpdateTitreTypeId(null)
+    titreTypeType.value = null
+  }
 
-  const domainesFiltered = computed<Domaine[]>(() =>
-    sortedDomaines.filter(d => getTitreTypeTypeByDomaineId(d.id).some(titreTypeTypeId => canCreateTitre(props.user, toTitreTypeId(titreTypeTypeId, d.id))))
-  )
 
-  const domaineUpdate = (domaineId: DomaineId | undefined) => {
-    domaineRef.value = domaineId
-    if (domaineId) {
-      const titreTypes = titresTypeTypes(props.user, domaineId)
-      // Si on a que 1 choix, on le sélectionne directement
-      if (titreTypes?.length === 1) {
-        props.element.typeId = toTitreTypeId(titreTypes[0].id, domaineId)
-      } else {
-        props.element.typeId = null
-      }
+  const titreTypeTypeUpdate = (titreTypeTypeId: TitreTypeTypeId | null) => {
+    const domaineId = domaineRef.value
+    if (isNotNullNorUndefined(domaineId) && isNotNullNorUndefined(titreTypeTypeId)) {
+      props.onUpdateTitreTypeId(toTitreTypeId(titreTypeTypeId, domaineId))
+      titreTypeType.value = titreTypeTypeId
     } else {
-      props.element.typeId = null
+      props.onUpdateTitreTypeId(null)
+      titreTypeType.value = null
     }
   }
   onMounted(() => {
     // Si l’utilisateur peut sélectionner que 1 domaine, on le sélectionne
-    if (domainesFiltered.value.length === 1) {
+    if (domaineRef.value === null && isNotNullNorUndefined(domainesFiltered.value) && domainesFiltered.value.length === 1) {
       domaineRef.value = domainesFiltered.value[0].id
+      domaineUpdate(domaineRef.value)
     }
-    domaineUpdate(domaineRef.value)
   })
 
   return () => (
-    <div>
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>Domaine</h5>
-        </div>
+    <>
 
-        <div class="mb tablet-blob-2-3">
-          <select value={domaineRef.value} class="p-s mr" onChange={event => domaineUpdate(isEventWithTarget(event) && isDomaineId(event.target.value) ? event.target.value : undefined)}>
-            {domainesFiltered.value.map(domaine => {
-              return (
-                <option key={domaine.id} value={domaine.id}>
-                  {domaine.nom}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-      </div>
-      <hr />
-      <TypeSelect element={props.element} user={props.user} domaineId={domaineRef.value}></TypeSelect>
-    </div>
+    {isNotNullNorUndefined(domainesFiltered.value) ? <DsfrSelect required={true} initialValue={domaineRef.value} items={domainesFiltered.value} valueChanged={domaineUpdate} legend={{main: 'Domaine'}} /> : null}
+
+    {isNotNullNorUndefined(titresTypeTypes.value) ? <DsfrSelect required={true} initialValue={titreTypeType.value} items={titresTypeTypes.value} legend={{main: 'Type'}} valueChanged={titreTypeTypeUpdate} /> : null}
+    
+    </>
   )
 })

@@ -13,14 +13,20 @@ type DsfrButtonProps = {
   onClick: () => void
   title: string
   label?: string
+  icon?: DsfrIcon
   disabled?: boolean
   buttonType?: ButtonType
   buttonSize?: ButtonSize
 } & ButtonHTMLAttributes
 export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButtonProps) => {
+  const iconClass = []
+  if (isNotNullNorUndefined(props.icon)) {
+    iconClass.push('fr-btn--icon-right')
+    iconClass.push(props.icon)
+  }
   return (
     <button
-      class={['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`, `fr-btn--${props.buttonSize ?? 'md'}`]}
+      class={['fr-btn', ...iconClass, `fr-btn--${props.buttonType ?? 'primary'}`, `fr-btn--${props.buttonSize ?? 'md'}`]}
       disabled={props.disabled ?? false}
       title={props.title}
       aria-label={props.title}
@@ -34,6 +40,7 @@ export const DsfrButton: FunctionalComponent<DsfrButtonProps> = (props: DsfrButt
 type DsfrButtonIconProps = DsfrButtonProps & { icon: DsfrIcon }
 
 export const DsfrButtonIcon: FunctionalComponent<DsfrButtonIconProps> = (props: DsfrButtonIconProps) => {
+
   return (
     <button
       class={['fr-btn', `fr-btn--${props.buttonType ?? 'primary'}`, `fr-btn--${props.buttonSize ?? 'md'}`, props.icon, isNotNullNorUndefined(props.label) ? 'fr-btn--icon-right' : null]}

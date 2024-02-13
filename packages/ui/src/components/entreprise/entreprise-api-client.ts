@@ -35,6 +35,7 @@ export interface EntrepriseApiClient {
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
   creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName) => Promise<EntrepriseDocumentId>
   deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
+  getEntreprisesTitresCreation: () => Promise<{id: EntrepriseId, nom: string}[]>
 }
 export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true })
 
@@ -96,4 +97,18 @@ export const entrepriseApiClient: EntrepriseApiClient = {
   deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, entrepriseDocumentId: EntrepriseDocumentId): Promise<void> => {
     return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId', { entrepriseId, entrepriseDocumentId })
   },
+  getEntreprisesTitresCreation: async (): Promise<{id: EntrepriseId, nom: string}[]> => {
+    const values = apiGraphQLFetch(
+    gql`
+      query EntreprisesTitresCreation {
+        entreprisesTitresCreation {
+          nom
+          id
+        }
+      }
+    `
+  )()
+  return values
+    }
+  
 }

@@ -12,7 +12,7 @@ type NumberInputType = {
 }
 type BaseProps = {
   id?: string
-  legend: { main: string; description?: string; placeholder?: string; info?: string }
+  legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: string }
   disabled?: boolean
   required?: boolean
 }
@@ -53,10 +53,10 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
 
   return () => (
     <div class={['fr-input-group', props.disabled ? 'fr-input-group--disabled' : null]}>
-      <label class="fr-label" for={id}>
+      {props.legend.visible ?? true ?<label class="fr-label" for={id}>
         {props.legend.main} {props.required ? ' *' : null}
         {props.legend.description ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
-      </label>
+      </label> : null }
       <input
         onInput={updateFromEvent}
         placeholder={props.legend.placeholder}
