@@ -2,8 +2,7 @@
 import { Knex } from 'knex'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
-import rewind from 'geojson-rewind'
-import { FeatureMultiPolygon, featureMultiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 import { TitreId } from 'camino-common/src/validators/titres'
 
 const etapesToNotMigrate = ['0NmsqYGVQJYKhFY22Ltt4NBV']
@@ -16,50 +15,9 @@ interface IGeoJson {
   features?: IGeoJson[] | null
 }
 
-const geojsonFeatureMultiPolygon = (points: any[]): FeatureMultiPolygon => {
-  const feature: FeatureMultiPolygon = {
-    type: 'Feature',
-    properties: {},
-    geometry: rewind(
-      {
-        type: 'MultiPolygon',
-        coordinates: geojsonMultiPolygonCoordinates(points),
-      },
-      false
-    ),
-  }
-
-  return featureMultiPolygonValidator.parse(feature)
+const geojsonFeatureMultiPolygon = (_points: any[]): FeatureMultiPolygon => {
+  throw new Error('Migration obsolète suite à la suppression de geojson-rewind du projet')
 }
-
-// convertit une liste de points
-// en un tableau 'coordinates' geoJson
-// (le premier et le dernier point d'un contour ont les mêmes coordonnées)
-const geojsonMultiPolygonCoordinates = (points: any[]) => multiPolygonContoursClose(multiPolygonCoordinates(points))
-
-// convertit une liste de points
-// [{groupe: 1, contour: 1, point: 1, coordonnees: {x: 1.111111, y: 1.111111}}]
-// en un tableau de 'coordinates': [[[[1.11111, 1.111111]]]]
-const multiPolygonCoordinates = (points: any[]): [number, number][][][] =>
-  points.reduce((res: [number, number][][][], p) => {
-    res[p.groupe - 1] = isNotNullNorUndefinedNorEmpty(res[p.groupe - 1]) ? res[p.groupe - 1] : []
-    res[p.groupe - 1][p.contour - 1] = isNotNullNorUndefinedNorEmpty(res[p.groupe - 1][p.contour - 1]) ? res[p.groupe - 1][p.contour - 1] : []
-    res[p.groupe - 1][p.contour - 1][p.point - 1] = [p.coordonnees.x, p.coordonnees.y]
-
-    return res
-  }, [])
-
-// duplique le premier point de chaque contour
-// en fin de contour pour fermer le tracé
-const multiPolygonContoursClose = (groupes: [number, number][][][]): [number, number][][][] =>
-  groupes.map(contours =>
-    contours.reduce((acc: [number, number][][], points) => {
-      points[points.length] = points[0]
-      acc.push(points)
-
-      return acc
-    }, [])
-  )
 
 // convertit des points
 // en un geojson de type 'FeatureCollection' de 'Points'
