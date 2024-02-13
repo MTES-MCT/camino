@@ -1,4 +1,4 @@
-import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types.js'
+import { ITitre, ITitreEtape, ITitreType } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
@@ -11,7 +11,7 @@ console.warn = vi.fn()
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -30,7 +30,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('ajoute une étape à une démarche qui contient déjà une étape', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -50,7 +50,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('modifie une étape à une démarche', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -82,7 +82,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('l’ajout d’une étape d’une démarche historique est valide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -103,7 +103,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('l’ajout d’une étape d’une démarche sans étape est valide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -124,7 +124,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test("retourne une erreur si la démarche en cours de modification n'existe pas", () => {
     expect(() =>
       titreDemarcheUpdatedEtatValidate(
-        { id: 'oct' } as IDemarcheType,
+        'oct',
         {
           typeId: 'arm',
           type: {
@@ -142,7 +142,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
     expect(() =>
       titreDemarcheUpdatedEtatValidate(
-        { id: 'oct' } as IDemarcheType,
+        'oct',
         {
           typeId: 'arm',
           type: {
@@ -160,7 +160,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('supprime une étape', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -181,7 +181,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('ajoute une étape sans statut à une démarche sans machine', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct', nom: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -191,10 +191,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [
           {
             typeId: 'oct',
-            type: {
-              id: 'oct',
-              nom: 'oct',
-            } as IDemarcheType,
           },
         ],
       } as ITitre,
@@ -207,7 +203,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('ajoute une étape à une démarche sans machine', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct', nom: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'arm',
         type: {
@@ -217,10 +213,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [
           {
             typeId: 'oct',
-            type: {
-              id: 'oct',
-              nom: 'oct',
-            } as IDemarcheType,
           },
         ],
       } as ITitre,
@@ -233,7 +225,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('ajoute une demande en construction à une démarche vide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'axm',
         type: {
@@ -251,7 +243,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('ajoute une demande en construction à une démarche qui contient déjà une étape', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'axm',
         type: {
@@ -271,7 +263,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test('modifie une demande en construction à une démarche', () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      'oct',
       {
         typeId: 'axm',
         type: {
@@ -295,7 +287,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ne peut pas ajouter une 2ème demande en construction à une démarche', () => {
     expect(
       titreDemarcheUpdatedEtatValidate(
-        { id: 'oct' } as IDemarcheType,
+        'oct',
         {
           typeId: 'axm',
           type: {
@@ -318,7 +310,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ne peut pas ajouter étape de type inconnu sur une machine', () => {
     expect(
       titreDemarcheUpdatedEtatValidate(
-        { id: 'oct' } as IDemarcheType,
+        'oct',
         {
           typeId: 'axm',
           type: {

@@ -24,7 +24,6 @@ describe("valeur d'une propriété pour une étape", () => {
         [
           {
             id: 'demarche-01',
-            type: { id: 'oct' },
             typeId: 'oct',
             etapes: [
               {

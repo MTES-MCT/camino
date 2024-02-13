@@ -18,12 +18,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     fields.demarches.titreType = { id: {} }
   }
 
-  // ajoute la propriété `type` sur les démarches
-  // pour pouvoir récupérer les types d'étapes spécifiques
-  if (fields.demarches && !fields.demarches.type) {
-    fields.demarches.type = { id: {} }
-  }
-
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {
     if (fields[key]) {

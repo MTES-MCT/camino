@@ -11,7 +11,7 @@ import { entreprisesTitresQuery } from './entreprises.js'
 import { isSuper, isAdministration, isEntreprise, isBureauDEtudes, User } from 'camino-common/src/roles.js'
 
 export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>, user: User) => {
-  q.select('titresDemarches.*').where('titresDemarches.archive', false).leftJoinRelated('[titre, type]')
+  q.select('titresDemarches.*').where('titresDemarches.archive', false).leftJoinRelated('titre')
 
   if (!isSuper(user)) {
     q.whereExists(titresQueryModify((TitresDemarches.relatedQuery('titre') as QueryBuilder<Titres, Titres | Titres[]>).alias('titres'), user))

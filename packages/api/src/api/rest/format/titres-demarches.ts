@@ -5,6 +5,7 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
@@ -62,7 +63,7 @@ export const titresDemarchesFormatTable = async (pool: Pool, titresDemarches: IT
       titre_domaine: Domaines[getDomaineId(titre.typeId)].nom,
       titre_type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
       titre_statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
-      type: titreDemarche.type!.nom,
+      type: DemarchesTypes[titreDemarche.typeId].nom,
       statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,
       titre_references: titre.references?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`).join(';'),

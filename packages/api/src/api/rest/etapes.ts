@@ -20,6 +20,7 @@ import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
@@ -104,7 +105,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     titreDemarcheId,
     {
       fields: {
-        type: { id: {} },
         titre: {
           type: { id: {} },
           demarches: { etapes: { id: {} } },
@@ -129,7 +129,8 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   // vérifie que son type est possible sur la démarche
   if (titreEtape) {
     if (!isTDEExist(titre.typeId, titreDemarche.typeId, titreEtape.typeId)) {
-      throw new Error(`étape ${titreEtape.type!.nom} inexistante pour une démarche ${titreDemarche.type!.nom} pour un titre ${titre.typeId}.`)
+      const demarcheType = DemarchesTypes[titreDemarche.typeId]
+      throw new Error(`étape ${titreEtape.type!.nom} inexistante pour une démarche ${demarcheType.nom} pour un titre ${titre.typeId}.`)
     }
   }
 

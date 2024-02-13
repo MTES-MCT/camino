@@ -2,7 +2,6 @@ import { Model, Modifiers, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types.js'
 import { newDemarcheId } from './_format/id-create.js'
-import DemarchesTypes from './demarches-types.js'
 import TitresTypes from './titres-types.js'
 import Titres from './titres.js'
 import TitresEtapes from './titres-etapes.js'
@@ -37,16 +36,6 @@ class TitresDemarches extends Model {
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: DemarchesTypes,
-      join: {
-        from: 'titresDemarches.typeId',
-        to: 'demarchesTypes.id',
-        extra: { titreId: 'titresDemarches.titreId' },
-      },
-    },
-
     // todo: pourquoi ne pas utiliser la relation `titre` ?
     titreType: {
       relation: Model.HasOneThroughRelation,

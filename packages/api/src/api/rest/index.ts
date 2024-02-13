@@ -269,7 +269,6 @@ export const demarches =
       },
       {
         fields: {
-          type: { id: {} },
           titre: {
             id: {},
             titulaires: { id: {} },

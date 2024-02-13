@@ -1,11 +1,12 @@
 // valide la date et la position de l'étape en fonction des autres étapes
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
-import type { ITitre, ITitreEtape, IDemarcheType } from '../../types.js'
+import type { ITitre, ITitreEtape } from '../../types.js'
 
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
 const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
@@ -38,7 +39,7 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
 export const titreDemarcheUpdatedEtatValidate = (
-  demarcheType: IDemarcheType,
+  demarcheTypeId: DemarcheTypeId,
   titre: ITitre,
   titreEtape: Pick<Partial<ITitreEtape>, 'id'> & Pick<ITitreEtape, 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'communes' | 'surface'>,
   demarcheId: DemarcheId,
@@ -46,11 +47,11 @@ export const titreDemarcheUpdatedEtatValidate = (
   suppression = false
 ): string[] => {
   let titreDemarcheEtapesNew = titreDemarcheEtapesBuild(titreEtape, suppression, titreDemarcheEtapes)
-  const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheType.id, titreDemarcheEtapesNew, demarcheId)
+  const demarcheDefinition = demarcheDefinitionFind(titre.typeId, demarcheTypeId, titreDemarcheEtapesNew, demarcheId)
   const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre
-  const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheType.id)
+  const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheTypeId)
   if (!titreDemarche) {
     throw new Error('le titre ne contient pas la démarche en cours de modification')
   }

@@ -140,7 +140,6 @@ export const statistiquesGranulatsMarins = async (annee: CaminoAnnee): Promise<S
           pointsEtape: { id: {} },
           demarches: {
             etapes: { id: {} },
-            type: { id: {} },
           },
         },
       },

@@ -123,7 +123,7 @@ const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarc
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
+  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
   if (demarcheUpdatedErrors.length) {
     errors.push(...demarcheUpdatedErrors)
   }

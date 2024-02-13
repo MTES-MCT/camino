@@ -17,7 +17,6 @@ const demarchesValidate = async () => {
           fields: {
             titre: { id: {}, demarches: { etapes: { id: {} } } },
             etapes: { id: {} },
-            type: { id: {} },
           },
         },
         userSuper
@@ -27,7 +26,7 @@ const demarchesValidate = async () => {
         .filter(demarche => demarche.etapes?.length)
         .forEach(demarche => {
           try {
-            const errs = titreDemarcheUpdatedEtatValidate(demarche.type!, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
+            const errs = titreDemarcheUpdatedEtatValidate(demarche.typeId, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
 
             if (errs.length) {
               errors.push(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}" : ${errs}`)
