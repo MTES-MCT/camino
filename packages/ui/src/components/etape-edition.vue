@@ -7,7 +7,7 @@
       <span class="color-neutral"> | </span>
       <span class="cap-first"> {{ demarcheType.nom }} {{ demarcheDescription }} </span>
     </p>
-    <h1>Étape</h1>
+    <h1 style="margin: 0">Étape</h1>
 
     <div v-if="helpVisible" class="p-s bg-info color-bg mb">
       Besoin d'aide pour déposer votre demande ?
