@@ -147,7 +147,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               </div>
             )}
           />
-          <hr />
         </div>
       ) : null}
 
@@ -166,15 +165,12 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateDebut)}</div>}
             />
           </div>
-
-          <hr />
         </>
       ) : null}
 
       {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.type.id, props.user) ? (
         <>
           <div class="tablet-blobs">
-            <hr />
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">
               <h5 class="mb-0">Date d'échéance</h5>
               <p class="h6 italic mb-0">Optionnel</p>
@@ -187,7 +183,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               read={heritagePropEtape => <div class="border p-s mb-s bold">{dateFormat(heritagePropEtape?.dateFin)}</div>}
             />
           </div>
-          <hr />
         </>
       ) : null}
 
@@ -218,14 +213,11 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               </ul>
             )}
           />
-          <hr />
         </>
       ) : null}
 
       {canEditAmodiataires(props.titreTypeId, props.user) ? (
         <>
-          <hr />
-
           <h3 class="mb-s">Amodiataires</h3>
           <p class="h6 italic">Optionnel</p>
 
@@ -252,14 +244,10 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               </ul>
             )}
           />
-
-          <hr />
         </>
       ) : null}
 
       <SubstancesEdit substances={props.etape.substances} heritageProps={props.etape.heritageProps} domaineId={domaineId.value} />
-
-      <hr />
     </div>
   )
 })

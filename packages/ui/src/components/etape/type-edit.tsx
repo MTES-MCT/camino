@@ -54,8 +54,6 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
           </select>
         </div>
       </div>
-
-      <hr />
     </div>
   )
 }
@@ -158,7 +156,6 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapeDate', 'dem
                   />
                 </div>
               </div>
-              <hr />
 
               {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || possibleStatuts.value.length === 0 ? null : (
                 <SelectStatut

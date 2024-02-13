@@ -1,20 +1,12 @@
 <template>
   <div class="mb">
-    <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
+    <Bloc v-if="stepType" id="step-type" :step="stepType" :complete="typeComplete">
       <DateEdit v-if="userIsAdmin" :date="etape.date" :onDateChanged="onDateChanged" />
 
       <TypeEdit :etape="etape" :etapeDate="etape.date" :demarcheId="etape.titreDemarcheId" :apiClient="apiClient" :onEtapeChange="onEtapeTypeChange" />
-    </Accordion>
+    </Bloc>
 
-    <Accordion
-      v-if="stepFondamentales"
-      id="step-fondamentales"
-      :step="stepFondamentales"
-      :opened="opened['fondamentales']"
-      :complete="stepFondamentalesComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('fondamentales')"
-    >
+    <Bloc v-if="stepFondamentales" id="step-fondamentales" :step="stepFondamentales" :complete="stepFondamentalesComplete">
       <FondamentalesEdit
         :etape="etape"
         :demarcheTypeId="demarcheTypeId"
@@ -24,9 +16,9 @@
         @update:etape="newValue => $emit('update:etape', newValue)"
         @complete-update="fondamentalesCompleteUpdate"
       />
-    </Accordion>
+    </Bloc>
 
-    <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="true" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
+    <Bloc v-if="stepPoints" id="step-points" :step="stepPoints" :complete="stepPerimetreComplete">
       <PerimetreEdit
         :etape="etape"
         :titreTypeId="titreTypeId"
@@ -36,21 +28,13 @@
         :onPointsChange="onEtapePointsChange"
         :completeUpdate="perimetreCompleteUpdate"
       />
-    </Accordion>
+    </Bloc>
 
-    <Accordion v-if="stepSections" id="step-sections" :step="stepSections" :opened="opened['sections']" :complete="stepSectionsComplete" :enConstruction="enConstruction" @toggle="toggle('sections')">
+    <Bloc v-if="stepSections" id="step-sections" :step="stepSections" :complete="stepSectionsComplete">
       <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
-    </Accordion>
+    </Bloc>
 
-    <Accordion
-      v-if="stepDocuments"
-      id="step-documents"
-      :step="stepDocuments"
-      :opened="opened['documents']"
-      :complete="stepDocumentsComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('documents')"
-    >
+    <Bloc v-if="stepDocuments" id="step-documents" :step="stepDocuments" :complete="stepDocumentsComplete">
       <DocumentsEdit
         v-model:documents="etape.documents"
         :addAction="{ name: 'titreEtapeEdition/documentAdd' }"
@@ -62,31 +46,15 @@
         :date="etape.date"
         @complete-update="documentsCompleteUpdate"
       />
-    </Accordion>
+    </Bloc>
 
-    <Accordion
-      v-if="stepEntrepriseDocuments"
-      id="step-entrepriseDocuments"
-      :step="stepEntrepriseDocuments"
-      :opened="opened['entrepriseDocuments']"
-      :complete="stepEntrepriseDocumentsComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('entrepriseDocuments')"
-    >
+    <Bloc v-if="stepEntrepriseDocuments" id="step-entrepriseDocuments" :step="stepEntrepriseDocuments" :complete="stepEntrepriseDocumentsComplete">
       <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
-    </Accordion>
+    </Bloc>
 
-    <Accordion
-      v-if="stepDecisionsAnnexes"
-      id="step-decisionsAnnexes"
-      :step="stepDecisionsAnnexes"
-      :opened="opened['decisionsAnnexes']"
-      :complete="stepDecisionsAnnexesComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('decisionsAnnexes')"
-    >
+    <Bloc v-if="stepDecisionsAnnexes" id="step-decisionsAnnexes" :step="stepDecisionsAnnexes" :complete="stepDecisionsAnnexesComplete">
       <DecisionsAnnexesEdit :etape="etape" @complete-update="decisionsAnnexesComplete = $event" />
-    </Accordion>
+    </Bloc>
 
     <div class="dsfr">
       <div class="fr-input-group">
@@ -98,8 +66,8 @@
 </template>
 
 <script>
-import Accordion from './accordion.vue'
 import { TypeEdit } from './type-edit'
+import { Bloc } from './bloc'
 import { DateEdit } from './date-edit'
 import { FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
@@ -114,7 +82,7 @@ import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_dem
 export default {
   components: {
     DecisionsAnnexesEdit,
-    Accordion,
+    Bloc,
     TypeEdit,
     FondamentalesEdit,
     PerimetreEdit,
@@ -146,15 +114,6 @@ export default {
       entrepriseDocumentsComplete: false,
       decisionsAnnexesComplete: false,
       entrepriseDocuments: false,
-      opened: {
-        type: true,
-        fondamentales: false,
-        points: false,
-        sections: false,
-        documents: false,
-        entrepriseDocuments: false,
-        decisionsAnnexes: false,
-      },
       help: {},
       apiClient,
     }
@@ -185,10 +144,6 @@ export default {
 
     heritageLoaded() {
       return this.$store.state.titreEtapeEdition.heritageLoaded
-    },
-
-    enConstruction() {
-      return this.etape.statutId === 'aco'
     },
 
     typeComplete() {
@@ -394,22 +349,6 @@ export default {
 
     completeUpdate() {
       this.$emit('complete-update', this.complete)
-    },
-
-    toggle(stepId) {
-      this.opened[stepId] = !this.opened[stepId]
-
-      if (this.opened[stepId]) {
-        this.scrollToStep(stepId)
-      }
-
-      this.$emit('change')
-    },
-
-    scrollToStep(stepId) {
-      setTimeout(() => {
-        document.getElementById(`step-${stepId}`).scrollIntoView({ behavior: 'smooth' })
-      }, 500)
     },
 
     onDateChanged(date) {
