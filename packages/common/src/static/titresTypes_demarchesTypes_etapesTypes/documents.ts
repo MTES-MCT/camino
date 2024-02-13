@@ -209,7 +209,6 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.rapportDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.extraitDuRegistreDesDeliberationsDeLaSectionDesTravauxPublicDuConseilDEtat],
   [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [DOCUMENTS_TYPES_IDS.arrete],
-  [ETAPES_TYPES.retraitDeLaDecision]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
   [ETAPES_TYPES.saisineDeLautoriteSignataire]: [DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, DOCUMENTS_TYPES_IDS.noteALAutoriteSignataire, DOCUMENTS_TYPES_IDS.notes],
   [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: [
     DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge,

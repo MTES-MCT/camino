@@ -81,7 +81,6 @@ type XStateEvent =
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
-  | { type: 'RENDRE_DECISION_RETRAIT' }
   | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
   | { type: 'CLASSER_SANS_SUITE' }
   | { type: 'MODIFIER_DEMANDE' }
@@ -145,7 +144,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   NOTIFIER_COLLECTIVITES_LOCALES: { db: EtapesTypesEtapesStatuts.notificationDesCollectivitesLocales, mainStep: true },
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDuJugeAdministratif.REJETE }, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: EtapesTypesEtapesStatuts.abrogationDeLaDecision, mainStep: true },
-  RENDRE_DECISION_RETRAIT: { db: EtapesTypesEtapesStatuts.retraitDeLaDecision, mainStep: true },
   DESISTER_PAR_LE_DEMANDEUR: { db: EtapesTypesEtapesStatuts.desistementDuDemandeur, mainStep: false },
   CLASSER_SANS_SUITE: { db: EtapesTypesEtapesStatuts.classementSansSuite, mainStep: false },
   MODIFIER_DEMANDE: { db: EtapesTypesEtapesStatuts.modificationDeLaDemande, mainStep: false },
@@ -704,7 +702,6 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
               on: {
                 RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: 'done',
                 RENDRE_DECISION_ABROGATION: 'publicationAuJORFAFaireSuiteAuRejet',
-                RENDRE_DECISION_RETRAIT: 'publicationAuJORFAFaireSuiteAuRejet',
               },
             },
             publicationAuJORFAFaireSuiteAuRejet: {

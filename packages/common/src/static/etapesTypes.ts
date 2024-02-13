@@ -3,10 +3,10 @@ import { CaminoDate, toCaminoDate } from '../date.js'
 import { Definition } from '../definition.js'
 
 // prettier-ignore
-const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','rtd','sco', 'aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const
+const IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','sco', 'aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','rtd','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ['abd', 'aca','aco','and','ane','anf','def','dex','dim', 'dpu', 'dup', 'dux','ihi', 'mfr','mod','mom','rca','rcb','rcd','rcm','rco','rcs','ria','rie','rif','rim','rio','rpu','sco'] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 const NON_FONDAMENTALES_IDS = ['aac','aaf','abs','acd','acg','acl','aec','aep','afp','agn','aim','ama','ami','aof','aop','apd','ape','api','apl','apm','apn','apo','app','apu','apw','ari','ars','asl','ass','auc','cac','ccs','cim','cod','cps','css','dae','dec','des','ede','edm','eof','epc','epu','esb','ide','mca','mcb','mcd','mcm','mco','mcp','mcr','mcs','mdp','mec','men','meo','mia','mie','mif','mim','mio','mna','mnb','mnc','mnd','mni','mno','mns','mnv','ncl','nis','npp','pfc','pfd','pnr','ppc','ppu','pqr','rcg','rde','rpe','sas','sca','scg','scl','spe','spo','spp','ssr','vfc','vfd','wab','wac','wad','wae','wai','wal','wam','wao','wap','war','was','wat','wau','wce','wco','wda','wdc','wdd','wde','wdm','wdt','wfa','wfd','wfo','wfr','wmm','wmr','wmt','woe','wpa','wpb','wpc','wpo','wpp','wps','wrc','wrd','wre','wrl','wrt','wse','wss','wtp'] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
@@ -126,7 +126,6 @@ export const ETAPES_TYPES = {
   receptionDinformation_ExpertiseDeLOfficeNationalDesForets_: 'rio',
   rapportDuConseilDEtat: 'rpe',
   publicationDeDecisionAuRecueilDesActesAdministratifs: 'rpu',
-  retraitDeLaDecision: 'rtd',
   saisineDeLautoriteSignataire: 'sas',
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'sca',
   saisineDuConseilGeneralDeLeconomie_CGE_: 'scg',
@@ -794,16 +793,6 @@ export const EtapesTypes = {
     nom: 'publication dans un journal local ou national',
     description: '',
     fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
-  rtd: {
-    id: 'rtd',
-    nom: 'retrait de la décision',
-    description: 'Sanction administrative consistant à retirer le titre minier dans les cas énumérés dans le code minier.',
-    fondamentale: true,
     unique: false,
     date_fin: null,
     public_lecture: true,

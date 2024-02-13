@@ -327,7 +327,6 @@ export const EtapesTypesEtapesStatuts = {
     DEFAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'def' },
   },
   publicationDeDecisionAuRecueilDesActesAdministratifs: { FAIT: { etapeTypeId: 'rpu', etapeStatutId: 'fai' } },
-  retraitDeLaDecision: { FAIT: { etapeTypeId: 'rtd', etapeStatutId: 'fai' } },
   saisineDeLautoriteSignataire: { FAIT: { etapeTypeId: 'sas', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: { FAIT: { etapeTypeId: 'sca', etapeStatutId: 'fai' } },
   saisineDuConseilGeneralDeLeconomie_CGE_: { FAIT: { etapeTypeId: 'scg', etapeStatutId: 'fai' } },

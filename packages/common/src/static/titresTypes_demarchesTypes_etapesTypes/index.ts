@@ -115,7 +115,6 @@ const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.notificationAuDemandeur,
   ETAPES_TYPES.abrogationDeLaDecision,
   ETAPES_TYPES.decisionDuJugeAdministratif,
-  ETAPES_TYPES.retraitDeLaDecision,
   ETAPES_TYPES.classementSansSuite,
 ] as const
 const permisExclusifDeRecherchesMetauxEtGranulatsMarinsProlongations = {
@@ -159,7 +158,6 @@ const permisExploitationMetauxEtGranulatsMarinsProlongationsEtapes = [
   ETAPES_TYPES.notificationAuDemandeur,
   ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
   ETAPES_TYPES.notificationDesCollectivitesLocales,
-  ETAPES_TYPES.retraitDeLaDecision,
   ETAPES_TYPES.abrogationDeLaDecision,
   ETAPES_TYPES.decisionDuJugeAdministratif,
   ETAPES_TYPES.classementSansSuite,
@@ -186,7 +184,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -197,7 +194,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -211,7 +207,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -228,7 +223,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -243,7 +237,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -254,7 +247,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -272,7 +264,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -287,7 +278,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -298,7 +288,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -316,7 +305,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -331,7 +319,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -342,7 +329,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -359,7 +345,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
@@ -373,7 +358,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -388,7 +372,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -399,7 +382,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -416,7 +398,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -430,7 +411,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -444,7 +424,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -459,7 +438,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -470,7 +448,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -592,7 +569,6 @@ const TDE = {
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.desistementDuDemandeur,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -637,7 +613,6 @@ const TDE = {
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.noteInterneSignalee,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
@@ -654,7 +629,6 @@ const TDE = {
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.desistementDuDemandeur,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -665,7 +639,6 @@ const TDE = {
       ETAPES_TYPES.decisionAdministrative,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.desistementDuDemandeur,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -679,7 +652,6 @@ const TDE = {
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.desistementDuDemandeur,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -695,7 +667,6 @@ const TDE = {
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.desistementDuDemandeur,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -764,7 +735,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -880,7 +850,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -940,7 +909,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -1006,7 +974,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1089,7 +1056,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.noteInterneSignalee,
       ETAPES_TYPES.informationsHistoriquesIncompletes,
@@ -1146,7 +1112,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuPrefet,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.notificationAuDemandeur,
@@ -1204,7 +1169,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Decheance]: [
@@ -1219,7 +1183,6 @@ const TDE = {
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.decisionAdministrative,
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -1283,7 +1246,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1383,7 +1345,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1491,7 +1452,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1603,7 +1563,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1658,7 +1617,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1689,7 +1647,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -1704,7 +1661,6 @@ const TDE = {
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.abrogationDeLaDecision,
@@ -1722,7 +1678,6 @@ const TDE = {
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -1744,7 +1699,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
@@ -1764,7 +1718,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.noteInterneSignalee,
@@ -1781,7 +1734,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
@@ -1795,7 +1747,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -1806,7 +1757,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [ETAPES_TYPES.saisineDuPrefet, ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuJORF],
@@ -1826,7 +1776,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -1841,7 +1790,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -1885,7 +1833,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -1902,7 +1849,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -1912,7 +1858,6 @@ const TDE = {
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
@@ -1932,7 +1877,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -1948,7 +1892,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -1960,7 +1903,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -1972,7 +1914,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -1990,7 +1931,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2005,7 +1945,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2019,7 +1958,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2036,7 +1974,6 @@ const TDE = {
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.ouvertureDeLaParticipationDuPublic,
       ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.avisDunMaire,
       ETAPES_TYPES.avisDunPresidentDEPCI,
       ETAPES_TYPES.avisDuneCollectiviteLocale,
@@ -2069,7 +2006,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -2085,7 +2021,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.desistementDuDemandeur,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -2101,7 +2036,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -2112,7 +2046,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [ETAPES_TYPES.demande, ETAPES_TYPES.depotDeLaDemande, ETAPES_TYPES.saisineDuPrefet, ETAPES_TYPES.classementSansSuite],
@@ -2130,7 +2063,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2145,7 +2077,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2159,7 +2090,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2173,7 +2103,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
@@ -2189,7 +2118,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -2204,7 +2132,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ProlongationExceptionnelle]: [
@@ -2219,7 +2146,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -2234,7 +2160,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -2245,7 +2170,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -2271,7 +2195,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2295,7 +2218,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -2312,7 +2234,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -2333,7 +2254,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -2350,7 +2270,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [
@@ -2372,7 +2291,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2395,7 +2313,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2444,7 +2361,6 @@ const TDE = {
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.noteInterneSignalee,
@@ -2467,7 +2383,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2483,7 +2398,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2498,7 +2412,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2538,7 +2451,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
       ETAPES_TYPES.avisDunMaire,
       ETAPES_TYPES.avisDunPresidentDEPCI,
@@ -2552,7 +2464,6 @@ const TDE = {
       ETAPES_TYPES.saisineDuPrefet,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.decisionAdministrative,
@@ -2570,7 +2481,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -2587,7 +2497,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -2602,7 +2511,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -2618,7 +2526,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -2636,7 +2543,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2652,7 +2558,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2667,7 +2572,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2711,7 +2615,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -2728,7 +2631,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -2743,7 +2645,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -2759,7 +2660,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -2771,7 +2671,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -2783,7 +2682,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -2836,7 +2734,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationAuDemandeur,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -2851,7 +2748,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -2868,7 +2764,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -2880,7 +2775,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -2897,7 +2791,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -2912,7 +2805,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2927,7 +2819,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -2945,7 +2836,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -2959,7 +2849,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -2973,7 +2862,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -2988,7 +2876,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation]: [
@@ -3002,7 +2889,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -3017,7 +2903,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
@@ -3032,7 +2917,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -3043,7 +2927,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Fusion]: [
@@ -3057,7 +2940,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -3077,7 +2959,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -3091,7 +2972,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -3105,7 +2985,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -3119,7 +2998,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
@@ -3133,7 +3011,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -3147,7 +3024,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -3161,7 +3037,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
@@ -3175,7 +3050,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -3186,7 +3060,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -3198,7 +3071,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -3209,7 +3081,6 @@ const TDE = {
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.decisionAdministrative,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -3227,7 +3098,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -3240,7 +3110,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -3285,7 +3154,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.notificationDesCollectivitesLocales,
       ETAPES_TYPES.publicationDansUnJournalLocalOuNational,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
@@ -3305,7 +3173,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
@@ -3320,7 +3187,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -3331,7 +3197,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -3345,7 +3210,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: [
@@ -3359,7 +3223,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -3375,7 +3238,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },
@@ -3393,7 +3255,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prorogation]: [ETAPES_TYPES.decisionDeLadministration, ETAPES_TYPES.publicationDeDecisionAuJORF],
@@ -3405,7 +3266,6 @@ const TDE = {
       ETAPES_TYPES.decisionImplicite,
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
@@ -3422,7 +3282,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -3436,7 +3295,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -3450,7 +3308,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation1]: [
@@ -3464,7 +3321,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prolongation2]: [
@@ -3478,7 +3334,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -3493,7 +3348,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: [
@@ -3508,7 +3362,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -3519,7 +3372,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: [
@@ -3531,7 +3383,6 @@ const TDE = {
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.decisionDeLadministration,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.classementSansSuite,
     ],
@@ -3549,7 +3400,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Octroi]: [
@@ -3564,7 +3414,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: [
@@ -3578,7 +3427,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Renonciation]: [
@@ -3592,7 +3440,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Mutation]: [
@@ -3606,7 +3453,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     ...permisExploitationMetauxEtGranulatsMarinsProlongations,
@@ -3621,7 +3467,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Retrait]: [
@@ -3632,7 +3477,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
     [DEMARCHES_TYPES_IDS.Prorogation]: [
@@ -3642,7 +3486,6 @@ const TDE = {
       ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
-      ETAPES_TYPES.retraitDeLaDecision,
       ETAPES_TYPES.classementSansSuite,
     ],
   },

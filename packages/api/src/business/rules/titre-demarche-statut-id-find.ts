@@ -9,7 +9,7 @@ import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes.js'
 
-const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
+const titreEtapesDecisivesCommunesTypes = ['css', 'abd', 'and']
 
 const titreEtapesDecisivesDemandesTypes = [
   'mfr',
@@ -52,9 +52,8 @@ const titresDemarcheCommunesStatutIdFind = (titreEtapeRecent: Pick<ITitreEtape, 
     return DemarchesStatutsIds.ClasseSansSuite
   }
 
-  //  - le type de l’étape est retrait de la décision (rtd)
   //  - le type de l’étape est abrogation de la décision (abd)
-  if (['rtd', 'abd'].includes(titreEtapeRecent.typeId)) {
+  if (titreEtapeRecent.typeId === 'abd') {
     //  - le statut de la démarche repasse en “instruction”
     return DemarchesStatutsIds.EnInstruction
   }
