@@ -185,7 +185,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       etape.titreDemarcheId,
       {
         fields: {
-          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             pointsEtape: { id: {} },
@@ -375,7 +374,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.titreDemarcheId,
       {
         fields: {
-          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
             titulaires: { id: {} },
@@ -688,7 +686,6 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
       titreEtape.titreDemarcheId,
       {
         fields: {
-          type: { id: {} },
           titre: {
             demarches: { etapes: { id: {} } },
           },
@@ -702,7 +699,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.typeId, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

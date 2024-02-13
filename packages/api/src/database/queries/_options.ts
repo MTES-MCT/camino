@@ -69,13 +69,12 @@ const titresEtapes = {
 
 const titresTypesRelateFalse = ['type']
 
-const titresDemarchesRelateTrue = ['type', ...titresEtapesRelateTrue.map(k => `etapes.${k}`)]
+const titresDemarchesRelateTrue = [...titresEtapesRelateTrue.map(k => `etapes.${k}`)]
 
 const titresDemarchesRelateFalse = ['titreType', ...titresTypesRelateFalse.map(k => `titreType.${k}`)]
 
 const titresDemarches = {
   graph: `[
-     type,
      titreType,
      etapes.${titresEtapes.graph},
   ]`,
@@ -197,7 +196,6 @@ export type FieldsTitre = FieldId & {
 export type FieldsDemarche = FieldId & {
   titre?: FieldsTitre
   etapes?: FieldsEtape
-  type?: FieldId
 }
 
 export type FieldsEtape = FieldId & {

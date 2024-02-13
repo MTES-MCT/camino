@@ -150,20 +150,6 @@ interface ICommune {
   surface?: number | null
 }
 
-interface IDemarcheType {
-  id: DemarcheTypeId
-  nom: string
-  duree?: boolean | null
-  points?: boolean | null
-  substances?: boolean | null
-  titulaires?: boolean | null
-  renouvelable?: boolean | null
-  exception?: boolean | null
-  titreTypeId?: string | null
-
-  travaux?: boolean
-}
-
 export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
 type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
@@ -300,7 +286,6 @@ interface ITitreDemarche {
   titre?: ITitre | null
   typeId: DemarcheTypeId
   statutId?: DemarcheStatutId | null
-  type?: IDemarcheType | null
   ordre?: number | null
   titreType?: ITitreType | null
   demarcheDateDebut?: CaminoDate | null
@@ -493,7 +478,6 @@ export {
   IContenuElement,
   IContenuValeur,
   IContenusTitreEtapesIds,
-  IDemarcheType,
   IDocumentRepertoire,
   IDomaine,
   IEntreprise,

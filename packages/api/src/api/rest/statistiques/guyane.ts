@@ -159,7 +159,7 @@ const statistiquesGuyane = async (anneeCurrent: CaminoAnnee) => {
       {
         fields: {
           pointsEtape: { id: {} },
-          demarches: { etapes: { id: {} }, type: { id: {} } },
+          demarches: { etapes: { id: {} } },
         },
       },
       userSuper

@@ -14,7 +14,7 @@ export const etapeStatutCheck = async () => {
     {
       fields: {
         type: { id: {} },
-        demarche: { type: { id: {} }, titre: { id: {} } },
+        demarche: { titre: { id: {} } },
       },
     },
     userSuper
