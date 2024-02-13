@@ -1,12 +1,12 @@
 <template>
   <div v-if="loaded">
-    <h6>
+    <p>
       <router-link :to="{ name: 'titre', params: { id: titre.slug } }" class="cap-first">
         {{ titre.nom }}
       </router-link>
       <span class="color-neutral"> | </span>
       <span class="cap-first"> {{ demarcheType.nom }} {{ demarcheDescription }} </span>
-    </h6>
+    </p>
     <h1>Étape</h1>
 
     <div v-if="helpVisible" class="p-s bg-info color-bg mb">
