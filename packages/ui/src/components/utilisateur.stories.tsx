@@ -43,7 +43,7 @@ const apiClientMock: Props['apiClient'] = {
 
     return Promise.resolve()
   },
-  getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
+  getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]),
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123', url: 'https://google.fr' }), 1000)),
 }
 

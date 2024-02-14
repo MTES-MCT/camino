@@ -178,7 +178,7 @@ export const PureEntreprise = caminoDefineComponent<Props>(['entrepriseId', 'use
                       <h5>Siren</h5>
                     </div>
                     <div class="tablet-blob-3-4">
-                      <p>{item.legalSiren}</p>
+                      <p>{item.legal_siren}</p>
                     </div>
                   </div>
 

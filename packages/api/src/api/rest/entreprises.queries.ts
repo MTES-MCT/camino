@@ -4,10 +4,20 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IDeleteEntrepriseDocumentQueryQuery,
   IGetEntrepriseDocumentsInternalQuery,
+  IGetEntreprisesDbQuery,
   IGetLargeobjectIdByEntrepriseDocumentIdInternalQuery,
   IInsertEntrepriseDocumentInternalQuery,
 } from './entreprises.queries.types.js'
-import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, entrepriseDocumentValidator, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import {
+  EntrepriseDocument,
+  EntrepriseDocumentId,
+  EntrepriseId,
+  Entreprise,
+  entrepriseDocumentIdValidator,
+  entrepriseDocumentValidator,
+  entrepriseIdValidator,
+  entrepriseValidator,
+} from 'camino-common/src/entreprise.js'
 import { EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { NonEmptyArray, isNonEmptyArray } from 'camino-common/src/typescript-tools.js'
@@ -129,4 +139,19 @@ const deleteEntrepriseDocumentQuery = sql<Redefine<IDeleteEntrepriseDocumentQuer
 delete from entreprises_documents
 where id = $ id
     and entreprise_id = $ entrepriseId !
+`
+
+export const getEntreprises = async (pool: Pool) => {
+  return dbQueryAndValidate(getEntreprisesDb, undefined, pool, entrepriseValidator)
+}
+
+const getEntreprisesDb = sql<Redefine<IGetEntreprisesDbQuery, void, Entreprise>>`
+select
+    id,
+    nom,
+    legal_siren
+from
+    entreprises
+where
+    archive is false
 `

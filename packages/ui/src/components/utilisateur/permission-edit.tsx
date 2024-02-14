@@ -11,6 +11,7 @@ import { UtilisateurApiClient } from './utilisateur-api-client'
 import { Pill } from '../_ui/pill'
 import { TypeAheadSmartMultiple, Element } from '../_ui/typeahead-smart-multiple'
 import { ButtonIcon } from '../_ui/button-icon'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   user: User
@@ -87,7 +88,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
                                   }}
                                   class="btn-border small p-s rnd-xs mr-xs"
                                 >
-                                  {e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom}
+                                  {isNotNullNorUndefined(e.legal_siren) ? `${e.nom} (${e.legal_siren})` : e.nom}
                                 </router-link>
                               </li>
                             ) : null
@@ -108,7 +109,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
 
               <div class="tablet-blob-3-4">
                 {`${Administrations[props.utilisateur.value.administrationId].abreviation}${
-                  Administrations[props.utilisateur.value.administrationId].service ? ` - ${Administrations[props.utilisateur.value.administrationId].service}` : ''
+                  isNotNullNorUndefined(Administrations[props.utilisateur.value.administrationId].service) ? ` - ${Administrations[props.utilisateur.value.administrationId].service}` : ''
                 }`}
               </div>
             </div>

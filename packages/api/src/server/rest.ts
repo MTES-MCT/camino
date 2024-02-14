@@ -19,6 +19,7 @@ import {
   postEntrepriseDocument,
   deleteEntrepriseDocument,
   entrepriseDocumentDownload,
+  getAllEntreprises,
 } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -136,7 +137,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
-  '/rest/entreprises': { post: creerEntreprise },
+  '/rest/entreprises': { post: creerEntreprise, get: getAllEntreprises },
   '/rest/administrations/:administrationId/utilisateurs': { get: getAdministrationUtilisateurs },
   '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },

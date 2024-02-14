@@ -57,7 +57,7 @@ const entreprise: EntrepriseType = {
   nom: 'nom entreprise',
   telephone: 'telephone',
   email: 'email@entreprise.fr',
-  legalSiren: 'siren',
+  legal_siren: 'siren',
   legalForme: 'forme',
   adresse: 'adresse',
   codePostal: 'code postal',
@@ -126,7 +126,7 @@ export const NonConnecte: StoryFn = () => <PureEntreprise currentYear={annee} en
 const completeEntreprise: EntrepriseType = {
   id: newEntrepriseId('any'),
   nom: 'An Entreprise',
-  legalSiren: 'SIREN',
+  legal_siren: 'SIREN',
   legalForme: 'SAS, société par actions simplifiée',
   adresse: '21 par ici',
   codePostal: '38240',

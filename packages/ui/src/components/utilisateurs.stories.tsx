@@ -23,7 +23,7 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const enterprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
+const enterprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }
 const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })

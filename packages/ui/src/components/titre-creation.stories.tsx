@@ -18,7 +18,7 @@ const meta: Meta = {
 }
 export default meta
 
-const getEntreprisesTitresCreationAction = action('getEntreprisesTitresCreation')
+const getEntreprisesAction = action('getEntreprises')
 const createTitreAction = action('createTitre')
 const loadLinkableTitresAction = action('loadLinkableTitres')
 
@@ -61,13 +61,13 @@ const linkableTitres: LinkableTitre[] = [
   },
 ]
 
-const apiClient: Pick<ApiClient, 'getEntreprisesTitresCreation' | 'createTitre' | 'loadLinkableTitres'> = {
-  getEntreprisesTitresCreation: () => {
-    getEntreprisesTitresCreationAction()
+const apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkableTitres'> = {
+  getEntreprises: () => {
+    getEntreprisesAction()
 
     return Promise.resolve([
-      { id: entreprise1Id, nom: 'entreprise 1' },
-      { id: entrepriseIdValidator.parse('id2'), nom: 'entreprise 2' },
+      { id: entreprise1Id, nom: 'entreprise 1', legal_siren: null },
+      { id: entrepriseIdValidator.parse('id2'), nom: 'entreprise 2', legal_siren: null },
     ])
   },
   createTitre: value => {
@@ -92,8 +92,8 @@ export const OnlyOneEntreprise: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={{
       ...apiClient,
-      getEntreprisesTitresCreation: () => {
-        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1' }])
+      getEntreprises: () => {
+        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1', legal_siren: null }])
       },
     }}
   />
@@ -104,8 +104,8 @@ export const OnlyOneEntrepriseUserEntreprise: StoryFn = () => (
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }}
     apiClient={{
       ...apiClient,
-      getEntreprisesTitresCreation: () => {
-        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1' }])
+      getEntreprises: () => {
+        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1', legal_siren: null }])
       },
     }}
   />

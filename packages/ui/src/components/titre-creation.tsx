@@ -1,7 +1,7 @@
 import { TitreTypeSelect } from './_common/titre-type-select'
-import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { User, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
 import { TitresLink } from '@/components/titre/titres-link'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { canCreateTitre, getLinkConfig } from 'camino-common/src/permissions/titres'
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -60,7 +60,7 @@ type Value = {
 }
 type Props = {
   user: User
-  apiClient: Pick<ApiClient, 'getEntreprisesTitresCreation' | 'createTitre' | 'loadLinkableTitres'>
+  apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkableTitres'>
   initialValue?: Value
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
@@ -130,9 +130,25 @@ export const PureTitreCreation = defineComponent<Props>(props => {
   const init = async () => {
     entreprises.value = { status: 'LOADING' }
     try {
-      const data = await props.apiClient.getEntreprisesTitresCreation()
+      const data = await props.apiClient.getEntreprises()
 
-      const dataParsed = data.map(({ id, nom }) => ({ id, label: nom }))
+      const dataParsed = data
+        .filter(entreprise => {
+          if (isSuper(props.user)) {
+            return true
+          }
+
+          if ((isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && canCreateTitre(props.user, null)) {
+            return true
+          }
+
+          if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
+            return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
+          }
+
+          return false
+        })
+        .map(({ id, nom }) => ({ id, label: nom }))
       if (isNonEmptyArray(dataParsed)) {
         entreprises.value = { status: 'LOADED', value: dataParsed }
 

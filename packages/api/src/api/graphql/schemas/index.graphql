@@ -153,8 +153,6 @@ type Query {
   "Liste des entreprises"
   entreprises(intervalle: Int, page: Int, colonne: String, ordre: String, noms: String, etapeId: ID, archive: Boolean, etapeUniquement: Boolean): Entreprises
 
-  entreprisesTitresCreation: [Entreprise]
-
   "Les emails à notifier pour un type d’activité"
   administrationActivitesTypesEmails(id: ID!): [ActiviteTypeEmail]
 
