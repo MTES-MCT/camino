@@ -10,6 +10,7 @@ import {
   entrepriseModificationValidator,
   entrepriseTypeValidator,
   sirenValidator,
+  entrepriseValidator,
 } from './entreprise.js'
 import { demarcheIdOrSlugValidator, demarcheIdValidator } from './demarche.js'
 import { newsletterAbonnementValidator, qgisTokenValidator, utilisateurToEdit } from './utilisateur.js'
@@ -17,6 +18,7 @@ import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
   titreAdministrationValidator,
+  titreDemandeValidator,
   titreGetValidator,
   titreLinksValidator,
   titreOnfValidator,
@@ -63,6 +65,7 @@ const IDS = [
   '/rest/statistiques/granulatsMarins',
   '/rest/statistiques/granulatsMarins/:annee',
   '/rest/statistiques/datagouv',
+  '/rest/titres',
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/abonne',
   '/rest/titresONF',
@@ -123,6 +126,7 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/granulatsMarins': { get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/statistiques/granulatsMarins/:annee': { params: { annee: caminoAnneeValidator }, get: { output: statistiquesGranulatsMarinsValidator } },
   '/rest/statistiques/datagouv': { get: { output: z.array(statistiquesDataGouvValidator) } },
+  '/rest/titres': { post: { input: titreDemandeValidator, output: etapeIdValidator } },
   '/rest/titres/:titreId': { params: { titreId: titreIdOrSlugValidator }, get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: { titreId: titreIdValidator }, post: { input: utilisateurTitreAbonneValidator, output: z.void() }, get: { output: z.boolean() } },
   '/rest/titresONF': { get: { output: z.array(titreOnfValidator) } },
@@ -133,7 +137,7 @@ export const CaminoRestRoutes = {
   '/rest/statistiques/dgtm': { get: { output: statistiquesDGTMValidator } },
 
   '/rest/entreprises/:entrepriseId/fiscalite/:annee': { params: { entrepriseId: entrepriseIdValidator, annee: caminoAnneeValidator }, get: { output: fiscaliteValidator } },
-  '/rest/entreprises': { post: { input: z.object({ siren: sirenValidator }), output: z.void() } },
+  '/rest/entreprises': { post: { input: z.object({ siren: sirenValidator }), output: z.void() }, get: { output: z.array(entrepriseValidator) } },
   '/rest/entreprises/:entrepriseId': {
     params: { entrepriseId: entrepriseIdValidator },
     get: { output: entrepriseTypeValidator },

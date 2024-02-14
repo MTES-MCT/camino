@@ -32,7 +32,7 @@ const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'get
   getUtilisateurEntreprises: () => {
     getEntreprisesAction()
 
-    return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])
+    return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }])
   },
   getActivites: siren => {
     getActivitesAction(siren)

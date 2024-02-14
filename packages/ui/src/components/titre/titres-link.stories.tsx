@@ -46,30 +46,19 @@ const titres: LinkableTitre[] = [
     ],
   },
 ]
-const onSelectTitre = action('onSelectTitre')
 const onSelectTitres = action('onSelectTitres')
-export const AXM: StoryFn = () => (
-  <TitresLink config={{ type: 'single', selectedTitreId: null }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
-)
+export const AXM: StoryFn = () => <TitresLink config={{ type: 'single', selectedTitreId: null }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitres={onSelectTitres} />
 
 export const AXMWithAlreadySelectedTitre: StoryFn = () => (
-  <TitresLink
-    config={{ type: 'single', selectedTitreId: titreIdValidator.parse('id1') }}
-    loadLinkableTitres={() => Promise.resolve(titres)}
-    onSelectTitre={onSelectTitre}
-    onSelectTitres={onSelectTitres}
-  />
+  <TitresLink config={{ type: 'single', selectedTitreId: titreIdValidator.parse('id1') }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitres={onSelectTitres} />
 )
 
-export const DemarcheFusion: StoryFn = () => (
-  <TitresLink config={{ type: 'multiple', selectedTitreIds: [] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
-)
+export const DemarcheFusion: StoryFn = () => <TitresLink config={{ type: 'multiple', selectedTitreIds: [] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitres={onSelectTitres} />
 
 export const DemarcheFusionWithAlreadySelectedTitre: StoryFn = () => (
   <TitresLink
     config={{ type: 'multiple', selectedTitreIds: [titreIdValidator.parse('id1'), titreIdValidator.parse('id2')] }}
     loadLinkableTitres={() => Promise.resolve(titres)}
-    onSelectTitre={onSelectTitre}
     onSelectTitres={onSelectTitres}
   />
 )
@@ -81,7 +70,6 @@ export const Loading: StoryFn = () => (
       selectedTitreIds: [titreIdValidator.parse('id1')],
     }}
     loadLinkableTitres={() => new Promise<LinkableTitre[]>(_resolve => {})}
-    onSelectTitre={onSelectTitre}
     onSelectTitres={onSelectTitres}
   />
 )
@@ -93,7 +81,6 @@ export const WithError: StoryFn = () => (
       selectedTitreIds: [titreIdValidator.parse('id1')],
     }}
     loadLinkableTitres={() => Promise.reject(new Error('because reasons'))}
-    onSelectTitre={onSelectTitre}
     onSelectTitres={onSelectTitres}
   />
 )

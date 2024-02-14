@@ -9,9 +9,7 @@ import { stringSplit } from './_utils.js'
 
 import Entreprises from '../models/entreprises.js'
 import { entreprisesQueryModify } from './permissions/entreprises.js'
-import { utilisateurGet } from './utilisateurs.js'
-import { isSuper, isEntreprise, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, User } from 'camino-common/src/roles.js'
-import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
+import { User } from 'camino-common/src/roles.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
@@ -133,27 +131,3 @@ export const entreprisesGet = async (
 export const entreprisesUpsert = async (entreprises: IEntreprise[]) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprises, options.entreprises.update)
 
 export const entrepriseUpsert = async (entreprise: IEntreprise) => Entreprises.query().withGraphFetched(options.entreprises.graph).upsertGraph(entreprise, options.entreprises.update).returning('*')
-
-export const titreDemandeEntreprisesGet = async ({ fields }: { fields?: FieldsEntreprise }, user: User) => {
-  if (!user) return []
-
-  if (isSuper(user)) {
-    return entreprisesGet({ archive: false }, { fields }, user)
-  }
-
-  if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    if (!canCreateTitre(user, null)) return []
-
-    return entreprisesGet({ archive: false }, { fields }, user)
-  }
-
-  if (isEntreprise(user) || isBureauDEtudes(user)) {
-    const utilisateur = await utilisateurGet(user.id, { fields: { entreprises: fields ?? { id: {} } } }, user)
-
-    if (!utilisateur || !utilisateur.entreprises) return []
-
-    return utilisateur.entreprises
-  }
-
-  return []
-}

@@ -1,6 +1,6 @@
-import { isTitreType, TitresTypes, TitreTypeId } from '../static/titresTypes.js'
+import { TitresTypes, TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../static/demarchesTypes.js'
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User, UserNotNull } from '../roles.js'
+import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isEntrepriseOrBureauDEtude, isSuper, User } from '../roles.js'
 import { AdministrationId } from '../static/administrations.js'
 import { isAssociee, isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { CommuneId } from '../static/communes.js'
@@ -44,12 +44,6 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
 }
 
 export const TITRES_TYPES_IDS_DEMAT = ['arm', 'axm']
-
-export function assertsCanCreateTitre(user: User, titreTypeId: TitreTypeId | undefined): asserts user is UserNotNull {
-  if (!isTitreType(titreTypeId) || !canCreateTitre(user, titreTypeId)) {
-    throw new Error('permissions insuffisantes')
-  }
-}
 
 export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | null): boolean => {
   if (isSuper(user)) {

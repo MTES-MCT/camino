@@ -1,29 +1,16 @@
 import { Context, IEntreprise, IEntrepriseColonneId } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 
-import { entreprisesCount, entreprisesGet, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
+import { entreprisesCount, entreprisesGet } from '../../../database/queries/entreprises.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
 import { entrepriseFormat } from '../../_format/entreprises.js'
 import { EtapeId } from 'camino-common/src/etape.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
-const entreprisesTitresCreation = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    const entreprises = await titreDemandeEntreprisesGet({ fields }, user)
-
-    return entreprises.map(entrepriseFormat)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const entreprises = async (
+export const entreprises = async (
   {
     etapeId,
     page,
@@ -52,7 +39,7 @@ const entreprises = async (
     let entreprises = [] as IEntreprise[]
     let total = 0
 
-    if (!etapeUniquement) {
+    if (isNullOrUndefined(etapeUniquement) || !etapeUniquement) {
       ;[entreprises, total] = await Promise.all([
         entreprisesGet(
           {
@@ -79,7 +66,7 @@ const entreprises = async (
         user
       )
 
-      if (titreEtape?.titulaires?.length) {
+      if (isNotNullNorUndefined(titreEtape) && isNotNullNorUndefinedNorEmpty(titreEtape.titulaires)) {
         titreEtape.titulaires.forEach(t => {
           if (!entreprises.find(e => e.id === t.id)) {
             entreprises.push(t)
@@ -88,7 +75,7 @@ const entreprises = async (
         })
       }
 
-      if (titreEtape?.amodiataires?.length) {
+      if (isNotNullNorUndefined(titreEtape) && isNotNullNorUndefinedNorEmpty(titreEtape.amodiataires)) {
         titreEtape.amodiataires.forEach(a => {
           if (!entreprises.find(e => e.id === a.id)) {
             entreprises.push(a)
@@ -114,5 +101,3 @@ const entreprises = async (
     throw e
   }
 }
-
-export { entreprises, entreprisesTitresCreation }

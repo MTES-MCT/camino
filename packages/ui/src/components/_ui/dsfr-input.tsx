@@ -1,4 +1,5 @@
 import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ref } from 'vue'
 
 type TextInputType = {
@@ -12,7 +13,7 @@ type NumberInputType = {
 }
 type BaseProps = {
   id?: string
-  legend: { main: string; description?: string; placeholder?: string; info?: string }
+  legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: string }
   disabled?: boolean
   required?: boolean
 }
@@ -52,11 +53,13 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
   }
 
   return () => (
-    <div class={['fr-input-group', props.disabled ? 'fr-input-group--disabled' : null]}>
-      <label class="fr-label" for={id}>
-        {props.legend.main} {props.required ? ' *' : null}
-        {props.legend.description ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
-      </label>
+    <div class={['fr-input-group', isNotNullNorUndefined(props.disabled) && props.disabled ? 'fr-input-group--disabled' : null]}>
+      {props.legend.visible ?? true ? (
+        <label class="fr-label" for={id}>
+          {props.legend.main} {isNotNullNorUndefined(props.required) && props.required ? ' *' : null}
+          {isNotNullNorUndefined(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
+        </label>
+      ) : null}
       <input
         onInput={updateFromEvent}
         placeholder={props.legend.placeholder}
@@ -67,9 +70,9 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
         disabled={props.disabled ?? false}
         required={props.required ?? false}
         {...(props.type ?? { type: 'text' })}
-        aria-describedby={props.legend.info ? `${id}-info` : undefined}
+        aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info !== '' ? `${id}-info` : undefined}
       />
-      {props.legend.info ? (
+      {isNotNullNorUndefined(props.legend.info) && props.legend.info !== '' ? (
         <p id={`${id}-info`} class="fr-info-text">
           {props.legend.info}
         </p>

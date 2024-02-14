@@ -5,7 +5,6 @@ import { saveAs } from 'file-saver'
 import router from '../router'
 import { urlQueryUpdate } from '../utils/url'
 
-import titreCreation from './titre-creation'
 import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
 import document from './document'
@@ -14,7 +13,6 @@ import meta from './meta'
 import user from './user'
 
 const modules = {
-  titreCreation,
   titreEtape,
   titreEtapeEdition,
   document,

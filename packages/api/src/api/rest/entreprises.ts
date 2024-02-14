@@ -34,6 +34,7 @@ import {
   entrepriseDocumentIdValidator,
   EntrepriseDocumentId,
   newEntrepriseId,
+  Entreprise,
 } from 'camino-common/src/entreprise.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 import { canCreateEntreprise, canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises.js'
@@ -44,6 +45,7 @@ import { Pool } from 'pg'
 import {
   deleteEntrepriseDocument as deleteEntrepriseDocumentQuery,
   getEntrepriseDocuments as getEntrepriseDocumentsQuery,
+  getEntreprises,
   getLargeobjectIdByEntrepriseDocumentId,
   insertEntrepriseDocument,
 } from './entreprises.queries.js'
@@ -402,7 +404,7 @@ export const getEntreprise = (_pool: Pool) => async (req: JWTRequest<User>, res:
       } else {
         // TODO 2023-05-15: utiliser pg-typed
         // @ts-ignore
-        res.json(entrepriseFormat(entreprise))
+        res.json({ ...entrepriseFormat(entreprise), legal_siren: entreprise.legalSiren })
       }
     } catch (e) {
       console.error(e)
@@ -623,4 +625,9 @@ export const entrepriseDocumentDownload: NewDownload = async (params, user, pool
   const entrepriseDocumentLargeObjectId = await getLargeobjectIdByEntrepriseDocumentId(entrepriseDocumentId, pool, user)
 
   return { loid: entrepriseDocumentLargeObjectId, fileName: entrepriseDocumentId }
+}
+
+export const getAllEntreprises = (pool: Pool) => async (_req: JWTRequest<User>, res: CustomResponse<Entreprise[]>) => {
+  const allEntreprises = await getEntreprises(pool)
+  res.json(allEntreprises)
 }

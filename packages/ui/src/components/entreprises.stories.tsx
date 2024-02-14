@@ -17,12 +17,12 @@ const meta: Meta = {
 export default meta
 
 const creerEntrepriseAction = action('creerEntreprise')
-const getEntreprisesAction = action('getEntreprises')
+const getEntreprisesAction = action('getFilteredEntreprises')
 const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
@@ -32,7 +32,7 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresR
   getUtilisateurEntreprises: () => {
     return Promise.resolve([])
   },
-  getEntreprises: _ => {
+  getFilteredEntreprises: _ => {
     getEntreprisesAction()
 
     return Promise.resolve({
@@ -59,7 +59,7 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'creerEntreprise' | 'titresR
 }
 
 export const Loading: StoryFn = () => (
-  <PureEntreprises apiClient={{ ...apiClient, getEntreprises: () => new Promise(() => ({})) }} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises apiClient={{ ...apiClient, getFilteredEntreprises: () => new Promise(() => ({})) }} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
 export const NonConnecte: StoryFn = () => <PureEntreprises apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />

@@ -7,8 +7,6 @@ import { HeritageEdit } from './heritage-edit'
 import { PropDuree } from './prop-duree'
 import { AutocompleteEntreprise } from './autocomplete-entreprise'
 import { CaminoDate } from 'camino-common/src/date'
-
-import { etablissementNameFind } from '@/utils/entreprise'
 import { SubstancesEdit } from './substances-edit'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
@@ -84,11 +82,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
 
     if (!entreprise) {
       return ''
-    }
-
-    const etablissementName: string | null = etablissementNameFind(entreprise.etablissements, props.etape.date)
-    if (isNotNullNorUndefined(etablissementName)) {
-      return etablissementName
     }
 
     return entreprise.nom

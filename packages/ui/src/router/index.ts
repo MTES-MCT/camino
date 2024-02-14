@@ -5,8 +5,12 @@ import type { MenuSection } from '@/utils/matomo'
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import { Titres } from '../components/titres'
-import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
+
+const TitreCreation = async () => {
+  const { TitreCreation } = await import('../components/titre-creation')
+  return TitreCreation
+}
 
 const Activite = async () => {
   const { Activite } = await import('../components/activite')

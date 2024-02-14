@@ -15,7 +15,6 @@ export const TITRES_TYPES_TYPES_IDS = {
 export const titreTypeTypeIdValidator = z.enum(IDS)
 
 export type TitreTypeTypeId = z.infer<typeof titreTypeTypeIdValidator>
-export type TitreTypeType = Definition<TitreTypeTypeId>
 export const TitresTypesTypes: {
   [key in TitreTypeTypeId]: Definition<key>
 } = {

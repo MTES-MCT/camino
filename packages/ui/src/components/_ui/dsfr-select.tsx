@@ -31,6 +31,7 @@ export const DsfrSelect = <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(pr
         aria-label={props.legend.main ?? undefined}
         disabled={props.disabled ?? false}
         name={id}
+        value={props.initialValue}
         onChange={event => (isEventWithTarget(event) ? props.valueChanged(event.target.value as T) : null)}
       >
         {props.items.map(({ id, label }) => (

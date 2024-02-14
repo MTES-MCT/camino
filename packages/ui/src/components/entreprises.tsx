@@ -28,7 +28,7 @@ const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
     const columns = {
       nom: { value: entreprise.nom },
       siren: {
-        value: entreprise.legalEtranger || entreprise.legalSiren || '–',
+        value: entreprise.legalEtranger ?? entreprise.legalSiren ?? '–',
       },
     }
 
@@ -42,7 +42,7 @@ const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
 interface Props {
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getEntreprises' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getFilteredEntreprises' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
   user: User
 }
 export const PureEntreprises = defineComponent<Props>(props => {
@@ -55,7 +55,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
   }
 
   const getData = async (params: Params<string>) => {
-    const values = await props.apiClient.getEntreprises({ ordre: params.ordre, colonne: params.colonne, page: params.page, nomsEntreprise: params.filtres?.nomsEntreprise ?? '' })
+    const values = await props.apiClient.getFilteredEntreprises({ ordre: params.ordre, colonne: params.colonne, page: params.page, nomsEntreprise: params.filtres?.nomsEntreprise ?? '' })
     const entreprises = entreprisesLignesBuild(values.elements)
 
     return { total: values.total, values: entreprises }

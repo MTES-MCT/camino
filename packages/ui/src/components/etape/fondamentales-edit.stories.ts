@@ -96,7 +96,7 @@ export const ArmDemandeONF = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }
@@ -113,7 +113,7 @@ export const ArmDemandeOperateur = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }
@@ -134,7 +134,7 @@ export const ArmJorfONF = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }
@@ -155,7 +155,7 @@ export const AxmDemandeONF = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }
@@ -176,7 +176,7 @@ export const PrmDemandeONF = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }
@@ -197,7 +197,7 @@ export const PrmDeplacementDePerimetreONF = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: [],
+        legal_siren: null,
       },
     ],
   }

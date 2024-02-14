@@ -19,6 +19,7 @@ import {
   postEntrepriseDocument,
   deleteEntrepriseDocument,
   entrepriseDocumentDownload,
+  getAllEntreprises,
 } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -49,6 +50,7 @@ import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { getAdministrationUtilisateurs } from '../api/rest/administrations.js'
+import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 
 interface IRestResolverResult {
   nom: string
@@ -116,6 +118,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
+  '/rest/titres': { post: titreDemandeCreer },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
   '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
   '/rest/titresONF': { get: titresONF },
@@ -136,7 +139,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/entreprises/:entrepriseId': { get: getEntreprise, put: modifierEntreprise },
   '/rest/entreprises/:entrepriseId/documents': { get: getEntrepriseDocuments, post: postEntrepriseDocument },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { delete: deleteEntrepriseDocument },
-  '/rest/entreprises': { post: creerEntreprise },
+  '/rest/entreprises': { post: creerEntreprise, get: getAllEntreprises },
   '/rest/administrations/:administrationId/utilisateurs': { get: getAdministrationUtilisateurs },
   '/rest/demarches/:demarcheId/geojson': { get: getPerimetreInfos },
   '/rest/etapes/:etapeId/geojson': { get: getPerimetreInfos },

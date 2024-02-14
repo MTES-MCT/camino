@@ -36,7 +36,7 @@ export const Entreprise: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
     apiClient={{
-      getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', etablissements: [] }]),
+      getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', legal_siren: null }]),
       updateUtilisateur: user =>
         new Promise(resolve =>
           setTimeout(() => {

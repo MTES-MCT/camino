@@ -264,7 +264,6 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
                   loadActivitesTypesEmails()
                 }}
                 emailDelete={(administrationId, activiteTypeId, email) => {
-                  console.log('coucou')
                   props.apiClient.administrationActiviteTypeEmailDelete({
                     activiteTypeId,
                     email,

@@ -15,19 +15,30 @@
                     </label><input class="fr-input" name="titre_nom" id="titre_nom" required="" type="text">
                     <!---->
                   </div>
-                  <div class="fr-input-group"><label class="fr-label" for="references">Références</label>
-                    <div class="fr-grid-row fr-grid-row--middle fr-mb-3v"><select class="fr-select fr-col">
-                        <option value="brg">BRGM</option>
-                        <option value="dea">DEAL</option>
-                        <option value="deb">DEB</option>
-                        <option value="dge">DGEC</option>
-                        <option value="ifr">Ifremer</option>
-                        <option value="irs">IRSN</option>
-                        <option value="nus">Nom d'usage</option>
-                        <option value="onf">ONF</option>
-                        <option value="ptm">PTMG</option>
-                        <option value="rnt">RNTM</option>
-                      </select><input type="text" class="fr-input fr-col fr-ml-2v"><button class="fr-btn fr-icon-delete-line fr-btn--icon fr-btn--tertiary fr-ml-2v" type="button"></button></div><button class="fr-btn fr-icon-add-line fr-btn--icon-right fr-btn--tertiary" id="references">Ajouter une référence</button>
+                  <div class="fr-input-group"><label class="fr-label fr-mb-1w" for="references">Références</label>
+                    <div class="fr-grid-row fr-grid-row--middle fr-mb-3v">
+                      <div class="fr-select-group fr-col fr-mb-0">
+                        <!----><select class="fr-select" id="select_271" aria-label="" name="select_271">
+                          <option value="brg">BRGM</option>
+                          <option value="dea">DEAL</option>
+                          <option value="deb">DEB</option>
+                          <option value="dge">DGEC</option>
+                          <option value="ifr">Ifremer</option>
+                          <option value="irs">IRSN</option>
+                          <option value="nus">Nom d'usage</option>
+                          <option value="onf">ONF</option>
+                          <option value="ptm">PTMG</option>
+                          <option value="rnt">RNTM</option>
+                          <option disabled="" hidden="" value="">Selectionnez une option</option>
+                        </select>
+                      </div>
+                      <div class="fr-input-group fr-col fr-ml-2v fr-mb-0">
+                        <!----><input class="fr-input" name="input_670" id="input_670" type="text">
+                        <!---->
+                      </div><button class="fr-btn fr-btn--tertiary fr-btn--md fr-icon-delete-bin-line fr-ml-2v" title="Supprimer la référence 1" aria-label="Supprimer la référence 1" type="button">
+                        <!---->
+                      </button>
+                    </div><button class="fr-btn fr-btn--icon-right fr-icon-add-line fr-btn--tertiary fr-btn--md" title="Ajouter une référence" aria-label="Ajouter une référence" type="button">Ajouter une référence</button>
                   </div>
                 </form>
               </div>

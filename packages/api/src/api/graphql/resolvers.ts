@@ -37,12 +37,12 @@ import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from
 
 import { substances } from './resolvers/substances.js'
 
-import { entreprises, entreprisesTitresCreation } from './resolvers/entreprises.js'
+import { entreprises } from './resolvers/entreprises.js'
 import { administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer, administrationActivitesTypesEmails } from './resolvers/administrations.js'
 import { activites, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
-import { titreDemandeCreer } from './resolvers/titre-demande.js'
+import { titreDemandeCreer } from '../rest/titre-demande.js'
 import { journaux } from './resolvers/journaux.js'
 
 export default {
@@ -102,7 +102,6 @@ export default {
   documentSupprimer,
   activiteDeposer,
   newsletterInscrire,
-  entreprisesTitresCreation,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
   titreDemandeCreer,

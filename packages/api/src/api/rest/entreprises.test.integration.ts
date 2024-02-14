@@ -18,6 +18,7 @@ import { mkdirSync, writeFileSync } from 'fs'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
+import type { Knex } from 'knex'
 console.info = vi.fn()
 console.error = vi.fn()
 vi.mock('../../tools/api-insee/fetch', () => ({
@@ -37,9 +38,12 @@ beforeEach(() => {
 
 let dbPool: Pool
 
+let knex: Knex
+
 beforeAll(async () => {
-  const { pool } = await dbManager.populateDb()
+  const { pool, knex: knexInstance } = await dbManager.populateDb()
   dbPool = pool
+  knex = knexInstance
 })
 
 afterAll(async () => {
@@ -205,6 +209,7 @@ describe('getEntreprise', () => {
         "legalEtranger": null,
         "legalForme": null,
         "legalSiren": null,
+        "legal_siren": null,
         "nom": "nouvelle-entreprise-id",
         "paysId": null,
         "telephone": null,
@@ -359,5 +364,29 @@ describe('getEntrepriseDocument', () => {
     )
 
     expect(deleteNotPossible.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  })
+})
+
+describe('getEntreprises', () => {
+  test('récupère toutes les entreprises', async () => {
+    await knex.raw('delete from titres_etapes_entreprises_documents')
+    await knex.raw('delete from entreprises_documents')
+    await knex.raw('delete from entreprises')
+    await entrepriseUpsert({
+      id: newEntrepriseId('plop'),
+      nom: 'Mon Entreprise',
+    })
+    const tested = await restCall(dbPool, '/rest/entreprises', {}, { role: 'defaut' })
+
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "plop",
+          "legal_siren": null,
+          "nom": "Mon Entreprise",
+        },
+      ]
+    `)
   })
 })

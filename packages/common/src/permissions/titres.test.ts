@@ -1,4 +1,4 @@
-import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, canReadTitre, getLinkConfig } from './titres.js'
+import { canCreateTitre, canDeleteTitre, canEditTitre, canHaveActiviteTypeId, canLinkTitres, canReadTitre, getLinkConfig } from './titres.js'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect, describe } from 'vitest'
@@ -63,9 +63,6 @@ describe('canCreateTitre', () => {
       const itCan = canCreateTitre(user, titreTypeid)
       if (itCan) {
         result[titreTypeid] = itCan
-        assertsCanCreateTitre(user, titreTypeid)
-      } else {
-        expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
       }
     }
     expect(result).toMatchSnapshot()
@@ -73,13 +70,11 @@ describe('canCreateTitre', () => {
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
     const user: User = { role: 'super', ...testBlankUser }
     expect(canCreateTitre(user, titreTypeId)).toBe(true)
-    expect(() => assertsCanCreateTitre(user, titreTypeId)).not.toThrowError()
   })
 
   test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas créer de titre de type %p', titreTypeId => {
     const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'], ...testBlankUser }
     expect(canCreateTitre(user, titreTypeId)).toBe(false)
-    expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
   })
 
   test('vérifie si un utilisateur administrateur admin peut créer des titres', () => {
@@ -91,9 +86,6 @@ describe('canCreateTitre', () => {
         const itCan = canCreateTitre(user, titreTypeid)
         if (itCan) {
           ;(result[administrationId] ??= {})[titreTypeid] = itCan
-          assertsCanCreateTitre(user, titreTypeid)
-        } else {
-          expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
         }
       }
     })

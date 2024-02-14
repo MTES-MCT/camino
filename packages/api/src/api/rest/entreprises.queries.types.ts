@@ -75,3 +75,19 @@ export interface IDeleteEntrepriseDocumentQueryQuery {
   result: IDeleteEntrepriseDocumentQueryResult;
 }
 
+/** 'GetEntreprisesDb' parameters type */
+export type IGetEntreprisesDbParams = void;
+
+/** 'GetEntreprisesDb' return type */
+export interface IGetEntreprisesDbResult {
+  id: string;
+  legal_siren: string | null;
+  nom: string;
+}
+
+/** 'GetEntreprisesDb' query type */
+export interface IGetEntreprisesDbQuery {
+  params: IGetEntreprisesDbParams;
+  result: IGetEntreprisesDbResult;
+}
+
