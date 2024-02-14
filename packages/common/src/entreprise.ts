@@ -42,7 +42,7 @@ export const entrepriseModificationValidator = z.object({
 })
 
 // TODO 2023-05-15 pas certain de l’utilité de la date de fin
-export type EntrepriseEtablissement = { id: string; dateDebut: CaminoDate; dateFin: CaminoDate | null; nom: string }
+type EntrepriseEtablissement = { id: string; dateDebut: CaminoDate; dateFin: CaminoDate | null; nom: string }
 export interface Entreprise {
   id: EntrepriseId
   nom: string
