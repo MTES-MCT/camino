@@ -1,7 +1,5 @@
-const compiler = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
-
 const config = {
-  "ignore": ["babel.config.js", ".history", "packages/api/knexfile.ts", "**/knex/migrations/*", "packages/api/src/knex/migration-stub.ts", "packages/api/src/knex/seeding.ts", "packages/api/src/knex/seeds/**", "packages/common/src/**/*.test.ts", "packages/api/src/tools/phases/tests-creation.ts", "packages/ui/src/__mocks__/setupVitest.js", "packages/api/src/**/*.queries.types.ts"],
+  "ignore": [".history/**", "packages/api/knexfile.ts", "**/knex/migrations/*", "packages/api/src/knex/migration-stub.ts", "packages/api/src/knex/seeding.ts", "packages/api/src/knex/seeds/**", "packages/common/src/**/*.test.ts", "packages/api/src/tools/phases/tests-creation.ts", "packages/ui/src/__mocks__/setupVitest.js", "packages/api/src/**/*.queries.types.ts"],
   "ignoreBinaries": [
   "eslint",
   "prettier",
@@ -42,10 +40,9 @@ const config = {
     },
     "packages/ui": {
       "entry": "src/index.ts",
-      "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js"],
+      "project": ["src/**/*.tsx","src/**/*.ts", "src/**/*.js", "src/**/*.vue"],
       ignoreDependencies: ["@vitest/coverage-v8",
       "@babel/eslint-parser",
-      "@babel/preset-env",
       "@sentry/tracing",
       "@storybook/addon-styling",
       "@storybook/builder-vite",
@@ -54,22 +51,12 @@ const config = {
       "@vue/eslint-config-standard",
       "babel-core",
       "babel-loader",
-      "babel-plugin-graphql-tag",
       "babel-preset-vite",
       "core-js",
       "eslint-plugin-node",
-      "vitest-fetch-mock",
       "node"
     ]
     }
-  },
-  compilers: {
-    vue: text => {
-      const scripts: string[] = [];
-      let match: RegExpExecArray | null = null;
-      while ((match = compiler.exec(text))) scripts.push(match[1]);
-      return scripts.join(';');
-    },
   },
 }
 export default config
