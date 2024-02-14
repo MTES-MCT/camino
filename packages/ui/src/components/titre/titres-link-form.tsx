@@ -15,7 +15,6 @@ import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 import { DsfrIcon } from '../_ui/icon'
 import { DsfrTag } from '../_ui/tag'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export interface Props {
   user: User
@@ -90,9 +89,6 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
   const onSelectedTitres = (titres: TitreLink[]) => {
     selectedTitres.value = titres
   }
-  const onSelectedTitre = (titre: TitreLink | undefined) => {
-    selectedTitres.value = isNotNullNorUndefined(titre) ? [titre] : []
-  }
 
   const saveLink = async () => {
     titresLinks.value = { status: 'LOADING' }
@@ -129,12 +125,7 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
                 {mode.value === 'edit' ? (
                   <>
                     {titreLinkConfig.value ? (
-                      <TitresLink
-                        config={titreLinkConfig.value}
-                        loadLinkableTitres={props.apiClient.loadLinkableTitres(props.titre.typeId, props.titre.demarches)}
-                        onSelectTitre={onSelectedTitre}
-                        onSelectTitres={onSelectedTitres}
-                      />
+                      <TitresLink config={titreLinkConfig.value} loadLinkableTitres={props.apiClient.loadLinkableTitres(props.titre.typeId, props.titre.demarches)} onSelectTitres={onSelectedTitres} />
                     ) : null}
                     <>
                       <DsfrButton buttonType="primary" title="Enregistrer" onClick={saveLink} />

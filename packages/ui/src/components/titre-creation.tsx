@@ -8,7 +8,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { DsfrSelect } from './_ui/dsfr-select'
 import { EntrepriseId } from 'camino-common/src/entreprise'
-import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, Nullable, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
@@ -19,6 +19,7 @@ import { DsfrButton } from './_ui/dsfr-button'
 import { EtapeId } from 'camino-common/src/etape'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
 
 export const TitreCreation = defineComponent(() => {
   const store = useStore()
@@ -51,17 +52,10 @@ export const TitreCreation = defineComponent(() => {
   )
 })
 
-type Value = {
-  entrepriseId: EntrepriseId | null
-  typeId: TitreTypeId | null
-  nom: string | null
-  titreFromIds?: TitreId[]
-  references: TitreReference[]
-}
 type Props = {
   user: User
   apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkableTitres'>
-  initialValue?: Value
+  initialValue?: TitreDemande
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
   type Entreprise = {
@@ -69,7 +63,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     label: string
   }
 
-  const titreDemande = ref<Value>(props.initialValue ?? { entrepriseId: null, references: [], typeId: null, nom: null })
+  const titreDemande = ref<Nullable<TitreDemande>>(props.initialValue ?? { entrepriseId: null, references: [], typeId: null, nom: null, titreFromIds: [] })
 
   const titreLinkConfig = computed<TitresLinkConfig>(() => {
     if (linkConfig.value?.count === 'single') {
@@ -122,10 +116,9 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     await init()
   })
 
-  const onSelectedTitres = (titres: { id: TitreId }[]) => {
+  const onSelectTitres = (titres: { id: TitreId }[]) => {
     titreDemande.value.titreFromIds = titres.map(({ id }) => id)
   }
-  const unused = () => {}
 
   const init = async () => {
     entreprises.value = { status: 'LOADING' }
@@ -173,19 +166,23 @@ export const PureTitreCreation = defineComponent<Props>(props => {
       references: [],
       typeId: null,
       nom: null,
+      titreFromIds: [],
     }
   }
 
   const save = async () => {
-    savingTitre.value = { status: 'LOADING' }
-    try {
-      await props.apiClient.createTitre(titreDemande.value)
-      savingTitre.value = { status: 'LOADED', value: undefined }
-    } catch (e: any) {
-      console.error('error', e)
-      savingTitre.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
+    const parsed = titreDemandeValidator.safeParse(titreDemande.value)
+    if (parsed.success) {
+      savingTitre.value = { status: 'LOADING' }
+      try {
+        await props.apiClient.createTitre(parsed.data)
+        savingTitre.value = { status: 'LOADED', value: undefined }
+      } catch (e: any) {
+        console.error('error', e)
+        savingTitre.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
       }
     }
   }
@@ -223,13 +220,13 @@ export const PureTitreCreation = defineComponent<Props>(props => {
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.typeId) && !entrepriseOuBureauDEtudeCheck.value ? (
-          <TitreReferenceSelect initialValues={titreDemande.value.references} onUpdateReferences={onUpdateReferences} />
+          <TitreReferenceSelect initialValues={titreDemande.value.references ?? []} onUpdateReferences={onUpdateReferences} />
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.typeId) && isNotNullNorUndefined(linkConfig.value) ? (
           <div class="fr-mb-3w">
             <label class="fr-label fr-mb-1w">Titre {linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande</label>
-            <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectedTitres} onSelectTitre={unused} />
+            <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectTitres} />
           </div>
         ) : null}
 

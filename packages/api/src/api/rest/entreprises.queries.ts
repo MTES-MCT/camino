@@ -154,4 +154,6 @@ from
     entreprises
 where
     archive is false
+order by
+    nom
 `

@@ -13,7 +13,6 @@
 # import * from 'titres-etapes.graphql'
 # import * from 'titres.graphql'
 # import * from 'utilisateurs.graphql'
-# import * from 'titre-demande.graphql'
 # import * from 'journaux.graphql'
 
 """
@@ -218,6 +217,4 @@ type Mutation {
   administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 
   administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
-
-  titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds
 }

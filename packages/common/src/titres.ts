@@ -10,6 +10,7 @@ import { demarcheStatutIdValidator } from './static/demarchesStatuts.js'
 import { demarcheTypeIdValidator } from './static/demarchesTypes.js'
 import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titres.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
+import { entrepriseIdValidator } from './entreprise.js'
 
 const commonTitreValidator = z.object({
   id: titreIdValidator,
@@ -156,3 +157,13 @@ export const getDemarcheByIdOrSlugValidator = z.object({
 })
 
 export type GetDemarcheByIdOrSlugValidator = z.infer<typeof getDemarcheByIdOrSlugValidator>
+
+export const titreDemandeValidator = z.object({
+  nom: z.string(),
+  typeId: titreTypeIdValidator,
+  entrepriseId: entrepriseIdValidator,
+  references: z.array(titreReferenceValidator),
+  titreFromIds: z.array(titreIdValidator),
+})
+
+export type TitreDemande = z.infer<typeof titreDemandeValidator>

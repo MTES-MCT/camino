@@ -50,6 +50,7 @@ import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
 import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { getAdministrationUtilisateurs } from '../api/rest/administrations.js'
+import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 
 interface IRestResolverResult {
   nom: string
@@ -117,6 +118,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/config': { get: config },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
+  '/rest/titres': { post: titreDemandeCreer },
   '/rest/titres/:titreId': { delete: removeTitre, post: updateTitre, get: getTitre },
   '/rest/titres/:titreId/abonne': { post: utilisateurTitreAbonner, get: getUtilisateurTitreAbonner },
   '/rest/titresONF': { get: titresONF },

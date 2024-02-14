@@ -446,13 +446,6 @@ interface IUtilisateurTitre {
 
 export type Context = { user: User; pool: Pool }
 
-interface ITitreDemande {
-  nom: string
-  typeId: TitreTypeId
-  domaineId: DomaineId
-  entrepriseId: string
-  references?: TitreReference[]
-}
 interface IJournaux {
   id: string
   utilisateurId: string
@@ -508,7 +501,6 @@ export {
   IHeritageContenu,
   ICache,
   ICacheId,
-  ITitreDemande,
   IJournaux,
   IDecisionAnnexeContenu,
 }

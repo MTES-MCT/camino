@@ -7,15 +7,14 @@ import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-
 import { TitreStatut } from '../_common/titre-statut'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 interface Props {
   config: TitresLinkConfig
   loadLinkableTitres: () => Promise<LinkableTitre[]>
-  onSelectTitre: (titre: TitreLink | undefined) => void
   onSelectTitres: (titres: TitreLink[]) => void
 }
-export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitre', 'onSelectTitres'], props => {
+export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitres'], props => {
   const display = (item: LinkableTitre) => {
     return (
       <div class="flex flex-center dsfr">
@@ -89,6 +88,13 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
 
     return `${dateDebut} - ${dateFin}`
   }
+  const onSelectOneItem = (item: TitreLink | undefined) => {
+    if (isNotNullNorUndefined(item)) {
+      props.onSelectTitres([item])
+    } else {
+      props.onSelectTitres([])
+    }
+  }
 
   return () => (
     <LoadingElement
@@ -105,7 +111,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
                 items: titresFiltered.value,
                 itemChipLabel: item => item.nom,
                 minInputLength: 1,
-                onSelectItem: props.onSelectTitre,
+                onSelectItem: onSelectOneItem,
                 onInput: onSearch,
                 displayItemInList: display,
               }}

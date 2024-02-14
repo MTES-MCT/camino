@@ -9,10 +9,11 @@ import { fieldsBuild } from './_fields-build.js'
 import { titreCreate, titreGet, titresCount, titresGet } from '../../../database/queries/titres.js'
 
 import titreUpdateTask from '../../../business/titre-update.js'
-import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
+import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
+import { isTitreType } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * TODO 2022-07-12 enlever cette fonction et nettoyer les tests d'intégration
@@ -150,7 +151,9 @@ export const titres = async (
  */
 export const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
-    assertsCanCreateTitre(user, titre.typeId)
+    if (!isTitreType(titre.typeId) || !canCreateTitre(user, titre.typeId)) {
+      throw new Error('permissions insuffisantes')
+    }
 
     // insert le titre dans la base
     titre = await titreCreate(titre, { fields: {} })
