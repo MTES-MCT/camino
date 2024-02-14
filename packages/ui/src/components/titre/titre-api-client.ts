@@ -16,6 +16,7 @@ import { RegionId } from 'camino-common/src/static/region'
 import { FacadesMaritimes, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreWithPerimetre } from '../titres/mapUtil'
+import { EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 
 export type TitreForTable = {
   id: TitreId
@@ -103,6 +104,7 @@ export interface TitreApiClient {
   }) => Promise<{ elements: TitreWithPerimetre[]; total: number }>
   titresRechercherByNom: (nom: string) => Promise<{ elements: TitreForTitresRerchercherByNom[] }>
   getTitresByIds: (titreIds: TitreId[], cacheKey: string) => Promise<{ elements: Pick<TitreForTable, 'id' | 'nom'>[] }>
+  createTitre: (titreDemande: unknown) => Promise<EtapeId>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -349,5 +351,17 @@ export const titreApiClient: TitreApiClient = {
       cacheKey
     )({ titresIds })
     return result
+  },
+
+  createTitre: async titreDemande => {
+    const result = await apiGraphQLFetch(gql`
+      mutation TitreDemandeCreer($titreDemande: InputTitreDemande!) {
+        titreDemandeCreer(titreDemande: $titreDemande) {
+          titreEtapeId
+        }
+      }
+    `)({ titreDemande })
+
+    return etapeIdValidator.parse(result.titreEtapeId)
   },
 }
