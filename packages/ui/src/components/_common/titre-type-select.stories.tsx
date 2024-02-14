@@ -16,6 +16,4 @@ export const Default: StoryFn = () => <TitreTypeSelect user={{ role: 'super', ..
 
 export const Entreprise: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={null} />
 
-
-
 export const AlreadySelected: StoryFn = () => <TitreTypeSelect user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} onUpdateTitreTypeId={onUpdateTitreTypeIdAction} titreTypeId={'arm'} />

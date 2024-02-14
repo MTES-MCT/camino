@@ -8,7 +8,7 @@ import { DsfrInput } from '../_ui/dsfr-input'
 import { DsfrButton, DsfrButtonIcon } from '../_ui/dsfr-button'
 
 type EditableTitreReference = TitreReference | { referenceTypeId: null; nom: null }
-export interface Props {
+interface Props {
   initialValues?: TitreReference[]
   onUpdateReferences: (references: TitreReference[]) => void
 }

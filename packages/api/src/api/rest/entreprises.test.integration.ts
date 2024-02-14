@@ -205,6 +205,7 @@ describe('getEntreprise', () => {
         "legalEtranger": null,
         "legalForme": null,
         "legalSiren": null,
+        "legal_siren": null,
         "nom": "nouvelle-entreprise-id",
         "paysId": null,
         "telephone": null,

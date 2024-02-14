@@ -101,11 +101,23 @@ export const OnlyOneEntreprise: StoryFn = () => (
 
 export const OnlyOneEntrepriseUserEntreprise: StoryFn = () => (
   <PureTitreCreation
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id }] }}
+    apiClient={{
+      ...apiClient,
+      getEntreprises: () => {
+        return Promise.resolve([{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }])
+      },
+    }}
+  />
+)
+
+export const NoEntreprise: StoryFn = () => (
+  <PureTitreCreation
     user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }}
     apiClient={{
       ...apiClient,
       getEntreprises: () => {
-        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1', legal_siren: null }])
+        return Promise.resolve([{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }])
       },
     }}
   />

@@ -14,16 +14,15 @@ interface Props {
   reload: () => Promise<void>
 }
 
-
 export const EditPopup = caminoDefineComponent<Props>(['titre', 'close', 'apiClient', 'reload'], props => {
   const nom = ref(props.titre.nom)
   const references = ref<TitreReference[]>([...props.titre.references])
- 
+
   const nomChange = (value: string) => {
     nom.value = value
   }
 
-  const onUpdateReferences  = (newReferences: TitreReference[]) => {
+  const onUpdateReferences = (newReferences: TitreReference[]) => {
     references.value = newReferences
   }
   const content = () => (

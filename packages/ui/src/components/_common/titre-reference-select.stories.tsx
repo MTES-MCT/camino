@@ -11,8 +11,14 @@ export default meta
 
 const onUpdateReferencesAction = action('onUpdateReferences')
 
-export const Default: StoryFn = () => <TitreReferenceSelect  onUpdateReferences={onUpdateReferencesAction}  />
+export const Default: StoryFn = () => <TitreReferenceSelect onUpdateReferences={onUpdateReferencesAction} />
 
-export const WithValues: StoryFn = () => <TitreReferenceSelect  onUpdateReferences={onUpdateReferencesAction}  initialValues={[{referenceTypeId: 'brg', nom: 'REF1'}, {referenceTypeId: 'dea', nom: 'REF2'}]} />
-
-
+export const WithValues: StoryFn = () => (
+  <TitreReferenceSelect
+    onUpdateReferences={onUpdateReferencesAction}
+    initialValues={[
+      { referenceTypeId: 'brg', nom: 'REF1' },
+      { referenceTypeId: 'dea', nom: 'REF2' },
+    ]}
+  />
+)
