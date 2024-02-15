@@ -1,9 +1,7 @@
-import { GraphQLResolveInfo } from 'graphql'
-import { Context, IDocumentRepertoire } from '../../../types.js'
+import { IDocumentRepertoire } from '../../../types.js'
 
-import { demarchesStatutsGet, devisesGet, documentsTypesGet, domainesGet, titresTypesTypesGet } from '../../../database/queries/metas.js'
+import { demarchesStatutsGet, devisesGet, documentsTypesGet, titresTypesTypesGet } from '../../../database/queries/metas.js'
 
-import { fieldsBuild } from './_fields-build.js'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { UNITES } from 'camino-common/src/static/unites.js'
 import { Pays, PaysList } from 'camino-common/src/static/pays.js'
@@ -15,6 +13,7 @@ import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/p
 import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { sortedAdministrationTypes } from 'camino-common/src/static/administrations.js'
+import { sortedDomaines } from 'camino-common/src/static/domaines.js'
 
 export const devises = async () => devisesGet()
 
@@ -34,17 +33,7 @@ export const documentsTypes = async ({ repertoire, typeId }: { repertoire: IDocu
 
 export const referencesTypes = () => sortedReferencesTypes
 
-export const domaines = async (_: never, _context: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    return await domainesGet(null as never, { fields })
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const domaines = () => sortedDomaines
 
 export const types = async () => {
   try {

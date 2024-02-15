@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
-const fieldsOrderAsc = ['domaines', 'references', 'titresTypes']
+const fieldsOrderAsc = ['references']
 const fieldsToRemove = ['heritageProps', 'communes']
 const titreFieldsToRemove: string[] = ['geojson4326Centre', 'references']
 
@@ -12,11 +12,6 @@ interface IFields {
 // ajoute des propriétés requises par /database/queries/_format
 export const fieldsFormat = (fields: IFields, parent: string) => {
   const isParentTitre = ['titres', 'titre', 'amodiataireTitres', 'titulaireTitres'].includes(parent)
-
-  // ajoute la propriété `titreType` sur les démarches
-  if (fields.demarches && !fields.demarches.titreType) {
-    fields.demarches.titreType = { id: {} }
-  }
 
   // supprime la propriété `coordonnees`
   fieldsToRemove.forEach(key => {

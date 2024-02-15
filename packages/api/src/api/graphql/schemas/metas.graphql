@@ -10,10 +10,6 @@ type Domaine {
   nom: String!
 
   description: String
-
-  ordre: Int
-
-  titresTypes: [TitreType]
 }
 
 "Type de titre minier"

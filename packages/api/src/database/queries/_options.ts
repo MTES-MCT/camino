@@ -71,11 +71,10 @@ const titresTypesRelateFalse = ['type']
 
 const titresDemarchesRelateTrue = [...titresEtapesRelateTrue.map(k => `etapes.${k}`)]
 
-const titresDemarchesRelateFalse = ['titreType', ...titresTypesRelateFalse.map(k => `titreType.${k}`)]
+const titresDemarchesRelateFalse: string[] = []
 
 const titresDemarches = {
   graph: `[
-     titreType,
      etapes.${titresEtapes.graph},
   ]`,
 
@@ -98,10 +97,6 @@ const titresActivites = {
     unrelate: titresActivitesRelateTrue,
     insertMissing: true,
   },
-}
-
-const domaines = {
-  graph: `[titresTypes(orderAsc).${titresTypes.graph}]`,
 }
 
 const titresRelateTrue = ['type', ...titresActivitesRelateTrue.map(k => `activites.${k}`), ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)]
@@ -143,7 +138,6 @@ const journaux = {
 }
 
 export default {
-  domaines,
   documents,
   entreprises,
   entreprisesEtablissements,

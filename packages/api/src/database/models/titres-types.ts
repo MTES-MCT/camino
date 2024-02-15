@@ -2,7 +2,6 @@ import { Model, Modifiers } from 'objection'
 
 import { ITitreType } from '../../types.js'
 
-import Domaines from './domaines.js'
 import TitresTypesTypes from './titres-types-types.js'
 
 interface TitresTypes extends ITitreType {}
@@ -30,15 +29,6 @@ class TitresTypes extends Model {
       join: {
         from: 'titresTypes.typeId',
         to: 'titresTypesTypes.id',
-      },
-    },
-
-    domaine: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Domaines,
-      join: {
-        from: 'titresTypes.domaineId',
-        to: 'domaines.id',
       },
     },
   })

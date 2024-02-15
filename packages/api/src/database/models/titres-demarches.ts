@@ -2,7 +2,6 @@ import { Model, Modifiers, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types.js'
 import { newDemarcheId } from './_format/id-create.js'
-import TitresTypes from './titres-types.js'
 import Titres from './titres.js'
 import TitresEtapes from './titres-etapes.js'
 import { demarcheSlugValidator } from 'camino-common/src/demarche.js'
@@ -36,20 +35,6 @@ class TitresDemarches extends Model {
   }
 
   static relationMappings = () => ({
-    // todo: pourquoi ne pas utiliser la relation `titre` ?
-    titreType: {
-      relation: Model.HasOneThroughRelation,
-      modelClass: TitresTypes,
-      join: {
-        from: 'titresDemarches.titreId',
-        through: {
-          from: 'titres.id',
-          to: 'titres.typeId',
-        },
-        to: 'titresTypes.id',
-      },
-    },
-
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
