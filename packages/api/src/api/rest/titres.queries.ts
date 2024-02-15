@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres.js'
+import { getMostRecentValuePropFromEtapeFondamentaleValide, TitreGet, TitreGetDemarche, titreGetValidator } from 'camino-common/src/titres.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import {
   IGetAdministrationsLocalesByTitreIdDbQuery,
@@ -37,7 +37,6 @@ import { getDateLastJournal } from './journal.queries.js'
 import { canHaveActivites, canReadTitre } from 'camino-common/src/permissions/titres.js'
 import { canReadTitreActivites } from 'camino-common/src/permissions/activites.js'
 import { TitreIdOrSlug, titreIdValidator, titreSlugValidator, TitreId } from 'camino-common/src/validators/titres.js'
-import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
@@ -176,25 +175,20 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
       superDemarches.push(formatedDemarche)
     }
 
-    const latestEtapeFondamentaleValide = getMostRecentEtapeFondamentaleValide(superDemarches)
+    const perimetre = getMostRecentValuePropFromEtapeFondamentaleValide('perimetre', superDemarches)
+    const titulaires = getMostRecentValuePropFromEtapeFondamentaleValide('titulaires', superDemarches)
+    const amodiataires = getMostRecentValuePropFromEtapeFondamentaleValide('amodiataires', superDemarches)
 
-    let fondamentale: null | DemarcheEtapeFondamentale['fondamentale'] = null
-    if (latestEtapeFondamentaleValide !== null && 'fondamentale' in latestEtapeFondamentaleValide) {
-      fondamentale = latestEtapeFondamentaleValide.fondamentale
-    }
     const administrationsLocales = memoize(() => {
       return Promise.resolve(
         getAdministrationsLocales(
-          fondamentale?.perimetre?.communes.map(({ id }) => id),
-          fondamentale?.perimetre?.secteurs_maritimes
+          perimetre?.communes.map(({ id }) => id),
+          perimetre?.secteurs_maritimes
         )
       )
     })
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
-      const titulaires = fondamentale?.titulaires ?? []
-      const amodiataires = fondamentale?.amodiataires ?? []
-
-      return Promise.resolve([...titulaires.map(({ id }) => id), ...amodiataires.map(({ id }) => id)])
+      return Promise.resolve([...(titulaires ?? []).map(({ id }) => id), ...(amodiataires ?? []).map(({ id }) => id)])
     })
 
     if (!(await canReadTitre(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titre))) {
@@ -237,9 +231,9 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
     if (
       canHaveActivites({
         titreTypeId: titre.titre_type_id,
-        communes: fondamentale?.perimetre?.communes ?? [],
+        communes: perimetre?.communes ?? [],
         demarches: formattedDemarches,
-        secteursMaritime: fondamentale?.perimetre?.secteurs_maritimes ?? [],
+        secteursMaritime: perimetre?.secteurs_maritimes ?? [],
       }) &&
       (await canReadTitreActivites(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires))
     ) {
