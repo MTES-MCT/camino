@@ -1,24 +1,25 @@
 import { productionCheck, titreActiviteAdministrationsEmailsGet } from './_titre-activite.js'
-import { IAdministrationActiviteTypeEmail, IContenu } from '../../../types.js'
+import { IContenu } from '../../../types.js'
 import { AdministrationId, ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { describe, expect, test } from 'vitest'
+import { GetActiviteTypeEmailsByAdministrationIds } from '../../rest/administrations.queries'
 
 describe('teste la construction des emails lors du dépôt d’une activité', () => {
   describe('teste le calcul des emails des administrations', () => {
-    test.each<null | undefined | Pick<IAdministrationActiviteTypeEmail, 'activiteTypeId' | 'email'>[]>([
+    test.each<null | undefined | Pick<GetActiviteTypeEmailsByAdministrationIds, 'activite_type_id' | 'email'>[]>([
       null,
       undefined,
       [],
-      [{ activiteTypeId: 'grx', email: '' }],
-      [{ activiteTypeId: 'gra', email: 'toto@foo.bar' }],
-      [{ activiteTypeId: 'grx', email: 'toto@foo.bar' }],
+      [{ activite_type_id: 'grx', email: '' }],
+      [{ activite_type_id: 'gra', email: 'toto@foo.bar' }],
+      [{ activite_type_id: 'grx', email: 'toto@foo.bar' }],
     ])('qu’on envoie pas d’emails', administrationActiviteTypeEmail => {
       expect(
         titreActiviteAdministrationsEmailsGet(
           ['ope-onf-973-01'],
           administrationActiviteTypeEmail?.map(a => ({
             ...a,
-            administrationId: 'ope-onf-973-01',
+            administration_id: 'ope-onf-973-01',
           })),
           'grx',
           undefined
@@ -34,7 +35,9 @@ describe('teste la construction des emails lors du dépôt d’une activité', (
       [ADMINISTRATION_IDS['BRGM - PROJET ZERCOA'], false],
       [ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'], false],
     ])('si la production est nulle on envoie des emails que aux ministères et au DREAL', (administrationId, envoie) => {
-      expect(titreActiviteAdministrationsEmailsGet([administrationId], [{ activiteTypeId: 'grx', email: 'toto@foo.bar', administrationId }], 'grx', undefined)).toHaveLength(envoie ? 1 : 0)
+      expect(titreActiviteAdministrationsEmailsGet([administrationId], [{ activite_type_id: 'grx', email: 'toto@foo.bar', administration_id: administrationId }], 'grx', undefined)).toHaveLength(
+        envoie ? 1 : 0
+      )
     })
   })
 

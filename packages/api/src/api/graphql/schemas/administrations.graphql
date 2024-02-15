@@ -5,11 +5,6 @@
 # import * from 'metas.graphql'
 # import * from 'territoires.graphql'
 
-type ActiviteTypeEmail {
-  activiteTypeId: String
-  email: String
-}
-
 input InputAdministrationTitreTypeTitreStatut {
   administrationId: ID!
   titreTypeId: ID!
@@ -26,10 +21,4 @@ input InputAdministrationTitreTypeEtapeType {
   lectureInterdit: Boolean
   modificationInterdit: Boolean
   creationInterdit: Boolean
-}
-
-input InputAdministrationActiviteTypeEmail {
-  administrationId: ID!
-  activiteTypeId: ID!
-  email: String
 }

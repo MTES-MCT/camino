@@ -1,4 +1,4 @@
-import { IAdministrationActiviteTypeEmail, IContenu, IContenuValeur, ITitreActivite, IUtilisateur } from '../../../types.js'
+import { IContenu, IContenuValeur, ITitreActivite, IUtilisateur } from '../../../types.js'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
@@ -6,10 +6,11 @@ import { UserNotNull } from 'camino-common/src/roles.js'
 import { getPeriode } from 'camino-common/src/static/frequence.js'
 import { AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import { dateFormat } from 'camino-common/src/date.js'
-import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 import { getElementValeurs, Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes.js'
+import { GetActiviteTypeEmailsByAdministrationIds, getActiviteTypeEmailsByAdministrationIds } from '../../rest/administrations.queries.js'
+import { Pool } from 'pg'
 
 const elementHtmlBuild = (sectionId: string, element: DeepReadonly<SectionElement>, contenu: IContenu) =>
   contenu[sectionId] && ((contenu[sectionId][element.id] as IContenuValeur) || (contenu[sectionId][element.id] as IContenuValeur) === 0 || (contenu[sectionId][element.id] as IContenuValeur) === false)
@@ -120,7 +121,7 @@ export const productionCheck = (activiteTypeId: string, contenu: IContenu | null
 
 export const titreActiviteAdministrationsEmailsGet = (
   administrationIds: AdministrationId[],
-  administrationsActivitesTypesEmails: IAdministrationActiviteTypeEmail[] | null | undefined,
+  administrationsActivitesTypesEmails: GetActiviteTypeEmailsByAdministrationIds[] | null | undefined,
   activiteTypeId: string,
   contenu: IContenu | null | undefined
 ): string[] => {
@@ -128,15 +129,15 @@ export const titreActiviteAdministrationsEmailsGet = (
     return []
   }
 
-  const activitesTypesEmailsByAdministrationId = (administrationsActivitesTypesEmails ?? []).reduce<Record<AdministrationId, IAdministrationActiviteTypeEmail[]>>((acc, a) => {
-    if (!acc[a.administrationId]) {
-      acc[a.administrationId] = []
+  const activitesTypesEmailsByAdministrationId = (administrationsActivitesTypesEmails ?? []).reduce<Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>>((acc, a) => {
+    if (!acc[a.administration_id]) {
+      acc[a.administration_id] = []
     }
 
-    acc[a.administrationId].push(a)
+    acc[a.administration_id].push(a)
 
     return acc
-  }, {} as Record<AdministrationId, IAdministrationActiviteTypeEmail[]>)
+  }, {} as Record<AdministrationId, GetActiviteTypeEmailsByAdministrationIds[]>)
 
   // Si production > 0, envoyer à toutes les administrations liées au titre
   // sinon envoyer seulement aux minitères et aux DREAL
@@ -147,8 +148,7 @@ export const titreActiviteAdministrationsEmailsGet = (
       .map(id => Administrations[id])
       .filter(administration => production || ['min', 'dre', 'dea'].includes(administration.typeId))
       .flatMap(administration => activitesTypesEmailsByAdministrationId[administration.id])
-      .filter(activiteTypeEmail => !!activiteTypeEmail)
-      .filter(activiteTypeEmail => activiteTypeEmail.activiteTypeId === activiteTypeId)
+      .filter(activiteTypeEmail => activiteTypeEmail.activite_type_id === activiteTypeId)
       .filter(activiteTypeEmail => activiteTypeEmail.email)
       .map(activiteTypeEmail => activiteTypeEmail.email) || []
   )
@@ -159,11 +159,12 @@ export const titreActiviteEmailsSend = async (
   titreNom: string,
   user: UserNotNull,
   utilisateurs: IUtilisateur[] | undefined | null,
-  administrationIds: AdministrationId[]
+  administrationIds: NonEmptyArray<AdministrationId>,
+  pool: Pool
 ) => {
   const emails = titreActiviteUtilisateursEmailsGet(utilisateurs)
 
-  const administrationsActivitesTypesEmails = await AdministrationsActivitesTypesEmails.query().whereIn('administrationId', administrationIds)
+  const administrationsActivitesTypesEmails = await getActiviteTypeEmailsByAdministrationIds(pool, administrationIds)
   emails.push(...titreActiviteAdministrationsEmailsGet(administrationIds, administrationsActivitesTypesEmails, activite.typeId, activite.contenu))
   if (!emails.length) {
     return

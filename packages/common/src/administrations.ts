@@ -3,6 +3,8 @@ import { CommuneId } from './static/communes.js'
 import { DepartementId, Departements, toDepartementId } from './static/departement.js'
 import { SecteursMaritimes, getDepartementsBySecteurs } from './static/facades.js'
 import { onlyUnique, isNullOrUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools.js'
+import { activiteTypeIdValidator } from './static/activitesTypes.js'
+import { z } from 'zod'
 
 // calcule tous les départements d'une étape
 const titreEtapeAdministrationsDepartementsBuild = (communes: CommuneId[] | undefined | null, secteursMaritimes: SecteursMaritimes[] | undefined | null): DepartementId[] => {
@@ -36,3 +38,6 @@ export const getAdministrationsLocales = (communes: CommuneId[] | undefined | nu
     return titreEtapeAdministrations
   }, [])
 }
+
+export const administrationActiviteTypeEmailValidator = z.object({ activite_type_id: activiteTypeIdValidator, email: z.string() })
+export type AdministrationActiviteTypeEmail = z.infer<typeof administrationActiviteTypeEmailValidator>

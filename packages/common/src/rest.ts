@@ -43,6 +43,7 @@ import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
 import { featureCollectionPointsValidator, geojsonImportBodyValidator, geojsonImportPointBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 import { administrationIdValidator } from './static/administrations.js'
+import { administrationActiviteTypeEmailValidator } from './administrations.js'
 
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
@@ -79,6 +80,8 @@ const IDS = [
   '/rest/entreprises/:entrepriseId/documents',
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId',
   '/rest/administrations/:administrationId/utilisateurs',
+  '/rest/administrations/:administrationId/activiteTypeEmails',
+  '/rest/administrations/:administrationId/activiteTypeEmails/delete',
   '/rest/utilisateur/generateQgisToken',
   '/rest/etapesTypes/:demarcheId/:date',
   '/rest/demarches/:demarcheId/geojson',
@@ -151,6 +154,15 @@ export const CaminoRestRoutes = {
   },
   '/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId': { params: { entrepriseId: entrepriseIdValidator, entrepriseDocumentId: entrepriseDocumentIdValidator }, delete: true },
   '/rest/administrations/:administrationId/utilisateurs': { params: { administrationId: administrationIdValidator }, get: { output: z.array(adminUserNotNullValidator) } },
+  '/rest/administrations/:administrationId/activiteTypeEmails': {
+    params: { administrationId: administrationIdValidator },
+    get: { output: z.array(administrationActiviteTypeEmailValidator) },
+    post: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
+  },
+  '/rest/administrations/:administrationId/activiteTypeEmails/delete': {
+    params: { administrationId: administrationIdValidator },
+    post: { input: administrationActiviteTypeEmailValidator, output: z.boolean() },
+  },
   '/rest/utilisateur/generateQgisToken': { post: { input: z.void(), output: qgisTokenValidator } },
   '/rest/etapesTypes/:demarcheId/:date': { params: { demarcheId: demarcheIdValidator, date: caminoDateValidator }, get: { output: z.array(etapeTypeEtapeStatutWithMainStepValidator) } },
   '/rest/demarches/:demarcheId/geojson': { params: { demarcheId: demarcheIdOrSlugValidator }, get: { output: perimetreInformationsValidator } },

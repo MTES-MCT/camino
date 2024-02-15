@@ -214,12 +214,6 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-interface IAdministrationActiviteTypeEmail {
-  administrationId: AdministrationId
-  activiteTypeId: string
-  email: string
-}
-
 export interface ITitreTitre {
   titreFromId: TitreId
   titreToId: TitreId
@@ -476,7 +470,6 @@ export {
   IEntreprise,
   IEntrepriseEtablissement,
   IEtapeType,
-  IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
   ITitreDemarche,

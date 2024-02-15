@@ -15,7 +15,7 @@ import { userSuper } from '../../../database/user-super.js'
 import { titreGet } from '../../../database/queries/titres.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
-import { memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { canReadActivites, isActiviteDeposable } from 'camino-common/src/permissions/activites.js'
@@ -221,7 +221,10 @@ export const activiteDeposer = async ({ id }: { id: ActiviteId }, { user, pool }
       administrations.push(...titre.administrationsLocales)
     }
 
-    await titreActiviteEmailsSend(activiteFormated, activiteFormated.titre!.nom, user, utilisateurs, administrations.filter(onlyUnique))
+    const filteredAdministrationId = administrations.filter(onlyUnique)
+    if (isNonEmptyArray(filteredAdministrationId)) {
+      await titreActiviteEmailsSend(activiteFormated, activiteFormated.titre!.nom, user, utilisateurs, filteredAdministrationId, pool)
+    }
 
     return activiteFormated
   } catch (e) {

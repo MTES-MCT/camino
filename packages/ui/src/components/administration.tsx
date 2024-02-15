@@ -11,13 +11,13 @@ import { ActivitesTypesEmails } from './administration/activites-types-emails'
 
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { ADMINISTRATION_TYPES, Administrations, AdministrationId, Administration as Adm, AdministrationType, isAdministrationId } from 'camino-common/src/static/administrations'
+import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
 import { AdminUserNotNull, isSuper, User } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails, canReadAdministrations } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
-import { ActiviteTypeEmail } from './administration/administration-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
@@ -60,7 +60,7 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
   const region = computed<Region | undefined>(() => {
     return administration.value.regionId ? Regions[administration.value.regionId] : undefined
   })
-  const activitesTypesEmails = ref<AsyncData<ActiviteTypeEmail[]>>({
+  const activitesTypesEmails = ref<AsyncData<AdministrationActiviteTypeEmail[]>>({
     status: 'LOADING',
   })
   const utilisateurs = ref<AsyncData<AdminUserNotNull[]>>({ status: 'LOADING' })
@@ -255,20 +255,12 @@ export const PureAdministration = caminoDefineComponent<Props>(['administrationI
                 user={props.user}
                 administrationId={props.administrationId}
                 activitesTypesEmails={item}
-                emailUpdate={(administrationId, activiteTypeId, email) => {
-                  props.apiClient.administrationActiviteTypeEmailUpdate({
-                    activiteTypeId,
-                    email,
-                    administrationId,
-                  })
+                emailUpdate={(administrationId, administrationActiviteTypeEmail) => {
+                  props.apiClient.administrationActiviteTypeEmailUpdate(administrationId, administrationActiviteTypeEmail)
                   loadActivitesTypesEmails()
                 }}
-                emailDelete={(administrationId, activiteTypeId, email) => {
-                  props.apiClient.administrationActiviteTypeEmailDelete({
-                    activiteTypeId,
-                    email,
-                    administrationId,
-                  })
+                emailDelete={(administrationId, administrationActiviteTypeEmail) => {
+                  props.apiClient.administrationActiviteTypeEmailDelete(administrationId, administrationActiviteTypeEmail)
                   loadActivitesTypesEmails()
                 }}
               />

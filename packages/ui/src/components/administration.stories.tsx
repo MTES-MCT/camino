@@ -29,7 +29,7 @@ export const Default: StoryFn = () => (
         Promise.resolve([
           {
             email: 'toto@toto.com',
-            activiteTypeId: ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"],
+            activite_type_id: ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"],
           },
         ]),
       administrationUtilisateurs: (_: AdministrationId) =>
@@ -46,12 +46,12 @@ export const Default: StoryFn = () => (
       administrationActiviteTypeEmailUpdate: () => {
         administrationActiviteTypeEmailUpdateAction()
 
-        return Promise.resolve([])
+        return Promise.resolve(undefined)
       },
       administrationActiviteTypeEmailDelete: () => {
         administrationActiviteTypeEmailDeleteAction()
 
-        return Promise.resolve([])
+        return Promise.resolve(undefined)
       },
     }}
   />
