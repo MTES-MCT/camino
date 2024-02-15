@@ -38,7 +38,6 @@ import { titresTypes, titresTypesTitresStatuts, etapesTypesDocumentsTypes } from
 import { substances } from './resolvers/substances.js'
 
 import { entreprises } from './resolvers/entreprises.js'
-import { administrationActiviteTypeEmailCreer, administrationActiviteTypeEmailSupprimer, administrationActivitesTypesEmails } from './resolvers/administrations.js'
 import { activites, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
@@ -78,7 +77,6 @@ export default {
   statistiquesGlobales,
   activites,
   administrationsTypes,
-  administrationActivitesTypesEmails,
   regions,
   departements,
   titresTypesTitresStatuts,
@@ -102,7 +100,5 @@ export default {
   documentSupprimer,
   activiteDeposer,
   newsletterInscrire,
-  administrationActiviteTypeEmailCreer,
-  administrationActiviteTypeEmailSupprimer,
   titreDemandeCreer,
 }

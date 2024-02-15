@@ -4,15 +4,17 @@ import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activ
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
 import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
+import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { ButtonIcon } from '../_ui/button-icon'
 
 interface Props {
   administrationId: AdministrationId
   user: User
-  activitesTypesEmails: { activiteTypeId: ActivitesTypesId; email: string }[]
-  emailUpdate: (administrationId: AdministrationId, activiteTypeId: ActivitesTypesId, email: string) => void
-  emailDelete: (administrationId: AdministrationId, activiteTypeId: ActivitesTypesId, email: string) => void
+  activitesTypesEmails: AdministrationActiviteTypeEmail[]
+  emailUpdate: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
+  emailDelete: (administrationId: AdministrationId, administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => void
 }
 
 export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administrationId', 'user', 'activitesTypesEmails', 'emailUpdate', 'emailDelete'], props => {
@@ -27,7 +29,7 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
   const activitesTypes = ref(Object.values(ActivitesTypes))
 
   const activiteTypeNewActive = computed<boolean>(() => {
-    return !!(activiteTypeNew.value.activiteTypeId && activiteTypeNew.value.email && emailValidator.validate(activiteTypeNew.value.email))
+    return isNotNullNorUndefined(activiteTypeNew.value.activiteTypeId) && isNotNullNorUndefined(activiteTypeNew.value.email) && emailValidator.validate(activiteTypeNew.value.email)
   })
 
   const isFullyNotifiable = computed(() => {
@@ -42,20 +44,20 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
     if (!activiteTypeNewActive.value) return
     const { email, activiteTypeId } = activiteTypeNew.value
     if (email !== null && activiteTypeId !== null) {
-      props.emailUpdate(props.administrationId, activiteTypeId, email)
+      props.emailUpdate(props.administrationId, { activite_type_id: activiteTypeId, email })
     }
     activiteTypeNew.value.activiteTypeId = null
     activiteTypeNew.value.email = null
   }
 
-  const activiteTypeEmailDelete = async ({ activiteTypeId, email }: { email: string; activiteTypeId: ActivitesTypesId }) => {
-    props.emailDelete(props.administrationId, activiteTypeId, email)
+  const activiteTypeEmailDelete = async (administrationActiviteTypeEmail: AdministrationActiviteTypeEmail) => {
+    props.emailDelete(props.administrationId, administrationActiviteTypeEmail)
   }
 
   const activiteTypeIdLabelize = (activiteTypeId: ActivitesTypesId) => {
     const activiteType = ActivitesTypes[activiteTypeId]
 
-    return activiteType ? activiteTypeLabelize(activiteType) : ''
+    return activiteTypeLabelize(activiteType)
   }
 
   const activiteTypeLabelize = (activiteType: { nom: string; id: string }) => {
@@ -121,9 +123,9 @@ export const ActivitesTypesEmails = caminoDefineComponent<Props>(['administratio
             ) : null}
 
             {props.activitesTypesEmails.map(activiteTypeEmail => (
-              <tr key={activiteTypeEmail.activiteTypeId + activiteTypeEmail.email}>
+              <tr key={activiteTypeEmail.activite_type_id + activiteTypeEmail.email}>
                 <td>
-                  <span class="cap-first">{activiteTypeIdLabelize(activiteTypeEmail.activiteTypeId)}</span>
+                  <span class="cap-first">{activiteTypeIdLabelize(activiteTypeEmail.activite_type_id)}</span>
                 </td>
                 <td>{activiteTypeEmail.email}</td>
                 {canEditEmailsComp.value ? (

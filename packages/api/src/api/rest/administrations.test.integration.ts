@@ -1,10 +1,11 @@
-import { restCall, userGenerate } from '../../../tests/_utils/index.js'
+import { restCall, restPostCall, userGenerate } from '../../../tests/_utils/index.js'
 import { dbManager } from '../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { AdministrationActiviteTypeEmail } from 'camino-common/src/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 console.info = vi.fn()
@@ -64,6 +65,44 @@ describe('getAdministrationUtilisateurs', () => {
           role: 'admin',
         },
       ])
+    } else {
+      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+    }
+  })
+})
+
+describe('administrationActiviteTypeEmails', () => {
+  test.each<[TestUser | undefined, boolean]>([
+    [{ role: 'super' }, true],
+    [
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON'],
+      },
+      true,
+    ],
+    [{ role: 'entreprise', entreprises: [] }, false],
+    [{ role: 'bureau d’études', entreprises: [] }, false],
+    [{ role: 'defaut' }, false],
+    [undefined, false],
+  ])('utilisateur %s peur gérer les emails associés à un type d’activité: %s', async (user, canEdit) => {
+    let tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
+
+    if (canEdit) {
+      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.body).toEqual([])
+
+      const newActiviteTypeEmail: AdministrationActiviteTypeEmail = { activite_type_id: 'gra', email: 'toto@toto.com' }
+      await restPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
+
+      tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
+      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.body).toEqual([newActiviteTypeEmail])
+
+      await restPostCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails/delete', { administrationId: 'dea-guyane-01' }, user, newActiviteTypeEmail)
+      tested = await restCall(dbPool, '/rest/administrations/:administrationId/activiteTypeEmails', { administrationId: 'dea-guyane-01' }, user)
+      expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+      expect(tested.body).toEqual([])
     } else {
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     }

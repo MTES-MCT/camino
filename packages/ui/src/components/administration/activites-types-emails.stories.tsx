@@ -13,11 +13,11 @@ export default meta
 
 const activitesTypesEmails = [
   {
-    activiteTypeId: ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"],
+    activite_type_id: ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"],
     email: 'foo@bar.co',
   },
   {
-    activiteTypeId: ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'],
+    activite_type_id: ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'],
     email: 'toto@tata.com',
   },
 ]

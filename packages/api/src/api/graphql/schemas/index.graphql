@@ -152,9 +152,6 @@ type Query {
   "Liste des entreprises"
   entreprises(intervalle: Int, page: Int, colonne: String, ordre: String, noms: String, etapeId: ID, archive: Boolean, etapeUniquement: Boolean): Entreprises
 
-  "Les emails à notifier pour un type d’activité"
-  administrationActivitesTypesEmails(id: ID!): [ActiviteTypeEmail]
-
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
 
@@ -213,8 +210,4 @@ type Mutation {
 
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
-
-  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
-
-  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Boolean
 }
