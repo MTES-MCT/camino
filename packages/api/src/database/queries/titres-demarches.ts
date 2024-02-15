@@ -13,6 +13,7 @@ import { titresDemarchesQueryModify } from './permissions/titres-demarches.js'
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresEtapes from '../models/titres-etapes.js'
 import { User } from 'camino-common/src/roles'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 
 const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarches[]>, etapes: ITitreEtapeFiltre[], mode: 'etapesInclues' | 'etapesExclues') => {
   const raw = etapes
@@ -104,12 +105,8 @@ const titresDemarchesFiltersQueryModify = (
   }
 
   if (travaux === false || travaux === true) {
-    q.leftJoinRelated('type as titresDemarchesType')
-    if (travaux) {
-      q.where('titresDemarchesType.travaux', travaux)
-    } else {
-      q.whereRaw('?? is not true', ['titresDemarchesType.travaux'])
-    }
+    const demarcheOrTravauxTypesIds = sortedDemarchesTypes.filter(d => d.travaux === travaux).map(({ id }) => id)
+    q.whereIn('titresDemarches.typeId', demarcheOrTravauxTypesIds)
   }
 
   titresFiltersQueryModify(
