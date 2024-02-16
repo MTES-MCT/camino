@@ -158,7 +158,7 @@ export const titresGeojsonFormat = async (pool: Pool, titres: ITitre[]): Promise
         isNotNullNorUndefined(titre.geojson4326Perimetre)
           ? {
               type: 'Feature',
-              geometry: titre.geojson4326Perimetre.geometry,
+              geometry: titre.geojson4326Perimetre,
               properties: titreGeojsonPropertiesFormat(communesIndex, titre),
             }
           : null

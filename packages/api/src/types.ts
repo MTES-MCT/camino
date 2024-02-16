@@ -28,7 +28,7 @@ import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 
 enum TitreEtapesTravauxTypes {
@@ -251,7 +251,7 @@ interface ITitre {
   confidentiel?: boolean | null
 
   geojson4326Centre?: GeojsonPoint | null
-  geojson4326Perimetre?: FeatureMultiPolygon | null
+  geojson4326Perimetre?: MultiPolygon | null
 }
 
 interface ITitreActivite {
