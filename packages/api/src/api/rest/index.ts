@@ -36,6 +36,7 @@ import { z, ZodOptional, ZodType } from 'zod'
 import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { getCommunesIndex } from '../../database/queries/communes.js'
 import { FeatureCollection, GeojsonFeaturePoint } from 'camino-common/src/perimetre.js'
+import { FieldsTitre } from '../../database/queries/_options'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -43,14 +44,13 @@ const formatCheck = (formats: string[], format: string) => {
   }
 }
 
-const titreFields = {
+const titreFields: FieldsTitre = {
   type: { type: { id: {} } },
   substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },
   pointsEtape: { id: {} },
   demarches: {
-    type: { id: {} },
     etapes: {
       type: { id: {} },
     },
