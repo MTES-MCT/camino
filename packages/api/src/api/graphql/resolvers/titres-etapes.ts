@@ -411,6 +411,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
       if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
         etape.surface = surface
+      } else {
+        etape.surface = titreEtapeOld.surface
       }
 
       etape.communes = communes

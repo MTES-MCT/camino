@@ -147,6 +147,7 @@ export const titreActiviteAdministrationsEmailsGet = (
     administrationIds
       .map(id => Administrations[id])
       .filter(administration => production || ['min', 'dre', 'dea'].includes(administration.typeId))
+      .filter(administration => Object.keys(activitesTypesEmailsByAdministrationId).includes(administration.id))
       .flatMap(administration => activitesTypesEmailsByAdministrationId[administration.id])
       .filter(activiteTypeEmail => activiteTypeEmail.activite_type_id === activiteTypeId)
       .filter(activiteTypeEmail => activiteTypeEmail.email)
