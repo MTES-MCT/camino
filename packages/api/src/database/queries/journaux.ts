@@ -86,6 +86,7 @@ export const upsertJournalCreate = async (
 ): Promise<ITitreEtape> => {
   const oldValue = isNotNullNorUndefined(id) ? await TitresEtapes.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 
+  // BUG Objection
   // on ne peut pas utiliser returning('*'),
   // car certains attributs de entity restent présents alors qu’ils sont enlevés avant l’enregistrement
   const newModel = await TitresEtapes.query().upsertGraph(entity, options).returning('id')

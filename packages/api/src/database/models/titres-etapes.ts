@@ -160,7 +160,10 @@ class TitresEtapes extends Model {
       this.heritageContenu = await heritageContenuFormat(this.heritageContenu)
     }
 
-    if (isNotNullNorUndefined(this.geojson4326Perimetre)) {
+    // BUG Objection
+    // Obligé de vérifier qu’on a pas déjà un geojson correct, des fois dans le $afterFind on a déjà ce qu’on souhaite
+    // il y a un bug dans objection sur lequel on est déjà tombé dans upsertJournalCreate
+    if (isNotNullNorUndefined(this.geojson4326Perimetre) && typeof this.geojson4326Perimetre === 'string') {
       // eslint-disable-next-line sql/no-unsafe-query
       const rawLine = await context.transaction.raw(`select ST_AsGeoJSON('${this.geojson4326Perimetre}'::text)::json`)
       this.geojson4326Perimetre = { type: 'Feature', properties: {}, geometry: rawLine.rows[0].st_asgeojson }
