@@ -44,14 +44,14 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
   const items: Item<DownloadFormat>[] = props.formats.map(f => ({ id: f, label: f }))
   if (isNonEmptyArray(items)) {
     return () => (
-      <div class="dsfr" style={{ display: 'flex' }}>
+      <div style={{ display: 'flex' }}>
         {props.formats.length > 1 ? (
           <DsfrSelect
             id={props.id}
             class="fr-mr-1v"
             items={items}
             legend={{ main: 'Téléchargements', visible: false, placeholder: "Choississez un format d'export" }}
-            initialValue={null}
+            initialValue={downloadFormat.value}
             valueChanged={id => {
               downloadFormat.value = id
             }}
