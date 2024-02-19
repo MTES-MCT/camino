@@ -3,7 +3,7 @@ import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
 import { GEO_SYSTEME_IDS, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { convertPoints, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
+import { convertPoints, getGeojsonByGeoSystemeId, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User } from 'camino-common/src/roles.js'
@@ -13,6 +13,7 @@ import { etapeIdOrSlugValidator } from 'camino-common/src/etape.js'
 import { getEtapeById } from './etapes.queries.js'
 import {
   FeatureCollectionPoints,
+  FeatureMultiPolygon,
   GeojsonInformations,
   MultiPolygon,
   PerimetreInformations,
@@ -160,32 +161,34 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 
         const buffer = await stream2buffer(fileStream)
 
-        let coordinates: [number, number][][][]
+        let featureMultiPolygon: FeatureMultiPolygon
         let featureCollectionPoints: null | FeatureCollectionPoints = null
         if (geojsonImportInput.data.fileType === 'geojson') {
           const features = featureCollectionValidator.parse(JSON.parse(buffer.toString()))
 
-          coordinates = (await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features.features[0])).geometry.coordinates
+          featureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features.features[0])
           // TODO 2024-01-24 on importe les points que si le référentiel est en 4326
           if (geoSystemeId.data === '4326' && features.features.length > 1) {
             const [_multi, ...points] = features.features
             featureCollectionPoints = { type: 'FeatureCollection', features: points }
           }
         } else {
-          const shpParsed = shpjs.parseShp(buffer, 'EPSG:4326')
+          const shpParsed = shpjs.parseShp(buffer)
 
           const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
 
+          let coordinates: [number, number][][][]
           if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
             coordinates = shapePolygonOrMultipolygon.coordinates
           } else {
             coordinates = [shapePolygonOrMultipolygon.coordinates]
           }
+          featureMultiPolygon = await getGeojsonByGeoSystemeId(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} })
         }
 
-        const geojson: MultiPolygon = { type: 'MultiPolygon', coordinates }
+        const geojson: MultiPolygon = featureMultiPolygon.geometry
 
-        z.array(polygon4326CoordinatesValidator).min(1).parse(coordinates)
+        z.array(polygon4326CoordinatesValidator).min(1).parse(geojson.coordinates)
 
         const geoInfo = await getGeojsonInformation(pool, geojson)
         const result: GeojsonInformations = {
