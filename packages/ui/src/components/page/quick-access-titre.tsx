@@ -3,7 +3,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
-import { ref, inject, FunctionalComponent } from 'vue'
+import { ref, FunctionalComponent } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { titreApiClient, TitreForTitresRerchercherByNom } from '../titre/titre-api-client'
 import { capitalize } from 'camino-common/src/strings'
@@ -15,7 +15,6 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
   const router = useRouter()
   const titres = ref<TitreForTitresRerchercherByNom[]>([])
 
-  const matomo = inject('matomo', null)
   const search = async (searchTerm: string): Promise<void> => {
     const intervalle = 10
 
@@ -32,10 +31,6 @@ export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitr
 
   const onSelectedTitre = (titre: TitreForTitresRerchercherByNom | undefined) => {
     if (titre) {
-      if (isNotNullNorUndefined(matomo)) {
-        // @ts-ignore
-        matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
-      }
       router.push({ name: 'titre', params: { id: titre.id } })
       props.onSelectTitre()
     }

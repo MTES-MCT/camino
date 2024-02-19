@@ -79,7 +79,6 @@
     "jsonwebtoken": "^9.0.0",
     "jszip": "^3.10.1",
     "knex": "^2.4.2",
-    "matomo-tracker": "^2.2.4",
     "node-mailjet": "^6.0.2",
     "objection": "github:Vincit/objection.js#dbb20aebaac2059149ec18386283b3cce4a3d7f0",
     "pg": "^8.11.0",

@@ -16,7 +16,6 @@ import { titresDemarchesFormatTable } from './format/titres-demarches.js'
 import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
 
-import { matomo } from '../../tools/matomo.js'
 import { User } from 'camino-common/src/roles.js'
 import {
   CaminoFiltre,
@@ -199,30 +198,6 @@ export const titres =
         break
       default:
         exhaustiveCheck(params.format)
-    }
-
-    if (isNotNullNorUndefined(matomo)) {
-      const url = Object.entries({
-        format: params.format,
-        ordre: params.ordre,
-        colonne: params.colonne,
-        typesIds: params.typesIds,
-        domainesIds: params.domainesIds,
-        statutsIds: params.statutsIds,
-        substancesIds: params.substancesIds,
-        titresIds: params.titresIds,
-        entreprisesIds: params.entreprisesIds,
-        references: params.references,
-      })
-        .filter(param => param[1] !== undefined)
-        .map(param => param.join('='))
-        .join('&')
-
-      matomo.track({
-        url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
-        e_c: 'camino-api',
-        e_a: `titres-flux-${params.format}`,
-      })
     }
 
     return isNotNullNorUndefined(contenu)

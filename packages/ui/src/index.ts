@@ -4,13 +4,13 @@ import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/browser'
 
-import VueMatomo from './stats'
 import { App } from './app'
 
 import router from './router'
 import store from './store'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { getWithJson } from './api/client-rest'
+import { initMatomo } from './stats/matomo'
 // Le Timeout du sse côté backend est mis à 30 secondes, toujours avoir une valeur plus haute ici
 const sseTimeoutInSeconds = 45
 
@@ -82,21 +82,12 @@ Promise.resolve().then(async (): Promise<void> => {
     try {
       if (!configFromJson.matomoHost || !configFromJson.matomoSiteId || !configFromJson.environment) throw new Error('host et/ou siteId manquant(s)')
 
-      const matomo = await VueMatomo({
+      await initMatomo({
         host: configFromJson.matomoHost,
         siteId: configFromJson.matomoSiteId,
         environnement: configFromJson.environment,
         router,
-        store,
-        requireConsent: false,
-        disableCookies: true,
-        trackInitialView: true,
-        trackerFileName: 'piwik',
-        enableHeartBeatTimer: true,
-        enableLinkTracking: true,
       })
-      app.provide('matomo', matomo)
-      app.config.globalProperties.$matomo = matomo
     } catch (e) {
       console.error('erreur : matomo :', e)
     }

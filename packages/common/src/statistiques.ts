@@ -7,22 +7,21 @@ import { SUBSTANCES_FISCALES_IDS, SubstanceFiscaleId } from './static/substances
 import { TitresTypes } from './static/titresTypes.js'
 import { CaminoStatistiquesDataGouvId } from './static/statistiques.js'
 
-export interface QuantiteParMois {
-  mois: string
-  quantite: number
-}
+export const yearMonthValidator = z
+  .string()
+  .regex(/^\d{4}-\d{2}$/)
+  .brand<'Year-Month'>()
+export const quantitesParMoisValidator = z.object({
+  mois: yearMonthValidator,
+  quantite: z.coerce.number(),
+})
+export type QuantiteParMois = z.infer<typeof quantitesParMoisValidator>
 
 export interface Statistiques {
   titresActivitesBeneficesEntreprise: number
   titresActivitesBeneficesAdministration: number
-  recherches: QuantiteParMois[]
-  titresModifies: QuantiteParMois[]
-  actions: number
-  sessionDuree: number
-  telechargements: number
   demarches: number
-  signalements: number
-  reutilisations: number
+  titresModifies: QuantiteParMois[]
 }
 
 export const substancesFiscalesStats = [

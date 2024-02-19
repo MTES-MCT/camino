@@ -1,4 +1,4 @@
-import { defineComponent, inject, onMounted } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { Tab, Tabs } from './_ui/tabs'
 import { useRoute, useRouter, RouterView } from 'vue-router'
 import { NonEmptyArray, getEntriesHardcore } from 'camino-common/src/typescript-tools'
@@ -35,14 +35,8 @@ type TabId = keyof typeof routeToTab
 export const Statistiques = defineComponent(() => {
   const route = useRoute()
   const router = useRouter()
-  const matomo = inject('matomo', null)
 
   onMounted(() => {
-    if (matomo) {
-      // @ts-ignore
-      matomo.trackEvent('menu-sections', 'menu-section', 'statistiques')
-    }
-
     if (route.name === 'statistiques') {
       router.replace({ name: 'statistiques-globales' })
     }

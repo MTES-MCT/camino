@@ -4,7 +4,6 @@ import { ActiviteApiClient } from './activite-api-client'
 import { Activite } from 'camino-common/src/activite'
 import { Alert } from '../_ui/alert'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
-import { inject } from 'vue'
 
 interface Props {
   close: () => void
@@ -12,8 +11,6 @@ interface Props {
   activite: Pick<Activite, 'id' | 'titre' | 'type_id'>
 }
 export const ActiviteDeposePopup = caminoDefineComponent<Props>(['close', 'apiClient', 'activite'], props => {
-  const matomo = inject('matomo', null)
-
   const content = () => (
     <Alert
       type="warning"
@@ -36,10 +33,6 @@ export const ActiviteDeposePopup = caminoDefineComponent<Props>(['close', 'apiCl
       validate={{
         action: async () => {
           await props.apiClient.deposerActivite(props.activite.id)
-          if (matomo !== null) {
-            // @ts-ignore
-            matomo.trackEvent('titre-activite', 'titre-activite_depot', props.activite.id)
-          }
         },
         text: 'Déposer',
       }}

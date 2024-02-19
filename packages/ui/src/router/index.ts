@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from '../store'
-import type { MenuSection } from '@/utils/matomo'
 
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
@@ -125,6 +124,8 @@ const About = async () => {
   const { About } = await import('../components/content/about')
   return About
 }
+
+export type MenuSection = 'dashboard' | 'titres' | 'demarches' | 'travaux' | 'activites' | 'administrations' | 'entreprises' | 'utilisateurs' | 'metas' | 'statistiques' | 'journaux'
 
 declare module 'vue-router' {
   interface RouteMeta {

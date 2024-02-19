@@ -16,3 +16,18 @@ export interface IGetLastJournalInternalQuery {
   result: IGetLastJournalInternalResult;
 }
 
+/** 'GetTitresModifiesByMonthDb' parameters type */
+export type IGetTitresModifiesByMonthDbParams = void;
+
+/** 'GetTitresModifiesByMonthDb' return type */
+export interface IGetTitresModifiesByMonthDbResult {
+  mois: string | null;
+  quantite: string | null;
+}
+
+/** 'GetTitresModifiesByMonthDb' query type */
+export interface IGetTitresModifiesByMonthDbQuery {
+  params: IGetTitresModifiesByMonthDbParams;
+  result: IGetTitresModifiesByMonthDbResult;
+}
+

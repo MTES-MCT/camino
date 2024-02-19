@@ -26,24 +26,20 @@ const meta: Meta = {
 }
 export default meta
 
-export const Super: StoryFn = () => <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'super' }} routePath="/titres?domainesIds=['m']" />
+export const Super: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'super' }} routePath="/titres?domainesIds=['m']" />
 export const AdminONF: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
+  <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
 )
 export const AdminDGTM: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' }} routePath="/titres?domainesIds=['m']" />
+  <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'admin', administrationId: 'dea-guyane-01' }} routePath="/titres?domainesIds=['m']" />
 )
 export const Editeur: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'editeur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
+  <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'editeur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
 )
 export const Lecteur: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'lecteur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
+  <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'lecteur', administrationId: 'ope-onf-973-01' }} routePath="/titres?domainesIds=['m']" />
 )
-export const Entreprise: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} routePath="/titres?domainesIds=['m']" />
-)
-export const BureauDEtudes: StoryFn = () => (
-  <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'bureau d’études', entreprises: [] }} routePath="/titres?domainesIds=['m']" />
-)
-export const Defaut: StoryFn = () => <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'defaut' }} routePath="/titres?domainesIds=['m']" />
-export const Deconnecte: StoryFn = () => <Header trackEvent={() => ({})} currentMenuSection={'utilisateurs'} user={undefined} routePath="/titres?domainesIds=['m']" />
+export const Entreprise: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} routePath="/titres?domainesIds=['m']" />
+export const BureauDEtudes: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'bureau d’études', entreprises: [] }} routePath="/titres?domainesIds=['m']" />
+export const Defaut: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={{ ...testBlankUser, role: 'defaut' }} routePath="/titres?domainesIds=['m']" />
+export const Deconnecte: StoryFn = () => <Header currentMenuSection={'utilisateurs'} user={undefined} routePath="/titres?domainesIds=['m']" />
