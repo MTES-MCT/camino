@@ -349,13 +349,6 @@ interface ITitreEtapeFiltre {
   dateFin?: string
 }
 
-type ICacheId = 'matomo'
-
-interface ICache {
-  id: ICacheId
-  valeur: any
-}
-
 interface ITitreType {
   id: TitreTypeId
   domaineId: DomaineId
@@ -492,8 +485,6 @@ export {
   IPropsTitreEtapesIds,
   IHeritageProps,
   IHeritageContenu,
-  ICache,
-  ICacheId,
   IJournaux,
   IDecisionAnnexeContenu,
 }

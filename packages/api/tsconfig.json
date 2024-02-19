@@ -22,8 +22,7 @@
     "noEmit": true,
     "paths": {
       "graphql-fields": ["./src/@types/graphql-fields"],
-      "html-to-text": ["./src/@types/html-to-text"],
-      "matomo-tracker": ["./src/@types/matomo-tracker"]
+      "html-to-text": ["./src/@types/html-to-text"]
     },
   }
 }

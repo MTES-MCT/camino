@@ -1,4 +1,4 @@
-import { inject, ref, defineComponent, HTMLAttributes, watch } from 'vue'
+import { ref, defineComponent, HTMLAttributes, watch } from 'vue'
 import { useRoute, RouteLocationNormalized, LocationQuery } from 'vue-router'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
 import { DownloadRestRoutes, DownloadFormat, CaminoRestParams } from 'camino-common/src/rest'
@@ -7,11 +7,10 @@ import { getDownloadRestRoute } from '@/api/client-rest'
 import { saveAs } from 'file-saver'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 
-export const Downloads = defineComponent(<T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route' | 'matomo'>) => {
+export const Downloads = defineComponent(<T extends DownloadRestRoutes>(props: Omit<Props<T>, 'route'>) => {
   const route = useRoute()
-  const matomo = inject('matomo', undefined)
 
-  return () => <PureDownloads {...props} route={route} matomo={matomo} />
+  return () => <PureDownloads {...props} route={route} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
@@ -24,7 +23,6 @@ export interface Props<T extends DownloadRestRoutes> {
   downloadRoute: T
   params: CaminoRestParams<T>
   route: Pick<RouteLocationNormalized, 'query'>
-  matomo?: { trackLink: (url: string, params: string) => void }
   downloadTitle?: string
 }
 
@@ -75,16 +73,12 @@ export const PureDownloads = defineComponent(<T extends DownloadRestRoutes>(prop
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'matomo', 'id', 'downloadTitle', 'class']
+PureDownloads.props = ['formats', 'downloadRoute', 'params', 'route', 'id', 'downloadTitle', 'class']
 
 async function download<T extends DownloadRestRoutes>(selectedFormat: DownloadFormat | null, query: LocationQuery, props: Omit<Props<T>, 'formats' | 'route'>) {
   if (selectedFormat !== null) {
     const url = getDownloadRestRoute(props.downloadRoute, props.params, { format: selectedFormat, ...query })
 
     saveAs(url)
-
-    if (props.matomo) {
-      props.matomo.trackLink(`${window.location.origin}${url}`, 'download')
-    }
   }
 }

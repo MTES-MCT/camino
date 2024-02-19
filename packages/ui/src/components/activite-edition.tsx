@@ -1,6 +1,6 @@
 import { ActiviteDocumentsEdit } from './activite/activite-documents-edit'
 import { getPeriode } from 'camino-common/src/static/frequence'
-import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { Activite, ActiviteDocumentId, ActiviteId, ActiviteIdOrSlug, TempActiviteDocument, activiteIdOrSlugValidator } from 'camino-common/src/activite'
 import { useRouter } from 'vue-router'
@@ -13,10 +13,8 @@ import { SectionsEdit } from './_common/new-sections-edit'
 import { DsfrButton, DsfrLink } from './_ui/dsfr-button'
 import { capitalize } from 'camino-common/src/strings'
 import { Alert } from './_ui/alert'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const ActiviteEdition = defineComponent(() => {
-  const matomo = inject('matomo', null)
   const router = useRouter()
 
   const activiteId = computed<ActiviteIdOrSlug>(() => {
@@ -25,16 +23,7 @@ export const ActiviteEdition = defineComponent(() => {
 
   return () => (
     <PureActiviteEdition
-      apiClient={{
-        ...apiClient,
-        updateActivite: async (activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments) => {
-          await apiClient.updateActivite(activiteId, activiteTypeId, sectionsWithValue, activiteDocumentIds, newTempDocuments)
-          if (isNotNullNorUndefined(matomo)) {
-            // @ts-ignore
-            matomo.trackEvent('activite', 'activite-enregistrer', ActivitesTypes[activiteTypeId].nom)
-          }
-        },
-      }}
+      apiClient={apiClient}
       goBack={(activiteId: ActiviteId): void => {
         router.push({ name: 'activite', params: { activiteId } })
       }}

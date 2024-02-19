@@ -31,7 +31,7 @@ const config = {
       "project": "**/*.ts",
       ignoreDependencies: [
         // TODO 2023-12-28 ces dépendances semblent être "shadow" par les définitions bourrines .d.ts qu'on a mise
-        "graphql-fields", "graphql-scalars", "html-to-text", "matomo-tracker",
+        "graphql-fields", "graphql-scalars", "html-to-text", 
         "@vitest/coverage-v8", "@pgtyped/cli"
       ]
     },

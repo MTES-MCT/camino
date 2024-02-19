@@ -127,12 +127,6 @@ export default {
         route: this.route,
         action: this.action,
       })
-
-      this.eventTrack({
-        categorie: 'titre-sections',
-        action: 'titre-etape-doc-enregistrer',
-        nom: this.document.titreEtapeId,
-      })
     },
 
     cancel() {
@@ -148,12 +142,6 @@ export default {
           this.$refs['save-button'].focus()
           this.save()
         }
-      }
-    },
-
-    eventTrack(event) {
-      if (this.$matomo) {
-        this.$matomo.trackEvent(event.categorie, event.action, event.nom)
       }
     },
 

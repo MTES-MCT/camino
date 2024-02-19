@@ -4,7 +4,6 @@ import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-fin
 import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
 import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
 import { userSuper } from '../../../database/user-super.js'
-import { matomoData } from '../../../tools/api-matomo/index.js'
 import { Statistiques } from 'camino-common/src/statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
@@ -24,7 +23,18 @@ export const statistiquesGlobales = async (): Promise<Statistiques> => {
 
     const titresActivitesBeneficesAdministration = Math.round((titresActivitesDepose * 1) / 7)
 
-    const { recherches, titresModifies, actions, sessionDuree, telechargements, signalements, reutilisations } = await matomoData()
+    // FIXME ici
+
+    // FIXME supprimer la table de cache
+    const { recherches, titresModifies, actions, sessionDuree, telechargements, signalements, reutilisations } = {
+      recherches: [],
+      titresModifies: [],
+      actions: 0,
+      sessionDuree: 0,
+      telechargements: 0,
+      signalements: 0,
+      reutilisations: 0,
+    }
 
     const demarches = titresActivites.filter(titreActivite => {
       const dateSaisie = titreActivite.dateSaisie

@@ -3,14 +3,13 @@ import { Role, User } from 'camino-common/src/roles'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { MenuSection } from '../../router'
 
 interface Props {
   user: User
   currentMenuSection: MenuSection | null
-  trackEvent: TrackEventFunction
   routePath: string
 }
 
@@ -34,17 +33,9 @@ const isDirectLink = (link: Link | LinkList): link is Link => Object.prototype.h
 
 const ANNUAIRE = { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS, links.UTILISATEURS] }
 
-const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'routePath'> & { userLinkClicked: () => void }> = props => {
+const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'routePath'> & { userLinkClicked: () => void }> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(`${window.location.origin}${props.routePath}`)
   const logoutUrl = '/apiUrl/deconnecter'
-
-  const logout = () => {
-    props.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
-  }
-
-  const login = () => {
-    props.trackEvent('menu', 'bouton', 'utilisateur')
-  }
 
   return (
     <div class="fr-btns-group">
@@ -56,14 +47,14 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'rout
             </router-link>
           </div>
           <div>
-            <a class="fr-btn fr-icon-lock-line" href={logoutUrl} onClick={logout}>
+            <a class="fr-btn fr-icon-lock-line" href={logoutUrl}>
               Se déconnecter
             </a>
           </div>
         </>
       ) : (
         <div>
-          <a class="fr-btn fr-icon-lock-fill" href={loginUrl} onClick={login}>
+          <a class="fr-btn fr-icon-lock-fill" href={loginUrl}>
             Se connecter / S’enregistrer
           </a>
         </div>
@@ -72,7 +63,7 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent' | 'rout
   )
 }
 
-export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'trackEvent', 'routePath'], props => {
+export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'routePath'], props => {
   const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.currentMenuSection) ? { 'aria-current': true } : {})
 
   const getAriaPage = (link: Link): { 'aria-current'?: 'page' } => {
@@ -94,15 +85,12 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
   const searchModalId = 'headerSearchModalId'
   const navigationId = 'headerNavigationId'
 
-  const linkClick = (path: Link['path']) => {
+  const linkClick = () => {
     // On ferme la modale
     modalMenuOpened.value = false
-    if (path !== 'journaux') {
-      props.trackEvent('menu-sections', 'menu-section', path)
-    }
   }
 
-  const sublinkClick = (path: Link['path']) => {
+  const sublinkClick = () => {
     // On ferme le menu déroulant d’annuaire
     const navigationElement = document.getElementById(navigationId)
     if (navigationElement) {
@@ -111,7 +99,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
         members[0].conceal()
       }
     }
-    linkClick(path)
+    linkClick()
   }
   const linksByRole = computed<Record<Role, (Link | LinkList)[]>>(() => {
     const linkActivites = canReadActivites(props.user) ? [links.ACTIVITES] : []
@@ -176,7 +164,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               </div>
               <div class="fr-header__tools">
                 <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
+                  <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
                 </div>
                 <div class={`fr-header__search fr-modal ${modalSearchOpened.value ? 'fr-modal--opened' : ''}`} id={searchModalId} aria-labelledby="button-search" aria-label="Recherche dans le site">
                   <div class="fr-container">
@@ -208,14 +196,14 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
               class="fr-btn--close"
             />
             <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} trackEvent={props.trackEvent} routePath={props.routePath} userLinkClicked={closeModals} />
+              <HeaderLinks user={props.user} routePath={props.routePath} userLinkClicked={closeModals} />
             </div>
             <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
                 {linksByRole.value[props.user?.role ?? 'defaut'].map((link, index) => (
                   <li key={link.label} class="fr-nav__item">
                     {isDirectLink(link) ? (
-                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={() => linkClick(link.path)} {...getAriaPage(link)}>
+                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={linkClick} {...getAriaPage(link)}>
                         {link.label}
                       </router-link>
                     ) : (
@@ -227,7 +215,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                           <ul class="fr-menu__list">
                             {link.sublinks.map((sublink, subIndex) => (
                               <li key={sublink.label}>
-                                <router-link onClick={() => sublinkClick(sublink.path)} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
+                                <router-link onClick={sublinkClick} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
                                   {sublink.label}
                                 </router-link>
                               </li>

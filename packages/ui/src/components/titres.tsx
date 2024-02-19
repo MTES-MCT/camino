@@ -1,4 +1,4 @@
-import { defineComponent, defineAsyncComponent, computed, onMounted, inject, ref } from 'vue'
+import { defineComponent, defineAsyncComponent, computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { User, isAdministration } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
@@ -19,7 +19,6 @@ import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { DemandeTitreButton } from './_common/demande-titre-button'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -38,7 +37,6 @@ export const Titres = defineComponent({
 
       return CaminoTitresMap
     })
-    const matomo = inject('matomo', null)
     const store = useStore()
     const router = useRouter()
     const user = computed<User>(() => store.state.user.element)
@@ -221,10 +219,6 @@ export const Titres = defineComponent({
                   if (newTabId === 'table') {
                     paramsForCarte.value = null
                     reloadTitres(newTabId)
-                  }
-                  if (isNotNullNorUndefined(matomo)) {
-                    // @ts-ignore
-                    matomo.trackEvent('titres-vue', 'titres-vueId', tabId.value)
                   }
                 }
               }}

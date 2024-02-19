@@ -261,12 +261,6 @@ export default {
           if (reroute) {
             await this.reroute(titreEtapeId)
           }
-
-          this.eventTrack({
-            categorie: 'titre-etape',
-            action: 'titre-etape-enregistrer',
-            nom: titreEtapeId,
-          })
         }
         return titreEtapeId
       }
@@ -285,21 +279,10 @@ export default {
               etapeId,
               onDepotDone: async () => {
                 await this.reroute(etapeId)
-                this.eventTrack({
-                  categorie: 'titre-etape',
-                  action: 'titre-etape_depot',
-                  nom: this.$route.params.id,
-                })
               },
             },
           })
         }
-      }
-    },
-
-    eventTrack(event) {
-      if (this.$matomo) {
-        this.$matomo.trackEvent(event.categorie, event.action, event.nom)
       }
     },
 
