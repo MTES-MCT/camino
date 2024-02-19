@@ -153,14 +153,6 @@ interface ICommune {
 export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
 type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
-interface IDomaine {
-  id: string
-  nom: string
-  description?: string
-  ordre: number
-  titresTypes: ITitreType[]
-}
-
 interface IEntrepriseEtablissement {
   id: string
   entrepriseId: string
@@ -281,7 +273,6 @@ interface ITitreDemarche {
   typeId: DemarcheTypeId
   statutId?: DemarcheStatutId | null
   ordre?: number | null
-  titreType?: ITitreType | null
   demarcheDateDebut?: CaminoDate | null
   demarcheDateFin?: CaminoDate | null
   publicLecture?: boolean | null
@@ -466,7 +457,6 @@ export {
   IContenuValeur,
   IContenusTitreEtapesIds,
   IDocumentRepertoire,
-  IDomaine,
   IEntreprise,
   IEntrepriseEtablissement,
   IEtapeType,
