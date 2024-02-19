@@ -4,27 +4,17 @@ import { IDocumentRepertoire } from '../../types.js'
 
 import { knex } from '../../knex.js'
 
-import options, { FieldId } from './_options.js'
+import { FieldId } from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
 import DocumentsTypes from '../models/documents-types.js'
 import EtapesTypes from '../models/etapes-types.js'
-import TitresTypesTypes from '../models/titres-types-types.js'
 
-import TitresTypes from '../models/titres-types.js'
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-
-export const titresTypesTypesGet = async () => TitresTypesTypes.query().orderBy('ordre')
-
-export const titresTypesGet = async (_: never, { fields }: { fields?: FieldId }) => {
-  const graph = fields ? graphBuild(fields, 'titresTypes', fieldsFormat) : options.titresTypes.graph
-
-  return TitresTypes.query().withGraphFetched(graph).orderBy('id')
-}
 
 export const etapesTypesDocumentsTypesGet = () => toDocuments()
 

@@ -32,7 +32,6 @@ export const titresSlugsUpdate = async (titresIds?: string[]) => {
     { ids: titresIds },
     {
       fields: {
-        type: { type: { id: {} } },
         demarches: {
           etapes: {
             id: {},

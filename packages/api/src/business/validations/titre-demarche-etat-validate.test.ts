@@ -1,4 +1,4 @@
-import { ITitre, ITitreEtape, ITitreType } from '../../types.js'
+import { ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { newDemarcheId, newEtapeId } from '../../database/models/_format/id-create.js'
@@ -14,10 +14,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -33,10 +29,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
       } as ITitre,
       { id: newEtapeId(), typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2022-05-04'), communes: null, contenu: null, ordre: 1, surface: null },
@@ -53,10 +45,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       {
@@ -85,10 +73,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -106,10 +90,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -127,10 +107,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         'oct',
         {
           typeId: 'arm',
-          type: {
-            id: 'arm',
-            contenuIds: [],
-          } as unknown as ITitreType,
           demarches: [{ typeId: 'pro' }],
         } as ITitre,
         { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -145,10 +121,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         'oct',
         {
           typeId: 'arm',
-          type: {
-            id: 'arm',
-            contenuIds: [],
-          } as unknown as ITitreType,
         } as ITitre,
         { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
         newDemarcheId(),
@@ -163,10 +135,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -184,10 +152,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [
           {
             typeId: 'oct',
@@ -206,10 +170,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'arm',
-        type: {
-          id: 'arm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [
           {
             typeId: 'oct',
@@ -228,10 +188,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'axm',
-        type: {
-          id: 'axm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco', date: '2030-01-01' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -246,10 +202,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'axm',
-        type: {
-          id: 'axm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -266,10 +218,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
       'oct',
       {
         typeId: 'axm',
-        type: {
-          id: 'axm',
-          contenuIds: [],
-        } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -290,10 +238,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         'oct',
         {
           typeId: 'axm',
-          type: {
-            id: 'axm',
-            contenuIds: [],
-          } as unknown as ITitreType,
           demarches: [{ typeId: 'oct' }],
         } as ITitre,
         { id: '3', typeId: 'mfr', statutId: 'aco' } as Pick<Required<ITitreEtape>, 'id' | 'statutId' | 'typeId' | 'date' | 'ordre' | 'contenu' | 'titreDemarcheId' | 'communes'>,
@@ -313,10 +257,6 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         'oct',
         {
           typeId: 'axm',
-          type: {
-            id: 'axm',
-            contenuIds: [],
-          } as unknown as ITitreType,
           demarches: [{ typeId: 'oct' }],
         } as ITitre,
         {

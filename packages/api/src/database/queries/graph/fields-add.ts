@@ -9,10 +9,6 @@ export const fieldsTitreAdd = <T extends { titre?: FieldsTitre }>(fields: T): T 
     }
   }
 
-  if (!fields.titre.type) {
-    fields.titre.type = { id: {}, type: { id: {} } }
-  }
-
   if (!fields.titre.titulaires) {
     fields.titre.titulaires = { id: {} }
   }

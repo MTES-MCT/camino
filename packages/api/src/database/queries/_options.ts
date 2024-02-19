@@ -1,7 +1,3 @@
-const titresTypes = {
-  graph: `[type]`,
-}
-
 const documentsRelateTrue = ['type']
 const documentsRelateFalse = [] as string[]
 
@@ -67,8 +63,6 @@ const titresEtapes = {
   },
 }
 
-const titresTypesRelateFalse = ['type']
-
 const titresDemarchesRelateTrue = [...titresEtapesRelateTrue.map(k => `etapes.${k}`)]
 
 const titresDemarchesRelateFalse: string[] = []
@@ -99,10 +93,9 @@ const titresActivites = {
   },
 }
 
-const titresRelateTrue = ['type', ...titresActivitesRelateTrue.map(k => `activites.${k}`), ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)]
+const titresRelateTrue = [...titresActivitesRelateTrue.map(k => `activites.${k}`), ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)]
 
 const titresRelateFalse = [
-  ...titresTypesRelateFalse.map(k => `type.${k}`),
   'substancesEtape',
   'pointsEtape',
   'titulaires',
@@ -116,7 +109,6 @@ const titresRelateFalse = [
 
 const titres = {
   graph: `[
-    type.${titresTypes.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     demarches(orderDesc).${titresDemarches.graph},
@@ -145,7 +137,6 @@ export default {
   titresActivites,
   titresDemarches,
   titresEtapes,
-  titresTypes,
   utilisateurs,
   utilisateursTitres,
   journaux,
@@ -168,9 +159,6 @@ export type FieldsUtilisateur = FieldId & {
   entreprises?: FieldsEntreprise
 }
 export type FieldsTitre = FieldId & {
-  type?: FieldId & {
-    type?: FieldId
-  }
   titulaires?: FieldsEntreprise
   amodiataires?: FieldsEntreprise
   demarches?: FieldsDemarche

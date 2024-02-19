@@ -20,7 +20,6 @@ export const titreFormat = (t: ITitre, fields: FieldsTitre = titreFormatFields) 
     t = {
       titreStatutId: t.titreStatutId,
       typeId: t.typeId,
-      type: t.type,
       secteursMaritime: t.secteursMaritime,
       forets: t.forets,
       communes: t.communes,

@@ -175,7 +175,7 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>> &
+type AdministrationTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId'>>> &
   Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>
 
 type TitreAdministrationAvecReferences = {
@@ -222,7 +222,6 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
         { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
         {
           fields: {
-            type: { id: {} },
             titulaires: { id: {} },
             activites: { id: {} },
             demarches: { etapes: { id: {} } },
@@ -235,10 +234,6 @@ export const titresAdministrations = (_pool: Pool) => async (req: CaminoRequest,
         .map((titre: ITitre): TitreAdministrationAvecReferences | null => {
           if (titre.slug === undefined) {
             return null
-          }
-
-          if (!titre.type) {
-            throw new Error('les types de titres ne sont pas chargées')
           }
 
           if (!titre.titulaires) {

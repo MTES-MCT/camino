@@ -1,6 +1,6 @@
 import { IDocumentRepertoire } from '../../../types.js'
 
-import { demarchesStatutsGet, devisesGet, documentsTypesGet, titresTypesTypesGet } from '../../../database/queries/metas.js'
+import { demarchesStatutsGet, devisesGet, documentsTypesGet } from '../../../database/queries/metas.js'
 
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { UNITES } from 'camino-common/src/static/unites.js'
@@ -14,6 +14,7 @@ import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes.
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { sortedAdministrationTypes } from 'camino-common/src/static/administrations.js'
 import { sortedDomaines } from 'camino-common/src/static/domaines.js'
+import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 
 export const devises = async () => devisesGet()
 
@@ -35,15 +36,7 @@ export const referencesTypes = () => sortedReferencesTypes
 
 export const domaines = () => sortedDomaines
 
-export const types = async () => {
-  try {
-    return await titresTypesTypesGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const types = () => sortedTitreTypesTypes
 
 export const statuts = () => titresStatutsArray
 

@@ -106,7 +106,6 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
     {
       fields: {
         titre: {
-          type: { id: {} },
           demarches: { etapes: { id: {} } },
           pointsEtape: { id: {} },
           titulaires: { id: {} },
