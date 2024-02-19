@@ -276,11 +276,11 @@ describe('geojsonImport', () => {
                     4.819056328722645,
                   ],
                   [
-                    -53.81913190272549,
+                    -53.81913190272548,
                     4.81580496237806,
                   ],
                   [
-                    -53.82241815394935,
+                    -53.82241815394934,
                     4.824167494311766,
                   ],
                   [
@@ -343,7 +343,7 @@ describe('geojsonImport', () => {
                     48.64222035907392,
                   ],
                   [
-                    -0.48911285307621105,
+                    -0.489112853076211,
                     48.63372706181441,
                   ],
                   [
@@ -438,7 +438,7 @@ describe('geojsonImportPoints', () => {
     `)
   })
 
-  test('valide avec conversion', async () => {
+  test('geojson valide avec conversion', async () => {
     const feature: FeatureCollectionPoints = {
       type: 'FeatureCollection',
       features: [
@@ -473,6 +473,61 @@ describe('geojsonImportPoints', () => {
           },
         ],
         "type": "FeatureCollection",
+      }
+    `)
+  })
+
+  test('shapefile valide avec conversion', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.shp`
+    mkdirSync(dir, { recursive: true })
+    copyFileSync(join(__dirname, 'perimetre-guyane.shp'), `${dir}/${fileName}`)
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('mfr'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'shp',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "communes": [],
+        "foretIds": [],
+        "geojson4326_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -0.0606,
+                    48.7263,
+                  ],
+                  [
+                    0.009,
+                    48.5605,
+                  ],
+                  [
+                    -0.2083,
+                    48.7511,
+                  ],
+                  [
+                    -0.0606,
+                    48.7263,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson4326_points": null,
+        "sdomZoneIds": [],
+        "secteurMaritimeIds": [],
+        "superposition_alertes": [],
+        "surface": 93,
       }
     `)
   })
