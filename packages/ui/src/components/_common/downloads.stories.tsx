@@ -6,6 +6,7 @@ const meta: Meta = {
   title: 'Components/Common/Downloads',
   // @ts-ignore
   component: PureDownloads,
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 

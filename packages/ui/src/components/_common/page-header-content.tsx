@@ -17,8 +17,8 @@ export const PageContentHeader: FunctionalComponent<Props> = props => {
       </div>
 
       <div class="fr-col-12 fr-col-md-6" style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
-        {props.download ? <Downloads {...props.download} class="" /> : null}
-        {props.renderButton !== null ? props.renderButton() : null}
+        {props.download ? <Downloads {...props.download} /> : null}
+        {props.renderButton !== null ? <div class="fr-ml-1w">{props.renderButton()}</div> : null}
       </div>
     </div>
   )
