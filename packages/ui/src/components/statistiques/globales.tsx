@@ -101,10 +101,6 @@ interface Props {
 }
 
 export const PureGlobales: FunctionalComponent<Props> = props => {
-  const recherchesStats = props.statistiques.recherches
-
-  const recherches = recherchesStats[recherchesStats.length - 1].quantite
-
   const utilisateursAdmin =
     props.statistiques["Nombre d'utilisateurs rattachés à un ministère"] +
     props.statistiques["Nombre d'utilisateurs rattachés à une Autorité"] +
@@ -146,40 +142,6 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
 
   return (
     <div>
-      <div id="engagement" class="mb-xxl">
-        <h2 class="mt">Engagement général sur le site</h2>
-        <span class="separator" />
-        <p class="mb-xl">Les données retenues ici témoignent du comportement général des utilisateurs sur le site et de leur engagement auprès du service</p>
-        <div class="tablet-float-blobs clearfix">
-          <div class="tablet-float-blob-1-3">
-            <div class="mb-xl mt">
-              <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(recherches)}</p>
-              <p class="bold text-center">recherches effectuées le mois dernier</p>
-              <p>Le nombre de recherches mensuelles est l'indicateur clé de l'utilisation du service de "cadastre minier"</p>
-            </div>
-
-            <div class="mb-xl">
-              <p class={['fr-display--xs', styles['donnee-importante']]}>{Math.round(props.statistiques.actions)}</p>
-              <p class="bold text-center">nombre moyen d'actions effectuées par utilisateur</p>
-            </div>
-
-            <div class="mb-xl">
-              <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.sessionDuree} min</p>
-              <p class="bold text-center">temps de session moyen par utilisateur</p>
-            </div>
-          </div>
-          <div class="tablet-float-blob-2-3 mb-xxl">
-            <ConfigurableChart
-              chartConfiguration={lineConfiguration(
-                statsLineFormat({
-                  stats: props.statistiques.recherches,
-                  labelY: 'recherches',
-                })
-              )}
-            />
-          </div>
-        </div>
-      </div>
       <div id="utilisateurs" class="mb-xxl content">
         <h2>Les différents profils des utilisateurs de Camino</h2>
         <span class="separator" />
@@ -245,20 +207,6 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
                 })
               )}
             />
-          </div>
-        </div>
-        <div class="desktop-blobs">
-          <div class="desktop-blob-1-3 mb-xl">
-            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.telechargements}</p>
-            <p class="bold text-center">téléchargements de pièces relatives à la bonne instruction des titres et autorisations miniers le mois dernier</p>
-          </div>
-          <div class="desktop-blob-1-3 mb-xl">
-            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.signalements}</p>
-            <p class="bold text-center">erreurs corrigées sur les bases de données de l'État grâce à la participation des utilisateurs</p>
-          </div>
-          <div class="desktop-blob-1-3 mb-xl">
-            <p class={['fr-display--xs', styles['donnee-importante']]}>{props.statistiques.reutilisations}</p>
-            <p class="bold text-center">réutilisations connues des données ouvertes distribuées</p>
           </div>
         </div>
       </div>

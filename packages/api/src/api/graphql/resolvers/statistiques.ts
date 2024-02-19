@@ -1,4 +1,4 @@
-import { ITitre } from '../../../types.js'
+import { Context, ITitre } from '../../../types.js'
 
 import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find.js'
 import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
@@ -10,32 +10,17 @@ import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import { getAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { getTitresModifiesByMonth } from '../../rest/journal.queries.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
-export const statistiquesGlobales = async (): Promise<Statistiques> => {
+export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promise<Statistiques> => {
   try {
     const titresActivites = await titresActivitesGet({}, {}, userSuper)
-
     const titresActivitesDepose = titresActivites.filter(titreActivite => titreActivite.annee >= ACTIVITE_ANNEE_DEBUT && titreActivite.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE).length
-
     const titresActivitesBeneficesEntreprise = Math.round((titresActivitesDepose * 2) / 7)
-
     const titresActivitesBeneficesAdministration = Math.round((titresActivitesDepose * 1) / 7)
-
-    // FIXME ici
-
-    // FIXME supprimer la table de cache
-    const { recherches, titresModifies, actions, sessionDuree, telechargements, signalements, reutilisations } = {
-      recherches: [],
-      titresModifies: [],
-      actions: 0,
-      sessionDuree: 0,
-      telechargements: 0,
-      signalements: 0,
-      reutilisations: 0,
-    }
-
+    const titresModifies = await getTitresModifiesByMonth(pool)
     const demarches = titresActivites.filter(titreActivite => {
       const dateSaisie = titreActivite.dateSaisie
 
@@ -45,14 +30,8 @@ export const statistiquesGlobales = async (): Promise<Statistiques> => {
     return {
       titresActivitesBeneficesEntreprise,
       titresActivitesBeneficesAdministration,
-      recherches,
       titresModifies,
-      actions,
-      sessionDuree,
-      telechargements,
       demarches,
-      signalements,
-      reutilisations,
     }
   } catch (e) {
     console.error(e)
