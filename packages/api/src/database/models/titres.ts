@@ -4,7 +4,6 @@ import { ITitre } from '../../types.js'
 import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
-import Types from './titres-types.js'
 import { idGenerate } from './_format/id-create.js'
 import { slugify } from 'camino-common/src/strings.js'
 import TitresActivites from './titres-activites.js'
@@ -30,7 +29,6 @@ class Titres extends Model {
       nom: { type: 'string' },
       typeId: { type: 'string', maxLength: 3 },
       titreStatutId: { type: 'string', maxLength: 3 },
-      contenusTitreEtapesIds: { type: ['object', 'null'] },
       propsTitreEtapesIds: { type: 'object' },
       doublonTitreId: { type: ['string', 'null'] },
       archive: { type: 'boolean' },
@@ -39,12 +37,6 @@ class Titres extends Model {
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Types,
-      join: { from: 'titres.typeId', to: 'titresTypes.id' },
-    },
-
     demarches: {
       relation: Model.HasManyRelation,
       modelClass: TitresDemarches,

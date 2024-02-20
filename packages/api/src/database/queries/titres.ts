@@ -65,7 +65,7 @@ export const titreGet = async (id: string, { fields, fetchHeritage }: { fields?:
 const titresColonnes = {
   nom: { id: 'nom' },
   domaine: { id: raw(`right( titres.type_id, 1 )`) },
-  type: { id: 'type:type.nom', relation: 'type.type' },
+  type: { id: raw(`left( titres.type_id, 2 )`) },
   statut: { id: 'titreStatutId' },
 } as const satisfies Record<ITitreColonneId, IColonne<string | RawBuilder>>
 
@@ -149,12 +149,7 @@ export const titresGet = async (
   )
 
   if (colonne) {
-    const myColonne = titresColonnes[colonne]
-    if ('relation' in myColonne) {
-      q.leftJoinRelated(myColonne.relation)
-    }
-
-    q.orderBy(myColonne.id, ordre || 'asc')
+    q.orderBy(titresColonnes[colonne].id, ordre || 'asc')
   } else {
     if (noms?.length) {
       q.orderByRaw('case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom', [`${noms}%`])

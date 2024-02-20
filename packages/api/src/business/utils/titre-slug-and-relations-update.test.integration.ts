@@ -18,7 +18,6 @@ afterAll(async () => {
 const titreAdd = async (titre: ITitre) =>
   titreCreate(titre, {
     fields: {
-      type: { type: { id: {} } },
       demarches: {
         etapes: {
           id: {},

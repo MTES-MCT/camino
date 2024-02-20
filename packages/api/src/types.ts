@@ -2,8 +2,6 @@ import { FileUpload } from 'graphql-upload'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { CodePostal } from 'camino-common/src/static/departement.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
-import { DomaineId } from 'camino-common/src/static/domaines.js'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -129,10 +127,6 @@ type IPropsTitreEtapesIds = {
   [key in PropsTitreEtapeIdKeys]?: string
 }
 
-interface IContenusTitreEtapesIds {
-  [sectionId: string]: { [key: string]: string }
-}
-
 export interface IHeritageElement {
   actif: boolean
   etapeId?: EtapeId | null
@@ -216,7 +210,6 @@ interface ITitre {
   slug?: TitreSlug
   nom: string
   typeId: TitreTypeId
-  type?: ITitreType | null
   titreStatutId: TitreStatutId
   references?: TitreReference[] | null
   activitesEnConstruction?: number | null
@@ -237,7 +230,6 @@ interface ITitre {
   activites?: ITitreActivite[] | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
-  contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   propsTitreEtapesIds: IPropsTitreEtapesIds
   doublonTitreId?: string | null
   confidentiel?: boolean | null
@@ -323,7 +315,6 @@ interface ITitreEtape {
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
-  contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
@@ -338,22 +329,6 @@ interface ITitreEtapeFiltre {
   statutId?: string
   dateDebut?: string
   dateFin?: string
-}
-
-interface ITitreType {
-  id: TitreTypeId
-  domaineId: DomaineId
-  typeId: TitreTypeTypeId
-  archive?: boolean | null
-  type: ITitreTypeType
-  // TODO 2023-02-19 à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
-  contenuIds?: IContenuId[] | null
-}
-
-interface ITitreTypeType {
-  id: TitreTypeTypeId
-  nom: string
-  ordre: number
 }
 
 interface IUtilisateur {
@@ -448,7 +423,6 @@ export {
   IContenu,
   IContenuElement,
   IContenuValeur,
-  IContenusTitreEtapesIds,
   IDocumentRepertoire,
   IEntreprise,
   IEntrepriseEtablissement,
@@ -459,8 +433,6 @@ export {
   IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
-  ITitreType,
-  ITitreTypeType,
   ITitreEntreprise,
   IUtilisateur,
   IUtilisateurTitre,

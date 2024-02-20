@@ -14,7 +14,6 @@ import { titresStatutIdsUpdate } from './processes/titres-statut-ids-update.js'
 import { titresDemarchesDatesUpdate } from './processes/titres-phases-update.js'
 import { titresEtapesAdministrationsLocalesUpdate } from './processes/titres-etapes-administrations-locales-update.js'
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update.js'
-import { titresContenusEtapesIdsUpdate } from './processes/titres-contenus-etapes-ids-update.js'
 import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
 import { titresPublicUpdate } from './processes/titres-public-update.js'
 import { logsUpdate } from './_logs-update.js'
@@ -64,8 +63,6 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
 
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
 
-    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
-
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
 
@@ -83,7 +80,6 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
       titresDemarchesDatesUpdated,
       titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,
-      titresContenusEtapesIdsUpdated,
       titresActivitesCreated,
       titresActivitesPropsUpdated,
       titresUpdatedIndex,

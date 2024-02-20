@@ -11,6 +11,8 @@ import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 const emailConfirmationDepotSend = async (
   emails: string[],
   params: {
@@ -28,10 +30,10 @@ const emailConfirmationDepotSend = async (
 }
 
 // envoie un email de confirmation à l’opérateur
-const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarche, etape: ITitreEtape, titulaires: ITitreEntreprise[]) => {
+const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarche, titulaires: ITitreEntreprise[]) => {
   const titreUrl = titreUrlGet(titreDemarche.titreId)
   const titreNom = titreDemarche.titre!.nom
-  const titreTypeNom = titreDemarche.titre!.type!.type!.nom
+  const titreTypeNom = TitresTypesTypes[getTitreTypeType(titreDemarche.titre!.typeId)].nom
 
   for (const titulaire of titulaires) {
     const emails = titulaire.utilisateurs?.map(u => u.email).filter(email => !!email) as string[]
@@ -80,7 +82,7 @@ const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) 
   const titulaires = titreDemarche.titre?.titulaires
 
   if (titulaires?.length) {
-    await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titreEtapeDepot, titulaires)
+    await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titulaires)
   }
 }
 export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string) => {
@@ -93,7 +95,6 @@ export const titresEtapesDepotCreate = async (pool: Pool, demarcheId: string) =>
       fields: {
         etapes: { id: {} },
         titre: {
-          type: { type: { id: {} } },
           titulaires: { utilisateurs: { id: {} } },
         },
       },

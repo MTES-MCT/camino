@@ -52,13 +52,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
         delete fields[key]
       }
     })
-
-    // trie les types de titres
-    if (fields.type) {
-      fields.type.$modifier = 'orderAsc' as unknown as IFields
-    }
-
-    // ajouter titulaires et amodiataires
   }
 
   // on a besoin des activités si elles sont absentes

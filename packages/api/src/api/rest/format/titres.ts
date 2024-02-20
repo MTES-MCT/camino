@@ -1,6 +1,6 @@
 import { ITitre, Index } from '../../../types.js'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales.js'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
@@ -9,8 +9,7 @@ import { Domaines } from 'camino-common/src/static/domaines.js'
 import { getFacadesComputed, SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { territoiresFind } from 'camino-common/src/territoires.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
-import { valeurFind } from 'camino-common/src/sections.js'
-import { titreSectionsGet } from '../titre-contenu.js'
+import { SectionWithValue } from 'camino-common/src/sections.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { titreDemarcheSortAsc } from '../../../business/utils/titre-elements-sort-asc.js'
 import { titreDateDemandeFind } from '../../../business/rules/titre-date-demande-find.js'
@@ -19,6 +18,9 @@ import { Pool } from 'pg'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre.js'
 import { getCommunesIndex } from '../../../database/queries/communes.js'
+import { getDemarcheContenu } from 'camino-common/src/demarche.js'
+import { getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 
 const getFacadesMaritimeCell = (secteursMaritime: SecteursMaritimes[], separator: string): string =>
   getFacadesComputed(secteursMaritime)
@@ -26,17 +28,24 @@ const getFacadesMaritimeCell = (secteursMaritime: SecteursMaritimes[], separator
     .join(separator)
 
 const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
-  const sections = titreSectionsGet(titre)
+  if (isNullOrUndefinedOrEmpty(titre.demarches)) {
+    return {}
+  }
 
-  return sections.reduce((result, section) => {
-    const subResult = section.elements.reduce<Record<string, string>>((acc, element) => {
-      acc[element.nom ?? element.id] = valeurFind(element)
+  const orderedDemarches = [...titre.demarches].filter(d => !DemarchesTypes[d.typeId].travaux).sort((a, b) => (b.ordre ?? 0) - (a.ordre ?? 0))
 
-      return acc
-    }, {})
+  const demarche = orderedDemarches[0]
+  const etapes = (demarche.etapes ?? []).map(etape => {
+    const sections = getSections(titre.typeId, demarche?.typeId, etape.typeId)
+      .map(section => ({ ...section, elements: section.elements.filter(element => !(etape.heritageContenu?.[section.id]?.[element.id]?.actif ?? false)) }))
+      .filter(section => section.elements.length > 0)
 
-    return { ...result, ...subResult }
-  }, {})
+    const sections_with_values: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
+
+    return { etape_type_id: etape.typeId, sections_with_values }
+  })
+
+  return getDemarcheContenu(etapes, titre.typeId)
 }
 
 export const titresTableFormat = async (pool: Pool, titres: ITitre[]) => {
