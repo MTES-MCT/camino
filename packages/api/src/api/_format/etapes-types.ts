@@ -3,9 +3,7 @@ import { ITitreEtape } from '../../types.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
 export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
@@ -29,11 +27,6 @@ export const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined 
   }
 
   return result
-}
-export interface DocumentTypeData {
-  titreTypeId: TitreTypeId
-  demarcheTypeId: DemarcheTypeId
-  etapeTypeId: EtapeTypeId
 }
 
 export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null): boolean => {

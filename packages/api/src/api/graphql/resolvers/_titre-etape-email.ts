@@ -6,7 +6,7 @@ import { utilisateursTitresGet } from '../../../database/queries/utilisateurs.js
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)

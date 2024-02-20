@@ -14,6 +14,10 @@ import {
   titreEtapeHeritageRes2,
   titreEtapeHeritage2,
 } from './__mocks__/titre-etape'
+import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
@@ -143,13 +147,13 @@ describe('étapes', () => {
 
     store.state.titreEtapeEdition.element = {
       date: '2020-01-01',
-      typeId: 'etape-type-id',
+      typeId: 'mfr',
       titreDemarcheId: 'demarche-id',
       heritageProps: {},
     }
 
     const apiMock3 = api.etapeHeritage.mockResolvedValue({
-      type: { id: 'new-etape-type-id' },
+      typeId: 'mcp',
     })
     await store.dispatch('titreEtapeEdition/heritageGet', {
       typeId: 'etape-type-id',
@@ -162,15 +166,12 @@ describe('étapes', () => {
       date: '2020-01-01',
       statutId: '',
       titreDemarcheId: 'demarche-id',
-      type: {
-        id: 'new-etape-type-id',
-      },
-      documents: [],
+      typeId: 'mcp',
     })
 
     const apiMock4 = api.etapeHeritage.mockResolvedValue(titreEtapeHeritageRes2)
     await store.dispatch('titreEtapeEdition/heritageGet', {
-      typeId: 'etape-type-id',
+      typeId: 'mfr',
       titreDemarcheId: 'demarche-id',
       date: '2020-01-02',
     })
@@ -239,30 +240,40 @@ describe('étapes', () => {
   })
 
   test('ajoute un nouveau document', async () => {
-    const type = { id: 'type-id', optionnel: false }
     store.state.titreEtapeEdition.element = {
       documents: [],
-      type: { id: 'mfr', documentsTypes: [type] },
+      typeId: ETAPES_TYPES.decisionDeLadministration,
+      demarche: {
+        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
+        titre: {
+          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
+        },
+      },
     }
 
     store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
-      document: { id: 'document-id', type },
+      document: { id: 'document-id', typeId: DOCUMENTS_TYPES_IDS.arrete },
     })
 
     expect(store.state.titreEtapeEdition.element.documents).toHaveLength(1)
   })
 
   test('remplace un document existant par un nouveau', async () => {
-    const type = { id: 'type-id', optionnel: false }
     store.state.titreEtapeEdition.element = {
-      documents: [{ id: 'document-id1' }],
-      type: { id: 'mfr', documentsTypes: [type] },
+      documents: [{ id: 'document-id1', typeId: DOCUMENTS_TYPES_IDS.arrete }],
+      typeId: ETAPES_TYPES.decisionDeLadministration,
+      demarche: {
+        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
+        titre: {
+          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
+        },
+      },
     }
 
     store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
-      document: { id: 'document-id2', type },
+      document: { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
       idOld: 'document-id1',
     })
 
@@ -271,13 +282,18 @@ describe('étapes', () => {
   })
 
   test('supprime un document', async () => {
-    const type = { id: 'type-id', optionnel: false }
     store.state.titreEtapeEdition.element = {
       documents: [
-        { id: 'document-id1', type, typeId: type.id },
-        { id: 'document-id2', type, typeId: type.id },
+        { id: 'document-id1', typeId: DOCUMENTS_TYPES_IDS.arrete },
+        { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
       ],
-      type: { id: 'mfr', documentsTypes: [type] },
+      typeId: ETAPES_TYPES.decisionDeLadministration,
+      demarche: {
+        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
+        titre: {
+          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
+        },
+      },
     }
 
     store.state.titreEtapeEdition.metas = {}

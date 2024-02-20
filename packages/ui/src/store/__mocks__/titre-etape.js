@@ -8,7 +8,7 @@ const titreEtapeMetas = {
   },
   demarche: {
     id: 'demarche-id',
-    type: { nom: 'nom de la démarche' },
+    typeId: 'oct',
     titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
 }
@@ -21,7 +21,7 @@ const titreEtapeMetasRes = {
   ],
   demarche: {
     id: 'demarche-id',
-    type: { nom: 'nom de la démarche' },
+    typeId: 'oct',
     titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
 }
@@ -34,7 +34,7 @@ const titreEtapeMetasRes2 = {
   ],
   demarche: {
     id: 'demarche-id',
-    type: { nom: 'nom de la démarche' },
+    typeId: 'oct',
     titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
 }
@@ -55,9 +55,7 @@ const titreEtapeHeritage1 = {
   titreDemarcheId: 'demarche-id',
   date: '2020-01-02',
   statutId: '',
-  type: {
-    id: 'new-etape-type-id',
-  },
+  typeId: 'mfr',
   dateDebut: undefined,
   dateFin: undefined,
   duree: undefined,
@@ -79,13 +77,10 @@ const titreEtapeHeritage1 = {
       elementId1: { etape: { id: 'etape-id' }, actif: true },
     },
   },
-  documents: [],
 }
 
 const titreEtapeHeritageRes1 = {
-  type: {
-    id: 'new-etape-type-id',
-  },
+  typeId: 'mfr',
   heritageProps: {},
   heritageContenu: {
     sectionId1: {
@@ -105,22 +100,17 @@ const titreEtapeHeritageRes1 = {
 const titreEtapeHeritage2 = {
   amodiataires: [],
   date: '2020-01-01',
-  documents: [],
   duree: undefined,
   heritageProps: {},
   statutId: '',
   substances: [],
   titreDemarcheId: 'demarche-id',
   titulaires: [],
-  type: {
-    id: 'new-etape-type-id',
-  },
+  typeId: 'mfr',
 }
 
 const titreEtapeHeritageRes2 = {
-  type: {
-    id: 'new-etape-type-id',
-  },
+  typeId: 'mfr',
   heritageProps: {},
   heritageContenu: {},
   contenu: {},
