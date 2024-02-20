@@ -18,7 +18,7 @@ export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport'>
   etape: {
     typeId: EtapeTypeId
-    heritageProps: { perimetre: EtapeWithHeritage<'perimetre', Pick<EtapeFondamentale, 'geojson4326Perimetre' | 'surface' | 'geojson4326Points' | 'type' | 'date'>>['heritageProps']['perimetre'] }
+    heritageProps: { perimetre: EtapeWithHeritage<'perimetre', Pick<EtapeFondamentale, 'geojson4326Perimetre' | 'surface' | 'geojson4326Points' | 'typeId' | 'date'>>['heritageProps']['perimetre'] }
     geojson4326Perimetre: FeatureMultiPolygon | null
     geojson4326Points: FeatureCollectionPoints | null
     surface: KM2 | null

@@ -1,5 +1,4 @@
 import { etapeEditFormat } from './titre-etape-edit'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { etapeIdValidator } from 'camino-common/src/etape'
@@ -41,7 +40,7 @@ describe('etapeEditFormat', () => {
     expect(
       etapeEditFormat({
         id: etapeIdValidator.parse('etape-id'),
-        type: { id: 'aac', nom: 'plop' },
+        typeId: 'aac',
         // @ts-ignore
         statutId: 'etape-statut-id',
         duree: 240,
@@ -53,7 +52,7 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      type: { id: 'aac', nom: 'plop' },
+      typeId: 'aac',
       statutId: 'etape-statut-id',
       duree: 240,
       amodiataires: [],

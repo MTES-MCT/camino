@@ -25,7 +25,7 @@ const heritageProps: Props['heritageProps']['substances'] = {
   etape: {
     substances: [SubstancesLegale.auru.id],
     date: toCaminoDate('2020-01-01'),
-    type: { nom: 'Demande', id: 'aac' },
+    typeId: 'mfr',
   },
 }
 export const SansHeritage = Template.bind({})

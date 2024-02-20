@@ -1885,6 +1885,8 @@ export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId =
   return etapeTypeIdValidator.safeParse(etapeTypeId).success
 }
 
+export const etapesTypes = Object.values(EtapesTypes)
+
 const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.publicationDeDecisionAuJORF,
   ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF,

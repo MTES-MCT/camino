@@ -40,7 +40,7 @@ type EtapeBase = {
   id: EtapeId
   contenu: { [key: string]: unknown }
   date: CaminoDate
-  type: { id: EtapeTypeId; nom: string }
+  typeId: EtapeTypeId
   substances: SubstanceLegaleId[]
   titulaires: EtapeEntreprise[]
   amodiataires: EtapeEntreprise[]
@@ -59,9 +59,9 @@ type EtapeBase = {
 
 type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type EtapeWithHeritage<K extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'type' | 'date' | EtapePropsFromHeritagePropName<K>>> = T & {
+export type EtapeWithHeritage<K extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'typeId' | 'date' | EtapePropsFromHeritagePropName<K>>> = T & {
   heritageProps: {
-    [key in K]: HeritageProp<Pick<T, 'type' | 'date' | EtapePropsFromHeritagePropName<K>>>
+    [key in K]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<K>>>
   }
 }
 
