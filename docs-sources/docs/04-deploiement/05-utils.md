@@ -23,7 +23,6 @@ Pré-requis: avoir un utilisateur se connectant en SSH sur le serveur de product
 # Se connecter dans le container
 docker exec -ti camino_api_app sh
 npm run db:migrate
-npm run db:seed
 
 ```
 

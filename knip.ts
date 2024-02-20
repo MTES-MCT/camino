@@ -1,5 +1,5 @@
 const config = {
-  "ignore": [".history/**", "packages/api/knexfile.ts", "**/knex/migrations/*", "packages/api/src/knex/migration-stub.ts", "packages/api/src/knex/seeding.ts", "packages/api/src/knex/seeds/**", "packages/common/src/**/*.test.ts", "packages/api/src/tools/phases/tests-creation.ts", "packages/ui/src/__mocks__/setupVitest.js", "packages/api/src/**/*.queries.types.ts"],
+  "ignore": [".history/**", "packages/api/knexfile.ts", "**/knex/migrations/*", "packages/api/src/knex/migration-stub.ts", "packages/common/src/**/*.test.ts", "packages/api/src/tools/phases/tests-creation.ts", "packages/ui/src/__mocks__/setupVitest.js", "packages/api/src/**/*.queries.types.ts"],
   "ignoreBinaries": [
   "eslint",
   "prettier",

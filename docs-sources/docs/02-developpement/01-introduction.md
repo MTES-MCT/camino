@@ -87,7 +87,6 @@ npm run start -w packages/api
     │
     ├── knex                 # `scripts de migration et d'import de la base de données
     │   ├── migrations       # `migration de la base de données`
-    │   └── seeds            # `import depuis les fichier /sources vers la base de données`
     │
     └── tools            # `outils`
         ├── export       # `exportation de la base de données vers des spreadsheets (npm run export)`

@@ -66,13 +66,11 @@ export default {
 
   props: {
     document: { type: Object, required: true },
-    repertoire: { type: String, required: true },
     title: { type: String, required: true },
     route: { type: Object, default: null },
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
     parentId: { type: String, default: '' },
-    parentTypeId: { type: String, default: '' },
     etiquette: { type: Boolean, default: false },
     boutonVisualisation: { type: Boolean, default: true },
     boutonDissociation: { type: Boolean, default: false },
@@ -80,6 +78,7 @@ export default {
     boutonSuppression: { type: Boolean, default: false },
     manquantShow: { type: Boolean, default: false },
     helpShow: { type: Boolean, default: false },
+    documentsTypes: { type: Array, required: true },
   },
 
   data() {
@@ -93,11 +92,7 @@ export default {
       return !(this.document.fichier || this.document.fichierNouveau)
     },
     documentType() {
-      if (this.document.typeId) {
-        return DocumentsTypes[this.document.typeId]
-      } else {
-        return this.document.type
-      }
+      return DocumentsTypes[this.document.typeId]
     },
   },
 
@@ -105,20 +100,11 @@ export default {
     editPopupOpen() {
       const document = cloneAndClean(this.document)
       if (this.parentId) {
-        if (this.repertoire === 'demarches') {
-          document.titreEtapeId = this.parentId
-        } else if (this.repertoire === 'activites') {
-          document.titreActiviteId = this.parentId
-        }
+        document.titreEtapeId = this.parentId
       }
 
-      // TODO 2023-04-11 make only typeId pass in documents
-      if (!document.typeId) {
-        document.typeId = document.type.id
-      }
       document.fichierNouveau = null
 
-      delete document.type
       delete document.suppression
 
       this.$store.commit('popupOpen', {
@@ -128,8 +114,7 @@ export default {
           route: this.route,
           action: this.addAction,
           document,
-          repertoire: this.repertoire,
-          parentTypeId: this.parentTypeId,
+          documentsTypes: this.documentsTypes,
         },
       })
     },

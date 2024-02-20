@@ -70,9 +70,6 @@ class DbManager {
         loadExtensions: ['.ts'],
         extension: 'ts',
       },
-      seeds: {
-        directory: join(__dirname, '../src/knex/seeds'),
-      },
       ...knexSnakeCaseMappers(),
     }
 
@@ -93,17 +90,11 @@ class DbManager {
 
   public async populateDb(): Promise<{ knex: Knex; pool: pg.Pool }> {
     await this.init()
-    await this.injectSeed()
 
     DbManager.checkKnexInstance(this.knexInstance)
     DbManager.checkPoolInstance(this.poolInstance)
 
     return { knex: this.knexInstance, pool: this.poolInstance }
-  }
-
-  public async reseedDb(): Promise<void> {
-    await this.truncateSchema()
-    await this.injectSeed()
   }
 
   public async closeKnex(): Promise<void> {
@@ -122,12 +113,7 @@ class DbManager {
     await globalClient.end()
   }
 
-  private async injectSeed() {
-    DbManager.checkKnexInstance(this.knexInstance)
-    await this.knexInstance.transaction(async trx => trx.seed.run())
-  }
-
-  private async truncateSchema() {
+  public async truncateSchema() {
     DbManager.checkKnexInstance(this.knexInstance)
     const tables = (await this.knexInstance('pg_tables').select('tablename').where('schemaname', 'public')) ?? []
 
@@ -140,6 +126,4 @@ class DbManager {
   }
 }
 
-const dbManager = new DbManager()
-
-export { dbManager }
+export const dbManager = new DbManager()

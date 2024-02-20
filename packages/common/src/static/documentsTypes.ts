@@ -264,6 +264,7 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
 }
 
 export const sortedEntrepriseDocumentTypes = EntrepriseDocumentTypeIds.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
+export const sortedDocumentTypes = IDS.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 
 const documentsTypesIds = Object.values(DOCUMENTS_TYPES_IDS)
 

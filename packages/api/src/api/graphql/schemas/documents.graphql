@@ -12,9 +12,6 @@ type Document {
   """
   id: ID!
 
-  "Type de document (arrêté, décret, etc.)"
-  type: DocumentType!
-
   typeId: String!
 
   "Date du document"

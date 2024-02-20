@@ -1,8 +1,8 @@
-const documentsRelateTrue = ['type']
+const documentsRelateTrue = [] as string[]
 const documentsRelateFalse = [] as string[]
 
 const documents = {
-  graph: `[type]`,
+  graph: ``,
   update: {
     insertMissing: true,
     relate: documentsRelateTrue,
@@ -43,11 +43,11 @@ const utilisateursTitres = {
 
 const titresEtapesRelateTrue = ['titulaires', 'amodiataires']
 
-const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs', ...documentsRelateFalse.map(k => `documents.${k}`)]
+const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs', `documents`]
 
 const titresEtapes = {
   graph: `[
-    documents.${documents.graph},
+    documents,
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph}
   ]`,
@@ -149,9 +149,7 @@ export type FieldsEntreprise = FieldId & {
   amodiataireTitres?: FieldId
 }
 
-type FieldDocumentType = FieldId
 export type FieldsDocument = FieldId & {
-  type?: FieldDocumentType
   etape?: FieldsEtape
 }
 export type FieldsUtilisateur = FieldId & {

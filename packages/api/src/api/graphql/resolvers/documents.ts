@@ -8,8 +8,6 @@ import fileStreamCreate from '../../../tools/file-stream-create.js'
 
 import { documentGet, documentCreate, documentUpdate, documentDelete } from '../../../database/queries/documents.js'
 
-import { documentTypeGet } from '../../../database/queries/metas.js'
-
 import { fieldsBuild } from './_fields-build.js'
 import fileRename from '../../../tools/file-rename.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
@@ -23,6 +21,7 @@ import { canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = documentFilePathFind(document, true)
@@ -76,15 +75,13 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
 
     await documentPermissionsCheck(document, user)
 
-    const documentType = await documentTypeGet(document.typeId)
-
-    if (!documentType) {
+    if (!documentTypeIdValidator.safeParse(document.typeId).success) {
       throw new Error('type de document manquant')
     }
 
     const errors = documentInputValidate(document)
 
-    const rulesErrors = await documentUpdationValidate(document)
+    const rulesErrors = documentUpdationValidate(document)
 
     if (errors.length || rulesErrors.length) {
       throw new Error(errors.concat(rulesErrors).join(', '))
@@ -192,11 +189,7 @@ export const documentSupprimer = async ({ id }: { id: string }, { user }: Contex
     const documentOld = await documentGet(
       id,
       {
-        fields: {
-          type: {
-            id: {},
-          },
-        },
+        fields: { id: {} },
       },
       user
     )

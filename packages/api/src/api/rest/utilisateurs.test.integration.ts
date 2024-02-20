@@ -22,7 +22,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await dbManager.reseedDb()
+  await dbManager.truncateSchema()
   await dbManager.closeKnex()
   await teardownKeycloak(keycloak)
 })

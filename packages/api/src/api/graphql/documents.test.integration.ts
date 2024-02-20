@@ -22,7 +22,7 @@ beforeAll(async () => {
 })
 
 afterEach(async () => {
-  await dbManager.reseedDb()
+  await dbManager.truncateSchema()
 })
 
 afterAll(async () => {

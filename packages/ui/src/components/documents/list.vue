@@ -12,11 +12,9 @@
         :key="document.id"
         :document="document"
         :parentId="parentId"
-        :parentTypeId="parentTypeId"
         :route="route"
         :addAction="addAction"
         :removeAction="removeAction"
-        :repertoire="repertoire"
         :title="title"
         :etiquette="etiquette"
         :boutonVisualisation="true"
@@ -25,6 +23,7 @@
         :boutonDissociation="boutonDissociation"
         :manquantShow="manquantShow"
         :helpShow="helpShow"
+        :documentsTypes="documentsTypes"
       />
     </table>
   </div>
@@ -40,19 +39,18 @@ export default {
 
   props: {
     documents: { type: Array, required: true },
-    repertoire: { type: String, required: true },
     title: { type: String, default: '' },
     route: { type: Object, default: null },
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
     parentId: { type: String, default: '' },
-    parentTypeId: { type: String, default: '' },
     etiquette: { type: Boolean, default: false },
     boutonDissociation: { type: Boolean, default: false },
     boutonModification: { type: Boolean, default: false },
     boutonSuppression: { type: Boolean, default: false },
     manquantShow: { type: Boolean, default: false },
     helpShow: { type: Boolean, default: false },
+    documentsTypes: { type: Array, required: true },
   },
 }
 </script>

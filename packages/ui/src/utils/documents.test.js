@@ -22,10 +22,6 @@ describe('documents', () => {
         id: 'aaa',
         publicLecture: false,
         suppression: false,
-        type: {
-          id: 'aaa',
-          optionnel: false,
-        },
         typeId: 'aaa',
       },
     ])

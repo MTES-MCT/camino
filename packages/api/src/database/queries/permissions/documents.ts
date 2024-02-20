@@ -7,8 +7,6 @@ import TitresEtapes from '../../models/titres-etapes.js'
 export const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]>, user: User) => {
   q.select('documents.*')
 
-  q.joinRelated('type')
-
   if (isEntreprise(user) || isBureauDEtudes(user)) {
     // repertoire = etapes
     q.leftJoinRelated('etape.demarche.titre.[titulaires, amodiataires]')

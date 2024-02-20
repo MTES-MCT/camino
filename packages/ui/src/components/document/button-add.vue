@@ -15,14 +15,10 @@ export default {
     route: { type: Object, default: null },
     action: { type: Object, default: null },
     document: { type: Object, required: true },
-    parentTypeId: { type: String, default: '' },
-    repertoire: { type: String, required: true },
     title: { type: String, required: true },
     large: { type: Boolean, default: false },
-    documentsTypes: { type: Array, default: null },
+    documentsTypes: { type: Array, required: true },
   },
-
-  emits: ['titre-event-track'],
 
   methods: {
     addPopupOpen() {
@@ -32,17 +28,9 @@ export default {
           document: this.document,
           action: this.action,
           route: this.route,
-          parentTypeId: this.parentTypeId,
-          repertoire: this.repertoire,
           title: this.title,
           documentsTypes: this.documentsTypes,
         },
-      })
-
-      this.$emit('titre-event-track', {
-        categorie: 'titre-sections',
-        action: 'titre-etape-doc_ajouter',
-        nom: this.$route.params.id,
       })
     },
   },
