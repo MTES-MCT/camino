@@ -149,7 +149,6 @@ export const fichier =
       documentId,
       {
         fields: {
-          type: { id: {} },
           etape: { id: {} },
         },
       },

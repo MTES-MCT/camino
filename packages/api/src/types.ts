@@ -10,7 +10,7 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
-import { DocumentType, DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
+import { DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
@@ -261,7 +261,6 @@ interface IDocument {
   typeId: DocumentTypeId
   date: CaminoDate
   description?: string | null
-  type?: DocumentType | null
   fichier?: boolean | null
   fichierTypeId?: FileUploadType | null
   fichierNouveau?: { file: FileUpload } | null

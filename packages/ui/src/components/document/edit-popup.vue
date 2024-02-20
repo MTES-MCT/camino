@@ -29,7 +29,7 @@
 
     <hr />
 
-    <SectionsEdit :document="document" :repertoire="repertoire" :userIsAdmin="userIsAdmin" @update:document="newValue => emits('update:document', newValue)" />
+    <SectionsEdit :document="document" :userIsAdmin="userIsAdmin" @update:document="newValue => emits('update:document', newValue)" />
 
     <template #footer>
       <div class="tablet-blobs">
@@ -63,9 +63,7 @@ export default {
     route: { type: Object, default: null },
     action: { type: Object, default: null },
     document: { type: Object, required: true },
-    repertoire: { type: String, required: true },
-    parentTypeId: { type: String, default: '' },
-    documentsTypes: { type: Array, default: null },
+    documentsTypes: { type: Array, required: true },
   },
 
   emits: ['update:document'],
@@ -84,10 +82,7 @@ export default {
     },
 
     types() {
-      if (this.documentsTypes) {
-        return this.documentsTypes
-      }
-      return this.$store.state.document.metas.documentsTypes
+      return this.documentsTypes
     },
 
     documentType() {
@@ -101,7 +96,6 @@ export default {
 
   async created() {
     document.addEventListener('keyup', this.keyUp)
-    await this.get()
   },
 
   beforeUnmount() {
@@ -109,18 +103,6 @@ export default {
   },
 
   methods: {
-    async get() {
-      if (!this.documentsTypes) {
-        const options = { repertoire: this.repertoire }
-
-        if (this.parentTypeId) {
-          options.typeId = this.parentTypeId
-        }
-
-        await this.$store.dispatch('document/init', options)
-      }
-    },
-
     async save() {
       await this.$store.dispatch('document/upsert', {
         document: this.document,

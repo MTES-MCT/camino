@@ -192,7 +192,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     delete etape.entrepriseDocumentIds
 
     const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
+    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
     delete etape.documentIds
 
     const sdomZones: SDOMZoneId[] = []
@@ -374,7 +374,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     delete etape.entrepriseDocumentIds
 
     const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
+    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
     delete etape.documentIds
 
     const sdomZones: SDOMZoneId[] = []

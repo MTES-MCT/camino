@@ -1,27 +1,9 @@
-import { documentMetas, documentCreer, documentModifier, documentSupprimer } from '../api/documents'
+import { documentCreer, documentModifier, documentSupprimer } from '../api/documents'
 import { uploadCall } from '../api/_upload'
 
-const state = {
-  metas: {
-    documentsTypes: [],
-  },
-}
+const state = {}
 
 const actions = {
-  async init({ commit }, options) {
-    try {
-      commit('loadingAdd', 'documentInit', { root: true })
-
-      const data = await documentMetas(options)
-
-      commit('metasSet', data)
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'documentInit', { root: true })
-    }
-  },
-
   async upsert({ commit, dispatch }, { document, route, action }) {
     try {
       commit('popupMessagesRemove', null, { root: true })
@@ -124,10 +106,6 @@ const actions = {
 }
 
 const mutations = {
-  metasSet(state, data) {
-    state.metas.documentsTypes = data
-  },
-
   uploadProgress(state, progress) {
     state.upload.progress = progress
   },

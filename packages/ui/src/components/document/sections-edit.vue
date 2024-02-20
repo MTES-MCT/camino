@@ -98,7 +98,6 @@ export default {
 
   props: {
     document: { type: Object, required: true },
-    repertoire: { type: String, required: true },
     userIsAdmin: { type: Boolean, default: false },
   },
 

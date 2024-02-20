@@ -1,25 +1,22 @@
 import { getCurrent } from 'camino-common/src/date'
 
 const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
-  const typeGet = document => (document.type ? document.type.id : document.typeId)
-
   // supprime tous les documents temporaires
-  documents = documents?.filter(d => d.id !== typeGet(d))
+  documents = documents?.filter(d => d.id !== d.typeId)
 
   // supprime les documents dont le documentType n'existe pas
   const newDocuments =
     documents?.filter(d => {
       const documentsTypesIds = documentsTypes.map(({ id }) => id)
-      return documentsTypesIds.includes(typeGet(d))
+      return documentsTypesIds.includes(d.typeId)
     }) || []
 
   // crée les documents dont le type est obligatoires si ils n'existent pas
   documentsTypes?.forEach(documentType => {
-    if (!documentType.optionnel && !newDocuments.find(d => typeGet(d) === documentType.id)) {
+    if (!documentType.optionnel && !newDocuments.find(d => d.typeId === documentType.id)) {
       newDocuments.push({
         id: documentType.id,
         typeId: documentType.id,
-        type: documentType,
         entreprisesLecture: userIsAdmin,
         publicLecture: false,
         fichier: null,
@@ -33,7 +30,7 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
 
   // on interdit la suppression des documents obligatoires et imcomplets
   documents?.forEach(d => {
-    d.suppression = d.suppression && d.id !== typeGet(d)
+    d.suppression = d.suppression && d.id !== d.typeId
   })
 
   return newDocuments

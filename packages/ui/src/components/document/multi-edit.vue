@@ -9,8 +9,8 @@
       :removeAction="removeAction"
       :manquantShow="true"
       :helpShow="true"
-      :repertoire="repertoire"
       :title="documentPopupTitle"
+      :documentsTypes="documentsTypes"
     />
 
     <DocumentAddButton
@@ -26,9 +26,7 @@
       }"
       :action="addAction"
       :title="documentPopupTitle"
-      :repertoire="repertoire"
       class="btn py-s px-m rnd-xs mb-s full-x"
-      :parentTypeId="parentTypeId"
       :large="true"
       :documentsTypes="documentsTypes"
     />
@@ -45,12 +43,10 @@ export default {
 
   props: {
     documents: { type: Array, required: true },
-    parentTypeId: { type: String, required: true },
     documentsTypes: { type: Array, required: true },
     documentPopupTitle: { type: String, required: true },
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
-    repertoire: { type: String, required: true },
     date: { type: String, default: getCurrent() },
   },
 

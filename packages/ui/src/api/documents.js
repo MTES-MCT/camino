@@ -5,8 +5,8 @@ import { fragmentDocumentType } from './fragments/metas'
 
 export const documentMetas = apiGraphQLFetch(
   gql`
-    query MetasDocument($repertoire: ID, $typeId: ID) {
-      documentsTypes(repertoire: $repertoire, typeId: $typeId) {
+    query MetasDocument {
+      documentsTypes {
         ...documentType
       }
     }
