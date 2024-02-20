@@ -145,8 +145,8 @@ const titresActivitesColonnes = {
   },
   titreDomaine: { id: 'titre.domaineId', relation: 'titre', groupBy: true },
   titreType: {
-    id: 'titre:type:type.nom',
-    relation: 'titre.type.type',
+    id: raw(`left( titre.type_id, 2 )`),
+    relation: 'titre',
     groupBy: true,
   },
   titreStatut: { id: 'titre.titreStatutId', relation: 'titre', groupBy: true },

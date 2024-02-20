@@ -198,7 +198,7 @@ const titresDemarchesColonnes = {
     id: raw(`right( titre.type_id, 1 )`),
     relation: 'titre',
   },
-  titreType: { id: 'titre:type:type.nom', relation: 'titre.type.type' },
+  titreType: { id: raw(`left( titre.type_id, 2 )`), relation: 'titre' },
   titreStatut: { id: 'titre.titreStatutId', relation: 'titre' },
   type: { id: 'titresDemarches.typeId' },
   statut: { id: 'titresDemarches.statutId' },
