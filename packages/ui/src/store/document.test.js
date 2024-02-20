@@ -6,7 +6,6 @@ import { createStore } from 'vuex'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('../api/documents', () => ({
-  documentMetas: vi.fn(),
   documentCreer: vi.fn(),
   documentModifier: vi.fn(),
   documentSupprimer: vi.fn(),
@@ -27,7 +26,6 @@ describe('documents', () => {
     vi.resetAllMocks()
 
     document.state = {
-      metas: { documentsTypes: [] },
       preferences: { types: [] },
     }
 
@@ -64,31 +62,6 @@ describe('documents', () => {
 
     const app = createApp({})
     app.use(store)
-  })
-  test('récupère les métas pour éditer un document', async () => {
-    const apiMock = api.documentMetas.mockResolvedValueOnce([
-      { id: 'arr', nom: 'Arrêté' },
-      { id: 'avi', nom: 'Avis' },
-    ])
-
-    await store.dispatch('document/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(store.state.document.metas.documentsTypes).toEqual([
-      { id: 'arr', nom: 'Arrêté' },
-      { id: 'avi', nom: 'Avis' },
-    ])
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.documentMetas.mockRejectedValue(new Error("erreur de l'api"))
-
-    await store.dispatch('document/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
   })
 
   test('ajoute un document', async () => {

@@ -1,19 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 import { fragmentDocument } from './fragments/documents'
-import { fragmentDocumentType } from './fragments/metas'
-
-export const documentMetas = apiGraphQLFetch(
-  gql`
-    query MetasDocument {
-      documentsTypes {
-        ...documentType
-      }
-    }
-
-    ${fragmentDocumentType}
-  `
-)
 
 export const documentCreer = apiGraphQLFetch(gql`
   mutation DocumentCreer($document: InputDocumentCreation!) {
