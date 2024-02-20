@@ -243,6 +243,9 @@ describe('étapes', () => {
     store.state.titreEtapeEdition.element = {
       documents: [],
       typeId: ETAPES_TYPES.decisionDeLadministration,
+    }
+
+    store.state.titreEtapeEdition.metas = {
       demarche: {
         typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
         titre: {
@@ -250,8 +253,6 @@ describe('étapes', () => {
         },
       },
     }
-
-    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id', typeId: DOCUMENTS_TYPES_IDS.arrete },
     })
@@ -263,6 +264,9 @@ describe('étapes', () => {
     store.state.titreEtapeEdition.element = {
       documents: [{ id: 'document-id1', typeId: DOCUMENTS_TYPES_IDS.arrete }],
       typeId: ETAPES_TYPES.decisionDeLadministration,
+    }
+
+    store.state.titreEtapeEdition.metas = {
       demarche: {
         typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
         titre: {
@@ -270,8 +274,6 @@ describe('étapes', () => {
         },
       },
     }
-
-    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentAdd', {
       document: { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
       idOld: 'document-id1',
@@ -288,6 +290,9 @@ describe('étapes', () => {
         { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
       ],
       typeId: ETAPES_TYPES.decisionDeLadministration,
+    }
+
+    store.state.titreEtapeEdition.metas = {
       demarche: {
         typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
         titre: {
@@ -295,8 +300,6 @@ describe('étapes', () => {
         },
       },
     }
-
-    store.state.titreEtapeEdition.metas = {}
     await store.dispatch('titreEtapeEdition/documentRemove', {
       id: 'document-id2',
     })

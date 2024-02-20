@@ -32,7 +32,7 @@ const getters = {
       return []
     }
 
-    const documentsTypes = getDocuments(state.element.demarche.titre.typeId, state.element.demarche.typeId, state.element.typeId)
+    const documentsTypes = getDocuments(state.metas.demarche.titre.typeId, state.metas.demarche.typeId, state.element.typeId)
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
     if (state.element.contenu && state.element.contenu.arm) {
