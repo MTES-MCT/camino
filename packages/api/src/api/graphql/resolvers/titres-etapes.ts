@@ -13,7 +13,6 @@ import { titreEtapeUpdationValidate } from '../../../business/validations/titre-
 import { fieldsBuild } from './_fields-build.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
-import { etapeTypeGet } from '../../../database/queries/metas.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentsLier } from './documents.js'
 import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathGet, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
@@ -24,7 +23,7 @@ import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import fileRename from '../../../tools/file-rename.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
@@ -67,9 +66,6 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   try {
     const fields: FieldsEtape = fieldsBuild(info)
 
-    if (isNullOrUndefined(fields.type)) {
-      fields.type = { id: {} }
-    }
     if (isNullOrUndefined(fields.documents)) {
       fields.documents = { id: {} }
     }
@@ -127,7 +123,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   }
 }
 
-const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; titreDemarcheId: string; typeId: string }, { user }: Context) => {
+const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; titreDemarcheId: string; typeId: EtapeTypeId }, { user }: Context) => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
@@ -139,7 +135,6 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
         fields: {
           titre: { id: {} },
           etapes: {
-            type: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
           },
@@ -148,21 +143,13 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
       userSuper
     )
 
-    const etapeType = await etapeTypeGet(typeId, {
-      fields: { id: {} },
-    })
-
-    const titreEtape = titreEtapeHeritageBuild(date, etapeType!, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
+    const titreEtape = titreEtapeHeritageBuild(date, typeId, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
       throw new Error(`le type du titre de l'étape ${titreEtape.id} n'est pas chargé`)
     }
 
-    return titreEtapeFormat(titreEtape, titreEtapeFormatFields, {
-      titreTypeId,
-      demarcheTypeId: titreDemarche!.typeId,
-      etapeTypeId: etapeType!.id,
-    })
+    return titreEtapeFormat(titreEtape, titreEtapeFormatFields)
   } catch (e) {
     console.error(e)
 
@@ -189,21 +176,13 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
             demarches: { etapes: { id: {} } },
             pointsEtape: { id: {} },
           },
-          etapes: { type: { id: {} } },
+          etapes: { id: {} },
         },
       },
       userSuper
     )
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
-
-    const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { id: {} },
-    })
-
-    if (!etapeType) {
-      throw new Error(`le type d'étape "${etape.typeId}" n'existe pas`)
-    }
 
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
@@ -244,7 +223,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(user, etapeType.id, etape.statutId, titreDemarche.titre.titulaires ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
+      !canCreateEtape(user, etape.typeId, etape.statutId, titreDemarche.titre.titulaires ?? [], titreDemarche.titre.administrationsLocales ?? [], titreDemarche.typeId, {
         typeId: titreDemarche.titre.typeId,
         titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
       })
@@ -252,7 +231,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       throw new Error('droits insuffisants pour créer cette étape')
     }
 
-    const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
+    const sections = getSections(titreTypeId, titreDemarche.typeId, etape.typeId)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
@@ -282,8 +261,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
       console.error('une erreur est survenue lors des tâches annexes', e)
     }
 
-    await titreEtapeAdministrationsEmailsSend(etapeUpdated, etapeType, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
-    await titreEtapeUtilisateursEmailsSend(etapeUpdated, etapeType, titreDemarche.typeId, titreDemarche.titreId)
+    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
+    await titreEtapeUtilisateursEmailsSend(etapeUpdated, titreDemarche.titreId)
     const fields = fieldsBuild(info)
 
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
@@ -379,20 +358,13 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
             titulaires: { id: {} },
             amodiataires: { id: {} },
           },
-          etapes: { type: { id: {} } },
+          etapes: { id: {} },
         },
       },
       userSuper
     )
 
     if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
-
-    const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { id: {} },
-    })
-    if (!etapeType) {
-      throw new Error(`le type d'étape "${etape.typeId}" n'existe pas`)
-    }
 
     const { statutId, date } = statutIdAndDateGet(etape, user!)
     etape.statutId = statutId
@@ -442,7 +414,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     await documentsLier(context, documentIds, etape.id, titreEtapeOld)
 
-    const sections = getSections(titreTypeId, titreDemarche.typeId, etapeType.id)
+    const sections = getSections(titreTypeId, titreDemarche.typeId, etape.typeId)
 
     const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
@@ -489,7 +461,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(etape, etapeType, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
+    await titreEtapeAdministrationsEmailsSend(etape, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
 
     const fields = fieldsBuild(info)
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
@@ -508,7 +480,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
       throw new Error("l'étape n'existe pas")
     }
 
-    const titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} } } }, user)
+    const titreEtape = await titreEtapeGet(id, { fields: { id: {} } }, user)
 
     if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
@@ -639,7 +611,7 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
     await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreEtape.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
+    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
     const titreUpdated = await titreGet(titreDemarche.titreId, { fields: { id: {} } }, user)
 
@@ -691,7 +663,7 @@ const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) 
           titre: {
             demarches: { etapes: { id: {} } },
           },
-          etapes: { type: { id: {} } },
+          etapes: { id: {} },
         },
       },
       userSuper

@@ -183,23 +183,6 @@ interface ITitreEntreprise extends IEntreprise {
   operateur?: boolean
 }
 
-// TODO 2024-01-10 supprimer ça dès que l'on arrête de faire passer le type d'étape entier via graphql
-interface IEtapeType {
-  id: EtapeTypeId
-  nom: string
-  ordre: number
-  description?: string
-  acceptationAuto?: boolean | null
-  fondamentale?: boolean | null
-  dateFin?: string | null
-  titreTypeId?: string | null
-  demarcheTypeId?: string | null
-  unique?: boolean | null
-  documentsTypes?: DocumentType[]
-  publicLecture?: boolean | null
-  entreprisesLecture?: boolean | null
-}
-
 export interface ITitreTitre {
   titreFromId: TitreId
   titreToId: TitreId
@@ -293,7 +276,6 @@ interface ITitreEtape {
   id: EtapeId
   slug?: EtapeSlug
   typeId: EtapeTypeId
-  type?: IEtapeType | null
   statutId: EtapeStatutId
   ordre?: number | null
   date: CaminoDate
@@ -426,7 +408,6 @@ export {
   IDocumentRepertoire,
   IEntreprise,
   IEntrepriseEtablissement,
-  IEtapeType,
   ITitre,
   ITitreActivite,
   ITitreDemarche,

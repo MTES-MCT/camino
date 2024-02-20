@@ -41,13 +41,12 @@ const utilisateursTitres = {
   graph: `[utilisateur]`,
 }
 
-const titresEtapesRelateTrue = ['type', 'titulaires', 'amodiataires']
+const titresEtapesRelateTrue = ['titulaires', 'amodiataires']
 
 const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs', ...documentsRelateFalse.map(k => `documents.${k}`)]
 
 const titresEtapes = {
   graph: `[
-    type,
     documents.${documents.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph}
@@ -184,7 +183,6 @@ export type FieldsEtape = FieldId & {
   titulaires?: FieldsEntreprise
   amodiataires?: FieldsEntreprise
   demarche?: FieldsDemarche
-  type?: FieldId
   documents?: FieldsDocument
 }
 

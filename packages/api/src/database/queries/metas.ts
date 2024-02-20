@@ -4,12 +4,7 @@ import { IDocumentRepertoire } from '../../types.js'
 
 import { knex } from '../../knex.js'
 
-import { FieldId } from './_options.js'
-import graphBuild from './graph/build.js'
-import { fieldsFormat } from './graph/fields-format.js'
-
 import DocumentsTypes from '../models/documents-types.js'
-import EtapesTypes from '../models/etapes-types.js'
 
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
@@ -19,12 +14,6 @@ import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes
 export const etapesTypesDocumentsTypesGet = () => toDocuments()
 
 export const demarchesStatutsGet = () => sortedDemarchesStatuts
-
-export const etapeTypeGet = async (id: string, { fields }: { fields?: FieldId }) => {
-  const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
-
-  return EtapesTypes.query().withGraphFetched(graph).findById(id)
-}
 
 export const devisesGet = () => sortedDevises
 

@@ -2,7 +2,6 @@ import { ITitreEtape } from '../../types.js'
 
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -35,26 +34,6 @@ export interface DocumentTypeData {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
   etapeTypeId: EtapeTypeId
-}
-
-export const etapeTypeFormat = (etape: ITitreEtape, documentTypeData: DocumentTypeData | null = null) => {
-  const etapeType = etape.type
-  if (etapeType) {
-    if (documentTypeData === null) {
-      const typeId = etape?.demarche?.titre?.typeId
-      if (!typeId) {
-        throw new Error(`le type du titre de l'étape ${etape.id} n'est pas chargé`)
-      }
-      const demarcheTypeId = etape?.demarche?.typeId
-      const etapeTypeId = etape?.typeId
-
-      etapeType.documentsTypes = getDocuments(typeId, demarcheTypeId, etapeTypeId)
-    } else {
-      etapeType.documentsTypes = getDocuments(documentTypeData.titreTypeId, documentTypeData.demarcheTypeId, documentTypeData.etapeTypeId)
-    }
-  }
-
-  return etapeType
 }
 
 export const etapeTypeDateFinCheck = (etapeTypeId: EtapeTypeId, titreEtapes?: ITitreEtape[] | null): boolean => {

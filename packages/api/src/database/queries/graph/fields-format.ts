@@ -68,12 +68,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
       fields.documents = { id: {} }
     }
 
-    if (!fields.type) {
-      fields.type = { id: {} }
-    }
-
-    delete fields.type.documentsTypes
-
     if (!fields.demarche) {
       fields.demarche = { id: {} }
     }

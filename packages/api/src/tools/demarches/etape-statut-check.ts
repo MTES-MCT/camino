@@ -1,3 +1,4 @@
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
@@ -13,7 +14,6 @@ export const etapeStatutCheck = async () => {
     {},
     {
       fields: {
-        type: { id: {} },
         demarche: { titre: { id: {} } },
       },
     },
@@ -26,8 +26,10 @@ export const etapeStatutCheck = async () => {
     const tdeExists = isTDEExist(etape.demarche!.titre!.typeId, etape.demarche!.typeId, etape.typeId)
     const etapesStatuts = getEtapesStatuts(etape.typeId)
 
+    const etapeType = EtapesTypes[etape.typeId]
+
     if (tdeExists && !etapesStatuts!.map(es => es.id).includes(etape.statutId)) {
-      console.info(`erreur sur le titre https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, étape « ${etape.type!.nom} » a un statut inconnu`)
+      console.info(`erreur sur le titre https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, étape « ${etapeType.nom} » a un statut inconnu`)
       errorsNb++
     }
   })

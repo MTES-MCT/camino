@@ -110,7 +110,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
           pointsEtape: { id: {} },
           titulaires: { id: {} },
         },
-        etapes: { type: { id: {} } },
+        etapes: { id: {} },
       },
     },
     userSuper
@@ -129,7 +129,7 @@ const demarcheEtapesTypesGet = async (titreDemarcheId: DemarcheId, date: CaminoD
   if (titreEtape) {
     if (!isTDEExist(titre.typeId, titreDemarche.typeId, titreEtape.typeId)) {
       const demarcheType = DemarchesTypes[titreDemarche.typeId]
-      throw new Error(`étape ${titreEtape.type!.nom} inexistante pour une démarche ${demarcheType.nom} pour un titre ${titre.typeId}.`)
+      throw new Error(`étape ${EtapesTypes[titreEtape.typeId].nom} inexistante pour une démarche ${demarcheType.nom} pour un titre ${titre.typeId}.`)
     }
   }
 

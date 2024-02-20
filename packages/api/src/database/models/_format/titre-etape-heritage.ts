@@ -9,7 +9,7 @@ import { FieldsEtape } from '../../queries/_options'
 export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of getKeys(heritageProps, isHeritageProps)) {
     if (heritageProps[propId]?.etapeId) {
-      const fields: FieldsEtape = { type: { id: {} } }
+      const fields: FieldsEtape = { id: {} }
       if (propId === 'titulaires' || propId === 'amodiataires') {
         fields[propId] = { id: {} }
       }
@@ -24,7 +24,7 @@ export const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
 }
 
 export const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
-  const fields: FieldsEtape = { type: { id: {} } }
+  const fields: FieldsEtape = { id: {} }
   for (const sectionId of Object.keys(heritageContenu)) {
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {
