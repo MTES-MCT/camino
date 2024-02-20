@@ -50,7 +50,7 @@ const titreFields: FieldsTitre = {
   pointsEtape: { id: {} },
   demarches: {
     etapes: {
-      type: { id: {} },
+      id: {},
     },
   },
 }
@@ -249,9 +249,7 @@ export const demarches =
             amodiataires: { id: {} },
           },
           etapes: {
-            type: {
-              id: {},
-            },
+            id: {},
           },
         },
       },

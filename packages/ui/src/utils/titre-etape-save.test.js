@@ -7,8 +7,8 @@ describe('etapeSaveFormat', () => {
     expect(
       etapeSaveFormat({
         id: 'etape-id',
-        type: { id: 'mfr' },
         titreDemarcheId: 'demarche-id',
+        typeId: 'mfr',
         statutId: '',
         dateFin: '',
         duree: null,
@@ -32,7 +32,7 @@ describe('etapeSaveFormat', () => {
     expect(
       etapeSaveFormat({
         id: 'etape-id',
-        type: { id: 'mfr' },
+        typeId: 'mfr',
         titreDemarcheId: 'demarche-id',
         statutId: '',
         duree: 10,
@@ -64,7 +64,7 @@ describe('etapeSaveFormat', () => {
       etapeSaveFormat({
         id: 'etape-id',
         titreDemarcheId: 'demarche-id',
-        type: { id: 'etape-type-id' },
+        typeId: 'mfr',
         statutId: 'etape-statut-id',
         duree: 240,
         amodiataires: [],
@@ -83,7 +83,7 @@ describe('etapeSaveFormat', () => {
       substances: ['substance-id-1'],
       titreDemarcheId: 'demarche-id',
       titulaires: [{ id: 'titulaire-id' }],
-      typeId: 'etape-type-id',
+      typeId: 'mfr',
       documentIds: ['doc-id'],
     })
   })

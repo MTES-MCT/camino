@@ -14,6 +14,7 @@ import { journauxQueryModify } from './journaux.js'
 import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 import { getAdministrationTitresTypesEtapesTypes } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
 import { knex } from '../../../knex.js'
+import { EtapeTypeId, etapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 /**
  * Modifie la requête d'étape(s) pour prendre en compte les permissions de l'utilisateur connecté
@@ -23,7 +24,7 @@ import { knex } from '../../../knex.js'
  * @returns une requête d'étape(s)
  */
 export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>, user: User) => {
-  q.select('titresEtapes.*').where('titresEtapes.archive', false).leftJoinRelated('[demarche.titre, type]')
+  q.select('titresEtapes.*').where('titresEtapes.archive', false).leftJoinRelated('[demarche.titre]')
 
   if (!isSuper(user)) {
     const etapePointAlias = 't_e'
@@ -34,7 +35,8 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
     }
 
     q.where(b => {
-      b.orWhere('type.publicLecture', true)
+      const etapeTypeIdsPublic: EtapeTypeId[] = etapesTypes.filter(({ public_lecture }) => public_lecture).map(({ id }) => id)
+      b.orWhereIn('titresEtapes.typeId', etapeTypeIdsPublic)
 
       // étapes visibles pour les admins
       if (isAdministration(user)) {
@@ -52,7 +54,8 @@ export const titresEtapesQueryModify = (q: QueryBuilder<TitresEtapes, TitresEtap
         const entreprisesIds = user.entreprises.map(a => a.id)
 
         b.orWhere(c => {
-          c.where('type.entreprisesLecture', true)
+          const etapeTypeIdsEntreprisePublic: EtapeTypeId[] = etapesTypes.filter(({ entreprises_lecture }) => entreprises_lecture).map(({ id }) => id)
+          c.whereIn('titresEtapes.typeId', etapeTypeIdsEntreprisePublic)
 
           c.whereExists(
             entreprisesTitresQuery(entreprisesIds, 'demarche:titre', {

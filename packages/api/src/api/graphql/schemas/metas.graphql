@@ -138,8 +138,6 @@ type EtapeType {
 
   publicLecture: Boolean
   entreprisesLecture: Boolean
-
-  documentsTypes: [DocumentType]
 }
 
 "Statut d'une étape de démarche de titre minier"

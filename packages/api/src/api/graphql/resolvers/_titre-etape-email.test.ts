@@ -5,7 +5,7 @@ import { UserNotNull } from 'camino-common/src/roles.js'
 import { newUtilisateurId } from '../../../database/models/_format/id-create.js'
 
 test('envoie un email sur une étape non existante', () => {
-  const actual = emailsForAdministrationsGet(undefined, undefined, '', '', '', userSuper, undefined)
+  const actual = emailsForAdministrationsGet(undefined, '', '', '', userSuper, undefined)
 
   expect(actual).toBe(null)
 })
@@ -24,7 +24,6 @@ test("envoie un email sur un octroi d'AEX", () => {
       typeId: 'mfr',
       statutId: 'fai',
     },
-    { nom: 'demande' },
     'oct',
     'titreId',
     'axm',
@@ -41,7 +40,6 @@ test("envoie un email sur un octroi d'ARM", () => {
       typeId: 'mdp',
       statutId: 'fai',
     },
-    { nom: 'dépôt de la demande' },
     'oct',
     'titreId',
     'arm',

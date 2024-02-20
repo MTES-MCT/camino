@@ -15,7 +15,7 @@ const dateChangedAction = action('dateChanged')
 
 export const HeritageDisabled: StoryFn = () => (
   <HeritageEdit
-    prop={{ actif: false, etape: { date: toCaminoDate('2024-01-01'), type: { nom: 'Demande' }, dateDebut: toCaminoDate('2022-01-01') } }}
+    prop={{ actif: false, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
     write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}
@@ -24,7 +24,7 @@ export const HeritageDisabled: StoryFn = () => (
 
 export const HeritageEnabled: StoryFn = () => (
   <HeritageEdit
-    prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), type: { nom: 'Demande' }, dateDebut: toCaminoDate('2022-01-01') } }}
+    prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
     write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}

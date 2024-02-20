@@ -6,6 +6,7 @@ import { titreEtapeHeritagePropsFind } from '../utils/titre-etape-heritage-props
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { UserNotNull } from 'camino-common/src/roles'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresDemarchesIds?: string[]) => {
   console.info()
@@ -16,7 +17,6 @@ export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresD
     {
       fields: {
         etapes: {
-          type: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
         },
@@ -32,7 +32,7 @@ export const titresEtapesHeritagePropsUpdate = async (user: UserNotNull, titresD
   const titresEtapesIdsUpdated = [] as string[]
 
   for (const titreDemarche of titresDemarches) {
-    const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes?.filter(e => e.type!.fondamentale) ?? [])
+    const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes?.filter(e => EtapesTypes[e.typeId].fondamentale) ?? [])
 
     for (let index = 0; index < titreEtapes.length; index++) {
       const titreEtape: ITitreEtape = titreEtapes[index]

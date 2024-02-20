@@ -13,6 +13,7 @@ import { Domaines } from 'camino-common/src/static/domaines.js'
 import { Forets } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { getCommunesIndex } from '../../../database/queries/communes.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
@@ -22,7 +23,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   return etapes
     .filter(e => e.statutId !== 'aco')
     .reduce((etapesDatesStatuts, etape) => {
-      const type = etape.type
+      const type = EtapesTypes[etape.typeId]
 
       if (!type) return etapesDatesStatuts
 

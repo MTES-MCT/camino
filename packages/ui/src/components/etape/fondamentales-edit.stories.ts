@@ -14,10 +14,7 @@ export default meta
 
 const etape: EtapeFondamentale = {
   id: etapeIdValidator.parse('id'),
-  type: {
-    id: 'mfr',
-    nom: 'demande',
-  },
+  typeId: 'mfr',
   contenu: {},
   date: toCaminoDate('2022-02-02'),
   dateDebut: toCaminoDate('2022-02-02'),
@@ -41,10 +38,7 @@ const etape: EtapeFondamentale = {
       actif: true,
       etape: {
         date: toCaminoDate('2022-01-01'),
-        type: {
-          id: 'mfr',
-          nom: 'étape précédente',
-        },
+        typeId: 'mfr',
         substances: ['arge'],
         titulaires: [],
         amodiataires: [],
@@ -122,7 +116,7 @@ export const ArmDemandeOperateur = Template.bind(
 export const ArmJorfONF = Template.bind(
   {},
   {
-    etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
+    etape: { ...etape, typeId: 'dpu' },
     demarcheTypeId: 'oct',
     titreTypeId: 'arm',
     user: {

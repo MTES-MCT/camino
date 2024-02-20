@@ -77,7 +77,9 @@ import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { apiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 
 export default {
   components: {
@@ -151,7 +153,7 @@ export default {
         return true
       }
 
-      if (!this.etape.date || !this.etape.type) {
+      if (!this.etape.date || !this.etape.typeId) {
         return false
       }
 
@@ -223,10 +225,12 @@ export default {
         steps.push({ id: 'sections', name: 'Propriétés spécifiques' })
       }
 
-      if (this.heritageLoaded && this.etape.type.documentsTypes?.length) {
+      const hasDocuments = this.etapeType?.id ? getDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id).length > 0 : false
+
+      if (this.heritageLoaded && hasDocuments) {
         steps.push({
           id: 'documents',
-          name: `Documents liés à l’étape ${this.etape.type.nom}`,
+          name: `Documents liés à l’étape ${EtapesTypes[this.etape.typeId].nom}`,
         })
       }
 
@@ -354,10 +358,7 @@ export default {
     },
 
     async onEtapeTypeChange(etapeStatutId, etapeTypeId) {
-      if (this.etape.type?.id !== etapeTypeId) {
-        if (!this.etape.type) {
-          this.etape.type = {}
-        }
+      if (this.etape.typeId !== etapeTypeId) {
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
           ...this.tde,
           etapeTypeId,
@@ -366,7 +367,7 @@ export default {
       // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
       // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
       this.etape.statutId = etapeStatutId
-      this.etape.type.id = etapeTypeId
+      this.etape.typeId = etapeTypeId
       this.$emit('type-complete-update', this.typeComplete)
       this.$emit('update:etape', this.etape)
     },

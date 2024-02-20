@@ -44,11 +44,11 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
   const dureeOptionalCheck = computed<boolean>(() => {
-    return titreEtapesDureeOptionalCheck(props.etape.type.id, props.demarcheTypeId, props.titreTypeId)
+    return titreEtapesDureeOptionalCheck(props.etape.typeId, props.demarcheTypeId, props.titreTypeId)
   })
 
   const complete = computed<boolean>(() => {
-    return props.etape.type.id !== ETAPES_TYPES.demande || (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
+    return props.etape.typeId !== ETAPES_TYPES.demande || (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
   })
 
   const completeUpdate = () => {
@@ -143,7 +143,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </div>
       ) : null}
 
-      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.type.id, props.user) ? (
+      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user) ? (
         <>
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -161,7 +161,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </>
       ) : null}
 
-      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.type.id, props.user) ? (
+      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user) ? (
         <>
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">

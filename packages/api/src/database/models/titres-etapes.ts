@@ -4,7 +4,6 @@ import { ITitreEtape } from '../../types.js'
 
 import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
 import { idGenerate } from './_format/id-create.js'
-import EtapesTypes from './etapes-types.js'
 import TitresDemarches from './titres-demarches.js'
 import Entreprises from './entreprises.js'
 import Document from './documents.js'
@@ -55,15 +54,6 @@ class TitresEtapes extends Model {
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: EtapesTypes,
-      join: {
-        from: 'titresEtapes.typeId',
-        to: 'etapesTypes.id',
-      },
-    },
-
     demarche: {
       relation: Model.BelongsToOneRelation,
       modelClass: TitresDemarches,

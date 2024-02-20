@@ -5,6 +5,7 @@ import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
 import { documentsRequiredAdd } from '../utils/documents'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 
 const state = {
   element: null,
@@ -20,20 +21,18 @@ const state = {
 
 const getters = {
   etapeType(state) {
-    if (state.element?.type) {
-      return EtapesTypes[state.element.type.id]
+    if (state.element?.typeId) {
+      return EtapesTypes[state.element.typeId]
     }
     return null
   },
 
   documentsTypes(state) {
-    if (!state.element.type || !state.element.type.documentsTypes) {
+    if (!state.element.typeId) {
       return []
     }
 
-    // TODO 2023-06-14 faire une méthode qui récupère les types de documents en fonction de TDE, arm mécanisé et des zones du SDOM
-    // state.metas.sdomZonesDocumentTypeIds et state.element.type.documentsTypes ne doivent plus être utilisés
-    const documentsTypes = JSON.parse(JSON.stringify(state.element.type.documentsTypes))
+    const documentsTypes = getDocuments(state.metas.demarche.titre.typeId, state.metas.demarche.typeId, state.element.typeId)
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
     if (state.element.contenu && state.element.contenu.arm) {
@@ -128,7 +127,7 @@ const actions = {
   },
 
   async documentInit({ state, getters, commit, rootGetters }, documents) {
-    if (!state.element.type) {
+    if (!state.element.typeId) {
       commit('documentsSet', [])
     } else {
       documents = documentsRequiredAdd(documents, getters.documentsTypes, rootGetters['user/userIsAdmin'])

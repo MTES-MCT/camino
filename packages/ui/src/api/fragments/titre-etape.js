@@ -1,6 +1,5 @@
 import gql from 'graphql-tag'
 import { fragmentTitreEntreprises } from './entreprises'
-import { fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
 
@@ -15,10 +14,7 @@ const fragmentHeritageEtape = gql`
     dateFin
     duree
     surface
-    type {
-      id
-      nom
-    }
+    typeId
     statutId
     titulaires {
       ...titreEntreprises
@@ -76,13 +72,7 @@ const fragmentEtapeHeritage = gql`
     dateFin
     duree
     surface
-    type {
-      id
-      nom
-      documentsTypes {
-        ...documentType
-      }
-    }
+    typeId
 
     titulaires {
       ...titreEntreprises
@@ -109,8 +99,6 @@ const fragmentEtapeHeritage = gql`
   ${fragmentTitreEntreprises}
 
   ${fragmentHeritageProps}
-
-  ${fragmentDocumentType}
 `
 
 const fragmentEtape = gql`
@@ -135,13 +123,6 @@ const fragmentEtape = gql`
     duree
     surface
     typeId
-    type {
-      id
-      nom
-      documentsTypes {
-        ...documentType
-      }
-    }
     statutId
     titulaires {
       ...titreEntreprises
@@ -170,8 +151,6 @@ const fragmentEtape = gql`
   ${fragmentDocument}
 
   ${fragmentHeritageProps}
-
-  ${fragmentDocumentType}
 `
 
 export { fragmentEtapeHeritage, fragmentEtape }

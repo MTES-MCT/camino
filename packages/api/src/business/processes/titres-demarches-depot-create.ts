@@ -77,7 +77,7 @@ const titreEtapeDepotCreate = async (pool: Pool, titreDemarche: ITitreDemarche) 
 
   titreEtapeDepot = await titreEtapeUpsert(titreEtapeDepot, userSuper, titreDemarche.titreId)
   await titreEtapeUpdateTask(pool, titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
-  await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreEtapeDepot.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
+  await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
 
   const titulaires = titreDemarche.titre?.titulaires
 

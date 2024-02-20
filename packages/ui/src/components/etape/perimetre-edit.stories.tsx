@@ -100,7 +100,7 @@ export const EmptyNoHeritage: StoryFn = () => (
 const etapeEmptyHeritage: Props['etape'] = {
   ...etapeNoHeritage,
   typeId: 'dpu',
-  heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), type: EtapesTypes.mfr, geojson4326Perimetre: null, geojson4326Points: null, surface: null } } },
+  heritageProps: { perimetre: { actif: true, etape: { date: toCaminoDate('2023-01-01'), typeId: EtapesTypes.mfr.id, geojson4326Perimetre: null, geojson4326Points: null, surface: null } } },
 }
 export const EmptyHeritage: StoryFn = () => (
   <PerimetreEdit
@@ -122,7 +122,7 @@ const etapeHeritage: Props['etape'] = {
       actif: true,
       etape: {
         date: toCaminoDate('2023-01-01'),
-        type: EtapesTypes.mfr,
+        typeId: EtapesTypes.mfr.id,
         surface: km2Validator.parse(2),
         geojson4326Perimetre: perimetre,
         geojson4326Points: null,

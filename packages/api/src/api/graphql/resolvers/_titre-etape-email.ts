@@ -1,4 +1,4 @@
-import { IEtapeType, ITitreEtape, formatUser } from '../../../types.js'
+import { ITitreEtape, formatUser } from '../../../types.js'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
@@ -6,6 +6,7 @@ import { utilisateursTitresGet } from '../../../database/queries/utilisateurs.js
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 
 const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
@@ -27,7 +28,6 @@ const etapeStatusUpdated = (etape: Pick<ITitreEtape, 'typeId' | 'statutId'>, typ
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
   etape: Pick<ITitreEtape, 'typeId' | 'statutId'> | undefined,
-  etapeType: Pick<IEtapeType, 'nom'> | undefined,
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
@@ -76,29 +76,23 @@ export const emailsForAdministrationsGet = (
     return null
   }
 
-  const subject = `${etapeType?.nom} | ${title}`
-  const content = emailForAdministrationContentFormat(titreTypeId, etapeType?.nom ?? '', titreId, user)
+  const etapeType = EtapesTypes[etape.typeId]
+
+  const subject = `${etapeType.nom} | ${title}`
+  const content = emailForAdministrationContentFormat(titreTypeId, etapeType.nom, titreId, user)
 
   return { subject, content, emails }
 }
 
-const titreEtapeAdministrationsEmailsSend = async (
-  etape: ITitreEtape,
-  etapeType: IEtapeType,
-  demarcheTypeId: string,
-  titreId: string,
-  titreTypeId: string,
-  user: UserNotNull,
-  oldEtape?: ITitreEtape
-) => {
-  const emailsForAdministrations = emailsForAdministrationsGet(etape, etapeType, demarcheTypeId, titreId, titreTypeId, user, oldEtape)
+export const titreEtapeAdministrationsEmailsSend = async (etape: ITitreEtape, demarcheTypeId: string, titreId: string, titreTypeId: string, user: UserNotNull, oldEtape?: ITitreEtape) => {
+  const emailsForAdministrations = emailsForAdministrationsGet(etape, demarcheTypeId, titreId, titreTypeId, user, oldEtape)
 
   if (emailsForAdministrations) {
     await emailsSend(emailsForAdministrations.emails, emailsForAdministrations.subject, emailsForAdministrations.content)
   }
 }
 
-const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, etapeType: IEtapeType, demarcheTypeId: string, titreId: string) => {
+export const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, titreId: string) => {
   const utilisateursEmails = [] as string[]
 
   const utilisateursTitres = await utilisateursTitresGet(titreId, {
@@ -121,6 +115,8 @@ const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, etapeType: I
   if (utilisateursEmails.length) {
     const titreUrl = titreUrlGet(titreId)
 
+    const etapeType = EtapesTypes[etape.typeId]
+
     await emailsSend(
       utilisateursEmails,
       'Nouvel évenement sur un titre minier.',
@@ -132,5 +128,3 @@ const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, etapeType: I
     )
   }
 }
-
-export { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend }

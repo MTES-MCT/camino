@@ -11,7 +11,7 @@ import { Button } from '../_ui/button'
 
 export type Props = {
   substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: EtapeWithHeritage<'substances', Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>>['heritageProps']
+  heritageProps: EtapeWithHeritage<'substances', Pick<EtapeFondamentale, 'substances' | 'typeId' | 'date'>>['heritageProps']
   domaineId: DomaineId
 }
 export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'domaineId'], props => {

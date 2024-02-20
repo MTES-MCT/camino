@@ -6,7 +6,7 @@
       <div v-else class="border p-s mb-s">Non renseigné</div>
       <p class="h6 italic mb-s">
         Hérité de :
-        <span class="cap-first">{{ prop.etape.type.nom }}</span> ({{ dateFormat(prop.etape.date) }})
+        <span class="cap-first">{{ EtapesTypes[prop.etape.typeId].nom }}</span> ({{ dateFormat(prop.etape.date) }})
       </p>
     </div>
     <slot />
@@ -21,6 +21,7 @@ import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
 import { Etape, HeritageProp } from 'camino-common/src/etape'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 // TODO 2022-11-14 surement à merger avec heritage-edit.vue
 const props = defineProps<{

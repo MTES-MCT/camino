@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { IEtapeType, ITitre } from '../../src/types.js'
+import { ITitre } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
-import { etapeTypeGet } from '../../src/database/queries/metas.js'
 import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
@@ -138,11 +137,8 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const demarche = await TitresDemarches.query().findOne({ slug })
 
     const etapeTypeId = 'mfr'
-    const etapeType = (await etapeTypeGet(etapeTypeId, {
-      fields: {},
-    })) as IEtapeType
 
-    const sections = getSections(titreTypeId, demarche?.typeId, etapeType.id)
+    const sections = getSections(titreTypeId, demarche?.typeId, etapeTypeId)
 
     const heritageContenu = sections.reduce((acc, section) => {
       if (!acc[section.id]) {

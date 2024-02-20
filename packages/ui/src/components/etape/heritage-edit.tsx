@@ -6,6 +6,8 @@ import { EtapeHeritage } from './heritage-edit.types'
 import { EtapeHeritageProps, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { capitalize } from 'camino-common/src/strings'
 
 type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   prop: HeritageProp<T>
@@ -20,7 +22,7 @@ export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T ext
   })
 
   const legendHint = computed<string | undefined>(() => {
-    return props.prop.actif ? `Hérité de : ${props.prop.etape?.type.nom} (${dateFormat(props.prop.etape?.date)})` : undefined
+    return props.prop.actif ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape?.date)})` : undefined
   })
 
   return () => (
