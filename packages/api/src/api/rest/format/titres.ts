@@ -41,8 +41,8 @@ const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
       .filter(section => section.elements.length > 0)
 
     const sections_with_values: SectionWithValue[] = getSectionsWithValue(sections, etape.contenu)
-    
-return { etape_type_id: etape.typeId, sections_with_values }
+
+    return { etape_type_id: etape.typeId, sections_with_values }
   })
 
   return getDemarcheContenu(etapes, titre.typeId)

@@ -127,10 +127,6 @@ type IPropsTitreEtapesIds = {
   [key in PropsTitreEtapeIdKeys]?: string
 }
 
-interface IContenusTitreEtapesIds {
-  [sectionId: string]: { [key: string]: string }
-}
-
 export interface IHeritageElement {
   actif: boolean
   etapeId?: EtapeId | null
@@ -319,7 +315,6 @@ interface ITitreEtape {
   forets?: ForetId[] | null
   sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
-  contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
@@ -428,7 +423,6 @@ export {
   IContenu,
   IContenuElement,
   IContenuValeur,
-  IContenusTitreEtapesIds,
   IDocumentRepertoire,
   IEntreprise,
   IEntrepriseEtablissement,

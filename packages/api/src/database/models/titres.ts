@@ -29,7 +29,6 @@ class Titres extends Model {
       nom: { type: 'string' },
       typeId: { type: 'string', maxLength: 3 },
       titreStatutId: { type: 'string', maxLength: 3 },
-      contenusTitreEtapesIds: { type: ['object', 'null'] },
       propsTitreEtapesIds: { type: 'object' },
       doublonTitreId: { type: ['string', 'null'] },
       archive: { type: 'boolean' },

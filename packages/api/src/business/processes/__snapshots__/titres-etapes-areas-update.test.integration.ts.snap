@@ -93,7 +93,6 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
         "surface": 292012,
       },
     ],
-    "contenusTitreEtapesIds": null,
     "doublonTitreId": null,
     "entreprisesLecture": false,
     "forets": [
