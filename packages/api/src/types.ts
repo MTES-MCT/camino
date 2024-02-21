@@ -212,7 +212,6 @@ interface ITitre {
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
   publicLecture?: boolean | null
-  entreprisesLecture?: boolean | null
   propsTitreEtapesIds: IPropsTitreEtapesIds
   doublonTitreId?: string | null
   confidentiel?: boolean | null

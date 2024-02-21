@@ -1,33 +1,18 @@
 import { isNotNullNorUndefined, getKeys } from '../typescript-tools.js'
-import { DemarcheTypeId } from './demarchesTypes.js'
 import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
 import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes.js'
 
-export const titrePublicFind = (
-  titreStatutId: TitreStatutId | null | undefined,
-  titreTypeId: TitreTypeId | undefined,
-  titreDemarches: { typeId: DemarcheTypeId; publicLecture?: boolean | undefined | null }[]
-): boolean => {
-  if (!titreStatutId || !titreTypeId) {
-    return false
-  }
-
+export const titrePublicFind = (titreStatutId: TitreStatutId, titreTypeId: TitreTypeId, hasDemarchePublic: boolean): boolean => {
   // si le type de titre associé au domaine associé au statut du titre est public
   // et qu’une démarche est publique
   // alors le titre est public
-  if (isTitrePublicLecture(titreTypeId, titreStatutId)) {
-    const titreDemarcheOctroi = titreDemarches.find(d => d.publicLecture)
-
-    if (titreDemarcheOctroi) {
+  if (hasDemarchePublic) {
+    if (titresPublicLecture[titreTypeId]?.includes(titreStatutId) ?? false) {
       return true
     }
   }
 
   return false
-}
-
-const isTitrePublicLecture = (titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
-  return titresPublicLecture[titreTypeId]?.includes(titreStatutId) ?? false
 }
 
 const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {

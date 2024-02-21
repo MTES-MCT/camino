@@ -38,7 +38,7 @@ import type { Pool } from 'pg'
 import { z } from 'zod'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries.js'
-import { titreIdValidator, titreIdOrSlugValidator } from 'camino-common/src/validators/titres.js'
+import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common/src/validators/titres.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -482,8 +482,8 @@ export const getUtilisateurTitreAbonner = (pool: Pool) => async (req: CaminoRequ
   }
 }
 
-export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
-  const titreId: string | undefined = req.params.titreId
+export const updateTitre = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
+  const titreId: TitreId | undefined | null = titreIdValidator.optional().nullable().parse(req.params.titreId)
   const user = req.auth
   const parsedBody = editableTitreValidator.safeParse(req.body)
   if (!titreId) {
@@ -506,7 +506,7 @@ export const updateTitre = (_pool: Pool) => async (req: CaminoRequest, res: Cust
           // car le titre contient des références (tableau d'objet)
           await titreUpsert(parsedBody.data)
 
-          await titreUpdateTask(titreId)
+          await titreUpdateTask(pool, titreId)
           res.sendStatus(HTTP_STATUS.HTTP_STATUS_NO_CONTENT)
         }
       }

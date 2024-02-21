@@ -96,5 +96,5 @@ select
 from
     administrations__activites_types__emails
 where
-    administration_id in ($ administrationIds !)
+    administration_id in $$ administrationIds !
 `

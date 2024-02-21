@@ -28,11 +28,9 @@ afterAll(async () => {
 describe('titresQueryModify', () => {
   describe('titresVisibleByEntrepriseQuery', () => {
     test.each([
-      [false, false, false],
-      [false, true, false],
-      [true, false, false],
-      [true, true, true],
-    ])('Vérifie la visibilité d’un titre par une entreprise', async (entreprisesLecture, withTitulaire, visible) => {
+      [false, false],
+      [true, true],
+    ])('Vérifie la visibilité d’un titre par une entreprise', async (withTitulaire, visible) => {
       const mockEntreprise1 = {
         id: idGenerate(),
         nom: 'monEntrepriseNom',
@@ -46,7 +44,6 @@ describe('titresQueryModify', () => {
         nom: 'titre1',
         typeId: 'arm',
         titreStatutId: 'ind',
-        entreprisesLecture,
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [
           {
@@ -163,17 +160,16 @@ describe('titresQueryModify', () => {
   })
 
   describe('titresConfidentielQuery', () => {
-    test.each<[boolean | undefined, boolean, boolean, TitreTypeId, TitreStatutId, boolean]>([
-      [false, false, false, 'arm', 'dmi', true],
-      [false, false, true, 'arm', 'dmi', true],
-      [undefined, true, false, 'arm', 'dmi', true],
-      [false, true, true, 'arm', 'dmi', false],
-      [false, false, false, 'axm', 'dmi', false],
-      [false, false, false, 'arm', 'val', false],
-      [true, false, false, 'arm', 'dmi', false],
-      [true, false, true, 'arm', 'dmi', false],
-      [true, true, false, 'arm', 'dmi', false],
-    ])('Vérifie si le titre est confidentiel', async (publicLecture, entreprisesLecture, withTitulaire, typeId, statutId, confidentiel) => {
+    test.each<[boolean | undefined, boolean, TitreTypeId, TitreStatutId, boolean]>([
+      [false, false, 'arm', 'dmi', true],
+      [undefined, false, 'arm', 'dmi', true],
+      [false, true, 'arm', 'dmi', false],
+      [false, false, 'axm', 'dmi', false],
+      [false, false, 'arm', 'val', false],
+      [true, false, 'arm', 'dmi', false],
+      [true, true, 'arm', 'dmi', false],
+      [true, false, 'arm', 'dmi', false],
+    ])('Vérifie si le titre est confidentiel', async (publicLecture, withTitulaire, typeId, statutId, confidentiel) => {
       const mockEntreprise1 = {
         id: idGenerate(),
         nom: 'monEntrepriseNom',
@@ -189,7 +185,6 @@ describe('titresQueryModify', () => {
         typeId,
         titreStatutId: statutId,
         publicLecture,
-        entreprisesLecture,
         propsTitreEtapesIds: { titulaires: etapeId },
         demarches: [
           {

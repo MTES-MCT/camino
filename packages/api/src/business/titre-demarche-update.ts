@@ -12,8 +12,10 @@ import { logsUpdate } from './_logs-update.js'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 import type { Pool } from 'pg'
+import { TitreId } from 'camino-common/src/validators/titres.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
-export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | null, titreId: string) => {
+export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: DemarcheId | null, titreId: TitreId) => {
   try {
     console.info()
     console.info('- - -')
@@ -36,7 +38,7 @@ export const titreDemarcheUpdate = async (pool: Pool, titreDemarcheId: string | 
       titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     }
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
-    const titresPublicUpdated = await titresPublicUpdate([titreId])
+    const titresPublicUpdated = await titresPublicUpdate(pool, [titreId])
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])

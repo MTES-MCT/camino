@@ -37,7 +37,7 @@ export const daily = async (pool: Pool) => {
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
 
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
-    const titresPublicUpdated = await titresPublicUpdate()
+    const titresPublicUpdated = await titresPublicUpdate(pool)
     const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
 
