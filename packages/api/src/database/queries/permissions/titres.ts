@@ -14,8 +14,6 @@ import { isAdministration, isBureauDEtudes, isEntreprise, isSuper, User } from '
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 export const titresVisibleByEntrepriseQuery = (q: QueryBuilder<Titres, Titres | Titres[]>, entreprisesIds: string[]) => {
-  q.where('titres.entreprisesLecture', true)
-
   // titres dont il est titulaire ou amodiataire
   q.whereExists(
     entreprisesTitresQuery(entreprisesIds, 'titres', {

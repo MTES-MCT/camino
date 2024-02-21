@@ -72,7 +72,7 @@ export interface IInsertAdministrationActiviteTypeEmailDbQuery {
 
 /** 'GetActiviteTypeEmailsByAdministrationIdsDb' parameters type */
 export interface IGetActiviteTypeEmailsByAdministrationIdsDbParams {
-  administrationIds: string;
+  administrationIds: readonly (string)[];
 }
 
 /** 'GetActiviteTypeEmailsByAdministrationIdsDb' return type */
