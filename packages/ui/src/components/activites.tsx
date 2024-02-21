@@ -26,6 +26,7 @@ const activitesColonnes = [
   {
     id: 'titulaires',
     name: 'Titulaires',
+    noSort: true
   },
   {
     id: activitesColonneIdAnnee,
