@@ -74,7 +74,7 @@ API_INSEE_SECRET={{ api_insee_secret }}
 API_INSEE_URL="https://api.insee.fr"
 
 # API Matomo
-API_MATOMO_URL="http://audience-sites.din.developpement-durable.gouv.fr"
+API_MATOMO_URL="https://audience-sites.din.developpement-durable.gouv.fr"
 API_MATOMO_ID=1667
 
 API_SENTRY_URL={{ api_sentry_url }}
