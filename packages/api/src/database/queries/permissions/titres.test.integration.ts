@@ -29,8 +29,6 @@ describe('titresQueryModify', () => {
   describe('titresVisibleByEntrepriseQuery', () => {
     test.each([
       [false, false],
-      [true, false],
-      [false, false],
       [true, true],
     ])('Vérifie la visibilité d’un titre par une entreprise', async (withTitulaire, visible) => {
       const mockEntreprise1 = {
@@ -164,7 +162,6 @@ describe('titresQueryModify', () => {
   describe('titresConfidentielQuery', () => {
     test.each<[boolean | undefined, boolean, TitreTypeId, TitreStatutId, boolean]>([
       [false, false, 'arm', 'dmi', true],
-      [false, true, 'arm', 'dmi', true],
       [undefined, false, 'arm', 'dmi', true],
       [false, true, 'arm', 'dmi', false],
       [false, false, 'axm', 'dmi', false],
