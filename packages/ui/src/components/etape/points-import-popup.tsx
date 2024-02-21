@@ -6,6 +6,7 @@ import { DeepReadonly, computed, ref } from 'vue'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
+import { Alert } from '../_ui/alert'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
@@ -49,7 +50,12 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
 
   const content = () => (
     <form>
-      <fieldset class="fr-fieldset" id="geographic">
+      <Alert
+        type="info"
+        small={true}
+        title='Vous pouvez déposer un fichier de points pour modifier ou supprimer les noms et descriptions des points. Votre fichier doit comporter un champ "nom" (nous vous conseillons de ne pas dépasser 3 caractères) et un champ "description".'
+      />
+      <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
         <div class="fr-fieldset__element">
           <div class="fr-select-group">
             <label class="fr-label" for="type">

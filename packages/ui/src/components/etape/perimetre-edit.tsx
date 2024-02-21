@@ -127,7 +127,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
         propId="perimetre"
         write={() => (
           <div>
-            <DsfrButton onClick={openPerimetrePopup} title="Importer depuis un fichier…" />
+            <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre…" />
             {isNotNullNorUndefined(props.etape.geojson4326Perimetre) ? <DsfrButton class="fr-ml-2w" onClick={openPointsPopup} buttonType="secondary" title="Éditer les points" /> : null}
 
             {importError.value ? <Alert class="fr-mt-2w" title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}

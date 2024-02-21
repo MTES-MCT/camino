@@ -10,6 +10,7 @@ import { perimetreFileUploadTypeValidator } from 'camino-common/src/static/docum
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Alert } from '../_ui/alert'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport'>
@@ -39,7 +40,20 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
 
   const content = () => (
     <form>
-      <fieldset class="fr-fieldset" id="geographic">
+      <Alert
+        type="info"
+        small={true}
+        title={
+          <>
+            Vous ne devez déposer que des fichiers ayant un seul multipolygone. Pour plus d'informations sur la création d'un périmètre et son dépôt vous pouvez regardez ce{' '}
+            <a class="fr-link" href="https://dai.ly/x8spe70" target="_blank" rel="noopener noreferrer" title="Vidéo tutoriel Dailymotion - lien externe">
+              tutoriel
+            </a>
+            .
+          </>
+        }
+      />
+      <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
         <div class="fr-fieldset__element">
           <div class="fr-select-group">
             <label class="fr-label" for="type">
