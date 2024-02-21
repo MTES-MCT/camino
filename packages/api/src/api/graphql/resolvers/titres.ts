@@ -149,7 +149,7 @@ export const titres = async (
  * TODO 2022-07-12 enlever cette fonction et nettoyer l'ui
  * @deprecated Not used by frontend, titreDemandeCreer is used instead
  */
-export const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info: GraphQLResolveInfo) => {
+export const titreCreer = async ({ titre }: { titre: ITitre }, { user, pool }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!isTitreType(titre.typeId) || !canCreateTitre(user, titre.typeId)) {
       throw new Error('permissions insuffisantes')
@@ -158,7 +158,7 @@ export const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context
     // insert le titre dans la base
     titre = await titreCreate(titre, { fields: {} })
 
-    await titreUpdateTask(titre.id)
+    await titreUpdateTask(pool, titre.id)
 
     const fields = fieldsBuild(info)
 

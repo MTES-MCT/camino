@@ -71,7 +71,7 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
             linkFrom: titreDemande.titreFromIds,
           })
         }
-        await titreUpdateTask(titre.id)
+        await titreUpdateTask(pool, titre.id)
 
         const titreDemarche = await titreDemarcheCreate({
           titreId,

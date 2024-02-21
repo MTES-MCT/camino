@@ -52,7 +52,7 @@ const titreEtapeUpdate = async (pool: Pool, titreEtapeId: EtapeId | null, titreD
     const [titresDemarchesDatesUpdated = []] = await titresDemarchesDatesUpdate(pool, [titreId])
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
-    const titresPublicUpdated = await titresPublicUpdate([titreId])
+    const titresPublicUpdated = await titresPublicUpdate(pool, [titreId])
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {

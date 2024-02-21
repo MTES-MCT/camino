@@ -1,49 +1,25 @@
 import { titrePublicFind } from 'camino-common/src/static/titresTypes_titresStatuts.js'
-import { titresGet, titreUpdate } from '../../database/queries/titres.js'
-import { userSuper } from '../../database/user-super.js'
-
-type ITitrePatch = {
-  publicLecture: boolean
-  entreprisesLecture: boolean
-}
+import { TitreId } from 'camino-common/src/validators/titres.js'
+import { getTitrePublicUpdateData, updateTitrePublicLecture } from './titres-public-update.queries.js'
+import { Pool } from 'pg'
+import { NonEmptyArray } from 'camino-common/src/typescript-tools.js'
 
 // met à jour la publicité d'un titre
-export const titresPublicUpdate = async (titresIds?: string[]) => {
+export const titresPublicUpdate = async (pool: Pool, titresIds?: NonEmptyArray<TitreId>) => {
   console.info()
   console.info('publicité des titres…')
 
-  const titres = await titresGet(
-    { ids: titresIds },
-    {
-      fields: {
-        demarches: { id: {} },
-      },
-    },
-    userSuper
-  )
+  const titres = await getTitrePublicUpdateData(pool, titresIds ?? null)
 
-  // TODO: forcer la présence des démarches sur le titre
-  // https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist/49725198#49725198
-  const titresUpdated = [] as string[]
+  const titresUpdated: TitreId[] = []
 
   for (const titre of titres) {
-    const publicLecture = titrePublicFind(titre.titreStatutId, titre.typeId, titre.demarches || [])
+    const publicLecture = titrePublicFind(titre.titre_statut_id, titre.titre_type_id, titre.has_demarche_public)
 
-    const patch = {} as ITitrePatch
+    if (titre.public_lecture !== publicLecture) {
+      await updateTitrePublicLecture(pool, titre.id, publicLecture)
 
-    if (titre.publicLecture !== publicLecture) {
-      patch.publicLecture = publicLecture
-    }
-
-    // TODO 2023-11-08 trouver le courage d'aller jusqu'à la BDD supprimer ce champ qui est toujours à true
-    if (titre.entreprisesLecture !== true) {
-      patch.entreprisesLecture = true
-    }
-
-    if (Object.keys(patch).length) {
-      await titreUpdate(titre.id, patch)
-
-      console.info('titre : public (mise à jour) ->', `${titre.id} : ${JSON.stringify(patch)}`)
+      console.info('titre : public (mise à jour) ->', `${titre.id} : ${publicLecture}}`)
 
       titresUpdated.push(titre.id)
     }
