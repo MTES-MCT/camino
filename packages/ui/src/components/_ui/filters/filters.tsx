@@ -385,7 +385,7 @@ export const Filters = defineComponent((props: Props) => {
             </div>
 
             <div class="dsfr">
-              <CaminoRouterLink class="fr-btn fr-mb-2w" to={urlQuery.value} title="Valider les filtres">
+              <CaminoRouterLink class="fr-btn fr-mb-2w" to={urlQuery.value} title="Valider les filtres" anchorHTMLAttributes={{ onClick: props.toggle }}>
                 Valider
               </CaminoRouterLink>
             </div>
