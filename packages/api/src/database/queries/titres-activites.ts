@@ -10,7 +10,7 @@ import graphBuild from './graph/build.js'
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresActivites from '../models/titres-activites.js'
 import { titresActivitesQueryModify } from './permissions/titres-activites.js'
-import { isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
+import { User } from 'camino-common/src/roles.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
 
@@ -106,11 +106,6 @@ const titreActivitesQueryBuild = ({ fields }: { fields?: FieldsActivite }, user:
 
   titresActivitesQueryModify(q, user)
 
-  // dans titresActivitesPropsQueryModify quand on est une administration on utilise les 3 colonnes suivantes pour une sous requête.
-  if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    q.groupBy('titresActivites.id', 'titre.type_id', 'titre.propsTitreEtapesIds')
-  }
-
   return q
 }
 
@@ -141,25 +136,13 @@ const titresActivitesColonnes = {
   titre: {
     id: 'titre.nom',
     relation: 'titre',
-    groupBy: true,
   },
-  titreDomaine: { id: 'titre.domaineId', relation: 'titre', groupBy: true },
+  titreDomaine: { id: 'titre.domaineId', relation: 'titre' },
   titreType: {
     id: raw(`left( titre.type_id, 2 )`),
     relation: 'titre',
-    groupBy: true,
   },
-  titreStatut: { id: 'titre.titreStatutId', relation: 'titre', groupBy: true },
-  titulaires: {
-    // trie par concaténation des titulaires du titre de l'activité
-    id: raw(`STRING_AGG (
-    "titre:titulaires"."nom",
-    ';'
-    order by "titre:titulaires"."nom"
-  )`),
-    relation: 'titre.titulaires',
-    groupBy: false,
-  },
+  titreStatut: { id: 'titre.titreStatutId', relation: 'titre' },
   annee: { id: 'annee' },
   periode: { id: 'periodeId' },
   statut: { id: 'activiteStatutId' },
@@ -250,16 +233,12 @@ const titresActivitesGet = async (
   if (colonne) {
     if (titresActivitesColonnes[colonne].relation) {
       q.leftJoinRelated(titresActivitesColonnes[colonne].relation!)
-      q.groupBy('titresActivites.id')
-
-      if (titresActivitesColonnes[colonne].groupBy) {
-        q.groupBy(titresActivitesColonnes[colonne].id)
-      }
     }
     q.orderBy(titresActivitesColonnes[colonne].id, ordre || 'asc')
-  } else {
-    q.orderBy('titresActivites.titreId')
   }
+
+  // Il faut ajouter cet orderBy systématiquement. Car on peut trier par le nom de titre, et ce titre peut avoir beaucoup de rapports. Donc la requête peut changer l’ordre peut ne pas être consitent entre ces lignes qui ont le même titre.
+  q.orderBy('titresActivites.titreId')
 
   if (page && intervalle) {
     q.offset((page - 1) * intervalle)
