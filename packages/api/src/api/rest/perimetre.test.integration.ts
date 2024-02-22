@@ -4,7 +4,15 @@ import { restPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { FeatureCollection, FeatureCollectionPoints, featureCollectionPointsValidator, FeatureMultiPolygon, GeojsonImportBody, GeojsonImportPointsBody } from 'camino-common/src/perimetre.js'
+import {
+  FeatureCollection,
+  FeatureCollectionPoints,
+  featureCollectionPointsValidator,
+  FeatureCollectionPolygon,
+  FeatureMultiPolygon,
+  GeojsonImportBody,
+  GeojsonImportPointsBody,
+} from 'camino-common/src/perimetre.js'
 import { GEO_SYSTEME_IDS, TransformableGeoSystemeId, transformableGeoSystemeIds } from 'camino-common/src/static/geoSystemes.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
@@ -25,25 +33,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await dbManager.closeKnex()
 })
-
-const value: FeatureMultiPolygon = {
-  type: 'Feature',
-  properties: {},
-
-  geometry: {
-    type: 'MultiPolygon',
-    coordinates: [
-      [
-        [
-          [-52.54, 4.22269896902571],
-          [-52.55, 4.22438936251509],
-          [-52.55, 4.24113309117193],
-          [-52.54, 4.22269896902571],
-        ],
-      ],
-    ],
-  },
-}
 
 const points: FeatureCollectionPoints = {
   type: 'FeatureCollection',
@@ -92,10 +81,124 @@ describe('geojsonImport', () => {
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
-  test('fichier valide', async () => {
+  test('fichier valide geojson polygon', async () => {
+    const feature: FeatureCollectionPolygon = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [-52.54, 4.22269896902571],
+                [-52.55, 4.22438936251509],
+                [-52.55, 4.24113309117193],
+                [-52.54, 4.22269896902571],
+              ],
+            ],
+          },
+        },
+        { type: 'Feature', geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] }, properties: { nom: 'A', description: 'Une description du point A' } },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "communes": [],
+        "foretIds": [],
+        "geojson4326_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                  [
+                    -52.55,
+                    4.22438936251509,
+                  ],
+                  [
+                    -52.55,
+                    4.24113309117193,
+                  ],
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson4326_points": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
+        "sdomZoneIds": [],
+        "secteurMaritimeIds": [],
+        "superposition_alertes": [],
+        "surface": 1.03,
+      }
+    `)
+  })
+
+  test('fichier valide geojson multipolygon', async () => {
+    const featureMultipolygon: FeatureMultiPolygon = {
+      type: 'Feature',
+      properties: {},
+
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [-52.54, 4.22269896902571],
+              [-52.55, 4.22438936251509],
+              [-52.55, 4.24113309117193],
+              [-52.54, 4.22269896902571],
+            ],
+          ],
+        ],
+      },
+    }
+
     const feature: FeatureCollection = {
       type: 'FeatureCollection',
-      features: [value, { type: 'Feature', geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] }, properties: { nom: 'A', description: 'Une description du point A' } }],
+      features: [featureMultipolygon, { type: 'Feature', geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] }, properties: { nom: 'A', description: 'Une description du point A' } }],
     }
     const fileName = `existing_temp_file_${idGenerate()}.geojson`
     mkdirSync(dir, { recursive: true })

@@ -18,11 +18,12 @@ import {
   MultiPolygon,
   PerimetreInformations,
   featureCollectionPointsValidator,
-  featureCollectionValidator,
+  featureCollectionMultipolygonValidator,
   geojsonImportBodyValidator,
   geojsonImportPointBodyValidator,
   multiPolygonValidator,
-  polygonCoordinatesValidator,
+  polygonValidator,
+  featureCollectionPolygonValidator,
 } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
 import { createReadStream } from 'node:fs'
@@ -136,10 +137,8 @@ const stream2buffer = async (stream: Stream): Promise<Buffer> => {
 
 const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
 const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
-const shapeValidator = z
-  .array(z.object({ coordinates: polygonCoordinatesValidator, type: z.literal('Polygon') }).or(multiPolygonValidator))
-  .max(1)
-  .min(1)
+
+const shapeValidator = z.array(polygonValidator.or(multiPolygonValidator)).max(1).min(1)
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -164,9 +163,12 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         let featureMultiPolygon: FeatureMultiPolygon
         let featureCollectionPoints: null | FeatureCollectionPoints = null
         if (geojsonImportInput.data.fileType === 'geojson') {
-          const features = featureCollectionValidator.parse(JSON.parse(buffer.toString()))
+          const features = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator).parse(JSON.parse(buffer.toString()))
 
-          featureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features.features[0])
+          const firstGeometry = features.features[0].geometry
+          const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
+
+          featureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, { type: 'Feature', properties: {}, geometry: multiPolygon })
           // TODO 2024-01-24 on importe les points que si le référentiel est en 4326
           if (geoSystemeId.data === '4326' && features.features.length > 1) {
             const [_multi, ...points] = features.features
