@@ -14,7 +14,7 @@ import { km2Validator } from './number.js'
 // [longitude, latitude]
 const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
 
-export const polygonCoordinatesValidator = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
+const polygonCoordinatesValidator = z.array(z.array(tupleCoordinateValidator).min(3)).min(1)
 export const multiPolygonValidator = z.object({
   type: z.literal('MultiPolygon'),
   coordinates: z.array(polygonCoordinatesValidator).min(1),
@@ -35,7 +35,9 @@ const nullToEmptyObject = (val: null | NonNullable<unknown>): NonNullable<unknow
   return val
 }
 
-export const featureMultiPolygonValidator = z.object({ type: z.literal('Feature'), geometry: multiPolygonValidator, properties: z.object({}).nullable().transform(nullToEmptyObject) })
+const featureValidator = z.object({ type: z.literal('Feature'), properties: z.object({}).nullable().transform(nullToEmptyObject) })
+
+export const featureMultiPolygonValidator = featureValidator.extend({ geometry: multiPolygonValidator })
 export type FeatureMultiPolygon = z.infer<typeof featureMultiPolygonValidator>
 
 const pointValidator = z.object({ type: z.literal('Point'), coordinates: tupleCoordinateValidator })
@@ -44,17 +46,29 @@ const featurePointValidator = z.object({ type: z.literal('Feature'), geometry: p
 
 export type GeojsonFeaturePoint = z.infer<typeof featurePointValidator>
 
-export const featureCollectionValidator = z.object({
+const featureCollectionValidator = z.object({
   type: z.literal('FeatureCollection'),
   properties: z.any().optional(),
+})
+
+export const featureCollectionMultipolygonValidator = featureCollectionValidator.extend({
   features: z.tuple([featureMultiPolygonValidator]).rest(featurePointValidator),
 })
 
-export const featureCollectionPointsValidator = z.object({ type: z.literal('FeatureCollection'), features: z.array(featurePointValidator) })
+export const polygonValidator = z.object({ type: z.literal('Polygon'), coordinates: polygonCoordinatesValidator })
+const featurePolygonValidator = featureValidator.extend({ geometry: polygonValidator })
+
+export const featureCollectionPolygonValidator = featureCollectionValidator.extend({
+  features: z.tuple([featurePolygonValidator]).rest(featurePointValidator),
+})
+
+export type FeatureCollectionPolygon = z.infer<typeof featureCollectionPolygonValidator>
+
+export const featureCollectionPointsValidator = featureCollectionValidator.extend({ features: z.array(featurePointValidator) })
 
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
 
-export type FeatureCollection = z.infer<typeof featureCollectionValidator>
+export type FeatureCollection = z.infer<typeof featureCollectionMultipolygonValidator>
 const superpositionAlerteValidator = z.object({ slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator })
 
 export const geojsonInformationsValidator = z.object({
