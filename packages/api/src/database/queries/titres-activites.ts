@@ -13,6 +13,7 @@ import { titresActivitesQueryModify } from './permissions/titres-activites.js'
 import { User } from 'camino-common/src/roles.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { ActiviteId } from 'camino-common/src/activite.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools.js'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -57,19 +58,19 @@ const titresActivitesFiltersQueryModify = (
   },
   q: QueryBuilder<TitresActivites, TitresActivites[]>
 ) => {
-  if (typesIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(typesIds)) {
     q.whereIn('titresActivites.typeId', typesIds)
   }
 
-  if (annees?.length) {
+  if (isNotNullNorUndefinedNorEmpty(annees)) {
     q.whereIn('titresActivites.annee', annees)
   }
 
-  if (statutsIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(statutsIds)) {
     q.whereIn('titresActivites.activiteStatutId', statutsIds)
   }
 
-  if (titresIds?.length) {
+  if (isNotNullNorUndefinedNorEmpty(titresIds)) {
     q.whereIn('titresActivites.titreId', titresIds)
   }
 
@@ -90,15 +91,6 @@ const titresActivitesFiltersQueryModify = (
   )
 }
 
-/**
- * Construit le corps de la requête sur les activités (hors paramètres de pagination)
- *
- * @param fields - propriétés demandées
- * @param userId - utilisateur
- * @returns une requête d'activités
- *
- */
-
 const titreActivitesQueryBuild = ({ fields }: { fields?: FieldsActivite }, user: User) => {
   const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
 
@@ -109,20 +101,8 @@ const titreActivitesQueryBuild = ({ fields }: { fields?: FieldsActivite }, user:
   return q
 }
 
-/**
- * Retourne une activité
- *
- * @param id - id de l'activité
- * @param fields - propriétés demandées
- * @param userId - utilisateur
- * @returns une activité
- *
- */
-
 const titreActiviteGet = async (id: string, { fields }: { fields?: FieldsActivite }, user: User) => {
   const q = titreActivitesQueryBuild({ fields }, user)
-
-  if (!q) return undefined
 
   return q
     .andWhere(b => {
@@ -228,23 +208,22 @@ const titresActivitesGet = async (
     q
   )
 
-  if (!q) return []
-
   if (colonne) {
-    if (titresActivitesColonnes[colonne].relation) {
-      q.leftJoinRelated(titresActivitesColonnes[colonne].relation!)
+    const relation = titresActivitesColonnes[colonne].relation
+    if (isNotNullNorUndefined(relation)) {
+      q.leftJoinRelated(relation)
     }
     q.orderBy(titresActivitesColonnes[colonne].id, ordre || 'asc')
   }
 
-  // Il faut ajouter cet orderBy systématiquement. Car on peut trier par le nom de titre, et ce titre peut avoir beaucoup de rapports. Donc la requête peut changer l’ordre peut ne pas être consitent entre ces lignes qui ont le même titre.
+  // Il faut ajouter cet orderBy systématiquement. Car on peut trier par le nom de titre, et ce titre peut avoir beaucoup de rapports. Donc la requête peut changer l’ordre pour ne pas être consistant entre ces lignes qui ont le même titre.
   q.orderBy('titresActivites.titreId')
 
-  if (page && intervalle) {
+  if (isNotNullNorUndefined(page) && isNotNullNorUndefined(intervalle) && page > 0 && intervalle > 0) {
     q.offset((page - 1) * intervalle)
   }
 
-  if (intervalle) {
+  if (isNotNullNorUndefined(intervalle) && intervalle > 0) {
     q.limit(intervalle)
   }
 
@@ -314,8 +293,6 @@ const titresActivitesCount = async (
     },
     q
   )
-
-  if (!q) return 0
 
   return q.resultSize()
 }
