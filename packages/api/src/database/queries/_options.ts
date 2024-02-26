@@ -1,5 +1,5 @@
-const documentsRelateTrue = [] as string[]
-const documentsRelateFalse = [] as string[]
+const documentsRelateTrue: string[] = []
+const documentsRelateFalse: string[] = []
 
 const documents = {
   graph: ``,
