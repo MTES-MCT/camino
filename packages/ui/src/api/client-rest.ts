@@ -11,7 +11,6 @@ import {
   PostRestRoutes,
   PutRestRoutes,
 } from 'camino-common/src/rest'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { z } from 'zod'
 
 type Loading = { status: 'LOADING' }
