@@ -81,6 +81,9 @@ const etapeNoHeritage: Props['etape'] = {
   heritageProps: { perimetre: { actif: false } },
   geojson4326Perimetre: null,
   geojson4326Points: null,
+  geojsonOriginePerimetre: null,
+  geojsonOriginePoints: null,
+  geoSystemeId: null,
   surface: null,
 }
 
@@ -126,6 +129,9 @@ const etapeHeritage: Props['etape'] = {
         surface: km2Validator.parse(2),
         geojson4326Perimetre: perimetre,
         geojson4326Points: null,
+        geojsonOriginePerimetre: perimetre,
+        geojsonOriginePoints: null,
+        geoSystemeId: '4326',
       },
     },
   },
@@ -147,6 +153,9 @@ const etape: Props['etape'] = {
   ...etapeEmptyHeritage,
   geojson4326Perimetre: perimetre,
   surface: km2Validator.parse(2),
+  geojsonOriginePerimetre: perimetre,
+  geojsonOriginePoints: null,
+  geoSystemeId: '4326',
   heritageProps: { perimetre: { actif: false } },
 }
 export const FilledNoHeritage: StoryFn = () => (

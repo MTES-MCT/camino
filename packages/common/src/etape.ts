@@ -9,6 +9,7 @@ import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
 import { KM2 } from './number.js'
+import { TransformableGeoSystemeId } from './static/geoSystemes.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -52,6 +53,9 @@ type EtapeBase = {
 
   geojson4326Perimetre?: FeatureMultiPolygon | null
   geojson4326Points?: FeatureCollectionPoints | null
+  geojsonOriginePerimetre?: FeatureMultiPolygon | null
+  geojsonOriginePoints?: FeatureCollectionPoints | null
+  geoSystemeId?: TransformableGeoSystemeId | null
   surface?: KM2 | null
 
   notes: null | string

@@ -139,6 +139,7 @@ const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.n
 const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
 
 const shapeValidator = z.array(polygonValidator.or(multiPolygonValidator)).max(1).min(1)
+const geojsonValidator = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator)
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -160,20 +161,24 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 
         const buffer = await stream2buffer(fileStream)
 
-        let featureMultiPolygon: FeatureMultiPolygon
-        let featureCollectionPoints: null | FeatureCollectionPoints = null
+        let geojson4326FeatureMultiPolygon: FeatureMultiPolygon
+        let geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon
+        let geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints = null
         if (geojsonImportInput.data.fileType === 'geojson') {
-          const features = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator).parse(JSON.parse(buffer.toString()))
+          const features = geojsonValidator.parse(JSON.parse(buffer.toString()))
 
           const firstGeometry = features.features[0].geometry
           const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
 
-          featureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, { type: 'Feature', properties: {}, geometry: multiPolygon })
+          geojsonOriginFeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: multiPolygon }
+
           // TODO 2024-01-24 on importe les points que si le référentiel est en 4326
           if (geoSystemeId.data === '4326' && features.features.length > 1) {
             const [_multi, ...points] = features.features
-            featureCollectionPoints = { type: 'FeatureCollection', features: points }
+            geojsonOriginFeatureCollectionPoints = { type: 'FeatureCollection', features: points }
           }
+
+          geojson4326FeatureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon)
         } else {
           const shpParsed = shpjs.parseShp(buffer)
 
@@ -185,23 +190,27 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
           } else {
             coordinates = [shapePolygonOrMultipolygon.coordinates]
           }
-          featureMultiPolygon = await getGeojsonByGeoSystemeId(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} })
+          geojsonOriginFeatureMultiPolygon = { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} }
+          geojson4326FeatureMultiPolygon = await getGeojsonByGeoSystemeId(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon)
         }
 
-        const geojson: MultiPolygon = featureMultiPolygon.geometry
+        const geojson4326MultiPolygon: MultiPolygon = geojson4326FeatureMultiPolygon.geometry
 
-        z.array(polygon4326CoordinatesValidator).min(1).parse(geojson.coordinates)
+        z.array(polygon4326CoordinatesValidator).min(1).parse(geojson4326MultiPolygon.coordinates)
 
-        const geoInfo = await getGeojsonInformation(pool, geojson)
+        const geoInfo = await getGeojsonInformation(pool, geojson4326MultiPolygon)
         const result: GeojsonInformations = {
-          superposition_alertes: await getAlertesSuperposition(geojson, geojsonImportInput.data.titreTypeId, geojsonImportInput.data.titreSlug, user, pool),
+          superposition_alertes: await getAlertesSuperposition(geojson4326MultiPolygon, geojsonImportInput.data.titreTypeId, geojsonImportInput.data.titreSlug, user, pool),
           communes: geoInfo.communes,
           foretIds: geoInfo.forets,
           sdomZoneIds: geoInfo.sdom,
           secteurMaritimeIds: geoInfo.secteurs,
           surface: geoInfo.surface,
-          geojson4326_perimetre: { type: 'Feature', geometry: geojson, properties: {} },
-          geojson4326_points: featureCollectionPoints,
+          geojson4326_perimetre: { type: 'Feature', geometry: geojson4326MultiPolygon, properties: {} },
+          geojson4326_points: geojsonOriginFeatureCollectionPoints,
+          geojson_origine_perimetre: geojsonOriginFeatureMultiPolygon,
+          geojson_origine_points: geojsonOriginFeatureCollectionPoints,
+          geojson_origine_geosysteme: geoSystemeId.data,
         }
 
         res.json(result)

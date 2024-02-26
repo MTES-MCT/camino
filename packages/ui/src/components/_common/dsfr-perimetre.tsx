@@ -8,9 +8,18 @@ import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
 export type TabId = 'carte' | 'points'
+
+
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
+  perimetre: { 
+    geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints | null
+    geosysteme: TransformableGeoSystemeId
+    geojson_origine_perimetre: FeatureMultiPolygon
+    geojson_origine_points: FeatureCollectionPoints | null
+  }
   titreSlug: TitreSlug
   initTab?: TabId
   class?: HTMLAttributes['class']
@@ -33,6 +42,13 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 
     return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
   })
+  const geojsonOriginePoints = computed<FeatureCollectionPoints>(() => {
+    if (isNotNullNorUndefined(props.perimetre.geojson_origine_points)) {
+      return props.perimetre.geojson_origine_points
+    }
+
+    return transformMultipolygonToPoints(props.perimetre.geojson_origine_perimetre)
+  })
 
   const vues = [
     {
@@ -45,7 +61,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value }} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geosysteme_id={props.perimetre.geosysteme} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 

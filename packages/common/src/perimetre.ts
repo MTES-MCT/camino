@@ -10,6 +10,7 @@ import { titreTypeIdValidator } from './static/titresTypes.js'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
+import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
 
 // [longitude, latitude]
 const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
@@ -80,6 +81,9 @@ export const geojsonInformationsValidator = z.object({
   secteurMaritimeIds: z.array(secteurDbIdValidator),
   geojson4326_perimetre: featureMultiPolygonValidator,
   geojson4326_points: featureCollectionPointsValidator.nullable(),
+  geojson_origine_perimetre: featureMultiPolygonValidator,
+  geojson_origine_points: featureCollectionPointsValidator.nullable(),
+  geojson_origine_geosysteme: transformableGeoSystemeIdValidator
 })
 
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>

@@ -5,7 +5,6 @@ import { defineComponent, ref, watch, computed } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { TableRow, TextColumnData } from '../_ui/table'
 import { TableAuto, Column } from '../_ui/table-auto'
-import { PerimetreApiClient } from '../titre/perimetre-api-client'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { capitalize } from 'camino-common/src/strings'
@@ -14,11 +13,8 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeTypeahead } from './geosysteme-typeahead'
 
 interface Props {
-  perimetre: {
-    geojson4326_perimetre: FeatureMultiPolygon
-    geojson4326_points: FeatureCollectionPoints
-  }
-  apiClient: Pick<PerimetreApiClient, 'getGeojsonByGeoSystemeId'>
+  geojson_origine_points: FeatureCollectionPoints
+  geosysteme_id: TransformableGeoSystemeId
   titreSlug: TitreSlug
   maxRows: number
 }
@@ -28,8 +24,8 @@ const labels = {
   deg: { x: 'longitude (E)', y: 'latitude (N)' },
   gon: { x: 'longitude', y: 'latitude' },
 } as const satisfies Record<GeoSysteme['uniteId'], { x: string; y: string }>
-const geoJsonToArray = (perimetre: Props['perimetre']): TableRow<string>[] => {
-  return perimetre.geojson4326_points.features.map<TableRow<string>>((feature, index) => {
+const geoJsonToArray = (perimetre: FeatureCollectionPoints): TableRow<string>[] => {
+  return perimetre.features.map<TableRow<string>>((feature, index) => {
     const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
     const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
 
@@ -52,15 +48,15 @@ export const TabCaminoTable = defineComponent<Props>(props => {
   const currentRows = ref<AsyncData<TableRow<string>[]>>({ status: 'LOADING' })
 
   watch(
-    () => props.perimetre,
+    () => props.geojson_origine_points,
     () => {
-      currentRows.value = { status: 'LOADED', value: geoJsonToArray(props.perimetre) }
+      currentRows.value = { status: 'LOADED', value: geoJsonToArray(props.geojson_origine_points) }
     },
     { immediate: true }
   )
 
   const columns = computed(() => {
-    const uniteId = geoSystemSelected.value?.uniteId
+    const uniteId = GeoSystemes[props.geosysteme_id].uniteId
 
     if (isNotNullNorUndefined(uniteId)) {
       const alwaysPresentColumns: Column<string>[] = [
@@ -113,30 +109,10 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     return []
   })
 
-  const geoSystemSelected = ref<GeoSysteme<TransformableGeoSystemeId> | null>(GeoSystemes[4326])
-  const geoSystemUpdate = async (geoSystemeId: TransformableGeoSystemeId | null) => {
-    if (isNotNullNorUndefined(geoSystemeId)) {
-      if (geoSystemeId !== geoSystemSelected.value?.id) {
-        geoSystemSelected.value = GeoSystemes[geoSystemeId]
-        try {
-          currentRows.value = { status: 'LOADING' }
-
-          const newGeojsonPoints = await props.apiClient.getGeojsonByGeoSystemeId(props.perimetre.geojson4326_points, geoSystemeId)
-          currentRows.value = { status: 'LOADED', value: geoJsonToArray({ geojson4326_perimetre: props.perimetre.geojson4326_perimetre, geojson4326_points: newGeojsonPoints }) }
-        } catch (e: any) {
-          console.error('error', e)
-          currentRows.value = {
-            status: 'ERROR',
-            message: e.message ?? "Une erreur s'est produite",
-          }
-        }
-      }
-    }
-  }
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <GeoSystemeTypeahead geoSystemeSelected={geoSystemUpdate} />
+      <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geosysteme_id} />
       <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort="noSort" />
 
       <DsfrLink
@@ -153,16 +129,16 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoTable.props = ['perimetre', 'apiClient', 'titreSlug', 'maxRows']
+TabCaminoTable.props = ['geojson_origine_points', 'geosysteme_id', 'titreSlug', 'maxRows']
 
-export const transformMultipolygonToPoints = (geojson4326_perimetre: FeatureMultiPolygon): FeatureCollectionPoints => {
+export const transformMultipolygonToPoints = (geojson_perimetre: FeatureMultiPolygon): FeatureCollectionPoints => {
   const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []
   let index = 0
-  geojson4326_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
+  geojson_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>
     topLevel.forEach((secondLevel, secondLevelIndex) =>
       secondLevel.forEach(([x, y], currentLevelIndex) => {
         // On ne rajoute pas le dernier point qui est égal au premier du contour...
-        if (geojson4326_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
+        if (geojson_perimetre.geometry.coordinates[topLevelIndex][secondLevelIndex].length !== currentLevelIndex + 1) {
           currentPoints.push({
             type: 'Feature',
             geometry: {

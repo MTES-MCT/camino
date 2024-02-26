@@ -59,7 +59,7 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} />
+            <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} disabled={false} />
           </div>
         </div>
       </fieldset>

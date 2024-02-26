@@ -33,4 +33,4 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'> =
   },
 }
 
-export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} />
+export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} geoSystemeId='2154' />
