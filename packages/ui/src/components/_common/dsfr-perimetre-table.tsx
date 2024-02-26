@@ -14,7 +14,7 @@ import { GeoSystemeTypeahead } from './geosysteme-typeahead'
 
 interface Props {
   geojson_origine_points: FeatureCollectionPoints
-  geosysteme_id: TransformableGeoSystemeId
+  geo_systeme_id: TransformableGeoSystemeId
   titreSlug: TitreSlug
   maxRows: number
 }
@@ -56,7 +56,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
   )
 
   const columns = computed(() => {
-    const uniteId = GeoSystemes[props.geosysteme_id].uniteId
+    const uniteId = GeoSystemes[props.geo_systeme_id].uniteId
 
     if (isNotNullNorUndefined(uniteId)) {
       const alwaysPresentColumns: Column<string>[] = [
@@ -112,7 +112,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geosysteme_id} />
+      <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />
       <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort="noSort" />
 
       <DsfrLink
@@ -129,7 +129,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoTable.props = ['geojson_origine_points', 'geosysteme_id', 'titreSlug', 'maxRows']
+TabCaminoTable.props = ['geojson_origine_points', 'geo_systeme_id', 'titreSlug', 'maxRows']
 
 export const transformMultipolygonToPoints = (geojson_perimetre: FeatureMultiPolygon): FeatureCollectionPoints => {
   const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []

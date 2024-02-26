@@ -188,6 +188,26 @@ const titre: TitreGet = {
                   ],
                 },
               },
+              geojson_origine_perimetre: {
+                properties: {},
+                type: 'Feature',
+                geometry: {
+                  type: 'MultiPolygon',
+                  coordinates: [
+                    [
+                      [
+                        [-53.58181013905019, 3.8309654861273],
+                        [-53.58178306390299, 3.8219278216269807],
+                        [-53.572785590706495, 3.82195493825841],
+                        [-53.57281257175149, 3.8309926670647294],
+                        [-53.58181013905019, 3.8309654861273],
+                      ],
+                    ],
+                  ],
+                },
+              },
+              geojson_origine_points: null,
+              geojson_origine_geo_systeme_id: '4326',
               surface: 0,
               communes: [],
               sdom_zones: [],

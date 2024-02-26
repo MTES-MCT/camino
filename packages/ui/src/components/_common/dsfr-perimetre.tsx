@@ -16,7 +16,7 @@ type Props = {
   perimetre: { 
     geojson4326_perimetre: FeatureMultiPolygon
     geojson4326_points: FeatureCollectionPoints | null
-    geosysteme: TransformableGeoSystemeId
+    geojson_origine_geo_systeme_id: TransformableGeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints | null
   }
@@ -61,7 +61,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geosysteme_id={props.perimetre.geosysteme} maxRows={maxRows} />,
+      renderContent: () => <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id} maxRows={maxRows} />,
     },
   ] as const satisfies readonly Tab<TabId>[]
 

@@ -55,7 +55,7 @@ type EtapeBase = {
   geojson4326Points?: FeatureCollectionPoints | null
   geojsonOriginePerimetre?: FeatureMultiPolygon | null
   geojsonOriginePoints?: FeatureCollectionPoints | null
-  geoSystemeId?: TransformableGeoSystemeId | null
+  geojsonOrigineGeoSystemeId?: TransformableGeoSystemeId | null
   surface?: KM2 | null
 
   notes: null | string

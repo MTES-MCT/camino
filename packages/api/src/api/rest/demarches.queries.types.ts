@@ -21,6 +21,9 @@ export interface IGetEtapesByDemarcheIdDbResult {
   etape_statut_id: string;
   etape_type_id: string;
   forets: Json;
+  geojson_origine_geo_systeme_id: string | null;
+  geojson_origine_perimetre: Json | null;
+  geojson_origine_points: Json | null;
   geojson4326_perimetre: Json | null;
   geojson4326_points: Json | null;
   heritage_contenu: Json | null;

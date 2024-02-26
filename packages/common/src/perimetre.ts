@@ -83,7 +83,7 @@ export const geojsonInformationsValidator = z.object({
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_perimetre: featureMultiPolygonValidator,
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
-  geojson_origine_geosysteme: transformableGeoSystemeIdValidator
+  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator
 })
 
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>

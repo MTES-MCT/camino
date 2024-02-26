@@ -210,7 +210,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
           geojson4326_points: geojsonOriginFeatureCollectionPoints,
           geojson_origine_perimetre: geojsonOriginFeatureMultiPolygon,
           geojson_origine_points: geojsonOriginFeatureCollectionPoints,
-          geojson_origine_geosysteme: geoSystemeId.data,
+          geojson_origine_geo_systeme_id: geoSystemeId.data,
         }
 
         res.json(result)

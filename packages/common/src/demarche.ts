@@ -18,6 +18,7 @@ import { UniteId, uniteIdValidator, UNITE_IDS, Unites } from './static/unites.js
 import { capitalize } from './strings.js'
 import { foretIdValidator } from './static/forets.js'
 import { featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
+import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -60,6 +61,9 @@ export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>
 const etapePerimetreValidator = z.object({
   geojson4326_perimetre: featureMultiPolygonValidator,
   geojson4326_points: featureCollectionPointsValidator.nullable(),
+  geojson_origine_perimetre: featureMultiPolygonValidator,
+  geojson_origine_points: featureCollectionPointsValidator.nullable(),
+  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator,
   surface: z.number(),
   communes: z.array(z.object({ id: communeIdValidator, nom: z.string() })),
   secteurs_maritimes: z.array(secteurMaritimeValidator),
