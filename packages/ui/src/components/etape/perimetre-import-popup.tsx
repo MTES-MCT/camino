@@ -45,7 +45,7 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
         small={true}
         title={
           <>
-            Vous ne devez déposer que des fichiers ayant un seul multipolygone. Pour plus d'informations sur la création d'un périmètre et son dépôt vous pouvez regardez ce{' '}
+            Vous ne devez déposer que des fichiers ayant un seul multipolygone. Pour plus d'informations sur la création d'un périmètre et son dépôt vous pouvez regarder ce{' '}
             <a class="fr-link" href="https://dai.ly/x8spe70" target="_blank" rel="noopener noreferrer" title="Vidéo tutoriel Dailymotion - lien externe">
               tutoriel
             </a>
