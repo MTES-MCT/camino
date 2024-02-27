@@ -48,7 +48,6 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
       )
     }
   }
-  console.log('props', props)
   const defaultGeoSysteme = props.disabled ? GeoSystemes[props.geoSystemeId] : GeoSystemes[4326]
   if (!props.disabled) {
     props.geoSystemeSelected(defaultGeoSysteme.id)
