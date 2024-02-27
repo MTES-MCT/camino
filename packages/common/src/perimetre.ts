@@ -83,7 +83,7 @@ export const geojsonInformationsValidator = z.object({
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_perimetre: featureMultiPolygonValidator,
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
-  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator
+  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator,
 })
 
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>
@@ -102,6 +102,10 @@ export type GeojsonImportBody = z.infer<typeof geojsonImportBodyValidator>
 
 export const geojsonImportPointBodyValidator = geojsonImportBodyValidator.pick({ tempDocumentName: true })
 export type GeojsonImportPointsBody = z.infer<typeof geojsonImportPointBodyValidator>
+
+export const geojsonImportPointResponseValidator = z.object({ geojson4326: featureCollectionPointsValidator, origin: featureCollectionPointsValidator })
+// FIXME faire passer ça au backend
+export type GeojsonImportPointsResponse = z.infer<typeof geojsonImportPointResponseValidator>
 
 const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
   for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {

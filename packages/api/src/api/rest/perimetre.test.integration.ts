@@ -168,6 +168,55 @@ describe('geojsonImport', () => {
           ],
           "type": "FeatureCollection",
         },
+        "geojson_origine_geo_systeme_id": "4326",
+        "geojson_origine_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                  [
+                    -52.55,
+                    4.22438936251509,
+                  ],
+                  [
+                    -52.55,
+                    4.24113309117193,
+                  ],
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson_origine_points": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
@@ -264,12 +313,103 @@ describe('geojsonImport', () => {
           ],
           "type": "FeatureCollection",
         },
+        "geojson_origine_geo_systeme_id": "4326",
+        "geojson_origine_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                  [
+                    -52.55,
+                    4.22438936251509,
+                  ],
+                  [
+                    -52.55,
+                    4.24113309117193,
+                  ],
+                  [
+                    -52.54,
+                    4.22269896902571,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson_origine_points": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
         "surface": 1.03,
       }
     `)
+  })
+
+  test('fichier valide geojson 2154', async () => {
+    const featureMultipolygon: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: { id: null },
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [
+              [
+                [
+                  [1051195.108314365847036, 6867800.046355471946299],
+                  [1063526.397924559889361, 6867885.978687250986695],
+                  [1061421.05579599016346, 6865050.211738565005362],
+                  [1051452.905309700872749, 6864147.922254892066121],
+                  [1044836.115762767498381, 6866081.399719905108213],
+                  [1047113.322554893908091, 6867928.944853140041232],
+                  [1051195.108314365847036, 6867800.046355471946299],
+                ],
+              ],
+            ],
+          },
+        },
+      ],
+    }
+
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(featureMultipolygon))
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchSnapshot()
   })
 
   test('geojson geometrie non valide', async () => {
@@ -399,6 +539,65 @@ describe('geojsonImport', () => {
           "type": "Feature",
         },
         "geojson4326_points": null,
+        "geojson_origine_geo_systeme_id": "4326",
+        "geojson_origine_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -53.81653184297778,
+                    4.8383872290879895,
+                  ],
+                  [
+                    -53.81322738755286,
+                    4.830006672894745,
+                  ],
+                  [
+                    -53.821573012562965,
+                    4.826728136167801,
+                  ],
+                  [
+                    -53.824850522367235,
+                    4.83511774986356,
+                  ],
+                  [
+                    -53.81653184297778,
+                    4.8383872290879895,
+                  ],
+                ],
+              ],
+              [
+                [
+                  [
+                    -53.81404550326657,
+                    4.827437097386464,
+                  ],
+                  [
+                    -53.81077723268214,
+                    4.819056328722645,
+                  ],
+                  [
+                    -53.81913190272548,
+                    4.81580496237806,
+                  ],
+                  [
+                    -53.82241815394934,
+                    4.824167494311766,
+                  ],
+                  [
+                    -53.81404550326657,
+                    4.827437097386464,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson_origine_points": null,
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
@@ -482,6 +681,65 @@ describe('geojsonImport', () => {
           "type": "Feature",
         },
         "geojson4326_points": null,
+        "geojson_origine_geo_systeme_id": "4326",
+        "geojson_origine_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    -0.559793682920957,
+                    48.69765481906163,
+                  ],
+                  [
+                    -0.50310099913386,
+                    48.66913554685156,
+                  ],
+                  [
+                    -0.503048663319543,
+                    48.66913708570969,
+                  ],
+                  [
+                    -0.463219575114003,
+                    48.64222035907392,
+                  ],
+                  [
+                    -0.489112853076211,
+                    48.63372706181441,
+                  ],
+                  [
+                    -0.504861007120728,
+                    48.632407377355996,
+                  ],
+                  [
+                    -0.520477872758127,
+                    48.63260449428472,
+                  ],
+                  [
+                    -0.551973282810394,
+                    48.664914859247844,
+                  ],
+                  [
+                    -0.567779909973754,
+                    48.6727797057878,
+                  ],
+                  [
+                    -0.565098757717653,
+                    48.68851259991904,
+                  ],
+                  [
+                    -0.559793682920957,
+                    48.69765481906163,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson_origine_points": null,
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
@@ -520,23 +778,44 @@ describe('geojsonImportPoints', () => {
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "features": [
-          {
-            "geometry": {
-              "coordinates": [
-                -52.54,
-                4.22269896902571,
-              ],
-              "type": "Point",
+        "geojson4326": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
             },
-            "properties": {
-              "description": "Une description du point A",
-              "nom": "A",
+          ],
+          "type": "FeatureCollection",
+        },
+        "origin": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
             },
-            "type": "Feature",
-          },
-        ],
-        "type": "FeatureCollection",
+          ],
+          "type": "FeatureCollection",
+        },
       }
     `)
   })
@@ -559,23 +838,44 @@ describe('geojsonImportPoints', () => {
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "features": [
-          {
-            "geometry": {
-              "coordinates": [
-                7.7854,
-                48.8145,
-              ],
-              "type": "Point",
+        "geojson4326": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  7.7854,
+                  48.8145,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
             },
-            "properties": {
-              "description": "Une description du point A",
-              "nom": "A",
+          ],
+          "type": "FeatureCollection",
+        },
+        "origin": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  1051195.1083143658,
+                  6867800.046355472,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+              },
+              "type": "Feature",
             },
-            "type": "Feature",
-          },
-        ],
-        "type": "FeatureCollection",
+          ],
+          "type": "FeatureCollection",
+        },
       }
     `)
   })
@@ -627,6 +927,37 @@ describe('geojsonImportPoints', () => {
           "type": "Feature",
         },
         "geojson4326_points": null,
+        "geojson_origine_geo_systeme_id": "2972",
+        "geojson_origine_perimetre": {
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  [
+                    4113587.1064621,
+                    6772028.066275262,
+                  ],
+                  [
+                    4132574.3236907134,
+                    6760333.001039797,
+                  ],
+                  [
+                    4102127.2736782786,
+                    6765797.543152926,
+                  ],
+                  [
+                    4113587.1064621,
+                    6772028.066275262,
+                  ],
+                ],
+              ],
+            ],
+            "type": "MultiPolygon",
+          },
+          "properties": {},
+          "type": "Feature",
+        },
+        "geojson_origine_points": null,
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],

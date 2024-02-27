@@ -47,8 +47,8 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson4326_perimetre: multiPolygonValidator.nullable(),
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
-geojson_origine_perimetre: featureMultiPolygonValidator.nullable(),
-geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator.nullable(),
+  geojson_origine_perimetre: featureMultiPolygonValidator.nullable(),
+  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator.nullable(),
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
@@ -82,8 +82,7 @@ select
     e.geojson4326_points as geojson4326_points,
     e.geojson_origine_points,
     e.geojson_origine_perimetre,
-    e.geojson_origine_geo_systeme_id 
-
+    e.geojson_origine_geo_systeme_id
 from
     titres_etapes e
 where

@@ -109,7 +109,6 @@ export const TabCaminoTable = defineComponent<Props>(props => {
     return []
   })
 
-
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />

@@ -106,6 +106,8 @@ describe('titresEtapesAreasUpdate', () => {
           { id: saintElieId, surface: 12 },
         ],
         geojson4326Perimetre: multiPolygonWith4Points,
+        geojsonOriginePerimetre: multiPolygonWith4Points,
+        geojsonOrigineGeoSystemeId: '4326',
       },
     ])
 

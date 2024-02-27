@@ -375,12 +375,16 @@ export default {
       // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
       this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
       this.etape.geojson4326Points = perimetreInfos.geojson4326_points
+      this.etape.geojsonOriginePerimetre = perimetreInfos.geojson_origine_perimetre
+      this.etape.geojsonOriginePoints = perimetreInfos.geojson_origine_points
+      this.etape.geojsonOrigineGeoSystemeId = perimetreInfos.geojson_origine_geo_systeme_id
 
       this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
       this.$emit('update:etape', this.etape)
     },
-    onEtapePointsChange(geojson4326Points) {
+    onEtapePointsChange(geojson4326Points, geojsonOriginePoints) {
       this.etape.geojson4326Points = geojson4326Points
+      this.etape.geojsonOriginePoints = geojsonOriginePoints
       this.$emit('update:etape', this.etape)
     },
   },

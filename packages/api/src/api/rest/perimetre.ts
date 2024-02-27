@@ -24,6 +24,7 @@ import {
   multiPolygonValidator,
   polygonValidator,
   featureCollectionPolygonValidator,
+  GeojsonImportPointsResponse,
 } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
 import { createReadStream } from 'node:fs'
@@ -224,7 +225,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
   }
 }
 
-export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
+export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonImportPointsResponse>) => {
   const user = req.auth
 
   const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -247,7 +248,7 @@ export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, re
 
         const features = featureCollectionPointsValidator.parse(JSON.parse(buffer.toString()))
         const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
-        res.json(conversion)
+        res.json({ geojson4326: conversion, origin: features })
       } catch (e: any) {
         console.error(e)
         res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)

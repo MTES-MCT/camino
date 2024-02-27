@@ -5,13 +5,15 @@ import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 // TODO 2024-02-26, attention, vue rajoute tous les champs qui sont dans GeoSystemeTypeahead.props et les met à undefined, donc le typage n'est pas tout à fait correct par rapport à la réalité :(
-type Props = {
-  geoSystemeSelected: (geoSysteme: TransformableGeoSystemeId | null) => void
-  disabled: false
-} | {
-  disabled: true
-  geoSystemeId: TransformableGeoSystemeId
-}
+type Props =
+  | {
+      geoSystemeSelected: (geoSysteme: TransformableGeoSystemeId | null) => void
+      disabled: false
+    }
+  | {
+      disabled: true
+      geoSystemeId: TransformableGeoSystemeId
+    }
 
 const display = (geosystem: GeoSysteme<TransformableGeoSystemeId>) => {
   return (

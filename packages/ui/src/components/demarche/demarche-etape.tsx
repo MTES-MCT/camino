@@ -245,7 +245,13 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreSlug={props.titre.slug}
           apiClient={props.apiClient}
           calculateNeighbours={false}
-          perimetre={{ geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre, geojson4326_points: props.etape.fondamentale.perimetre.geojson4326_points, geojson_origine_perimetre: props.etape.fondamentale.perimetre.geojson_origine_perimetre, geojson_origine_points:  props.etape.fondamentale.perimetre.geojson_origine_points, geojson_origine_geo_systeme_id: props.etape.fondamentale.perimetre.geojson_origine_geo_systeme_id}}
+          perimetre={{
+            geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre,
+            geojson4326_points: props.etape.fondamentale.perimetre.geojson4326_points,
+            geojson_origine_perimetre: props.etape.fondamentale.perimetre.geojson_origine_perimetre,
+            geojson_origine_points: props.etape.fondamentale.perimetre.geojson_origine_points,
+            geojson_origine_geo_systeme_id: props.etape.fondamentale.perimetre.geojson_origine_geo_systeme_id,
+          }}
         />
       ) : null}
 

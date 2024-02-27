@@ -524,7 +524,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
           geojson4326_points: null,
           geojson4326_perimetre: demandeArmMecaniseNonDeposable,
           geojson_origine_geo_systeme_id: '4326',
-          geojson_origine_perimetre:demandeArmMecaniseNonDeposable,
+          geojson_origine_perimetre: demandeArmMecaniseNonDeposable,
           geojson_origine_points: null,
           surface: 10,
           communes: [],
@@ -540,42 +540,42 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
   />
 )
 const demandeArmMecaniseDeposable: FeatureMultiPolygon = {
-    properties: {},
-    type: 'Feature',
-    geometry: {
-      type: 'MultiPolygon',
-      coordinates: [
+  properties: {},
+  type: 'Feature',
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: [
+      [
         [
-          [
-            [-53.58181013905019, 3.8309654861273],
-            [-53.58178306390299, 3.8219278216269807],
-            [-53.572785590706495, 3.82195493825841],
-            [-53.57281257175149, 3.8309926670647294],
-            [-53.58181013905019, 3.8309654861273],
-          ],
-        ],
-        [
-          [
-            [-53.60031408473134, 3.8224780986447566],
-            [-53.59891645305842, 3.8181831495446303],
-            [-53.58181205656814, 3.82379854768971],
-            [-53.58320964990986, 3.828093576227541],
-            [-53.60031408473134, 3.8224780986447566],
-          ],
-        ],
-        [
-          [
-            [-53.583861926103765, 3.8502114455117433],
-            [-53.592379712320195, 3.834289122043602],
-            [-53.588417035915334, 3.8321501920354253],
-            [-53.57989914401643, 3.8480725119510217],
-            [-53.583861926103765, 3.8502114455117433],
-          ],
+          [-53.58181013905019, 3.8309654861273],
+          [-53.58178306390299, 3.8219278216269807],
+          [-53.572785590706495, 3.82195493825841],
+          [-53.57281257175149, 3.8309926670647294],
+          [-53.58181013905019, 3.8309654861273],
         ],
       ],
-    }
-  }
-  
+      [
+        [
+          [-53.60031408473134, 3.8224780986447566],
+          [-53.59891645305842, 3.8181831495446303],
+          [-53.58181205656814, 3.82379854768971],
+          [-53.58320964990986, 3.828093576227541],
+          [-53.60031408473134, 3.8224780986447566],
+        ],
+      ],
+      [
+        [
+          [-53.583861926103765, 3.8502114455117433],
+          [-53.592379712320195, 3.834289122043602],
+          [-53.588417035915334, 3.8321501920354253],
+          [-53.57989914401643, 3.8480725119510217],
+          [-53.583861926103765, 3.8502114455117433],
+        ],
+      ],
+    ],
+  },
+}
+
 export const DemandeArmMecaniseDeposable: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
@@ -603,12 +603,11 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
           { id: entrepriseIdValidator.parse('titulaire2'), nom: 'titulaire2', operateur: true },
         ],
         amodiataires: [{ id: entrepriseIdValidator.parse('amodiataire1'), nom: 'Amodiataire 1', operateur: false }],
-        perimetre: 
-          {
-            geojson4326_perimetre: demandeArmMecaniseDeposable,
-            geojson4326_points: null,
+        perimetre: {
+          geojson4326_perimetre: demandeArmMecaniseDeposable,
+          geojson4326_points: null,
           geojson_origine_geo_systeme_id: '4326',
-          geojson_origine_perimetre:demandeArmMecaniseDeposable,
+          geojson_origine_perimetre: demandeArmMecaniseDeposable,
           geojson_origine_points: null,
           surface: 10,
           communes: [],

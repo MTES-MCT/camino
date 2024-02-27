@@ -333,3 +333,99 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
   },
 }
 `;
+
+exports[`geojsonImport > fichier valide geojson 2154 1`] = `
+{
+  "communes": [],
+  "foretIds": [],
+  "geojson4326_perimetre": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            [
+              7.7854,
+              48.8145,
+            ],
+            [
+              7.9531,
+              48.8084,
+            ],
+            [
+              7.9221,
+              48.7841,
+            ],
+            [
+              7.7859,
+              48.7815,
+            ],
+            [
+              7.6976,
+              48.8025,
+            ],
+            [
+              7.7301,
+              48.8178,
+            ],
+            [
+              7.7854,
+              48.8145,
+            ],
+          ],
+        ],
+      ],
+      "type": "MultiPolygon",
+    },
+    "properties": {},
+    "type": "Feature",
+  },
+  "geojson4326_points": null,
+  "geojson_origine_geo_systeme_id": "2154",
+  "geojson_origine_perimetre": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            [
+              1051195.1083143658,
+              6867800.046355472,
+            ],
+            [
+              1063526.39792456,
+              6867885.978687251,
+            ],
+            [
+              1061421.0557959902,
+              6865050.211738565,
+            ],
+            [
+              1051452.9053097009,
+              6864147.922254892,
+            ],
+            [
+              1044836.1157627675,
+              6866081.399719905,
+            ],
+            [
+              1047113.3225548939,
+              6867928.94485314,
+            ],
+            [
+              1051195.1083143658,
+              6867800.046355472,
+            ],
+          ],
+        ],
+      ],
+      "type": "MultiPolygon",
+    },
+    "properties": {},
+    "type": "Feature",
+  },
+  "geojson_origine_points": null,
+  "sdomZoneIds": [],
+  "secteurMaritimeIds": [],
+  "superposition_alertes": [],
+  "surface": 51.55,
+}
+`;

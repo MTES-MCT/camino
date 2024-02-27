@@ -1,9 +1,8 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { DeepReadonly, computed, ref } from 'vue'
-import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
 import { Alert } from '../_ui/alert'
@@ -12,12 +11,11 @@ import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
   geoSystemeId: TransformableGeoSystemeId
-  result: (param: FeatureCollectionPoints | Error) => void
+  result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => void
   close: () => void
 }
 
 export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'geoSystemeId'], props => {
-
   const importFile = ref<File | null>(null)
 
   const fileChange = async (file: File) => {
@@ -32,7 +30,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
         title='Vous pouvez déposer un fichier de points pour modifier ou supprimer les noms et descriptions des points. Votre fichier doit comporter un champ "nom" (nous vous conseillons de ne pas dépasser 3 caractères) et un champ "description".'
       />
       <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
-       <div class="fr-fieldset__element">
+        <div class="fr-fieldset__element">
           <div class="fr-select-group">
             <label class="fr-label" for="type">
               Système géographique

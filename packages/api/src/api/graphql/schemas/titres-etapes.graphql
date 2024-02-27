@@ -85,6 +85,9 @@ type Etape {
   "Périmètre géographique du titre"
   geojson4326Perimetre: Json
   geojson4326Points: Json
+  geojsonOriginePoints: Json
+  geojsonOriginePerimetre: Json
+  geojsonOrigineGeoSystemeId: String
 }
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -112,6 +115,9 @@ type EtapeHeritage {
   geojson4326Perimetre: Json
 
   geojson4326Points: Json
+  geojsonOriginePoints: Json
+  geojsonOriginePerimetre: Json
+  geojsonOrigineGeoSystemeId: String
 
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
@@ -157,6 +163,9 @@ input InputEtapeCreation {
   substances: [String!]
   geojson4326Perimetre: Json
   geojson4326Points: Json
+  geojsonOriginePoints: Json
+  geojsonOriginePerimetre: Json
+  geojsonOrigineGeoSystemeId: String
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
   heritageProps: InputHeritageProps
@@ -189,6 +198,9 @@ input InputEtapeModification {
   notes: String
   geojson4326Perimetre: Json
   geojson4326Points: Json
+  geojsonOriginePoints: Json
+  geojsonOriginePerimetre: Json
+  geojsonOrigineGeoSystemeId: String
 }
 
 input InputEtapeFiltre {
