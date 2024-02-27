@@ -104,7 +104,6 @@ export const geojsonImportPointBodyValidator = geojsonImportBodyValidator.pick({
 export type GeojsonImportPointsBody = z.infer<typeof geojsonImportPointBodyValidator>
 
 export const geojsonImportPointResponseValidator = z.object({ geojson4326: featureCollectionPointsValidator, origin: featureCollectionPointsValidator })
-// FIXME faire passer ça au backend
 export type GeojsonImportPointsResponse = z.infer<typeof geojsonImportPointResponseValidator>
 
 const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {

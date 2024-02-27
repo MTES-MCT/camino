@@ -388,8 +388,6 @@ const customPointWithoutNameAndDesc: FeatureCollectionPoints = {
   features: [{ type: 'Feature', properties: { nom: null, description: null }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0] } }],
 }
 
-// FIXME ajouter des tests avec un geosysteme différent
-// FIXME sauvegarder le périmètre d'origine et les points d'origine
 // FIXME récupérer les données de l'ancienne production
 export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
   <>
@@ -401,6 +399,29 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
         geojson_origine_perimetre: geojson4326_perimetre,
         geojson_origine_points: customPointWithoutNameAndDesc,
         geojson_origine_geo_systeme_id: '4326',
+      }}
+      initTab="points"
+      calculateNeighbours={false}
+      apiClient={apiClientMock}
+      titreSlug={titreSlugValidator.parse('titre-slug')}
+    />
+  </>
+)
+
+export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
+  <>
+    <MapPattern />
+    <DsfrPerimetre
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: customPointWithoutNameAndDesc,
+        geojson_origine_perimetre: geojson4326_perimetre,
+        geojson_origine_points: {
+          type: 'FeatureCollection',
+          properties: {},
+          features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
+        },
+        geojson_origine_geo_systeme_id: '2154',
       }}
       initTab="points"
       calculateNeighbours={false}
