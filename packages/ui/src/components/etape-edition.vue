@@ -73,8 +73,10 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { isAdministration } from 'camino-common/src/roles'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { apiClient } from '../api/api-client'
+import { userMemoized } from '@/moi'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
@@ -97,16 +99,13 @@ export default {
       newDate: getCurrent(),
       sdomZoneIds: [],
       superposition_alertes: [],
+      user: null,
     }
   },
 
   computed: {
     loaded() {
       return this.$store.state.titreEtapeEdition.loaded
-    },
-
-    user() {
-      return this.$store.state.user.element
     },
 
     etapeId() {
@@ -184,7 +183,7 @@ export default {
     },
 
     userIsAdmin() {
-      return this.$store.getters['user/userIsAdmin']
+      return isAdministration(this.user)
     },
 
     helpVisible() {
@@ -197,6 +196,7 @@ export default {
   },
 
   async created() {
+    this.user = await userMemoized()
     await this.init()
 
     document.addEventListener('keyup', this.keyUp)

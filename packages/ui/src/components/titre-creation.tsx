@@ -20,14 +20,17 @@ import { EtapeId } from 'camino-common/src/etape'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
+import { userMemoized } from '@/moi'
 
 export const TitreCreation = defineComponent(() => {
-  const store = useStore()
   const router = useRouter()
 
-  const user = computed(() => {
-    return store.state.user.element
+  const user = ref<User>(null)
+
+  onMounted(async () => {
+    user.value = await userMemoized()
   })
+  
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({

@@ -1,4 +1,4 @@
-import { computed, defineComponent, markRaw } from 'vue'
+import { defineComponent, markRaw, onMounted, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -7,7 +7,6 @@ import { List } from './_ui/list'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { CaminoAccessError } from './error'
-import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { Column, TableRow } from './_ui/table'
 import { activitesDownloadFormats, activitesFiltresNames } from 'camino-common/src/filters'
@@ -15,6 +14,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { capitalize } from 'camino-common/src/strings'
+import { userMemoized } from '@/moi'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -129,9 +129,11 @@ export const PureActivites = defineComponent<Props>(props => {
 PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
 
 export const Activites = defineComponent(() => {
-  const store = useStore()
   const router = useRouter()
-  const user = computed<User>(() => store.state.user.element)
+  const user = ref<User>(null)
 
+  onMounted(async () => {
+    user.value = await userMemoized()
+  })
   return () => <PureActivites user={user.value} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })

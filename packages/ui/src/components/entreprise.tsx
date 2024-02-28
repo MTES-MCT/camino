@@ -22,13 +22,18 @@ import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { userMemoized } from '@/moi'
 
 export const Entreprise = defineComponent({
   setup() {
     const store = useStore()
     const vueRoute = useRoute()
     const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
-    const user = computed<User>(() => store.state.user.element)
+    const user = ref<User>(null)
+
+    onMounted(async () => {
+      user.value = await userMemoized()
+    })
 
     watch(
       () => vueRoute.params.id,

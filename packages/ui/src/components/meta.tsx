@@ -1,10 +1,11 @@
-import { computed, defineComponent, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { MetaIndexTable, metasIndex } from '../store/metas-definitions'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { useRoute } from 'vue-router'
 import { capitalize } from 'camino-common/src/strings'
+import { userMemoized } from '@/moi'
 export const Meta = defineComponent(() => {
   const store = useStore()
   const route = useRoute()
@@ -18,6 +19,7 @@ export const Meta = defineComponent(() => {
 
   onMounted(async () => {
     await get()
+    user.value = await userMemoized()
   })
   onBeforeUnmount(() => {
     store.commit('meta/reset')
@@ -29,10 +31,10 @@ export const Meta = defineComponent(() => {
   const elements = computed(() => {
     return store.getters['meta/elements'](id.value)
   })
-  const user: User = store.state.user.element
+  const user = ref<User>(null)
 
   const get = async () => {
-    if (!canReadMetas(user)) {
+    if (!canReadMetas(user.value)) {
       await store.dispatch('pageError')
     } else {
       await store.dispatch('meta/get', id.value)

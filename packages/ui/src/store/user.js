@@ -46,19 +46,6 @@ const getters = {
     return state.loaded
   },
 
-  preferencesConditions(state) {
-    if (state.element) {
-      return true
-    }
-
-    const threedays = 1000 * 60 * 60
-
-    if (localStorage.getItem('conditions') && Number(localStorage.getItem('conditions')) + threedays > new Date().getTime()) {
-      return true
-    }
-
-    return false
-  },
   /*
   / @deprecated
   */

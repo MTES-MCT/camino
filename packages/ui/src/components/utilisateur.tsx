@@ -14,6 +14,7 @@ import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
 import { ButtonIcon } from './_ui/button-icon'
+import { userMemoized } from '@/moi'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -21,9 +22,12 @@ export const Utilisateur = defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-    const user = computed<User>(() => {
-      return store.state.user.element
+    const user = ref<User>(null)
+
+    onMounted(async () => {
+      user.value = await userMemoized()
     })
+    
 
     const deleteUtilisateur = async (userId: string) => {
       const isMe: boolean = (user.value && userId === user.value.id) ?? false

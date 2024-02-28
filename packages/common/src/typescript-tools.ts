@@ -66,7 +66,7 @@ export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 export type OmitDistributive<T, K extends string> = T extends unknown ? Omit<T, K> : never
 
 export type SimplePromiseFn<T> = () => Promise<T>
-type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
+export type Memoized<T> = SimplePromiseFn<T> & { _type: 'MEMOIZED' }
 export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
   let cache: T | null = null
 

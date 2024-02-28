@@ -107,22 +107,6 @@ describe("état de l'utilisateur connecté", () => {
     expect(store.state.user.preferences.carte.zoom).toEqual(2)
   })
 
-  test("retourne true si l'utilisateur est connecté", () => {
-    user.state.element = {}
-    store = createStore({ modules: { user } })
-
-    expect(store.getters['user/preferencesConditions']).toBeTruthy()
-  })
-
-  test('ne recupere pas les preferences sauvegardées: vieilles de plus de 3 jours', () => {
-    localStorage.setItem('conditions', '3')
-    expect(store.getters['user/preferencesConditions']).toBeFalsy()
-  })
-
-  test('recupere les preferences sauvegardées', () => {
-    localStorage.setItem('conditions', new Date().getTime().toString())
-    expect(store.getters['user/preferencesConditions']).toBeTruthy()
-  })
 
   test("initialise le statut de l'user sans entreprises", () => {
     store.commit('user/set', {

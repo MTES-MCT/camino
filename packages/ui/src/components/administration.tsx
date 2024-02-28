@@ -1,6 +1,5 @@
 import { CaminoError } from './error'
 import { apiClient, ApiClient } from '@/api/api-client'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 import { Card } from './_ui/card'
@@ -20,12 +19,16 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { userMemoized } from '@/moi'
 
 export const Administration = defineComponent(() => {
-  const store = useStore()
   const route = useRoute()
 
-  const user = computed<User>(() => store.state.user.element)
+  const user = ref<User>(null)
+
+  onMounted(async () => {
+    user.value = await userMemoized()
+  })
 
   const administrationId = computed<AdministrationId | null>(() => {
     if (isAdministrationId(route.params.id)) {

@@ -19,6 +19,7 @@ import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { DemandeTitreButton } from './_common/demande-titre-button'
+import { userMemoized } from '@/moi'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -37,10 +38,9 @@ export const Titres = defineComponent({
 
       return CaminoTitresMap
     })
-    const store = useStore()
     const router = useRouter()
-    const user = computed<User>(() => store.state.user.element)
-
+    const user = ref<User>(null)
+    
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
     const titresForCarte = ref<{ hash: string; titres: TitreWithPerimetre[] }>({ hash: '', titres: [] })
@@ -109,6 +109,7 @@ export const Titres = defineComponent({
       }
     }
     onMounted(async () => {
+      user.value = await userMemoized()
       await reloadTitres(routerQueryToString(router.currentRoute.value.query.vueId, 'carte') as VueId)
     })
 

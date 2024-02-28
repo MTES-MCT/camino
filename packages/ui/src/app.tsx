@@ -2,7 +2,7 @@ import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
-import { defineComponent, Transition, computed } from 'vue'
+import { defineComponent, Transition, computed, inject, ref, onMounted } from 'vue'
 import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
@@ -12,15 +12,15 @@ import { IconSprite } from './components/_ui/iconSprite'
 import { CaminoError } from './components/error'
 import { useStore } from 'vuex'
 import { RouterView, useRoute } from 'vue-router'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-export const App = defineComponent({
-  setup: () => {
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { userMemoized } from './moi'
+import { User } from 'camino-common/src/roles'
+export const App = defineComponent(() => {
     const store = useStore()
     const route = useRoute()
-
-    const user = computed(() => store.state.user.element)
-
-    const loaded = computed<boolean>(() => store.state.user.loaded)
+    
+    const user = ref<User>(null)
+    const loaded = ref<boolean>(false)
 
     const error = computed(() => store.state.error)
 
@@ -34,6 +34,23 @@ export const App = defineComponent({
 
     const currentMenuSection = computed(() => route.meta?.menuSection)
 
+    onMounted(async () => {
+      console.log("mounted")
+      user.value = await userMemoized()
+      loaded.value = true
+    })
+
+    // FIXME péter tout les getter dans user, remplacer les appels dans les .vue
+    const version = computed(() => {
+      /* global applicationVersion */
+      // @ts-ignore
+      return applicationVersion
+    })
+
+    const displayNewsletter = computed<boolean>(() => {
+      return isNullOrUndefined(user.value)
+    })
+
     return () => (
       <div class="page relative">
         <MapPattern />
@@ -45,7 +62,7 @@ export const App = defineComponent({
           <div class="container">{isNotNullNorUndefined(error.value) ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
         </main>
 
-        <Footer />
+        <Footer displayNewsletter={displayNewsletter.value} version={version.value} />
 
         <div class="messages">
           <Messages messages={messages.value} />
@@ -76,5 +93,4 @@ export const App = defineComponent({
         </Transition>
       </div>
     )
-  },
 })

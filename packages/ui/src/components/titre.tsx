@@ -40,6 +40,7 @@ import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { EtapeId } from 'camino-common/src/etape'
+import { userMemoized } from '@/moi'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -49,8 +50,12 @@ const activitesSort: TableSortEvent = {
 export const Titre = defineComponent(() => {
   const router = useRouter()
   const store = useStore()
-  const user = computed<User>(() => store.state.user.element)
+  const user = ref<User>(null)
 
+  onMounted(async () => {
+    user.value = await userMemoized()
+  })
+  
   const titreIdOrSlug = computed<TitreIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.id) ? router.currentRoute.value.params.id[0] : router.currentRoute.value.params.id
     const validated = titreIdOrSlugValidator.safeParse(idOrSlug)

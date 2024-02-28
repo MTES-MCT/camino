@@ -1,4 +1,4 @@
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { User } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
@@ -9,6 +9,7 @@ import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/ta
 import { ApiClient, apiClient } from '../api/api-client'
 import { TableRow } from './_ui/table'
 import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
+import { userMemoized } from '@/moi'
 
 interface Props {
   user: User
@@ -59,9 +60,12 @@ export const Utilisateurs = defineComponent(() => {
   const store = useStore()
   const router = useRouter()
 
-  const user = computed<User>(() => {
-    return store.state.user.element
+  const user = ref<User>(null)
+
+  onMounted(async () => {
+    user.value = await userMemoized()
   })
+  
 
   return () => {
     return <PureUtilisateurs user={user.value} apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />

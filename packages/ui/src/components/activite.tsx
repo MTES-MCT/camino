@@ -6,14 +6,17 @@ import { AsyncData } from '@/api/client-rest'
 import { Preview } from './activite/preview'
 import { ActiviteApiClient, activiteApiClient } from './activite/activite-api-client'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
-import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import { CaminoAccessError } from './error'
+import { userMemoized } from '@/moi'
 
 export const Activite = defineComponent(() => {
   const router = useRouter()
-  const store = useStore()
-  const user = computed<User>(() => store.state.user.element)
+  const user = ref<User>(null)
+
+  onMounted(async () => {
+    user.value = await userMemoized()
+  })
 
   const activiteId = computed<ActiviteIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.activiteId) ? router.currentRoute.value.params.activiteId[0] : router.currentRoute.value.params.activiteId
