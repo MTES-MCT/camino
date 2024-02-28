@@ -1,52 +1,26 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { DeepReadonly, computed, ref } from 'vue'
-import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
 import { Alert } from '../_ui/alert'
+import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
-  result: (param: FeatureCollectionPoints | Error) => void
+  geoSystemeId: TransformableGeoSystemeId
+  result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => void
   close: () => void
 }
 
-const defaultGeoSystemeId = GeoSystemes[4326].id
-export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result'], props => {
-  const systemeGeographique = ref<TransformableGeoSystemeId>(defaultGeoSystemeId)
-
+export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'geoSystemeId'], props => {
   const importFile = ref<File | null>(null)
 
   const fileChange = async (file: File) => {
     importFile.value = file
   }
-
-  const itemChipLabel = (item: GeoSysteme): string => item?.nom
-  const onSelectGeographicSystem = (item: DeepReadonly<GeoSysteme<TransformableGeoSystemeId>> | undefined) => {
-    if (item !== undefined) {
-      systemeGeographique.value = item.id
-    } else {
-      systemeGeographique.value = defaultGeoSystemeId
-    }
-  }
-
-  const search = ref<string | null>(null)
-  const geoSystemesToDisplay = computed<GeoSysteme<TransformableGeoSystemeId>[]>(() => {
-    const value = search.value
-
-    return transformableGeoSystemes.filter(({ id, nom }) => {
-      return value !== null ? id.toLowerCase().includes(value) || nom.toLowerCase().includes(value) : true
-    })
-  })
-
-  const searchReduceGeoSystem = (item: string) => {
-    search.value = item.toLowerCase()
-  }
-
-  const overrideItem = GeoSystemes[systemeGeographique.value]
 
   const content = () => (
     <form>
@@ -61,19 +35,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <TypeAheadSingle
-              overrideItem={overrideItem}
-              props={{
-                id: 'geographic-system',
-                itemKey: 'id',
-                itemChipLabel,
-                items: geoSystemesToDisplay.value,
-                minInputLength: 1,
-                placeholder: '',
-                onSelectItem: onSelectGeographicSystem,
-                onInput: searchReduceGeoSystem,
-              }}
-            />
+            <GeoSystemeTypeahead geoSystemeId={props.geoSystemeId} disabled={true} />
           </div>
         </div>
       </fieldset>
@@ -95,7 +57,7 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
           if (importFile.value !== null) {
             const tempFile = await props.apiClient.uploadTempDocument(importFile.value)
             try {
-              const result = await props.apiClient.geojsonPointsImport({ tempDocumentName: tempFile }, systemeGeographique.value)
+              const result = await props.apiClient.geojsonPointsImport({ tempDocumentName: tempFile }, props.geoSystemeId)
               props.result(result)
             } catch (e: any) {
               props.result(new Error("Erreur lors de l'import"))

@@ -2,15 +2,23 @@ import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
-import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollection, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
 export type TabId = 'carte' | 'points'
+
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints | null }
+  perimetre: {
+    geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints | null
+    geojson_origine_geo_systeme_id: TransformableGeoSystemeId
+    geojson_origine_perimetre: FeatureMultiPolygon
+    geojson_origine_points: FeatureCollectionPoints | null
+  }
   titreSlug: TitreSlug
   initTab?: TabId
   class?: HTMLAttributes['class']
@@ -33,26 +41,35 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 
     return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
   })
+  const geojsonOriginePoints = computed<FeatureCollectionPoints>(() => {
+    if (isNotNullNorUndefined(props.perimetre.geojson_origine_points)) {
+      return props.perimetre.geojson_origine_points
+    }
+
+    return transformMultipolygonToPoints(props.perimetre.geojson_origine_perimetre)
+  })
 
   const vues = [
     {
       id: 'carte',
       icon: 'fr-icon-earth-fill',
       title: 'Carte',
-      renderContent: () => <TabCaminoMap {...props} perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value }} />,
+      renderContent: () => <TabCaminoMap {...props} perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value, geojson_origine_points: geojsonOriginePoints.value }} />,
     },
     {
       id: 'points',
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
-      renderContent: () => <TabCaminoTable perimetre={{ ...props.perimetre, geojson4326_points: geojson4326Points.value }} titreSlug={props.titreSlug} apiClient={props.apiClient} maxRows={maxRows} />,
+      renderContent: () => (
+        <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id} maxRows={maxRows} />
+      ),
     },
   ] as const satisfies readonly Tab<TabId>[]
 
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints } }
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: { [key in keyof Props['perimetre']]: NonNullable<Props['perimetre'][key]> } }
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 
@@ -62,20 +79,44 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
     return DemarcheMap
   })
 
-  const geojson = { type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre, ...props.perimetre.geojson4326_points.features] }
+  const geojson_origine = computed<FeatureCollection>(() => ({
+    type: 'FeatureCollection',
+    crs: { type: 'name', properties: { name: `urn:ogc:def:crs:EPSG::${props.perimetre.geojson_origine_geo_systeme_id}` } },
+    properties: null,
+    features: [props.perimetre.geojson_origine_perimetre, ...props.perimetre.geojson_origine_points.features],
+  }))
+
+  const geojson_4326 = computed<FeatureCollection>(() => ({
+    type: 'FeatureCollection',
+    crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::4326' } },
+    properties: null,
+    features: [props.perimetre.geojson4326_perimetre, ...props.perimetre.geojson4326_points.features],
+  }))
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DemarcheMap perimetre={props.perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
-      <DsfrLink
-        style={{ alignSelf: 'end' }}
-        href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson))}`}
-        download={`perimetre-${props.titreSlug}.geojson`}
-        icon="fr-icon-download-line"
-        buttonType="secondary"
-        title="Télécharge le périmètre au format geojson"
-        label=".geojson"
-      />
+      <div style={{ alignSelf: 'end' }}>
+        {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
+          <DsfrLink
+            class="fr-mr-2w"
+            href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
+            download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
+            icon="fr-icon-download-line"
+            buttonType="secondary"
+            title={`Télécharge le périmètre au format geojson dans le référentiel d'origine ${props.perimetre.geojson_origine_geo_systeme_id}`}
+            label={`.geojson (${props.perimetre.geojson_origine_geo_systeme_id})`}
+          />
+        ) : null}
+        <DsfrLink
+          href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
+          download={`perimetre-${props.titreSlug}-4326.geojson`}
+          icon="fr-icon-download-line"
+          buttonType="secondary"
+          title="Télécharge le périmètre au format geojson dans le référentiel 4326"
+          label=".geojson (4326)"
+        />
+      </div>
     </div>
   )
 })

@@ -92,7 +92,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
           if (!(etape.heritage_props?.perimetre?.actif ?? false)) {
-            if (isNotNullNorUndefined(etape.geojson4326_perimetre)) {
+            if (isNotNullNorUndefined(etape.geojson4326_perimetre) && isNotNullNorUndefined(etape.geojson_origine_perimetre) && isNotNullNorUndefined(etape.geojson_origine_geo_systeme_id)) {
               const communes: Commune[] = []
               if (isNonEmptyArray(etape.communes)) {
                 const ids = etape.communes.map(({ id }) => id)
@@ -107,7 +107,11 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
                   properties: {},
                   geometry: etape.geojson4326_perimetre,
                 },
+
                 geojson4326_points: etape.geojson4326_points,
+                geojson_origine_points: etape.geojson_origine_points,
+                geojson_origine_perimetre: etape.geojson_origine_perimetre,
+                geojson_origine_geo_systeme_id: etape.geojson_origine_geo_systeme_id,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],

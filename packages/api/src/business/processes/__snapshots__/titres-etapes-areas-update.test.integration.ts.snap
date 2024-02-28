@@ -59,6 +59,41 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "type": "Feature",
     },
     "geojson4326Points": null,
+    "geojsonOrigineGeoSystemeId": "4326",
+    "geojsonOriginePerimetre": {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              [
+                -53.16822754488772,
+                5.02935254143807,
+              ],
+              [
+                -53.15913163720232,
+                5.029382753429523,
+              ],
+              [
+                -53.15910186841349,
+                5.020342601941031,
+              ],
+              [
+                -53.168197650929095,
+                5.02031244452273,
+              ],
+              [
+                -53.16822754488772,
+                5.02935254143807,
+              ],
+            ],
+          ],
+        ],
+        "type": "MultiPolygon",
+      },
+      "properties": {},
+      "type": "Feature",
+    },
+    "geojsonOriginePoints": null,
     "heritageContenu": null,
     "heritageProps": null,
     "id": "titreEtapeIdUniquePourMiseAJourAreas",
@@ -156,6 +191,41 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
         "type": "Feature",
       },
       "geojson4326Points": null,
+      "geojsonOrigineGeoSystemeId": "4326",
+      "geojsonOriginePerimetre": {
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                [
+                  -53.16822754488772,
+                  5.02935254143807,
+                ],
+                [
+                  -53.15913163720232,
+                  5.029382753429523,
+                ],
+                [
+                  -53.15910186841349,
+                  5.020342601941031,
+                ],
+                [
+                  -53.168197650929095,
+                  5.02031244452273,
+                ],
+                [
+                  -53.16822754488772,
+                  5.02935254143807,
+                ],
+              ],
+            ],
+          ],
+          "type": "MultiPolygon",
+        },
+        "properties": {},
+        "type": "Feature",
+      },
+      "geojsonOriginePoints": null,
       "heritageContenu": null,
       "heritageProps": null,
       "id": "titreEtapeIdUniquePourMiseAJourAreas",

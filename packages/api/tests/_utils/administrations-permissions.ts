@@ -20,6 +20,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { TitreId } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../src/database/models/titres-demarches.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -214,6 +215,24 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
           substances: ['auru'],
           documentIds,
           geojson4326Perimetre: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'MultiPolygon',
+              coordinates: [
+                [
+                  [
+                    [1, 2],
+                    [1, 2],
+                    [1, 2],
+                    [1, 2],
+                  ],
+                ],
+              ],
+            },
+          },
+          geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.WGS84,
+          geojsonOriginePerimetre: {
             type: 'Feature',
             properties: {},
             geometry: {

@@ -40,7 +40,14 @@ import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
 import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
-import { featureCollectionPointsValidator, geojsonImportBodyValidator, geojsonImportPointBodyValidator, geojsonInformationsValidator, perimetreInformationsValidator } from './perimetre.js'
+import {
+  featureCollectionPointsValidator,
+  geojsonImportBodyValidator,
+  geojsonImportPointBodyValidator,
+  geojsonImportPointResponseValidator,
+  geojsonInformationsValidator,
+  perimetreInformationsValidator,
+} from './perimetre.js'
 import { titreIdOrSlugValidator, titreIdValidator } from './validators/titres.js'
 import { administrationIdValidator } from './static/administrations.js'
 import { administrationActiviteTypeEmailValidator } from './administrations.js'
@@ -179,7 +186,7 @@ export const CaminoRestRoutes = {
   },
   '/rest/geojson_points/import/:geoSystemeId': {
     params: { geoSystemeId: transformableGeoSystemeIdValidator },
-    post: { input: geojsonImportPointBodyValidator, output: featureCollectionPointsValidator },
+    post: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },

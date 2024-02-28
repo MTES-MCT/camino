@@ -4,9 +4,16 @@ import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSys
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-interface Props {
-  geoSystemeSelected: (geoSysteme: TransformableGeoSystemeId | null) => void
-}
+// TODO 2024-02-26, attention, vue rajoute tous les champs qui sont dans GeoSystemeTypeahead.props et les met à undefined, donc le typage n'est pas tout à fait correct par rapport à la réalité :(
+type Props =
+  | {
+      geoSystemeSelected: (geoSysteme: TransformableGeoSystemeId | null) => void
+      disabled: false
+    }
+  | {
+      disabled: true
+      geoSystemeId: TransformableGeoSystemeId
+    }
 
 const display = (geosystem: GeoSysteme<TransformableGeoSystemeId>) => {
   return (
@@ -23,7 +30,9 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
   const geoSystemSelected = ref<GeoSysteme<TransformableGeoSystemeId> | undefined>(GeoSystemes[4326])
   const geoSystemUpdate = async (geoSysteme: GeoSysteme<TransformableGeoSystemeId> | undefined) => {
     geoSystemSelected.value = geoSysteme
-    props.geoSystemeSelected(isNotNullNorUndefined(geoSysteme) ? geoSysteme.id : null)
+    if (!props.disabled) {
+      props.geoSystemeSelected(isNotNullNorUndefined(geoSysteme) ? geoSysteme.id : null)
+    }
   }
 
   const geoSystemeFiltered = ref<GeoSysteme<TransformableGeoSystemeId>[]>(transformableGeoSystemes)
@@ -39,9 +48,10 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
       )
     }
   }
-
-  const defaultGeoSysteme = GeoSystemes[4326]
-  props.geoSystemeSelected(defaultGeoSysteme.id)
+  const defaultGeoSysteme = props.disabled ? GeoSystemes[props.geoSystemeId] : GeoSystemes[4326]
+  if (!props.disabled) {
+    props.geoSystemeSelected(defaultGeoSysteme.id)
+  }
 
   return () => (
     <TypeAheadSingle
@@ -56,9 +66,10 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
         onInput: geoSystemeOnInput,
         displayItemInList: display,
       }}
+      disabled={props.disabled}
     />
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-GeoSystemeTypeahead.props = ['geoSystemeSelected']
+GeoSystemeTypeahead.props = ['geoSystemeSelected', 'geoSystemeId', 'disabled']

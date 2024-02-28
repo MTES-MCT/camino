@@ -5,7 +5,6 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 export interface IConvertMultiPointDbParams {
   fromGeoSystemeId: number;
   geojson: string;
-  precision: number;
   toGeoSystemeId: number;
 }
 
@@ -24,7 +23,6 @@ export interface IConvertMultiPointDbQuery {
 export interface IGetGeojsonByGeoSystemeIdDbParams {
   fromGeoSystemeId: number;
   geojson: string;
-  precision: number;
   toGeoSystemeId: number;
 }
 

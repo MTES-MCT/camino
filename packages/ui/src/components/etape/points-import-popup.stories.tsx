@@ -24,7 +24,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'> =
       type: 'FeatureCollection',
     }
 
-    return Promise.resolve(result)
+    return Promise.resolve({ geojson4326: result, origin: result })
   },
   uploadTempDocument(document) {
     geojsonImport(document)
@@ -33,4 +33,4 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'> =
   },
 }
 
-export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} />
+export const Default: StoryFn = () => <PointsImportPopup close={close} apiClient={apiClient} result={resultAction} geoSystemeId="2154" />
