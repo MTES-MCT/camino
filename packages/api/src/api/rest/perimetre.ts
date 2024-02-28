@@ -132,8 +132,20 @@ const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValid
 const shapeValidator = z.array(polygonValidator.or(multiPolygonValidator)).max(1).min(1)
 const geojsonValidator = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator)
 
-const csvMetreToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string(), x: z.number(), y: z.number() }))
-const csvDegToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string(), longitude: z.number(), latitude: z.number() }))
+const csvInputNumberValidator = z.union([z.string(), z.number()]).transform<number>(val => {
+  if (typeof val === 'string') {
+    if (val.includes(',')) {
+      return Number.parseFloat(val.replace(/\./g, '').replace(/,/g, '.'))
+    }
+
+    return Number.parseFloat(val)
+  } else {
+    return val
+  }
+})
+
+const csvMetreToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string().optional(), x: csvInputNumberValidator, y: csvInputNumberValidator }))
+const csvDegToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string().optional(), longitude: csvInputNumberValidator, latitude: csvInputNumberValidator }))
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -193,14 +205,18 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 
           case 'csv': {
             const fileContent = readFileSync(pathFrom, { encoding: 'utf-8' })
-            const result = xlsx.read(fileContent, { type: 'string' })
+            const result = xlsx.read(fileContent, { type: 'string', FS: ';', raw: true })
 
             if (result.SheetNames.length !== 1) {
               throw new Error(`une erreur est survenue lors de la lecture du csv, il ne devrait y avoir qu'un seul document ${result.SheetNames}`)
             }
             const sheet1 = result.Sheets[result.SheetNames[0]]
-            const converted = xlsx.utils.sheet_to_json(sheet1)
+            const converted = xlsx.utils.sheet_to_json(sheet1, { raw: true })
             const uniteId = GeoSystemes[geoSystemeId.data].uniteId
+
+            if (converted.length > 20) {
+              throw new Error(`L'import CSV est fait pour des petits polygones simple de moins de 20 sommets`)
+            }
 
             let coordinates: MultiPolygon['coordinates']
             let points: FeatureCollectionPoints['features']
