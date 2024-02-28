@@ -10,7 +10,7 @@ import { titreTypeIdValidator } from './static/titresTypes.js'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
-import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
+import { TransformableGeoSystemeId, transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
 
 // [longitude, latitude]
 const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
@@ -47,8 +47,25 @@ const featurePointValidator = z.object({ type: z.literal('Feature'), geometry: p
 
 export type GeojsonFeaturePoint = z.infer<typeof featurePointValidator>
 
+// d'après la spec --> https://www.ogc.org/about-ogc/policies/ogc-urn-policy/ : “urn:ogc:def” “:” objectType “:” authority “:” [ version ] “:” code
+// donc nous `objectType` est tout le temps 'crs', `authority` est tout le temps 'EPSG'
+// un exemple de ce que génère QGis
+// "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2972" } },
+/** @public (knip) visibleForTesting */
+export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${TransformableGeoSystemeId}`>(val => {
+  if (typeof val !== 'string') {
+    return false
+  }
+  if (!val.startsWith('urn:ogc:def:crs:EPSG:')) {
+    return false
+  }
+
+  return transformableGeoSystemeIdValidator.safeParse(val.substring(val.length - 4)).success
+})
+
 const featureCollectionValidator = z.object({
   type: z.literal('FeatureCollection'),
+  crs: z.object({ type: z.literal('name'), properties: z.object({ name: crsUrnValidator }) }).optional(),
   properties: z.any().optional(),
 })
 

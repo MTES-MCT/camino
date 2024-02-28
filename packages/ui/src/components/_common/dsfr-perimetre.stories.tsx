@@ -388,7 +388,6 @@ const customPointWithoutNameAndDesc: FeatureCollectionPoints = {
   features: [{ type: 'Feature', properties: { nom: null, description: null }, geometry: { type: 'Point', coordinates: geojson4326_perimetre.geometry.coordinates[0][0][0] } }],
 }
 
-// FIXME récupérer les données de l'ancienne production
 export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
   <>
     <MapPattern />

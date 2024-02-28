@@ -2,7 +2,7 @@ import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
-import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollection, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
@@ -79,9 +79,19 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
     return DemarcheMap
   })
 
-  const geojson_origine = computed(() => ({ type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson_origine_perimetre, ...props.perimetre.geojson_origine_points.features] }))
+  const geojson_origine = computed<FeatureCollection>(() => ({
+    type: 'FeatureCollection',
+    crs: { type: 'name', properties: { name: `urn:ogc:def:crs:EPSG::${props.perimetre.geojson_origine_geo_systeme_id}` } },
+    properties: null,
+    features: [props.perimetre.geojson_origine_perimetre, ...props.perimetre.geojson_origine_points.features],
+  }))
 
-  const geojson_4326 = computed(() => ({ type: 'FeatureCollection', properties: null, features: [props.perimetre.geojson4326_perimetre, ...props.perimetre.geojson4326_points.features] }))
+  const geojson_4326 = computed<FeatureCollection>(() => ({
+    type: 'FeatureCollection',
+    crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::4326' } },
+    properties: null,
+    features: [props.perimetre.geojson4326_perimetre, ...props.perimetre.geojson4326_points.features],
+  }))
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
