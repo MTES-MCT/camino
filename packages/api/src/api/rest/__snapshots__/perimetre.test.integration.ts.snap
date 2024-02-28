@@ -7,8 +7,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -6508915.664,
-            4155227.249,
+            -6508915.664375298,
+            4155227.248671529,
           ],
           "type": "Point",
         },
@@ -21,8 +21,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -6509838.38,
-            4156321.503,
+            -6509838.379601351,
+            4156321.503214284,
           ],
           "type": "Point",
         },
@@ -35,8 +35,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -6508315.744,
-            4158116.457,
+            -6508315.743755955,
+            4158116.456688329,
           ],
           "type": "Point",
         },
@@ -54,8 +54,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            329078.146,
-            466912.757,
+            329078.14625668,
+            466912.756863522,
           ],
           "type": "Point",
         },
@@ -68,8 +68,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            327968.368,
-            467101.879,
+            327968.367773906,
+            467101.879219439,
           ],
           "type": "Point",
         },
@@ -82,8 +82,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            327972.066,
-            468953.34,
+            327972.065525552,
+            468953.340146031,
           ],
           "type": "Point",
         },
@@ -101,8 +101,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -10635907.53,
-            28583935.69,
+            -10635907.529523982,
+            28583935.690351125,
           ],
           "type": "Point",
         },
@@ -115,8 +115,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -10632537.838,
-            28584100.036,
+            -10632537.837798638,
+            28584100.0361242,
           ],
           "type": "Point",
         },
@@ -129,8 +129,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -10631349.492,
-            28578682.388,
+            -10631349.492396124,
+            28578682.38840603,
           ],
           "type": "Point",
         },
@@ -195,8 +195,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            995446.594,
-            468165.655,
+            995446.594222558,
+            468165.655298487,
           ],
           "type": "Point",
         },
@@ -209,8 +209,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            994332.422,
-            468346.681,
+            994332.421942485,
+            468346.6813774,
           ],
           "type": "Point",
         },
@@ -223,8 +223,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            994321.759,
-            470203.04,
+            994321.758500365,
+            470203.04015182,
           ],
           "type": "Point",
         },
@@ -242,8 +242,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -16143544.355,
-            26292802.746,
+            -16143544.355460875,
+            26292802.745847106,
           ],
           "type": "Point",
         },
@@ -256,8 +256,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -16136616.095,
-            26296480.296,
+            -16136616.09490179,
+            26296480.29590045,
           ],
           "type": "Point",
         },
@@ -270,8 +270,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            -16128766.302,
-            26286263.401,
+            -16128766.302407652,
+            26286263.400504485,
           ],
           "type": "Point",
         },
@@ -289,8 +289,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            1667272.177,
-            474656.113,
+            1667272.17661137,
+            474656.112587331,
           ],
           "type": "Point",
         },
@@ -303,8 +303,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            1666141.191,
-            474830.764,
+            1666141.191191891,
+            474830.764466307,
           ],
           "type": "Point",
         },
@@ -317,8 +317,8 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
       {
         "geometry": {
           "coordinates": [
-            1666115.568,
-            476712.631,
+            1666115.567554901,
+            476712.63102223,
           ],
           "type": "Point",
         },
@@ -344,32 +344,32 @@ exports[`geojsonImport > fichier valide geojson 2154 1`] = `
         [
           [
             [
-              7.7854,
-              48.8145,
+              7.785447944,
+              48.814462158,
             ],
             [
-              7.9531,
-              48.8084,
+              7.953116703,
+              48.808398978,
             ],
             [
-              7.9221,
-              48.7841,
+              7.922100156,
+              48.784128049,
             ],
             [
-              7.7859,
-              48.7815,
+              7.785939586,
+              48.781536,
             ],
             [
-              7.6976,
-              48.8025,
+              7.697613836,
+              48.80246529,
             ],
             [
-              7.7301,
-              48.8178,
+              7.730067616,
+              48.817829852,
             ],
             [
-              7.7854,
-              48.8145,
+              7.785447944,
+              48.814462158,
             ],
           ],
         ],
@@ -426,6 +426,6 @@ exports[`geojsonImport > fichier valide geojson 2154 1`] = `
   "sdomZoneIds": [],
   "secteurMaritimeIds": [],
   "superposition_alertes": [],
-  "surface": 51.55,
+  "surface": 51.48,
 }
 `;

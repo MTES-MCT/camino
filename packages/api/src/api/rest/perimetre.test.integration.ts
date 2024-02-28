@@ -843,8 +843,8 @@ describe('geojsonImportPoints', () => {
             {
               "geometry": {
                 "coordinates": [
-                  7.7854,
-                  48.8145,
+                  7.785447944,
+                  48.814462158,
                 ],
                 "type": "Point",
               },
@@ -903,20 +903,20 @@ describe('geojsonImportPoints', () => {
               [
                 [
                   [
-                    -0.0606,
-                    48.7263,
+                    -0.060576632,
+                    48.726347166,
                   ],
                   [
-                    0.009,
-                    48.5605,
+                    0.009012626,
+                    48.560476879,
                   ],
                   [
-                    -0.2083,
-                    48.7511,
+                    -0.208334647,
+                    48.751132381,
                   ],
                   [
-                    -0.0606,
-                    48.7263,
+                    -0.060576632,
+                    48.726347166,
                   ],
                 ],
               ],
@@ -961,7 +961,7 @@ describe('geojsonImportPoints', () => {
         "sdomZoneIds": [],
         "secteurMaritimeIds": [],
         "superposition_alertes": [],
-        "surface": 93,
+        "surface": 93.09,
       }
     `)
   })
