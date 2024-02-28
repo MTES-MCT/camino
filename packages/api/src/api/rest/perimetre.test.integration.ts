@@ -81,6 +81,55 @@ describe('geojsonImport', () => {
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
+  test('csv valide en 2972', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;x;y
+A;Point A;1051195.108314365847036;6867800.046355471946299
+B;Point B;1063526.397924559889361;6867885.978687250986695
+C;Point C;1061421.05579599016346;6865050.211738565005362`
+    )
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchSnapshot()
+
+    const testedWithError = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test('csv valide en 4326', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;longitude;latitude
+A;Point A;-52.54;4.22269896902571
+B;Point B;-52.55;4.22438936251509
+C;Point éç;-52.55;4.24113309117193`
+    )
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchSnapshot()
+
+    const testedWithError = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
   test('fichier valide geojson polygon', async () => {
     const feature: FeatureCollectionPolygon = {
       type: 'FeatureCollection',

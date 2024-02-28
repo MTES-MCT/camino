@@ -1,9 +1,9 @@
 import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
-import { GEO_SYSTEME_IDS, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
+import { GEO_SYSTEME_IDS, GeoSystemes, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { convertPoints, getGeojsonByGeoSystemeId, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
+import { convertPoints, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getMostRecentEtapeFondamentaleValide } from './titre-heritage.js'
 import { isAdministrationAdmin, isAdministrationEditeur, isDefault, isSuper, User } from 'camino-common/src/roles.js'
@@ -27,14 +27,14 @@ import {
   GeojsonImportPointsResponse,
 } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
-import { createReadStream } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import shpjs from 'shpjs'
-import { Stream } from 'node:stream'
-import { isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
+import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { TitreSlug } from 'camino-common/src/validators/titres.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import xlsx from 'xlsx'
 import { z } from 'zod'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
@@ -126,21 +126,14 @@ export const getPerimetreInfos = (pool: Pool) => async (req: CaminoRequest, res:
   }
 }
 
-const stream2buffer = async (stream: Stream): Promise<Buffer> => {
-  return new Promise<Buffer>((resolve, reject) => {
-    const _buf = [] as any[]
-
-    stream.on('data', chunk => _buf.push(chunk))
-    stream.on('end', () => resolve(Buffer.concat(_buf)))
-    stream.on('error', err => reject(new Error(`error converting stream - ${err}`)))
-  })
-}
-
 const tuple4326CoordinateValidator = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)])
 const polygon4326CoordinatesValidator = z.array(z.array(tuple4326CoordinateValidator).min(3)).min(1)
 
 const shapeValidator = z.array(polygonValidator.or(multiPolygonValidator)).max(1).min(1)
 const geojsonValidator = featureCollectionMultipolygonValidator.or(featureCollectionPolygonValidator)
+
+const csvMetreToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string(), x: z.number(), y: z.number() }))
+const csvDegToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string(), longitude: z.number(), latitude: z.number() }))
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -158,42 +151,95 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         const filename = geojsonImportInput.data.tempDocumentName
 
         const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
-        const fileStream = createReadStream(pathFrom)
 
-        const buffer = await stream2buffer(fileStream)
-
-        let geojson4326FeatureMultiPolygon: FeatureMultiPolygon
         let geojsonOriginFeatureMultiPolygon: FeatureMultiPolygon
         let geojsonOriginFeatureCollectionPoints: null | FeatureCollectionPoints = null
-        if (geojsonImportInput.data.fileType === 'geojson') {
-          const features = geojsonValidator.parse(JSON.parse(buffer.toString()))
+        const fileType = geojsonImportInput.data.fileType
+        switch (fileType) {
+          case 'geojson': {
+            const fileContent = readFileSync(pathFrom)
+            const features = geojsonValidator.parse(JSON.parse(fileContent.toString()))
 
-          const firstGeometry = features.features[0].geometry
-          const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
+            const firstGeometry = features.features[0].geometry
+            const multiPolygon: MultiPolygon = firstGeometry.type === 'Polygon' ? { type: 'MultiPolygon', coordinates: [firstGeometry.coordinates] } : firstGeometry
 
-          geojsonOriginFeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: multiPolygon }
+            geojsonOriginFeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: multiPolygon }
 
-          // TODO 2024-01-24 on importe les points que si le référentiel est en 4326
-          if (geoSystemeId.data === '4326' && features.features.length > 1) {
-            const [_multi, ...points] = features.features
+            // On a des points après le multipolygone
+            if (features.features.length > 1) {
+              const [_multi, ...points] = features.features
+              geojsonOriginFeatureCollectionPoints = { type: 'FeatureCollection', features: points }
+            }
+
+            break
+          }
+
+          case 'shp': {
+            const fileContent = readFileSync(pathFrom)
+            const shpParsed = shpjs.parseShp(fileContent)
+
+            const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
+
+            let coordinates: [number, number][][][]
+            if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
+              coordinates = shapePolygonOrMultipolygon.coordinates
+            } else {
+              coordinates = [shapePolygonOrMultipolygon.coordinates]
+            }
+            geojsonOriginFeatureMultiPolygon = { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} }
+
+            break
+          }
+
+          case 'csv': {
+            const fileContent = readFileSync(pathFrom, { encoding: 'utf-8' })
+            const result = xlsx.read(fileContent, { type: 'string' })
+
+            if (result.SheetNames.length !== 1) {
+              throw new Error(`une erreur est survenue lors de la lecture du csv, il ne devrait y avoir qu'un seul document ${result.SheetNames}`)
+            }
+            const sheet1 = result.Sheets[result.SheetNames[0]]
+            const converted = xlsx.utils.sheet_to_json(sheet1)
+            const uniteId = GeoSystemes[geoSystemeId.data].uniteId
+
+            let coordinates: MultiPolygon['coordinates']
+            let points: FeatureCollectionPoints['features']
+            switch (uniteId) {
+              case 'met': {
+                const rows = csvMetreToJsonValidator.parse(converted)
+                coordinates = [[rows.map(({ x, y }) => [x, y])]]
+                points = rows.map(ligne => ({ type: 'Feature', properties: { nom: ligne.nom, description: ligne.description }, geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] } }))
+
+                coordinates[0][0].push([rows[0].x, rows[0].y])
+                break
+              }
+              case 'deg': {
+                const rows = csvDegToJsonValidator.parse(converted)
+                coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
+                points = rows.map(ligne => ({
+                  type: 'Feature',
+                  properties: { nom: ligne.nom, description: ligne.description },
+                  geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
+                }))
+                coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
+                break
+              }
+              default:
+                exhaustiveCheck(uniteId)
+                throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
+            }
+            geojsonOriginFeatureMultiPolygon = { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates } }
             geojsonOriginFeatureCollectionPoints = { type: 'FeatureCollection', features: points }
+            break
           }
-
-          geojson4326FeatureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon)
-        } else {
-          const shpParsed = shpjs.parseShp(buffer)
-
-          const shapePolygonOrMultipolygon = shapeValidator.parse(shpParsed)[0]
-
-          let coordinates: [number, number][][][]
-          if (shapePolygonOrMultipolygon.type === 'MultiPolygon') {
-            coordinates = shapePolygonOrMultipolygon.coordinates
-          } else {
-            coordinates = [shapePolygonOrMultipolygon.coordinates]
+          default: {
+            exhaustiveCheck(fileType)
+            throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
           }
-          geojsonOriginFeatureMultiPolygon = { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates }, properties: {} }
-          geojson4326FeatureMultiPolygon = await getGeojsonByGeoSystemeId(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon)
         }
+        const geojson4326FeatureMultiPolygon = await getGeojsonByGeoSystemeIdQuery(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureMultiPolygon)
+        const geojson4326FeatureCollectionPoints =
+          geojsonOriginFeatureCollectionPoints !== null ? await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureCollectionPoints) : null
 
         const geojson4326MultiPolygon: MultiPolygon = geojson4326FeatureMultiPolygon.geometry
 
@@ -208,7 +254,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
           secteurMaritimeIds: geoInfo.secteurs,
           surface: geoInfo.surface,
           geojson4326_perimetre: { type: 'Feature', geometry: geojson4326MultiPolygon, properties: {} },
-          geojson4326_points: geojsonOriginFeatureCollectionPoints,
+          geojson4326_points: geojson4326FeatureCollectionPoints,
           geojson_origine_perimetre: geojsonOriginFeatureMultiPolygon,
           geojson_origine_points: geojsonOriginFeatureCollectionPoints,
           geojson_origine_geo_systeme_id: geoSystemeId.data,
@@ -242,11 +288,8 @@ export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, re
         const filename = geojsonImportInput.data.tempDocumentName
 
         const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
-        const fileStream = createReadStream(pathFrom)
-
-        const buffer = await stream2buffer(fileStream)
-
-        const features = featureCollectionPointsValidator.parse(JSON.parse(buffer.toString()))
+        const fileContent = readFileSync(pathFrom)
+        const features = featureCollectionPointsValidator.parse(JSON.parse(fileContent.toString()))
         const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
         res.json({ geojson4326: conversion, origin: features })
       } catch (e: any) {
