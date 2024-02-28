@@ -65,7 +65,7 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
       </fieldset>
       <fieldset class="fr-fieldset" id="fichier">
         <div class="fr-fieldset__element">
-          <InputFile accept={['geojson', 'shp']} uploadFile={fileChange} />
+          <InputFile accept={['geojson', 'shp', 'csv']} uploadFile={fileChange} />
         </div>
       </fieldset>
     </form>
