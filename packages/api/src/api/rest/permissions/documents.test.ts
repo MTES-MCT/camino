@@ -37,8 +37,8 @@ describe('canReadDocument', () => {
   test('en tant qu’entreprise ou non connecté, je peux lire les documents public', async () => {
     const users: User[] = [
       { ...testBlankUser, role: 'defaut' },
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entreprise1') }] },
-      { ...testBlankUser, role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entreprise2') }] },
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entreprise1'), nom: 'nom' }] },
+      { ...testBlankUser, role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entreprise2'), nom: 'nom' }] },
     ]
     for (const user of users) {
       expect(
@@ -54,8 +54,8 @@ describe('canReadDocument', () => {
 
   test('en tant qu’entreprise je peux lire les documents en fonction de entreprise_lecture', async () => {
     const users: EntrepriseUserNotNull[] = [
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entreprise1') }] },
-      { ...testBlankUser, role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entreprise2') }] },
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: newEntrepriseId('entreprise1'), nom: 'nom' }] },
+      { ...testBlankUser, role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entreprise2'), nom: 'nom' }] },
     ]
     for (const user of users) {
       expect(

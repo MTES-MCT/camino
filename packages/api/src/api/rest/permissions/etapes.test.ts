@@ -49,7 +49,14 @@ describe('canReadEtape', () => {
   test("pour les utilisateurs entreprises, on peut lire une étape si la démarche est visible entreprise_lecture ET que l'étape est visible pour les entreprises ET que l'utilisateur fait partie d'une entreprise titulaire ou amodiataire", async () => {
     const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
     expect(
-      await canReadEtape({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), 'cac', demarche)
+      await canReadEtape(
+        { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId, nom: 'nom' }] },
+        shouldNotBeCalled,
+        shouldNotBeCalled,
+        () => Promise.resolve([entrepriseId]),
+        'cac',
+        demarche
+      )
     ).toBe(false)
   })
 })

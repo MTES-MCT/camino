@@ -34,7 +34,7 @@ export const Default: StoryFn = () => (
 export const Entreprise: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1'), nom: 'nom' }] } }}
     apiClient={{
       getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', legal_siren: null }]),
       updateUtilisateur: user =>
@@ -51,7 +51,7 @@ export const Entreprise: StoryFn = () => (
 export const EntrepriseLoading: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1'), nom: 'nom' }] } }}
     apiClient={{
       getUtilisateurEntreprises: () => new Promise(() => ({})),
       updateUtilisateur: user =>

@@ -101,7 +101,7 @@ export const OnlyOneEntreprise: StoryFn = () => (
 
 export const OnlyOneEntrepriseUserEntreprise: StoryFn = () => (
   <PureTitreCreation
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id }] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id, nom: 'nom' }] }}
     apiClient={{
       ...apiClient,
       getEntreprises: () => {
