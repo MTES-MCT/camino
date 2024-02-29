@@ -144,8 +144,8 @@ const csvInputNumberValidator = z.union([z.string(), z.number()]).transform<numb
   }
 })
 
-const csvMetreToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string().optional(), x: csvInputNumberValidator, y: csvInputNumberValidator }))
-const csvDegToJsonValidator = z.array(z.object({ nom: z.string(), description: z.string().optional(), longitude: csvInputNumberValidator, latitude: csvInputNumberValidator }))
+const csvMetreToJsonValidator = z.array(z.object({ 'Nom du point': z.string(), Description: z.string().optional(), X: csvInputNumberValidator, Y: csvInputNumberValidator }))
+const csvDegToJsonValidator = z.array(z.object({ 'Nom du point': z.string(), Description: z.string().optional(), Longitude: csvInputNumberValidator, Latitude: csvInputNumberValidator }))
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -223,21 +223,25 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             switch (uniteId) {
               case 'met': {
                 const rows = csvMetreToJsonValidator.parse(converted)
-                coordinates = [[rows.map(({ x, y }) => [x, y])]]
-                points = rows.map(ligne => ({ type: 'Feature', properties: { nom: ligne.nom, description: ligne.description }, geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] } }))
+                coordinates = [[rows.map(({ X, Y }) => [X, Y])]]
+                points = rows.map(ligne => ({
+                  type: 'Feature',
+                  properties: { nom: ligne['Nom du point'], description: ligne.Description },
+                  geometry: { type: 'Point', coordinates: [ligne.X, ligne.Y] },
+                }))
 
-                coordinates[0][0].push([rows[0].x, rows[0].y])
+                coordinates[0][0].push([rows[0].X, rows[0].Y])
                 break
               }
               case 'deg': {
                 const rows = csvDegToJsonValidator.parse(converted)
-                coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
+                coordinates = [[rows.map(({ Longitude, Latitude }) => [Longitude, Latitude])]]
                 points = rows.map(ligne => ({
                   type: 'Feature',
-                  properties: { nom: ligne.nom, description: ligne.description },
-                  geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
+                  properties: { nom: ligne['Nom du point'], description: ligne.Description },
+                  geometry: { type: 'Point', coordinates: [ligne.Longitude, ligne.Latitude] },
                 }))
-                coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
+                coordinates[0][0].push([rows[0].Longitude, rows[0].Latitude])
                 break
               }
               default:

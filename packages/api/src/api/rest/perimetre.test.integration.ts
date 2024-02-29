@@ -86,7 +86,7 @@ describe('geojsonImport', () => {
     mkdirSync(dir, { recursive: true })
     writeFileSync(
       `${dir}/${fileName}`,
-      `nom;description;x;y
+      `Nom du point;Description;X;Y
 A;Point A;1051195.108314365847036;6867800.046355471946299
 B;Point B;1063526.397924559889361;6867885.978687250986695
 C;Point C;1061421.05579599016346;6865050.211738565005362`
@@ -111,7 +111,7 @@ C;Point C;1061421.05579599016346;6865050.211738565005362`
     mkdirSync(dir, { recursive: true })
     writeFileSync(
       `${dir}/${fileName}`,
-      `nom;description;x;y
+      `Nom du point;Description;X;Y
 A;Point A;1051195.108314365847036;6867800.046355471946299
 B;Point B;1063526.397924559889361;6867885.978687250986695
 B;Point B;1063526.397924559889361;6867885.978687250986695
@@ -150,7 +150,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695`
     mkdirSync(dir, { recursive: true })
     writeFileSync(
       `${dir}/${fileName}`,
-      `nom;description;longitude;latitude
+      `Nom du point;Description;Longitude;Latitude
 A;Point A;-52.54;4.22269896902571
 B;Point B;-52.55;4.22438936251509
 C;Point éç;-52.55;4.24113309117193`
@@ -175,7 +175,7 @@ C;Point éç;-52.55;4.24113309117193`
     mkdirSync(dir, { recursive: true })
     writeFileSync(
       `${dir}/${fileName}`,
-      `nom;description;longitude;latitude
+      `Nom du point;Description;Longitude;Latitude
 A;;-52,54;4,22269896902571
 B;;-52,55;4,22438936251509
 C;Point éç;-52,55;4,24113309117193`

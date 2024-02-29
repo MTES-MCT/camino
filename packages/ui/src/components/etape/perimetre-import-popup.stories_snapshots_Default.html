@@ -10,9 +10,8 @@
               <h1 id="monId-title" class="fr-modal__title"><span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>Import d'un périmètre</h1>
               <div class="fr-container">
                 <form>
-                  <div class="fr-alert fr-alert--info fr-alert--sm">
-                    <p>Vous ne devez déposer que des fichiers ayant un seul multipolygone. Le dépôt csv n'est possible que pour des périmètres simples : un seul polygone sans lacune ayant moins de 20 sommets.</p>
-                  </div>
+                  <!---->
+                  <!---->
                   <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
                     <div class="fr-fieldset__element">
                       <div class="fr-select-group"><label class="fr-label" for="type">Système géographique</label>
@@ -23,11 +22,27 @@
                       </div>
                     </div>
                   </fieldset>
-                  <fieldset class="fr-fieldset" id="fichier">
-                    <div class="fr-fieldset__element">
-                      <div class="fr-upload-group"><label class="fr-label" for="file-upload">Ajouter un fichier<span class="fr-hint-text">Taille maximale : 100 Mo. Formats supportés : geojson, shp, csv.</span></label><input class="fr-upload" type="file" id="file-upload" name="file-upload" accept=".geojson,.shp,.csv"></div>
+                  <fieldset class="fr-fieldset" id="radio_670" aria-labelledby="radio_670-legend">
+                    <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio_670-legend">Type de fichier
+                      <!---->
+                    </legend>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-0" name="radio_670"><label class="fr-label" for="radio_670-0">csv
+                          <!---->
+                        </label></div>
+                    </div>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-1" name="radio_670"><label class="fr-label" for="radio_670-1">geojson
+                          <!---->
+                        </label></div>
+                    </div>
+                    <div class="fr-fieldset__element fr-fieldset__element--inline">
+                      <div class="fr-radio-group"><input type="radio" id="radio_670-2" name="radio_670"><label class="fr-label" for="radio_670-2">shape
+                          <!---->
+                        </label></div>
                     </div>
                   </fieldset>
+                  <!---->
                 </form>
               </div>
             </div>
