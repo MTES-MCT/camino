@@ -15,6 +15,7 @@ import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
 import { ButtonIcon } from './_ui/button-icon'
 import { userMemoized } from '@/moi'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -27,7 +28,6 @@ export const Utilisateur = defineComponent({
     onMounted(async () => {
       user.value = await userMemoized()
     })
-    
 
     const deleteUtilisateur = async (userId: string) => {
       const isMe: boolean = (user.value && userId === user.value.id) ?? false
@@ -103,10 +103,6 @@ export interface Props {
 
 export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
   watch(
-    () => props.user,
-    () => get()
-  )
-  watch(
     () => props.utilisateurId,
     _newId => {
       get()
@@ -119,8 +115,8 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
   const subscription = ref<AsyncData<boolean>>({ status: 'LOADING' })
   const utilisateur = ref<AsyncData<ApiUser>>({ status: 'LOADING' })
   const removePopup = ref<boolean>(false)
-  const isMe = computed(() => {
-    return props.user && props.utilisateurId === props.user.id
+  const isMe = computed<boolean>(() => {
+    return isNotNullNorUndefined(props.user) && props.utilisateurId === props.user.id
   })
 
   const get = async () => {
@@ -182,7 +178,7 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
       <h5>Utilisateur</h5>
       <div class="flex">
         <h1>
-          <LoadingElement data={utilisateur.value} renderItem={item => <>{item ? `${item.prenom || '–'} ${item.nom || '–'}` : '–'}</>} />
+          <LoadingElement data={utilisateur.value} renderItem={item => <>{`${item.prenom || '–'} ${item.nom || '–'}`}</>} />
         </h1>
       </div>
 
@@ -238,14 +234,14 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
               <div class="tablet-blob-1-4">
                 <h5>Téléphone fixe</h5>
               </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneFixe || '–'}</p>} />
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneFixe) ? item.telephoneFixe : '–'}</p>} />
             </div>
 
             <div class="tablet-blobs">
               <div class="tablet-blob-1-4">
                 <h5>Téléphone mobile</h5>
               </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneMobile || '–'}</p>} />
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneMobile) ? item.telephoneMobile : '–'}</p>} />
             </div>
             <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} />
 

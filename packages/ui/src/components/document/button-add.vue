@@ -18,6 +18,7 @@ export default {
     title: { type: String, required: true },
     large: { type: Boolean, default: false },
     documentsTypes: { type: Array, required: true },
+    user: { type: Object, required: true },
   },
 
   methods: {
@@ -30,6 +31,7 @@ export default {
           route: this.route,
           title: this.title,
           documentsTypes: this.documentsTypes,
+          user: this.user,
         },
       })
     },

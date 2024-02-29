@@ -24,6 +24,7 @@
         :manquantShow="manquantShow"
         :helpShow="helpShow"
         :documentsTypes="documentsTypes"
+        :user="user"
       />
     </table>
   </div>
@@ -51,6 +52,7 @@ export default {
     manquantShow: { type: Boolean, default: false },
     helpShow: { type: Boolean, default: false },
     documentsTypes: { type: Array, required: true },
+    user: { type: Object, required: true },
   },
 }
 </script>

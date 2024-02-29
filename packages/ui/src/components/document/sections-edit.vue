@@ -98,6 +98,7 @@ export default {
 
   props: {
     document: { type: Object, required: true },
+    user: { type: Object, required: true },
     userIsAdmin: { type: Boolean, default: false },
   },
 
@@ -110,10 +111,9 @@ export default {
 
   computed: {
     documentsVisibilites() {
-      const user = this.$store.state.user.element
-      if (!user) return []
+      if (!this.user) return []
 
-      if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+      if (isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)) {
         return [
           { id: 'admin', nom: 'Administrations uniquement' },
           {
@@ -124,7 +124,7 @@ export default {
         ]
       }
 
-      if (isEntreprise(user) || isBureauDEtudes(user)) {
+      if (isEntreprise(this.user) || isBureauDEtudes(this.user)) {
         return [{ id: 'entreprise', nom: 'Administrations et entreprises titulaires' }]
       }
 

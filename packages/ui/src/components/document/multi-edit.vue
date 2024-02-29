@@ -11,6 +11,7 @@
       :helpShow="true"
       :title="documentPopupTitle"
       :documentsTypes="documentsTypes"
+      :user="user"
     />
 
     <DocumentAddButton
@@ -29,6 +30,7 @@
       class="btn py-s px-m rnd-xs mb-s full-x"
       :large="true"
       :documentsTypes="documentsTypes"
+      :user="user"
     />
   </div>
 </template>
@@ -37,6 +39,7 @@
 import DocumentAddButton from './button-add.vue'
 import Documents from '../documents/list.vue'
 import { getCurrent } from 'camino-common/src/date'
+import { isAdministration } from 'camino-common/src/roles'
 
 export default {
   components: { DocumentAddButton, Documents },
@@ -48,6 +51,7 @@ export default {
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
     date: { type: String, default: getCurrent() },
+    user: { type: Object, required: true },
   },
 
   emits: ['complete-update'],
@@ -61,7 +65,7 @@ export default {
     },
 
     userIsAdmin() {
-      return this.$store.getters['user/userIsAdmin']
+      return isAdministration(this.user)
     },
   },
 

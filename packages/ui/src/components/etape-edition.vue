@@ -182,12 +182,8 @@ export default {
       return `${cap(this.titre.nom)} | ${cap(this.demarcheType.nom)} | ${this.etapeType ? cap(this.etapeType.nom) : ''}`
     },
 
-    userIsAdmin() {
-      return isAdministration(this.user)
-    },
-
     helpVisible() {
-      return !this.userIsAdmin && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
+      return !isAdministration(this.user) && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
     },
   },
 
@@ -197,8 +193,6 @@ export default {
 
   async created() {
     this.user = await userMemoized()
-    await this.init()
-
     document.addEventListener('keyup', this.keyUp)
     window.addEventListener('beforeunload', this.beforeWindowUnload)
   },

@@ -1,7 +1,6 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { User } from 'camino-common/src/roles'
-import { useStore } from 'vuex'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { CaminoAccessError } from './error'
@@ -57,7 +56,6 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
 PureUtilisateurs.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
 
 export const Utilisateurs = defineComponent(() => {
-  const store = useStore()
   const router = useRouter()
 
   const user = ref<User>(null)
@@ -65,7 +63,6 @@ export const Utilisateurs = defineComponent(() => {
   onMounted(async () => {
     user.value = await userMemoized()
   })
-  
 
   return () => {
     return <PureUtilisateurs user={user.value} apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />

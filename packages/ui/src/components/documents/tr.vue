@@ -79,6 +79,7 @@ export default {
     manquantShow: { type: Boolean, default: false },
     helpShow: { type: Boolean, default: false },
     documentsTypes: { type: Array, required: true },
+    user: { type: Object, required: true },
   },
 
   data() {
@@ -115,6 +116,7 @@ export default {
           action: this.addAction,
           document,
           documentsTypes: this.documentsTypes,
+          user: this.user,
         },
       })
     },

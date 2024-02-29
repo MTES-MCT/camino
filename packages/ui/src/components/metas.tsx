@@ -1,4 +1,4 @@
-import { FunctionalComponent, computed, defineComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, defineComponent, onMounted, ref } from 'vue'
 import { Liste } from './_common/liste'
 import { RouteLocationNormalizedLoaded, useRoute } from 'vue-router'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
@@ -52,6 +52,6 @@ export const Metas = defineComponent(() => {
   onMounted(async () => {
     user.value = await userMemoized()
   })
-  
+
   return () => <PureMetas user={user.value} currentRoute={route} />
 })

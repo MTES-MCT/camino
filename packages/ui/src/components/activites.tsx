@@ -135,5 +135,6 @@ export const Activites = defineComponent(() => {
   onMounted(async () => {
     user.value = await userMemoized()
   })
+
   return () => <PureActivites user={user.value} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })

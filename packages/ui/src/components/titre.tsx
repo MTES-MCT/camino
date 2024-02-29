@@ -55,7 +55,7 @@ export const Titre = defineComponent(() => {
   onMounted(async () => {
     user.value = await userMemoized()
   })
-  
+
   const titreIdOrSlug = computed<TitreIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.id) ? router.currentRoute.value.params.id[0] : router.currentRoute.value.params.id
     const validated = titreIdOrSlugValidator.safeParse(idOrSlug)

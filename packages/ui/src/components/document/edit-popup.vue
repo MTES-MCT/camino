@@ -29,7 +29,7 @@
 
     <hr />
 
-    <SectionsEdit :document="document" :userIsAdmin="userIsAdmin" @update:document="newValue => emits('update:document', newValue)" />
+    <SectionsEdit :document="document" :userIsAdmin="userIsAdmin" :user="user" @update:document="newValue => emits('update:document', newValue)" />
 
     <template #footer>
       <div class="tablet-blobs">
@@ -49,6 +49,7 @@
 <script>
 import Popup from '../_ui/popup.vue'
 import SectionsEdit from './sections-edit.vue'
+import { isAdministration } from 'camino-common/src/roles'
 
 export default {
   name: 'CaminoDocumentEditPopup',
@@ -64,6 +65,7 @@ export default {
     action: { type: Object, default: null },
     document: { type: Object, required: true },
     documentsTypes: { type: Array, required: true },
+    user: { type: Object, required: true },
   },
 
   emits: ['update:document'],
@@ -90,7 +92,7 @@ export default {
     },
 
     userIsAdmin() {
-      return this.$store.getters['user/userIsAdmin']
+      return isAdministration(this.user)
     },
   },
 

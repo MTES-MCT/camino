@@ -2,7 +2,7 @@ import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
-import { defineComponent, Transition, computed, inject, ref, onMounted } from 'vue'
+import { defineComponent, Transition, computed, ref, onMounted } from 'vue'
 import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
@@ -16,81 +16,79 @@ import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/type
 import { userMemoized } from './moi'
 import { User } from 'camino-common/src/roles'
 export const App = defineComponent(() => {
-    const store = useStore()
-    const route = useRoute()
-    
-    const user = ref<User>(null)
-    const loaded = ref<boolean>(false)
+  const store = useStore()
+  const route = useRoute()
 
-    const error = computed(() => store.state.error)
+  const user = ref<User>(null)
+  const loaded = ref<boolean>(false)
 
-    const messages = computed<{ type: 'error' | 'success'; value: string }[]>(() => store.state.messages)
+  const error = computed(() => store.state.error)
 
-    const popup = computed(() => store.state.popup)
+  const messages = computed<{ type: 'error' | 'success'; value: string }[]>(() => store.state.messages)
 
-    const loading = computed(() => store.state.loading.length > 0)
+  const popup = computed(() => store.state.popup)
 
-    const fileLoading = computed(() => store.state.fileLoading)
+  const loading = computed(() => store.state.loading.length > 0)
 
-    const currentMenuSection = computed(() => route.meta?.menuSection)
+  const fileLoading = computed(() => store.state.fileLoading)
 
-    onMounted(async () => {
-      console.log("mounted")
-      user.value = await userMemoized()
-      loaded.value = true
-    })
+  const currentMenuSection = computed(() => route.meta?.menuSection)
 
-    // FIXME péter tout les getter dans user, remplacer les appels dans les .vue
-    const version = computed(() => {
-      /* global applicationVersion */
-      // @ts-ignore
-      return applicationVersion
-    })
+  onMounted(async () => {
+    user.value = await userMemoized()
+    loaded.value = true
+  })
 
-    const displayNewsletter = computed<boolean>(() => {
-      return isNullOrUndefined(user.value)
-    })
+  const version = computed(() => {
+    /* global applicationVersion */
+    // @ts-ignore
+    return applicationVersion
+  })
 
-    return () => (
-      <div class="page relative">
-        <MapPattern />
-        <IconSprite />
+  const displayNewsletter = computed<boolean>(() => {
+    return isNullOrUndefined(user.value)
+  })
 
-        <Header user={user.value} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
+  return () => (
+    <div class="page relative">
+      <MapPattern />
+      <IconSprite />
 
-        <main class="main" role="main">
-          <div class="container">{isNotNullNorUndefined(error.value) ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
-        </main>
+      <Header user={user.value} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 
-        <Footer displayNewsletter={displayNewsletter.value} version={version.value} />
+      <main class="main" role="main">
+        <div class="container">{isNotNullNorUndefined(error.value) ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
+      </main>
 
-        <div class="messages">
-          <Messages messages={messages.value} />
-        </div>
+      <Footer displayNewsletter={displayNewsletter.value} version={version.value} />
 
-        <Transition name="fade">{isNotNullNorUndefined(popup.value.component) ? <div class="absolute full bg-inverse-alpha" style="z-index: 100002" /> : null}</Transition>
-
-        <Transition name="slide-top">{isNotNullNorUndefined(popup.value.component) ? <popup.value.component {...popup.value.props} /> : null}</Transition>
-
-        <Transition name="fade">
-          {loading.value || (isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0) ? (
-            <div class="loaders fixed p">
-              {loading.value ? <div class="loader" /> : null}
-              {isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0 ? (
-                <div>
-                  <div class="relative loader-file">
-                    <div
-                      class="loader-file-bar"
-                      style={{
-                        right: `${100 - 100 * (fileLoading.value.loaded / fileLoading.value.total)}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-        </Transition>
+      <div class="messages">
+        <Messages messages={messages.value} />
       </div>
-    )
+
+      <Transition name="fade">{isNotNullNorUndefined(popup.value.component) ? <div class="absolute full bg-inverse-alpha" style="z-index: 100002" /> : null}</Transition>
+
+      <Transition name="slide-top">{isNotNullNorUndefined(popup.value.component) ? <popup.value.component {...popup.value.props} /> : null}</Transition>
+
+      <Transition name="fade">
+        {loading.value || (isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0) ? (
+          <div class="loaders fixed p">
+            {loading.value ? <div class="loader" /> : null}
+            {isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0 ? (
+              <div>
+                <div class="relative loader-file">
+                  <div
+                    class="loader-file-bar"
+                    style={{
+                      right: `${100 - 100 * (fileLoading.value.loaded / fileLoading.value.total)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </Transition>
+    </div>
+  )
 })

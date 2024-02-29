@@ -3,7 +3,6 @@ import { User, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, 
 import { TitresLink } from '@/components/titre/titres-link'
 import { canCreateTitre, getLinkConfig } from 'camino-common/src/permissions/titres'
 import { computed, defineComponent, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { DsfrSelect } from './_ui/dsfr-select'
@@ -30,7 +29,6 @@ export const TitreCreation = defineComponent(() => {
   onMounted(async () => {
     user.value = await userMemoized()
   })
-  
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({

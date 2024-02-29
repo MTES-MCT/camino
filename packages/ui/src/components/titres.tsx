@@ -1,5 +1,4 @@
 import { defineComponent, defineAsyncComponent, computed, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
 import { User, isAdministration } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import type { TitreCarteParams } from './titres/map'
@@ -40,7 +39,7 @@ export const Titres = defineComponent({
     })
     const router = useRouter()
     const user = ref<User>(null)
-    
+
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
     const titresForCarte = ref<{ hash: string; titres: TitreWithPerimetre[] }>({ hash: '', titres: [] })

@@ -72,6 +72,7 @@ const actions = {
 
       commit('load')
     } catch (e) {
+      console.error(e)
       dispatch('pageError', null, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeInit', { root: true })
@@ -89,6 +90,8 @@ const actions = {
 
       commit('metasSet', metas)
     } catch (e) {
+      console.error(e)
+
       dispatch('pageError', null, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeMetasGet', { root: true })
@@ -130,7 +133,7 @@ const actions = {
     if (!state.element.typeId) {
       commit('documentsSet', [])
     } else {
-      documents = documentsRequiredAdd(documents, getters.documentsTypes, rootGetters['user/userIsAdmin'])
+      documents = documentsRequiredAdd(documents, getters.documentsTypes)
 
       commit('documentsSet', documents)
     }

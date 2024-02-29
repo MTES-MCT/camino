@@ -42,6 +42,7 @@
         :documentPopupTitle="documentPopupTitle"
         :documentsTypes="documentsTypes"
         :date="etape.date"
+        :user="user"
         @complete-update="documentsCompleteUpdate"
       />
     </Bloc>
@@ -78,6 +79,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
+import { isAdministration } from 'camino-common/src/roles'
 
 export default {
   components: {
@@ -281,7 +283,7 @@ export default {
     },
 
     userIsAdmin() {
-      return this.$store.getters['user/userIsAdmin']
+      return isAdministration(this.user)
     },
 
     sections() {

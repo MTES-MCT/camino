@@ -6,6 +6,7 @@ import { User } from 'camino-common/src/roles'
 import { useRoute } from 'vue-router'
 import { capitalize } from 'camino-common/src/strings'
 import { userMemoized } from '@/moi'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export const Meta = defineComponent(() => {
   const store = useStore()
   const route = useRoute()
@@ -14,12 +15,12 @@ export const Meta = defineComponent(() => {
   })
 
   const loaded = computed<boolean>(() => {
-    return !!elements.value
+    return isNotNullNorUndefined(elements.value)
   })
 
   onMounted(async () => {
-    await get()
     user.value = await userMemoized()
+    await get()
   })
   onBeforeUnmount(() => {
     store.commit('meta/reset')
@@ -35,7 +36,7 @@ export const Meta = defineComponent(() => {
 
   const get = async () => {
     if (!canReadMetas(user.value)) {
-      await store.dispatch('pageError')
+      await store.dispatch('pageError', user.value)
     } else {
       await store.dispatch('meta/get', id.value)
     }
@@ -52,7 +53,7 @@ export const Meta = defineComponent(() => {
   watch(
     () => route.params.id,
     async id => {
-      if (route.name === 'meta' && id) {
+      if (route.name === 'meta' && isNotNullNorUndefined(id) && id !== '') {
         await get()
       }
     }
