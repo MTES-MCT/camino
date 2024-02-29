@@ -334,6 +334,166 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
 }
 `;
 
+exports[`geojsonImport > csv valide avec des virgules 1`] = `
+{
+  "communes": [],
+  "foretIds": [],
+  "geojson4326_perimetre": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            [
+              -52.54,
+              4.22269896902571,
+            ],
+            [
+              -52.55,
+              4.22438936251509,
+            ],
+            [
+              -52.55,
+              4.24113309117193,
+            ],
+            [
+              -52.54,
+              4.22269896902571,
+            ],
+          ],
+        ],
+      ],
+      "type": "MultiPolygon",
+    },
+    "properties": {},
+    "type": "Feature",
+  },
+  "geojson4326_points": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.22269896902571,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "nom": "A",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.22438936251509,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "nom": "B",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.24113309117193,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point éç",
+          "nom": "C",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "geojson_origine_geo_systeme_id": "4326",
+  "geojson_origine_perimetre": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            [
+              -52.54,
+              4.22269896902571,
+            ],
+            [
+              -52.55,
+              4.22438936251509,
+            ],
+            [
+              -52.55,
+              4.24113309117193,
+            ],
+            [
+              -52.54,
+              4.22269896902571,
+            ],
+          ],
+        ],
+      ],
+      "type": "MultiPolygon",
+    },
+    "properties": {},
+    "type": "Feature",
+  },
+  "geojson_origine_points": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.22269896902571,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "nom": "A",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.22438936251509,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "nom": "B",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.24113309117193,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point éç",
+          "nom": "C",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "sdomZoneIds": [],
+  "secteurMaritimeIds": [],
+  "superposition_alertes": [],
+  "surface": 1.03,
+}
+`;
+
 exports[`geojsonImport > csv valide en 2972 1`] = `
 {
   "communes": [],
