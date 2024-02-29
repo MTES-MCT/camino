@@ -21,7 +21,7 @@ interface Props {
 
 const labels = {
   met: { x: 'x', y: 'y' },
-  deg: { x: 'longitude (E)', y: 'latitude (N)' },
+  deg: { x: 'longitude', y: 'latitude' },
   gon: { x: 'longitude', y: 'latitude' },
 } as const satisfies Record<GeoSysteme['uniteId'], { x: string; y: string }>
 const geoJsonToArray = (perimetre: FeatureCollectionPoints): TableRow<string>[] => {
@@ -60,14 +60,14 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
     if (isNotNullNorUndefined(uniteId)) {
       const alwaysPresentColumns: Column<string>[] = [
-        { id: 'nom', name: 'Point', noSort: true },
+        { id: 'nom', name: 'Nom du point', noSort: true },
         { id: 'description', name: 'Description', noSort: true },
         { id: 'x', name: capitalize(labels[uniteId].x), noSort: true },
         { id: 'y', name: capitalize(labels[uniteId].y), noSort: true },
       ]
 
       if (uniteId === 'deg') {
-        alwaysPresentColumns.push({ id: 'x_deg', name: capitalize(labels[uniteId].x), noSort: true }, { id: 'y_deg', name: capitalize(labels[uniteId].y), noSort: true })
+        alwaysPresentColumns.push({ id: 'x_deg', name: 'Longitude (E)', noSort: true }, { id: 'y_deg', name: 'Latitude (N)', noSort: true })
       }
 
       return alwaysPresentColumns
