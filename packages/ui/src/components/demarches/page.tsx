@@ -1,4 +1,4 @@
-import { defineComponent, markRaw } from 'vue'
+import { defineComponent, inject, markRaw } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
@@ -15,6 +15,8 @@ import { TitreStatut } from '../_common/titre-statut'
 import { List } from '../_ui/list'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { ApiClient, apiClient } from '@/api/api-client'
+import { Entreprise } from 'camino-common/src/entreprise'
+import { entreprisesKey } from '@/moi'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -33,7 +35,8 @@ interface PureProps {
   filtres: readonly CaminoFiltre[]
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getDemarches' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
 }
 
 const demarchesLignesBuild = (demarches: GetDemarchesDemarche[]): TableRow[] =>
@@ -118,6 +121,7 @@ export const PurePage = defineComponent<PureProps>(props => {
         filtres: props.filtres,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
+        entreprises: props.entreprises,
       }}
       route={props.currentRoute}
       getData={getData}
@@ -126,12 +130,13 @@ export const PurePage = defineComponent<PureProps>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux', 'filtres']
+PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux', 'filtres', 'entreprises']
 
 export const Page = defineComponent<Props>(props => {
   const router = useRouter()
+  const entreprises = inject(entreprisesKey, [])
 
-  return () => <PurePage filtres={props.filtres} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PurePage filtres={props.filtres} entreprises={entreprises} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

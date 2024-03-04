@@ -17,14 +17,13 @@ const meta: Meta = {
 export default meta
 
 const getUtilisateursAction = action('getUtilisateurs')
-const getEntreprisesAction = action('getEntreprises')
 
 const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const enterprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }
-const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'> = {
+const entreprise = { id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }
+const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
@@ -50,7 +49,7 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntrepri
           nom: 'nom2',
           prenom: 'prenom2',
           role: 'entreprise',
-          entreprises: [enterprise],
+          entreprises: [entreprise],
         },
         {
           id: toUtilisateurId('id3'),
@@ -63,11 +62,6 @@ const apiClientMock: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntrepri
       ],
     })
   },
-  getUtilisateurEntreprises: () => {
-    getEntreprisesAction()
-
-    return Promise.resolve([enterprise])
-  },
 }
 
 export const Loading: StoryFn = () => (
@@ -77,23 +71,32 @@ export const Loading: StoryFn = () => (
       ...apiClientMock,
       getUtilisateurs: () => new Promise(() => ({})),
     }}
+    entreprises={[entreprise]}
     currentRoute={{ name: 'utilisateurs', query: {} }}
     updateUrlQuery={updateUrlQuery}
   />
 )
 
-export const NotConnected: StoryFn = () => <PureUtilisateurs user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+export const NotConnected: StoryFn = () => (
+  <PureUtilisateurs entreprises={[entreprise]} user={null} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+)
 
 export const Forbidden: StoryFn = () => (
-  <PureUtilisateurs user={{ ...testBlankUser, role: 'defaut' }} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureUtilisateurs
+    entreprises={[entreprise]}
+    user={{ ...testBlankUser, role: 'defaut' }}
+    apiClient={apiClientMock}
+    currentRoute={{ name: 'utilisateurs', query: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )
 
 export const WithError: StoryFn = () => (
   <PureUtilisateurs
     user={{ ...testBlankUser, role: 'super' }}
+    entreprises={[entreprise]}
     apiClient={{
       ...apiClientMock,
-      getUtilisateurEntreprises: () => Promise.reject(new Error('Cassé')),
       getUtilisateurs: () => Promise.reject(new Error('Cassé')),
     }}
     currentRoute={{ name: 'utilisateurs', query: {} }}
@@ -102,5 +105,11 @@ export const WithError: StoryFn = () => (
 )
 
 export const Connected: StoryFn = () => (
-  <PureUtilisateurs user={{ ...testBlankUser, role: 'super' }} apiClient={apiClientMock} currentRoute={{ name: 'utilisateurs', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureUtilisateurs
+    entreprises={[entreprise]}
+    user={{ ...testBlankUser, role: 'super' }}
+    apiClient={apiClientMock}
+    currentRoute={{ name: 'utilisateurs', query: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )

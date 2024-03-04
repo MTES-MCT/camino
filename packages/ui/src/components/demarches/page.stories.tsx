@@ -17,12 +17,11 @@ const meta: Meta = {
 export default meta
 
 const getDemarchesAction = action('getDemarches')
-const getEntreprisesAction = action('getEntreprises')
 const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
@@ -54,33 +53,34 @@ const apiClient: Pick<ApiClient, 'getDemarches' | 'titresRechercherByNom' | 'get
       })),
     })
   },
-  getUtilisateurEntreprises: () => {
-    getEntreprisesAction()
-
-    return Promise.resolve([])
-  },
 }
 
 export const Loading: StoryFn = () => (
   <PurePage
     travaux
     updateUrlQuery={updateUrlQuery}
-    currentRoute={{ name: 'demarches', query: {} }}
-    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
+    entreprises={[]}
+    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] } }}
+    apiClient={{ ...apiClient, getDemarches: () => new Promise(() => ({})), getTitresByIds: () => new Promise(() => ({})) }}
     filtres={demarchesFiltres}
   />
 )
 
-export const Travaux: StoryFn = () => <PurePage travaux updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={travauxFiltres} />
+export const Travaux: StoryFn = () => (
+  <PurePage travaux entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={travauxFiltres} />
+)
 
-export const Demarches: StoryFn = () => <PurePage travaux={false} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
+export const Demarches: StoryFn = () => (
+  <PurePage travaux={false} entreprises={[]} updateUrlQuery={updateUrlQuery} currentRoute={{ name: 'demarches', query: {} }} apiClient={apiClient} filtres={demarchesFiltres} />
+)
 
 export const WithError: StoryFn = () => (
   <PurePage
     travaux
     updateUrlQuery={updateUrlQuery}
-    currentRoute={{ name: 'demarches', query: {} }}
-    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => Promise.reject(new Error('Cassé')), getDemarches: () => Promise.reject(new Error('Cassé')) }}
+    entreprises={[]}
+    currentRoute={{ name: 'demarches', query: { titresIds: ['id1'] } }}
+    apiClient={{ ...apiClient, getTitresByIds: () => Promise.reject(new Error('Cassé')), getDemarches: () => Promise.reject(new Error('Cassé')) }}
     filtres={demarchesFiltres}
   />
 )

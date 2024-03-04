@@ -12,11 +12,11 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { caminoDefineComponent, isEventWithTarget } from '../utils/vue-tsx-utils'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
-import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
+import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
 import { ButtonIcon } from './_ui/button-icon'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -25,6 +25,7 @@ export const Utilisateur = defineComponent({
     const router = useRouter()
 
     const user = inject(userKey)
+    const entreprises = inject(entreprisesKey, [])
 
     const deleteUtilisateur = async (userId: string) => {
       const isMe: boolean = (user && userId === user.id) ?? false
@@ -84,6 +85,7 @@ export const Utilisateur = defineComponent({
         apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
         user={user}
+        entreprises={entreprises}
       />
     )
   },
@@ -91,14 +93,12 @@ export const Utilisateur = defineComponent({
 export interface Props {
   user: User
   utilisateurId: string
-  apiClient: Pick<
-    UtilisateurApiClient,
-    'getUtilisateurEntreprises' | 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'
-  >
+  apiClient: Pick<UtilisateurApiClient, 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'>
+  entreprises: Entreprise[]
   passwordUpdate: () => void
 }
 
-export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
+export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate', 'entreprises'], props => {
   watch(
     () => props.utilisateurId,
     _newId => {
@@ -240,7 +240,7 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
               </div>
               <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneMobile) ? item.telephoneMobile : '–'}</p>} />
             </div>
-            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} />
+            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
 
             {isMe.value ? (
               <>

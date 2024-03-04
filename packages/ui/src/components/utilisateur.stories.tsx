@@ -43,16 +43,22 @@ const apiClientMock: Props['apiClient'] = {
 
     return Promise.resolve()
   },
-  getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]),
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123', url: 'https://google.fr' }), 1000)),
 }
 
 export const MySelf: StoryFn = () => (
-  <PureUtilisateur user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+  <PureUtilisateur
+    entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
+    user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }}
+    utilisateurId="id"
+    passwordUpdate={passwordUpdate}
+    apiClient={apiClientMock}
+  />
 )
 
 export const Loading: StoryFn = () => (
   <PureUtilisateur
+    entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('id'), role: 'super' }}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
@@ -65,6 +71,7 @@ export const Loading: StoryFn = () => (
 
 export const error: StoryFn = () => (
   <PureUtilisateur
+    entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
     user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
@@ -77,5 +84,11 @@ export const error: StoryFn = () => (
 )
 
 export const AnotherUser: StoryFn = () => (
-  <PureUtilisateur user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+  <PureUtilisateur
+    entreprises={[{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]}
+    user={{ ...testBlankUser, id: toUtilisateurId('anotherId'), role: 'super' }}
+    utilisateurId="id"
+    passwordUpdate={passwordUpdate}
+    apiClient={apiClientMock}
+  />
 )

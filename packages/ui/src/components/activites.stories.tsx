@@ -17,23 +17,19 @@ const meta: Meta = {
 export default meta
 
 const getActivitesAction = action('getActivites')
-const getEntreprisesAction = action('getEntreprises')
 const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+const entreprises = [{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }]
+const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
   getTitresByIds: () => {
     return Promise.resolve({ elements: [] })
   },
-  getUtilisateurEntreprises: () => {
-    getEntreprisesAction()
 
-    return Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', legal_siren: null }])
-  },
   getActivites: siren => {
     getActivitesAction(siren)
 
@@ -62,16 +58,10 @@ const apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'get
   },
 }
 
-export const Loading: StoryFn = () => (
-  <PureActivites
-    user={{ ...testBlankUser, role: 'super' }}
-    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
-    currentRoute={{ name: 'activites', query: {} }}
-    updateUrlQuery={updateUrlQuery}
-  />
-)
-export const NotConnected: StoryFn = () => <PureActivites user={null} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+export const NotConnected: StoryFn = () => <PureActivites entreprises={entreprises} user={null} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
 export const Forbidden: StoryFn = () => (
-  <PureActivites user={{ ...testBlankUser, role: 'defaut' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureActivites entreprises={entreprises} user={{ ...testBlankUser, role: 'defaut' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
 )
-export const Full: StoryFn = () => <PureActivites user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+export const Full: StoryFn = () => (
+  <PureActivites entreprises={entreprises} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} currentRoute={{ name: 'activites', query: {} }} updateUrlQuery={updateUrlQuery} />
+)

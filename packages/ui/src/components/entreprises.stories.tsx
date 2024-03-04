@@ -22,15 +22,12 @@ const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
   getTitresByIds: () => {
     return Promise.resolve({ elements: [] })
-  },
-  getUtilisateurEntreprises: () => {
-    return Promise.resolve([])
   },
   getFilteredEntreprises: _ => {
     getEntreprisesAction()
@@ -59,11 +56,17 @@ const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 
 }
 
 export const Loading: StoryFn = () => (
-  <PureEntreprises apiClient={{ ...apiClient, getFilteredEntreprises: () => new Promise(() => ({})) }} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises
+    entreprises={[]}
+    apiClient={{ ...apiClient, getFilteredEntreprises: () => new Promise(() => ({})) }}
+    user={null}
+    currentRoute={{ name: 'entreprises', query: {} }}
+    updateUrlQuery={updateUrlQuery}
+  />
 )
 
-export const NonConnecte: StoryFn = () => <PureEntreprises apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+export const NonConnecte: StoryFn = () => <PureEntreprises entreprises={[]} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
 
 export const canCreateEntreprise: StoryFn = () => (
-  <PureEntreprises apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises entreprises={[]} apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
 )

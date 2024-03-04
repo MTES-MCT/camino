@@ -8,13 +8,15 @@ import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/ta
 import { ApiClient, apiClient } from '../api/api-client'
 import { TableRow } from './_ui/table'
 import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 interface Props {
   user: User
-  apiClient: Pick<ApiClient, 'getUtilisateurs' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'getUtilisateurs' | 'titresRechercherByNom' | 'getTitresByIds'>
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
+  entreprises: Entreprise[]
 }
 export const PureUtilisateurs = defineComponent<Props>(props => {
   const load = async (params: Params<string>): Promise<{ values: TableRow[]; total: number }> => {
@@ -38,7 +40,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
       {canReadUtilisateurs(props.user) ? (
         <Liste
           nom="utilisateurs"
-          listeFiltre={{ filtres: utilisateursFiltresNames, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient }}
+          listeFiltre={{ filtres: utilisateursFiltresNames, updateUrlQuery: props.updateUrlQuery, apiClient: props.apiClient, entreprises: props.entreprises }}
           route={props.currentRoute}
           colonnes={utilisateursColonnes}
           getData={load}
@@ -53,14 +55,15 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureUtilisateurs.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
+PureUtilisateurs.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user', 'entreprises']
 
 export const Utilisateurs = defineComponent(() => {
   const router = useRouter()
 
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey, [])
 
   return () => {
-    return <PureUtilisateurs user={user} apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
+    return <PureUtilisateurs user={user} apiClient={apiClient} entreprises={entreprises} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
   }
 })

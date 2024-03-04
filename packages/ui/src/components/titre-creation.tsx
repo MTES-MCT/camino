@@ -6,8 +6,8 @@ import { computed, defineComponent, onMounted, ref, inject } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { DsfrSelect } from './_ui/dsfr-select'
-import { EntrepriseId } from 'camino-common/src/entreprise'
-import { NonEmptyArray, Nullable, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { Nullable, isNonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from './_ui/functional-loader'
@@ -19,12 +19,14 @@ import { EtapeId } from 'camino-common/src/etape'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
+import { Alert } from './_ui/alert'
 
 export const TitreCreation = defineComponent(() => {
   const router = useRouter()
 
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey)
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({
@@ -36,6 +38,7 @@ export const TitreCreation = defineComponent(() => {
   return () => (
     <PureTitreCreation
       user={user}
+      entreprises={entreprises ?? []}
       apiClient={{
         ...apiClient,
         createTitre: async titreDemande => {
@@ -51,11 +54,12 @@ export const TitreCreation = defineComponent(() => {
 
 type Props = {
   user: User
-  apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkableTitres'>
+  entreprises: Entreprise[]
+  apiClient: Pick<ApiClient, 'createTitre' | 'loadLinkableTitres'>
   initialValue?: TitreDemande
 }
 export const PureTitreCreation = defineComponent<Props>(props => {
-  type Entreprise = {
+  type EntrepriseInternal = {
     id: EntrepriseId
     label: string
   }
@@ -76,7 +80,6 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     }
   })
 
-  const entreprises = ref<AsyncData<NonEmptyArray<Entreprise>>>({ status: 'LOADING' })
   const savingTitre = ref<AsyncData<void>>({ status: 'LOADED', value: undefined })
 
   const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
@@ -109,53 +112,33 @@ export const PureTitreCreation = defineComponent<Props>(props => {
     }
   })
 
-  onMounted(async () => {
-    await init()
+  onMounted(() => {
+    if (entreprises.length === 1) {
+      titreDemande.value.entrepriseId = entreprises[0].id
+    }
   })
 
   const onSelectTitres = (titres: { id: TitreId }[]) => {
     titreDemande.value.titreFromIds = titres.map(({ id }) => id)
   }
 
-  const init = async () => {
-    entreprises.value = { status: 'LOADING' }
-    try {
-      const data = await props.apiClient.getEntreprises()
-
-      const dataParsed = data
-        .filter(entreprise => {
-          if (isSuper(props.user)) {
-            return true
-          }
-
-          if ((isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && canCreateTitre(props.user, null)) {
-            return true
-          }
-
-          if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
-            return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
-          }
-
-          return false
-        })
-        .map(({ id, nom }) => ({ id, label: nom }))
-      if (isNonEmptyArray(dataParsed)) {
-        entreprises.value = { status: 'LOADED', value: dataParsed }
-
-        if (dataParsed.length === 1) {
-          titreDemande.value.entrepriseId = dataParsed[0].id
-        }
-      } else {
-        entreprises.value = { status: 'ERROR', message: 'Aucune entreprise associée à cet utilisateur' }
+  const entreprises: EntrepriseInternal[] = props.entreprises
+    .filter(entreprise => {
+      if (isSuper(props.user)) {
+        return true
       }
-    } catch (e: any) {
-      console.error('error', e)
-      entreprises.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
+
+      if ((isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && canCreateTitre(props.user, null)) {
+        return true
       }
-    }
-  }
+
+      if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
+        return props.user.entreprises.map(({ id }) => id).includes(entreprise.id)
+      }
+
+      return false
+    })
+    .map(({ id, nom }) => ({ id, label: nom }))
 
   const entrepriseUpdate = (entrepriseId: EntrepriseId | null) => {
     titreDemande.value = {
@@ -205,10 +188,11 @@ export const PureTitreCreation = defineComponent<Props>(props => {
           e.preventDefault()
         }}
       >
-        <LoadingElement
-          data={entreprises.value}
-          renderItem={items => <DsfrSelect required={true} legend={{ main: 'Entreprise' }} initialValue={titreDemande.value.entrepriseId} items={items} valueChanged={entrepriseUpdate} />}
-        />
+        {isNonEmptyArray(entreprises) ? (
+          <DsfrSelect required={true} legend={{ main: 'Entreprise' }} initialValue={titreDemande.value.entrepriseId} items={entreprises} valueChanged={entrepriseUpdate} />
+        ) : (
+          <Alert class="fr-mb-1w" small={true} type="error" title="Aucune entreprise associée à cet utilisateur" />
+        )}
 
         {isNotNullNorUndefined(titreDemande.value.entrepriseId) ? <TitreTypeSelect onUpdateTitreTypeId={onUpdateTitreTypeId} titreTypeId={titreDemande.value.typeId} user={props.user} /> : null}
 
@@ -237,4 +221,4 @@ export const PureTitreCreation = defineComponent<Props>(props => {
 })
 
 // @ts-ignore
-PureTitreCreation.props = ['user', 'apiClient', 'initialValue']
+PureTitreCreation.props = ['user', 'entreprises', 'apiClient', 'initialValue']

@@ -6,12 +6,12 @@ import { User } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
 import { EntrepriseAddPopup } from './entreprise/add-popup'
 import { GetEntreprisesEntreprise, entrepriseApiClient } from './entreprise/entreprise-api-client'
-import { Siren } from 'camino-common/src/entreprise'
+import { Entreprise, Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { ApiClient, apiClient } from '../api/api-client'
 import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
 import { Column } from './_ui/table'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
 
 const entreprisesColonnes = [
   {
@@ -43,7 +43,8 @@ const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
 interface Props {
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getFilteredEntreprises' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getFilteredEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
   user: User
 }
 export const PureEntreprises = defineComponent<Props>(props => {
@@ -72,6 +73,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
         filtres: entreprisesFiltresNames,
         apiClient: props.apiClient,
         updateUrlQuery: props.updateUrlQuery,
+        entreprises: props.entreprises,
       }}
       route={props.currentRoute}
       renderButton={() => {
@@ -91,12 +93,13 @@ export const PureEntreprises = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEntreprises.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
+PureEntreprises.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user', 'entreprises']
 
 export const Entreprises = defineComponent(() => {
   const router = useRouter()
   const store = useStore()
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey, [])
 
   const customApiClient = () => {
     return {
@@ -113,5 +116,5 @@ export const Entreprises = defineComponent(() => {
     }
   }
 
-  return () => <PureEntreprises currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user} apiClient={customApiClient()} />
+  return () => <PureEntreprises entreprises={entreprises} currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user} apiClient={customApiClient()} />
 })

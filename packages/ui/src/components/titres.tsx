@@ -18,7 +18,7 @@ import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { DemandeTitreButton } from './_common/demande-titre-button'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -39,6 +39,7 @@ export const Titres = defineComponent({
     })
     const router = useRouter()
     const user = inject(userKey)
+    const entreprises = inject(entreprisesKey, [])
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
@@ -190,6 +191,7 @@ export const Titres = defineComponent({
         <TitresFiltres
           subtitle={resultat.value}
           apiClient={apiClient}
+          entreprises={entreprises}
           route={router.currentRoute.value}
           router={router}
           paramsUpdate={async params => {

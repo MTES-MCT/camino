@@ -21,22 +21,20 @@ const push = (params: RouteLocationRaw) => {
   return Promise.resolve()
 }
 
-const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getUtilisateurEntreprises'> = {
+const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
   getTitresByIds: () => {
     return Promise.resolve({ elements: [] })
   },
-  getUtilisateurEntreprises: () => {
-    return Promise.resolve([])
-  },
 }
 
 export const Loading: StoryFn = () => (
   <Filters
-    filters={['entreprisesIds']}
-    apiClient={{ ...apiClient, getUtilisateurEntreprises: () => new Promise(() => ({})) }}
+    filters={['titresIds']}
+    entreprises={[]}
+    apiClient={{ ...apiClient, getTitresByIds: () => new Promise(() => ({})) }}
     updateUrlQuery={{ push }}
     route={{ query: { entreprisesIds: ['toto'] }, name: '/plop' }}
     toggle={action('toggle')}
@@ -45,11 +43,20 @@ export const Loading: StoryFn = () => (
 )
 
 export const ClosedWithoutValue: StoryFn = () => (
-  <Filters filters={['nomsAdministration']} apiClient={apiClient} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} toggle={action('toggle')} validate={action('validate')} />
+  <Filters
+    entreprises={[]}
+    filters={['nomsAdministration']}
+    apiClient={apiClient}
+    updateUrlQuery={{ push }}
+    route={{ query: {}, name: '/plop' }}
+    toggle={action('toggle')}
+    validate={action('validate')}
+  />
 )
 
 export const AllFiltersClosedWithValues: StoryFn = () => (
   <Filters
+    entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
     route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
@@ -62,6 +69,7 @@ export const AllFiltersClosedWithValues: StoryFn = () => (
 
 export const AllFiltersOpenedWithValues: StoryFn = () => (
   <Filters
+    entreprises={[]}
     filters={allCaminoFiltres}
     updateUrlQuery={{ push }}
     route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
@@ -74,6 +82,7 @@ export const AllFiltersOpenedWithValues: StoryFn = () => (
 
 export const CustomOpenedWithValues: StoryFn = () => (
   <Filters
+    entreprises={[]}
     filters={['nomsAdministration', 'substancesIds']}
     updateUrlQuery={{ push }}
     route={{ query: { nomsAdministration: 'test', substancesIds: ['arge', 'auru'] }, name: '/plop' }}
@@ -85,5 +94,14 @@ export const CustomOpenedWithValues: StoryFn = () => (
 )
 
 export const Opened: StoryFn = () => (
-  <Filters filters={allCaminoFiltres} updateUrlQuery={{ push }} route={{ query: {}, name: '/plop' }} apiClient={apiClient} toggle={action('toggle')} validate={action('validate')} opened={true} />
+  <Filters
+    entreprises={[]}
+    filters={allCaminoFiltres}
+    updateUrlQuery={{ push }}
+    route={{ query: {}, name: '/plop' }}
+    apiClient={apiClient}
+    toggle={action('toggle')}
+    validate={action('validate')}
+    opened={true}
+  />
 )

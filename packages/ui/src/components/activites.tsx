@@ -14,7 +14,8 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { capitalize } from 'camino-common/src/strings'
-import { userKey } from '@/moi'
+import { entreprisesKey, userKey } from '@/moi'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -87,7 +88,8 @@ interface Props {
   user: User
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getActivites' | 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'getActivites' | 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
 }
 
 export const PureActivites = defineComponent<Props>(props => {
@@ -114,6 +116,7 @@ export const PureActivites = defineComponent<Props>(props => {
             filtres: activitesFiltresNames,
             apiClient: props.apiClient,
             updateUrlQuery: props.updateUrlQuery,
+            entreprises: props.entreprises,
           }}
           renderButton={null}
           route={props.currentRoute}
@@ -126,11 +129,12 @@ export const PureActivites = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
+PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user', 'entreprises']
 
 export const Activites = defineComponent(() => {
   const router = useRouter()
   const user = inject(userKey)
+  const entreprises = inject(entreprisesKey, [])
 
-  return () => <PureActivites user={user} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PureActivites user={user} entreprises={entreprises} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })

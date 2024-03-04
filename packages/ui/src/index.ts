@@ -11,8 +11,9 @@ import store from './store'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { getWithJson } from './api/client-rest'
 import { initMatomo } from './stats/matomo'
-import { User } from 'camino-common/src/roles'
-import { userKey } from './moi'
+import type { User } from 'camino-common/src/roles'
+import { userKey, entreprisesKey } from './moi'
+import type { Entreprise } from 'camino-common/src/entreprise'
 // Le Timeout du sse côté backend est mis à 30 secondes, toujours avoir une valeur plus haute ici
 const sseTimeoutInSeconds = 45
 
@@ -59,9 +60,10 @@ checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
   sync(store, router)
-  const [configFromJson, user]: [CaminoConfig, User] = await Promise.all([getWithJson('/config', {}), getWithJson('/moi', {})])
+  const [configFromJson, user, entreprises]: [CaminoConfig, User, Entreprise[]] = await Promise.all([getWithJson('/config', {}), getWithJson('/moi', {}), getWithJson('/rest/entreprises', {})])
   const app = createApp(App)
   app.provide(userKey, user)
+  app.provide(entreprisesKey, entreprises)
   app.config.globalProperties.user = user
   if (configFromJson.caminoStage) {
     try {

@@ -29,6 +29,7 @@ import { ApiClient } from '../../../api/api-client'
 import { AsyncData } from '../../../api/client-rest'
 import { LoadingElement } from '../functional-loader'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -40,7 +41,8 @@ type Props = {
   opened?: boolean
   validate: (param: { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }) => void
   toggle: () => void
-  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
 } & Pick<HTMLAttributes, 'class'>
 
 const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[]): FormatedLabel[] => {
@@ -151,7 +153,6 @@ export const Filters = defineComponent((props: Props) => {
       props.updateUrlQuery.push(urlQuery.value)
     }
   }
-  const entreprises = ref<Awaited<ReturnType<typeof props.apiClient.getUtilisateurEntreprises>>>([])
   const loading = ref<AsyncData<true>>({ status: 'LOADING' })
   onMounted(async () => {
     document.addEventListener('keyup', keyup)
@@ -234,11 +235,6 @@ export const Filters = defineComponent((props: Props) => {
     let titresIds: Awaited<ReturnType<typeof props.apiClient.getTitresByIds>> = { elements: [] }
 
     try {
-      if (props.filters.includes('entreprisesIds') && entreprises.value.length === 0) {
-        loading.value = { status: 'LOADING' }
-        entreprises.value = await props.apiClient.getUtilisateurEntreprises()
-      }
-
       if (nonValidatedValues.value.titresIds?.length > 0) {
         loading.value = { status: 'LOADING' }
         titresIds = await props.apiClient.getTitresByIds(nonValidatedValues.value.titresIds, 'filters')
@@ -262,7 +258,7 @@ export const Filters = defineComponent((props: Props) => {
           if (filterType.id === 'titresIds') {
             elements = titresIds.elements
           } else if (filterType.id === 'entreprisesIds') {
-            elements = entreprises.value
+            elements = props.entreprises
           } else {
             elements = filterType.elements
           }
@@ -313,7 +309,7 @@ export const Filters = defineComponent((props: Props) => {
                           class={['rnd-m', 'box', 'btn-flash', 'h6', 'pl-s', 'pr-xs', 'py-xs', 'bold', 'mr-xs', 'mb-xs', opened.value ? 'pr-s' : 'pr-xs']}
                           onClick={() => labelRemove(label)}
                         >
-                          {label.name} : {label.valueName || label.value}{' '}
+                          {label.name} : {isNotNullNorUndefined(label.valueName) ? label.valueName : label.value}{' '}
                           {!opened.value ? (
                             <span class="inline-block align-y-top ml-xs">
                               {' '}
@@ -348,7 +344,13 @@ export const Filters = defineComponent((props: Props) => {
                   ))}
                   {autocompletes.value.map(input => (
                     <div key={input}>
-                      <InputAutocomplete filter={input} apiClient={props.apiClient} initialValue={nonValidatedValues.value[input]} onFilterAutocomplete={onFilterAutocomplete(input)} />
+                      <InputAutocomplete
+                        entreprises={props.entreprises}
+                        filter={input}
+                        apiClient={props.apiClient}
+                        initialValue={nonValidatedValues.value[input]}
+                        onFilterAutocomplete={onFilterAutocomplete(input)}
+                      />
                     </div>
                   ))}
                   <button class="btn-border small px-s p-xs rnd-xs mb" onClick={inputsErase}>
@@ -397,4 +399,4 @@ export const Filters = defineComponent((props: Props) => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'apiClient']
+Filters.props = ['filters', 'subtitle', 'opened', 'validate', 'toggle', 'class', 'route', 'updateUrlQuery', 'apiClient', 'entreprises']
