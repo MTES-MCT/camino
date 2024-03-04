@@ -1,4 +1,4 @@
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { User } from 'camino-common/src/roles'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
@@ -61,9 +61,9 @@ export const Utilisateurs = defineComponent(() => {
   const router = useRouter()
 
   const user = inject(userKey)
-  const entreprises = inject(entreprisesKey, [])
+  const entreprises = inject(entreprisesKey, ref([]))
 
   return () => {
-    return <PureUtilisateurs user={user} apiClient={apiClient} entreprises={entreprises} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
+    return <PureUtilisateurs user={user} apiClient={apiClient} entreprises={entreprises.value} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
   }
 })

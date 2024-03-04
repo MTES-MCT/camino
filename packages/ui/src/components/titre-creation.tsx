@@ -26,7 +26,7 @@ export const TitreCreation = defineComponent(() => {
   const router = useRouter()
 
   const user = inject(userKey)
-  const entreprises = inject(entreprisesKey)
+  const entreprises = inject(entreprisesKey, ref([]))
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({
@@ -38,7 +38,7 @@ export const TitreCreation = defineComponent(() => {
   return () => (
     <PureTitreCreation
       user={user}
-      entreprises={entreprises ?? []}
+      entreprises={entreprises.value}
       apiClient={{
         ...apiClient,
         createTitre: async titreDemande => {

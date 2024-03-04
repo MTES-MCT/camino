@@ -36,7 +36,7 @@ export const Loading: StoryFn = () => (
     entreprises={[]}
     apiClient={{ ...apiClient, getTitresByIds: () => new Promise(() => ({})) }}
     updateUrlQuery={{ push }}
-    route={{ query: { entreprisesIds: ['toto'] }, name: '/plop' }}
+    route={{ query: { titresIds: ['toto'] }, name: '/plop' }}
     toggle={action('toggle')}
     validate={action('validate')}
   />

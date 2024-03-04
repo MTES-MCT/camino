@@ -25,7 +25,7 @@ export const Utilisateur = defineComponent({
     const router = useRouter()
 
     const user = inject(userKey)
-    const entreprises = inject(entreprisesKey, [])
+    const entreprises = inject(entreprisesKey, ref([]))
 
     const deleteUtilisateur = async (userId: string) => {
       const isMe: boolean = (user && userId === user.id) ?? false
@@ -85,7 +85,7 @@ export const Utilisateur = defineComponent({
         apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
         user={user}
-        entreprises={entreprises}
+        entreprises={entreprises.value}
       />
     )
   },

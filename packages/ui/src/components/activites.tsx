@@ -1,4 +1,4 @@
-import { defineComponent, inject, markRaw } from 'vue'
+import { defineComponent, inject, markRaw, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -134,7 +134,7 @@ PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user', 'e
 export const Activites = defineComponent(() => {
   const router = useRouter()
   const user = inject(userKey)
-  const entreprises = inject(entreprisesKey, [])
+  const entreprises = inject(entreprisesKey, ref([]))
 
-  return () => <PureActivites user={user} entreprises={entreprises} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PureActivites user={user} entreprises={entreprises.value} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })

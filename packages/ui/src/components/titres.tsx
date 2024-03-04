@@ -39,7 +39,7 @@ export const Titres = defineComponent({
     })
     const router = useRouter()
     const user = inject(userKey)
-    const entreprises = inject(entreprisesKey, [])
+    const entreprises = inject(entreprisesKey, ref([]))
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
@@ -191,7 +191,7 @@ export const Titres = defineComponent({
         <TitresFiltres
           subtitle={resultat.value}
           apiClient={apiClient}
-          entreprises={entreprises}
+          entreprises={entreprises.value}
           route={router.currentRoute.value}
           router={router}
           paramsUpdate={async params => {

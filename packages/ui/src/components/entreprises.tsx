@@ -5,45 +5,35 @@ import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 import { User } from 'camino-common/src/roles'
 import { useStore } from 'vuex'
 import { EntrepriseAddPopup } from './entreprise/add-popup'
-import { GetEntreprisesEntreprise, entrepriseApiClient } from './entreprise/entreprise-api-client'
+import { entrepriseApiClient } from './entreprise/entreprise-api-client'
 import { Entreprise, Siren } from 'camino-common/src/entreprise'
 import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { ApiClient, apiClient } from '../api/api-client'
 import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
-import { Column } from './_ui/table'
+import { Column, TableRow } from './_ui/table'
 import { entreprisesKey, userKey } from '@/moi'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { getWithJson } from '@/api/client-rest'
 
 const entreprisesColonnes = [
   {
     id: 'nom',
     name: 'Nom',
+    noSort: true,
   },
   {
     id: 'siren',
     name: 'Siren',
+    noSort: true,
   },
 ] as const satisfies readonly Column[]
 
-const entreprisesLignesBuild = (entreprises: GetEntreprisesEntreprise[]) =>
-  entreprises.map(entreprise => {
-    const columns = {
-      nom: { value: entreprise.nom },
-      siren: {
-        value: entreprise.legalEtranger ?? entreprise.legalSiren ?? '–',
-      },
-    }
-
-    return {
-      id: entreprise.id,
-      link: { name: 'entreprise', params: { id: entreprise.id } },
-      columns,
-    }
-  })
+type ColonneId = (typeof entreprisesColonnes)[number]['id']
 
 interface Props {
   currentRoute: Pick<RouteLocationNormalizedLoaded, 'query' | 'name'>
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'creerEntreprise' | 'getFilteredEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds'>
   entreprises: Entreprise[]
   user: User
 }
@@ -56,11 +46,33 @@ export const PureEntreprises = defineComponent<Props>(props => {
     popupVisible.value = !popupVisible.value
   }
 
-  const getData = async (params: Params<string>) => {
-    const values = await props.apiClient.getFilteredEntreprises({ ordre: params.ordre, colonne: params.colonne, page: params.page, nomsEntreprise: params.filtres?.nomsEntreprise ?? '' })
-    const entreprises = entreprisesLignesBuild(values.elements)
+  const getData = (options: Params<ColonneId>): Promise<{ total: number; values: TableRow<string>[] }> => {
+    const lignes = [...props.entreprises]
+      .filter(entreprise => {
+        if (isNotNullNorUndefined(options.filtres) && isNotNullNorUndefined(options.filtres.nomsEntreprise) && options.filtres.nomsEntreprise !== '') {
+          if (!entreprise.nom.toLowerCase().includes(options.filtres.nomsEntreprise) && !(entreprise.legal_siren ?? '').toLowerCase().includes(options.filtres.nomsEntreprise)) {
+            return false
+          }
+        }
 
-    return { total: values.total, values: entreprises }
+        return true
+      })
+      .map(entreprise => {
+        const columns = {
+          nom: { value: entreprise.nom },
+          siren: {
+            value: entreprise.legal_siren ?? '–',
+          },
+        }
+
+        return {
+          id: entreprise.id,
+          link: { name: 'entreprise', params: { id: entreprise.id } },
+          columns,
+        }
+      })
+
+    return Promise.resolve({ total: lignes.length, values: lignes })
   }
 
   return () => (
@@ -99,7 +111,7 @@ export const Entreprises = defineComponent(() => {
   const router = useRouter()
   const store = useStore()
   const user = inject(userKey)
-  const entreprises = inject(entreprisesKey, [])
+  const entreprises = inject(entreprisesKey, ref([]))
 
   const customApiClient = () => {
     return {
@@ -107,6 +119,9 @@ export const Entreprises = defineComponent(() => {
       creerEntreprise: async (siren: Siren) => {
         try {
           await entrepriseApiClient.creerEntreprise(siren)
+          const newEntreprises = await getWithJson('/rest/entreprises', {})
+          entreprises.value = newEntreprises
+
           store.dispatch('messageAdd', { value: `l'entreprise a été créée`, type: 'success' }, { root: true })
           router.push({ name: 'entreprise', params: { id: `fr-${siren}` } })
         } catch (e) {
@@ -116,5 +131,5 @@ export const Entreprises = defineComponent(() => {
     }
   }
 
-  return () => <PureEntreprises entreprises={entreprises} currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user} apiClient={customApiClient()} />
+  return () => <PureEntreprises entreprises={entreprises.value} currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user} apiClient={customApiClient()} />
 })

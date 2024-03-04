@@ -48,7 +48,6 @@ export interface TitreApiClient {
   getTitreUtilisateurAbonne: (titreId: TitreId) => Promise<boolean>
   editTitre: (titre: EditableTitre) => Promise<void>
   getTitreById: (titreId: TitreIdOrSlug) => Promise<TitreGet>
-  getTitresMetas: () => Promise<Pick<Entreprise, 'id' | 'nom'>[]>
   getTitresForTable: (params: {
     page?: number
     colonne?: string
@@ -122,21 +121,6 @@ export const titreApiClient: TitreApiClient = {
   },
   getTitreById: (titreId: TitreIdOrSlug): Promise<TitreGet> => {
     return getWithJson('/rest/titres/:titreId', { titreId })
-  },
-  getTitresMetas: async () => {
-    const { elements } = await apiGraphQLFetch(
-      gql`
-        query TitresMetas {
-          entreprises {
-            elements {
-              id
-              nom
-            }
-          }
-        }
-      `
-    )()
-    return elements
   },
   getTitresForTable: async params => {
     const { elements, total } = await apiGraphQLFetch(

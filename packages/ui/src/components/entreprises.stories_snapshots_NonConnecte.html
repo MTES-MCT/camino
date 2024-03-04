@@ -25,7 +25,7 @@
       <div>
         <div style="display: flex; align-items: center;">
           <div>Filtres</div>
-          <div class="pl-s small">(10 / 1200 résultats)</div>
+          <div class="pl-s small">(10 résultats)</div>
         </div>
       </div>
       <div class="flex flex-right flex-end"><svg style="display: block;" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#666">
@@ -60,8 +60,12 @@
           <caption>entreprises</caption>
           <thead>
             <tr>
-              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Nom par ordre descendant" class="fr-link fr-link--icon-right fr-icon-arrow-down-fill" aria-label="Trier par la colonne Nom par ordre descendant">Nom</a></th>
-              <th scope="col" class="nowrap"><a href="/mocked-href" title="Trier par la colonne Siren" class="fr-link" aria-label="Trier par la colonne Siren">Siren</a></th>
+              <th scope="col" class="nowrap">
+                <div class="fr-text--md">Nom</div>
+              </th>
+              <th scope="col" class="nowrap">
+                <div class="fr-text--md">Siren</div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -109,21 +113,6 @@
         </table>
       </div>
     </div>
-    <nav role="navigation" class="fr-pagination" aria-label="Pagination">
-      <ul class="fr-pagination__list">
-        <li><a aria-disabled="true" role="link" title="Première page" class="fr-pagination__link fr-pagination__link--first" aria-label="Première page">Première page</a></li>
-        <li><a aria-disabled="true" role="link" title="Page précédente" class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" aria-label="Page précédente">Page précédente</a></li>
-        <li><a href="/mocked-href" title="Page 1" class="fr-pagination__link" aria-label="Page 1" aria-current="page">1</a></li>
-        <!---->
-        <li><a href="/mocked-href" title="Page 2" class="fr-pagination__link" aria-label="Page 2">2</a></li>
-        <li><a href="/mocked-href" title="Page 3" class="fr-pagination__link" aria-label="Page 3">3</a></li>
-        <li><a href="/mocked-href" title="Page 4" class="fr-pagination__link" aria-label="Page 4">4</a></li>
-        <li><a href="/mocked-href" title="Page 5" class="fr-pagination__link" aria-label="Page 5">5</a></li>
-        <li><a class="fr-pagination__link fr-displayed-lg"> … </a></li>
-        <li><a href="/mocked-href" title="Page 120" class="fr-pagination__link" aria-label="Page 120">120</a></li>
-        <li><a href="/mocked-href" title="Page suivante" class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" aria-label="Page suivante">Page suivante</a></li>
-        <li><a href="/mocked-href" title="Dernière page" class="fr-pagination__link fr-pagination__link--last" aria-label="Dernière page">Dernière page</a></li>
-      </ul>
-    </nav>
+    <!---->
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { defineComponent, inject, markRaw } from 'vue'
+import { defineComponent, inject, markRaw, ref } from 'vue'
 import { Liste, Params } from '../_common/liste'
 import { Column, TableRow } from '../_ui/table'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
@@ -134,9 +134,9 @@ PurePage.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'travaux', 'fil
 
 export const Page = defineComponent<Props>(props => {
   const router = useRouter()
-  const entreprises = inject(entreprisesKey, [])
+  const entreprises = inject(entreprisesKey, ref([]))
 
-  return () => <PurePage filtres={props.filtres} entreprises={entreprises} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PurePage filtres={props.filtres} entreprises={entreprises.value} travaux={props.travaux} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

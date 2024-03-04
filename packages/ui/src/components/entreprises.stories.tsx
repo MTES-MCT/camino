@@ -17,36 +17,28 @@ const meta: Meta = {
 export default meta
 
 const creerEntrepriseAction = action('creerEntreprise')
-const getEntreprisesAction = action('getFilteredEntreprises')
 const pushRouteAction = action('pushRoute')
 
 const updateUrlQuery = { push: (values: RouteLocationRaw) => Promise.resolve(pushRouteAction(values)) }
 
-const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds'> = {
+const entreprises = [
+  { id: entrepriseIdValidator.parse('fr-899600233'), nom: '10 A', legal_siren: '899600233' },
+  { id: entrepriseIdValidator.parse('fr-529770646'), nom: '2GRE', legal_siren: '529770646' },
+  { id: entrepriseIdValidator.parse('fr-895187920'), nom: '45-8 AVANT-MONTS', legal_siren: '895187920' },
+  { id: entrepriseIdValidator.parse('fr-831762786'), nom: '45-8 FONTS-BOUILLANTS', legal_siren: '831762786' },
+  { id: entrepriseIdValidator.parse('fr-539449124'), nom: '6EME SENS IMMOBILIER ENTREPRISES', legal_siren: '539449124' },
+  { id: entrepriseIdValidator.parse('xx-100000146'), nom: '8 communes de la vallée de Vicdessos', legal_siren: null },
+  { id: entrepriseIdValidator.parse('xx-97300a001'), nom: 'Aboeka Alphonse', legal_siren: null },
+  { id: entrepriseIdValidator.parse('fr-523359024'), nom: 'ABOEKA METAL', legal_siren: '523359024' },
+  { id: entrepriseIdValidator.parse('xx-97300a002'), nom: 'Aboeka Thomas', legal_siren: null },
+  { id: entrepriseIdValidator.parse('fr-839888138'), nom: 'ABOUNAMI GOLD', legal_siren: '839888138' },
+]
+const apiClient: Pick<ApiClient, 'creerEntreprise' | 'titresRechercherByNom' | 'getTitresByIds'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
   getTitresByIds: () => {
     return Promise.resolve({ elements: [] })
-  },
-  getFilteredEntreprises: _ => {
-    getEntreprisesAction()
-
-    return Promise.resolve({
-      total: 1200,
-      elements: [
-        { id: entrepriseIdValidator.parse('fr-899600233'), nom: '10 A', legalSiren: '899600233', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-529770646'), nom: '2GRE', legalSiren: '529770646', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-895187920'), nom: '45-8 AVANT-MONTS', legalSiren: '895187920', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-831762786'), nom: '45-8 FONTS-BOUILLANTS', legalSiren: '831762786', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-539449124'), nom: '6EME SENS IMMOBILIER ENTREPRISES', legalSiren: '539449124', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('xx-100000146'), nom: '8 communes de la vallée de Vicdessos', legalSiren: null, legalEtranger: null },
-        { id: entrepriseIdValidator.parse('xx-97300a001'), nom: 'Aboeka Alphonse', legalSiren: null, legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-523359024'), nom: 'ABOEKA METAL', legalSiren: '523359024', legalEtranger: null },
-        { id: entrepriseIdValidator.parse('xx-97300a002'), nom: 'Aboeka Thomas', legalSiren: null, legalEtranger: null },
-        { id: entrepriseIdValidator.parse('fr-839888138'), nom: 'ABOUNAMI GOLD', legalSiren: '839888138', legalEtranger: null },
-      ],
-    })
   },
   creerEntreprise: siren => {
     creerEntrepriseAction(siren)
@@ -55,18 +47,10 @@ const apiClient: Pick<ApiClient, 'getFilteredEntreprises' | 'creerEntreprise' | 
   },
 }
 
-export const Loading: StoryFn = () => (
-  <PureEntreprises
-    entreprises={[]}
-    apiClient={{ ...apiClient, getFilteredEntreprises: () => new Promise(() => ({})) }}
-    user={null}
-    currentRoute={{ name: 'entreprises', query: {} }}
-    updateUrlQuery={updateUrlQuery}
-  />
+export const NonConnecte: StoryFn = () => (
+  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
 )
 
-export const NonConnecte: StoryFn = () => <PureEntreprises entreprises={[]} apiClient={apiClient} user={null} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
-
 export const canCreateEntreprise: StoryFn = () => (
-  <PureEntreprises entreprises={[]} apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
+  <PureEntreprises entreprises={entreprises} apiClient={apiClient} user={{ role: 'super', ...testBlankUser }} currentRoute={{ name: 'entreprises', query: {} }} updateUrlQuery={updateUrlQuery} />
 )

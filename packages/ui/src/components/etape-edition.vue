@@ -76,13 +76,11 @@ import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresS
 import { isAdministration } from 'camino-common/src/roles'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { apiClient } from '../api/api-client'
-import { userKey } from '@/moi'
+import { userKey, entreprisesKey } from '@/moi'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
   components: { Edit, InputDate, FormSaveBtn },
-
-  inject: [userKey],
 
   beforeRouteLeave(_, __, next) {
     if (this.isFormDirty && !confirm(this.promptMsg)) {
@@ -189,6 +187,7 @@ export default {
   },
   async created() {
     await this.init()
+
     document.addEventListener('keyup', this.keyUp)
     window.addEventListener('beforeunload', this.beforeWindowUnload)
   },
@@ -211,6 +210,7 @@ export default {
       await this.$store.dispatch('titreEtapeEdition/init', {
         titreDemarcheId,
         id: this.etapeId,
+        entreprises: this.entreprises,
         date: this.newDate,
       })
 
