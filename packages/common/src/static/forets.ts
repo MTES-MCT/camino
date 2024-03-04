@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // prettier-ignore
-const IDS = [  '3PI','ZDUARBAL','ZDUARMAT','BSL','BSM','BEL','CHA','CORA','COUN','PTS','CKA','CPG','DBR','EGY','ZDUGABAL','ZDUGAKOU','GDS','KAW','LPS','LDD','MAL','MAN','MPA','PAR','MCA','MDF','MSO','MBV','NANC','ZDUPAFAV','ZDUPAMAC','PAP','PAUL','AMO','PTI','FRG','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SLU','SPA','STE','STJ','SMA', 'FOS'] as const
+const IDS = ['3PI','AMO','BEL','BSL','BSM','CHA','CKA','CORA','COUN','CPG','DBR','EGY','FOS','FRG','GDS','KAW','LDD','LPS','MAL','MAN','MBV','MCA','MDF','MPA','MSO','NANC','PAP','PAR','PAUL','PTI','REG','RNNMAT','RNNNOU','RNNTRI','SAU','SGK','SLU','SMA','SPA','STE','STJ','ZDUARBAL','ZDUARMAT','ZDUGABAL','ZDUGAKOU','ZDUPAFAV','ZDUPAMAC'] as const
 
 export const Forets = {
   '3PI': { id: '3PI', nom: '3 Pitons' },
@@ -13,7 +13,6 @@ export const Forets = {
   CHA: { id: 'CHA', nom: 'Charvein' },
   CORA: { id: 'CORA', nom: 'Coralie' },
   COUN: { id: 'COUN', nom: 'Counamama' },
-  PTS: { id: 'PTS', nom: 'Crique Fossée' },
   CKA: { id: 'CKA', nom: 'Crique Kalaweli' },
   CPG: { id: 'CPG', nom: 'Crique Petit Galibi' },
   DBR: { id: 'DBR', nom: 'Deux Branches' },
