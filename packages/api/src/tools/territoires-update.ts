@@ -135,7 +135,7 @@ const foretsUpdate = async () => {
   }
 
   if (ids.some(id => !ForetIds.includes(id)) || ForetIds.some(fId => !ids.includes(fId))) {
-    console.error(`les forêts ne sont pas à jour dans le common: ${ForetIds} --> ${ids}`)
+    console.error(`les forêts ne sont pas à jour dans le common: ${[...ForetIds].sort()} --> ${ids.sort()}`)
   }
 }
 
