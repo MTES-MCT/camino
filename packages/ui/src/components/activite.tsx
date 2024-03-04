@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { ActiviteId, ActiviteIdOrSlug, activiteIdOrSlugValidator, Activite as CommonActivite } from 'camino-common/src/activite'
@@ -8,15 +8,11 @@ import { ActiviteApiClient, activiteApiClient } from './activite/activite-api-cl
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { User } from 'camino-common/src/roles'
 import { CaminoAccessError } from './error'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 export const Activite = defineComponent(() => {
   const router = useRouter()
-  const user = ref<User>(null)
-
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
+  const user = inject(userKey)
 
   const activiteId = computed<ActiviteIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.activiteId) ? router.currentRoute.value.params.activiteId[0] : router.currentRoute.value.params.activiteId
@@ -37,7 +33,7 @@ export const Activite = defineComponent(() => {
     },
   }
 
-  return () => <PureActivite user={user.value} activiteId={activiteId.value} apiClient={apiClient} />
+  return () => <PureActivite user={user} activiteId={activiteId.value} apiClient={apiClient} />
 })
 
 interface Props {

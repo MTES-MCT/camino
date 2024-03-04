@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { RouteLocationNormalizedLoaded, Router, useRouter } from 'vue-router'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
@@ -11,7 +11,7 @@ import { DsfrButtonIcon } from './_ui/dsfr-button'
 import { ApiClient, apiClient } from '../api/api-client'
 import { entreprisesDownloadFormats, entreprisesFiltresNames } from 'camino-common/src/filters'
 import { Column } from './_ui/table'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 const entreprisesColonnes = [
   {
@@ -96,11 +96,7 @@ PureEntreprises.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
 export const Entreprises = defineComponent(() => {
   const router = useRouter()
   const store = useStore()
-  const user = ref<User>(null)
-
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
+  const user = inject(userKey)
 
   const customApiClient = () => {
     return {
@@ -117,5 +113,5 @@ export const Entreprises = defineComponent(() => {
     }
   }
 
-  return () => <PureEntreprises currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user.value} apiClient={customApiClient()} />
+  return () => <PureEntreprises currentRoute={router.currentRoute.value} updateUrlQuery={router} user={user} apiClient={customApiClient()} />
 })

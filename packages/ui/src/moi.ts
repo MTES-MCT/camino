@@ -1,4 +1,4 @@
-import { memoize } from 'camino-common/src/typescript-tools'
-import { getWithJson } from './api/client-rest'
+import type { InjectionKey } from 'vue'
+import { User } from 'camino-common/src/roles'
 
-export const userMemoized = memoize(() => getWithJson('/moi', {}))
+export const userKey = Symbol('user') as InjectionKey<User>

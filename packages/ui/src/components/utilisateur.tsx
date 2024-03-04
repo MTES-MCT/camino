@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
 import { Card } from './_ui/card'
 import { User } from 'camino-common/src/roles'
 import { QGisToken } from './utilisateur/qgis-token'
@@ -14,8 +14,9 @@ import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
 import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
 import { ButtonIcon } from './_ui/button-icon'
-import { userMemoized } from '@/moi'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+
+import { userKey } from '@/moi'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -23,14 +24,10 @@ export const Utilisateur = defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-    const user = ref<User>(null)
-
-    onMounted(async () => {
-      user.value = await userMemoized()
-    })
+    const user = inject(userKey)
 
     const deleteUtilisateur = async (userId: string) => {
-      const isMe: boolean = (user.value && userId === user.value.id) ?? false
+      const isMe: boolean = (user && userId === user.id) ?? false
       if (isMe) {
         // TODO 2023-10-23 type window.location pour s'appuyer sur nos routes rest et pas sur n'importe quoi
         window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
@@ -86,7 +83,7 @@ export const Utilisateur = defineComponent({
         passwordUpdate={passwordUpdate}
         apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
-        user={user.value}
+        user={user}
       />
     )
   },

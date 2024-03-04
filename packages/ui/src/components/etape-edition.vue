@@ -76,11 +76,13 @@ import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresS
 import { isAdministration } from 'camino-common/src/roles'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { apiClient } from '../api/api-client'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
   components: { Edit, InputDate, FormSaveBtn },
+
+  inject: [userKey],
 
   beforeRouteLeave(_, __, next) {
     if (this.isFormDirty && !confirm(this.promptMsg)) {
@@ -99,7 +101,6 @@ export default {
       newDate: getCurrent(),
       sdomZoneIds: [],
       superposition_alertes: [],
-      user: null,
     }
   },
 
@@ -186,13 +187,8 @@ export default {
       return !isAdministration(this.user) && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
     },
   },
-
-  watch: {
-    user: 'init',
-  },
-
   async created() {
-    this.user = await userMemoized()
+    await this.init()
     document.addEventListener('keyup', this.keyUp)
     window.addEventListener('beforeunload', this.beforeWindowUnload)
   },

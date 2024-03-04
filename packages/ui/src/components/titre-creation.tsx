@@ -2,7 +2,7 @@ import { TitreTypeSelect } from './_common/titre-type-select'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
 import { TitresLink } from '@/components/titre/titres-link'
 import { canCreateTitre, getLinkConfig } from 'camino-common/src/permissions/titres'
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, inject } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { DsfrSelect } from './_ui/dsfr-select'
@@ -19,16 +19,12 @@ import { EtapeId } from 'camino-common/src/etape'
 import { useRouter } from 'vue-router'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreDemande, titreDemandeValidator } from 'camino-common/src/titres'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 export const TitreCreation = defineComponent(() => {
   const router = useRouter()
 
-  const user = ref<User>(null)
-
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
+  const user = inject(userKey)
 
   const goToEtape = async (titreEtapeId: EtapeId) => {
     await router.push({
@@ -39,7 +35,7 @@ export const TitreCreation = defineComponent(() => {
 
   return () => (
     <PureTitreCreation
-      user={user.value}
+      user={user}
       apiClient={{
         ...apiClient,
         createTitre: async titreDemande => {

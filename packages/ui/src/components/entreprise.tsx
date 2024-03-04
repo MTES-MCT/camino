@@ -9,7 +9,7 @@ import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/ta
 import { fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date'
-import { computed, onMounted, watch, defineComponent, ref } from 'vue'
+import { computed, onMounted, watch, defineComponent, ref, inject } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { canEditEntreprise, canSeeEntrepriseDocuments } from 'camino-common/src/permissions/entreprises'
@@ -22,18 +22,14 @@ import { CaminoError } from './error'
 import { ButtonIcon } from './_ui/button-icon'
 import { ApiClient, apiClient } from '@/api/api-client'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 export const Entreprise = defineComponent({
   setup() {
     const store = useStore()
     const vueRoute = useRoute()
     const entrepriseId = ref<EntrepriseId | undefined>(newEntrepriseId(vueRoute.params.id.toString()))
-    const user = ref<User>(null)
-
-    onMounted(async () => {
-      user.value = await userMemoized()
-    })
+    const user = inject(userKey)
 
     watch(
       () => vueRoute.params.id,
@@ -83,7 +79,7 @@ export const Entreprise = defineComponent({
     return () => (
       <>
         {entrepriseId.value ? (
-          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClientRef.value} user={user.value} />
+          <PureEntreprise currentYear={anneeCourante} entrepriseId={entrepriseId.value} apiClient={apiClientRef.value} user={user} />
         ) : (
           <CaminoError couleur="error" message="Impossible d’afficher une entreprise sans identifiant" />
         )}

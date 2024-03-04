@@ -1,4 +1,4 @@
-import { defineComponent, markRaw, onMounted, ref } from 'vue'
+import { defineComponent, inject, markRaw } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { getPeriode } from 'camino-common/src/static/frequence'
 import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
@@ -14,7 +14,7 @@ import { ApiClient, apiClient } from '@/api/api-client'
 import { UiGraphqlActivite } from './activite/activite-api-client'
 import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { capitalize } from 'camino-common/src/strings'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 export const activitesColonneIdAnnee = 'annee'
 
@@ -130,11 +130,7 @@ PureActivites.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
 
 export const Activites = defineComponent(() => {
   const router = useRouter()
-  const user = ref<User>(null)
+  const user = inject(userKey)
 
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
-
-  return () => <PureActivites user={user.value} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
+  return () => <PureActivites user={user} apiClient={apiClient} currentRoute={router.currentRoute.value} updateUrlQuery={router} />
 })

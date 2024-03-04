@@ -2,7 +2,7 @@ import '@gouvfr/dsfr/dist/core/core.module'
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
 import '@gouvfr/dsfr/dist/component/tab/tab.module'
 
-import { defineComponent, Transition, computed, ref, onMounted } from 'vue'
+import { defineComponent, Transition, computed, ref, onMounted, inject } from 'vue'
 import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
@@ -13,13 +13,11 @@ import { CaminoError } from './components/error'
 import { useStore } from 'vuex'
 import { RouterView, useRoute } from 'vue-router'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { userMemoized } from './moi'
-import { User } from 'camino-common/src/roles'
+import { userKey } from './moi'
 export const App = defineComponent(() => {
   const store = useStore()
   const route = useRoute()
 
-  const user = ref<User>(null)
   const loaded = ref<boolean>(false)
 
   const error = computed(() => store.state.error)
@@ -34,8 +32,9 @@ export const App = defineComponent(() => {
 
   const currentMenuSection = computed(() => route.meta?.menuSection)
 
+  const user = inject(userKey)
+
   onMounted(async () => {
-    user.value = await userMemoized()
     loaded.value = true
   })
 
@@ -46,7 +45,7 @@ export const App = defineComponent(() => {
   })
 
   const displayNewsletter = computed<boolean>(() => {
-    return isNullOrUndefined(user.value)
+    return isNullOrUndefined(user)
   })
 
   return () => (
@@ -54,7 +53,7 @@ export const App = defineComponent(() => {
       <MapPattern />
       <IconSprite />
 
-      <Header user={user.value} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
+      <Header user={user} currentMenuSection={currentMenuSection.value} routePath={route.fullPath} />
 
       <main class="main" role="main">
         <div class="container">{isNotNullNorUndefined(error.value) ? <CaminoError couleur={error.value.type} message={error.value.value} /> : <>{loaded.value ? <RouterView /> : null}</>}</div>
@@ -92,3 +91,6 @@ export const App = defineComponent(() => {
     </div>
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+App.props = ['user']

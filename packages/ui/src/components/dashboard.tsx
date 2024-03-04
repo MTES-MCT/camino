@@ -1,30 +1,24 @@
-import { FunctionalComponent, defineAsyncComponent, defineComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, defineAsyncComponent, defineComponent, inject, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { dashboardApiClient } from './dashboard/dashboard-api-client'
 import { User, isAdministration, isEntreprise } from 'camino-common/src/roles'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { userMemoized } from '@/moi'
-import { AsyncData } from '@/api/client-rest'
-import { LoadingElement } from './_ui/functional-loader'
+import { userKey } from '@/moi'
 
 export const Dashboard = defineComponent({
   setup() {
     const router = useRouter()
 
-    const user = ref<AsyncData<User>>({ status: 'LOADING' })
+    const user = inject(userKey)
 
     onMounted(async () => {
-      user.value = { status: 'LOADING' }
-
-      user.value = { status: 'LOADED', value: await userMemoized() }
-
-      if (!isEntreprise(user.value.value) && !isAdministration(user.value.value)) {
+      if (!isEntreprise(user) && !isAdministration(user)) {
         router.replace({ name: 'titres' })
       }
     })
 
-    return () => <LoadingElement data={user.value} renderItem={item => <PureDashboard user={item} />} />
+    return () => <PureDashboard user={user} />
   },
 })
 

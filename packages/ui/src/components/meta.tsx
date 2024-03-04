@@ -1,15 +1,16 @@
-import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import { MetaIndexTable, metasIndex } from '../store/metas-definitions'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
 import { useStore } from 'vuex'
-import { User } from 'camino-common/src/roles'
 import { useRoute } from 'vue-router'
 import { capitalize } from 'camino-common/src/strings'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export const Meta = defineComponent(() => {
   const store = useStore()
   const route = useRoute()
+  const user = inject(userKey)
+
   const id = computed<MetaIndexTable>(() => {
     return route.params.id as unknown as MetaIndexTable
   })
@@ -19,7 +20,6 @@ export const Meta = defineComponent(() => {
   })
 
   onMounted(async () => {
-    user.value = await userMemoized()
     await get()
   })
   onBeforeUnmount(() => {
@@ -32,11 +32,10 @@ export const Meta = defineComponent(() => {
   const elements = computed(() => {
     return store.getters['meta/elements'](id.value)
   })
-  const user = ref<User>(null)
 
   const get = async () => {
-    if (!canReadMetas(user.value)) {
-      await store.dispatch('pageError', user.value)
+    if (!canReadMetas(user)) {
+      await store.dispatch('pageError', user)
     } else {
       await store.dispatch('meta/get', id.value)
     }

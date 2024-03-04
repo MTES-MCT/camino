@@ -1,4 +1,4 @@
-import { FunctionalComponent, defineComponent, onMounted, ref } from 'vue'
+import { FunctionalComponent, defineComponent, inject } from 'vue'
 import { Liste } from './_common/liste'
 import { RouteLocationNormalizedLoaded, useRoute } from 'vue-router'
 import { canReadMetas } from 'camino-common/src/permissions/metas'
@@ -6,7 +6,7 @@ import { CaminoAccessError } from './error'
 import { User } from 'camino-common/src/roles'
 import { Column, TableRow } from './_ui/table'
 import { metasIndex } from '@/store/metas-definitions'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 const metasColonnes = [
   {
     id: 'nom',
@@ -47,11 +47,7 @@ export const PureMetas: FunctionalComponent<Props> = props => {
 
 export const Metas = defineComponent(() => {
   const route = useRoute()
-  const user = ref<User>(null)
+  const user = inject(userKey)
 
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
-
-  return () => <PureMetas user={user.value} currentRoute={route} />
+  return () => <PureMetas user={user} currentRoute={route} />
 })

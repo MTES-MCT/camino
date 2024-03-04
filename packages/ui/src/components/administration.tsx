@@ -15,20 +15,16 @@ import { AdminUserNotNull, isSuper, User } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails, canReadAdministrations } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 export const Administration = defineComponent(() => {
   const route = useRoute()
 
-  const user = ref<User>(null)
-
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
+  const user = inject(userKey)
 
   const administrationId = computed<AdministrationId | null>(() => {
     if (isAdministrationId(route.params.id)) {
@@ -40,11 +36,7 @@ export const Administration = defineComponent(() => {
 
   return () => (
     <>
-      {administrationId.value ? (
-        <PureAdministration administrationId={administrationId.value} user={user.value} apiClient={apiClient} />
-      ) : (
-        <CaminoError message="Administration inconnue" couleur="error" />
-      )}
+      {administrationId.value ? <PureAdministration administrationId={administrationId.value} user={user} apiClient={apiClient} /> : <CaminoError message="Administration inconnue" couleur="error" />}
     </>
   )
 })

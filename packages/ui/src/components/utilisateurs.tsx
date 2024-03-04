@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, inject } from 'vue'
 import { Liste, Params } from './_common/liste'
 import { User } from 'camino-common/src/roles'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
@@ -8,7 +8,7 @@ import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/ta
 import { ApiClient, apiClient } from '../api/api-client'
 import { TableRow } from './_ui/table'
 import { utilisateursDownloadFormats, utilisateursFiltresNames } from 'camino-common/src/filters'
-import { userMemoized } from '@/moi'
+import { userKey } from '@/moi'
 
 interface Props {
   user: User
@@ -58,13 +58,9 @@ PureUtilisateurs.props = ['currentRoute', 'updateUrlQuery', 'apiClient', 'user']
 export const Utilisateurs = defineComponent(() => {
   const router = useRouter()
 
-  const user = ref<User>(null)
-
-  onMounted(async () => {
-    user.value = await userMemoized()
-  })
+  const user = inject(userKey)
 
   return () => {
-    return <PureUtilisateurs user={user.value} apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
+    return <PureUtilisateurs user={user} apiClient={apiClient} updateUrlQuery={router} currentRoute={router.currentRoute.value} />
   }
 })
