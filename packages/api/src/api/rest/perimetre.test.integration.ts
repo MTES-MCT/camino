@@ -335,6 +335,42 @@ C;Point éç;-52,55;4,24113309117193`
     `)
   })
 
+  test('geojson avec une trop grande surface', async () => {
+    const feature: FeatureCollectionPolygon = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [-52.54, 4.22269896902571],
+                [0, 0],
+                [20, 2],
+                [-52.54, 4.22269896902571],
+              ],
+            ],
+          },
+        },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
   test('fichier valide geojson multipolygon', async () => {
     const featureMultipolygon: FeatureMultiPolygon = {
       type: 'Feature',
