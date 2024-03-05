@@ -49,15 +49,16 @@ export const titresEtapesAreasUpdate = async (pool: Pool, titresEtapesIds?: stri
       }
     } catch (e) {
       console.error(`Une erreur est survenue lors du traitement de l'étape ${titreEtape.id}`)
-      throw e
     }
   }
 }
 async function intersectSdom(titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>, sdomZonesIds: SDOMZoneId[]) {
   if (sdomZonesIds.length > 0) {
-    if (sdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sdomZonesIds[index])) {
-      console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sdomZonesIds)}`)
-      await knex.raw(`update titres_etapes set sdom_zones = '["${sdomZonesIds.join('","')}"]' where id ='${titreEtape.id}'`)
+    const sortedSdomZonesIds = [...sdomZonesIds.sort()]
+
+    if (sortedSdomZonesIds.length !== titreEtape.sdomZones?.length || titreEtape.sdomZones?.some((elem, index) => elem !== sortedSdomZonesIds[index])) {
+      console.info(`nouvelles zones du sdom pour l'étape ${titreEtape.id}. Anciennes: ${JSON.stringify(titreEtape.sdomZones)}, nouvelles: ${JSON.stringify(sortedSdomZonesIds)}`)
+      await knex.raw(`update titres_etapes set sdom_zones = '["${sortedSdomZonesIds.join('","')}"]' where id ='${titreEtape.id}'`)
     }
   }
 }
@@ -67,10 +68,12 @@ async function intersectForets(titreEtape: Pick<ITitreEtape, 'forets' | 'id'>, f
     throw new Error('les forêts de l’étape ne sont pas chargées')
   }
 
-  if (titreEtape.forets?.length !== foretsNew.length || titreEtape.forets.some((value, index) => value !== foretsNew[index])) {
-    console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(foretsNew)}'`)
+  const sortedForets = [...foretsNew.sort()]
+
+  if (titreEtape.forets?.length !== sortedForets.length || titreEtape.forets.some((value, index) => value !== sortedForets[index])) {
+    console.info(`Mise à jour des forêts sur l'étape ${titreEtape.id}, ancien: '${JSON.stringify(titreEtape.forets)}', nouveaux: '${JSON.stringify(sortedForets)}'`)
     await knex('titres_etapes')
-      .update({ forets: JSON.stringify(foretsNew) })
+      .update({ forets: JSON.stringify(sortedForets) })
       .where('id', titreEtape.id)
   }
 }
