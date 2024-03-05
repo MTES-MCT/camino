@@ -64,7 +64,7 @@ const titresEtapesGet = async (
     q.whereIn('titresEtapes.titreDemarcheId', titresDemarchesIds)
   }
 
-  q.orderBy('ordre')
+  q.orderBy(['ordre', 'id'])
 
   return q
 }
