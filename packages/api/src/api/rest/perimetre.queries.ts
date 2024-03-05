@@ -127,10 +127,10 @@ where
         1) = $ domaine_id !
 `
 
-const numberTokm2 = (value: number): KM2 => km2Validator.parse(Number.parseFloat((value / 1000000).toFixed(2)))
+const numberTokm2 = (value: number): KM2 => km2Validator.parse(Number.parseFloat((value / 1_000_000).toFixed(2)))
 
 export const getGeojsonInformation = async (pool: Pool, geojson4326_perimetre: MultiPolygon): Promise<GetGeojsonInformation> => {
-  const result = await dbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationValidator)
+  const result = await dbQueryAndValidate(getGeojsonInformationDb, { geojson4326_perimetre }, pool, getGeojsonInformationDbValidator)
   if (result.length !== 1) {
     throw new Error('On veut un seul résultat')
   }
@@ -155,9 +155,12 @@ const getGeojsonInformationValidator = z.object({
     .transform(nullToEmptyArray),
   secteurs: z.array(secteurDbIdValidator).nullable().transform(nullToEmptyArray),
 })
+
+// Surface maximale acceptée pour un titre
+const SURFACE_M2_MAX = 100_000 * 1_000_000
 type GetGeojsonInformation = z.infer<typeof getGeojsonInformationValidator>
 const getGeojsonInformationDbValidator = z.object({
-  surface: z.number(),
+  surface: z.number().max(SURFACE_M2_MAX),
   sdom: z.array(sdomZoneIdValidator).nullable().transform(nullToEmptyArray),
   forets: z.array(foretIdValidator).nullable().transform(nullToEmptyArray),
   communes: z
