@@ -73,7 +73,7 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { isAdministration } from 'camino-common/src/roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { apiClient } from '../api/api-client'
 import { userKey, entreprisesKey } from '@/moi'
@@ -182,7 +182,7 @@ export default {
     },
 
     helpVisible() {
-      return !isAdministration(this.user) && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
+      return !(isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)) && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
     },
   },
   async created() {

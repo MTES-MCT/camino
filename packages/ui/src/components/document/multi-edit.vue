@@ -39,7 +39,7 @@
 import DocumentAddButton from './button-add.vue'
 import Documents from '../documents/list.vue'
 import { getCurrent } from 'camino-common/src/date'
-import { isAdministration } from 'camino-common/src/roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 
 export default {
   components: { DocumentAddButton, Documents },
@@ -65,7 +65,7 @@ export default {
     },
 
     userIsAdmin() {
-      return isAdministration(this.user)
+      return isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)
     },
   },
 

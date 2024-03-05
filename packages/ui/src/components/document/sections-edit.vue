@@ -99,7 +99,6 @@ export default {
   props: {
     document: { type: Object, required: true },
     user: { type: Object, required: true },
-    userIsAdmin: { type: Boolean, default: false },
   },
 
   data() {
@@ -129,6 +128,10 @@ export default {
       }
 
       return []
+    },
+
+    userIsAdmin() {
+      return isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)
     },
 
     visibiliteId() {

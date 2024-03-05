@@ -79,7 +79,7 @@ import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
-import { isAdministration } from 'camino-common/src/roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 
 export default {
   components: {
@@ -283,7 +283,7 @@ export default {
     },
 
     userIsAdmin() {
-      return isAdministration(this.user)
+      return isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)
     },
 
     sections() {
