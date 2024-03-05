@@ -213,11 +213,11 @@ const titresActivitesGet = async (
     if (isNotNullNorUndefined(relation)) {
       q.leftJoinRelated(relation)
     }
-    q.orderBy(titresActivitesColonnes[colonne].id, ordre || 'asc')
+    q.orderBy([{ column: titresActivitesColonnes[colonne].id, order: ordre || 'asc' }, 'titresActivites.annee', 'titresActivites.periode_id', 'titresActivites.id'])
+  } else {
+    // Il faut ajouter cet orderBy systématiquement. Car on peut trier par le nom de titre, et ce titre peut avoir beaucoup de rapports. Donc la requête peut changer l’ordre pour ne pas être consistant entre ces lignes qui ont le même titre.
+    q.orderBy('titresActivites.id')
   }
-
-  // Il faut ajouter cet orderBy systématiquement. Car on peut trier par le nom de titre, et ce titre peut avoir beaucoup de rapports. Donc la requête peut changer l’ordre pour ne pas être consistant entre ces lignes qui ont le même titre.
-  q.orderBy('titresActivites.titreId')
 
   if (isNotNullNorUndefined(page) && isNotNullNorUndefined(intervalle) && page > 0 && intervalle > 0) {
     q.offset((page - 1) * intervalle)
