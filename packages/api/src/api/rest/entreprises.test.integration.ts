@@ -125,7 +125,7 @@ describe('entrepriseModifier', () => {
       dbPool,
       '/rest/entreprises/:entrepriseId',
       { entrepriseId: entreprise.id },
-      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise.id }] },
+      { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise.id, nom: 'nom' }] },
       { id: entreprise.id, email: 'toto@gmail.com' }
     )
     expect(tested.statusCode).toBe(204)

@@ -4,7 +4,7 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
 export const titreEtapeMetas = apiGraphQLFetch(
   gql`
-    query TitreEtapeMetas($titreDemarcheId: ID!, $id: ID) {
+    query TitreEtapeMetas($titreDemarcheId: ID!) {
       demarche(id: $titreDemarcheId) {
         id
         slug
@@ -15,13 +15,6 @@ export const titreEtapeMetas = apiGraphQLFetch(
           slug
           nom
           typeId
-        }
-      }
-
-      entreprises(archive: false, etapeId: $id) {
-        elements {
-          id
-          nom
         }
       }
     }

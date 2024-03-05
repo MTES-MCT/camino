@@ -1,12 +1,12 @@
 import { Journal } from 'camino-common/src/journaux'
-import { Journaux } from './journaux'
+import { PureJournaux } from './journaux'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { vueRouter } from 'storybook-vue3-router'
 import { ApiClient } from '@/api/api-client'
 
 const meta: Meta = {
-  title: 'Components/Journaux/Journaux',
-  component: Journaux,
+  title: 'Components/Journaux',
+  component: PureJournaux,
   decorators: [vueRouter([{ name: 'etape', params: { id: 'unIdDelement' } }])],
 }
 export default meta
@@ -26,10 +26,7 @@ const element: Journal = {
   },
 }
 
-const apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds' | 'getJournaux'> = {
-  getUtilisateurEntreprises: () => {
-    return Promise.resolve([])
-  },
+const apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds' | 'getJournaux'> = {
   titresRechercherByNom: () => {
     return Promise.resolve({ elements: [] })
   },
@@ -46,12 +43,12 @@ const apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercher
   },
 }
 
-export const Loading: StoryFn = () => <Journaux apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
-export const WithError: StoryFn = () => <Journaux apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
-export const Default: StoryFn = () => <Journaux apiClient={apiClient} />
+export const Loading: StoryFn = () => <PureJournaux apiClient={{ ...apiClient, getJournaux: () => new Promise(() => ({})) }} />
+export const WithError: StoryFn = () => <PureJournaux apiClient={{ ...apiClient, getJournaux: () => Promise.reject(new Error('erreur')) }} />
+export const Default: StoryFn = () => <PureJournaux apiClient={apiClient} />
 
 export const AvecPagination: StoryFn = () => (
-  <Journaux
+  <PureJournaux
     apiClient={{
       ...apiClient,
       getJournaux: async () => {

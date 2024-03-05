@@ -3,15 +3,6 @@
 # import * from 'documents.graphql'
 # import * from 'metas.graphql'
 
-type Entreprises {
-  elements: [Entreprise]
-  intervalle: Int
-  page: Int
-  colonne: String
-  ordre: String
-  total: Int
-}
-
 type Entreprise {
   id: ID!
   nom: String

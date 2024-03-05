@@ -139,8 +139,8 @@ test('canDeleteTitre', () => {
   expect(canDeleteTitre({ role: 'admin', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'editeur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'lecteur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
-  expect(canDeleteTitre({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
-  expect(canDeleteTitre({ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId'), nom: 'nom' }], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entrepriseId'), nom: 'nom' }], ...testBlankUser })).toEqual(false)
   expect(canDeleteTitre({ role: 'defaut', ...testBlankUser })).toEqual(false)
 })
 
@@ -301,7 +301,7 @@ describe('canReadTitre', () => {
     test('entreprise titulaire', async () => {
       const entrepriseId = entrepriseIdValidator.parse('entrepriseId')
       expect(
-        await canReadTitre({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId }] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), {
+        await canReadTitre({ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseId, nom: 'nom' }] }, shouldNotBeCalled, shouldNotBeCalled, () => Promise.resolve([entrepriseId]), {
           public_lecture: false,
         })
       ).toBe(true)
@@ -312,7 +312,7 @@ describe('canReadTitre', () => {
       const entrepriseIdNonTitulaire = entrepriseIdValidator.parse('entrepriseIdNonTitulaire')
       expect(
         await canReadTitre(
-          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire }] },
+          { ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdTitulaire, nom: 'nom' }] },
           shouldNotBeCalled,
           shouldNotBeCalled,
           () => Promise.resolve([entrepriseIdNonTitulaire]),

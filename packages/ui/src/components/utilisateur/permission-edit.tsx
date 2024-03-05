@@ -1,5 +1,5 @@
 import { isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, isAdministration, isSuper, isEntrepriseOrBureauDEtude, isAdministrationRole } from 'camino-common/src/roles'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Administrations, isAdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
@@ -16,31 +16,17 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 interface Props {
   user: User
   utilisateur: AsyncData<UserNotNull>
-  apiClient: Pick<UtilisateurApiClient, 'getUtilisateurEntreprises' | 'updateUtilisateur'>
+  apiClient: Pick<UtilisateurApiClient, 'updateUtilisateur'>
+  entreprises: Entreprise[]
 }
 
-export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisateur', 'apiClient'], props => {
-  const entreprises = ref<AsyncData<Entreprise[]>>({ status: 'LOADING' })
-
+export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisateur', 'apiClient', 'entreprises'], props => {
   const mode = ref<'read' | 'edit'>('read')
 
   const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
     await props.apiClient.updateUtilisateur(utilisateur)
     mode.value = 'read'
   }
-
-  onMounted(async () => {
-    try {
-      const entreprisesApi = await props.apiClient.getUtilisateurEntreprises()
-      entreprises.value = { status: 'LOADED', value: entreprisesApi }
-    } catch (e: any) {
-      console.error('error', e)
-      entreprises.value = {
-        status: 'ERROR',
-        message: e.message ?? "Une erreur s'est produite",
-      }
-    }
-  })
 
   return () => (
     <>
@@ -70,32 +56,25 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
 
               <div>
                 <ul class="list-inline">
-                  <LoadingElement
-                    data={entreprises.value}
-                    renderItem={loadedEntreprises => (
-                      <>
-                        {props.utilisateur.status === 'LOADED' &&
-                          isEntrepriseOrBureauDEtude(props.utilisateur.value) &&
-                          props.utilisateur.value.entreprises.map(ent => {
-                            const e = loadedEntreprises.find(({ id }) => id === ent.id)
+                  {props.utilisateur.status === 'LOADED' &&
+                    isEntrepriseOrBureauDEtude(props.utilisateur.value) &&
+                    props.utilisateur.value.entreprises.map(ent => {
+                      const e = props.entreprises.find(({ id }) => id === ent.id)
 
-                            return e ? (
-                              <li key={e.id} class="mb-xs">
-                                <router-link
-                                  to={{
-                                    name: 'entreprise',
-                                    params: { id: e.id },
-                                  }}
-                                  class="btn-border small p-s rnd-xs mr-xs"
-                                >
-                                  {isNotNullNorUndefined(e.legal_siren) ? `${e.nom} (${e.legal_siren})` : e.nom}
-                                </router-link>
-                              </li>
-                            ) : null
-                          })}
-                      </>
-                    )}
-                  />
+                      return e ? (
+                        <li key={e.id} class="mb-xs">
+                          <router-link
+                            to={{
+                              name: 'entreprise',
+                              params: { id: e.id },
+                            }}
+                            class="btn-border small p-s rnd-xs mr-xs"
+                          >
+                            {isNotNullNorUndefined(e.legal_siren) ? `${e.nom} (${e.legal_siren})` : e.nom}
+                          </router-link>
+                        </li>
+                      ) : null
+                    })}
                 </ul>
               </div>
             </div>
@@ -118,7 +97,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
       ) : (
         <>
           {props.utilisateur.status === 'LOADED' ? (
-            <PermissionEdit cancelEdition={() => (mode.value = 'read')} user={props.user} utilisateur={props.utilisateur.value} entreprises={entreprises.value} updateUtilisateur={updateUtilisateur} />
+            <PermissionEdit cancelEdition={() => (mode.value = 'read')} user={props.user} utilisateur={props.utilisateur.value} entreprises={props.entreprises} updateUtilisateur={updateUtilisateur} />
           ) : null}
         </>
       )}
@@ -129,7 +108,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
 type PermissionEditProps = {
   user: User
   utilisateur: UserNotNull
-  entreprises: AsyncData<Entreprise[]>
+  entreprises: Entreprise[]
   updateUtilisateur: (utilisateur: UtilisateurToEdit) => Promise<void>
   cancelEdition: () => void
 }
@@ -210,27 +189,22 @@ const PermissionEdit = caminoDefineComponent<PermissionEditProps>(['user', 'util
 
           {isEntrepriseOrBureauDetudeRole(updatingUtilisateur.value.role) ? (
             <div>
-              <LoadingElement
-                data={props.entreprises}
-                renderItem={item => (
-                  <div class="tablet-blobs">
-                    <div class="tablet-blob-1-4 tablet-pt-s pb-s">
-                      <h5>Entreprises</h5>
-                    </div>
-                    <div class="mb tablet-blob-3-4">
-                      <TypeAheadSmartMultiple
-                        filter={{
-                          name: 'Entreprises',
-                          value: updatingUtilisateur.value.entreprises,
-                          elements: item,
-                          lazy: false,
-                        }}
-                        onSelectItems={elements => onSelectEntreprises(elements)}
-                      />
-                    </div>
-                  </div>
-                )}
-              />
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-4 tablet-pt-s pb-s">
+                  <h5>Entreprises</h5>
+                </div>
+                <div class="mb tablet-blob-3-4">
+                  <TypeAheadSmartMultiple
+                    filter={{
+                      name: 'Entreprises',
+                      value: updatingUtilisateur.value.entreprises,
+                      elements: props.entreprises,
+                      lazy: false,
+                    }}
+                    onSelectItems={elements => onSelectEntreprises(elements)}
+                  />
+                </div>
+              </div>
             </div>
           ) : null}
 

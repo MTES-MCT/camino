@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch, inject } from 'vue'
 import { Router, useRouter } from 'vue-router'
 import { LoadingElement } from './_ui/functional-loader'
 import { DemarcheEtapeFondamentale, DemarcheSlug, demarcheSlugValidator } from 'camino-common/src/demarche'
@@ -40,6 +40,7 @@ import { DemarcheEditPopup } from './titre/demarche-edit-popup'
 import { PhaseWithAlterations, phaseWithAlterations } from './titre/phase'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { EtapeId } from 'camino-common/src/etape'
+import { userKey } from '@/moi'
 
 const activitesSort: TableSortEvent = {
   colonne: activitesColonneIdAnnee,
@@ -49,7 +50,8 @@ const activitesSort: TableSortEvent = {
 export const Titre = defineComponent(() => {
   const router = useRouter()
   const store = useStore()
-  const user = computed<User>(() => store.state.user.element)
+
+  const user = inject(userKey)
 
   const titreIdOrSlug = computed<TitreIdOrSlug | null>(() => {
     const idOrSlug = Array.isArray(router.currentRoute.value.params.id) ? router.currentRoute.value.params.id[0] : router.currentRoute.value.params.id
@@ -87,9 +89,7 @@ export const Titre = defineComponent(() => {
     },
   }
 
-  return () => (
-    <PureTitre user={user.value} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={overriddenApiClient} router={router} currentDate={getCurrent()} />
-  )
+  return () => <PureTitre user={user} titreIdOrSlug={titreIdOrSlug.value} currentDemarcheSlug={currentDemarcheSlug.value} apiClient={overriddenApiClient} router={router} currentDate={getCurrent()} />
 })
 
 interface Props {

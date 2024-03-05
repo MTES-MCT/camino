@@ -484,10 +484,6 @@ const router = createRouter({
 router.isReady().then(async () => {})
 
 router.beforeEach(async (to, from, next) => {
-  if (!store.getters['user/isLoaded']) {
-    await store.dispatch('user/identify')
-  }
-
   document.title = typeof to.meta.title === 'string' ? `${to.meta.title} - Camino` : 'le cadastre minier numérique ouvert - Camino'
 
   next()

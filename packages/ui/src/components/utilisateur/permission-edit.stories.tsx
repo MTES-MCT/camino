@@ -18,8 +18,8 @@ export const Default: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' } }}
+    entreprises={[]}
     apiClient={{
-      getUtilisateurEntreprises: () => new Promise(resolve => setTimeout(() => resolve([]), 1000)),
       updateUtilisateur: user =>
         new Promise(resolve =>
           setTimeout(() => {
@@ -34,9 +34,9 @@ export const Default: StoryFn = () => (
 export const Entreprise: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1'), nom: 'nom' }] } }}
+    entreprises={[{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', legal_siren: null }]}
     apiClient={{
-      getUtilisateurEntreprises: () => Promise.resolve([{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', legal_siren: null }]),
       updateUtilisateur: user =>
         new Promise(resolve =>
           setTimeout(() => {
@@ -48,12 +48,12 @@ export const Entreprise: StoryFn = () => (
   />
 )
 
-export const EntrepriseLoading: StoryFn = () => (
+export const Loading: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
+    entreprises={[]}
+    utilisateur={{ status: 'LOADING' }}
     apiClient={{
-      getUtilisateurEntreprises: () => new Promise(() => ({})),
       updateUtilisateur: user =>
         new Promise(resolve =>
           setTimeout(() => {
@@ -69,8 +69,8 @@ export const UserAdminCanEditDefautIntoLecteur: StoryFn = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }}
     utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: toUtilisateurId('utilisateurIdFake'), role: 'defaut' } }}
+    entreprises={[]}
     apiClient={{
-      getUtilisateurEntreprises: () => new Promise(resolve => setTimeout(() => resolve([]), 1000)),
       updateUtilisateur: user =>
         new Promise(resolve =>
           setTimeout(() => {

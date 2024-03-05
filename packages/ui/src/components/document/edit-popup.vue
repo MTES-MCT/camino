@@ -29,7 +29,7 @@
 
     <hr />
 
-    <SectionsEdit :document="document" :userIsAdmin="userIsAdmin" @update:document="newValue => emits('update:document', newValue)" />
+    <SectionsEdit :document="document" :user="user" @update:document="newValue => emits('update:document', newValue)" />
 
     <template #footer>
       <div class="tablet-blobs">
@@ -64,6 +64,7 @@ export default {
     action: { type: Object, default: null },
     document: { type: Object, required: true },
     documentsTypes: { type: Array, required: true },
+    user: { type: Object, required: true },
   },
 
   emits: ['update:document'],
@@ -87,10 +88,6 @@ export default {
 
     documentType() {
       return this.types && this.types.find(d => d.id === this.document.typeId)
-    },
-
-    userIsAdmin() {
-      return this.$store.getters['user/userIsAdmin']
     },
   },
 

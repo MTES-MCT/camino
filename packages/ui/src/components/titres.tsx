@@ -1,6 +1,5 @@
-import { defineComponent, defineAsyncComponent, computed, onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
-import { User, isAdministration } from 'camino-common/src/roles'
+import { defineComponent, defineAsyncComponent, computed, onMounted, ref, inject } from 'vue'
+import { isAdministration } from 'camino-common/src/roles'
 import { TitreFiltresParams, TitresFiltres, getInitialTitresFiltresParams } from './titres/filtres'
 import type { TitreCarteParams } from './titres/map'
 import { Tab, Tabs } from './_ui/tabs'
@@ -19,6 +18,7 @@ import { TableRow } from './_ui/table'
 import { titresDownloadFormats } from 'camino-common/src/filters'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { DemandeTitreButton } from './_common/demande-titre-button'
+import { entreprisesKey, userKey } from '@/moi'
 
 const defaultFilterByAdministrationUser: Pick<TitreFiltresParams, 'domainesIds' | 'typesIds' | 'statutsIds'> = {
   domainesIds: ['m', 'w', 'g'],
@@ -37,9 +37,9 @@ export const Titres = defineComponent({
 
       return CaminoTitresMap
     })
-    const store = useStore()
     const router = useRouter()
-    const user = computed<User>(() => store.state.user.element)
+    const user = inject(userKey)
+    const entreprises = inject(entreprisesKey, ref([]))
 
     const data = ref<AsyncData<true>>({ status: 'LOADING' })
     const titresForTable = ref<AsyncData<{ rows: TableRow[]; total: number }>>({ status: 'LOADING' })
@@ -56,7 +56,7 @@ export const Titres = defineComponent({
         return paramsFiltres.value[key] === '' || (Array.isArray(paramsFiltres.value[key]) && paramsFiltres.value[key].length === 0)
       })
 
-    if (noFilter && isAdministration(user.value)) {
+    if (noFilter && isAdministration(user)) {
       router.push({ name: router.currentRoute.value.name ?? 'titres', query: { ...router.currentRoute.value.query, ...defaultFilterByAdministrationUser } })
     }
 
@@ -129,7 +129,7 @@ export const Titres = defineComponent({
     })
 
     const activitesCol = computed(() => {
-      return canReadActivites(user.value)
+      return canReadActivites(user)
     })
 
     const colonnes = computed(() => {
@@ -184,13 +184,14 @@ export const Titres = defineComponent({
                 ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
                 : null
             }
-            renderButton={() => <DemandeTitreButton user={user.value} />}
+            renderButton={() => <DemandeTitreButton user={user} />}
           />
         </div>
 
         <TitresFiltres
           subtitle={resultat.value}
           apiClient={apiClient}
+          entreprises={entreprises.value}
           route={router.currentRoute.value}
           router={router}
           paramsUpdate={async params => {

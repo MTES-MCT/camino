@@ -368,7 +368,7 @@ export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
     return {
       ...baseUser,
       role: userInBdd.role,
-      entreprises: userInBdd.entreprises,
+      entreprises: userInBdd.entreprises.map(({ id, nom }) => ({ id, nom: nom ?? '' })),
     }
   }
 

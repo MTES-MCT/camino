@@ -128,7 +128,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
+    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [{ id: newEntrepriseId('1') }],
@@ -138,7 +138,7 @@ test.each<{
     canCreate: false,
   },
   {
-    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
+    user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1'), nom: 'nom' }] },
     etapeTypeId: 'mfr',
     etapeStatutId: 'aco',
     titreTitulaires: [{ id: newEntrepriseId('1') }],

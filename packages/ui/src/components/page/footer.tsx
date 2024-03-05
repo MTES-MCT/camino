@@ -1,29 +1,12 @@
-import { computed, defineComponent, FunctionalComponent } from 'vue'
-import { useStore } from 'vuex'
+import { FunctionalComponent } from 'vue'
 import { NewsletterForm } from './footer/newsletter-form'
-
-export const Footer = defineComponent({
-  setup() {
-    const store = useStore()
-    const version = computed(() => {
-      /* global applicationVersion */
-      // @ts-ignore
-      return applicationVersion
-    })
-    const displayNewsletter = computed(() => {
-      return !store.state.user.element
-    })
-
-    return () => <PureFooter version={version.value} displayNewsletter={displayNewsletter.value} />
-  },
-})
 
 interface Props {
   version: string
   displayNewsletter: boolean
 }
 
-export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
+export const Footer: FunctionalComponent<Props> = (props: Props) => (
   <footer class="dsfr" role="contentinfo" id="footer">
     <div class="fr-footer fr-mt-3w">
       <div class="fr-footer__top">

@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue'
 import { Card } from './_ui/card'
 import { User } from 'camino-common/src/roles'
 import { QGisToken } from './utilisateur/qgis-token'
@@ -12,8 +12,11 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { caminoDefineComponent, isEventWithTarget } from '../utils/vue-tsx-utils'
 import { PermissionDisplay } from './utilisateur/permission-edit'
 import { UtilisateurToEdit } from 'camino-common/src/utilisateur'
-import { Utilisateur as ApiUser } from 'camino-common/src/entreprise'
+import { Utilisateur as ApiUser, Entreprise } from 'camino-common/src/entreprise'
 import { ButtonIcon } from './_ui/button-icon'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+
+import { entreprisesKey, userKey } from '@/moi'
 
 export const Utilisateur = defineComponent({
   setup() {
@@ -21,12 +24,11 @@ export const Utilisateur = defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-    const user = computed<User>(() => {
-      return store.state.user.element
-    })
+    const user = inject(userKey)
+    const entreprises = inject(entreprisesKey, ref([]))
 
     const deleteUtilisateur = async (userId: string) => {
-      const isMe: boolean = (user.value && userId === user.value.id) ?? false
+      const isMe: boolean = (user && userId === user.id) ?? false
       if (isMe) {
         // TODO 2023-10-23 type window.location pour s'appuyer sur nos routes rest et pas sur n'importe quoi
         window.location.replace(`/apiUrl/rest/utilisateurs/${userId}/delete`)
@@ -82,7 +84,8 @@ export const Utilisateur = defineComponent({
         passwordUpdate={passwordUpdate}
         apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
-        user={user.value}
+        user={user}
+        entreprises={entreprises.value}
       />
     )
   },
@@ -90,18 +93,12 @@ export const Utilisateur = defineComponent({
 export interface Props {
   user: User
   utilisateurId: string
-  apiClient: Pick<
-    UtilisateurApiClient,
-    'getUtilisateurEntreprises' | 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'
-  >
+  apiClient: Pick<UtilisateurApiClient, 'getQGISToken' | 'getUtilisateur' | 'removeUtilisateur' | 'getUtilisateurNewsletter' | 'updateUtilisateur' | 'updateUtilisateurNewsletter'>
+  entreprises: Entreprise[]
   passwordUpdate: () => void
 }
 
-export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
-  watch(
-    () => props.user,
-    () => get()
-  )
+export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate', 'entreprises'], props => {
   watch(
     () => props.utilisateurId,
     _newId => {
@@ -115,8 +112,8 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
   const subscription = ref<AsyncData<boolean>>({ status: 'LOADING' })
   const utilisateur = ref<AsyncData<ApiUser>>({ status: 'LOADING' })
   const removePopup = ref<boolean>(false)
-  const isMe = computed(() => {
-    return props.user && props.utilisateurId === props.user.id
+  const isMe = computed<boolean>(() => {
+    return isNotNullNorUndefined(props.user) && props.utilisateurId === props.user.id
   })
 
   const get = async () => {
@@ -178,7 +175,7 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
       <h5>Utilisateur</h5>
       <div class="flex">
         <h1>
-          <LoadingElement data={utilisateur.value} renderItem={item => <>{item ? `${item.prenom || '–'} ${item.nom || '–'}` : '–'}</>} />
+          <LoadingElement data={utilisateur.value} renderItem={item => <>{`${item.prenom || '–'} ${item.nom || '–'}`}</>} />
         </h1>
       </div>
 
@@ -234,16 +231,16 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateu
               <div class="tablet-blob-1-4">
                 <h5>Téléphone fixe</h5>
               </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneFixe || '–'}</p>} />
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneFixe) ? item.telephoneFixe : '–'}</p>} />
             </div>
 
             <div class="tablet-blobs">
               <div class="tablet-blob-1-4">
                 <h5>Téléphone mobile</h5>
               </div>
-              <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneMobile || '–'}</p>} />
+              <LoadingElement data={utilisateur.value} renderItem={item => <p>{isNotNullNorUndefined(item.telephoneMobile) ? item.telephoneMobile : '–'}</p>} />
             </div>
-            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} />
+            <PermissionDisplay user={props.user} utilisateur={utilisateur.value} apiClient={{ ...props.apiClient, updateUtilisateur }} entreprises={props.entreprises} />
 
             {isMe.value ? (
               <>

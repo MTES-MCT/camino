@@ -152,7 +152,7 @@ describe("état général de l'application", () => {
   })
 
   test('retourne une erreur 404', async () => {
-    await store.dispatch('pageError')
+    await store.dispatch('pageError', null)
 
     expect(state.error).toEqual({
       type: 'error',

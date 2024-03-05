@@ -48,7 +48,7 @@ const getters = {
 }
 
 const actions = {
-  async init({ commit, state, dispatch }, { titreDemarcheId, id }) {
+  async init({ commit, state, dispatch }, { titreDemarcheId, id, entreprises }) {
     try {
       commit('loadingAdd', 'titreEtapeInit', { root: true })
 
@@ -64,7 +64,7 @@ const actions = {
         commit('set', etapeEditFormat({ titreDemarcheId }))
       }
 
-      await dispatch('metasGet', { titreDemarcheId, id })
+      await dispatch('metasGet', { titreDemarcheId, entreprises })
 
       if (id) {
         await dispatch('dateUpdate', { date: state.element.date })
@@ -72,23 +72,25 @@ const actions = {
 
       commit('load')
     } catch (e) {
+      console.error(e)
       dispatch('pageError', null, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeInit', { root: true })
     }
   },
 
-  async metasGet({ commit, dispatch }, { titreDemarcheId, id }) {
+  async metasGet({ commit, dispatch }, { titreDemarcheId, entreprises }) {
     try {
       commit('loadingAdd', 'titreEtapeMetasGet', { root: true })
 
-      const metas = await titreEtapeMetas({
+      const demarche = await titreEtapeMetas({
         titreDemarcheId,
-        id,
       })
 
-      commit('metasSet', metas)
+      commit('metasSet', { demarche, entreprises })
     } catch (e) {
+      console.error(e)
+
       dispatch('pageError', null, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeMetasGet', { root: true })
@@ -130,7 +132,7 @@ const actions = {
     if (!state.element.typeId) {
       commit('documentsSet', [])
     } else {
-      documents = documentsRequiredAdd(documents, getters.documentsTypes, rootGetters['user/userIsAdmin'])
+      documents = documentsRequiredAdd(documents, getters.documentsTypes)
 
       commit('documentsSet', documents)
     }
@@ -213,11 +215,7 @@ const mutations = {
 
   metasSet(state, data) {
     Object.keys(data).forEach(id => {
-      if (id === 'entreprises') {
-        state.metas[id] = data[id].elements
-      } else {
-        state.metas[id] = data[id]
-      }
+      state.metas[id] = data[id]
     })
   },
 

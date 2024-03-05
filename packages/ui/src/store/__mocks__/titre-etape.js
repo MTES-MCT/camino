@@ -14,7 +14,6 @@ const titreEtapeMetas = {
 }
 
 const titreEtapeMetasRes = {
-  substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
     { id: 'ent-2', nom: '2' },

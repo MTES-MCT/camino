@@ -1,6 +1,6 @@
 import { getCurrent } from 'camino-common/src/date'
 
-const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
+export const documentsRequiredAdd = (documents, documentsTypes) => {
   // supprime tous les documents temporaires
   documents = documents?.filter(d => d.id !== d.typeId)
 
@@ -17,7 +17,8 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
       newDocuments.push({
         id: documentType.id,
         typeId: documentType.id,
-        entreprisesLecture: userIsAdmin,
+        // TODO 2024-02-29 avant on mettait ça a true si l'utilisateur était un admin, pourquoi ?
+        entreprisesLecture: false,
         publicLecture: false,
         fichier: null,
         fichierNouveau: null,
@@ -35,5 +36,3 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
 
   return newDocuments
 }
-
-export { documentsRequiredAdd }

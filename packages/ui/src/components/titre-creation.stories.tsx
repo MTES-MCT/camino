@@ -18,7 +18,6 @@ const meta: Meta = {
 }
 export default meta
 
-const getEntreprisesAction = action('getEntreprises')
 const createTitreAction = action('createTitre')
 const loadLinkableTitresAction = action('loadLinkableTitres')
 
@@ -61,15 +60,11 @@ const linkableTitres: LinkableTitre[] = [
   },
 ]
 
-const apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkableTitres'> = {
-  getEntreprises: () => {
-    getEntreprisesAction()
-
-    return Promise.resolve([
-      { id: entreprise1Id, nom: 'entreprise 1', legal_siren: null },
-      { id: entrepriseIdValidator.parse('id2'), nom: 'entreprise 2', legal_siren: null },
-    ])
-  },
+const entreprises = [
+  { id: entreprise1Id, nom: 'entreprise 1', legal_siren: null },
+  { id: entrepriseIdValidator.parse('id2'), nom: 'entreprise 2', legal_siren: null },
+]
+const apiClient: Pick<ApiClient, 'createTitre' | 'loadLinkableTitres'> = {
   createTitre: value => {
     createTitreAction(value)
 
@@ -86,46 +81,27 @@ const apiClient: Pick<ApiClient, 'getEntreprises' | 'createTitre' | 'loadLinkabl
     },
 }
 
-export const Default: StoryFn = () => <PureTitreCreation user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} />
+export const Default: StoryFn = () => <PureTitreCreation entreprises={entreprises} user={{ ...testBlankUser, role: 'super' }} apiClient={apiClient} />
 export const OnlyOneEntreprise: StoryFn = () => (
-  <PureTitreCreation
-    user={{ ...testBlankUser, role: 'super' }}
-    apiClient={{
-      ...apiClient,
-      getEntreprises: () => {
-        return Promise.resolve([{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1', legal_siren: null }])
-      },
-    }}
-  />
+  <PureTitreCreation user={{ ...testBlankUser, role: 'super' }} entreprises={[{ id: entrepriseIdValidator.parse('id1'), nom: 'entreprise 1', legal_siren: null }]} apiClient={apiClient} />
 )
 
 export const OnlyOneEntrepriseUserEntreprise: StoryFn = () => (
   <PureTitreCreation
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id }] }}
-    apiClient={{
-      ...apiClient,
-      getEntreprises: () => {
-        return Promise.resolve([{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }])
-      },
-    }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entreprise1Id, nom: 'nom' }] }}
+    entreprises={[{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }]}
+    apiClient={apiClient}
   />
 )
 
 export const NoEntreprise: StoryFn = () => (
-  <PureTitreCreation
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }}
-    apiClient={{
-      ...apiClient,
-      getEntreprises: () => {
-        return Promise.resolve([{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }])
-      },
-    }}
-  />
+  <PureTitreCreation user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} entreprises={[{ id: entreprise1Id, nom: 'entreprise 1', legal_siren: null }]} apiClient={apiClient} />
 )
 
 export const Full: StoryFn = () => (
   <PureTitreCreation
     user={{ ...testBlankUser, role: 'super' }}
+    entreprises={entreprises}
     apiClient={apiClient}
     initialValue={{
       entrepriseId: entreprise1Id,

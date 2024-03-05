@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { DsfrTag } from './_ui/tag'
 import { CaminoFiltre } from 'camino-common/src/filters'
 import { apiClient } from '../api/api-client'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const colonnes = [
   {
@@ -35,7 +36,7 @@ export const Administrations = defineComponent({
     const getData = (options: Params<ColonneId>): Promise<{ total: number; values: TableRow<string>[] }> => {
       const lignes = [...administrations]
         .filter(a => {
-          if (options.filtres?.nomsAdministration?.length) {
+          if (isNotNullNorUndefined(options.filtres) && isNotNullNorUndefined(options.filtres.nomsAdministration) && options.filtres.nomsAdministration !== '') {
             if (
               !a.id.toLowerCase().includes(options.filtres.nomsAdministration) &&
               !a.nom.toLowerCase().includes(options.filtres.nomsAdministration) &&
@@ -45,7 +46,7 @@ export const Administrations = defineComponent({
             }
           }
 
-          if (options.filtres?.administrationTypesIds.length) {
+          if (isNotNullNorUndefined(options.filtres) && isNotNullNorUndefinedNorEmpty(options.filtres.administrationTypesIds)) {
             if (!options.filtres.administrationTypesIds.includes(a.typeId)) {
               return false
             }
@@ -93,6 +94,16 @@ export const Administrations = defineComponent({
       return Promise.resolve({ total: lignes.length, values: lignes })
     }
 
-    return () => <Liste nom="administrations" listeFiltre={{ filtres, apiClient, updateUrlQuery: router }} colonnes={colonnes} getData={getData} route={route} download={null} renderButton={null} />
+    return () => (
+      <Liste
+        nom="administrations"
+        listeFiltre={{ filtres, apiClient, updateUrlQuery: router, entreprises: [] }}
+        colonnes={colonnes}
+        getData={getData}
+        route={route}
+        download={null}
+        renderButton={null}
+      />
+    )
   },
 })

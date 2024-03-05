@@ -9,6 +9,7 @@ import { getInitialFiltres } from '../_ui/filters/filters'
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
 import { AsyncData } from '../../api/client-rest'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 export type Params<ColumnId extends string> = {
   colonne: ColumnId
@@ -20,7 +21,8 @@ export type Params<ColumnId extends string> = {
 type ListeFiltreProps = {
   filtres: readonly CaminoFiltre[]
   updateUrlQuery: Pick<Router, 'push'>
-  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
 }
 type Props<ColumnId extends string> = {
   listeFiltre: ListeFiltreProps | null
@@ -97,6 +99,7 @@ export const Liste = defineComponent(<ColumnId extends string>(props: Props<Colu
           filters={props.listeFiltre.filtres}
           subtitle={resultat.value}
           apiClient={props.listeFiltre.apiClient}
+          entreprises={props.listeFiltre.entreprises}
           paramsUpdate={paramsFiltresUpdate}
         />
       ) : null}

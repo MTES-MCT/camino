@@ -3,6 +3,7 @@ import { Filters, getInitialFiltres } from '../_ui/filters/filters'
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import { CaminoFiltre, caminoFiltres } from 'camino-common/src/filters'
 import { ApiClient } from '../../api/api-client'
+import { Entreprise } from 'camino-common/src/entreprise'
 
 type Params = { [key in Props['filters'][number]]: (typeof caminoFiltres)[key]['validator']['_output'] }
 interface Props {
@@ -12,7 +13,8 @@ interface Props {
   subtitle?: string
   toggle?: (open: boolean) => void
   paramsUpdate: (params: Params) => void
-  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
+  entreprises: Entreprise[]
 }
 
 export const Filtres = defineComponent((props: Props) => {
@@ -46,6 +48,7 @@ export const Filtres = defineComponent((props: Props) => {
       updateUrlQuery={props.updateUrlQuery}
       route={props.route}
       apiClient={props.apiClient}
+      entreprises={props.entreprises}
       filters={props.filters}
       class="flex-grow"
       opened={opened.value}

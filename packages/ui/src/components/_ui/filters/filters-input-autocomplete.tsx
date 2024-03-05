@@ -1,9 +1,7 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { TypeAheadSmartMultiple, Filter } from '../typeahead-smart-multiple'
 import { AutocompleteCaminoFiltres, caminoAutocompleteFiltres } from './camino-filtres'
-import { AsyncData } from '../../../api/client-rest'
 import { Entreprise } from 'camino-common/src/entreprise'
-import { LoadingElement } from '../functional-loader'
 import { ApiClient } from '../../../api/api-client'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { caminoFiltres } from 'camino-common/src/filters'
@@ -12,38 +10,19 @@ export type InputAutocompleteValues = (typeof caminoFiltres)[AutocompleteCaminoF
 type Props = {
   filter: AutocompleteCaminoFiltres
   initialValue: InputAutocompleteValues
+  entreprises: Entreprise[]
   onFilterAutocomplete: (values: InputAutocompleteValues) => void
-  apiClient: Pick<ApiClient, 'getUtilisateurEntreprises' | 'titresRechercherByNom' | 'getTitresByIds'>
+  apiClient: Pick<ApiClient, 'titresRechercherByNom' | 'getTitresByIds'>
 }
 
 export const InputAutocomplete = defineComponent<Props>(props => {
   const filter = computed<(typeof caminoAutocompleteFiltres)[number]>(() => {
     return caminoFiltres[props.filter]
   })
-  const entreprisesMetasAsync = ref<AsyncData<Entreprise[]>>({ status: 'LOADING' })
-
-  onMounted(async () => {
-    if (props.filter === 'entreprisesIds') {
-      entreprisesMetasAsync.value = { status: 'LOADING' }
-      try {
-        const entreprises = await props.apiClient.getUtilisateurEntreprises()
-        entreprisesMetasAsync.value = { status: 'LOADED', value: entreprises }
-      } catch (e: any) {
-        console.error('error', e)
-        entreprisesMetasAsync.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
-        }
-      }
-    } else {
-      entreprisesMetasAsync.value = { status: 'LOADED', value: [] }
-    }
-  })
-
-  const filterFull = (items: Entreprise[]) => {
+  const filterFull = computed(() => {
     const filterCopy = { ...filter.value }
     if (filterCopy.id === 'entreprisesIds') {
-      filterCopy.elements = items
+      filterCopy.elements = props.entreprises
     }
 
     const filterFull: Filter<(typeof filter.value)['id']> = {
@@ -54,13 +33,29 @@ export const InputAutocomplete = defineComponent<Props>(props => {
     if (filterCopy.id === 'titresIds') {
       const filterTitresIds = filterFull as Filter<TitreId>
       if (filterTitresIds.lazy) {
-        filterTitresIds.search = (value: string) => props.apiClient.titresRechercherByNom(value)
-        filterTitresIds.load = (value: TitreId[]) => props.apiClient.getTitresByIds(value, 'filter-input-autocomplete')
+        filterTitresIds.search = async (value: string) => {
+          try {
+            return await props.apiClient.titresRechercherByNom(value)
+          } catch (e) {
+            console.error('error', e)
+
+            return Promise.resolve({ elements: [] })
+          }
+        }
+        filterTitresIds.load = async (value: TitreId[]) => {
+          try {
+            return await props.apiClient.getTitresByIds(value, 'filter-input-autocomplete')
+          } catch (e) {
+            console.error('error', e)
+
+            return Promise.resolve({ elements: [] })
+          }
+        }
       }
     }
 
     return filterFull
-  }
+  })
 
   const onSelectItems = (items: { id: string }[]) => {
     // @ts-ignore typescript est perdu ici (probablement un distributive qu'il faut supprimer)
@@ -71,10 +66,10 @@ export const InputAutocomplete = defineComponent<Props>(props => {
     <div class="mb">
       <h5>{filter.value.name}</h5>
       <hr class="mb-s" />
-      <LoadingElement data={entreprisesMetasAsync.value} renderItem={item => <TypeAheadSmartMultiple filter={filterFull(item)} onSelectItems={onSelectItems} />} />
+      <TypeAheadSmartMultiple filter={filterFull.value} onSelectItems={onSelectItems} />
     </div>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-InputAutocomplete.props = ['filter', 'initialValue', 'onFilterAutocomplete', 'apiClient']
+InputAutocomplete.props = ['filter', 'entreprises', 'initialValue', 'onFilterAutocomplete', 'apiClient']

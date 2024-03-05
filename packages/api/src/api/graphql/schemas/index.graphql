@@ -149,9 +149,6 @@ type Query {
 
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
 
-  "Liste des entreprises"
-  entreprises(intervalle: Int, page: Int, colonne: String, ordre: String, noms: String, etapeId: ID, archive: Boolean, etapeUniquement: Boolean): Entreprises
-
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
 

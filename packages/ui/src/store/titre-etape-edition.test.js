@@ -39,7 +39,6 @@ describe('étapes', () => {
       element: null,
       metas: {
         demarche: {},
-        substances: [],
         entreprises: [],
       },
       heritageLoaded: false,
@@ -75,38 +74,6 @@ describe('étapes', () => {
 
     const app = createApp({})
     app.use(store)
-  })
-
-  test('récupère les métas pour éditer une étape', async () => {
-    const apiMockMetas = api.titreEtapeMetas.mockResolvedValue(titreEtapeMetas)
-    const apiMockEtape = api.etape.mockResolvedValue({
-      id: 'etape-id',
-      titreDemarcheId: 'demarche-id',
-      date: '2020-01-01',
-    })
-
-    await store.dispatch('titreEtapeEdition/init', {
-      id: 'etape-id',
-      titreDemarcheId: 'demarche-id',
-    })
-
-    expect(apiMockMetas).toHaveBeenCalled()
-    expect(apiMockEtape).toHaveBeenCalled()
-    expect(store.state.titreEtapeEdition.metas).toEqual(titreEtapeMetasRes)
-    expect(store.state.titreEtapeEdition.element).toEqual(titreEtapeEdited)
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test('récupère les métas pour créer une étape', async () => {
-    const apiMockMetas = api.titreEtapeMetas.mockResolvedValue(titreEtapeMetas)
-
-    await store.dispatch('titreEtapeEdition/init', {
-      titreDemarcheId: 'demarche-id',
-    })
-
-    expect(apiMockMetas).toHaveBeenCalled()
-    expect(store.state.titreEtapeEdition.metas).toEqual(titreEtapeMetasRes2)
-    expect(mutations.loadingRemove).toHaveBeenCalled()
   })
 
   test("retourne une erreur si l'api ne répond pas", async () => {

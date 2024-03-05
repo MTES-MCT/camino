@@ -9,14 +9,12 @@ import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
 import document from './document'
 import meta from './meta'
-import user from './user'
 
 const modules = {
   titreEtape,
   titreEtapeEdition,
   document,
   meta,
-  user,
 }
 
 const state = {
@@ -55,8 +53,8 @@ const actions = {
     console.error(error)
   },
 
-  pageError({ commit, getters }) {
-    if (getters['user/user'] !== null) {
+  pageError({ user, commit, getters }) {
+    if (user !== null) {
       commit('errorUpdate', {
         type: 'error',
         value: `Erreur: page introuvable`,

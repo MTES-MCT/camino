@@ -1,4 +1,3 @@
-import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, postWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
 import {
@@ -10,33 +9,21 @@ import {
   EntrepriseDocumentId,
   entrepriseDocumentIdValidator,
   EntrepriseDocument,
-  Entreprise,
 } from 'camino-common/src/entreprise'
 import { TempDocumentName } from 'camino-common/src/document'
 import { EtapeId } from 'camino-common/src/etape'
 import { Fiscalite } from 'camino-common/src/validators/fiscalite'
-import gql from 'graphql-tag'
 import { z } from 'zod'
 
-type GetEntreprisesParams = {
-  page: number
-  colonne: string
-  ordre: 'asc' | 'desc'
-  nomsEntreprise: string
-}
-
-export type GetEntreprisesEntreprise = Pick<EntrepriseType, 'id' | 'nom'> & { legalEtranger: string | null; legalSiren: string | null }
 export interface EntrepriseApiClient {
   getFiscaliteEntreprise: (annee: CaminoAnnee, entrepriseId: EntrepriseId) => Promise<Fiscalite>
   modifierEntreprise: (entreprise: { id: EntrepriseId; telephone?: string; email?: string; url?: string; archive?: boolean }) => Promise<void>
   creerEntreprise: (siren: Siren) => Promise<void>
   getEntreprise: (id: EntrepriseId) => Promise<EntrepriseType>
-  getFilteredEntreprises: (params: GetEntreprisesParams) => Promise<{ total: number; elements: GetEntreprisesEntreprise[] }>
   getEntrepriseDocuments: (id: EntrepriseId) => Promise<EntrepriseDocument[]>
   getEtapeEntrepriseDocuments: (etapeId: EtapeId) => Promise<EtapeEntrepriseDocument[]>
   creerEntrepriseDocument: (entrepriseId: EntrepriseId, entrepriseDocumentInput: UiEntrepriseDocumentInput, tempDocumentName: TempDocumentName) => Promise<EntrepriseDocumentId>
   deleteEntrepriseDocument: (entrepriseId: EntrepriseId, documentId: EntrepriseDocumentId) => Promise<void>
-  getEntreprises: () => Promise<Entreprise[]>
 }
 export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true })
 
@@ -60,22 +47,6 @@ export const entrepriseApiClient: EntrepriseApiClient = {
       entrepriseId,
     })
   },
-  getFilteredEntreprises: async params => {
-    const values = await apiGraphQLFetch(gql`
-      query Entreprises($page: Int, $colonne: String, $ordre: String, $nomsEntreprise: String) {
-        entreprises(intervalle: 10, page: $page, colonne: $colonne, ordre: $ordre, noms: $nomsEntreprise) {
-          elements {
-            id
-            nom
-            legalSiren
-            legalEtranger
-          }
-          total
-        }
-      }
-    `)(params)
-    return values
-  },
   getEntrepriseDocuments: async (entrepriseId: EntrepriseId): Promise<EntrepriseDocument[]> => {
     return getWithJson('/rest/entreprises/:entrepriseId/documents', {
       entrepriseId,
@@ -97,8 +68,5 @@ export const entrepriseApiClient: EntrepriseApiClient = {
   },
   deleteEntrepriseDocument: async (entrepriseId: EntrepriseId, entrepriseDocumentId: EntrepriseDocumentId): Promise<void> => {
     return deleteWithJson('/rest/entreprises/:entrepriseId/documents/:entrepriseDocumentId', { entrepriseId, entrepriseDocumentId })
-  },
-  getEntreprises: async (): Promise<Entreprise[]> => {
-    return getWithJson('/rest/entreprises', {})
   },
 }

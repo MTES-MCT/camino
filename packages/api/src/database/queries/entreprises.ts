@@ -57,24 +57,6 @@ const entreprisesQueryBuild = ({ fields }: { fields?: FieldsEntreprise }, user: 
   return q
 }
 
-export const entreprisesCount = async (
-  {
-    noms,
-    archive,
-  }: {
-    noms?: string | null
-    archive?: boolean | null
-  },
-  { fields }: { fields?: FieldsEntreprise },
-  user: User
-) => {
-  const q = entreprisesQueryBuild({ fields }, user)
-
-  entreprisesFiltersQueryModify({ noms, archive }, q)
-
-  return q.resultSize()
-}
-
 export const entrepriseGet = async (id: EntrepriseId, { fields }: { fields?: FieldsEntreprise }, user: User): Promise<IEntreprise | undefined> => {
   const q = entreprisesQueryBuild({ fields }, user)
 
