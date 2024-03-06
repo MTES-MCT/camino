@@ -40,7 +40,7 @@ import { Pool } from 'pg'
 import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
-import { equalGeojson } from 'camino-common/src/perimetre.js'
+import { FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
 import { FieldsEtape } from '../../../database/queries/_options'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
@@ -157,6 +157,16 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; 
   }
 }
 
+export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: FeatureCollectionPoints): boolean => {
+  const coordinatesSet = new Set()
+
+  perimetre.geometry.coordinates.forEach(geometry => geometry.forEach(sub => sub.forEach(coordinate => coordinatesSet.add(`${coordinate[0]}-${coordinate[1]}`))))
+
+  return points.features.every(point => {
+    return coordinatesSet.has(`${point.geometry.coordinates[0]}-${point.geometry.coordinates[1]}`)
+  })
+}
+
 const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
@@ -197,6 +207,11 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
+      if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
+        if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
+          throw new Error(`les points doivent être sur le périmètre`)
+        }
+      }
       const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
       etape.surface = surface
 
@@ -379,6 +394,12 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
+      if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
+        if (!arePointsOnPerimeter(etape.geojsonOriginePerimetre, etape.geojsonOriginePoints)) {
+          throw new Error(`les points doivent être sur le périmètre`)
+        }
+      }
+
       const { communes, sdom, surface, forets, secteurs } = await getGeojsonInformation(context.pool, etape.geojson4326Perimetre.geometry)
 
       if (!equalGeojson(etape.geojson4326Perimetre.geometry, titreEtapeOld.geojson4326Perimetre?.geometry)) {
