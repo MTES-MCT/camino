@@ -7,6 +7,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { ApiClient } from '@/api/api-client'
+import { GEO_SYSTEME_IDS, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
 const meta: Meta = {
   title: 'Components/Common/Perimetre',
@@ -421,6 +422,29 @@ export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
           features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
         },
         geojson_origine_geo_systeme_id: '2154',
+      }}
+      initTab="points"
+      calculateNeighbours={false}
+      apiClient={apiClientMock}
+      titreSlug={titreSlugValidator.parse('titre-slug')}
+    />
+  </>
+)
+
+export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
+  <>
+    <MapPattern />
+    <DsfrPerimetre
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: customPointWithoutNameAndDesc,
+        geojson_origine_perimetre: geojson4326_perimetre,
+        geojson_origine_points: {
+          type: 'FeatureCollection',
+          properties: {},
+          features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
+        },
+        geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95 as unknown as TransformableGeoSystemeId,
       }}
       initTab="points"
       calculateNeighbours={false}
