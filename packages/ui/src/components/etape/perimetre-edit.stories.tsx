@@ -8,6 +8,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
+import { GEO_SYSTEME_IDS, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
 const meta: Meta = {
   title: 'Components/Etape/PerimetreEdit',
@@ -165,6 +166,28 @@ export const FilledNoHeritage: StoryFn = () => (
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etape}
+    titreTypeId="arm"
+    titreSlug={titreSlug}
+    onPointsChange={onPointsChange}
+  />
+)
+
+const etapeLegacy: Props['etape'] = {
+  ...etapeEmptyHeritage,
+  geojson4326Perimetre: perimetre,
+  surface: km2Validator.parse(2),
+  geojsonOriginePerimetre: perimetre,
+  geojsonOriginePoints: null,
+  geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.RGFG95 as unknown as TransformableGeoSystemeId,
+  heritageProps: { perimetre: { actif: false } },
+}
+export const LegacyGeoSysteme: StoryFn = () => (
+  <PerimetreEdit
+    initTab="points"
+    completeUpdate={completeUpdate}
+    onEtapeChange={onEtapeChange}
+    apiClient={apiClient}
+    etape={etapeLegacy}
     titreTypeId="arm"
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}

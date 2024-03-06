@@ -1,6 +1,6 @@
 import { AsyncData } from '@/api/client-rest'
 import { contentTypes } from 'camino-common/src/rest'
-import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GeoSysteme, GeoSystemes, TransformableGeoSystemeId, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
 import { defineComponent, ref, watch, computed } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { TableRow, TextColumnData } from '../_ui/table'
@@ -11,6 +11,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { indexToLetter, toDegresMinutes } from 'camino-common/src/number'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeTypeahead } from './geosysteme-typeahead'
+import { Alert } from '../_ui/alert'
 
 interface Props {
   geojson_origine_points: FeatureCollectionPoints
@@ -111,7 +112,12 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />
+      {transformableGeoSystemeIdValidator.safeParse(props.geo_systeme_id).success ? (
+        <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />
+      ) : (
+        <Alert small={true} title={`Nous affichons les points dans un référentiel ${props.geo_systeme_id} qui n'est plus utilisable dans Camino`} type="warning" />
+      )}
+
       <TableAuto caption="" class="fr-mb-1w" columns={columns.value} rows={rowsToDisplay.value} initialSort="noSort" />
 
       <DsfrLink
