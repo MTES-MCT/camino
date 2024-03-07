@@ -2,7 +2,7 @@
 import { EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { GeoSystemeId, geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { getKeys, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import knexBuilder from 'knex'
 import { knexSnakeCaseMappers } from 'objection'
 import { z } from 'zod'
@@ -29,6 +29,7 @@ const entry = z.object({
   contour: z.number(),
   point: z.number(),
   nom: z.string().nullable(),
+  opposable: z.boolean().nullable(),
   description: z.string().nullable(),
 })
 
@@ -56,72 +57,109 @@ const etapeIdsIgnored: string[] = [
 
 const generate = async () => {
   const pointsReferences: { rows: Row[] } = await knex.raw(
-    `select tpr.coordonnees, tpr.geo_systeme_id, tp.titre_etape_id, tp.groupe, tp.contour, tp.point, tp.nom, tp.description from titres_points_references tpr join titres_points tp on tp.id = tpr.titre_point_id where tpr.opposable is true and tpr.geo_systeme_id != '4326' and tp.titre_etape_id not in (${etapeIdsIgnored
+    `select tpr.coordonnees, tpr.geo_systeme_id, tp.titre_etape_id, tp.groupe, tp.contour, tp.point, tp.nom, tp.description, tpr.opposable from titres_points_references tpr join titres_points tp on tp.id = tpr.titre_point_id where tpr.geo_systeme_id != '4326' and tp.titre_etape_id not in (${etapeIdsIgnored
       .map(id => `'${id}'`)
       .join(', ')}) order by titre_etape_id, groupe, contour, point`
   )
 
   const points = z.array(entry).parse(pointsReferences.rows)
 
-  const pointsByEtape = points.reduce<Record<EtapeId, Row[]>>((acc, point) => {
+  const pointsByEtape = points.reduce<Record<EtapeId, {[key in GeoSystemeId]?:  Row[]}>>((acc, point) => {
     if (isNullOrUndefined(acc[point.titre_etape_id])) {
-      acc[point.titre_etape_id] = []
+      acc[point.titre_etape_id] = {}
+    }
+    if (isNullOrUndefined(acc[point.titre_etape_id][point.geo_systeme_id])) {
+      acc[point.titre_etape_id][point.geo_systeme_id] = []
     }
 
-    acc[point.titre_etape_id].push(point)
+    acc[point.titre_etape_id][point.geo_systeme_id]?.push(point)
 
     return acc
   }, {})
 
-  for (const points of Object.values(pointsByEtape)) {
-    const origineGeosystemeId: GeoSystemeId = points[0].geo_systeme_id
+  
+  
+  for (const pointsBygeoSystemes of Object.values(pointsByEtape)) {
 
-    const originePoints: FeatureCollectionPoints = {
-      type: 'FeatureCollection',
-      features: points.map(point => ({
+    try {
+    const geoSystemes = getKeys(pointsBygeoSystemes, (value: string): value is GeoSystemeId => geoSystemeIdValidator.safeParse(value).success)
+
+    let geoSystemeId: GeoSystemeId 
+    if (geoSystemes.length === 1) {
+      geoSystemeId = geoSystemes[0]
+    }else {
+      const geoSystemeFound = geoSystemes.filter(geoSysteme => pointsBygeoSystemes[geoSysteme]?.[0]?.opposable)
+      if (geoSystemeFound.length === 1 ) {
+        geoSystemeId = geoSystemeFound[0]
+      } else {
+        throw new Error(`plusieurs geosysteme et aucun opposable, ${pointsBygeoSystemes[geoSystemes[0]]?.[0].titre_etape_id}`)
+      }
+    }
+
+    if (isNullOrUndefined(geoSystemeId) ) {
+      throw new Error(`zizi ${pointsBygeoSystemes[geoSystemes[0]]?.[0].titre_etape_id}`)
+    }
+    const points = pointsBygeoSystemes[geoSystemeId]
+    if (isNullOrUndefined(points)) {
+      throw new Error('WAAAAAT')
+    }
+
+      
+      const origineGeosystemeId: GeoSystemeId = points[0].geo_systeme_id
+
+      const originePoints: FeatureCollectionPoints = {
+        type: 'FeatureCollection',
+        features: points.map(point => ({
+          type: 'Feature',
+          properties: { nom: point.nom?.replace(/'/g, '’'), description: point.description?.replace(/'/g, '’') },
+          geometry: { type: 'Point', coordinates: [point.coordonnees.x, point.coordonnees.y] },
+        })),
+      }
+
+      const originePerimetre: FeatureMultiPolygon = {
         type: 'Feature',
-        properties: { nom: point.nom?.replace(/'/g, '’'), description: point.description?.replace(/'/g, '’') },
-        geometry: { type: 'Point', coordinates: [point.coordonnees.x, point.coordonnees.y] },
-      })),
-    }
+        properties: {},
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: points.reduce<[number, number][][][]>((acc, point) => {
+            if (acc.length < point.groupe) {
+              acc.push([])
+            }
 
-    const originePerimetre: FeatureMultiPolygon = {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'MultiPolygon',
-        coordinates: points.reduce<[number, number][][][]>((acc, point) => {
-          if (acc.length < point.groupe) {
-            acc.push([])
-          }
+            if (acc[point.groupe - 1].length < point.contour) {
+              acc[point.groupe - 1].push([])
+            }
 
-          if (acc[point.groupe - 1].length < point.contour) {
-            acc[point.groupe - 1].push([])
-          }
+            acc[point.groupe - 1][point.contour - 1][point.point - 1] = [point.coordonnees.x, point.coordonnees.y]
+            acc[point.groupe - 1][point.contour - 1][point.point] = acc[point.groupe - 1][point.contour - 1][0]
 
-          acc[point.groupe - 1][point.contour - 1][point.point - 1] = [point.coordonnees.x, point.coordonnees.y]
-          acc[point.groupe - 1][point.contour - 1][point.point] = acc[point.groupe - 1][point.contour - 1][0]
+            return acc
+          }, []),
+        },
+      }
 
-          return acc
-        }, []),
-      },
-    }
+        const result: { rows: { result: boolean }[] } = await knex.raw(
+          `select ST_ISVALID(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(originePerimetre.geometry)}'), ${origineGeosystemeId}))) as result`
+        )
+      
 
-    const result: { rows: { result: boolean }[] } = await knex.raw(
-      `select ST_ISVALID(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(originePerimetre.geometry)}'), ${origineGeosystemeId}))) as result`
-    )
 
-    if (!result.rows[0].result) {
-      console.error(`étape invalide ${points[0].titre_etape_id}`, origineGeosystemeId, JSON.stringify(originePerimetre))
-      throw new Error('boom')
-    } else {
-      const sqlQuery = `update titres_etapes set geojson_origine_geo_systeme_id = '${origineGeosystemeId}', geojson_origine_points = '${JSON.stringify(
-        originePoints
-      )}', geojson_origine_perimetre = '${JSON.stringify(originePerimetre)}'  where id='${points[0].titre_etape_id}';`
+      if (!result.rows[0].result) {
+        console.error(`étape invalide ${points[0].titre_etape_id}`, origineGeosystemeId, JSON.stringify(originePerimetre))
+        // throw new Error('boom')
+      } else {
+        const sqlQuery = `update titres_etapes set geojson_origine_geo_systeme_id = '${origineGeosystemeId}', geojson_origine_points = '${JSON.stringify(
+          originePoints
+        )}', geojson_origine_perimetre = '${JSON.stringify(originePerimetre)}'  where id='${points[0].titre_etape_id}';`
 
-      console.info(sqlQuery)
-    }
+        // console.info(sqlQuery)
+      }
+
+  } catch(e) {
+  console.error(`Wow, ça plante, ${e}`)
+  
   }
+    }
 }
 
 generate()
