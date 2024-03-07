@@ -39,11 +39,6 @@ export interface GeoSysteme<T = GeoSystemeId> {
   definitionProj4: string // https://github.com/josueggh/proj4-list/blob/master/list.js
 }
 
-// https://github.com/MTES-MCT/camino/issues/917
-export const transformableGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975', '4471', '4467'] as const satisfies readonly GeoSystemeId[]
-export const transformableGeoSystemeIdValidator = z.enum(transformableGeoSystemeIds)
-export type TransformableGeoSystemeId = z.infer<typeof transformableGeoSystemeIdValidator>
-
 export const geoSystemeIdValidator = z.enum(IDS)
 export type GeoSystemeId = z.infer<typeof geoSystemeIdValidator>
 
@@ -225,4 +220,3 @@ export const GeoSystemes = {
 } as const satisfies { [key in GeoSystemeId]: GeoSysteme<key> }
 
 export const sortedGeoSystemes = Object.values(GeoSystemes).sort((a, b) => a.nom.localeCompare(b.nom))
-export const transformableGeoSystemes: GeoSysteme<TransformableGeoSystemeId>[] = transformableGeoSystemeIds.map(id => GeoSystemes[id])

@@ -8,14 +8,14 @@ import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 export type TabId = 'carte' | 'points'
 
 type Props = {
   perimetre: {
     geojson4326_perimetre: FeatureMultiPolygon
     geojson4326_points: FeatureCollectionPoints | null
-    geojson_origine_geo_systeme_id: TransformableGeoSystemeId
+    geojson_origine_geo_systeme_id: GeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints | null
   }

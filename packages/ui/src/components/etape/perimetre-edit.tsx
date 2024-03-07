@@ -13,7 +13,7 @@ import { KM2 } from 'camino-common/src/number'
 import { EtapeWithHeritage, EtapeFondamentale } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { PointsImportPopup } from './points-import-popup'
-import { TransformableGeoSystemeId, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport'>
@@ -29,7 +29,7 @@ export interface Props {
     geojson4326Points: FeatureCollectionPoints | null
     geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
     geojsonOriginePoints: FeatureCollectionPoints | null
-    geojsonOrigineGeoSystemeId: TransformableGeoSystemeId | null
+    geojsonOrigineGeoSystemeId: GeoSystemeId | null
     surface: KM2 | null
   }
   titreTypeId: TitreTypeId
@@ -47,7 +47,7 @@ type DisplayPerimetreProps = {
     geojson4326Points: FeatureCollectionPoints | null
     geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
     geojsonOriginePoints: FeatureCollectionPoints | null
-    geojsonOrigineGeoSystemeId: TransformableGeoSystemeId | null
+    geojsonOrigineGeoSystemeId: GeoSystemeId | null
   }
   surface: KM2 | null
   titreSlug: TitreSlug
@@ -146,9 +146,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
         write={() => (
           <div>
             <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre" />
-            {isNotNullNorUndefined(props.etape.geojson4326Perimetre) &&
-            isNotNullNorUndefined(props.etape.geojsonOrigineGeoSystemeId) &&
-            transformableGeoSystemeIdValidator.safeParse(props.etape.geojsonOrigineGeoSystemeId).success ? (
+            {isNotNullNorUndefined(props.etape.geojson4326Perimetre) && isNotNullNorUndefined(props.etape.geojsonOrigineGeoSystemeId) ? (
               <DsfrButton class="fr-ml-2w" onClick={openPointsPopup} buttonType="secondary" title="Éditer les points" />
             ) : null}
 

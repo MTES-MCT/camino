@@ -49,6 +49,288 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
     ],
     "type": "FeatureCollection",
   },
+  "27561": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6705121.61250076,
+            -2533464.314156466,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6706045.365292369,
+            -2532311.734234085,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6704428.434049787,
+            -2530499.194353798,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "27563": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6419903.998539594,
+            -2132422.374455293,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6420844.302907188,
+            -2131387.194367276,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6419422.26215663,
+            -2129579.828581271,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "27571": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6705121.61250076,
+            -1533464.314156466,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6706045.365292369,
+            -1532311.734234085,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6704428.434049787,
+            -1530499.194353798,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "27572": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6558012.142644974,
+            -330085.70153978,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6558943.952043006,
+            -328992.232262048,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6557425.07184469,
+            -327182.747013077,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "27573": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -6419903.998539594,
+            867577.625544707,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6420844.302907188,
+            868612.805632724,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -6419422.26215663,
+            870420.171418729,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "2970": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            1667693.002642631,
+            474962.273045017,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666562.013422814,
+            475136.920846182,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666536.38215323,
+            477018.792357492,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
   "2972": {
     "features": [
       {
@@ -131,6 +413,429 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
           "coordinates": [
             -10631349.492396124,
             28578682.38840603,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "32620": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            1667272.17661105,
+            474656.112602675,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666141.191191572,
+            474830.764481658,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1666115.56755458,
+            476712.631037641,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "32621": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            995446.594222497,
+            468165.655313838,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994332.421942425,
+            468346.681392758,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994321.758500304,
+            470203.040167238,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "32622": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            329078.146256696,
+            466912.756878874,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            327968.367773922,
+            467101.879234796,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            327972.065525568,
+            468953.34016145,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "32630": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -5841798.951395092,
+            720788.374567202,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -5843479.1534257,
+            721224.12987481,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -5843230.650385964,
+            724068.226121691,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "3313": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            995446.594222558,
+            468165.655298487,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994332.421942485,
+            468346.6813774,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            994321.758500365,
+            470203.04015182,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "3949": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -5649322.981644171,
+            5568553.523243326,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -5650238.180866389,
+            5569703.215678348,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -5648623.59710415,
+            5571501.099138989,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "4171": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.222698969,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.224389363,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.241133091,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "4230": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.222698969,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.224389363,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.241133091,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "4275": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.538470125,
+            4.220239072,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.548470036,
+            4.221929661,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.548470003,
+            4.238675131,
           ],
           "type": "Point",
         },
@@ -272,6 +977,100 @@ exports[`convertGeojsonPointsToGeoSystemeId > toutes les conversions 1`] = `
           "coordinates": [
             -16128766.302407652,
             26286263.400504485,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "4624": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -52.54,
+            4.222698969,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.224389363,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -52.55,
+            4.241133091,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point *",
+          "nom": "*",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "4807": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -60.972999213,
+            4.689154525,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point 8",
+          "nom": "8",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -60.984110225,
+            4.691032957,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "description point W",
+          "nom": "W",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -60.984110188,
+            4.709639035,
           ],
           "type": "Point",
         },

@@ -1,7 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { GeoSystemes, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemes, GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { GeojsonInformations } from 'camino-common/src/perimetre'
@@ -24,7 +24,7 @@ type FileType = 'geojson' | 'shp' | 'csv'
 
 const defaultGeoSystemeId = GeoSystemes[4326].id
 export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', 'close', 'result', 'titreTypeId', 'titreSlug'], props => {
-  const systemeGeographique = ref<TransformableGeoSystemeId>(defaultGeoSystemeId)
+  const systemeGeographique = ref<GeoSystemeId>(defaultGeoSystemeId)
 
   const importFile = ref<File | null>(null)
 
@@ -32,7 +32,7 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
     importFile.value = file
   }
 
-  const onSelectGeographicSystem = (geoSystemeId: TransformableGeoSystemeId | null) => {
+  const onSelectGeographicSystem = (geoSystemeId: GeoSystemeId | null) => {
     if (isNotNullNorUndefined(geoSystemeId)) {
       systemeGeographique.value = geoSystemeId
     } else {

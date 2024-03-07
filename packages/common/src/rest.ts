@@ -39,7 +39,7 @@ import { caminoConfigValidator } from './static/config.js'
 import { communeValidator } from './static/communes.js'
 import { Expect, isFalse, isTrue } from './typescript-tools.js'
 import { activiteDocumentIdValidator, activiteEditionValidator, activiteIdOrSlugValidator, activiteValidator } from './activite.js'
-import { transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
+import { geoSystemeIdValidator } from './static/geoSystemes.js'
 import {
   featureCollectionPointsValidator,
   geojsonImportBodyValidator,
@@ -179,13 +179,13 @@ export const CaminoRestRoutes = {
   '/rest/etapes/:etapeId/depot': { params: { etapeId: etapeIdValidator }, put: { input: z.void(), output: z.void() } },
   '/rest/activites/:activiteId': { params: { activiteId: activiteIdOrSlugValidator }, get: { output: activiteValidator }, put: { input: activiteEditionValidator, output: z.void() }, delete: true },
   '/rest/communes': { get: { output: z.array(communeValidator) } },
-  '/rest/geojson_points/:geoSystemeId': { params: { geoSystemeId: transformableGeoSystemeIdValidator }, post: { input: featureCollectionPointsValidator, output: featureCollectionPointsValidator } },
+  '/rest/geojson_points/:geoSystemeId': { params: { geoSystemeId: geoSystemeIdValidator }, post: { input: featureCollectionPointsValidator, output: featureCollectionPointsValidator } },
   '/rest/geojson/import/:geoSystemeId': {
-    params: { geoSystemeId: transformableGeoSystemeIdValidator },
+    params: { geoSystemeId: geoSystemeIdValidator },
     post: { input: geojsonImportBodyValidator, output: geojsonInformationsValidator },
   },
   '/rest/geojson_points/import/:geoSystemeId': {
-    params: { geoSystemeId: transformableGeoSystemeIdValidator },
+    params: { geoSystemeId: geoSystemeIdValidator },
     post: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
   },
   '/deconnecter': { get: { output: z.string() } },

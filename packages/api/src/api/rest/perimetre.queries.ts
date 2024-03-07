@@ -3,7 +3,7 @@ import { sql } from '@pgtyped/runtime'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
-import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { IConvertMultiPointDbQuery, IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
@@ -16,12 +16,7 @@ import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
 
-export const convertPoints = async (
-  pool: Pool,
-  fromGeoSystemeId: TransformableGeoSystemeId,
-  toGeoSystemeId: TransformableGeoSystemeId,
-  geojsonPoints: FeatureCollectionPoints
-): Promise<FeatureCollectionPoints> => {
+export const convertPoints = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojsonPoints: FeatureCollectionPoints): Promise<FeatureCollectionPoints> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
     return geojsonPoints
   }
@@ -38,20 +33,13 @@ export const convertPoints = async (
   }
 }
 
-const convertMultiPointDb = sql<
-  Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: TransformableGeoSystemeId; toGeoSystemeId: TransformableGeoSystemeId; geojson: string }, { geojson: MultiPoint }>
->`
+const convertMultiPointDb = sql<Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPoint }>>`
 select
     ST_AsGeoJSON (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer))::json as geojson
 LIMIT 1
 `
 
-export const getGeojsonByGeoSystemeId = async (
-  pool: Pool,
-  fromGeoSystemeId: TransformableGeoSystemeId,
-  toGeoSystemeId: TransformableGeoSystemeId,
-  geojson: FeatureMultiPolygon
-): Promise<FeatureMultiPolygon> => {
+export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
     return geojson
   }
@@ -74,9 +62,7 @@ export const getGeojsonByGeoSystemeId = async (
   throw new Error(`Impossible de convertir le geojson vers le systeme ${toGeoSystemeId}`)
 }
 
-const getGeojsonByGeoSystemeIdDb = sql<
-  Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: TransformableGeoSystemeId; toGeoSystemeId: TransformableGeoSystemeId; geojson: string }, { geojson: MultiPolygon }>
->`
+const getGeojsonByGeoSystemeIdDb = sql<Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPolygon }>>`
 select
     ST_AsGeoJSON (ST_Multi (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer)))::json as geojson
 LIMIT 1

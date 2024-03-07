@@ -20,7 +20,7 @@ import { featureCollectionPointsValidator, featureMultiPolygonValidator, multiPo
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
 import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
-import { transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
+import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
   id: etapeIdValidator,
@@ -48,7 +48,7 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_perimetre: featureMultiPolygonValidator.nullable(),
-  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator.nullable(),
+  geojson_origine_geo_systeme_id: geoSystemeIdValidator.nullable(),
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
