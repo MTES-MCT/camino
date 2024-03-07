@@ -139,7 +139,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {canEditOrDeleteEtape.value ? (
               <>
                 {props.etape.etape_type_id === ETAPES_TYPES.demande && props.etape.etape_statut_id === ETAPES_STATUTS.EN_CONSTRUCTION ? (
-                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer..." title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
+                  <DsfrButton class="fr-mr-1v" buttonType="primary" label="Déposer" title="Déposer la demande" onClick={deposePopupOpen} disabled={!isDeposable.value} />
                 ) : null}
                 <DsfrLink
                   icon={'fr-icon-pencil-line'}
