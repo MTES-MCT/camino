@@ -13,7 +13,7 @@ import {
   GeojsonImportBody,
   GeojsonImportPointsBody,
 } from 'camino-common/src/perimetre.js'
-import { GEO_SYSTEME_IDS, TransformableGeoSystemeId, transformableGeoSystemeIds } from 'camino-common/src/static/geoSystemes.js'
+import { GEO_SYSTEME_IDS, GeoSystemeId, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
@@ -52,12 +52,12 @@ describe('convertGeojsonPointsToGeoSystemeId', () => {
   })
 
   test('toutes les conversions', async () => {
-    const result: { [key in TransformableGeoSystemeId]?: unknown } = {}
-    for (const geoSysteme of transformableGeoSystemeIds) {
-      const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: geoSysteme }, userSuper, featureCollectionPointsValidator.parse(points))
+    const result: { [key in GeoSystemeId]?: unknown } = {}
+    for (const geoSysteme of sortedGeoSystemes) {
+      const tested = await restPostCall(dbPool, '/rest/geojson_points/:geoSystemeId', { geoSystemeId: geoSysteme.id }, userSuper, featureCollectionPointsValidator.parse(points))
 
       expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
-      result[geoSysteme] = tested.body
+      result[geoSysteme.id] = tested.body
     }
 
     expect(result).toMatchSnapshot()

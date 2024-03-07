@@ -28,7 +28,7 @@ import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
-import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -305,7 +305,7 @@ interface ITitreEtape {
   geojson4326Points?: FeatureCollectionPoints | null
   geojsonOriginePerimetre?: FeatureMultiPolygon | null
   geojsonOriginePoints?: FeatureCollectionPoints | null
-  geojsonOrigineGeoSystemeId?: TransformableGeoSystemeId | null
+  geojsonOrigineGeoSystemeId?: GeoSystemeId | null
 }
 
 interface ITitreEtapeFiltre {

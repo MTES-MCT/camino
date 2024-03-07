@@ -1,7 +1,7 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { InputFile } from '../_ui/dsfr-input-file'
-import { TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
@@ -10,7 +10,7 @@ import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
-  geoSystemeId: TransformableGeoSystemeId
+  geoSystemeId: GeoSystemeId
   result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => void
   close: () => void
 }

@@ -10,7 +10,7 @@ import { titreTypeIdValidator } from './static/titresTypes.js'
 import { perimetreFileUploadTypeValidator } from './static/documentsTypes.js'
 import { isNullOrUndefined } from './typescript-tools.js'
 import { km2Validator } from './number.js'
-import { TransformableGeoSystemeId, transformableGeoSystemeIdValidator } from './static/geoSystemes.js'
+import { GeoSystemeId, geoSystemeIdValidator } from './static/geoSystemes.js'
 
 // [longitude, latitude]
 const tupleCoordinateValidator = z.tuple([z.number(), z.number()])
@@ -52,7 +52,7 @@ export type GeojsonFeaturePoint = z.infer<typeof featurePointValidator>
 // un exemple de ce que génère QGis
 // "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2972" } },
 /** @public (knip) visibleForTesting */
-export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${TransformableGeoSystemeId}`>(val => {
+export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${GeoSystemeId}`>(val => {
   if (typeof val !== 'string') {
     return false
   }
@@ -60,7 +60,7 @@ export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${Transf
     return false
   }
 
-  return transformableGeoSystemeIdValidator.safeParse(val.substring(val.length - 4)).success
+  return geoSystemeIdValidator.safeParse(val.substring(val.length - 4)).success
 })
 
 const featureCollectionValidator = z.object({
@@ -100,7 +100,7 @@ export const geojsonInformationsValidator = z.object({
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_perimetre: featureMultiPolygonValidator,
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
-  geojson_origine_geo_systeme_id: transformableGeoSystemeIdValidator,
+  geojson_origine_geo_systeme_id: geoSystemeIdValidator,
 })
 
 export type GeojsonInformations = z.infer<typeof geojsonInformationsValidator>

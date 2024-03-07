@@ -8,7 +8,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { km2Validator } from 'camino-common/src/number'
-import { GEO_SYSTEME_IDS, TransformableGeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 
 const meta: Meta = {
   title: 'Components/Etape/PerimetreEdit',
@@ -178,7 +178,7 @@ const etapeLegacy: Props['etape'] = {
   surface: km2Validator.parse(2),
   geojsonOriginePerimetre: perimetre,
   geojsonOriginePoints: null,
-  geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.RGFG95 as unknown as TransformableGeoSystemeId,
+  geojsonOrigineGeoSystemeId: GEO_SYSTEME_IDS.RGFG95,
   heritageProps: { perimetre: { actif: false } },
 }
 export const LegacyGeoSysteme: StoryFn = () => (

@@ -1,7 +1,7 @@
 import { DemarcheId, demarcheIdOrSlugValidator } from 'camino-common/src/demarche.js'
 import { CaminoRequest, CustomResponse } from './express-type.js'
 import { Pool } from 'pg'
-import { GEO_SYSTEME_IDS, GeoSystemes, transformableGeoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
+import { GEO_SYSTEME_IDS, GeoSystemes, geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { convertPoints, getGeojsonByGeoSystemeId as getGeojsonByGeoSystemeIdQuery, getGeojsonInformation, getTitresIntersectionWithGeojson } from './perimetre.queries.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
@@ -38,7 +38,7 @@ import xlsx from 'xlsx'
 import { z } from 'zod'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
-  const geoSystemeIdParsed = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+  const geoSystemeIdParsed = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
   const geojsonParsed = featureCollectionPointsValidator.safeParse(req.body)
 
   if (!geoSystemeIdParsed.success || !geojsonParsed.success) {
@@ -149,7 +149,7 @@ const csvDegToJsonValidator = z.array(z.object({ 'Nom du point': z.string(), Des
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
-  const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+  const geoSystemeId = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
   if (!user || isDefault(user)) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else if (!geoSystemeId.success) {
@@ -233,6 +233,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
                 coordinates[0][0].push([rows[0].X, rows[0].Y])
                 break
               }
+              case 'gon':
               case 'deg': {
                 const rows = csvDegToJsonValidator.parse(converted)
                 coordinates = [[rows.map(({ Longitude, Latitude }) => [Longitude, Latitude])]]
@@ -294,7 +295,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
 export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonImportPointsResponse>) => {
   const user = req.auth
 
-  const geoSystemeId = transformableGeoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+  const geoSystemeId = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
   if (!user || isDefault(user)) {
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
   } else if (!geoSystemeId.success) {
