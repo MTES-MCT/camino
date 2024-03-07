@@ -145,7 +145,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
         propId="perimetre"
         write={() => (
           <div>
-            <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre…" />
+            <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre" />
             {isNotNullNorUndefined(props.etape.geojson4326Perimetre) &&
             isNotNullNorUndefined(props.etape.geojsonOrigineGeoSystemeId) &&
             transformableGeoSystemeIdValidator.safeParse(props.etape.geojsonOrigineGeoSystemeId).success ? (

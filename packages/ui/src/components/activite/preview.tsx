@@ -15,6 +15,7 @@ import { isActiviteComplete } from 'camino-common/src/permissions/activites'
 import { ActiviteDeposePopup } from './depose-popup'
 import { ActiviteApiClient } from './activite-api-client'
 import { ActiviteRemovePopup } from './remove-popup'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   activite: Activite
@@ -106,12 +107,12 @@ export const Preview = defineComponent<Props>(props => {
                 />
               ) : null}
 
-              {props.activite.deposable ? <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer…" onClick={deposePopupOpen} /> : null}
+              {props.activite.deposable ? <DsfrButton buttonType="primary" title="déposer l'activité" label="Déposer" onClick={deposePopupOpen} /> : null}
             </div>
           ),
           default: () => (
             <div class="pb-s">
-              {activiteType.value.description ? (
+              {isNotNullNorUndefined(activiteType.value.description) && activiteType.value.description !== '' ? (
                 <div class="border-b-s px-m pt-m">
                   <div class="h6" v-html={activiteType.value.description} />
                 </div>
