@@ -134,6 +134,8 @@ interface PxgContext extends CaminoCommonContext {
   saisineDesCollectivitesLocalesFaites: boolean
   saisineAutoriteEnvironnementaleFaite: boolean
   avisAutoriteEnvironnementaleFaite: boolean
+  depotFait: boolean
+  enquetePubliqueOuvertePourLaDemarcheSimplifiee: boolean
 }
 
 const peutRendreAvisDREAL = (context: PxgContext): boolean => {
@@ -151,6 +153,8 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     saisineDesCollectivitesLocalesFaites: false,
     saisineAutoriteEnvironnementaleFaite: false,
     avisAutoriteEnvironnementaleFaite: false,
+    depotFait: false,
+    enquetePubliqueOuvertePourLaDemarcheSimplifiee: false,
   },
   on: {
     FAIRE_DESISTEMENT_DEMANDEUR: {
@@ -161,6 +165,20 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
       cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
       target: 'classementSansSuiteRendu',
     },
+    RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
+      target: 'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+      cond: context => !context.depotFait && context.demarcheStatut === DemarchesStatutsIds.EnConstruction,
+      actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+        demarcheStatut: DemarchesStatutsIds.Accepte,
+      }),
+    },
+    OUVRIR_ENQUETE_PUBLIQUE: {
+      target: 'clotureEnquetePubliqueAFaire',
+      cond: context => !context.depotFait && !context.enquetePubliqueOuvertePourLaDemarcheSimplifiee,
+      actions: assign<PxgContext, { type: 'OUVRIR_ENQUETE_PUBLIQUE' }>({
+        enquetePubliqueOuvertePourLaDemarcheSimplifiee: true,
+      }),
+    },
   },
   states: {
     demandeAFaire: {
@@ -170,7 +188,25 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     },
     depotDeLaDemandeAFaire: {
       on: {
-        DEPOSER_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
+        DEPOSER_DEMANDE: {
+          target: 'recevabiliteDeLaDemandeAFaire',
+          actions: assign<PxgContext, { type: 'DEPOSER_DEMANDE' }>({
+            depotFait: true,
+          }),
+        },
+      },
+    },
+    clotureEnquetePubliqueAFaire: {
+      on: { CLOTURER_ENQUETE_PUBLIQUE: 'clotureEnquetePubliqueFaite' },
+    },
+    clotureEnquetePubliqueFaite: {
+      on: {
+        RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
+          target: 'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+            demarcheStatut: DemarchesStatutsIds.Accepte,
+          }),
+        },
       },
     },
     recevabiliteDeLaDemandeAFaire: {
@@ -506,6 +542,14 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
           },
         },
       },
+    },
+    publicationDeDecisionAuRecueilDesActesAdministratifsAFaire: {
+      on: {
+        PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'publicationDeDecisionAuRecueilDesActesAdministratifsFaite',
+      },
+    },
+    publicationDeDecisionAuRecueilDesActesAdministratifsFaite: {
+      type: 'final',
     },
     desistementDuDemandeurRendu: {
       type: 'final',
