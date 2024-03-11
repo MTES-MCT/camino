@@ -157,7 +157,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
     test('ne peut pas faire une rpu seule', () => {
       const etapes = [{ ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') }]
       expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-15\\"}\' after \'[]\'. The event {\\"type\\":\\"PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\\"} should be one of \'RENDRE_DECISION_ADMINISTRATION_FAVORABLE,OUVRIR_ENQUETE_PUBLIQUE,FAIRE_DEMANDE\'"'
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-15\\"}\' after \'[]\'. The event {\\"type\\":\\"PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\\"} should be one of \'FAIRE_DEMANDE,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_DECISION_ADMINISTRATION_FAVORABLE\'"'
       )
     })
 
@@ -199,7 +199,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
         { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
       ]
       expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"epu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-13\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\"]\'. The event {\\"type\\":\\"OUVRIR_ENQUETE_PUBLIQUE\\"} should be one of \'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE\'"'
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"epu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-13\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\"]\'. The event {\\"type\\":\\"OUVRIR_ENQUETE_PUBLIQUE\\"} should be one of \'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE\'"'
       )
     })
 
@@ -209,7 +209,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
         { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
       ]
       expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"dex\\",\\"etapeStatutId\\":\\"acc\\",\\"date\\":\\"2022-04-15\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"RENDRE_DECISION_ADMINISTRATION_FAVORABLE\\"} should be one of \'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS,OUVRIR_ENQUETE_PUBLIQUE\'"'
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"dex\\",\\"etapeStatutId\\":\\"acc\\",\\"date\\":\\"2022-04-15\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"RENDRE_DECISION_ADMINISTRATION_FAVORABLE\\"} should be one of \'OUVRIR_ENQUETE_PUBLIQUE,PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
       )
     })
   })

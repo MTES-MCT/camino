@@ -449,6 +449,24 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
           "etapeTypeId": "mio",
           "mainStep": false,
         },
@@ -482,24 +500,6 @@ describe('mainStep', () => {
           "etapeTypeId": "edm",
           "mainStep": false,
         },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mod",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "des",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "css",
-          "mainStep": false,
-        },
       ]
     `)
   })
@@ -522,7 +522,19 @@ describe('mainStep', () => {
         {
           "contenu": undefined,
           "etapeStatutId": "fai",
-          "etapeTypeId": "mia",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
           "mainStep": false,
         },
         {
@@ -551,24 +563,6 @@ describe('mainStep', () => {
         },
         {
           "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mod",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "des",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "css",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
           "etapeStatutId": "fav",
           "etapeTypeId": "ede",
           "mainStep": false,
@@ -589,6 +583,12 @@ describe('mainStep', () => {
           "contenu": undefined,
           "etapeStatutId": "def",
           "etapeTypeId": "edm",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mia",
           "mainStep": false,
         },
       ]
@@ -608,6 +608,24 @@ describe('mainStep', () => {
       )
     ).toMatchInlineSnapshot(`
       [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
         {
           "contenu": undefined,
           "etapeStatutId": "fai",
@@ -632,24 +650,6 @@ describe('mainStep', () => {
           "etapeTypeId": "mcr",
           "mainStep": false,
         },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mod",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "des",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "css",
-          "mainStep": false,
-        },
       ]
     `)
   })
@@ -668,6 +668,24 @@ describe('mainStep', () => {
       )
     ).toMatchInlineSnapshot(`
       [
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "mod",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "des",
+          "mainStep": false,
+        },
+        {
+          "contenu": undefined,
+          "etapeStatutId": "fai",
+          "etapeTypeId": "css",
+          "mainStep": false,
+        },
         {
           "contenu": undefined,
           "etapeStatutId": "fav",
@@ -691,24 +709,6 @@ describe('mainStep', () => {
           "etapeStatutId": "dre",
           "etapeTypeId": "aof",
           "mainStep": true,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mod",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "des",
-          "mainStep": false,
-        },
-        {
-          "contenu": undefined,
-          "etapeStatutId": "fai",
-          "etapeTypeId": "css",
-          "mainStep": false,
         },
       ]
     `)

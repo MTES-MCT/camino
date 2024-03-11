@@ -26,7 +26,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         { ...ETES.modificationDeLaDemande.FAIT, date: toCaminoDate('2020-06-30') },
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"mod\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2020-06-30\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"mcr_fav\\"]\'. The event {\\"type\\":\\"RECEVOIR_MODIFICATION_DE_LA_DEMANDE\\"} should be one of \'DEMANDER_INFORMATION_EXPERTISE_ONF,FAIRE_EXPERTISE_ONF,DESISTER_PAR_LE_DEMANDEUR,CLASSER_SANS_SUITE\'"'
+      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"mod\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2020-06-30\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"mcr_fav\\"]\'. The event {\\"type\\":\\"RECEVOIR_MODIFICATION_DE_LA_DEMANDE\\"} should be one of \'CLASSER_SANS_SUITE,DEMANDER_INFORMATION_EXPERTISE_ONF,DESISTER_PAR_LE_DEMANDEUR,FAIRE_EXPERTISE_ONF\'"'
     )
   })
 
@@ -40,7 +40,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         // {...ETES.recevabiliteDeLaDemande.DEFAVORABLE, date: toCaminoDate('2020-05-30') },
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"mca\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2020-06-30\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"mca_fai\\"]\'. The event {\\"type\\":\\"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE\\"} should be one of \'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,DESISTER_PAR_LE_DEMANDEUR\'"'
+      '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"mca\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2020-06-30\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\",\\"mca_fai\\"]\'. The event {\\"type\\":\\"DEMANDER_COMPLEMENTS_POUR_RECEVABILITE\\"} should be one of \'DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE,RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE\'"'
     )
   })
 

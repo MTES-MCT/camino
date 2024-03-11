@@ -1,40 +1,18 @@
-import { BaseActionObject, interpret, ResolveTypegenMeta, ServiceMap, State, StateMachine, TypegenDisabled } from 'xstate'
-import { EventObject } from 'xstate/lib/types.js'
+import { AnyMachineSnapshot, createActor, EventObject, MachineSnapshot, StateMachine } from 'xstate'
 import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
 import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 
-type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = State<
-  CaminoContext,
-  CaminoEvent,
-  any,
-  { value: any; context: CaminoContext },
-  ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
->
+type CaminoState<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> = MachineSnapshot<CaminoContext, CaminoEvent, any, any, any, any>
+
 export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
-  public readonly machine: StateMachine<
-    CaminoContext,
-    any,
-    CaminoEvent,
-    { value: any; context: CaminoContext },
-    BaseActionObject,
-    ServiceMap,
-    ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
-  >
+  public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>
 
   private readonly trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
-  private readonly events: Array<CaminoEvent['type']>
+  public readonly events: Array<CaminoEvent['type']>
 
   protected constructor(
-    machine: StateMachine<
-      CaminoContext,
-      any,
-      CaminoEvent,
-      { value: any; context: CaminoContext },
-      BaseActionObject,
-      ServiceMap,
-      ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
-    >,
+    machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>,
     trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
   ) {
     this.machine = machine
@@ -122,7 +100,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
    * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
    * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
    */
-  public isEtapesOk(sortedEtapes: readonly Etape[], initialState: CaminoState<CaminoContext, CaminoEvent> | null = null): boolean {
+  public isEtapesOk(sortedEtapes: readonly Etape[]): boolean {
     if (sortedEtapes.length) {
       for (let i = 1; i < sortedEtapes.length; i++) {
         if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
@@ -131,7 +109,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
       }
     }
     try {
-      const result = this.goTo(sortedEtapes, initialState)
+      const result = this.goTo(sortedEtapes)
 
       return result.valid
     } catch (e) {
@@ -141,35 +119,38 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  private goTo(
-    etapes: readonly Etape[],
-    initialState: CaminoState<CaminoContext, CaminoEvent> | null = null
-  ):
+  private goTo(etapes: readonly Etape[]):
     | { valid: false; etapeIndex: number }
     | {
         valid: true
         state: CaminoState<CaminoContext, CaminoEvent>
       } {
-    const service = interpret(this.machine)
+    const service = createActor(this.machine, {})
 
-    if (initialState === null) {
-      service.start()
-    } else {
-      service.start(initialState)
-    }
-    for (let i = 0; i < etapes.length; i++) {
-      const etapeAFaire = etapes[i]
-      const event = this.eventFrom(etapeAFaire)
-      if (!service.getSnapshot().can(event) || service.getSnapshot().done) {
-        service.stop()
+    service.subscribe({
+      error(_err) {
+        // on catch les erreurs sinon on a des trucs bizarre dans la console, mais le `can` plus bas fait déjà le taf de savoir si un événement est valide ou non
+      },
+    })
 
-        return { valid: false, etapeIndex: i }
+    service.start()
+    try {
+      for (let i = 0; i < etapes.length; i++) {
+        const etapeAFaire = etapes[i]
+        const event = this.eventFrom(etapeAFaire)
+
+        if (!service.getSnapshot().can(event) || service.getSnapshot().status === 'done') {
+          service.stop()
+
+          return { valid: false, etapeIndex: i }
+        }
+        service.send(event)
       }
-      service.send(event)
+    } finally {
+      service.stop()
     }
 
     const state = service.getSnapshot()
-    service.stop()
 
     return { valid: true, state }
   }
@@ -194,8 +175,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
     }
   }
 
-  private assertGoTo(etapes: readonly Etape[], initialState: CaminoState<CaminoContext, CaminoEvent> | null = null): CaminoState<CaminoContext, CaminoEvent> {
-    const value = this.goTo(etapes, initialState)
+  private assertGoTo(etapes: readonly Etape[]): CaminoState<CaminoContext, CaminoEvent> {
+    const value = this.goTo(etapes)
     if (!value.valid) {
       throw new Error(`Les étapes '${JSON.stringify(etapes)}' sont invalides à partir de l’étape ${value.etapeIndex}`)
     } else {
@@ -206,7 +187,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   public whoIsBlocking(etapes: readonly Etape[]): Intervenant[] {
     const state = this.assertGoTo(etapes)
 
-    const responsables: string[] = [...state.tags]
+    const responsables: string[] = [...(state?.tags ?? [])]
 
     return intervenants.filter(r => responsables.includes(tags.responsable[r]))
   }
@@ -214,13 +195,25 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   public possibleNextEtapes(etapes: readonly Etape[], date: CaminoDate): (Omit<Etape, 'date'> & { mainStep: boolean })[] {
     const state = this.assertGoTo(etapes)
 
-    return state.nextEvents
-      .filter((event: string) => this.isEvent(event))
-      .flatMap(event => {
-        const events = this.toPotentialCaminoXStateEvent(event, date)
+    if (state !== undefined) {
+      return getNextEvents(state)
+        .filter((event: string) => this.isEvent(event))
+        .flatMap(event => {
+          const events = this.toPotentialCaminoXStateEvent(event, date)
 
-        return events.filter(event => state.can(event) && !state.done).flatMap(event => this.caminoXStateEventToEtapes(event))
-      })
-      .filter(event => event !== undefined)
+          return events
+            .filter(event => {
+              return state.can(event) && state.status !== 'done'
+            })
+            .flatMap(event => this.caminoXStateEventToEtapes(event))
+        })
+        .filter(event => event !== undefined)
+    }
+
+    return []
   }
+}
+
+export function getNextEvents(snapshot: AnyMachineSnapshot) {
+  return [...new Set([...snapshot._nodes.flatMap(sn => sn.ownEvents)])]
 }

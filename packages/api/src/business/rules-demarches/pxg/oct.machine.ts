@@ -138,12 +138,12 @@ interface PxgContext extends CaminoCommonContext {
   enquetePubliqueOuvertePourLaDemarcheSimplifiee: boolean
 }
 
-const peutRendreAvisDREAL = (context: PxgContext): boolean => {
+const peutRendreAvisDREAL = ({ context }: { context: PxgContext }): boolean => {
   return context.saisineDesServicesFaite && context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite
 }
 
-const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
-  predictableActionArguments: true,
+const pxgOctMachine = createMachine({
+  types: {} as { context: PxgContext; events: PXGOctXStateEvent },
   id: 'PXGOct',
   initial: 'demandeAFaire',
   context: {
@@ -158,24 +158,24 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
   },
   on: {
     FAIRE_DESISTEMENT_DEMANDEUR: {
-      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
-      target: 'desistementDuDemandeurRendu',
+      guard: ({ context, event: _event }) => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      target: '.desistementDuDemandeurRendu',
     },
     FAIRE_CLASSEMENT_SANS_SUITE: {
-      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
-      target: 'classementSansSuiteRendu',
+      guard: ({ context, event: _event }) => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      target: '.classementSansSuiteRendu',
     },
     RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
-      target: 'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-      cond: context => !context.depotFait && context.demarcheStatut === DemarchesStatutsIds.EnConstruction,
-      actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+      target: '.publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+      guard: ({ context, event: _event }) => !context.depotFait && context.demarcheStatut === DemarchesStatutsIds.EnConstruction,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.Accepte,
       }),
     },
     OUVRIR_ENQUETE_PUBLIQUE: {
-      target: 'clotureEnquetePubliqueAFaire',
-      cond: context => !context.depotFait && !context.enquetePubliqueOuvertePourLaDemarcheSimplifiee,
-      actions: assign<PxgContext, { type: 'OUVRIR_ENQUETE_PUBLIQUE' }>({
+      target: '.clotureEnquetePubliqueAFaire',
+      guard: ({ context, event: _event }) => !context.depotFait && !context.enquetePubliqueOuvertePourLaDemarcheSimplifiee,
+      actions: assign({
         enquetePubliqueOuvertePourLaDemarcheSimplifiee: true,
       }),
     },
@@ -190,7 +190,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
       on: {
         DEPOSER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
-          actions: assign<PxgContext, { type: 'DEPOSER_DEMANDE' }>({
+          actions: assign({
             depotFait: true,
           }),
         },
@@ -203,7 +203,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
       on: {
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
           target: 'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
@@ -214,7 +214,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
         DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFaire',
-          actions: assign<PxgContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,
             visibilite: 'publique',
           }),
@@ -227,7 +227,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFaire',
-          actions: assign<PxgContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,
             visibilite: 'publique',
           }),
@@ -249,13 +249,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
             rendreAvisDrealPasEncorePossible: {
               always: {
                 target: 'rendreAvisDrealAFaire',
-                cond: peutRendreAvisDREAL,
+                guard: peutRendreAvisDREAL,
               },
             },
             rendreAvisDrealAFaire: {
               on: {
                 RENDRE_AVIS_DREAL: {
-                  cond: peutRendreAvisDREAL,
+                  guard: peutRendreAvisDREAL,
                   target: '#transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
                 },
               },
@@ -269,9 +269,9 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINES_DES_SERVICES: {
                   target: 'avisDesServicesARendre',
-                  actions: assign<PxgContext, { type: 'FAIRE_SAISINES_DES_SERVICES' }>({
+                  actions: assign({
                     saisineDesServicesFaite: true,
-                    demarcheStatut: (context, _event) => {
+                    demarcheStatut: ({ context }) => {
                       return context.saisineDesCollectivitesLocalesFaites && context.saisineAutoriteEnvironnementaleFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
                   }),
@@ -382,9 +382,9 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: {
                   target: 'consultationCLEEtConseilsMunicipauxAFaire',
-                  actions: assign<PxgContext, { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }>({
+                  actions: assign({
                     saisineDesCollectivitesLocalesFaites: true,
-                    demarcheStatut: (context, _event) => {
+                    demarcheStatut: ({ context }) => {
                       return context.saisineAutoriteEnvironnementaleFaite && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
                   }),
@@ -411,7 +411,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                     consultationCLEDuSAGEAFaire: {
                       on: {
                         FAIRE_CONSULTATION_CLE_DU_SAGE: {
-                          cond: context => context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite,
+                          guard: ({ context, event: _event }) => context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite,
                           target: 'consultationCLEDuSAGEAFait',
                         },
                       },
@@ -430,9 +430,9 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: {
                   target: 'avisAutoriteEnvironnementaleAFaire',
-                  actions: assign<PxgContext, { type: 'FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE' }>({
+                  actions: assign({
                     saisineAutoriteEnvironnementaleFaite: true,
-                    demarcheStatut: (context, _event) => {
+                    demarcheStatut: ({ context, event: _event }) => {
                       return context.saisineDesCollectivitesLocalesFaites && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
                     },
                   }),
@@ -443,7 +443,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE: {
                   target: 'ouvertureEnquetePubliqueAFaire',
-                  actions: assign<PxgContext, { type: 'RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE' }>({
+                  actions: assign({
                     avisAutoriteEnvironnementaleFaite: true,
                   }),
                 },
@@ -465,7 +465,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     avisDREALARendre: {
       on: {
         RENDRE_AVIS_DREAL: {
-          cond: peutRendreAvisDREAL,
+          guard: peutRendreAvisDREAL,
           target: 'transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
         },
       },
@@ -486,13 +486,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
         RENDRE_PASSAGE_CODERST: 'decisionDeLAdministrationARendre',
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
           target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
           target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -502,13 +502,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
       on: {
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
           target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
           target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -553,14 +553,14 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     },
     desistementDuDemandeurRendu: {
       type: 'final',
-      entry: assign<PxgContext>({
+      entry: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
         visibilite: 'publique',
       }),
     },
     classementSansSuiteRendu: {
       type: 'final',
-      entry: assign<PxgContext>({
+      entry: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
         visibilite: 'publique',
       }),

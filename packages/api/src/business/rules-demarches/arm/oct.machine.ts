@@ -4,6 +4,7 @@ import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEt
 import { CaminoMachine } from '../machine-helper.js'
 import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -265,7 +266,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
     throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 
-  toPotentialCaminoXStateEvent(event: XStateEvent['type']): XStateEvent[] {
+  toPotentialCaminoXStateEvent(event: XStateEvent['type'], _date: CaminoDate): XStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE': {
         return [
@@ -334,26 +335,26 @@ const fraisDeDossierComplementairesPayeOuExempte = (mecanisation: MecanisationIn
 const validationFraisApresDesistementOuClassementSansSuite = [
   {
     target: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.validationDesFraisDossierAFaire',
-    cond: (context: OctARMContext) => {
+    guard: ({ context }: { context: OctARMContext }) => {
       return !context.paiementFraisDossierValide
     },
   },
   {
     target: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
-    cond: (context: OctARMContext) => {
+    guard: ({ context }: { context: OctARMContext }) => {
       return context.paiementFraisDossierValide && mustPayerFraisDossierComplementaire(context.mecanisation)
     },
   },
   {
     target: 'fini',
-    cond: (context: OctARMContext) => {
+    guard: ({ context }: { context: OctARMContext }) => {
       return context.paiementFraisDossierValide && fraisDeDossierComplementairesPayeOuExempte(context.mecanisation)
     },
   },
 ]
 
-const actionMecanisation = assign<OctARMContext>({
-  mecanisation: context => {
+const actionMecanisation = assign<OctARMContext, any, any, any, any>({
+  mecanisation: ({ context }) => {
     if (isMecanise(context.mecanisation)) {
       return context.mecanisation
     }
@@ -366,8 +367,8 @@ const actionMecanisation = assign<OctARMContext>({
   },
 })
 
-const actionAccepterOuRefuserRDE = assign<OctARMContext, AccepterRDE | RefuserRDE>({
-  mecanisation: (context, event) => {
+const actionAccepterOuRefuserRDE = assign<OctARMContext, AccepterRDE | RefuserRDE, any, any, any>({
+  mecanisation: ({ context, event }) => {
     if (event.franchissements === null || event.franchissements < 1) {
       throw new Error('cas impossible')
     }
@@ -386,8 +387,8 @@ const actionAccepterOuRefuserRDE = assign<OctARMContext, AccepterRDE | RefuserRD
   },
 })
 
-const actionRecevoirComplementsRde = assign<OctARMContext, RecevoirComplementsRde>({
-  mecanisation: (context, event) => {
+const actionRecevoirComplementsRde = assign<OctARMContext, RecevoirComplementsRde, any, any, any>({
+  mecanisation: ({ context, event }) => {
     if (event.franchissements === null) {
       throw new Error('cas impossible')
     }
@@ -406,8 +407,8 @@ const actionRecevoirComplementsRde = assign<OctARMContext, RecevoirComplementsRd
   },
 })
 
-const armOctMachine = createMachine<OctARMContext, XStateEvent>({
-  predictableActionArguments: true,
+const armOctMachine = createMachine({
+  types: {} as { context: OctARMContext; events: XStateEvent },
   id: 'oct',
   initial: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine',
   context: {
@@ -420,20 +421,20 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
   on: {
     MODIFIER_DEMANDE: {
       actions: () => ({}),
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.visibilite === 'confidentielle',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction && context.visibilite === 'confidentielle',
     },
     DESISTER_PAR_LE_DEMANDEUR: {
-      target: 'desistementDuDemandeurFait',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign<OctARMContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
+      target: '.desistementDuDemandeurFait',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
         visibilite: 'publique',
       }),
     },
     CLASSER_SANS_SUITE: {
-      target: 'decisionDeClassementSansSuiteFait',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign<OctARMContext, { type: 'CLASSER_SANS_SUITE' }>({
+      target: '.decisionDeClassementSansSuiteFait',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
         visibilite: 'publique',
       }),
@@ -459,8 +460,8 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                       on: {
                         FAIRE_DEMANDE: {
                           target: 'demandeADeposer',
-                          actions: assign<OctARMContext, FaireDemandeEvent>({
-                            mecanisation: (context, event) => {
+                          actions: assign({
+                            mecanisation: ({ context, event }): MecanisationInconnu => {
                               if (isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0 && (event.franchissements === null || event.franchissements === 0)) {
                                 throw new Error("pas le droit d'avoir pas de franchissements alors qu'une rde a été faite")
                               } else {
@@ -474,7 +475,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                               }
                             },
                           }),
-                          cond: (context, event) => {
+                          guard: ({ context, event }) => {
                             if (isMecanise(context.mecanisation) && !event.mecanise) {
                               return false
                             }
@@ -492,7 +493,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                       on: {
                         DEPOSER_DEMANDE: {
                           target: 'demandeDeposee',
-                          actions: assign<OctARMContext, { type: 'DEPOSER_DEMANDE' }>({
+                          actions: assign({
                             demarcheStatut: DemarchesStatutsIds.EnInstruction,
                           }),
                         },
@@ -522,7 +523,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     decisionAutoriteEnvironnementaleAFaire: {
                       always: {
                         target: 'decisionAutoriteEnvironnementaleExemptee',
-                        cond: context => isNonMecanise(context.mecanisation),
+                        guard: ({ context }) => isNonMecanise(context.mecanisation),
                       },
                       on: {
                         DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
@@ -535,7 +536,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                         },
                         DEMANDER_COMPLEMENTS_DAE: {
                           target: 'recevoirComplementDAEAFaire',
-                          cond: context => context.demarcheStatut !== DemarchesStatutsIds.EnConstruction,
+                          guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.EnConstruction,
                         },
                       },
                     },
@@ -590,18 +591,19 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 VALIDER_FRAIS_DE_DOSSIER: [
                   {
                     target: 'recevabiliteDeLaDemandeAFaire',
-                    actions: assign<OctARMContext, { type: 'VALIDER_FRAIS_DE_DOSSIER' }>({
+                    actions: assign({
                       paiementFraisDossierValide: true,
                     }),
-                    cond: context => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
+                    guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
                   },
                   {
                     target: '#fini',
-                    cond: context => (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) && isNonMecanise(context.mecanisation),
+                    guard: ({ context }) =>
+                      (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) && isNonMecanise(context.mecanisation),
                   },
                   {
                     target: '#validationDuPaiementDesFraisDeDossierComplementairesAFaire',
-                    cond: context =>
+                    guard: ({ context }) =>
                       (context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite) &&
                       mustPayerFraisDossierComplementaire(context.mecanisation),
                   },
@@ -653,7 +655,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                       on: {
                         DEMANDER_INFORMATION_AVIS_ONF: 'receptionInformationAvisONFAFaire',
                       },
-                      entry: assign<OctARMContext>({ expertiseONFFaite: true }),
+                      entry: assign({ expertiseONFFaite: true }),
                     },
                     receptionInformationAvisONFAFaire: {
                       on: {
@@ -690,7 +692,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               on: {
                 RENDRE_AVIS_ONF: {
                   target: 'avisONFRendu',
-                  cond: context => context.expertiseONFFaite,
+                  guard: ({ context }) => context.expertiseONFFaite,
                 },
               },
             },
@@ -708,17 +710,17 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             declarationLoiSurLEauAFaire: {
               always: {
                 target: 'declarationLoiSurLEauExemptee',
-                cond: context => isNonMecanise(context.mecanisation) || (isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau) || isInconnu(context.mecanisation),
+                guard: ({ context }) => isNonMecanise(context.mecanisation) || (isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau) || isInconnu(context.mecanisation),
               },
               on: {
                 REFUSER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: (_context, event) => (event.franchissements ?? 0) > 0,
+                  guard: ({ event }) => (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
                 ACCEPTER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: (_context, event) => (event.franchissements ?? 0) > 0,
+                  guard: ({ event }) => (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
@@ -732,12 +734,12 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 },
                 REFUSER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: context => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
+                  guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
                 ACCEPTER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: context => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
+                  guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire',
@@ -746,21 +748,21 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             declarationLoiSurLEauExemptee: {
               always: {
                 target: 'declarationLoiSurLEauAFaire',
-                cond: context => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
+                guard: ({ context }) => isMecanise(context.mecanisation) && context.mecanisation.franchissementCoursEau > 0,
               },
               on: {
                 DEMANDER_COMPLEMENTS_RDE: {
                   target: 'receptionDeComplementsAFaire',
-                  cond: context => (context.demarcheStatut === DemarchesStatutsIds.Depose || context.demarcheStatut === DemarchesStatutsIds.EnInstruction) && isMecanise(context.mecanisation),
+                  guard: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose || context.demarcheStatut === DemarchesStatutsIds.EnInstruction) && isMecanise(context.mecanisation),
                 },
                 REFUSER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: (context, event) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
+                  guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
                 ACCEPTER_RDE: {
                   target: 'declarationLoiSurLEauFaite',
-                  cond: (context, event) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
+                  guard: ({ context, event }) => (isInconnu(context.mecanisation) || isMecanise(context.mecanisation)) && (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE,
                 },
               },
@@ -775,7 +777,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
       on: {
         FAIRE_SAISINE_CARM: {
           target: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
-          actions: assign<OctARMContext, { type: 'FAIRE_SAISINE_CARM' }>({
+          actions: assign({
             visibilite: 'publique',
           }),
         },
@@ -784,16 +786,16 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             'demandeEnConstructionOuDeposeeOuEnInstructionMachine.declarationLoiSurLEauMachine.receptionDeComplementsAFaire',
             'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisONFRendu',
           ],
-          cond: context => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau,
+          guard: ({ context }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau,
         },
         REFUSER_RDE: {
           target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
-          cond: (context, event) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
+          guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
           actions: actionAccepterOuRefuserRDE,
         },
         ACCEPTER_RDE: {
           target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
-          cond: (context, event) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
+          guard: ({ context, event }) => isMecanise(context.mecanisation) && !context.mecanisation.franchissementCoursEau && (event.franchissements ?? 0) > 0,
           actions: actionAccepterOuRefuserRDE,
         },
       },
@@ -803,16 +805,16 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         RENDRE_AVIS_FAVORABLE_CARM: [
           {
             target: 'signatureAutorisationDeRechercheMiniereAFaire',
-            cond: context => isNonMecanise(context.mecanisation),
+            guard: ({ context }) => isNonMecanise(context.mecanisation),
           },
           {
             target: 'notificationDuDemandeurFraisDeDossierComplementairesAFaire',
-            cond: context => isMecanise(context.mecanisation),
+            guard: ({ context }) => isMecanise(context.mecanisation),
           },
         ],
         RENDRE_AVIS_DEFAVORABLE_CARM: {
           target: 'notificationDuDemandeurAvisDefavorableCARMAFaire',
-          actions: assign<OctARMContext, { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -858,8 +860,8 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [
           {
             target: 'signatureAutorisationDeRechercheMiniereAFaire',
-            actions: assign<OctARMContext, { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }>({
-              mecanisation: context => {
+            actions: assign({
+              mecanisation: ({ context }) => {
                 if (!isMecanise(context.mecanisation)) {
                   throw new Error('cas impossible')
                 }
@@ -870,12 +872,12 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 }
               },
             }),
-            cond: context => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
+            guard: ({ context }) => context.demarcheStatut !== DemarchesStatutsIds.Desiste && context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite,
           },
           {
             target: '#fini',
-            actions: assign<OctARMContext, { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }>({
-              mecanisation: context => {
+            actions: assign({
+              mecanisation: ({ context }) => {
                 if (!isMecanise(context.mecanisation)) {
                   throw new Error('cas impossible')
                 }
@@ -886,7 +888,7 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 }
               },
             }),
-            cond: context => context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite,
+            guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.Desiste || context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite,
           },
         ],
       },
@@ -896,17 +898,17 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: [
           {
             target: 'avenantARMAFaire',
-            actions: assign<OctARMContext, { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }>({
+            actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
             }),
-            cond: context => isMecanise(context.mecanisation),
+            guard: ({ context }) => isMecanise(context.mecanisation),
           },
           {
             target: 'notificationSignatureARMAFaire',
-            actions: assign<OctARMContext, { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }>({
+            actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
             }),
-            cond: context => isNonMecanise(context.mecanisation),
+            guard: ({ context }) => isNonMecanise(context.mecanisation),
           },
         ],
       },

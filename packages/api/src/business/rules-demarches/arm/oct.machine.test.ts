@@ -1,5 +1,4 @@
 import { ArmOctMachine } from './oct.machine.js'
-import { interpret } from 'xstate'
 import { interpretMachine, orderAndInterpretMachine as commonOrderAndInterpretMachine } from '../machine-test-helper.js'
 import { IContenu } from '../../../types.js'
 import { EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
@@ -15,14 +14,16 @@ const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const armOctMachine = new ArmOctMachine()
   test('ne peut pas désister', () => {
-    const service = interpret(armOctMachine.machine)
-    const interpreter = service.start()
+    const service = orderAndInterpretMachine([])
 
-    const state = interpreter.state
-
-    // DESISTER_PAR_LE_DEMANDEUR est un événement potentiel mais pas faisable, dû à une condition
-    expect(state.nextEvents).toContain('DESISTER_PAR_LE_DEMANDEUR')
-    expect(state.can('DESISTER_PAR_LE_DEMANDEUR')).toBe(false)
+    expect(service).canOnlyTransitionTo({ machine: armOctMachine, date: toCaminoDate('2020-01-01') }, [
+      'ACCEPTER_RDE',
+      'DEMANDER_MODIFICATION_DE_LA_DEMANDE',
+      'EXEMPTER_DAE',
+      'FAIRE_DEMANDE',
+      'PAYER_FRAIS_DE_DOSSIER',
+      'REFUSER_RDE',
+    ])
   })
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {

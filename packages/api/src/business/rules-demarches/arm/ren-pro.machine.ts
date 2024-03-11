@@ -88,8 +88,8 @@ export class ArmRenProMachine extends CaminoMachine<CaminoCommonContext, XStateE
   }
 }
 
-const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
-  predictableActionArguments: true,
+const armRenProMachine = createMachine({
+  types: {} as { context: CaminoCommonContext; events: XStateEvent },
   id: 'renpro',
   initial: 'demandeAFaire',
   context: {
@@ -98,17 +98,17 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
   },
   on: {
     DESISTER_PAR_LE_DEMANDEUR: {
-      target: 'done',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
-      actions: assign<CaminoCommonContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
+      target: '.done',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
         visibilite: 'publique',
       }),
     },
     CLASSER_SANS_SUITE: {
-      target: 'notificationDuDemandeurApresClassementSansSuiteAFaire',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign<CaminoCommonContext, { type: 'CLASSER_SANS_SUITE' }>({
+      target: '.notificationDuDemandeurApresClassementSansSuiteAFaire',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
         visibilite: 'publique',
       }),
@@ -124,7 +124,7 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
       on: {
         DEPOSER_DEMANDE: {
           target: 'recevabiliteDeLaDemandeAFaire',
-          actions: assign<CaminoCommonContext, { type: 'DEPOSER_DEMANDE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,
           }),
         },
@@ -135,7 +135,7 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
         DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'expertiseONFAFaire',
-          actions: assign<CaminoCommonContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -148,7 +148,7 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'expertiseONFAFaire',
-          actions: assign<CaminoCommonContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -178,13 +178,13 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
         DEMANDER_INFORMATION_AVIS_ONF: 'receptionInformationAvisONFAFaire',
         RENDRE_AVIS_ONF_FAVORABLE: {
           target: 'avenantARMAFaire',
-          actions: assign<CaminoCommonContext, { type: 'RENDRE_AVIS_ONF_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_AVIS_ONF_DEFAVORABLE: {
           target: 'notificationDuDemandeurApresAvisONFDefavorableAFaire',
-          actions: assign<CaminoCommonContext, { type: 'RENDRE_AVIS_ONF_DEFAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -195,13 +195,13 @@ const armRenProMachine = createMachine<CaminoCommonContext, XStateEvent>({
         RECEVOIR_INFORMATION_AVIS_ONF: 'demandeAvisONFAFaire',
         RENDRE_AVIS_ONF_FAVORABLE: {
           target: 'avenantARMAFaire',
-          actions: assign<CaminoCommonContext, { type: 'RENDRE_AVIS_ONF_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
         RENDRE_AVIS_ONF_DEFAVORABLE: {
           target: 'notificationDuDemandeurApresAvisONFDefavorableAFaire',
-          actions: assign<CaminoCommonContext, { type: 'RENDRE_AVIS_ONF_DEFAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
