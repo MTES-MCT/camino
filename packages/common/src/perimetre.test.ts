@@ -43,6 +43,7 @@ test('equalGeojson', () => {
 test('crsUrnValidator', () => {
   expect(crsUrnValidator.safeParse('').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::2972').success).toBe(true)
+  expect(crsUrnValidator.safeParse('urn:ogc:def:crs:OGC::CRS84').success).toBe(true)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG:1.32:2972').success).toBe(true)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::PLOP').success).toBe(false)
   expect(crsUrnValidator.safeParse('urn:ogc:def:crs:EPSG::').success).toBe(false)

@@ -52,9 +52,12 @@ export type GeojsonFeaturePoint = z.infer<typeof featurePointValidator>
 // un exemple de ce que génère QGis
 // "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2972" } },
 /** @public (knip) visibleForTesting */
-export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${GeoSystemeId}`>(val => {
+export const crsUrnValidator = z.custom<`urn:ogc:def:crs:EPSG:${string}:${GeoSystemeId}` | 'urn:ogc:def:crs:OGC::CRS84'>(val => {
   if (typeof val !== 'string') {
     return false
+  }
+  if (val === 'urn:ogc:def:crs:OGC::CRS84') {
+    return true
   }
   if (!val.startsWith('urn:ogc:def:crs:EPSG:')) {
     return false
