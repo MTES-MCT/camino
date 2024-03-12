@@ -9,6 +9,7 @@ Dockerfile*
 .vscode
 docker-compose*
 infra/cd/.cargo_docker
+infra/cd/.cargo
 infra/cd/target
 packages/api/backups
 packages/api/sources
@@ -18,3 +19,5 @@ packages/api/coverage
 packages/api/docs
 packages/ui/coverage
 packages/ui/stats.html
+packages/ui/dist
+docs
