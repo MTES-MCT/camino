@@ -77,11 +77,12 @@ export const TabCaminoTable = defineComponent<Props>(props => {
   })
   const csvContent = computed(() => {
     if (currentRows.value.status === 'LOADED') {
+      const uniteId = GeoSystemes[props.geo_systeme_id].uniteId
       const columsToSave = columns.value
 
       const values = currentRows.value.value.map(({ columns }) => columsToSave.map(({ id }) => columns[id]?.value ?? '').join(';'))
 
-      return encodeURI(`${columsToSave.map(c => c.name).join(';')}\n${values.join('\n')}`)
+      return encodeURI(`${columsToSave.map(c => (c.id === 'x' || c.id === 'y' ? labels[uniteId][c.id] : c.id)).join(';')}\n${values.join('\n')}`)
     }
 
     return ''
