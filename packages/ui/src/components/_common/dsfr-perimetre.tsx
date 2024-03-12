@@ -2,7 +2,7 @@ import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
-import { FeatureCollection, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollection, FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
@@ -18,6 +18,8 @@ type Props = {
     geojson_origine_geo_systeme_id: GeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints | null
+    geojson4236_forages: FeatureCollectionForages | null
+    geojson_origine_forages: FeatureCollectionForages | null
   }
   titreSlug: TitreSlug
   initTab?: TabId
@@ -69,7 +71,14 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: { [key in keyof Props['perimetre']]: NonNullable<Props['perimetre'][key]> } }
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: {
+  geojson4326_perimetre: FeatureMultiPolygon
+  geojson4326_points: FeatureCollectionPoints
+  geojson_origine_geo_systeme_id: GeoSystemeId
+  geojson_origine_perimetre: FeatureMultiPolygon
+  geojson_origine_points: FeatureCollectionPoints
+  geojson4236_forages: FeatureCollectionForages | null
+ } }
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 

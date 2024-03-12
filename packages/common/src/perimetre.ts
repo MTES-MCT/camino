@@ -87,6 +87,11 @@ export type FeatureCollectionPolygon = z.infer<typeof featureCollectionPolygonVa
 
 export const featureCollectionPointsValidator = featureCollectionValidator.extend({ features: z.array(featurePointValidator) })
 
+const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: z.object({ nom: z.string().nullish(), description: z.string().nullish(), type: z.enum(['captage', 'rejet']), profondeur: z.number() }) })
+export const featureCollectionForagesValidator = featureCollectionValidator.extend({ features: z.array(featureForageValidator) })
+export type FeatureCollectionForages = z.infer<typeof featureCollectionForagesValidator>
+
+
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
 
 export type FeatureCollection = z.infer<typeof featureCollectionMultipolygonValidator>

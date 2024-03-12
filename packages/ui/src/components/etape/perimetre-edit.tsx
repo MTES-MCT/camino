@@ -4,7 +4,7 @@ import { FunctionalComponent, HTMLAttributes, computed, defineComponent, onMount
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -29,6 +29,8 @@ export interface Props {
     geojson4326Points: FeatureCollectionPoints | null
     geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
     geojsonOriginePoints: FeatureCollectionPoints | null
+    geojson4236Forages: FeatureCollectionForages | null
+    geojsonOrigineForages: FeatureCollectionForages | null
     geojsonOrigineGeoSystemeId: GeoSystemeId | null
     surface: KM2 | null
   }
@@ -47,6 +49,8 @@ type DisplayPerimetreProps = {
     geojson4326Points: FeatureCollectionPoints | null
     geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
     geojsonOriginePoints: FeatureCollectionPoints | null
+    geojson4236Forages: FeatureCollectionForages | null
+    geojsonOrigineForages: FeatureCollectionForages | null
     geojsonOrigineGeoSystemeId: GeoSystemeId | null
   }
   surface: KM2 | null
@@ -68,6 +72,8 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
             geojson_origine_perimetre: props.etape.geojsonOriginePerimetre,
             geojson_origine_points: props.etape.geojsonOriginePoints,
             geojson_origine_geo_systeme_id: props.etape.geojsonOrigineGeoSystemeId,
+            geojson4236_forages: props.etape.geojson4236Forages,
+            geojson_origine_forages: props.etape.geojsonOrigineForages
           }}
           titreSlug={props.titreSlug}
           initTab={props.initTab ?? 'carte'}

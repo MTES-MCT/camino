@@ -5,6 +5,7 @@
   "private": true,
   "main": "./src/index.js",
   "type": "module",
+  
   "scripts": {
     "build": "tsc",
     "daily": "node --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
@@ -20,12 +21,12 @@
     "db:add-migration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' knex migrate:make",
     "db:watch": "npx --yes --package=@pgtyped/cli pgtyped -w -c pgtyped-config.json",
     "db:check": "npx --yes --package=@pgtyped/cli pgtyped -c pgtyped-config.ci.json",
-    "dev": "node --watch --loader ts-node/esm/transpile-only --inspect ./src/index.ts",
+    "dev": "node --watch --enable-source-maps --loader ts-node/esm/transpile-only --inspect ./src/index.ts",
     "daily-debug": "node  --inspect-brk=3000 --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
     "dev:update": "npm-check-updates -u && npm install && npm audit fix",
     "documents:check": "node NODE_OPTIONS='--loader ts-node/esm/transpile-only' ./api/src/scripts/documents-check.ts",
     "lint": "prettier --write . && eslint --fix .",
-    "start": "node --loader ts-node/esm/transpile-only ./src/index.ts",
+    "start": "node --enable-source-maps --loader ts-node/esm/transpile-only ./src/index.ts",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "vitest --environment node --root src/ --config ../vitest.unit.config.ts",
     "test:integration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' JWT_SECRET=secret-tests vitest --environment node --root src/ --config ../vitest.integration.config.ts",
@@ -35,6 +36,7 @@
     "matrices": "node --loader ts-node/esm/transpile-only ./src/scripts/matrices.ts"
   },
   "@comment dependencies": {
+    "--enable-source-maps": "Vient de l'issue https://github.com/TypeStrong/ts-node/issues/2053",
     "modules esm": ".ncurc.json à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
     "express-graphql": "bloque l'upgrade de graphql"
   },

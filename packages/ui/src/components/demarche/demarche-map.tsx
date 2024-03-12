@@ -3,26 +3,29 @@ import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpe
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
-import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreWithPerimetre } from '../titres/mapUtil'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
 import { getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
+const foragesSourceName = 'Forages'
 const contoursLineName = 'ContoursLine'
 const contourPointsName = 'ContoursPoints'
+const contourForagesName = 'ContoursForages'
+const contourForagesLabel = 'ContoursForagesLabel'
 const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints }
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4236_forages: FeatureCollectionForages | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -59,11 +62,13 @@ const overlayLayers = [
   contoursLineName,
   contourPointsName,
   'ContoursPointLabels',
+  contourForagesName,
+  contourForagesLabel,
 ] as const
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
-const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, 'Titres valides'] as const
+const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, foragesSourceName, 'Titres valides'] as const
 const overlayNameValidator = z.enum(overlayNames)
 type OverlayName = z.infer<typeof overlayNameValidator>
 
@@ -73,6 +78,7 @@ const overlayMapNames = {
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
   [contoursSourceName]: [contoursLineName, 'ContoursFill'],
   [pointsSourceName]: [contourPointsName, 'ContoursPointLabels'],
+  [foragesSourceName]: [contourForagesName, contourForagesLabel],
   'Titres valides': [titresValidesLineName, titresValidesFillName],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
@@ -115,7 +121,7 @@ const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
   },
 }
 const staticOverlayLayersSourceSpecification: Record<
-  Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'ContoursPoints' | 'ContoursPointLabels' | 'TitresValidesLine' | 'TitresValidesFill'>,
+  Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'ContoursPoints' | 'ContoursPointLabels' | 'TitresValidesLine' | 'TitresValidesFill' | 'ContoursForages' | 'ContoursForagesLabel'>,
   SourceSpecification
 > = {
   SDOM: {
@@ -199,6 +205,27 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
       'text-allow-overlap': false,
     },
   },
+  [contourForagesName]: {
+    id: contourForagesName,
+    type: 'circle',
+    source: foragesSourceName,
+    paint: {
+      'circle-color': '#fcc63a',
+      'circle-radius': 16,
+    },
+  },
+  [contourForagesLabel]: {
+    id: contourForagesLabel,
+    type: 'symbol',
+    source: foragesSourceName,
+    paint: {
+      'text-color': '#ffffff',
+    },
+    layout: {
+      'text-field': ['get', 'nom'],
+      'text-allow-overlap': false,
+    },
+  },
   [titresValidesLineName]: {
     id: titresValidesLineName,
     type: 'line',
@@ -226,14 +253,18 @@ export const DemarcheMap = defineComponent<Props>(props => {
   const layersControlVisible = ref<boolean>(false)
   const map = ref<Map | null>(null) as Ref<Map | null>
 
-  const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides'>[]>(() => {
-    const values: Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides'>[] = []
+  const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[]>(() => {
+    const values: Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[] = []
     if (props.neighbours !== null) {
       values.push('Titres valides')
     }
     values.push('Contours')
     if (props.maxMarkers > points.value.features.length) {
       values.push('Points')
+    }
+
+    if (isNotNullNorUndefinedNorEmpty(forages.value.features)) {
+      values.push('Forages')
     }
 
     return values
@@ -248,6 +279,15 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
+  const forages = computed<FeatureCollectionForages>(() => {
+    return {
+      type: 'FeatureCollection',
+      features: props.perimetre.geojson4236_forages?.features.map(feature => {
+        return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
+      }) ?? [],
+    }
+  })
+
   watch(
     () => props.perimetre,
     () => {
@@ -257,6 +297,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       })
       ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
+      ;(map.value?.getSource(foragesSourceName) as GeoJSONSource).setData(forages.value)
 
       map.value?.fitBounds(bounds, { padding: 50 })
     }
@@ -325,6 +366,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
         [pointsSourceName]: {
           type: 'geojson',
           data: points.value,
+        },
+
+        [foragesSourceName]: {
+          type: 'geojson',
+          data: forages.value,
         },
         TitresValides: {
           type: 'geojson',
@@ -483,7 +529,15 @@ export const DemarcheMap = defineComponent<Props>(props => {
         setLayer={selectLayer}
         toggleOverlayLayer={toggleOverlayLayer}
         defaultOverlayLayer={defaultOverlayLayer.value}
-        overlays={overlayNames.filter(name => props.neighbours !== null || name !== 'Titres valides')}
+        overlays={overlayNames.filter(name => {
+          if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
+            return false
+          }
+          if(isNullOrUndefined(props.perimetre.geojson4236_forages) && name === 'Forages'){
+            return false
+          }
+          return true
+        })}
       />
     </div>
   )
