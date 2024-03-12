@@ -209,7 +209,17 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
         { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
       ]
       expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
-        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"dex\\",\\"etapeStatutId\\":\\"acc\\",\\"date\\":\\"2022-04-15\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"RENDRE_DECISION_ADMINISTRATION_FAVORABLE\\"} should be one of \'OUVRIR_ENQUETE_PUBLIQUE,PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"dex\\",\\"etapeStatutId\\":\\"acc\\",\\"date\\":\\"2022-04-15\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"RENDRE_DECISION_ADMINISTRATION_FAVORABLE\\"} should be one of \'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
+      )
+    })
+
+    test("ne peut pas faire une ouverture d'enquête publique après une décision de l'administration", () => {
+      const etapes = [
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-16') },
+      ]
+      expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"epu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-16\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"OUVRIR_ENQUETE_PUBLIQUE\\"} should be one of \'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
       )
     })
   })

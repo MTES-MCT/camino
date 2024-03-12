@@ -174,7 +174,7 @@ const pxgOctMachine = createMachine({
     },
     OUVRIR_ENQUETE_PUBLIQUE: {
       target: '.clotureEnquetePubliqueAFaire',
-      guard: ({ context, event: _event }) => !context.depotFait && !context.enquetePubliqueOuvertePourLaDemarcheSimplifiee,
+      guard: ({ context, event: _event }) => !context.depotFait && !context.enquetePubliqueOuvertePourLaDemarcheSimplifiee && context.demarcheStatut !== DemarchesStatutsIds.Accepte,
       actions: assign({
         enquetePubliqueOuvertePourLaDemarcheSimplifiee: true,
       }),
