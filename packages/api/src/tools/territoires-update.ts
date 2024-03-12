@@ -103,6 +103,7 @@ const foretsUpdate = async () => {
 
   const foretsPostgisIdsKnown: string[] = (await knex.select('id').from('forets_postgis')).map(({ id }: { id: string }) => id)
 
+  const foretsToDelete = new Set<string>([...foretsPostgisIdsKnown])
   console.info('Traitement du fichier des forets')
 
   const ids: ForetId[] = []
@@ -114,6 +115,7 @@ const foretsUpdate = async () => {
       if (idParsed.success) {
         ids.push(idParsed.data)
         if (foretsPostgisIdsKnown.includes(idParsed.data)) {
+          foretsToDelete.delete(idParsed.data)
           await knex('forets_postgis').where('id', idParsed.data).update({
             geometry: result.rows[0].result,
           })
@@ -132,6 +134,14 @@ const foretsUpdate = async () => {
     } catch (e) {
       console.error(foret.properties.nom, e)
     }
+  }
+
+  if (foretsToDelete.size > 0) {
+    console.warn(`Suppression des anciennes forêts ${JSON.stringify([...foretsToDelete])}`)
+
+    await knex('forets_postgis')
+      .whereIn('id', [...foretsToDelete])
+      .delete()
   }
 
   if (ids.some(id => !ForetIds.includes(id)) || ForetIds.some(fId => !ids.includes(fId))) {
