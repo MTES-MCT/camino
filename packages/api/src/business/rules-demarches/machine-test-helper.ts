@@ -29,8 +29,6 @@ expect.extend({
       .filter((event: (typeof events)[number]) => {
         const events = machine.toPotentialCaminoXStateEvent(event, date)
 
-        // TODO 2024-03-11 il faudrait mieux type server, machine, mais on se perd avec le multivers sur Machines
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return events.some(event => service.getSnapshot().can(event) && service.getSnapshot().status !== 'done')
       })
 
