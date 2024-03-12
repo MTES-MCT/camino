@@ -230,19 +230,19 @@ interface PrmOctContext extends CaminoCommonContext {
   surface: number | null
 }
 
-const peutOuvrirParticipationDuPublic = (context: PrmOctContext, event: OuvrirParticipationDuPublic): boolean => {
-  return estExempteDeLaMiseEnConcurrence(context) || (context.dateAvisMiseEnConcurrentJorf !== null && daysBetween(dateAddMonths(context.dateAvisMiseEnConcurrentJorf, 1), event.date) >= 0)
+const peutOuvrirParticipationDuPublic = ({ context, event }: { context: PrmOctContext; event: OuvrirParticipationDuPublic }): boolean => {
+  return estExempteDeLaMiseEnConcurrence({ context }) || (context.dateAvisMiseEnConcurrentJorf !== null && daysBetween(dateAddMonths(context.dateAvisMiseEnConcurrentJorf, 1), event.date) >= 0)
 }
 
-const peutRendreRapportDREAL = (context: PrmOctContext, event: RendreRapportDREAL): boolean => {
+const peutRendreRapportDREAL = ({ context, event }: { context: PrmOctContext; event: RendreRapportDREAL }): boolean => {
   return isMetropole(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
 }
 
-const peutRendreAvisCDM = (context: PrmOctContext, event: RendreAvisCDM): boolean => {
+const peutRendreAvisCDM = ({ context, event }: { context: PrmOctContext; event: RendreAvisCDM }): boolean => {
   return isOutreMer(context.paysId) && !!context.dateSaisineDesServices && daysBetween(dateAddMonths(context.dateSaisineDesServices, 1), event.date) >= 0
 }
 
-const estExempteDeLaMiseEnConcurrence = (context: PrmOctContext): boolean => {
+const estExempteDeLaMiseEnConcurrence = ({ context }: { context: PrmOctContext }): boolean => {
   if (isGuyane(context.paysId)) {
     if (context.surface === null) {
       throw new Error('la surface est obligatoire quand on est en Guyane')
@@ -254,8 +254,8 @@ const estExempteDeLaMiseEnConcurrence = (context: PrmOctContext): boolean => {
   return false
 }
 
-const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
-  predictableActionArguments: true,
+const prmOctMachine = createMachine({
+  types: {} as { context: PrmOctContext; events: XStateEvent },
   id: 'oct',
   initial: 'demandeAFaire',
   context: {
@@ -269,28 +269,28 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
   on: {
     MODIFIER_DEMANDE: {
       actions: () => ({}),
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
     },
     DEMANDER_INFORMATIONS: {
       actions: () => ({}),
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
     },
     RECEVOIR_INFORMATIONS: {
       actions: () => ({}),
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
     },
     DESISTER_PAR_LE_DEMANDEUR: {
-      target: 'done',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
-      actions: assign<CaminoCommonContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
+      target: '.done',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction || context.demarcheStatut === DemarchesStatutsIds.Depose,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.Desiste,
         visibilite: 'publique',
       }),
     },
     CLASSER_SANS_SUITE: {
-      target: 'done',
-      cond: context => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
-      actions: assign<CaminoCommonContext, { type: 'CLASSER_SANS_SUITE' }>({
+      target: '.done',
+      guard: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
+      actions: assign({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
         visibilite: 'publique',
       }),
@@ -301,11 +301,11 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
       on: {
         FAIRE_DEMANDE: {
           target: 'depotDeLaDemandeAFaire',
-          actions: assign<PrmOctContext, FaireDemande>({
-            paysId: (_context, event) => {
+          actions: assign({
+            paysId: ({ event }) => {
               return event.paysId
             },
-            surface: (_context, event) => {
+            surface: ({ event }) => {
               return event.surface
             },
           }),
@@ -316,7 +316,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
       on: {
         DEPOSER_DEMANDE: {
           target: 'saisineDuPrefetAFaire',
-          actions: assign<CaminoCommonContext, { type: 'DEPOSER_DEMANDE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Depose,
           }),
         },
@@ -332,7 +332,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
         DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'avisDeMiseEnConcurrenceAuJORFAFaire',
-          actions: assign<CaminoCommonContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -345,7 +345,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'avisDeMiseEnConcurrenceAuJORFAFaire',
-          actions: assign<CaminoCommonContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.EnInstruction,
             visibilite: 'publique',
           }),
@@ -355,14 +355,14 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
     },
     avisDeMiseEnConcurrenceAuJORFAFaire: {
       always: {
-        cond: estExempteDeLaMiseEnConcurrence,
+        guard: estExempteDeLaMiseEnConcurrence,
         target: 'saisinesEtMiseEnConcurrence',
       },
       on: {
         RENDRE_AVIS_DE_MISE_EN_CONCURRENCE_AU_JORF: {
           target: 'saisinesEtMiseEnConcurrence',
-          actions: assign<PrmOctContext, RendreAvisMiseEnConcurrentJORF>({
-            dateAvisMiseEnConcurrentJorf: (_context, event) => {
+          actions: assign({
+            dateAvisMiseEnConcurrentJorf: ({ event }) => {
               return event.date
             },
           }),
@@ -383,7 +383,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
                   states: {
                     saisineDesCollectivitesLocalesAFaire: {
                       always: {
-                        cond: (context: PrmOctContext) => !isGuyane(context.paysId),
+                        guard: ({ context }) => !isGuyane(context.paysId),
                         target: 'done',
                       },
                       on: {
@@ -405,8 +405,8 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
                       on: {
                         FAIRE_SAISINE_DES_SERVICES: {
                           target: 'avisDesServicesARendre',
-                          actions: assign<PrmOctContext, FaireSaisineDesServices>({
-                            dateSaisineDesServices: (_context, event) => event.date,
+                          actions: assign({
+                            dateSaisineDesServices: ({ event }) => event.date,
                           }),
                         },
                       },
@@ -417,8 +417,8 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
                       states: {
                         rendreAvisDrealAFaire: {
                           on: {
-                            RENDRE_AVIS_CDM: { target: '#rapportDREALAFaire', cond: peutRendreAvisCDM },
-                            RENDRE_RAPPORT_DREAL: { target: '#avisPrefetARendre', cond: peutRendreRapportDREAL },
+                            RENDRE_AVIS_CDM: { target: '#rapportDREALAFaire', guard: peutRendreAvisCDM },
+                            RENDRE_RAPPORT_DREAL: { target: '#avisPrefetARendre', guard: peutRendreRapportDREAL },
                           },
                         },
                         avisServiceAdministratifCivilLocal: {
@@ -444,8 +444,8 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
                           states: {
                             avisDesDDTARendre: {
                               on: {
-                                RENDRE_AVIS_DES_DTT: { target: 'avisDesDDTRendu', cond: (context: PrmOctContext) => !isGuyane(context.paysId) },
-                                RENDRE_AVIS_POLICE_EAU: { target: 'avisDesDDTRendu', cond: (context: PrmOctContext) => isGuyane(context.paysId) },
+                                RENDRE_AVIS_DES_DTT: { target: 'avisDesDDTRendu', guard: ({ context }) => !isGuyane(context.paysId) },
+                                RENDRE_AVIS_POLICE_EAU: { target: 'avisDesDDTRendu', guard: ({ context }) => isGuyane(context.paysId) },
                               },
                             },
                             avisDesDDTRendu: { type: 'final' },
@@ -527,11 +527,11 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
               always: [
                 {
                   target: 'avisCommissionDepartementaleDesMinesEnGuyaneEtOutreMerARendre',
-                  cond: (context: PrmOctContext) => isOutreMer(context.paysId),
+                  guard: ({ context }) => isOutreMer(context.paysId),
                 },
                 {
                   target: 'rapportDREALAFaire',
-                  cond: (context: PrmOctContext) => isMetropole(context.paysId),
+                  guard: ({ context }) => isMetropole(context.paysId),
                 },
               ],
             },
@@ -560,8 +560,8 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
           states: {
             participationDuPublicPasEncorePossible: {
               on: {
-                DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', cond: context => !estExempteDeLaMiseEnConcurrence(context) },
-                OUVRIR_PARTICIPATION_DU_PUBLIC: { target: 'clotureParticipationDuPublicAFaire', cond: peutOuvrirParticipationDuPublic },
+                DEPOSER_DEMANDE_CONCURRENTE: { target: 'participationDuPublicPasEncorePossible', guard: value => !estExempteDeLaMiseEnConcurrence(value) },
+                OUVRIR_PARTICIPATION_DU_PUBLIC: { target: 'clotureParticipationDuPublicAFaire', guard: peutOuvrirParticipationDuPublic },
               },
             },
             clotureParticipationDuPublicAFaire: {
@@ -605,7 +605,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
         RENDRE_DECISION_ADMINISTRATION_ACCEPTE: 'publicationAuJORFAFaire',
         RENDRE_DECISION_ADMINISTRATION_REJETE: {
           target: 'decisionsEtNotificationsRejetAFaire',
-          actions: assign<PrmOctContext, { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Rejete,
           }),
         },
@@ -615,7 +615,7 @@ const prmOctMachine = createMachine<PrmOctContext, XStateEvent>({
       on: {
         FAIRE_PUBLICATION_AU_JORF: {
           target: 'notificationsAFaire',
-          actions: assign<PrmOctContext, { type: 'FAIRE_PUBLICATION_AU_JORF' }>({
+          actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },

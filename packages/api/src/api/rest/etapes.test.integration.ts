@@ -41,82 +41,82 @@ test('getEtapesTypesEtapesStatusWithMainStep', async () => {
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
   expect(tested.body).toMatchInlineSnapshot(`
-      [
-        {
-          "etapeStatutId": "def",
-          "etapeTypeId": "rde",
-          "mainStep": false,
-        },
-        {
-          "etapeStatutId": "fav",
-          "etapeTypeId": "rde",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "aco",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "aco",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "aco",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "aco",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "aco",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "mfr",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "fai",
-          "etapeTypeId": "pfd",
-          "mainStep": true,
-        },
-        {
-          "etapeStatutId": "req",
-          "etapeTypeId": "dae",
-          "mainStep": false,
-        },
-        {
-          "etapeStatutId": "exe",
-          "etapeTypeId": "dae",
-          "mainStep": true,
-        },
-      ]
-    `)
+    [
+      {
+        "etapeStatutId": "aco",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "aco",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "aco",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "aco",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "aco",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "mfr",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "fai",
+        "etapeTypeId": "pfd",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "req",
+        "etapeTypeId": "dae",
+        "mainStep": false,
+      },
+      {
+        "etapeStatutId": "exe",
+        "etapeTypeId": "dae",
+        "mainStep": true,
+      },
+      {
+        "etapeStatutId": "def",
+        "etapeTypeId": "rde",
+        "mainStep": false,
+      },
+      {
+        "etapeStatutId": "fav",
+        "etapeTypeId": "rde",
+        "mainStep": true,
+      },
+    ]
+  `)
 })

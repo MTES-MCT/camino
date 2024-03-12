@@ -11,8 +11,8 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
   "id": Any<String>,
   "nom": "titre1",
   "prochainesEtapes": [
-    "vfd",
     "mod",
+    "vfd",
   ],
   "references": [
     {
@@ -58,8 +58,8 @@ exports[`titresAdministration > teste la récupération des données pour les Ad
   "id": Any<String>,
   "nom": "titre2",
   "prochainesEtapes": [
-    "mcp",
     "mod",
+    "mcp",
   ],
   "references": [
     {

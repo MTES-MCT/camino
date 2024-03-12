@@ -90,7 +90,7 @@
     "stream-json": "^1.8.0",
     "ts-node": "^10.9.1",
     "xlsx": "^0.18.5",
-    "xstate": "^4.37.2",
+    "xstate": "^5.9.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

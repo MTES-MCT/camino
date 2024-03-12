@@ -240,7 +240,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2019-12-04'))
       .map(({ etapeTypeId }) => etapeTypeId)
       .filter(onlyUnique)
-    expect(tested).toStrictEqual(['rde', 'pfd', 'dae'])
+    expect(tested).toStrictEqual(['pfd', 'dae', 'rde'])
   })
 
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
@@ -423,7 +423,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
       .map(({ etapeTypeId }) => etapeTypeId)
       .filter(onlyUnique)
-    expect(tested).toStrictEqual(['rcb', 'rde', 'mcb', 'mod', 'des', 'css', 'aof', 'mia', 'ede'])
+    expect(tested).toStrictEqual(['mod', 'des', 'css', 'aof', 'ede', 'mia', 'rcb', 'rde', 'mcb'])
     vi.resetAllMocks()
   })
   test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
@@ -480,6 +480,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(machine, etapes, null, toCaminoDate('2022-07-01'))
       .map(({ etapeTypeId }) => etapeTypeId)
       .filter(onlyUnique)
-    expect(tested).toStrictEqual(['mcp', 'mod', 'des', 'css', 'rde', 'mcb'])
+    expect(tested).toStrictEqual(['mod', 'des', 'css', 'rde', 'mcb', 'mcp'])
   })
 })

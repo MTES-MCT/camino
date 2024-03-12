@@ -12,7 +12,7 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
   test('peut créer une "mfr"', () => {
     const etapes = [{ ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') }]
     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
-    expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-14') }, ['DEPOSER_DEMANDE'])
+    expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-14') }, ['DEPOSER_DEMANDE', 'OUVRIR_ENQUETE_PUBLIQUE', 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE'])
   })
 
   test('peut avoir une démarche en instruction', () => {
@@ -142,6 +142,86 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
     ]
     const service = orderAndInterpretMachine(pxgOctMachine, etapes)
     expect(service).canOnlyTransitionTo({ machine: pxgOctMachine, date: toCaminoDate('2022-04-26') }, [])
+  })
+
+  describe('démarches simplifiées', () => {
+    test('la plus simple possible', () => {
+      const etapes = [
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
+      ]
+      const service = orderAndInterpretMachine(pxgOctMachine, etapes)
+      expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    })
+
+    test('ne peut pas faire une rpu seule', () => {
+      const etapes = [{ ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') }]
+      expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"rpu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-15\\"}\' after \'[]\'. The event {\\"type\\":\\"PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\\"} should be one of \'FAIRE_DEMANDE,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_DECISION_ADMINISTRATION_FAVORABLE\'"'
+      )
+    })
+
+    test('peut créer avec une demande', () => {
+      const etapes = [
+        { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
+      ]
+      const service = orderAndInterpretMachine(pxgOctMachine, etapes)
+      expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    })
+    test('peut créer avec une enquête publique', () => {
+      const etapes = [
+        { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
+        { ...ETES.clotureDeLenquetePublique.TERMINE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
+      ]
+      const service = orderAndInterpretMachine(pxgOctMachine, etapes)
+      expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    })
+    test('peut créer avec une demande et une enquête publique', () => {
+      const etapes = [
+        { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-12') },
+        { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
+        { ...ETES.clotureDeLenquetePublique.TERMINE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT, date: toCaminoDate('2022-04-15') },
+      ]
+      const service = orderAndInterpretMachine(pxgOctMachine, etapes)
+      expect(service.getSnapshot().context.demarcheStatut).toBe(DemarchesStatutsIds.Accepte)
+    })
+
+    test('ne peut pas aller dans la démarche simplifiée une fois la demande déposée', () => {
+      const etapes = [
+        { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-12') },
+        { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-12') },
+        { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-13') },
+      ]
+      expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"epu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-13\\"}\' after \'[\\"mfr_fai\\",\\"mdp_fai\\"]\'. The event {\\"type\\":\\"OUVRIR_ENQUETE_PUBLIQUE\\"} should be one of \'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE,FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE,FAIRE_RECEVABILITE_DEMANDE_FAVORABLE\'"'
+      )
+    })
+
+    test("ne peut pas refaire de décision de l'administration", () => {
+      const etapes = [
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-15') },
+      ]
+      expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"dex\\",\\"etapeStatutId\\":\\"acc\\",\\"date\\":\\"2022-04-15\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"RENDRE_DECISION_ADMINISTRATION_FAVORABLE\\"} should be one of \'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
+      )
+    })
+
+    test("ne peut pas faire une ouverture d'enquête publique après une décision de l'administration", () => {
+      const etapes = [
+        { ...ETES.decisionDeLadministration.ACCEPTE, date: toCaminoDate('2022-04-14') },
+        { ...ETES.ouvertureDeLenquetePublique.FAIT, date: toCaminoDate('2022-04-16') },
+      ]
+      expect(() => orderAndInterpretMachine(pxgOctMachine, etapes)).toThrowErrorMatchingInlineSnapshot(
+        '"Error: cannot execute step: \'{\\"etapeTypeId\\":\\"epu\\",\\"etapeStatutId\\":\\"fai\\",\\"date\\":\\"2022-04-16\\"}\' after \'[\\"dex_acc\\"]\'. The event {\\"type\\":\\"OUVRIR_ENQUETE_PUBLIQUE\\"} should be one of \'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS\'"'
+      )
+    })
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
