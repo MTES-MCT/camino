@@ -9,7 +9,7 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
   public readonly machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>
 
   private readonly trad: { [key in CaminoEvent['type']]: { db: DBEtat; mainStep: boolean } }
-  public readonly events: Array<CaminoEvent['type']>
+  private readonly events: Array<CaminoEvent['type']>
 
   protected constructor(
     machine: StateMachine<CaminoContext, CaminoEvent, any, any, any, any, any, any, any, any, any, EventObject, any>,

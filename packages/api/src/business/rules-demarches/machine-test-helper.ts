@@ -1,10 +1,10 @@
 import { CaminoCommonContext, Etape } from './machine-common.js'
-import { EventObject, createActor } from 'xstate'
+import { Actor, EventObject, createActor } from 'xstate'
 import { CaminoMachine, getNextEvents } from './machine-helper.js'
 import { expect } from 'vitest'
 import { CaminoDate } from 'camino-common/src/date.js'
 interface CustomMatchers<R = unknown> {
-  canOnlyTransitionTo<T extends EventObject>(context: { machine: CaminoMachine<any, T>; date: CaminoDate }, _events: T['type'][]): R
+  canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(context: { machine: CaminoMachine<C, T>; date: CaminoDate }, _events: T['type'][]): R
 }
 
 declare global {
@@ -18,11 +18,15 @@ declare global {
   }
 }
 expect.extend({
-  canOnlyTransitionTo<T extends EventObject>(service: any, { machine, date }: { machine: CaminoMachine<any, T>; date: CaminoDate }, events: T['type'][]) {
+  canOnlyTransitionTo<T extends EventObject, C extends CaminoCommonContext>(
+    service: Actor<CaminoMachine<C, T>['machine']>,
+    { machine, date }: { machine: CaminoMachine<C, T>; date: CaminoDate },
+    events: T['type'][]
+  ) {
     events.sort()
-    const passEvents: EventObject['type'][] = getNextEvents(service.getSnapshot())
+    const passEvents: (typeof events)[number][] = getNextEvents(service.getSnapshot())
       .filter((event: string) => machine.isEvent(event))
-      .filter((event: EventObject['type']) => {
+      .filter((event: (typeof events)[number]) => {
         const events = machine.toPotentialCaminoXStateEvent(event, date)
 
         // TODO 2024-03-11 il faudrait mieux type server, machine, mais on se perd avec le multivers sur Machines
