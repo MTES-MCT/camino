@@ -35,23 +35,21 @@ export const convertPoints = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, 
 
 const convertMultiPointDb = sql<Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPoint }>>`
 select
-    ST_AsGeoJSON (ST_Transform (ST_MAKEVALID(ST_SetSRID  (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer))::json as geojson
+    ST_AsGeoJSON (ST_Transform (ST_MAKEVALID (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer), 40)::json as geojson
 LIMIT 1
 `
 
+const getGeojsonByGeoSystemeIdValidator = z.object({ geojson: multiPolygonValidator, is_valid: z.boolean().nullable() })
 export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
-  const result = await dbQueryAndValidate(
-    getGeojsonByGeoSystemeIdDb,
-    { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(geojson.geometry) },
-    pool,
-    z.object({ geojson: multiPolygonValidator })
-  )
-
-  if (fromGeoSystemeId === toGeoSystemeId) {
-    return geojson
-  }
+  const result = await dbQueryAndValidate(getGeojsonByGeoSystemeIdDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(geojson.geometry) }, pool, getGeojsonByGeoSystemeIdValidator)
 
   if (result.length === 1) {
+    if (result[0].is_valid !== true) {
+      throw new Error(`Le périmètre n'est pas valide dans le référentiel '${fromGeoSystemeId}' ${geojson}`)
+    }
+    if (fromGeoSystemeId === toGeoSystemeId) {
+      return geojson
+    }
     const feature: FeatureMultiPolygon = {
       type: 'Feature',
       properties: {},
@@ -63,10 +61,12 @@ export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: Geo
   throw new Error(`Impossible de convertir le geojson vers le systeme ${toGeoSystemeId}`)
 }
 
-const getGeojsonByGeoSystemeIdDb = sql<Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPolygon }>>`
+const getGeojsonByGeoSystemeIdDb = sql<
+  Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, z.infer<typeof getGeojsonByGeoSystemeIdValidator>>
+>`
 select
-    ST_ISValid(ST_GeomFromGeoJSON ($ geojson !::text)),
-    ST_AsGeoJSON (ST_Multi (ST_Transform (ST_MAKEVALID(ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer)))::json as geojson
+    ST_ISValid (ST_GeomFromGeoJSON ($ geojson !::text)) as is_valid,
+    ST_AsGeoJSON (ST_Multi (ST_Transform (ST_MAKEVALID (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer)), 40)::json as geojson
 LIMIT 1
 `
 
