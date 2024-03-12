@@ -28,7 +28,7 @@ select
     id as etape_id,
     type_id as etape_type_id,
     titre_demarche_id as demarche_id,
-    ST_AsGeoJSON (geojson4326_perimetre)::json as geojson4326_perimetre,
+    ST_AsGeoJSON (geojson4326_perimetre, 40)::json as geojson4326_perimetre,
     sdom_zones
 from
     titres_etapes

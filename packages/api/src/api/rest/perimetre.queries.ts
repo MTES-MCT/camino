@@ -35,20 +35,21 @@ export const convertPoints = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, 
 
 const convertMultiPointDb = sql<Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPoint }>>`
 select
-    ST_AsGeoJSON (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer))::json as geojson
+    ST_AsGeoJSON (ST_Transform (ST_MAKEVALID(ST_SetSRID  (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer))::json as geojson
 LIMIT 1
 `
 
 export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojson: FeatureMultiPolygon): Promise<FeatureMultiPolygon> => {
-  if (fromGeoSystemeId === toGeoSystemeId) {
-    return geojson
-  }
   const result = await dbQueryAndValidate(
     getGeojsonByGeoSystemeIdDb,
     { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(geojson.geometry) },
     pool,
     z.object({ geojson: multiPolygonValidator })
   )
+
+  if (fromGeoSystemeId === toGeoSystemeId) {
+    return geojson
+  }
 
   if (result.length === 1) {
     const feature: FeatureMultiPolygon = {
@@ -64,7 +65,8 @@ export const getGeojsonByGeoSystemeId = async (pool: Pool, fromGeoSystemeId: Geo
 
 const getGeojsonByGeoSystemeIdDb = sql<Redefine<IGetGeojsonByGeoSystemeIdDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPolygon }>>`
 select
-    ST_AsGeoJSON (ST_Multi (ST_Transform (ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer), $ toGeoSystemeId !::integer)))::json as geojson
+    ST_ISValid(ST_GeomFromGeoJSON ($ geojson !::text)),
+    ST_AsGeoJSON (ST_Multi (ST_Transform (ST_MAKEVALID(ST_SetSRID (ST_GeomFromGeoJSON ($ geojson !::text), $ fromGeoSystemeId !::integer)), $ toGeoSystemeId !::integer)))::json as geojson
 LIMIT 1
 `
 
@@ -107,7 +109,7 @@ where
     t.archive is false
     and t.titre_statut_id in $$ titre_statut_ids !
     and t.slug != $ titre_slug !
-    and ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), e.geojson4326_perimetre) is true
+    and ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), ST_MAKEVALID (e.geojson4326_perimetre)) is true
     and
     right (t.type_id,
         1) = $ domaine_id !
@@ -164,7 +166,7 @@ select
         from
             sdom_zones_postgis sdom
         where
-            ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), sdom.geometry) is true) as sdom,
+            ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), sdom.geometry) is true) as sdom,
     (
         select
             json_agg(communes_with_surface)
@@ -177,22 +179,22 @@ select
                 communes_postgis commune
                 join communes c on c.id = commune.id
             where
-                ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), commune.geometry) is true) as communes_with_surface) as communes,
+                ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), commune.geometry) is true) as communes_with_surface) as communes,
     (
         select
             json_agg(foret.id) as forets
         from
             forets_postgis foret
         where
-            ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), foret.geometry) is true) as forets,
+            ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), foret.geometry) is true) as forets,
     (
         select
             json_agg(secteur.id) as secteurs
         from
             secteurs_maritime_postgis secteur
         where
-            ST_INTERSECTS (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), secteur.geometry) is true) as secteurs,
+            ST_INTERSECTS (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), secteur.geometry) is true) as secteurs,
     (
         select
-            ST_AREA (ST_GeomFromGeoJSON ($ geojson4326_perimetre !), true)) as surface
+            ST_AREA (ST_MAKEVALID (ST_GeomFromGeoJSON ($ geojson4326_perimetre !)), true)) as surface
 `

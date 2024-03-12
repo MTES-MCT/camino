@@ -114,7 +114,7 @@ export const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, us
   // {"type":"Point","coordinates":[5.636779897,43.389000571]}
   q.joinRaw("left join titres_etapes teGeojsonCentre on teGeojsonCentre.id = titres.props_titre_etapes_ids ->> 'points'")
   q.select(raw('ST_AsGeoJSON(ST_Centroid(teGeojsonCentre.geojson4326_perimetre))::json as geojson4326_centre'))
-  q.select(raw('ST_AsGeoJSON(teGeojsonCentre.geojson4326_perimetre)::json as geojson4326_perimetre'))
+  q.select(raw('ST_AsGeoJSON(teGeojsonCentre.geojson4326_perimetre, 40)::json as geojson4326_perimetre'))
 
   // visibilité des étapes
   q.modifyGraph('demarches', b => {

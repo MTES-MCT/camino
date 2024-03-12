@@ -155,7 +155,7 @@ class TitresEtapes extends Model {
     // il y a un bug dans objection sur lequel on est déjà tombé dans upsertJournalCreate
     if (isNotNullNorUndefined(this.geojson4326Perimetre) && typeof this.geojson4326Perimetre === 'string') {
       // eslint-disable-next-line sql/no-unsafe-query
-      const rawLine = await context.transaction.raw(`select ST_AsGeoJSON('${this.geojson4326Perimetre}'::text)::json`)
+      const rawLine = await context.transaction.raw(`select ST_AsGeoJSON('${this.geojson4326Perimetre}'::text)::json`, 40)
       this.geojson4326Perimetre = { type: 'Feature', properties: {}, geometry: rawLine.rows[0].st_asgeojson }
     }
 
