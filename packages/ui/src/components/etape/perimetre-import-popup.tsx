@@ -56,8 +56,8 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
           small={true}
           title={
             <>
-              Le dépôt csv n'est possible que pour des périmètres simples : un seul polygone sans lacune ayant moins de 20 sommets. Ils doivent avoir les 4 champs suivants : "Nom du point",
-              "Description", {GeoSystemes[systemeGeographique.value].uniteId === 'deg' ? '"Longitude", "Latitude"' : '"X", "Y"'}. Seul le champ description peut être vide.
+              Le dépôt csv n'est possible que pour des périmètres simples : un seul polygone sans lacune ayant moins de 20 sommets. Ils doivent avoir les 4 champs suivants : "nom", "description",{' '}
+              {GeoSystemes[systemeGeographique.value].uniteId === 'deg' ? '"longitude", "latitude"' : '"x", "y"'}. Seul le champ description peut être vide.
             </>
           }
         />

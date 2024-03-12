@@ -144,8 +144,21 @@ const csvInputNumberValidator = z.union([z.string(), z.number()]).transform<numb
   }
 })
 
-const csvMetreToJsonValidator = z.array(z.object({ 'Nom du point': z.string(), Description: z.string().optional(), X: csvInputNumberValidator, Y: csvInputNumberValidator }))
-const csvDegToJsonValidator = z.array(z.object({ 'Nom du point': z.string(), Description: z.string().optional(), Longitude: csvInputNumberValidator, Latitude: csvInputNumberValidator }))
+const csvCommonValidator = z
+  .object({})
+  .passthrough()
+  .transform(value => {
+    if ('Nom du point' in value) {
+      value.nom = value['Nom du point']
+    }
+    Object.keys(value).forEach(k => (value[k.toLowerCase()] = value[k]))
+
+    return value
+  })
+
+const csvCommonLowerValidator = z.object({ nom: z.string(), description: z.string().optional() })
+const csvMetreToJsonValidator = z.array(csvCommonValidator.pipe(csvCommonLowerValidator.extend({ x: csvInputNumberValidator, y: csvInputNumberValidator })))
+const csvDegToJsonValidator = z.array(csvCommonValidator.pipe(csvCommonLowerValidator.extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator })))
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -223,26 +236,26 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             switch (uniteId) {
               case 'met': {
                 const rows = csvMetreToJsonValidator.parse(converted)
-                coordinates = [[rows.map(({ X, Y }) => [X, Y])]]
+                coordinates = [[rows.map(({ x, y }) => [x, y])]]
                 points = rows.map(ligne => ({
                   type: 'Feature',
-                  properties: { nom: ligne['Nom du point'], description: ligne.Description },
-                  geometry: { type: 'Point', coordinates: [ligne.X, ligne.Y] },
+                  properties: { nom: ligne.nom, description: ligne.description },
+                  geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] },
                 }))
 
-                coordinates[0][0].push([rows[0].X, rows[0].Y])
+                coordinates[0][0].push([rows[0].x, rows[0].y])
                 break
               }
               case 'gon':
               case 'deg': {
                 const rows = csvDegToJsonValidator.parse(converted)
-                coordinates = [[rows.map(({ Longitude, Latitude }) => [Longitude, Latitude])]]
+                coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
                 points = rows.map(ligne => ({
                   type: 'Feature',
-                  properties: { nom: ligne['Nom du point'], description: ligne.Description },
-                  geometry: { type: 'Point', coordinates: [ligne.Longitude, ligne.Latitude] },
+                  properties: { nom: ligne.nom, description: ligne.description },
+                  geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
                 }))
-                coordinates[0][0].push([rows[0].Longitude, rows[0].Latitude])
+                coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
                 break
               }
               default:
