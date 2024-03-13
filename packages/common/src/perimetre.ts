@@ -85,10 +85,9 @@ export const featureCollectionPolygonValidator = featureCollectionValidator.exte
 
 export type FeatureCollectionPolygon = z.infer<typeof featureCollectionPolygonValidator>
 
-
 // Permet d’obtenir un type générique sur FeatureCollection<T>, utile pour esquiver la « distributivity »
 const makeFeatureCollectionValidator = <T extends z.ZodTypeAny>(schema: T) => featureCollectionValidator.extend({ features: z.array(schema) })
-export type GenericFeatureCollection <T extends z.ZodTypeAny>= z.infer<ReturnType<typeof makeFeatureCollectionValidator<T>>>
+export type GenericFeatureCollection<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof makeFeatureCollectionValidator<T>>>
 
 export const featureCollectionPointsValidator = makeFeatureCollectionValidator(featurePointValidator)
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
@@ -98,7 +97,6 @@ const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: 
 
 export const featureCollectionForagesValidator = makeFeatureCollectionValidator(featureForageValidator)
 export type FeatureCollectionForages = z.infer<typeof featureCollectionForagesValidator>
-
 
 export type FeatureCollection = z.infer<typeof featureCollectionMultipolygonValidator>
 const superpositionAlerteValidator = z.object({ slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator })

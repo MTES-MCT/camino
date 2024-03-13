@@ -4,15 +4,7 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import {
-  FeatureMultiPolygon,
-  GenericFeatureCollection,
-  MultiPoint,
-  MultiPolygon,
-  featureMultiPolygonValidator,
-  multiPointsValidator,
-  multiPolygonValidator,
-} from 'camino-common/src/perimetre.js'
+import { FeatureMultiPolygon, GenericFeatureCollection, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { IConvertMultiPointDbQuery, IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
