@@ -389,16 +389,14 @@ export const geojsonImportForages = (pool: Pool) => async (req: CaminoRequest, r
             const converted = xlsx.utils.sheet_to_json(sheet1, { raw: true })
             const uniteId = GeoSystemes[geoSystemeId.data].uniteId
 
-            if (converted.length > 20) {
-              throw new Error(`L'import CSV est fait pour des petits polygones simple de moins de 20 sommets`)
-            }
-
             let coordinates: MultiPolygon['coordinates']
             let points: FeatureCollectionForages['features']
 
             switch (uniteId) {
               case 'met': {
-                const csvMetreToJsonValidator = makeCsvToJsonValidator(featureForagePropertiesValidator.extend({ x: csvInputNumberValidator, y: csvInputNumberValidator }))
+                const csvMetreToJsonValidator = makeCsvToJsonValidator(
+                  featureForagePropertiesValidator.omit({ profondeur: true }).extend({ x: csvInputNumberValidator, y: csvInputNumberValidator, profondeur: csvInputNumberValidator })
+                )
 
                 const rows = csvMetreToJsonValidator.parse(converted)
                 coordinates = [[rows.map(({ x, y }) => [x, y])]]
@@ -413,7 +411,9 @@ export const geojsonImportForages = (pool: Pool) => async (req: CaminoRequest, r
               }
               case 'gon':
               case 'deg': {
-                const csvDegToJsonValidator = makeCsvToJsonValidator(featureForagePropertiesValidator.extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator }))
+                const csvDegToJsonValidator = makeCsvToJsonValidator(
+                  featureForagePropertiesValidator.omit({ profondeur: true }).extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator, profondeur: csvInputNumberValidator })
+                )
                 const rows = csvDegToJsonValidator.parse(converted)
                 coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
                 points = rows.map(ligne => ({

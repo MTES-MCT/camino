@@ -1880,3 +1880,82 @@ exports[`geojsonImport > fichier valide geojson 2154 1`] = `
   "surface": 51.48,
 }
 `;
+
+exports[`geojsonImportForages > csv valide en 2972 1`] = `
+{
+  "geojson4326": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            -40.598937151159184,
+            61.54628068732175,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point A",
+          "nom": "A",
+          "profondeur": 12.12,
+          "type": "rejet",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            -40.37064788704864,
+            61.5292784396591,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point B",
+          "nom": "B",
+          "profondeur": 12.12,
+          "type": "captage",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+  "origin": {
+    "features": [
+      {
+        "geometry": {
+          "coordinates": [
+            1051195.1083143658,
+            6867800.046355472,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point A",
+          "nom": "A",
+          "profondeur": 12.12,
+          "type": "rejet",
+        },
+        "type": "Feature",
+      },
+      {
+        "geometry": {
+          "coordinates": [
+            1063526.39792456,
+            6867885.978687251,
+          ],
+          "type": "Point",
+        },
+        "properties": {
+          "description": "Point B",
+          "nom": "B",
+          "profondeur": 12.12,
+          "type": "captage",
+        },
+        "type": "Feature",
+      },
+    ],
+    "type": "FeatureCollection",
+  },
+}
+`;
