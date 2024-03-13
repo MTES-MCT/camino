@@ -16,7 +16,7 @@ import { sectionValidator } from 'camino-common/src/static/titresTypes_demarches
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
-import { featureCollectionPointsValidator, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
 import { titreIdValidator } from 'camino-common/src/validators/titres.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
@@ -49,6 +49,8 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_perimetre: featureMultiPolygonValidator.nullable(),
   geojson_origine_geo_systeme_id: geoSystemeIdValidator.nullable(),
+  geojson4326_forages: featureCollectionForagesValidator.nullable(),
+  geojson_origine_forages: featureCollectionForagesValidator.nullable(),
 })
 
 export const getEtapesByDemarcheId = async (pool: Pool, demarcheId: DemarcheId) => {
@@ -82,7 +84,9 @@ select
     e.geojson4326_points as geojson4326_points,
     e.geojson_origine_points,
     e.geojson_origine_perimetre,
-    e.geojson_origine_geo_systeme_id
+    e.geojson_origine_geo_systeme_id,
+    e.geojson4326_forages,
+    e.geojson_origine_forages
 from
     titres_etapes e
 where

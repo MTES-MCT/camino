@@ -116,10 +116,6 @@ export const titreGeojsonPropertiesFormat = (communesIndex: Record<CommuneId, st
 
   const { dateDebut, dateFin, dateDemande } = getTitreDates(titre)
 
-
-  if( titre.id === 'dUOoufjlKEnXP6ohZcAxXM5f')
-  console.log('traitement', titre.id)
-
   return {
     id: titre.slug,
     nom: titre.nom,

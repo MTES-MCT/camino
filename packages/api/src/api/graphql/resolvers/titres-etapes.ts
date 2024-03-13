@@ -37,11 +37,14 @@ import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
-import { getGeojsonInformation } from '../../rest/perimetre.queries.js'
+import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { getSecteurMaritime } from 'camino-common/src/static/facades.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
+import {  FeatureCollectionPoints, FeatureMultiPolygon, equalGeojson } from 'camino-common/src/perimetre.js'
 import { FieldsEtape } from '../../../database/queries/_options'
+import { canHaveForages } from 'camino-common/src/permissions/titres.js'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -167,6 +170,30 @@ export const arePointsOnPerimeter = (perimetre: FeatureMultiPolygon, points: Fea
   })
 }
 
+const getForagesProperties = async (
+  titreTypeId: TitreTypeId,
+  geojsonOrigineGeoSystemeId: ITitreEtape['geojsonOrigineGeoSystemeId'],
+  geojsonOrigineForages: ITitreEtape['geojsonOrigineForages'],
+  pool: Pool
+): Promise<Pick<ITitreEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
+  if (!canHaveForages(titreTypeId)) {
+    return {
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+    }
+  } else if (isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
+    return {
+      geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
+      geojsonOrigineForages,
+    }
+  } else {
+    return {
+      geojson4326Forages: null,
+      geojsonOrigineForages: null,
+    }
+  }
+}
+
 const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
@@ -233,6 +260,9 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
+
+    etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
+
     const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -426,6 +456,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     if (!titreTypeId) {
       throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
+
+    etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
     const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user, titreEtapeOld)
 

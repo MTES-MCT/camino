@@ -208,6 +208,8 @@ const titre: TitreGet = {
               },
               geojson_origine_points: null,
               geojson_origine_geo_systeme_id: '4326',
+              geojson4326_forages: null,
+              geojson_origine_forages: null,
               surface: 0,
               communes: [],
               sdom_zones: [],

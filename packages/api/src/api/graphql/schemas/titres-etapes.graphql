@@ -87,6 +87,8 @@ type Etape {
   geojson4326Points: Json
   geojsonOriginePoints: Json
   geojsonOriginePerimetre: Json
+  geojson4326Forages: Json
+  geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
 }
 
@@ -118,6 +120,8 @@ type EtapeHeritage {
   geojsonOriginePoints: Json
   geojsonOriginePerimetre: Json
   geojsonOrigineGeoSystemeId: String
+  geojson4326Forages: Json
+  geojsonOrigineForages: Json
 
   "Titulaires du titre dans son dernier état de validité"
   titulaires: [Entreprise]
@@ -165,6 +169,7 @@ input InputEtapeCreation {
   geojson4326Points: Json
   geojsonOriginePoints: Json
   geojsonOriginePerimetre: Json
+  geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
@@ -200,6 +205,7 @@ input InputEtapeModification {
   geojson4326Points: Json
   geojsonOriginePoints: Json
   geojsonOriginePerimetre: Json
+  geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
 }
 

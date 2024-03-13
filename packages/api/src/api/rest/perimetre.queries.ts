@@ -4,7 +4,15 @@ import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, MultiPoint, MultiPolygon, featureMultiPolygonValidator, multiPointsValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import {
+  FeatureMultiPolygon,
+  GenericFeatureCollection,
+  MultiPoint,
+  MultiPolygon,
+  featureMultiPolygonValidator,
+  multiPointsValidator,
+  multiPolygonValidator,
+} from 'camino-common/src/perimetre.js'
 import { IConvertMultiPointDbQuery, IGetGeojsonByGeoSystemeIdDbQuery, IGetGeojsonInformationDbQuery, IGetTitresIntersectionWithGeojsonDbQuery } from './perimetre.queries.types.js'
 import { TitreStatutId, TitresStatutIds, titreStatutIdValidator } from 'camino-common/src/static/titresStatuts.js'
 import { DOMAINES_IDS, DomaineId } from 'camino-common/src/static/domaines.js'
@@ -16,7 +24,12 @@ import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
 
-export const convertPoints = async (pool: Pool, fromGeoSystemeId: GeoSystemeId, toGeoSystemeId: GeoSystemeId, geojsonPoints: FeatureCollectionPoints): Promise<FeatureCollectionPoints> => {
+export const convertPoints = async <T extends z.ZodTypeAny>(
+  pool: Pool,
+  fromGeoSystemeId: GeoSystemeId,
+  toGeoSystemeId: GeoSystemeId,
+  geojsonPoints: GenericFeatureCollection<T>
+): Promise<GenericFeatureCollection<T>> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
     return geojsonPoints
   }

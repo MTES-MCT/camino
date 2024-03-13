@@ -43,6 +43,8 @@ import { geoSystemeIdValidator } from './static/geoSystemes.js'
 import {
   featureCollectionPointsValidator,
   geojsonImportBodyValidator,
+  geojsonImportForagesBodyValidator,
+  geojsonImportForagesResponseValidator,
   geojsonImportPointBodyValidator,
   geojsonImportPointResponseValidator,
   geojsonInformationsValidator,
@@ -100,6 +102,7 @@ const IDS = [
   '/rest/geojson/import/:geoSystemeId',
   '/rest/geojson_points/:geoSystemeId',
   '/rest/geojson_points/import/:geoSystemeId',
+  '/rest/geojson_forages/import/:geoSystemeId',
   '/rest/communes',
   '/deconnecter',
   '/changerMotDePasse',
@@ -187,6 +190,10 @@ export const CaminoRestRoutes = {
   '/rest/geojson_points/import/:geoSystemeId': {
     params: { geoSystemeId: geoSystemeIdValidator },
     post: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
+  },
+  '/rest/geojson_forages/import/:geoSystemeId': {
+    params: { geoSystemeId: geoSystemeIdValidator },
+    post: { input: geojsonImportForagesBodyValidator, output: geojsonImportForagesResponseValidator },
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },

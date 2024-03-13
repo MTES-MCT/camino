@@ -18,7 +18,7 @@ type Props = {
     geojson_origine_geo_systeme_id: GeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints | null
-    geojson4236_forages: FeatureCollectionForages | null
+    geojson4326_forages: FeatureCollectionForages | null
     geojson_origine_forages: FeatureCollectionForages | null
   }
   titreSlug: TitreSlug
@@ -63,7 +63,13 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
       renderContent: () => (
-        <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id} maxRows={maxRows} />
+        <TabCaminoTable
+          geojson_origine_points={geojsonOriginePoints.value}
+          titreSlug={props.titreSlug}
+          geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id}
+          geojson_origine_forages={props.perimetre.geojson_origine_forages}
+          maxRows={maxRows}
+        />
       ),
     },
   ] as const satisfies readonly Tab<TabId>[]
@@ -71,14 +77,16 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: {
-  geojson4326_perimetre: FeatureMultiPolygon
-  geojson4326_points: FeatureCollectionPoints
-  geojson_origine_geo_systeme_id: GeoSystemeId
-  geojson_origine_perimetre: FeatureMultiPolygon
-  geojson_origine_points: FeatureCollectionPoints
-  geojson4236_forages: FeatureCollectionForages | null
- } }
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {
+  perimetre: {
+    geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints
+    geojson_origine_geo_systeme_id: GeoSystemeId
+    geojson_origine_perimetre: FeatureMultiPolygon
+    geojson_origine_points: FeatureCollectionPoints
+    geojson4326_forages: FeatureCollectionForages | null
+  }
+}
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 

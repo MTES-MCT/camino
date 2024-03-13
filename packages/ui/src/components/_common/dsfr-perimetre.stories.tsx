@@ -47,8 +47,8 @@ const geojson4326_points: FeatureCollectionPoints = {
 const geojson4326_forages: FeatureCollectionForages = {
   type: 'FeatureCollection',
   features: [
-    { type: 'Feature', properties: { profondeur: 42, type: 'captage'}, geometry: { type: 'Point', coordinates: [-52.5620583466962, 4.23454263425535] } },
-    { type: 'Feature', properties: { profondeur: 42, type: 'rejet'}, geometry: { type: 'Point', coordinates: [-52.5640583466962, 4.23754263425535] } },
+    { type: 'Feature', properties: { nom: 'C1', description: 'Captage 1', profondeur: 42, type: 'captage' }, geometry: { type: 'Point', coordinates: [-52.5620583466962, 4.23454263425535] } },
+    { type: 'Feature', properties: { nom: 'R1', description: 'Rejet 1', profondeur: 42, type: 'rejet' }, geometry: { type: 'Point', coordinates: [-52.5640583466962, 4.23754263425535] } },
   ],
 }
 
@@ -73,7 +73,15 @@ export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{ geojson4326_perimetre, geojson4326_points: null, geojson_origine_perimetre: geojson4326_perimetre, geojson_origine_points: null, geojson_origine_geo_systeme_id: '4326', geojson4236_forages: null, geojson_origine_forages: null }}
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: null,
+        geojson_origine_perimetre: geojson4326_perimetre,
+        geojson_origine_points: null,
+        geojson_origine_geo_systeme_id: '4326',
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
+      }}
       calculateNeighbours={true}
       apiClient={{
         ...apiClientMock,
@@ -130,7 +138,15 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{ geojson4326_perimetre, geojson4326_points: null, geojson_origine_perimetre: geojson4326_perimetre, geojson_origine_points: null, geojson_origine_geo_systeme_id: '4326', geojson4236_forages: null, geojson_origine_forages: null }}
+      perimetre={{
+        geojson4326_perimetre,
+        geojson4326_points: null,
+        geojson_origine_perimetre: geojson4326_perimetre,
+        geojson_origine_points: null,
+        geojson_origine_geo_systeme_id: '4326',
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
+      }}
       calculateNeighbours={false}
       apiClient={apiClientMock}
       titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -172,7 +188,8 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
         geojson_origine_perimetre: perimetreWithLacune,
         geojson_origine_points: null,
         geojson_origine_geo_systeme_id: '4326',
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
@@ -205,7 +222,15 @@ export const BigNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
-      perimetre={{ geojson4326_perimetre: bigGeoJson, geojson4326_points: null, geojson_origine_perimetre: bigGeoJson, geojson_origine_points: null, geojson_origine_geo_systeme_id: '4326', geojson4236_forages: null, geojson_origine_forages: null }}
+      perimetre={{
+        geojson4326_perimetre: bigGeoJson,
+        geojson4326_points: null,
+        geojson_origine_perimetre: bigGeoJson,
+        geojson_origine_points: null,
+        geojson_origine_geo_systeme_id: '4326',
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
+      }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
         push: to => {
@@ -267,7 +292,8 @@ export const MultipleNoSnapshot: StoryFn = () => (
         geojson_origine_points: null,
         geojson_origine_geo_systeme_id: '4326',
         geojson4326_points: null,
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       titreSlug={titreSlugValidator.parse('titre-slug')}
       router={{
@@ -352,7 +378,8 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
         geojson_origine_perimetre: multiplePolygoneWithLacune,
         geojson_origine_points: null,
         geojson_origine_geo_systeme_id: '4326',
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       calculateNeighbours={true}
       apiClient={apiClientMock}
@@ -386,7 +413,8 @@ export const CustomPoints: StoryFn = () => (
         geojson_origine_perimetre: geojson4326_perimetre,
         geojson_origine_points: customPoints,
         geojson_origine_geo_systeme_id: '4326',
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -411,7 +439,8 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
         geojson_origine_perimetre: geojson4326_perimetre,
         geojson_origine_points: customPointWithoutNameAndDesc,
         geojson_origine_geo_systeme_id: '4326',
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -435,7 +464,8 @@ export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
           features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
         },
         geojson_origine_geo_systeme_id: '2154',
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -459,7 +489,8 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
           features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
         },
         geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95,
-        geojson4236_forages: null, geojson_origine_forages: null
+        geojson4326_forages: null,
+        geojson_origine_forages: null,
       }}
       initTab="points"
       calculateNeighbours={false}
@@ -469,24 +500,24 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
   </>
 )
 
-
 export const WithForages: StoryFn = () => (
-    <DsfrPerimetre
-      perimetre={{
-        geojson4326_perimetre,
-        geojson4326_points: customPointWithoutNameAndDesc,
-        geojson_origine_perimetre: geojson4326_perimetre,
-        geojson_origine_points: {
-          type: 'FeatureCollection',
-          properties: {},
-          features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
-        },
-        geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95,
-        geojson4236_forages: geojson4326_forages, geojson_origine_forages: null
-      }}
-      initTab="points"
-      calculateNeighbours={false}
-      apiClient={apiClientMock}
-      titreSlug={titreSlugValidator.parse('titre-slug')}
-    />
+  <DsfrPerimetre
+    perimetre={{
+      geojson4326_perimetre,
+      geojson4326_points: customPointWithoutNameAndDesc,
+      geojson_origine_perimetre: geojson4326_perimetre,
+      geojson_origine_points: {
+        type: 'FeatureCollection',
+        properties: {},
+        features: [{ type: 'Feature', properties: { nom: 'Nom', description: 'Description' }, geometry: { type: 'Point', coordinates: [338097.8, 462518.2] } }],
+      },
+      geojson_origine_geo_systeme_id: GEO_SYSTEME_IDS.RGFG95,
+      geojson4326_forages,
+      geojson_origine_forages: geojson4326_forages,
+    }}
+    initTab="points"
+    calculateNeighbours={false}
+    apiClient={apiClientMock}
+    titreSlug={titreSlugValidator.parse('titre-slug')}
+  />
 )

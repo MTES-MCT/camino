@@ -112,6 +112,8 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
                 geojson_origine_points: etape.geojson_origine_points,
                 geojson_origine_perimetre: etape.geojson_origine_perimetre,
                 geojson_origine_geo_systeme_id: etape.geojson_origine_geo_systeme_id,
+                geojson4326_forages: etape.geojson4326_forages,
+                geojson_origine_forages: etape.geojson_origine_forages,
                 communes,
                 secteurs_maritimes: etape.secteurs_maritime ?? [],
                 sdom_zones: etape.sdom_zones ?? [],

@@ -1,8 +1,6 @@
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {
-
-
   await knex.raw('alter table titres_etapes add column geojson4326_forages JSONB')
   await knex.raw('alter table titres_etapes add column geojson_origine_forages JSONB')
 

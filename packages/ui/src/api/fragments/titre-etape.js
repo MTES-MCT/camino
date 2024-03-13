@@ -27,6 +27,8 @@ const fragmentHeritageEtape = gql`
     geojsonOriginePoints
     geojsonOriginePerimetre
     geojsonOrigineGeoSystemeId
+    geojson4326Forages
+    geojsonOrigineForages
     substances
     contenu
   }
@@ -90,6 +92,8 @@ const fragmentEtapeHeritage = gql`
     geojsonOriginePoints
     geojsonOriginePerimetre
     geojsonOrigineGeoSystemeId
+    geojson4326Forages
+    geojsonOrigineForages
 
     substances
 
@@ -141,6 +145,8 @@ const fragmentEtape = gql`
     geojsonOriginePoints
     geojsonOriginePerimetre
     geojsonOrigineGeoSystemeId
+    geojson4326Forages
+    geojsonOrigineForages
     substances
     documents {
       ...document

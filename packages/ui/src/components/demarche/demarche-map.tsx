@@ -25,7 +25,7 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4236_forages: FeatureCollectionForages | null }
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -212,6 +212,8 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     paint: {
       'circle-color': '#fcc63a',
       'circle-radius': 16,
+      'circle-stroke-width': 4,
+      'circle-stroke-color': ['get', 'strokeColor'],
     },
   },
   [contourForagesLabel]: {
@@ -219,7 +221,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     type: 'symbol',
     source: foragesSourceName,
     paint: {
-      'text-color': '#ffffff',
+      'text-color': '#000000',
     },
     layout: {
       'text-field': ['get', 'nom'],
@@ -282,9 +284,20 @@ export const DemarcheMap = defineComponent<Props>(props => {
   const forages = computed<FeatureCollectionForages>(() => {
     return {
       type: 'FeatureCollection',
-      features: props.perimetre.geojson4236_forages?.features.map(feature => {
-        return { ...feature, properties: { ...feature.properties, latitude: feature.geometry.coordinates[1], longitude: feature.geometry.coordinates[0] } }
-      }) ?? [],
+      features:
+        props.perimetre.geojson4326_forages?.features.map(feature => {
+          // pink-tuile-sun-425 a94645
+
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              strokeColor: feature.properties.type === 'captage' ? '#00A95F' : '#845d48',
+              latitude: feature.geometry.coordinates[1],
+              longitude: feature.geometry.coordinates[0],
+            },
+          }
+        }) ?? [],
     }
   })
 
@@ -533,9 +546,10 @@ export const DemarcheMap = defineComponent<Props>(props => {
           if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
             return false
           }
-          if(isNullOrUndefined(props.perimetre.geojson4236_forages) && name === 'Forages'){
+          if (isNullOrUndefined(props.perimetre.geojson4326_forages) && name === 'Forages') {
             return false
           }
+
           return true
         })}
       />
