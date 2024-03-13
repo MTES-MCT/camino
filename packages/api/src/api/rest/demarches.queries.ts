@@ -78,7 +78,7 @@ select
     e.forets,
     e.decisions_annexes_contenu,
     e.decisions_annexes_sections,
-    ST_AsGeoJSON (e.geojson4326_perimetre)::json as geojson4326_perimetre,
+    ST_AsGeoJSON (e.geojson4326_perimetre, 40)::json as geojson4326_perimetre,
     e.geojson4326_points as geojson4326_points,
     e.geojson_origine_points,
     e.geojson_origine_perimetre,

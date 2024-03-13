@@ -29,6 +29,7 @@ export interface IGetGeojsonByGeoSystemeIdDbParams {
 /** 'GetGeojsonByGeoSystemeIdDb' return type */
 export interface IGetGeojsonByGeoSystemeIdDbResult {
   geojson: Json | null;
+  is_valid: boolean | null;
 }
 
 /** 'GetGeojsonByGeoSystemeIdDb' query type */
