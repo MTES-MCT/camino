@@ -315,10 +315,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
   watch(
     () => props.perimetre,
     () => {
-      (map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
+      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
       ;(map.value?.getSource(foragesSourceName) as GeoJSONSource).setData(forages.value)
-      console.log('update perimetre', forages.value)
     }
   )
 
