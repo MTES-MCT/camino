@@ -70,6 +70,7 @@ type DisplayPerimetreProps = {
   }
   surface: KM2 | null
   titreSlug: TitreSlug
+  titreTypeId: TitreTypeId
   initTab?: 'points' | 'carte'
   class?: HTMLAttributes['class']
 }
@@ -91,6 +92,7 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
             geojson_origine_forages: props.etape.geojsonOrigineForages,
           }}
           titreSlug={props.titreSlug}
+          titreTypeId={props.titreTypeId}
           initTab={props.initTab ?? 'carte'}
         />
 
@@ -194,7 +196,15 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 
             {importError.value ? <Alert class="fr-mt-2w" title="Une erreur est survenue lors de l’import de votre fichier." type="error" description="Vérifiez le contenu de votre fichier" /> : null}
 
-            <DisplayPerimetre class="fr-mt-2w" apiClient={props.apiClient} etape={props.etape} titreSlug={props.titreSlug} initTab={props.initTab} surface={surface.value} />
+            <DisplayPerimetre
+              class="fr-mt-2w"
+              apiClient={props.apiClient}
+              etape={props.etape}
+              titreSlug={props.titreSlug}
+              initTab={props.initTab}
+              surface={surface.value}
+              titreTypeId={props.titreTypeId}
+            />
           </div>
         )}
         read={heritage => (
@@ -211,6 +221,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
               geojsonOrigineForages: heritage?.geojsonOrigineForages ?? null,
             }}
             titreSlug={props.titreSlug}
+            titreTypeId={props.titreTypeId}
             initTab={props.initTab}
             surface={heritage?.surface ?? null}
           />

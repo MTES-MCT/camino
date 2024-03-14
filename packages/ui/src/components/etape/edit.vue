@@ -393,7 +393,7 @@ export default {
       this.etape.geojsonOriginePoints = geojsonOriginePoints
       this.$emit('update:etape', this.etape)
     },
-    onEtapeForagessChange(geojson4326Forages, geojsonOrigineForages) {
+    onEtapeForagesChange(geojson4326Forages, geojsonOrigineForages) {
       this.etape.geojson4326Forages = geojson4326Forages
       this.etape.geojsonOrigineForages = geojsonOrigineForages
       this.$emit('update:etape', this.etape)

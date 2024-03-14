@@ -3,7 +3,7 @@ import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpe
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
-import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -11,8 +11,10 @@ import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreWithPerimetre } from '../titres/mapUtil'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
-import { getDomaineId } from 'camino-common/src/static/titresTypes'
+import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
+import { canHaveForages } from 'camino-common/src/permissions/titres'
+import { capitalize } from 'camino-common/src/strings'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -29,6 +31,7 @@ type Props = {
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
+  titreTypeId: TitreTypeId
   neighbours: {
     apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'>
     titreSlug: TitreSlug
@@ -265,7 +268,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       values.push('Points')
     }
 
-    if (isNotNullNorUndefinedNorEmpty(forages.value.features)) {
+    if (canHaveForages(props.titreTypeId)) {
       values.push('Forages')
     }
 
@@ -286,8 +289,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
       type: 'FeatureCollection',
       features:
         props.perimetre.geojson4326_forages?.features.map(feature => {
-          // pink-tuile-sun-425 a94645
-
           return {
             ...feature,
             properties: {
@@ -301,18 +302,32 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
+  const bounds = computed<LngLatBounds>(() => {
+    const bounds = new LngLatBounds()
+    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
+      top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
+    })
+    props.perimetre.geojson4326_forages?.features.forEach(feature => bounds.extend(feature.geometry.coordinates))
+    
+return bounds
+  })
+
   watch(
     () => props.perimetre,
     () => {
-      const bounds = new LngLatBounds()
-      props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
-        top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
-      })
-      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
+      (map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
       ;(map.value?.getSource(foragesSourceName) as GeoJSONSource).setData(forages.value)
+      console.log('update perimetre', forages.value)
+    }
+  )
 
-      map.value?.fitBounds(bounds, { padding: 50 })
+  watch(
+    () => [bounds.value, map.value],
+    () => {
+      if (isNotNullNorUndefined(map.value) && isNotNullNorUndefined(bounds.value)) {
+        map.value?.fitBounds(bounds.value, { padding: 50 })
+      }
     }
   )
 
@@ -361,11 +376,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
   }
 
   onMounted(() => {
-    const bounds = new LngLatBounds()
-    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
-      top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
-    })
-
     const style: StyleSpecification = {
       version: 8,
       glyphs: 'https://etalab-tiles.fr/fonts/{fontstack}/{range}.pbf',
@@ -407,7 +417,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
         container: mapRef.value,
         cooperativeGestures: true,
         style,
-        center: bounds.getCenter().toArray(),
+        center: bounds.value.getCenter().toArray(),
         zoom: 16,
       })
 
@@ -444,8 +454,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
         'top-right'
       )
 
-      mapLibre.fitBounds(bounds, { padding: 50 })
-
       mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
@@ -458,6 +466,24 @@ export const DemarcheMap = defineComponent<Props>(props => {
               }</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`
             )
             .addTo(mapLibre)
+        }
+      })
+
+      mapLibre.on('click', contourForagesName, e => {
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          const properties = featureForagePropertiesValidator.safeParse(e.features[0].properties)
+          if (properties.success) {
+            new Popup({ closeButton: false, maxWidth: '500' })
+              .setLngLat(e.lngLat)
+              .setHTML(
+                `<div class="fr-text--md fr-m-0" style="max-width: 400px;"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${
+                  e.features[0].properties.longitude
+                }</b><div>Nom : <b>${properties.data.nom}</b><div>Profondeur : <b>${properties.data.profondeur} NGF</b></div><div>Type : <b>${capitalize(properties.data.type)}</b>${
+                  isNotNullNorUndefined(properties.data.description) ? `<div>Description : ${properties.data.description}</div>` : ''
+                }</div>`
+              )
+              .addTo(mapLibre)
+          }
         }
       })
 
@@ -546,7 +572,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
             return false
           }
-          if (isNullOrUndefined(props.perimetre.geojson4326_forages) && name === 'Forages') {
+          if (!canHaveForages(props.titreTypeId) && name === 'Forages') {
             return false
           }
 
@@ -606,4 +632,4 @@ const LayersControl: FunctionalComponent<{
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router']
+DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router', 'titreTypeId']

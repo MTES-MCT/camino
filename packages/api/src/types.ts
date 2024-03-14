@@ -271,7 +271,18 @@ interface IDocument {
   etape?: ITitreEtape | null
   suppression?: boolean | null
 }
-interface ITitreEtape {
+
+export interface ITitreEtapePerimetre {
+  geojson4326Perimetre: FeatureMultiPolygon | null | undefined
+  geojson4326Points: FeatureCollectionPoints | null | undefined
+  geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
+  geojsonOriginePoints: FeatureCollectionPoints | null | undefined
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
+  geojson4326Forages: FeatureCollectionForages | null | undefined
+  geojsonOrigineForages: FeatureCollectionForages | null | undefined
+  surface: number | null | undefined
+}
+type ITitreEtape = {
   id: EtapeId
   slug?: EtapeSlug
   typeId: EtapeTypeId
@@ -279,7 +290,6 @@ interface ITitreEtape {
   ordre?: number | null
   date: CaminoDate
   duree?: number | null
-  surface?: number | null
   contenu?: IContenu | null
   documents?: IDocument[] | null
   documentIds?: string[] | null
@@ -301,14 +311,7 @@ interface ITitreEtape {
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
-  geojson4326Perimetre?: FeatureMultiPolygon | null
-  geojson4326Points?: FeatureCollectionPoints | null
-  geojsonOriginePerimetre?: FeatureMultiPolygon | null
-  geojsonOriginePoints?: FeatureCollectionPoints | null
-  geojsonOrigineGeoSystemeId?: GeoSystemeId | null
-  geojson4326Forages?: FeatureCollectionForages | null
-  geojsonOrigineForages?: FeatureCollectionForages | null
-}
+} & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {
   typeId: string

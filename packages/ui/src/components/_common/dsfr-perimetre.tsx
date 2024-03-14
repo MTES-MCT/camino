@@ -9,6 +9,7 @@ import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 export type TabId = 'carte' | 'points'
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
     geojson_origine_forages: FeatureCollectionForages | null
   }
   titreSlug: TitreSlug
+  titreTypeId: TitreTypeId
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & (
@@ -112,7 +114,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap perimetre={props.perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
+      <DemarcheMap perimetre={props.perimetre} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
       <div style={{ alignSelf: 'end' }}>
         {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
           <DsfrLink
@@ -139,7 +141,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']

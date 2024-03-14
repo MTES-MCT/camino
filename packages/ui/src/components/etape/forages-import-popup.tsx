@@ -54,25 +54,27 @@ export const ForagesImportPopup = caminoDefineComponent<Props>(['apiClient', 'cl
       />
 
       {isNotNullNorUndefined(fileType.value) ? (
-        <Alert
-          type="info"
-          small={true}
-          title={
-            <>
-              Vous pouvez déposer un fichier de forages pour modifier ou supprimer les propriétés des forages. Ils doivent avoir les champs suivants : "nom" (nous vous conseillons de ne pas dépasser 3
-              caractères), "description", "type" (rejet ou captage), "profondeur" (en NGF)
-              {fileType.value !== 'csv' ? '. ' : `, ${GeoSystemes[props.geoSystemeId].uniteId === 'deg' ? '"longitude", "latitude". ' : '"x", "y". '}`}
-              Seul le champ description peut être vide.
-            </>
-          }
-        />
-      ) : null}
+        <>
+          <Alert
+            type="info"
+            small={true}
+            title={
+              <>
+                Vous pouvez déposer un fichier de forages pour modifier ou supprimer les propriétés des forages. Ils doivent avoir les champs suivants : "nom" (nous vous conseillons de ne pas dépasser
+                3 caractères), "description", "type" (rejet ou captage), "profondeur" (en NGF)
+                {fileType.value !== 'csv' ? '. ' : `, ${GeoSystemes[props.geoSystemeId].uniteId === 'deg' ? '"longitude", "latitude". ' : '"x", "y". '}`}
+                Seul le champ description peut être vide.
+              </>
+            }
+          />
 
-      <fieldset class="fr-fieldset" id="fichier">
-        <div class="fr-fieldset__element">
-          <InputFile accept={['geojson']} uploadFile={fileChange} />
-        </div>
-      </fieldset>
+          <fieldset class="fr-fieldset" id="fichier">
+            <div class="fr-fieldset__element">
+              <InputFile accept={[fileType.value]} uploadFile={fileChange} />
+            </div>
+          </fieldset>
+        </>
+      ) : null}
     </form>
   )
 

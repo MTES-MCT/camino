@@ -119,7 +119,7 @@ const TableForages: FunctionalComponent<NotNullableKeys<Pick<Props, 'geo_systeme
 
   const currentRows = geoJsonToArray(props.geojson_origine_forages)
 
-  const values = currentRows.map(({ columns: c }) => columns.map(({ id }) => c[id]?.value ?? '').join(';'))
+  const values = currentRows.map(({ columns: c }) => columns.map(({ id }) => (id === 'type' ? `${c.type.value}`.toLowerCase() : c[id]?.value ?? '')).join(';'))
 
   const csvContent = encodeURI(`${columns.map(c => (c.id === 'x' || c.id === 'y' ? labels[uniteId][c.id] : c.id)).join(';')}\n${values.join('\n')}`)
 

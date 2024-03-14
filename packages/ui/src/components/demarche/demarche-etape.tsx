@@ -243,6 +243,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           class="fr-pt-2w"
           initTab={props.initTab}
           titreSlug={props.titre.slug}
+          titreTypeId={props.titre.typeId}
           apiClient={props.apiClient}
           calculateNeighbours={false}
           perimetre={{
