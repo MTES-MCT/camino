@@ -308,14 +308,14 @@ export const DemarcheMap = defineComponent<Props>(props => {
       top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
     })
     props.perimetre.geojson4326_forages?.features.forEach(feature => bounds.extend(feature.geometry.coordinates))
-    
-return bounds
+
+    return bounds
   })
 
   watch(
     () => props.perimetre,
     () => {
-      (map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
+      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
       ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
       ;(map.value?.getSource(foragesSourceName) as GeoJSONSource).setData(forages.value)
       console.log('update perimetre', forages.value)
