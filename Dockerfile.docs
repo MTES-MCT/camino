@@ -1,0 +1,12 @@
+FROM node:20.9-alpine as builder
+
+RUN apk add -U make python3 py3-pip curl
+RUN python3 -m pip config set global.break-system-packages true
+COPY . /project/
+WORKDIR /project
+RUN make install
+RUN make docs/build
+
+FROM nginx:1.25.3
+COPY --from=builder /project/docs /usr/share/nginx/html
+COPY --from=builder /project/packages/ui/storybook-static /usr/share/nginx/html/storybook
