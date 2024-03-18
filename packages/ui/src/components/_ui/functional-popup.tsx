@@ -39,6 +39,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
           status: 'LOADED',
           value: null,
         }
+        props.close()
       } catch (e: any) {
         console.error('error', e)
         validateProcess.value = {
@@ -46,7 +47,6 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
           message: e.message ?? 'something wrong happened',
         }
       }
-      props.close()
     }
   }
 
@@ -89,12 +89,12 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
                     </h1>
                     <div class="fr-container">{props.content()}</div>
                   </div>
-                  <div class="fr-modal__footer">
-                    <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                      <li>
-                        <LoadingElement
-                          data={validateProcess.value}
-                          renderItem={() => (
+                  <LoadingElement
+                    data={validateProcess.value}
+                    renderItem={() => (
+                      <div class="fr-modal__footer">
+                        <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                          <li>
                             <button
                               class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
                               disabled={!canValidate.value}
@@ -106,16 +106,16 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
                             >
                               {text}
                             </button>
-                          )}
-                        />
-                      </li>
-                      <li>
-                        <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
-                          Annuler
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
+                          </li>
+                          <li>
+                            <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
+                              Annuler
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  />
                 </div>
               </div>
             </div>
