@@ -73,6 +73,7 @@ export const DefaultNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: null,
@@ -138,6 +139,7 @@ export const NoNeighborsNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: null,
@@ -182,6 +184,7 @@ export const PolygonWithLacuneNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre: perimetreWithLacune,
         geojson4326_points: null,
@@ -222,6 +225,7 @@ export const BigNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre: bigGeoJson,
         geojson4326_points: null,
@@ -286,6 +290,7 @@ export const MultipleNoSnapshot: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre: multiplePolygone,
         geojson_origine_perimetre: multiplePolygone,
@@ -372,6 +377,7 @@ export const MultiplePolygonWithLacuneTableau: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre: multiplePolygoneWithLacune,
         geojson4326_points: null,
@@ -407,6 +413,7 @@ export const CustomPoints: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: customPoints,
@@ -433,6 +440,7 @@ export const CustomPointsWithoutNameAndDesc: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: customPointWithoutNameAndDesc,
@@ -454,6 +462,7 @@ export const CustomPointsWithAnotherGeoSysteme: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: customPointWithoutNameAndDesc,
@@ -479,6 +488,7 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
   <>
     <MapPattern />
     <DsfrPerimetre
+      titreTypeId="axm"
       perimetre={{
         geojson4326_perimetre,
         geojson4326_points: customPointWithoutNameAndDesc,
@@ -502,6 +512,7 @@ export const CustomPointsWithAnotherLegacyGeoSysteme: StoryFn = () => (
 
 export const WithForages: StoryFn = () => (
   <DsfrPerimetre
+    titreTypeId="pxm"
     perimetre={{
       geojson4326_perimetre,
       geojson4326_points: customPointWithoutNameAndDesc,
