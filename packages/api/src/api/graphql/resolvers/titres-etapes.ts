@@ -176,21 +176,16 @@ const getForagesProperties = async (
   geojsonOrigineForages: ITitreEtape['geojsonOrigineForages'],
   pool: Pool
 ): Promise<Pick<ITitreEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
-  if (!canHaveForages(titreTypeId)) {
-    return {
-      geojson4326Forages: null,
-      geojsonOrigineForages: null,
-    }
-  } else if (isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
+  if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
     return {
       geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
       geojsonOrigineForages,
     }
-  } else {
-    return {
-      geojson4326Forages: null,
-      geojsonOrigineForages: null,
-    }
+  }
+
+  return {
+    geojson4326Forages: null,
+    geojsonOrigineForages: null,
   }
 }
 
