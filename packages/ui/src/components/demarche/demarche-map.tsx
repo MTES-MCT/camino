@@ -1,5 +1,5 @@
 import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted } from 'vue'
-import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
+import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
@@ -15,6 +15,7 @@ import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { capitalize } from 'camino-common/src/strings'
+import { CaminoMapLibre } from '@/typings/maplibre-gl'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -256,7 +257,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
 export const DemarcheMap = defineComponent<Props>(props => {
   const mapRef = ref<HTMLDivElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
-  const map = ref<Map | null>(null) as Ref<Map | null>
+  const map = ref<CaminoMapLibre | null>(null) as Ref<CaminoMapLibre | null>
 
   const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[]>(() => {
     const values: Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[] = []
@@ -315,9 +316,9 @@ export const DemarcheMap = defineComponent<Props>(props => {
   watch(
     () => props.perimetre,
     () => {
-      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
-      ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
-      ;(map.value?.getSource(foragesSourceName) as GeoJSONSource).setData(forages.value)
+      map.value?.getSource(contoursSourceName).setData(props.perimetre.geojson4326_perimetre)
+      map.value?.getSource(pointsSourceName).setData(points.value)
+      map.value?.getSource(foragesSourceName).setData(forages.value)
     }
   )
 
@@ -350,7 +351,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           typesIds: [],
         })
 
-        ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
+        map.value?.getSource('TitresValides').setData({
           type: 'FeatureCollection',
           features: res.elements
             .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
@@ -412,13 +413,13 @@ export const DemarcheMap = defineComponent<Props>(props => {
     if (mapRef.value === null) {
       console.error("la carte ne peut pas être chargée à cause d'un problème technique, contactez l'équipe Camion")
     } else {
-      const mapLibre: Map = new Map({
+      const mapLibre: CaminoMapLibre = new Map({
         container: mapRef.value,
         cooperativeGestures: true,
         style,
         center: bounds.value.getCenter().toArray(),
         zoom: 16,
-      })
+      }) as CaminoMapLibre
 
       map.value = mapLibre
 
