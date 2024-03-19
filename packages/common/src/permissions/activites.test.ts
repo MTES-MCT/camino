@@ -57,7 +57,7 @@ test.each<[User, boolean]>([
       role: 'admin',
       administrationId: ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE'],
     },
-    false,
+    true,
   ],
   [
     {
@@ -72,42 +72,6 @@ test.each<[User, boolean]>([
   [{ ...testBlankUser, role: 'defaut' }, false],
 ])('utilisateur %s peur voir les activités: %s', async (user, lecture) => {
   expect(canReadActivites(user)).toBe(lecture)
-})
-
-describe('canEditActivite', () => {
-  test("l'ONF, le BRGM ne peuvent pas éditer (ni voir) les activités", async () => {
-    expect(
-      await canEditActivite(
-        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] },
-        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
-        () => Promise.resolve([ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]),
-        () => Promise.resolve([]),
-        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
-      )
-    ).toBe(false)
-
-    expect(
-      await canEditActivite(
-        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM },
-        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
-        () => Promise.resolve([ADMINISTRATION_IDS.BRGM]),
-        () => Promise.resolve([]),
-        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
-      )
-    ).toBe(false)
-  })
-
-  test('La préfecture de Guyane peut éditer les activités', async () => {
-    expect(
-      await canEditActivite(
-        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - GUYANE'] },
-        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
-        () => Promise.resolve([ADMINISTRATION_IDS['PRÉFECTURE - GUYANE']]),
-        () => Promise.resolve([]),
-        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
-      )
-    ).toBe(true)
-  })
 })
 
 describe('canDeleteActiviteDocument', () => {
@@ -136,8 +100,9 @@ describe('canReadTitreActivites', () => {
     [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DGALN/DEB/EARM2'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [], [], true],
     [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [], [], false],
     [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DGCL/SDFLAE/FL1'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [ADMINISTRATION_IDS['DGCL/SDFLAE/FL1']], [], true],
-    [{ role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE']], [], false],
-  ])('vérifie la possibilité de consulter les activités d un titre', async (user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, readable) => {
+    [{ role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE']], [], true],
+    [{ role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - ARDÈCHE'] }, TITRES_TYPES_IDS.CONCESSION_FOSSILES, [ADMINISTRATION_IDS['PRÉFECTURE - AISNE']], [], false],
+  ])("vérifie la possibilité de consulter les activités d'un titre $user", async (user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, readable) => {
     expect(
       await canReadTitreActivites(
         { ...testBlankUser, ...user },
@@ -175,7 +140,7 @@ describe('canEditActivite', () => {
       ACTIVITES_STATUTS_IDS.ABSENT,
       false,
     ],
-  ])('vérifie la possibilité de éditer les activités d un titre', async (user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, activiteStatutId, readable) => {
+  ])("vérifie la possibilité d'éditer les activités d'un titre %s %s %s", async (user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, activiteStatutId, readable) => {
     expect(
       await canEditActivite(
         { ...testBlankUser, ...user },
@@ -185,6 +150,40 @@ describe('canEditActivite', () => {
         activiteStatutId
       )
     ).toBe(readable)
+  })
+
+  test("l'ONF, le BRGM ne peuvent pas éditer (ni voir) les activités", async () => {
+    expect(
+      await canEditActivite(
+        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] },
+        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
+        () => Promise.resolve([ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]),
+        () => Promise.resolve([]),
+        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      )
+    ).toBe(false)
+
+    expect(
+      await canEditActivite(
+        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM },
+        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
+        () => Promise.resolve([ADMINISTRATION_IDS.BRGM]),
+        () => Promise.resolve([]),
+        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      )
+    ).toBe(false)
+  })
+
+  test('La préfecture de Guyane peut éditer les activités', async () => {
+    expect(
+      await canEditActivite(
+        { ...testBlankUser, role: 'admin', administrationId: ADMINISTRATION_IDS['PRÉFECTURE - GUYANE'] },
+        () => Promise.resolve(TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES),
+        () => Promise.resolve([ADMINISTRATION_IDS['PRÉFECTURE - GUYANE']]),
+        () => Promise.resolve([]),
+        ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      )
+    ).toBe(true)
   })
 })
 
