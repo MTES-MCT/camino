@@ -1,9 +1,10 @@
 import { CaminoAnnee } from 'camino-common/src/date.js'
+import { config } from '../../config/index.js'
 
-export const titreUrlGet = (titreId: string) => `${process.env.OAUTH_URL}/titres/${titreId}`
+export const titreUrlGet = (titreId: string) => `${config().OAUTH_URL}/titres/${titreId}`
 
 export const activitesUrlGet = (params?: { typesIds?: string[]; statutsIds?: string[]; annees?: CaminoAnnee[] }): string => {
-  const url = new URL(`${process.env.OAUTH_URL ?? 'https://camino.beta.gouv.fr'}/activites`)
+  const url = new URL(`${config().OAUTH_URL}/activites`)
 
   url.searchParams.append('page', '1')
   url.searchParams.append('intervalle', '200')

@@ -127,7 +127,10 @@ jobs:
             cache: 'npm'
         - name: Npm install
           run: make install
-
+        - uses: cardinalby/export-env-action@v2
+          with:
+            envFile: '.env-example'    
+            expand: 'true'
         - name: Migrate database and check queries
           run: | 
             make db/migrate

@@ -16,6 +16,7 @@ import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../../config/index.js'
 
 export const isSubscribedToNewsletter = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
@@ -73,9 +74,9 @@ export const updateUtilisateurPermission = (_pool: Pool) => async (req: CaminoRe
 export type KeycloakAccessTokenResponse = { access_token: string }
 
 export const getKeycloakApiToken = async (): Promise<string> => {
-  const client_id = process.env.KEYCLOAK_API_CLIENT_ID
-  const client_secret = process.env.KEYCLOAK_API_CLIENT_SECRET
-  const url = process.env.KEYCLOAK_URL
+  const client_id = config().KEYCLOAK_API_CLIENT_ID
+  const client_secret = config().KEYCLOAK_API_CLIENT_SECRET
+  const url = config().KEYCLOAK_URL
 
   if (!client_id || !client_secret || !url) {
     throw new Error('variables KEYCLOAK_API_CLIENT_ID and KEYCLOAK_API_CLIENT_SECRET and KEYCLOAK_URL must be set')
@@ -124,7 +125,7 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
 
       const authorizationToken = await getKeycloakApiToken()
 
-      const deleteFromKeycloak = await fetch(`${process.env.KEYCLOAK_URL}/admin/realms/Camino/users/${utilisateurKeycloakId}`, {
+      const deleteFromKeycloak = await fetch(`${config().KEYCLOAK_URL}/admin/realms/Camino/users/${utilisateurKeycloakId}`, {
         method: 'DELETE',
         headers: {
           authorization: `Bearer ${authorizationToken}`,
@@ -146,7 +147,7 @@ export const deleteUtilisateur = (_pool: Pool) => async (req: CaminoRequest, res
       await utilisateurUpsert(utilisateur)
 
       if (isNotNullNorUndefined(user) && user.id === req.params.id) {
-        const uiUrl = process.env.OAUTH_URL
+        const uiUrl = config().OAUTH_URL
         const oauthLogoutUrl = new URL(`${uiUrl}/oauth2/sign_out`)
         res.redirect(oauthLogoutUrl.href)
       } else {
@@ -211,7 +212,7 @@ export const generateQgisToken = (_pool: Pool) => async (req: CaminoRequest, res
     await knex('utilisateurs')
       .update({ qgis_token: bcrypt.hashSync(token, 10) })
       .where('email', user.email)
-    res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${process.env.API_HOST ?? 'api.camino.beta.gouv.fr'}/titres_qgis` })
+    res.send({ token, url: `https://${user.email.replace('@', '%40')}:${token}@${config().API_HOST}/titres_qgis` })
   }
 }
 
@@ -220,9 +221,9 @@ interface IUtilisateursQueryInput {
   colonne?: IUtilisateursColonneId | null
   ordre?: 'asc' | 'desc' | null
   entrepriseIds?: string | string[]
-  administrationIds?: string
+  administrationIds?: string | string[]
   //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
-  roles?: string
+  roles?: string | string[]
   noms?: string | null
   nomsUtilisateurs?: string | null
   emails?: string | null
@@ -235,9 +236,9 @@ export const utilisateurs =
       {
         colonne,
         ordre,
-        entreprisesIds: entrepriseIds ? (Array.isArray(entrepriseIds) ? entrepriseIds : entrepriseIds.split(',')) : undefined,
-        administrationIds: administrationIds ? (Array.isArray(administrationIds) ? administrationIds : administrationIds.split(',')) : undefined,
-        roles: roles ? (Array.isArray(roles) ? roles.filter(isRole) : roles.split(',').filter(isRole)) : undefined,
+        entreprisesIds: isNotNullNorUndefined(entrepriseIds) ? (Array.isArray(entrepriseIds) ? entrepriseIds : entrepriseIds.split(',')) : undefined,
+        administrationIds: isNotNullNorUndefined(administrationIds) ? (Array.isArray(administrationIds) ? administrationIds : administrationIds.split(',')) : undefined,
+        roles: isNotNullNorUndefined(roles) ? (Array.isArray(roles) ? roles.filter(isRole) : roles.split(',').filter(isRole)) : undefined,
         noms: noms ?? nomsUtilisateurs,
         emails,
       },

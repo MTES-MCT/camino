@@ -10,7 +10,9 @@ describe('config', () => {
     const tested = await restCall(null as unknown as Pool, '/config', {}, undefined)
     expect(tested.body).toMatchInlineSnapshot(`
       {
-        "environment": "dev",
+        "API_MATOMO_ID": "plop",
+        "API_MATOMO_URL": "plop",
+        "SENTRY_DSN": "plop",
       }
     `)
   })

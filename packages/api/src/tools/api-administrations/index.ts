@@ -2,10 +2,12 @@
 import errorLog from '../error-log.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { Administration, AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
+import { config } from '../../config/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const MAX_CALLS_MINUTE = 200
 
-const { API_ADMINISTRATION_URL } = process.env
+const API_ADMINISTRATION_URL = config().API_ADMINISTRATION_URL
 
 interface IOrganisme {
   features: {
@@ -26,10 +28,6 @@ interface IOrganisme {
 }
 
 const organismeFetch = async (departementId: string, nom: 'paris_ppp' | 'prefecture') => {
-  if (!API_ADMINISTRATION_URL) {
-    throw new Error("impossible de se connecter à l'API administration car la variable d'environnement est absente")
-  }
-
   console.info(`API administration: requête ${departementId}, ${nom}`)
 
   const response = await fetch(`${API_ADMINISTRATION_URL}/v3/departements/${departementId}/${nom}`, {
@@ -56,7 +54,7 @@ const organismeDepartementCall = async (departementId: string, nom: 'paris_ppp' 
   try {
     return await organismeFetch(departementId, nom)
   } catch (err: any) {
-    const error = err.error ? `${err.error}: ${err.error_description}` : err
+    const error = isNotNullNorUndefined(err.error) ? `${err.error}: ${err.error_description}` : err
     errorLog(`API administrations ${departementId} ${nom}:`, error)
 
     return null
@@ -92,16 +90,16 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
     telephone: p.telephone,
     departementId,
   }
-  const adresse2 = adresseB ? adresseB.lignes.join(', ') : null
-  if (adresse2) {
+  const adresse2 = isNotNullNorUndefined(adresseB) ? adresseB.lignes.join(', ') : null
+  if (isNotNullNorUndefined(adresse2)) {
     organisme.adresse2 = adresse2
   }
   const email = p.email && p.email.match('@') ? p.email : null
-  if (email) {
+  if (isNotNullNorUndefined(email)) {
     organisme.email = email
   }
   const url = p.url || null
-  if (url) {
+  if (isNotNullNorUndefined(url)) {
     organisme.url = url
   }
 

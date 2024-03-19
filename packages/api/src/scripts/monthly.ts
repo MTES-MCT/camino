@@ -5,19 +5,21 @@ import { readFileSync, writeFileSync, createWriteStream } from 'fs'
 import * as Console from 'console'
 import { monthly } from '../business/monthly.js'
 import pg from 'pg'
+import { config } from '../config/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const logFile = '/tmp/monthly.log'
 
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
-  host: process.env.PGHOST,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  database: process.env.PGDATABASE,
+  host: config().PGHOST,
+  user: config().PGUSER,
+  password: config().PGPASSWORD,
+  database: config().PGDATABASE,
 })
 
 const output = createWriteStream(logFile)
-if (process.env.CAMINO_STAGE) {
+if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
   const logger = new Console.Console({ stdout: output, stderr: output })
   // eslint-disable-next-line no-console
   console.log = logger.log
@@ -34,10 +36,10 @@ const tasks = async () => {
     console.error('Erreur durant le monthly', e)
   }
 
-  if (process.env.CAMINO_STAGE) {
-    const emailBody = `Résultats de ${process.env.ENV} \n${readFileSync(logFile).toString()}`
-    await mailjetSend([process.env.ADMIN_EMAIL!], {
-      Subject: `[Camino][${process.env.ENV}] Résultats du monthly`,
+  if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
+    const emailBody = `Résultats de ${config().ENV} \n${readFileSync(logFile).toString()}`
+    await mailjetSend([config().ADMIN_EMAIL], {
+      Subject: `[Camino][${config().ENV}] Résultats du monthly`,
       'Text-part': emailBody,
     })
   }

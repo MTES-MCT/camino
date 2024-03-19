@@ -7,7 +7,7 @@ exports[`envoie un email sur un octroi d'AEX 1`] = `
   
   <hr>
   
-  <b>Lien</b> : <a href=\\"undefined/titres/titreId\\">undefined/titres/titreId</a> <br>
+  <b>Lien</b> : <a href=\\"http://plop.plop/titres/titreId\\">http://plop.plop/titres/titreId</a> <br>
   <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
   
   ",
@@ -25,7 +25,7 @@ exports[`envoie un email sur un octroi d'ARM 1`] = `
   
   <hr>
   
-  <b>Lien</b> : <a href=\\"undefined/titres/titreId\\">undefined/titres/titreId</a> <br>
+  <b>Lien</b> : <a href=\\"http://plop.plop/titres/titreId\\">http://plop.plop/titres/titreId</a> <br>
   <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
   
   ",

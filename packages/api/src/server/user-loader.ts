@@ -8,6 +8,7 @@ import { formatUser } from '../types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { EmailTemplateId } from '../tools/api-mailjet/types.js'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../config/index.js'
 
 export type JWTUser = { email?: string; family_name?: string; given_name?: string; sub: string | undefined }
 export const userLoader = async (req: JWTRequest<{ email?: string; family_name?: string; given_name?: string; sub?: string }>, _res: express.Response, next: express.NextFunction) => {
@@ -37,9 +38,9 @@ export const userLoader = async (req: JWTRequest<{ email?: string; family_name?:
         )
 
         await emailsSend(
-          [process.env.ADMIN_EMAIL!],
+          [config().ADMIN_EMAIL],
           `Nouvel utilisateur ${user.email} créé`,
-          `L'utilisateur ${user.nom} ${user.prenom} vient de se créer un compte : ${process.env.OAUTH_URL}/utilisateurs/${user.id}`
+          `L'utilisateur ${user.nom} ${user.prenom} vient de se créer un compte : ${config().OAUTH_URL}/utilisateurs/${user.id}`
         )
         if (isNotNullNorUndefined(reqUser.email)) {
           await emailsWithTemplateSend([reqUser.email], EmailTemplateId.CREATION_COMPTE, {})

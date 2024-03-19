@@ -6,6 +6,7 @@ import { knexInstanceSet } from '../src/knex.js'
 import knex, { Knex } from 'knex'
 import pg, { Client } from 'pg'
 import { knexSnakeCaseMappers, Model } from 'objection'
+import { config } from '../src/config/index.js'
 
 class DbManager {
   private readonly dbName: string
@@ -17,11 +18,11 @@ class DbManager {
   }
 
   private static getPgUser() {
-    return process.env.PGUSER ?? 'postgres'
+    return config().PGUSER
   }
 
   private static getPgPassword() {
-    return process.env.PGPASSWORD ?? 'password'
+    return config().PGPASSWORD
   }
 
   private async init(): Promise<void> {

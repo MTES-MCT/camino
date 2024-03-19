@@ -1,3 +1,5 @@
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../../config/index.js'
 import { mailjet } from './index.js'
 
 interface IContactListAdd {
@@ -5,15 +7,15 @@ interface IContactListAdd {
   Action: string
 }
 
-const newsLetterContactListId = Number(process.env.API_MAILJET_CONTACTS_LIST_ID!)
-const exploitantsGuyaneContactListId = Number(process.env.API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID!)
+const newsLetterContactListId = config().API_MAILJET_CONTACTS_LIST_ID
+const exploitantsGuyaneContactListId = config().API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID
 
 export const isSubscribedToNewsLetter = async (email: string | null | undefined): Promise<boolean> => {
   return isSubscribed(newsLetterContactListId, email)
 }
 
 const isSubscribed = async (contactListId: number, email: string | null | undefined): Promise<boolean> => {
-  if (email) {
+  if (isNotNullNorUndefined(email) && email !== '') {
     const recipientsResult = await mailjet.get('listrecipient', { version: 'v3' }).request(
       {},
       {
@@ -31,7 +33,7 @@ const isSubscribed = async (contactListId: number, email: string | null | undefi
   return false
 }
 
-const contactListSubscribe = async (email: string, contactListId: number, Action: 'addforce' | 'unsub') => {
+const contactListSubscribe = async (email: string, contactListId: number, Action: 'addforce' | 'unsub'): Promise<boolean> => {
   const contactResult = (await mailjet
     .post('contact', { version: 'v3' })
     .id(encodeURIComponent(email))
@@ -42,7 +44,7 @@ const contactListSubscribe = async (email: string, contactListId: number, Action
 
   const contactListAdded = contactResult.body.Data[0]
 
-  return !!contactListAdded
+  return isNotNullNorUndefined(contactListAdded)
 }
 
 const contactAdd = async (email: string): Promise<void> => {
@@ -50,10 +52,12 @@ const contactAdd = async (email: string): Promise<void> => {
     await mailjet.post('contact', { version: 'v3' }).request({ Email: email })
   } catch (e: any) {
     // MJ18 -> erreur mailjet contact déjà existant
-    if (!e.statusText.includes('MJ18')) {
+    const statusText: string = e?.statusText ?? ''
+    if (statusText.includes('MJ18')) {
+      console.info(`utilisateur ${email} déjà existant chez mailjet`)
+    } else {
       throw e
     }
-    console.info(`utilisateur ${email} déjà existant chez mailjet`)
   }
 }
 
@@ -76,7 +80,7 @@ export const exploitantsGuyaneSubscriberUpdate = async (users: { email: string; 
 }
 
 export const newsletterSubscriberUpdate = async (email: string | undefined | null, subscribed: boolean): Promise<string> => {
-  if (!email) {
+  if (isNullOrUndefined(email) || email === '') {
     return ''
   }
   await isSubscribed(newsLetterContactListId, email)

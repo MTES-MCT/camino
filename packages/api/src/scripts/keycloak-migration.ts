@@ -1,10 +1,11 @@
 import { getKeycloakApiToken } from '../api/rest/utilisateurs.js'
+import { config } from '../config/index.js'
 import '../init.js'
 import { knex } from '../knex.js'
 
 const migrate = async (): Promise<void> => {
   const token = await getKeycloakApiToken()
-  const url = process.env.KEYCLOAK_URL
+  const url = config().KEYCLOAK_URL
 
   if (!url) {
     throw new Error('variables KEYCLOAK_API_CLIENT_ID and KEYCLOAK_API_CLIENT_SECRET and KEYCLOAK_URL must be set')
