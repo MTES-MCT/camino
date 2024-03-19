@@ -8,11 +8,12 @@ import { documentsClean } from '../tools/documents/clean.js'
 import * as Console from 'console'
 import pg from 'pg'
 import { config } from '../config/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const logFile = '/tmp/cron.log'
 const output = createWriteStream(logFile)
 
-if (config().CAMINO_STAGE) {
+if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
   const logger = new Console.Console({ stdout: output, stderr: output })
   // eslint-disable-next-line no-console
   console.log = logger.log
@@ -33,7 +34,7 @@ const tasks = async () => {
   writeFileSync(logFile, '')
   try {
     await daily(pool)
-    if (config().CAMINO_STAGE) {
+    if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
       await documentsClean(pool)
       await documentsCheck(pool)
     }
@@ -41,7 +42,7 @@ const tasks = async () => {
     console.error('Erreur durant le daily', e)
   }
 
-  if (config().CAMINO_STAGE) {
+  if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
     const emailBody = `Résultats de ${config().ENV} \n${readFileSync(logFile).toString()}`
     await mailjetSend([config().ADMIN_EMAIL], {
       Subject: `[Camino][${config().ENV}] Résultats du daily`,

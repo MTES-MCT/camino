@@ -14,6 +14,7 @@ import { initMatomo } from './stats/matomo'
 import type { User } from 'camino-common/src/roles'
 import { userKey, entreprisesKey } from './moi'
 import type { Entreprise } from 'camino-common/src/entreprise'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 // Le Timeout du sse côté backend est mis à 30 secondes, toujours avoir une valeur plus haute ici
 const sseTimeoutInSeconds = 45
 
@@ -67,7 +68,7 @@ Promise.resolve().then(async (): Promise<void> => {
   // TODO 2024-03-04 à supprimer quand on a plus etape-edition.vue
   app.config.globalProperties.user = user
   app.config.globalProperties.entreprises = entreprises
-  if (configFromJson.CAMINO_STAGE) {
+  if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
     try {
       if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')
       Sentry.init({

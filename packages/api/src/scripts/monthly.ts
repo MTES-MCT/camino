@@ -6,6 +6,7 @@ import * as Console from 'console'
 import { monthly } from '../business/monthly.js'
 import pg from 'pg'
 import { config } from '../config/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 const logFile = '/tmp/monthly.log'
 
@@ -18,7 +19,7 @@ const pool = new pg.Pool({
 })
 
 const output = createWriteStream(logFile)
-if (config().CAMINO_STAGE) {
+if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
   const logger = new Console.Console({ stdout: output, stderr: output })
   // eslint-disable-next-line no-console
   console.log = logger.log
@@ -35,7 +36,7 @@ const tasks = async () => {
     console.error('Erreur durant le monthly', e)
   }
 
-  if (config().CAMINO_STAGE) {
+  if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
     const emailBody = `Résultats de ${config().ENV} \n${readFileSync(logFile).toString()}`
     await mailjetSend([config().ADMIN_EMAIL], {
       Subject: `[Camino][${config().ENV}] Résultats du monthly`,
