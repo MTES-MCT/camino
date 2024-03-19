@@ -34,6 +34,7 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
           FromName: from.name,
           Recipients: emails.map(Email => ({ Email })),
           ...options,
+          Headers: { 'Reply-To': process.env.API_MAILJET_REPLY_TO_EMAIL },
         },
       ],
     })) as {

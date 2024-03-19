@@ -55,7 +55,8 @@ ADMIN_EMAIL=camino@beta.gouv.fr
 
 
 # API Mailjet
-API_MAILJET_EMAIL=camino@beta.gouv.fr
+API_MAILJET_REPLY_TO_EMAIL=camino@beta.gouv.fr
+API_MAILJET_EMAIL=contact@camino.beta.gouv.fr
 API_MAILJET_KEY={{ mailjet_key }}
 API_MAILJET_SECRET={{ mailjet_secret }}
 API_MAILJET_SERVER=in-v3.mailjet.com
