@@ -2,14 +2,15 @@ import 'dotenv/config'
 import { knexSnakeCaseMappers } from 'objection'
 import path, { join } from 'node:path'
 import { fileURLToPath } from 'url'
+import { config } from '../config/index.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const connection = {
-  host: process.env.PGHOST,
-  port: Number(process.env.PGPORT),
-  database: process.env.PGDATABASE,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
+  host: config().PGHOST,
+  port: config().PGPORT,
+  database: config().PGDATABASE,
+  user: config().PGUSER,
+  password: config().PGPASSWORD,
 }
 
 export const simpleKnexConfig = {

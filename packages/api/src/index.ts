@@ -15,7 +15,7 @@ import express from 'express'
 import rateLimit from 'express-rate-limit'
 import * as Sentry from '@sentry/node'
 
-import { port, url } from './config/index.js'
+import { config } from './config/index.js'
 import { restWithPool } from './server/rest.js'
 import { graphql } from './server/graphql.js'
 import { authJwt } from './server/auth-jwt.js'
@@ -30,12 +30,13 @@ import { connectedCatcher } from './server/connected-catcher.js'
 import cookieParser from 'cookie-parser'
 import pg from 'pg'
 import qs from 'qs'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 // Le pool ne doit être qu'aux entrypoints : le daily, le monthly, et l'application.
 const pool = new pg.Pool({
-  host: process.env.PGHOST,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  database: process.env.PGDATABASE,
+  host: config().PGHOST,
+  user: config().PGUSER,
+  password: config().PGPASSWORD,
+  database: config().PGDATABASE,
   idleTimeoutMillis: 60000,
 })
 
@@ -47,10 +48,10 @@ databaseInit(pool).then(() => {
   app.set('query parser', function (str: string) {
     return qs.parse(str, { comma: true })
   })
-  if (process.env.API_SENTRY_URL) {
+  if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
     Sentry.init({
-      dsn: process.env.API_SENTRY_URL,
-      environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV,
+      dsn: config().API_SENTRY_URL,
+      environment: config().ENV === 'prod' ? 'production' : config().ENV,
     })
     app.use(Sentry.Handlers.requestHandler())
   }
@@ -80,7 +81,7 @@ databaseInit(pool).then(() => {
     res.writeHead(200, headers)
     res.write(`id: ${Date.now()}\n`)
     res.write(`event: version\n`)
-    res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+    res.write(`data: ${config().APPLICATION_VERSION}\n\n`)
     res.flush()
     let counter = 0
     const interValID = setInterval(() => {
@@ -93,7 +94,7 @@ databaseInit(pool).then(() => {
       }
       res.write(`id: ${Date.now()}\n`)
       res.write(`event: version\n`)
-      res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+      res.write(`data: ${config().APPLICATION_VERSION}\n\n`)
       res.flush()
     }, ssePingDelayInSeconds * 1000)
 
@@ -109,19 +110,14 @@ databaseInit(pool).then(() => {
 
   app.use('/', graphqlUpload, graphql(pool))
 
-  if (process.env.API_SENTRY_URL) {
+  if (isNotNullNorUndefined(config().API_SENTRY_URL)) {
     app.use(Sentry.Handlers.errorHandler())
   }
 
-  app.listen(port, () => {
+  app.listen(config().API_PORT, () => {
     console.info('')
-    console.info('URL:', url)
-    console.info('ENV:', process.env.ENV)
-    console.info('NODE_ENV:', process.env.NODE_ENV)
-
-    if (process.env.NODE_DEBUG === 'true') {
-      console.warn('NODE_DEBUG:', process.env.NODE_DEBUG)
-    }
+    console.info('ENV:', config().ENV)
+    console.info('NODE_ENV:', config().NODE_ENV)
     console.info('')
   })
 })

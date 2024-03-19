@@ -1,6 +1,7 @@
 import { SubstanceFiscale, SubstanceFiscaleId, SubstancesFiscales } from 'camino-common/src/static/substancesFiscales.js'
 import { Unite, Unites } from 'camino-common/src/static/unites.js'
 import Decimal from 'decimal.js'
+import { config } from '../../config/index.js'
 type Attribute = 'surface_communale' | 'surface_communale_proportionnee' | 'taxe_guyane_brute' | 'taxe_guyane_deduction' | 'taxe_guyane' | string
 
 const openfiscaSubstanceFiscaleNom = (substanceFiscale: SubstanceFiscale): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
@@ -81,11 +82,7 @@ export interface OpenfiscaConstants {
 }
 
 const apiOpenfiscaFetch = async <T>(call: (apiOpenfiscaUrl: string) => Promise<Response>): Promise<T> => {
-  const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
-  if (!apiOpenfiscaUrl) {
-    throw new Error("impossible de se connecter à l'API Openfisca car la variable d'environnement est absente")
-  }
-
+  const apiOpenfiscaUrl = config().API_OPENFISCA_URL
   const response = await call(apiOpenfiscaUrl)
 
   const result = (await response.json()) as T

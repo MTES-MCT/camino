@@ -67,13 +67,13 @@ Promise.resolve().then(async (): Promise<void> => {
   // TODO 2024-03-04 à supprimer quand on a plus etape-edition.vue
   app.config.globalProperties.user = user
   app.config.globalProperties.entreprises = entreprises
-  if (configFromJson.caminoStage) {
+  if (configFromJson.CAMINO_STAGE) {
     try {
-      if (!configFromJson.sentryDsn) throw new Error('dsn manquant')
+      if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')
       Sentry.init({
         app,
-        dsn: configFromJson.sentryDsn,
-        environment: configFromJson.environment,
+        dsn: configFromJson.SENTRY_DSN,
+        environment: configFromJson.CAMINO_STAGE,
         autoSessionTracking: false,
         integrations: [
           new BrowserTracing({
@@ -88,12 +88,12 @@ Promise.resolve().then(async (): Promise<void> => {
       console.error('erreur : Sentry :', e)
     }
     try {
-      if (!configFromJson.matomoHost || !configFromJson.matomoSiteId || !configFromJson.environment) throw new Error('host et/ou siteId manquant(s)')
+      if (!configFromJson.API_MATOMO_URL || !configFromJson.API_MATOMO_ID || !configFromJson.CAMINO_STAGE) throw new Error('host et/ou siteId manquant(s)')
 
       await initMatomo({
-        host: configFromJson.matomoHost,
-        siteId: configFromJson.matomoSiteId,
-        environnement: configFromJson.environment,
+        host: configFromJson.API_MATOMO_URL,
+        siteId: configFromJson.API_MATOMO_ID,
+        environnement: configFromJson.CAMINO_STAGE,
         router,
       })
     } catch (e) {

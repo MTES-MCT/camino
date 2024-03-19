@@ -1,20 +1,20 @@
-import { Algorithm } from 'jsonwebtoken'
 import { expressjwt } from 'express-jwt'
 import { CaminoRequest } from '../api/rest/express-type'
+import { config } from '../config/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 export const authJwt = expressjwt({
   credentialsRequired: false,
   getToken: (req: CaminoRequest) => {
-    if (req.headers) {
+    if (isNotNullNorUndefined(req.headers)) {
       const token = req.headers['x-forwarded-access-token']
-      if (token) {
+      if (isNotNullNorUndefined(token)) {
         return Array.isArray(token) ? token[0] : token
       }
     }
 
     return undefined
   },
-  secret: process.env.JWT_SECRET || 'jwtSecret should be declared in .env',
-  // TODO 2023-03-15: vérifier ça au runtime ?
-  algorithms: [(process.env.JWT_SECRET_ALGORITHM as Algorithm) || 'HS256'],
+  secret: config().JWT_SECRET,
+  algorithms: [config().JWT_SECRET_ALGORITHM],
 })

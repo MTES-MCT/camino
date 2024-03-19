@@ -8,6 +8,7 @@ import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { userSuper } from '../../database/user-super.js'
 import { newUtilisateurId } from '../../database/models/_format/id-create.js'
 import { KeycloakFakeServer, idUserKeycloakRecognised, setupKeycloak, teardownKeycloak } from '../../../tests/keycloak.js'
+import { renewConfig } from '../../config/index.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -19,6 +20,7 @@ beforeAll(async () => {
   dbPool = pool
   knex = knexInstance
   keycloak = await setupKeycloak()
+  renewConfig()
 })
 
 afterAll(async () => {
@@ -97,6 +99,7 @@ describe('utilisateurSupprimer', () => {
   test('peut supprimer son compte utilisateur', async () => {
     const OAUTH_URL = 'http://unused'
     process.env.OAUTH_URL = OAUTH_URL
+    renewConfig()
     const user = await userGenerate({ role: 'defaut' })
 
     const tested = await restCall(dbPool, '/rest/utilisateurs/:id/delete', { id: user.id }, { role: 'defaut' })

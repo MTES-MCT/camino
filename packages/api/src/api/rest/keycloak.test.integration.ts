@@ -4,6 +4,7 @@ import { restCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
+import { renewConfig } from '../../config/index.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -22,6 +23,7 @@ afterAll(async () => {
 test('deconnecter', async () => {
   process.env.KEYCLOAK_LOGOUT_URL = 'https://notexisting.url'
   process.env.OAUTH_URL = 'https://another.notexisting.url'
+  renewConfig()
   const tested = await restCall(dbPool, '/deconnecter', {}, userSuper)
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FOUND)
@@ -29,6 +31,7 @@ test('deconnecter', async () => {
 
 test('resetPassword', async () => {
   process.env.KEYCLOAK_RESET_PASSWORD_URL = 'https://notexisting.url'
+  renewConfig()
   const tested = await restCall(dbPool, '/changerMotDePasse', {}, userSuper)
 
   expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_FOUND)

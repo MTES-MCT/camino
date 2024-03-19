@@ -51,6 +51,7 @@ import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId,
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 import { titreDemandeCreer } from '../api/rest/titre-demande.js'
+import { config } from '../config/index.js'
 
 interface IRestResolverResult {
   nom: string
@@ -84,16 +85,15 @@ type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route>
   (Route extends NewDownloadRestRoutes ? { newDownload: NewDownload } : {}) &
   (Route extends DownloadRestRoutes ? { download: RestDownloadCall } : {})
 
-const config = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
-  const config: CaminoConfig = {
-    sentryDsn: process.env.SENTRY_DSN,
-    caminoStage: process.env.CAMINO_STAGE,
-    environment: process.env.ENV ?? 'dev',
-    matomoHost: process.env.API_MATOMO_URL,
-    matomoSiteId: process.env.API_MATOMO_ID,
+const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomResponse<CaminoConfig>) => {
+  const caminoConfig: CaminoConfig = {
+    CAMINO_STAGE: config().CAMINO_STAGE,
+    SENTRY_DSN: config().SENTRY_DSN,
+    API_MATOMO_URL: config().API_MATOMO_URL,
+    API_MATOMO_ID: config().API_MATOMO_ID,
   }
 
-  res.json(caminoConfigValidator.parse(config))
+  res.json(caminoConfigValidator.parse(caminoConfig))
 }
 
 const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> }> = {
@@ -115,7 +115,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 
   '/moi': { get: moi },
-  '/config': { get: config },
+  '/config': { get: getConfig },
   '/rest/titres/:id/titreLiaisons': { get: getTitreLiaisons, post: postTitreLiaisons },
   '/rest/etapesTypes/:demarcheId/:date': { get: getEtapesTypesEtapesStatusWithMainStep },
   '/rest/titres': { post: titreDemandeCreer },
@@ -165,24 +165,30 @@ export const restWithPool = (dbPool: Pool) => {
     .forEach(route => {
       const maRoute = restRouteImplementations[route]
       if ('get' in maRoute) {
+        console.info(`GET ${route}`)
         rest.get(route, restCatcher(maRoute.get(dbPool)))
       }
       if ('post' in maRoute) {
+        console.info(`POST ${route}`)
         rest.post(route, restCatcher(maRoute.post(dbPool)))
       }
       if ('put' in maRoute) {
+        console.info(`PUT ${route}`)
         rest.put(route, restCatcher(maRoute.put(dbPool)))
       }
 
       if ('delete' in maRoute) {
+        console.info(`delete ${route}`)
         rest.delete(route, restCatcher(maRoute.delete(dbPool)))
       }
 
       if ('download' in maRoute) {
+        console.info(`download ${route}`)
         rest.get(route, restDownload(maRoute.download(dbPool)))
       }
 
       if ('newDownload' in maRoute) {
+        console.info(`newDownload ${route}`)
         rest.get(route, restNewDownload(dbPool, maRoute.newDownload))
       }
     })

@@ -1,15 +1,17 @@
 import { Pool } from 'pg'
 import { CaminoRequest, CustomResponse } from './express-type'
+import { config } from '../../config/index.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export const logout = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
-  if (!authorizationToken) {
+  if (isNullOrUndefined(authorizationToken)) {
     res.sendStatus(403)
   } else {
     const token = authorizationToken.substring(7)
-    const uiUrl = process.env.OAUTH_URL ?? ''
+    const uiUrl = config().OAUTH_URL
 
-    const keycloakLogoutUrl = new URL(process.env.KEYCLOAK_LOGOUT_URL ?? '')
+    const keycloakLogoutUrl = new URL(config().KEYCLOAK_LOGOUT_URL)
     keycloakLogoutUrl.searchParams.append('post_logout_redirect_uri', uiUrl)
     keycloakLogoutUrl.searchParams.append('id_token_hint', token)
 
@@ -21,14 +23,14 @@ export const logout = (_pool: Pool) => async (req: CaminoRequest, res: CustomRes
 }
 export const resetPassword = (_pool: Pool) => async (req: CaminoRequest, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
-  if (!authorizationToken) {
+  if (isNullOrUndefined(authorizationToken)) {
     res.sendStatus(403)
   } else {
-    const uiUrl = process.env.OAUTH_URL ?? ''
+    const uiUrl = config().OAUTH_URL
 
-    const resetPasswordUrl = new URL(process.env.KEYCLOAK_RESET_PASSWORD_URL ?? '')
+    const resetPasswordUrl = new URL(config().KEYCLOAK_RESET_PASSWORD_URL)
     resetPasswordUrl.searchParams.append('response_type', 'code')
-    resetPasswordUrl.searchParams.append('client_id', process.env.KEYCLOAK_CLIENT_ID ?? '')
+    resetPasswordUrl.searchParams.append('client_id', config().KEYCLOAK_CLIENT_ID)
     resetPasswordUrl.searchParams.append('kc_action', 'UPDATE_PASSWORD')
     resetPasswordUrl.searchParams.append('redirect_uri', uiUrl)
 

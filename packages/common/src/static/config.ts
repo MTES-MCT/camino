@@ -1,11 +1,10 @@
 import { z } from 'zod'
 
 export const caminoConfigValidator = z.object({
-  caminoStage: z.enum(['dev', 'preprod', 'prod']).optional(),
-  sentryDsn: z.string().optional(),
-  environment: z.string(),
-  matomoHost: z.string().optional(),
-  matomoSiteId: z.string().optional(),
+  CAMINO_STAGE: z.enum(['prod', 'preprod', 'dev']).default('dev'),
+  SENTRY_DSN: z.string(),
+  API_MATOMO_URL: z.string(),
+  API_MATOMO_ID: z.string(),
 })
 
 export type CaminoConfig = z.infer<typeof caminoConfigValidator>

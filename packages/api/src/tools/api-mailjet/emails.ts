@@ -2,9 +2,10 @@ import { convert } from 'html-to-text'
 import { mailjet } from './index.js'
 import { EmailTemplateId } from './types.js'
 import { emailCheck } from '../email-check.js'
+import { config } from '../../config/index.js'
 
 const from = {
-  email: process.env.API_MAILJET_EMAIL,
+  email: config().API_MAILJET_EMAIL,
   name: 'Camino - le cadastre minier',
 }
 
@@ -22,8 +23,8 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
 
     // si on est pas sur le serveur de prod
     // l'adresse email du destinataire est remplacée
-    if (process.env.NODE_ENV !== 'production' || process.env.ENV !== 'prod') {
-      emails = [process.env.ADMIN_EMAIL!]
+    if (config().NODE_ENV !== 'production' || config().ENV !== 'prod') {
+      emails = [config().ADMIN_EMAIL!]
     }
 
     const res = (await mailjet.post('send', { version: 'v3' }).request({
@@ -34,7 +35,7 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
           FromName: from.name,
           Recipients: emails.map(Email => ({ Email })),
           ...options,
-          Headers: { 'Reply-To': process.env.API_MAILJET_REPLY_TO_EMAIL },
+          Headers: { 'Reply-To': config().API_MAILJET_REPLY_TO_EMAIL },
         },
       ],
     })) as {
@@ -51,8 +52,8 @@ export const mailjetSend = async (emails: string[], options: Record<string, any>
 }
 
 export const emailsSend = async (emails: string[], subject: string, html: string) => {
-  if (process.env.NODE_ENV !== 'production' || process.env.ENV !== 'prod') {
-    html = `<p style="color: red">destinataire(s): ${emails.join(', ')} | env: ${process.env.ENV} | node: ${process.env.NODE_ENV}</p> ${html}`
+  if (config().NODE_ENV !== 'production' || config().ENV !== 'prod') {
+    html = `<p style="color: red">destinataire(s): ${emails.join(', ')} | env: ${config().ENV} | node: ${config().NODE_ENV}</p> ${html}`
   }
 
   mailjetSend(emails, {

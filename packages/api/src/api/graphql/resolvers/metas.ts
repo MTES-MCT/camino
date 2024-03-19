@@ -13,6 +13,7 @@ import { sortedAdministrationTypes } from 'camino-common/src/static/administrati
 import { sortedDomaines } from 'camino-common/src/static/domaines.js'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 import { sortedDocumentTypes } from 'camino-common/src/static/documentsTypes.js'
+import { config } from '../../../config/index.js'
 
 export const devises = async () => devisesGet()
 
@@ -44,7 +45,7 @@ export const demarchesStatuts = async () => {
 
 export const etapesStatuts = () => Object.values(EtapesStatuts)
 
-export const version = () => process.env.APPLICATION_VERSION
+export const version = () => config().APPLICATION_VERSION
 
 /**
  * Retourne les types d'administrations

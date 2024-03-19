@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 import { idUserKeycloakRecognised } from '../keycloak.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { config } from '../../src/config/index.js'
 
 export const queryImport = (nom: string) =>
   fs
@@ -24,10 +25,7 @@ export const queryImport = (nom: string) =>
     .toString()
 
 const tokenCreate = (user: Partial<IUtilisateur>) => {
-  if (isNotNullNorUndefined(process.env.JWT_SECRET)) {
-    return jwt.sign(JSON.stringify(user), process.env.JWT_SECRET)
-  }
-  throw new Error('La variable d’environnement JWT_SECRET est manquante')
+  return jwt.sign(JSON.stringify(user), config().JWT_SECRET)
 }
 
 export const graphQLCall = async (pool: Pool, query: string, variables: Index<string | boolean | Index<string | boolean | Index<string>[] | any>>, user: TestUser | undefined) => {

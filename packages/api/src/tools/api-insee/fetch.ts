@@ -5,6 +5,8 @@ import { IApiSirenQueryTypes, IApiSirenQueryToken, IApiSirenEtablissement, IApiS
 import errorLog from '../error-log.js'
 import { CaminoDate, dateAddDays, daysBetween, getCurrent } from 'camino-common/src/date.js'
 import { Siren } from 'camino-common/src/entreprise.js'
+import { config } from '../../config/index.js'
+import { isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20
@@ -13,7 +15,7 @@ const TOKEN_VALIDITY_IN_DAYS = 1
 // utilise `tokenInitialize` pour l'initialiser
 let apiToken: { validUntil: CaminoDate; token: string } | null = null
 
-const { API_INSEE_URL, API_INSEE_KEY, API_INSEE_SECRET } = process.env
+const { API_INSEE_URL, API_INSEE_KEY, API_INSEE_SECRET } = config()
 
 // VisibleForTesting
 export const tokenInitialize = async (tokenFetchCall = tokenFetch, today = getCurrent()): Promise<string> => {
@@ -34,6 +36,7 @@ export const tokenInitialize = async (tokenFetchCall = tokenFetch, today = getCu
   } catch (e: any) {
     errorLog(
       "API Insee: impossible de générer le token de l'API INSEE ",
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       (e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e
     )
 
@@ -43,11 +46,7 @@ export const tokenInitialize = async (tokenFetchCall = tokenFetch, today = getCu
 
 const tokenFetch = async (): Promise<IApiSirenQueryToken | null> => {
   try {
-    if (!API_INSEE_URL) {
-      throw new Error("impossible de se connecter car la variable d'environnement est absente")
-    }
-
-    console.info(`API Insee: récupération du token ${API_INSEE_KEY?.substring(0, 5)}...:${API_INSEE_SECRET?.substring(0, 5)}...`)
+    console.info(`API Insee: récupération du token ${API_INSEE_KEY.substring(0, 5)}...:${API_INSEE_SECRET.substring(0, 5)}...`)
 
     const auth = Buffer.from(`${API_INSEE_KEY}:${API_INSEE_SECRET}`).toString('base64')
 
@@ -67,7 +66,7 @@ const tokenFetch = async (): Promise<IApiSirenQueryToken | null> => {
       throw result
     }
 
-    if (!result) {
+    if (isNullOrUndefined(result)) {
       throw new Error('contenu de la réponse vide')
     }
 
@@ -75,6 +74,7 @@ const tokenFetch = async (): Promise<IApiSirenQueryToken | null> => {
   } catch (e: any) {
     errorLog(
       `API Insee: tokenFetch `,
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       (e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e
     )
 
@@ -105,7 +105,7 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
       throw result
     }
 
-    if (!result) {
+    if (isNullOrUndefined(result)) {
       throw new Error('API Insee: contenu de la réponse vide')
     }
 
@@ -117,6 +117,7 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
   } catch (e: any) {
     errorLog(
       `API Insee: typeFetch `,
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       (e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e
     )
 
@@ -132,6 +133,7 @@ const typeMultiFetch = async (type: 'siren' | 'siret', field: 'etablissements' |
   } catch (e: any) {
     errorLog(
       `API Insee: ${type} get ${ids.join(', ')}`,
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       JSON.stringify((e.header && e.header.message) || (e.fault && `${e.fault.message}: ${e.fault.description}`) || (e.error && `${e.error}: ${e.error_description}`) || e.message || e)
     )
 
@@ -155,7 +157,7 @@ export const entreprisesEtablissementsFetch = async (ids: Siren[]) => {
   const results = []
   for (const batch of batches) {
     const result = (await typeMultiFetch('siren', 'unitesLegales', batch, queryFormat(batch))) as IApiSirenUniteLegale[]
-    if (result) {
+    if (isNotNullNorUndefinedNorEmpty(result)) {
       results.push(...result)
     }
   }
@@ -175,7 +177,7 @@ export const entreprisesFetch = async (ids: Siren[]) => {
   const results = []
   for (const batch of batches) {
     const result = (await typeMultiFetch('siret', 'etablissements', batch, queryFormat(batch))) as IApiSirenEtablissement[]
-    if (result) {
+    if (isNotNullNorUndefinedNorEmpty(result)) {
       results.push(...result)
     }
   }
