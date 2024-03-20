@@ -24,7 +24,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
       return 'Visible seulement par les entreprises titulaires'
     }
 
-    return 'Visible seulemement par les administrations'
+    return 'Visible seulement par les administrations'
   }
 
   if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {

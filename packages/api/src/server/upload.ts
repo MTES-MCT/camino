@@ -9,6 +9,7 @@ import { IncomingMessage, ServerResponse } from 'node:http'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { fileUploadTypeValidator } from 'camino-common/src/static/documentsTypes.js'
 import { isPdf } from '../tools/file-check.js'
+import { unlinkSync } from 'node:fs'
 
 // Téléversement REST
 export const uploadAllowedMiddleware = async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
@@ -27,8 +28,10 @@ export const uploadAllowedMiddleware = async (req: CaminoRequest, res: express.R
 const directory = './files/tmp'
 const onUploadFinish = async (req: IncomingMessage, res: ServerResponse, upload: Upload): Promise<ServerResponse> => {
   const fileName = upload.metadata?.filename
+  const filePath = `${directory}/${upload.id}`
   if (isNullOrUndefined(fileName)) {
     console.error('Le fichier téléversé est étrange', upload)
+    unlinkSync(filePath)
     // eslint-disable-next-line no-throw-literal
     throw { body: 'Le fichier téléversé est étrange', status_code: 500 }
   }
@@ -37,13 +40,15 @@ const onUploadFinish = async (req: IncomingMessage, res: ServerResponse, upload:
   const parsedExtension = fileUploadTypeValidator.safeParse(extension)
   if (!parsedExtension.success) {
     console.error("L'extension du fichier téléversé n'est pas autorisé", upload)
+    unlinkSync(filePath)
     // eslint-disable-next-line no-throw-literal
     throw { body: "L'extension du fichier téléversé n'est pas autorisé", status_code: 500 }
   }
 
   if (parsedExtension.data === 'pdf') {
-    if (!(await isPdf(`${directory}/${upload.id}`))) {
+    if (!(await isPdf(filePath))) {
       console.error("Le fichier téléversé n'est pas un pdf valide", upload)
+      unlinkSync(filePath)
       // eslint-disable-next-line no-throw-literal
       throw { body: "Le fichier téléversé n'est pas un pdf valide", status_code: 500 }
     }

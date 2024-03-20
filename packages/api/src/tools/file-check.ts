@@ -11,8 +11,6 @@ export const isPdf = async (filePath: string): Promise<boolean> => {
 
     const header = buffer.toString('utf-8')
     if (header !== '%PDF-') {
-      console.error('Ce PDF ne semble pas être un PDF valide')
-
       return false
     }
 
