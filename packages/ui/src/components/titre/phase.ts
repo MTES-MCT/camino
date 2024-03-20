@@ -41,7 +41,7 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
             demarcheDate = [...demarche.etapes].sort((a, b) => b.ordre - a.ordre).find(etape => isEtapeDecision(etape.etape_type_id) && isEtapeStatusOk(etape.etape_statut_id))?.date ?? null
           }
 
-          if (isNotNullNorUndefined(demarcheDate) && demarcheDate > phase.demarche_date_debut && (isNullOrUndefined(phase.demarche_date_fin) || demarcheDate <= phase.demarche_date_fin)) {
+          if (isNotNullNorUndefined(demarcheDate) && demarcheDate >= phase.demarche_date_debut && (isNullOrUndefined(phase.demarche_date_fin) || demarcheDate < phase.demarche_date_fin)) {
             return { ...demarche, date_etape_decision_ok: demarcheDate }
           }
         }
