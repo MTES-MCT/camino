@@ -53,7 +53,7 @@ const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0
   return dataContent
 }
 
-const apiGraphQLFetch = (query, cacheKey) => async variables => {
+export const apiGraphQLFetch = (query, cacheKey) => async variables => {
   try {
     return await graphQLCall(apiUrl, query, variables, cacheKey)
   } catch (e) {
@@ -65,5 +65,3 @@ const apiGraphQLFetch = (query, cacheKey) => async variables => {
     }
   }
 }
-
-export { apiGraphQLFetch, errorThrow }

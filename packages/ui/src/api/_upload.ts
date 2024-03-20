@@ -1,6 +1,5 @@
 import Uppy from '@uppy/core'
 import Tus, { TusOptions } from '@uppy/tus'
-import { errorThrow } from './_client'
 import { Upload } from 'tus-js-client'
 import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
 
@@ -35,11 +34,11 @@ export const uploadCall = async (file: File, progressCb: (progress: number) => v
       const { successful, failed } = result
 
       if (failed.length || !successful.length) {
-        reject(errorThrow(new Error('Échec du téléversement')))
+        reject(new Error('Échec du téléversement'))
+      } else {
+        const [{ uploadURL }] = successful
+        resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
       }
-
-      const [{ uploadURL }] = successful
-      resolve(tempDocumentNameValidator.parse(uploadURL.substring(uploadURL.lastIndexOf('/') + 1)))
     })
   })
 }

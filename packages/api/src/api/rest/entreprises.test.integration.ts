@@ -14,7 +14,7 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
-import { mkdirSync, writeFileSync } from 'fs'
+import { copyFileSync, mkdirSync } from 'node:fs'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { insertTitreEtapeEntrepriseDocument } from '../../database/queries/titres-etapes.queries.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
@@ -246,7 +246,7 @@ describe('postEntrepriseDocument', () => {
 
     const fileName = `existing_temp_file_${idGenerate()}`
     mkdirSync(dir, { recursive: true })
-    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'kbi',
       date: toCaminoDate('2023-05-16'),
@@ -303,7 +303,7 @@ describe('getEntrepriseDocument', () => {
 
     const fileName = `existing_temp_file_${idGenerate()}`
     mkdirSync(dir, { recursive: true })
-    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
     const documentToInsert: EntrepriseDocumentInput = {
       typeId: 'atf',
       date: toCaminoDate('2023-01-12'),
@@ -315,7 +315,7 @@ describe('getEntrepriseDocument', () => {
     expect(documentCall.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
 
     mkdirSync(dir, { recursive: true })
-    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
     const secondDocumentToInsert: EntrepriseDocumentInput = {
       typeId: 'kbi',
       date: toCaminoDate('2023-02-12'),
