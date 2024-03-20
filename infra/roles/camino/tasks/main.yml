@@ -146,12 +146,20 @@
         job: "/srv/scripts/monthly"
         user: camino
       become: True
-- name: Ajoute le cron de nettoyage
+- name: Ajoute le cron de nettoyage des téléchargements
   ansible.builtin.cron:
     name: "cleanup_downloads"
     minute: "0"
     hour: "5"
     job: "rm -rf /srv/www/camino/files/downloads/*"
+    user: camino
+  become: True
+- name: Ajoute le cron de nettoyage des fichiers temporaires
+  ansible.builtin.cron:
+    name: "cleanup_tmps"
+    minute: "30"
+    hour: "5"
+    job: "find /srv/www/camino/files/tmp/ -mtime +7 -type f -delete"
     user: camino
   become: True
 - name: Continuous deployment
