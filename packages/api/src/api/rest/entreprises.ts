@@ -57,7 +57,6 @@ import { join } from 'node:path'
 import { NewDownload } from './fichiers'
 import { TempDocumentName } from 'camino-common/src/document.js'
 import Decimal from 'decimal.js'
-import { isPdf } from '../../tools/file-check.js'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): Decimal => {
   if (typeof quantite !== 'number') {
@@ -434,11 +433,6 @@ export const getEntrepriseDocuments = (pool: Pool) => async (req: JWTRequest<Use
 const bufferSize = 16384
 
 export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentName): Promise<number> => {
-  const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
-  if (!(await isPdf(pathFrom))) {
-    throw new Error('Uniquement des PDFs sont supportés')
-  }
-
   const client = await pool.connect()
   try {
     const man = new LargeObjectManager({ pg: client })
@@ -448,6 +442,7 @@ export const createLargeObject = async (pool: Pool, tmpFileName: TempDocumentNam
     const [oid, stream] = await man.createAndWritableStreamAsync(bufferSize)
 
     const promise = new Promise<number>((resolve, reject) => {
+      const pathFrom = join(process.cwd(), `/files/tmp/${tmpFileName}`)
       const fileStream = createReadStream(pathFrom)
       fileStream.on('error', function (e) {
         reject(e)

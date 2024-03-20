@@ -22,11 +22,12 @@ import { newDocumentId } from '../../../database/models/_format/id-create.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
-import { isPdf } from '../../../tools/file-check.js'
 
 const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = documentFilePathFind(document, true)
-  await fileStreamCreate(fileUpload.createReadStream(), join(process.cwd(), documentFilePath))
+  const { createReadStream } = await fileUpload
+
+  await fileStreamCreate(createReadStream(), join(process.cwd(), documentFilePath))
 }
 
 const documentPermissionsCheck = async (document: IDocument, user: User) => {
@@ -90,21 +91,15 @@ export const documentCreer = async ({ document }: { document: IDocument }, { use
 
     // Enregistre le nouveau fichier
     // - arrivé via API (requêtes libres)
-    const pathTo = documentFilePathFind(document, true)
     if (document.fichierNouveau) {
       document.fichier = true
       await documentFileCreate(document, document.fichierNouveau.file)
     } else if (isNotNullNorUndefined(document.nomTemporaire)) {
       // - arrivé via UI
       const pathFrom = `/files/tmp/${document.nomTemporaire}`
+      const pathTo = await documentFilePathFind(document, true)
 
       await fileRename(pathFrom, pathTo)
-    }
-
-    if (!(await isPdf(pathTo))) {
-      console.error('seul les pdfs sont autorisés')
-      await fileDelete(pathTo)
-      throw new Error('Uniquement les PDFs sont autorisés')
     }
 
     if ((document.publicLecture ?? false) || isEntreprise(user) || isBureauDEtudes(user)) {
@@ -169,22 +164,12 @@ export const documentModifier = async ({ document }: { document: IDocument }, { 
     // - arrivé via API (requêtes libres)
     if (documentFichierNouveau) {
       await documentFileCreate(documentUpdated, documentFichierNouveau.file)
-      const pathTo = documentFilePathFind(documentUpdated, true)
-      if (!(await isPdf(pathTo))) {
-        console.error('seul les pdfs sont autorisés')
-        await fileDelete(pathTo)
-        throw new Error('Uniquement les PDFs sont autorisés')
-      }
     } else {
       // - arrivé via UI
       if (isNotNullNorUndefined(document.nomTemporaire)) {
         const pathFrom = `/files/tmp/${document.nomTemporaire}`
         const pathTo = documentFilePathFind(document, true)
 
-        if (!(await isPdf(pathFrom))) {
-          console.error('seul les pdfs sont autorisés')
-          throw new Error('Uniquement les PDFs sont autorisés')
-        }
         await fileRename(pathFrom, pathTo)
       }
     }

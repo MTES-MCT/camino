@@ -79,7 +79,6 @@ export default {
     },
 
     messages() {
-      console.log('this.$store.state.popup.messages', this.$store.state.popup.messages)
       return this.$store.state.popup.messages
     },
 
