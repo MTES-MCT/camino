@@ -1,6 +1,5 @@
 # import * from 'scalars.graphql'
 # import * from 'administrations.graphql'
-# import * from 'documents.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'geojsons.graphql'
 # import * from 'metas-activites.graphql'
@@ -152,9 +151,6 @@ type Query {
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
 
-  "Définitions et descriptions"
-  definitions: [Definition]
-
   pays: [Pays]
 
   journaux(page: Int!, recherche: String, titresIds: [String]): Journaux
@@ -195,15 +191,6 @@ type Mutation {
 
   "Dépose une demande et met à jour le titre minier"
   etapeDeposer(id: ID!): TitreSlug
-
-  "Crée un document et met à jour le titre minier"
-  documentCreer(document: InputDocumentCreation!): Document
-
-  "Modifie un document et met à jour le titre minier"
-  documentModifier(document: InputDocumentModification!): Document
-
-  "Supprime un document et met à jour le titre minier"
-  documentSupprimer(id: ID!): Boolean
 
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite

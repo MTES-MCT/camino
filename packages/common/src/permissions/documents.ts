@@ -1,8 +1,8 @@
-import { DocumentType, DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { isNotNullNorUndefined } from '../typescript-tools.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
+import { EtapeDocument } from '../etape';
 
 export const isDocumentsComplete = (
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown }[],
+  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   documentsTypes?: Pick<DocumentType, 'id' | 'optionnel'>[]
 ): { valid: true } | { valid: false; errors: string[] } => {
   const errors = [] as string[]
@@ -11,7 +11,7 @@ export const isDocumentsComplete = (
     documentsTypes
       .filter(dt => !dt.optionnel)
       .forEach(dt => {
-        if (!documents?.find(d => d.typeId === dt.id && !!(isNotNullNorUndefined(d.fichier) || isNotNullNorUndefined(d.fichierNouveau)))) {
+        if (!documents?.find(d => d.etape_document_type_id === dt.id )) {
           errors.push(`le document "${dt.id}" est obligatoire`)
         }
       })

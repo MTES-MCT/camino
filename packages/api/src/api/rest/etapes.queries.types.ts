@@ -21,3 +21,20 @@ export interface IGetEtapeByIdDbQuery {
   result: IGetEtapeByIdDbResult;
 }
 
+/** 'GetEtapeDocumentsDb' parameters type */
+export type IGetEtapeDocumentsDbParams = void;
+
+/** 'GetEtapeDocumentsDb' return type */
+export interface IGetEtapeDocumentsDbResult {
+  description: string | null;
+  etape_document_type_id: string;
+  etape_id: string | null;
+  id: string;
+}
+
+/** 'GetEtapeDocumentsDb' query type */
+export interface IGetEtapeDocumentsDbQuery {
+  params: IGetEtapeDocumentsDbParams;
+  result: IGetEtapeDocumentsDbResult;
+}
+

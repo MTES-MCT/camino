@@ -62,11 +62,9 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     }
   }
 
+  //FIXME à vérifier que le bouton déposable fonctionne tjrs aux 2 endroits de l’ui
   // pour calculer la propriété « déposable » sur les étapes
   if (['etapes', 'etape'].includes(parent)) {
-    if (!fields.documents) {
-      fields.documents = { id: {} }
-    }
 
     if (!fields.demarche) {
       fields.demarche = { id: {} }

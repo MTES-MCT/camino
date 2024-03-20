@@ -23,7 +23,7 @@ describe('teste isDocumentsComplete', () => {
     const errors = isDocumentsComplete(
       [
         {
-          typeId: 'arr',
+          etape_document_type_id: 'arr',
         },
       ],
       [{ id: 'arr', optionnel: false }]
@@ -43,8 +43,7 @@ describe('teste isDocumentsComplete', () => {
     const errors = isDocumentsComplete(
       [
         {
-          typeId: 'arr',
-          fichier: true,
+          etape_document_type_id: 'arr',
         },
       ],
       [{ id: 'arr', optionnel: false }]

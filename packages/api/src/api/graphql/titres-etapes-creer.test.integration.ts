@@ -3,7 +3,6 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import Titres from '../../database/models/titres.js'
-import { documentCreate } from '../../database/queries/documents.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
 import { userSuper } from '../../database/user-super'
@@ -204,30 +203,31 @@ describe('etapeCreer', () => {
     const idFor = newDocumentId(toCaminoDate('2020-01-01'), 'for')
     const idJpa = newDocumentId(toCaminoDate('2020-01-01'), 'jpa')
     const idCar = newDocumentId(toCaminoDate('2020-01-01'), 'car')
-    await documentCreate({
-      id: idDom,
-      typeId: 'dom',
-      date: toCaminoDate('2020-01-01'),
-      fichier: true,
-    })
-    await documentCreate({
-      id: idFor,
-      typeId: 'for',
-      date: toCaminoDate('2020-01-01'),
-      fichier: true,
-    })
-    await documentCreate({
-      id: idJpa,
-      typeId: 'jpa',
-      date: toCaminoDate('2020-01-01'),
-      fichier: true,
-    })
-    await documentCreate({
-      id: idCar,
-      typeId: 'car',
-      date: toCaminoDate('2020-01-01'),
-      fichier: true,
-    })
+    //FIXME
+    // await documentCreate({
+    //   id: idDom,
+    //   typeId: 'dom',
+    //   date: toCaminoDate('2020-01-01'),
+    //   fichier: true,
+    // })
+    // await documentCreate({
+    //   id: idFor,
+    //   typeId: 'for',
+    //   date: toCaminoDate('2020-01-01'),
+    //   fichier: true,
+    // })
+    // await documentCreate({
+    //   id: idJpa,
+    //   typeId: 'jpa',
+    //   date: toCaminoDate('2020-01-01'),
+    //   fichier: true,
+    // })
+    // await documentCreate({
+    //   id: idCar,
+    //   typeId: 'car',
+    //   date: toCaminoDate('2020-01-01'),
+    //   fichier: true,
+    // })
     const res = await graphQLCall(
       dbPool,
       etapeCreerQuery,

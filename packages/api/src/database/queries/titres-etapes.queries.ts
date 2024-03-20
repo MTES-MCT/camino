@@ -118,14 +118,14 @@ where
 const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeDocument>>`
 select
     d.id,
-    d.type_id as document_type_id,
+    d.etape_document_type_id,
     d.description,
     public_lecture,
     entreprises_lecture
 from
-    documents d
+    etapes_documents d
 where
-    d.titre_etape_id = $ titre_etape_id !
+    d.etape_id = $ titre_etape_id !
 `
 
 export const getDocumentsByEtapeId = async (

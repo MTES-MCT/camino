@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { Context, IContenu, IDecisionAnnexeContenu, IDocument, ITitre, ITitreEtape } from '../../../types.js'
+import { Context, IContenu, IDecisionAnnexeContenu, ITitre, ITitreEtape } from '../../../types.js'
 
 import { titreEtapeCreate, titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
@@ -14,27 +14,21 @@ import { fieldsBuild } from './_fields-build.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
-import { documentsLier } from './documents.js'
-import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathGet, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
-import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
+import { contenuElementFilesCreate, contenuElementFilesDelete, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
-import { newDocumentId } from '../../../database/models/_format/id-create.js'
-import fileRename from '../../../tools/file-rename.js'
-import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId, isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { isDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeId } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -69,9 +63,6 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   try {
     const fields: FieldsEtape = fieldsBuild(info)
 
-    if (isNullOrUndefined(fields.documents)) {
-      fields.documents = { id: {} }
-    }
     if (isNullOrUndefined(fields.titulaires)) {
       fields.titulaires = { id: {} }
     }
@@ -223,9 +214,8 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
-    delete etape.documentIds
+    //FIXME créer les etape_documents
+    const etapeDocuments: EtapeDocument[] = []
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
@@ -258,7 +248,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
@@ -292,8 +282,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape }, context: Context, i
     }
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
-
-    await documentsLier(context, documentIds, etapeUpdated.id)
 
     try {
       await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
@@ -360,7 +348,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
       etape.id,
       {
         fields: {
-          documents: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
           demarche: { titre: { pointsEtape: { id: {} } } },
@@ -413,9 +400,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    const documentIds = etape.documentIds || []
-    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { id: {} } }, userSuper) : null
-    delete etape.documentIds
+    //FIXME créer/modifier/supprimer les etapeDocuments
+    const etapeDocuments: EtapeDocument[] = []
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
@@ -454,13 +440,11 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, documents, entrepriseDocuments, sdomZones, user, titreEtapeOld)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, titreEtapeOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
-
-    await documentsLier(context, documentIds, etape.id, titreEtapeOld)
 
     const sections = getSections(titreTypeId, titreDemarche.typeId, etape.typeId)
 
@@ -537,16 +521,20 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
       titreEtape.titreDemarcheId,
       {
         fields: {
-          titre: { pointsEtape: { id: {} }, titulaires: { id: {} } },
+          titre: { pointsEtape: { id: {} }, titulaires: { id: {} }, amodiataires: { id: {} } },
         },
       },
       userSuper
     )
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
-    if (!titreDemarche.titre) throw new Error("le titre n'est pas chargé")
-    if (titreDemarche.titre.administrationsLocales === undefined) throw new Error('les administrations locales du titre ne sont pas chargées')
-    if (titreDemarche.titre.titulaires === undefined) throw new Error('les titulaires du titre ne sont pas chargés')
+    
+    const titre = titreDemarche.titre
+    if (isNullOrUndefined(titre)) throw new Error("le titre n'est pas chargé")
+    if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales du titre ne sont pas chargées')
+    
+    if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
+    if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
@@ -554,15 +542,21 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
       sdomZones.push(...sdom)
     }
+    const titreTypeId = memoize(() => Promise.resolve(titre.typeId))
+    const administrationsLocales = memoize(() => Promise.resolve(titre.administrationsLocales ?? []))
+    const entreprisesTitulairesOuAmodiataires = memoize(() => {
+      return Promise.resolve([...(titre.titulaires ?? []).map(({ id }) => id), ...(titre.amodiataires ?? []).map(({ id }) => id)])
+    })
+    const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {demarche_type_id: titreDemarche.typeId, entreprises_lecture: titreDemarche.entreprisesLecture ?? false, public_lecture: titreDemarche.publicLecture ?? false, titre_public_lecture: titre.publicLecture ?? false})
 
     const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
-    // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titreDemarche.titre
+    // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
     const deposable = isEtapeDeposable(
       user,
-      { ...titreDemarche.titre, titulaires: titreDemarche.titre.titulaires ?? [], administrationsLocales: titreDemarche.titre.administrationsLocales ?? [] },
+      { ...titre, titulaires: titre.titulaires ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
       titreDemarche.typeId,
       titreEtape,
-      titreEtape.documents,
+      etapeDocuments,
       entrepriseDocuments,
       sdomZones
     )
@@ -631,28 +625,30 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
 
         const documentTypeIds = decisionAnnexesElements.filter(({ type }) => type === 'file').map(({ id }) => id) ?? []
         for (const documentTypeId of documentTypeIds) {
-          const fileName = decisionContenu[documentTypeId]
+            //FIXME
 
-          if (isDocumentTypeId(documentTypeId)) {
-            const id = newDocumentId(decisionContenu.date, documentTypeId)
-            const document: IDocument = {
-              id,
-              typeId: documentTypeId,
-              date: decisionContenu.date,
-              fichier: true,
-              entreprisesLecture: true,
-              titreEtapeId: etapeDecisionAnnexe.id,
-              fichierTypeId: 'pdf',
-            }
+          // const fileName = decisionContenu[documentTypeId]
 
-            const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
+          // if (isDocumentTypeId(documentTypeId)) {
+          //   const id = newDocumentId(decisionContenu.date, documentTypeId)
+            // const document: IDocument = {
+            //   id,
+            //   typeId: documentTypeId,
+            //   date: decisionContenu.date,
+            //   fichier: true,
+            //   entreprisesLecture: true,
+            //   titreEtapeId: etapeDecisionAnnexe.id,
+            //   fichierTypeId: 'pdf',
+            // }
 
-            const newDocumentPath = documentFilePathFind(document, true)
+            // const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
 
-            await fileRename(filePath, newDocumentPath)
+            // const newDocumentPath = documentFilePathFind(document, true)
 
-            await documentCreate(document)
-          }
+            // await fileRename(filePath, newDocumentPath)
+
+            // await documentCreate(document)
+          // }
         }
       }
     }

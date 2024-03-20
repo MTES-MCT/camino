@@ -4,7 +4,6 @@
 # import * from 'geojsons.graphql'
 # import * from 'metas.graphql'
 # import * from 'territoires.graphql'
-# import * from 'documents.graphql'
 # import * from 'titres-demarches.graphql'
 
 "Étape d'une démarche effectuée sur un titre minier"
@@ -65,9 +64,6 @@ type Etape {
 
   "Zones du SDOM"
   sdomZones: [String]
-
-  "Documents relatifs à l'étape"
-  documents: [Document]
 
   heritageProps: HeritageProps
 
@@ -176,9 +172,18 @@ input InputEtapeCreation {
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
-  documentIds: [ID]
+  etapeDocuments: [InputEtapeDocumentCreation]
   entrepriseDocumentIds: [ID]
   notes: String
+}
+
+input InputEtapeDocumentCreation {
+  date: String!
+  tempDocumentName: String!
+  etapeDocumentTypeId: String!
+  description: String
+  publicLecture: Boolean
+  entreprisesLecture: Boolean
 }
 
 input InputEtapeModification {
@@ -197,7 +202,7 @@ input InputEtapeModification {
   heritageProps: InputHeritageProps
   heritageContenu: Json
   contenu: Json
-  documentIds: [ID]
+  etapeDocuments: [InputEtapeDocumentModification]
   entrepriseDocumentIds: [ID]
   decisionsAnnexesContenu: Json
   notes: String
@@ -207,6 +212,17 @@ input InputEtapeModification {
   geojsonOriginePerimetre: Json
   geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
+}
+
+
+input InputEtapeDocumentModification {
+  id: ID!
+  date: String!
+  tempDocumentName: String!
+  etapeDocumentTypeId: String!
+  description: String
+  publicLecture: Boolean
+  entreprisesLecture: Boolean
 }
 
 input InputEtapeFiltre {

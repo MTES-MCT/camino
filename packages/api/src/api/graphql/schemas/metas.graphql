@@ -200,23 +200,6 @@ type DocumentType {
   description: String
 }
 
-type DocumentVisibilite {
-  id: ID!
-
-  nom: String!
-}
-
-"Définitions et descriptions"
-type Definition {
-  id: ID!
-  nom: String!
-  slug: String!
-  description: String
-  couleur: Couleur
-  ordre: Int
-  elements: [Definition]
-}
-
 type TitreTypeTitreStatut {
   titreTypeId: ID!
   titreStatutId: ID!
