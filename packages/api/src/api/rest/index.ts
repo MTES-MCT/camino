@@ -17,25 +17,14 @@ import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
 
 import { User } from 'camino-common/src/roles.js'
-import {
-  CaminoFiltre,
-  caminoFiltres,
-  demarchesDownloadFormats,
-  demarchesFiltresNames,
-  titresFiltresNames,
-  titresDownloadFormats,
-  activitesFiltresNames,
-  activitesDownloadFormats,
-  entreprisesFiltresNames,
-  entreprisesDownloadFormats,
-} from 'camino-common/src/filters.js'
 import { DownloadFormat } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { z, ZodOptional, ZodType } from 'zod'
-import { NonEmptyArray, exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { z, ZodType } from 'zod'
+import { exhaustiveCheck, isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { getCommunesIndex } from '../../database/queries/communes.js'
 import { FeatureCollection, GeojsonFeaturePoint } from 'camino-common/src/perimetre.js'
 import { FieldsTitre } from '../../database/queries/_options'
+import { titresValidator, demarchesValidator, activitesValidator, entreprisesValidator } from '../../business/utils/filters.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -55,53 +44,6 @@ const titreFields: FieldsTitre = {
   },
 }
 
-type GenericFiltreValidator<T extends Readonly<CaminoFiltre[]>> = { [key in T[number]]: ZodOptional<(typeof caminoFiltres)[key]['validator']> }
-
-const generateFilterValidator = <T extends readonly CaminoFiltre[]>(filtresNames: T) =>
-  z.object<GenericFiltreValidator<T>>(
-    filtresNames.reduce((acc, filtre) => {
-      const validator = caminoFiltres[filtre].validator
-
-      // Ceci est un hack pour le plugin camino QGIS, car la requête générée par le plugin ne respecte pas le "standard" pour les tableaux
-      if (validator._def.typeName === 'ZodArray') {
-        return {
-          ...acc,
-          [filtre]: validator
-            .or(
-              z
-                .string()
-                .transform(val => val.split(','))
-                .pipe(validator)
-            )
-            .optional(),
-        }
-      }
-
-      return {
-        ...acc,
-        [filtre]: validator.optional(),
-      }
-    }, {} as GenericFiltreValidator<T>)
-  )
-
-const commonValidator = <T extends Readonly<NonEmptyArray<string>>, D extends DownloadFormat = DownloadFormat>(colonnes: T, formats: Readonly<NonEmptyArray<D>>) => {
-  return z.object({
-    format: z
-      .enum(formats)
-      // @ts-ignore ici formats[0] est un string, on est sûr de sa valeur vu qu'on est sur un nonemptyarray
-      .default(formats[0]),
-    ordre: z.enum(['asc', 'desc']).default('asc'),
-    colonne: z.enum(colonnes).optional(),
-  })
-}
-
-const generateValidator = <T extends readonly CaminoFiltre[], U extends Readonly<NonEmptyArray<string>>, D extends DownloadFormat = DownloadFormat>(
-  filtresNames: T,
-  colonnes: U,
-  formats: Readonly<NonEmptyArray<D>>
-) => {
-  return generateFilterValidator(filtresNames).merge(commonValidator(colonnes, formats))
-}
 type GenericQueryInput<T extends ZodType> = { [key in keyof z.infer<T>]?: null | string }
 
 interface ITitreInput {
@@ -147,13 +89,6 @@ export const titre =
       contenu: JSON.stringify(titreGeojson, null, 2),
     }
   }
-
-// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const titresColonnes = ['nom', 'domaine', 'type', 'statut'] as const
-const titresValidator = generateValidator(titresFiltresNames, titresColonnes, titresDownloadFormats).extend({
-  // pour gérer les téléchargement quand on est sur la carte
-  perimetre: z.array(z.coerce.number()).optional(),
-})
 
 export const titres =
   (pool: Pool) =>
@@ -207,10 +142,6 @@ export const titres =
         }
       : null
   }
-
-// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const demarchesColonnes = ['titreNom', 'titreDomaine', 'titreType', 'titreStatut', 'type', 'statut'] as const
-const demarchesValidator = generateValidator(demarchesFiltresNames, demarchesColonnes, demarchesDownloadFormats).extend({ travaux: z.coerce.boolean().default(false) })
 
 export const travaux =
   (pool: Pool) =>
@@ -279,10 +210,6 @@ export const demarches =
       : null
   }
 
-// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const activitesColonnes = ['titre', 'titreDomaine', 'titreType', 'titreStatut', 'titulaires', 'annee', 'periode', 'statut'] as const
-const activitesValidator = generateValidator(activitesFiltresNames, activitesColonnes, activitesDownloadFormats)
-
 export const activites =
   (pool: Pool) =>
   async ({ query }: { query: GenericQueryInput<typeof activitesValidator> }, user: User) => {
@@ -333,10 +260,6 @@ export const activites =
         }
       : null
   }
-
-// TODO 2023-08-22 merger ça avec le front (gestion des colonnes du tableau et le back)
-const entreprisesColonnes = ['siren'] as const
-const entreprisesValidator = generateValidator(entreprisesFiltresNames, entreprisesColonnes, entreprisesDownloadFormats)
 
 export const entreprises =
   (_pool: Pool) =>

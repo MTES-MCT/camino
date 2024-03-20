@@ -6,18 +6,20 @@ import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { CaminoDate, anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
 import { ITitreActivite } from '../../types.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
+import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 
 const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
-const statutsIds = ['abs', 'enc']
-const typesIds = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
+const activiteStatutsIds: ActivitesStatutId[] = ['abs', 'enc']
+const activiteTypesIds: ActivitesTypesId[] = ['gra', 'grx', 'pma', 'pmb', 'pmc', 'pmd', 'wrp']
 
 export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
   console.info()
   console.info('relance des activités des titres…')
 
   const activites = await titresActivitesGet(
-    { statutsIds, typesIds },
+    { statutsIds: activiteStatutsIds, typesIds: activiteTypesIds },
     {
       fields: {
         titre: { titulaires: { utilisateurs: { id: {} } } },
@@ -50,8 +52,8 @@ export const checkDateAndSendEmail = async (aujourdhui: CaminoDate, activites: I
     if (emails.size) {
       await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_RELANCE, {
         activitesUrl: activitesUrlGet({
-          typesIds,
-          statutsIds,
+          activiteTypesIds,
+          activiteStatutsIds,
           annees: [anneePrecedente(getAnnee(aujourdhui))],
         }),
       })
