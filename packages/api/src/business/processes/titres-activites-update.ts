@@ -85,7 +85,7 @@ export const titresActivitesUpdate = async (titresIds?: string[], aujourdhui: Ca
     // envoi d’email aux opérateurs pour les prévenir de l’ouverture des déclarations
     if (emails.size) {
       await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_NOUVELLES, {
-        activitesUrl: activitesUrlGet({ statutsIds: ['abs', 'enc'] }),
+        activitesUrl: activitesUrlGet({ activiteStatutsIds: ['abs', 'enc'] }),
       })
     }
 
