@@ -7,7 +7,7 @@ import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
-import { FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
 import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 
@@ -56,6 +56,8 @@ type EtapeBase = {
   geojsonOriginePerimetre?: FeatureMultiPolygon | null
   geojsonOriginePoints?: FeatureCollectionPoints | null
   geojsonOrigineGeoSystemeId?: GeoSystemeId | null
+  geojson4326Forages?: FeatureCollectionForages | null
+  geojsonOrigineForages?: FeatureCollectionForages | null
   surface?: KM2 | null
 
   notes: null | string

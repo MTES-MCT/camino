@@ -1,4 +1,4 @@
-import { ITitreEtape, IEntreprise, ITitreEntreprise } from '../../types.js'
+import { ITitreEtape, IEntreprise, ITitreEntreprise, ITitreEtapePerimetre } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
@@ -82,11 +82,20 @@ export const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEt
           newTitreEtape = objectClone(newTitreEtape)
 
           switch (propId) {
-            case 'perimetre':
-              newTitreEtape.geojson4326Perimetre = prevTitreEtape.geojson4326Perimetre
-              newTitreEtape.geojson4326Points = prevTitreEtape.geojson4326Points
-              newTitreEtape.surface = prevTitreEtape.surface
+            case 'perimetre': {
+              const perimetre: ITitreEtapePerimetre = {
+                geojson4326Perimetre: prevTitreEtape.geojson4326Perimetre,
+                geojson4326Points: prevTitreEtape.geojson4326Points,
+                geojsonOrigineGeoSystemeId: prevTitreEtape.geojsonOrigineGeoSystemeId,
+                geojsonOriginePoints: prevTitreEtape.geojsonOriginePoints,
+                geojsonOriginePerimetre: prevTitreEtape.geojsonOriginePerimetre,
+                geojsonOrigineForages: prevTitreEtape.geojsonOrigineForages,
+                geojson4326Forages: prevTitreEtape.geojson4326Forages,
+                surface: prevTitreEtape.surface ?? 0,
+              }
+              newTitreEtape = { ...newTitreEtape, ...perimetre }
               break
+            }
             case 'amodiataires':
             case 'titulaires':
               newTitreEtape[propId] = newValue as IEntreprise[]

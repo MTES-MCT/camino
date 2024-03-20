@@ -1,8 +1,7 @@
 <div class="dsfr">
   <div class="dsfr">
     <div class="mb-s">
-      <div><button class="fr-btn fr-btn--primary fr-btn--md" title="Importer un périmètre" aria-label="Importer un périmètre" type="button">Importer un périmètre</button><button class="fr-btn fr-btn--secondary fr-btn--md fr-ml-2w" title="Éditer les points" aria-label="Éditer les points" type="button">Éditer les points</button>
-        <!---->
+      <div><button class="fr-btn fr-btn--primary fr-btn--md" title="Importer un périmètre" aria-label="Importer un périmètre" type="button">Importer un périmètre</button><button class="fr-btn fr-btn--secondary fr-btn--md fr-ml-2w" title="Éditer les points" aria-label="Éditer les points" type="button">Éditer les points</button><button class="fr-btn fr-btn--secondary fr-btn--md fr-ml-2w" title="Éditer les forages" aria-label="Éditer les forages" type="button">Éditer les forages</button>
         <!---->
         <div class="fr-mt-2w">
           <div class="dsfr">
@@ -24,7 +23,7 @@
                     <div style="overflow-x: auto;" class="fr-mb-1w">
                       <div class="fr-table">
                         <table style="display: table;">
-                          <caption></caption>
+                          <caption>Points</caption>
                           <thead>
                             <tr>
                               <th scope="col" class="nowrap">
@@ -77,7 +76,55 @@
                       </div>
                     </div><a class="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-download-line" title="Télécharge les points au format csv" href="data:text/csv;charset=utf-8,nom;description;longitude;latitude;x_deg;y_deg%0AA;Polygone%201;-52.54;4.22269896902571;-52%C2%B032,4';4%C2%B013,362'%0AB;Polygone%201;-52.55;4.22438936251509;-52%C2%B033';4%C2%B013,463'%0AC;Polygone%201;-52.55;4.24113309117193;-52%C2%B033';4%C2%B014,468'" download="points-titre-slug.csv" style="align-self: end;">.csv</a>
                   </div>
-                  <!---->
+                  <div style="display: flex; flex-direction: column;">
+                    <div style="overflow-x: auto;" class="fr-mb-1w">
+                      <div class="fr-table">
+                        <table style="display: table;">
+                          <caption>Forages</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Nom</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Description</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Profondeur (NGF)</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Type</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Longitude</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Latitude</div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class=""><span class="">C1</span></td>
+                              <td class=""><span class="">Captage 1</span></td>
+                              <td class=""><span class="">42</span></td>
+                              <td class=""><span class="">Captage</span></td>
+                              <td class=""><span class="">-52.5620583466962</span></td>
+                              <td class=""><span class="">4.23454263425535</span></td>
+                            </tr>
+                            <tr>
+                              <td class=""><span class="">R1</span></td>
+                              <td class=""><span class="">Rejet 1</span></td>
+                              <td class=""><span class="">42</span></td>
+                              <td class=""><span class="">Rejet</span></td>
+                              <td class=""><span class="">-52.5640583466962</span></td>
+                              <td class=""><span class="">4.23754263425535</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div><a class="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-download-line" title="Télécharge les forages au format csv" href="data:text/csv;charset=utf-8,nom;description;profondeur;type;longitude;latitude%0AC1;Captage%201;42;captage;-52.5620583466962;4.23454263425535%0AR1;Rejet%201;42;rejet;-52.5640583466962;4.23754263425535" download="forages-titre-slug.csv" style="align-self: end;">.csv</a>
+                  </div>
                 </div>
               </div>
             </div>

@@ -85,9 +85,18 @@ export const featureCollectionPolygonValidator = featureCollectionValidator.exte
 
 export type FeatureCollectionPolygon = z.infer<typeof featureCollectionPolygonValidator>
 
-export const featureCollectionPointsValidator = featureCollectionValidator.extend({ features: z.array(featurePointValidator) })
+// Permet d’obtenir un type générique sur FeatureCollection<T>, utile pour esquiver la « distributivity »
+const makeFeatureCollectionValidator = <T extends z.ZodTypeAny>(schema: T) => featureCollectionValidator.extend({ features: z.array(schema) })
+export type GenericFeatureCollection<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof makeFeatureCollectionValidator<T>>>
 
+export const featureCollectionPointsValidator = makeFeatureCollectionValidator(featurePointValidator)
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
+
+export const featureForagePropertiesValidator = z.object({ nom: z.string(), description: z.string().nullish(), type: z.enum(['captage', 'rejet']), profondeur: z.number() })
+const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: featureForagePropertiesValidator })
+
+export const featureCollectionForagesValidator = makeFeatureCollectionValidator(featureForageValidator)
+export type FeatureCollectionForages = z.infer<typeof featureCollectionForagesValidator>
 
 export type FeatureCollection = z.infer<typeof featureCollectionMultipolygonValidator>
 const superpositionAlerteValidator = z.object({ slug: titreSlugValidator, nom: z.string(), titre_statut_id: titreStatutIdValidator })
@@ -122,9 +131,13 @@ export type GeojsonImportBody = z.infer<typeof geojsonImportBodyValidator>
 
 export const geojsonImportPointBodyValidator = geojsonImportBodyValidator.pick({ tempDocumentName: true })
 export type GeojsonImportPointsBody = z.infer<typeof geojsonImportPointBodyValidator>
-
 export const geojsonImportPointResponseValidator = z.object({ geojson4326: featureCollectionPointsValidator, origin: featureCollectionPointsValidator })
 export type GeojsonImportPointsResponse = z.infer<typeof geojsonImportPointResponseValidator>
+
+export const geojsonImportForagesBodyValidator = geojsonImportBodyValidator.pick({ tempDocumentName: true, fileType: true })
+export type GeojsonImportForagesBody = z.infer<typeof geojsonImportForagesBodyValidator>
+export const geojsonImportForagesResponseValidator = z.object({ geojson4326: featureCollectionForagesValidator, origin: featureCollectionForagesValidator })
+export type GeojsonImportForagesResponse = z.infer<typeof geojsonImportForagesResponseValidator>
 
 const internalEqualGeojson = (geo1: MultiPolygon, geo2: MultiPolygon): boolean => {
   for (let indexLevel1 = 0; indexLevel1 < geo1.coordinates.length; indexLevel1++) {

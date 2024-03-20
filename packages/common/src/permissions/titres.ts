@@ -140,3 +140,5 @@ export const canHaveActiviteTypeId = (activiteTypeId: ActivitesTypesId, titre: T
 
   return false
 }
+
+export const canHaveForages = (titreTypeId: TitreTypeId): boolean => titreTypeId === 'pxg'

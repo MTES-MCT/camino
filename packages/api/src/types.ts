@@ -26,7 +26,7 @@ import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
 import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
-import { FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 
@@ -271,7 +271,18 @@ interface IDocument {
   etape?: ITitreEtape | null
   suppression?: boolean | null
 }
-interface ITitreEtape {
+
+export interface ITitreEtapePerimetre {
+  geojson4326Perimetre: FeatureMultiPolygon | null | undefined
+  geojson4326Points: FeatureCollectionPoints | null | undefined
+  geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
+  geojsonOriginePoints: FeatureCollectionPoints | null | undefined
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
+  geojson4326Forages: FeatureCollectionForages | null | undefined
+  geojsonOrigineForages: FeatureCollectionForages | null | undefined
+  surface: number | null | undefined
+}
+type ITitreEtape = {
   id: EtapeId
   slug?: EtapeSlug
   typeId: EtapeTypeId
@@ -279,7 +290,6 @@ interface ITitreEtape {
   ordre?: number | null
   date: CaminoDate
   duree?: number | null
-  surface?: number | null
   contenu?: IContenu | null
   documents?: IDocument[] | null
   documentIds?: string[] | null
@@ -301,12 +311,7 @@ interface ITitreEtape {
   decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
   decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
-  geojson4326Perimetre?: FeatureMultiPolygon | null
-  geojson4326Points?: FeatureCollectionPoints | null
-  geojsonOriginePerimetre?: FeatureMultiPolygon | null
-  geojsonOriginePoints?: FeatureCollectionPoints | null
-  geojsonOrigineGeoSystemeId?: GeoSystemeId | null
-}
+} & Partial<ITitreEtapePerimetre>
 
 interface ITitreEtapeFiltre {
   typeId: string

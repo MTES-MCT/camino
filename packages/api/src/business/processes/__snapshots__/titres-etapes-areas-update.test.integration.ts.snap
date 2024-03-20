@@ -25,6 +25,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "forets": [
       "DBR",
     ],
+    "geojson4326Forages": null,
     "geojson4326Perimetre": {
       "geometry": {
         "coordinates": [
@@ -59,6 +60,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "type": "Feature",
     },
     "geojson4326Points": null,
+    "geojsonOrigineForages": null,
     "geojsonOrigineGeoSystemeId": "4326",
     "geojsonOriginePerimetre": {
       "geometry": {
@@ -157,6 +159,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "forets": [
         "DBR",
       ],
+      "geojson4326Forages": null,
       "geojson4326Perimetre": {
         "geometry": {
           "coordinates": [
@@ -191,6 +194,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
         "type": "Feature",
       },
       "geojson4326Points": null,
+      "geojsonOrigineForages": null,
       "geojsonOrigineGeoSystemeId": "4326",
       "geojsonOriginePerimetre": {
         "geometry": {

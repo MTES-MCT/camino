@@ -2,13 +2,14 @@ import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
-import { FeatureCollection, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollection, FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { contentTypes } from 'camino-common/src/rest'
 import { ApiClient } from '../../api/api-client'
 import { TabCaminoTable, transformMultipolygonToPoints } from './dsfr-perimetre-table'
 import { OmitDistributive, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 export type TabId = 'carte' | 'points'
 
 type Props = {
@@ -18,8 +19,11 @@ type Props = {
     geojson_origine_geo_systeme_id: GeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints | null
+    geojson4326_forages: FeatureCollectionForages | null
+    geojson_origine_forages: FeatureCollectionForages | null
   }
   titreSlug: TitreSlug
+  titreTypeId: TitreTypeId
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & (
@@ -61,7 +65,13 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
       icon: 'fr-icon-list-unordered',
       title: 'Tableau',
       renderContent: () => (
-        <TabCaminoTable geojson_origine_points={geojsonOriginePoints.value} titreSlug={props.titreSlug} geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id} maxRows={maxRows} />
+        <TabCaminoTable
+          geojson_origine_points={geojsonOriginePoints.value}
+          titreSlug={props.titreSlug}
+          geo_systeme_id={props.perimetre.geojson_origine_geo_systeme_id}
+          geojson_origine_forages={props.perimetre.geojson_origine_forages}
+          maxRows={maxRows}
+        />
       ),
     },
   ] as const satisfies readonly Tab<TabId>[]
@@ -69,7 +79,16 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
   return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
-type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & { perimetre: { [key in keyof Props['perimetre']]: NonNullable<Props['perimetre'][key]> } }
+type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {
+  perimetre: {
+    geojson4326_perimetre: FeatureMultiPolygon
+    geojson4326_points: FeatureCollectionPoints
+    geojson_origine_geo_systeme_id: GeoSystemeId
+    geojson_origine_perimetre: FeatureMultiPolygon
+    geojson_origine_points: FeatureCollectionPoints
+    geojson4326_forages: FeatureCollectionForages | null
+  }
+}
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
 
@@ -95,7 +114,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap perimetre={props.perimetre} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
+      <DemarcheMap perimetre={props.perimetre} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
       <div style={{ alignSelf: 'end' }}>
         {props.perimetre.geojson_origine_geo_systeme_id !== '4326' ? (
           <DsfrLink
@@ -122,7 +141,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'router', 'initTab', 'calculateNeighbours']
+TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']

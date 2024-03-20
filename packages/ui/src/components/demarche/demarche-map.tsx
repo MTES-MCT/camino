@@ -1,31 +1,38 @@
 import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted } from 'vue'
-import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup, GeoJSONSource } from 'maplibre-gl'
+import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
-import { FeatureCollectionPoints, FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreWithPerimetre } from '../titres/mapUtil'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
-import { getDomaineId } from 'camino-common/src/static/titresTypes'
+import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
+import { canHaveForages } from 'camino-common/src/permissions/titres'
+import { capitalize } from 'camino-common/src/strings'
+import { CaminoMapLibre } from '@/typings/maplibre-gl'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
+const foragesSourceName = 'Forages'
 const contoursLineName = 'ContoursLine'
 const contourPointsName = 'ContoursPoints'
+const contourForagesName = 'ContoursForages'
+const contourForagesLabel = 'ContoursForagesLabel'
 const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints }
+  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
+  titreTypeId: TitreTypeId
   neighbours: {
     apiClient: Pick<TitreApiClient, 'getTitresWithPerimetreForCarte'>
     titreSlug: TitreSlug
@@ -59,11 +66,13 @@ const overlayLayers = [
   contoursLineName,
   contourPointsName,
   'ContoursPointLabels',
+  contourForagesName,
+  contourForagesLabel,
 ] as const
 const overlayLayerIdValidator = z.enum(overlayLayers)
 type OverlayLayerId = z.infer<typeof overlayLayerIdValidator>
 
-const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, 'Titres valides'] as const
+const overlayNames = [sdomOverlayName, 'Façades maritimes', 'Limite de la redevance d’archéologie préventive', contoursSourceName, pointsSourceName, foragesSourceName, 'Titres valides'] as const
 const overlayNameValidator = z.enum(overlayNames)
 type OverlayName = z.infer<typeof overlayNameValidator>
 
@@ -73,6 +82,7 @@ const overlayMapNames = {
   'Limite de la redevance d’archéologie préventive': ['RedevanceArcheologiePreventive'],
   [contoursSourceName]: [contoursLineName, 'ContoursFill'],
   [pointsSourceName]: [contourPointsName, 'ContoursPointLabels'],
+  [foragesSourceName]: [contourForagesName, contourForagesLabel],
   'Titres valides': [titresValidesLineName, titresValidesFillName],
 } as const satisfies Record<OverlayName, Readonly<OverlayLayerId[]>>
 
@@ -115,7 +125,7 @@ const layersSourceSpecifications: Record<LayerId, SourceSpecification> = {
   },
 }
 const staticOverlayLayersSourceSpecification: Record<
-  Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'ContoursPoints' | 'ContoursPointLabels' | 'TitresValidesLine' | 'TitresValidesFill'>,
+  Exclude<OverlayLayerId, 'ContoursLine' | 'ContoursFill' | 'ContoursPoints' | 'ContoursPointLabels' | 'TitresValidesLine' | 'TitresValidesFill' | 'ContoursForages' | 'ContoursForagesLabel'>,
   SourceSpecification
 > = {
   SDOM: {
@@ -199,6 +209,29 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
       'text-allow-overlap': false,
     },
   },
+  [contourForagesName]: {
+    id: contourForagesName,
+    type: 'circle',
+    source: foragesSourceName,
+    paint: {
+      'circle-color': '#fcc63a',
+      'circle-radius': 16,
+      'circle-stroke-width': 4,
+      'circle-stroke-color': ['get', 'strokeColor'],
+    },
+  },
+  [contourForagesLabel]: {
+    id: contourForagesLabel,
+    type: 'symbol',
+    source: foragesSourceName,
+    paint: {
+      'text-color': '#000000',
+    },
+    layout: {
+      'text-field': ['get', 'nom'],
+      'text-allow-overlap': false,
+    },
+  },
   [titresValidesLineName]: {
     id: titresValidesLineName,
     type: 'line',
@@ -224,16 +257,20 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
 export const DemarcheMap = defineComponent<Props>(props => {
   const mapRef = ref<HTMLDivElement | null>(null)
   const layersControlVisible = ref<boolean>(false)
-  const map = ref<Map | null>(null) as Ref<Map | null>
+  const map = ref<CaminoMapLibre | null>(null) as Ref<CaminoMapLibre | null>
 
-  const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides'>[]>(() => {
-    const values: Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides'>[] = []
+  const defaultOverlayLayer = computed<Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[]>(() => {
+    const values: Extract<OverlayName, 'Contours' | 'Points' | 'Titres valides' | 'Forages'>[] = []
     if (props.neighbours !== null) {
       values.push('Titres valides')
     }
     values.push('Contours')
     if (props.maxMarkers > points.value.features.length) {
       values.push('Points')
+    }
+
+    if (canHaveForages(props.titreTypeId)) {
+      values.push('Forages')
     }
 
     return values
@@ -248,17 +285,49 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
+  const forages = computed<FeatureCollectionForages>(() => {
+    return {
+      type: 'FeatureCollection',
+      features:
+        props.perimetre.geojson4326_forages?.features.map(feature => {
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              strokeColor: feature.properties.type === 'captage' ? '#00A95F' : '#845d48',
+              latitude: feature.geometry.coordinates[1],
+              longitude: feature.geometry.coordinates[0],
+            },
+          }
+        }) ?? [],
+    }
+  })
+
+  const bounds = computed<LngLatBounds>(() => {
+    const bounds = new LngLatBounds()
+    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
+      top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
+    })
+    props.perimetre.geojson4326_forages?.features.forEach(feature => bounds.extend(feature.geometry.coordinates))
+
+    return bounds
+  })
+
   watch(
     () => props.perimetre,
     () => {
-      const bounds = new LngLatBounds()
-      props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
-        top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
-      })
-      ;(map.value?.getSource(contoursSourceName) as GeoJSONSource).setData(props.perimetre.geojson4326_perimetre)
-      ;(map.value?.getSource(pointsSourceName) as GeoJSONSource).setData(points.value)
+      map.value?.getSource(contoursSourceName).setData(props.perimetre.geojson4326_perimetre)
+      map.value?.getSource(pointsSourceName).setData(points.value)
+      map.value?.getSource(foragesSourceName).setData(forages.value)
+    }
+  )
 
-      map.value?.fitBounds(bounds, { padding: 50 })
+  watch(
+    () => [bounds.value, map.value],
+    () => {
+      if (isNotNullNorUndefined(map.value) && isNotNullNorUndefined(bounds.value)) {
+        map.value?.fitBounds(bounds.value, { padding: 50 })
+      }
     }
   )
 
@@ -282,7 +351,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
           typesIds: [],
         })
 
-        ;(map.value?.getSource('TitresValides') as GeoJSONSource).setData({
+        map.value?.getSource('TitresValides').setData({
           type: 'FeatureCollection',
           features: res.elements
             .filter(({ slug }) => slug !== props.neighbours?.titreSlug)
@@ -307,11 +376,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
   }
 
   onMounted(() => {
-    const bounds = new LngLatBounds()
-    props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
-      top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
-    })
-
     const style: StyleSpecification = {
       version: 8,
       glyphs: 'https://etalab-tiles.fr/fonts/{fontstack}/{range}.pbf',
@@ -325,6 +389,11 @@ export const DemarcheMap = defineComponent<Props>(props => {
         [pointsSourceName]: {
           type: 'geojson',
           data: points.value,
+        },
+
+        [foragesSourceName]: {
+          type: 'geojson',
+          data: forages.value,
         },
         TitresValides: {
           type: 'geojson',
@@ -344,13 +413,13 @@ export const DemarcheMap = defineComponent<Props>(props => {
     if (mapRef.value === null) {
       console.error("la carte ne peut pas être chargée à cause d'un problème technique, contactez l'équipe Camion")
     } else {
-      const mapLibre: Map = new Map({
+      const mapLibre: CaminoMapLibre = new Map({
         container: mapRef.value,
         cooperativeGestures: true,
         style,
-        center: bounds.getCenter().toArray(),
+        center: bounds.value.getCenter().toArray(),
         zoom: 16,
-      })
+      }) as CaminoMapLibre
 
       map.value = mapLibre
 
@@ -385,8 +454,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
         'top-right'
       )
 
-      mapLibre.fitBounds(bounds, { padding: 50 })
-
       mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
@@ -399,6 +466,24 @@ export const DemarcheMap = defineComponent<Props>(props => {
               }</b></div>${isNotNullNorUndefined(e.features[0].properties.description) ? `<div>Description : ${e.features[0].properties.description}</div>` : ''}</div>`
             )
             .addTo(mapLibre)
+        }
+      })
+
+      mapLibre.on('click', contourForagesName, e => {
+        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+          const properties = featureForagePropertiesValidator.safeParse(e.features[0].properties)
+          if (properties.success) {
+            new Popup({ closeButton: false, maxWidth: '500' })
+              .setLngLat(e.lngLat)
+              .setHTML(
+                `<div class="fr-text--md fr-m-0" style="max-width: 400px;"><div>Latitude : <b>${e.features[0].properties.latitude}</b></div><div>Longitude : <b>${
+                  e.features[0].properties.longitude
+                }</b><div>Nom : <b>${properties.data.nom}</b><div>Profondeur : <b>${properties.data.profondeur} NGF</b></div><div>Type : <b>${capitalize(properties.data.type)}</b>${
+                  isNotNullNorUndefined(properties.data.description) ? `<div>Description : ${properties.data.description}</div>` : ''
+                }</div>`
+              )
+              .addTo(mapLibre)
+          }
         }
       })
 
@@ -483,7 +568,16 @@ export const DemarcheMap = defineComponent<Props>(props => {
         setLayer={selectLayer}
         toggleOverlayLayer={toggleOverlayLayer}
         defaultOverlayLayer={defaultOverlayLayer.value}
-        overlays={overlayNames.filter(name => props.neighbours !== null || name !== 'Titres valides')}
+        overlays={overlayNames.filter(name => {
+          if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
+            return false
+          }
+          if (!canHaveForages(props.titreTypeId) && name === 'Forages') {
+            return false
+          }
+
+          return true
+        })}
       />
     </div>
   )
@@ -538,4 +632,4 @@ const LayersControl: FunctionalComponent<{
 }
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router']
+DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router', 'titreTypeId']

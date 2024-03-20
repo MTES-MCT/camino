@@ -6,11 +6,13 @@ import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import {
   FeatureCollection,
+  FeatureCollectionForages,
   FeatureCollectionPoints,
   featureCollectionPointsValidator,
   FeatureCollectionPolygon,
   FeatureMultiPolygon,
   GeojsonImportBody,
+  GeojsonImportForagesBody,
   GeojsonImportPointsBody,
 } from 'camino-common/src/perimetre.js'
 import { GEO_SYSTEME_IDS, GeoSystemeId, sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
@@ -1135,5 +1137,198 @@ describe('geojsonImportPoints', () => {
         "surface": 93.09,
       }
     `)
+  })
+})
+
+describe('geojsonImportForages', () => {
+  test('fichier geojson invalide', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, 'Hey there!')
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test('fichier geojson valide sans conversion', async () => {
+    const feature: FeatureCollectionForages = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [-52.54, 4.22269896902571] },
+          properties: { nom: 'A', description: 'Une description du point A', profondeur: 10.12, type: 'captage' },
+        },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "geojson4326": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+                "profondeur": 10.12,
+                "type": "captage",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
+        "origin": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  -52.54,
+                  4.22269896902571,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+                "profondeur": 10.12,
+                "type": "captage",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
+      }
+    `)
+  })
+
+  test('geojson valide avec conversion', async () => {
+    const feature: FeatureCollectionForages = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [1051195.108314365847036, 6867800.046355471946299] },
+          properties: { nom: 'A', description: 'Une description du point A', profondeur: 11.1, type: 'rejet' },
+        },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "geojson4326": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  7.785447944275908,
+                  48.81446215755622,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+                "profondeur": 11.1,
+                "type": "rejet",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
+        "origin": {
+          "features": [
+            {
+              "geometry": {
+                "coordinates": [
+                  1051195.1083143658,
+                  6867800.046355472,
+                ],
+                "type": "Point",
+              },
+              "properties": {
+                "description": "Une description du point A",
+                "nom": "A",
+                "profondeur": 11.1,
+                "type": "rejet",
+              },
+              "type": "Feature",
+            },
+          ],
+          "type": "FeatureCollection",
+        },
+      }
+    `)
+  })
+
+  test('csv valide en 2972', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;x;y;profondeur;type
+A;Point A;1051195.108314365847036;6867800.046355471946299;12.12;rejet
+B;Point B;1063526.397924559889361;6867885.978687250986695;12,12;captage`
+    )
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
+    expect(tested.body).toMatchSnapshot()
+
+    const testedWithError = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
+  test('csv invalide en 2972', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;x;y;profondeur;type
+A;Point A;1051195.108314365847036;6867800.046355471946299;1212;1212
+B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;12,12`
+    )
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 })

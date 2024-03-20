@@ -26,6 +26,7 @@
         :apiClient="apiClient"
         :onEtapeChange="onEtapePerimetreChange"
         :onPointsChange="onEtapePointsChange"
+        :onForagesChange="onEtapeForagesChange"
         :completeUpdate="perimetreCompleteUpdate"
       />
     </Bloc>
@@ -381,12 +382,20 @@ export default {
       this.etape.geojsonOriginePoints = perimetreInfos.geojson_origine_points
       this.etape.geojsonOrigineGeoSystemeId = perimetreInfos.geojson_origine_geo_systeme_id
 
+      this.etape.geojson4326Forages = perimetreInfos.geojson4326_forages
+      this.etape.geojsonOrigineForages = perimetreInfos.geojson_origine_forages
+
       this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
       this.$emit('update:etape', this.etape)
     },
     onEtapePointsChange(geojson4326Points, geojsonOriginePoints) {
       this.etape.geojson4326Points = geojson4326Points
       this.etape.geojsonOriginePoints = geojsonOriginePoints
+      this.$emit('update:etape', this.etape)
+    },
+    onEtapeForagesChange(geojson4326Forages, geojsonOrigineForages) {
+      this.etape.geojson4326Forages = geojson4326Forages
+      this.etape.geojsonOrigineForages = geojsonOrigineForages
       this.$emit('update:etape', this.etape)
     },
   },

@@ -3,6 +3,7 @@
     <div class="mb-s">
       <div><button class="fr-btn fr-btn--primary fr-btn--md" title="Importer un périmètre" aria-label="Importer un périmètre" type="button">Importer un périmètre</button><button class="fr-btn fr-btn--secondary fr-btn--md fr-ml-2w" title="Éditer les points" aria-label="Éditer les points" type="button">Éditer les points</button>
         <!---->
+        <!---->
         <div class="fr-mt-2w">
           <div class="dsfr">
             <div class="fr-tabs">
@@ -19,61 +20,64 @@
                     <div class="flex"><input id="typeahead_670" type="text" name="typeahead_670" disabled="" class="_typeahead-input_8eddf1 fr-input" placeholder="" autocomplete="off"></div>
                     <!---->
                   </div>
-                  <div style="overflow-x: auto;" class="fr-mb-1w">
-                    <div class="fr-table">
-                      <table style="display: table;">
-                        <caption></caption>
-                        <thead>
-                          <tr>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Nom du point</div>
-                            </th>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Description</div>
-                            </th>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Longitude</div>
-                            </th>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Latitude</div>
-                            </th>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Longitude (E)</div>
-                            </th>
-                            <th scope="col" class="nowrap">
-                              <div class="fr-text--md">Latitude (N)</div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class=""><span class="">A</span></td>
-                            <td class=""><span class="">Polygone 1</span></td>
-                            <td class=""><span class="">-52.54</span></td>
-                            <td class=""><span class="">4.22269896902571</span></td>
-                            <td class=""><span class="">-52°32,4'</span></td>
-                            <td class=""><span class="">4°13,362'</span></td>
-                          </tr>
-                          <tr>
-                            <td class=""><span class="">B</span></td>
-                            <td class=""><span class="">Polygone 1</span></td>
-                            <td class=""><span class="">-52.55</span></td>
-                            <td class=""><span class="">4.22438936251509</span></td>
-                            <td class=""><span class="">-52°33'</span></td>
-                            <td class=""><span class="">4°13,463'</span></td>
-                          </tr>
-                          <tr>
-                            <td class=""><span class="">C</span></td>
-                            <td class=""><span class="">Polygone 1</span></td>
-                            <td class=""><span class="">-52.55</span></td>
-                            <td class=""><span class="">4.24113309117193</span></td>
-                            <td class=""><span class="">-52°33'</span></td>
-                            <td class=""><span class="">4°14,468'</span></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div><a class="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-download-line" title="Télécharge les points au format csv" href="data:text/csv;charset=utf-8,nom;description;longitude;latitude;x_deg;y_deg%0AA;Polygone%201;-52.54;4.22269896902571;-52%C2%B032,4';4%C2%B013,362'%0AB;Polygone%201;-52.55;4.22438936251509;-52%C2%B033';4%C2%B013,463'%0AC;Polygone%201;-52.55;4.24113309117193;-52%C2%B033';4%C2%B014,468'" download="points-titre-slug.csv" style="align-self: end;">.csv</a>
+                  <div style="display: flex; flex-direction: column;">
+                    <div style="overflow-x: auto;" class="fr-mb-1w">
+                      <div class="fr-table">
+                        <table style="display: table;">
+                          <caption></caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Nom du point</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Description</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Longitude</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Latitude</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Longitude (E)</div>
+                              </th>
+                              <th scope="col" class="nowrap">
+                                <div class="fr-text--md">Latitude (N)</div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class=""><span class="">A</span></td>
+                              <td class=""><span class="">Polygone 1</span></td>
+                              <td class=""><span class="">-52.54</span></td>
+                              <td class=""><span class="">4.22269896902571</span></td>
+                              <td class=""><span class="">-52°32,4'</span></td>
+                              <td class=""><span class="">4°13,362'</span></td>
+                            </tr>
+                            <tr>
+                              <td class=""><span class="">B</span></td>
+                              <td class=""><span class="">Polygone 1</span></td>
+                              <td class=""><span class="">-52.55</span></td>
+                              <td class=""><span class="">4.22438936251509</span></td>
+                              <td class=""><span class="">-52°33'</span></td>
+                              <td class=""><span class="">4°13,463'</span></td>
+                            </tr>
+                            <tr>
+                              <td class=""><span class="">C</span></td>
+                              <td class=""><span class="">Polygone 1</span></td>
+                              <td class=""><span class="">-52.55</span></td>
+                              <td class=""><span class="">4.24113309117193</span></td>
+                              <td class=""><span class="">-52°33'</span></td>
+                              <td class=""><span class="">4°14,468'</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div><a class="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-download-line" title="Télécharge les points au format csv" href="data:text/csv;charset=utf-8,nom;description;longitude;latitude;x_deg;y_deg%0AA;Polygone%201;-52.54;4.22269896902571;-52%C2%B032,4';4%C2%B013,362'%0AB;Polygone%201;-52.55;4.22438936251509;-52%C2%B033';4%C2%B013,463'%0AC;Polygone%201;-52.55;4.24113309117193;-52%C2%B033';4%C2%B014,468'" download="points-titre-slug.csv" style="align-self: end;">.csv</a>
+                  </div>
+                  <!---->
                 </div>
               </div>
             </div>
@@ -83,6 +87,7 @@
       </div>
       <!---->
     </div>
+    <!---->
     <!---->
     <!---->
   </div>

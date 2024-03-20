@@ -47,7 +47,7 @@ import { SendFileOptions } from 'express-serve-static-core'
 import { activiteDocumentDownload, getActivite, updateActivite, deleteActivite } from '../api/rest/activites.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDemarcheByIdOrSlug } from '../api/rest/demarches.js'
-import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos } from '../api/rest/perimetre.js'
+import { geojsonImport, geojsonImportPoints, convertGeojsonPointsToGeoSystemeId, getPerimetreInfos, geojsonImportForages } from '../api/rest/perimetre.js'
 import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 import { titreDemandeCreer } from '../api/rest/titre-demande.js'
@@ -152,6 +152,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },
   '/rest/geojson_points/import/:geoSystemeId': { post: geojsonImportPoints },
+  '/rest/geojson_forages/import/:geoSystemeId': { post: geojsonImportForages },
   '/rest/geojson_points/:geoSystemeId': { post: convertGeojsonPointsToGeoSystemeId },
   '/deconnecter': { get: logout },
   '/changerMotDePasse': { get: resetPassword },

@@ -25,6 +25,11 @@ import {
   polygonValidator,
   featureCollectionPolygonValidator,
   GeojsonImportPointsResponse,
+  GeojsonImportForagesResponse,
+  featureCollectionForagesValidator,
+  FeatureCollectionForages,
+  featureForagePropertiesValidator,
+  geojsonImportForagesBodyValidator,
 } from 'camino-common/src/perimetre.js'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
@@ -35,7 +40,7 @@ import { TitreSlug } from 'camino-common/src/validators/titres.js'
 import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import xlsx from 'xlsx'
-import { z } from 'zod'
+import { ZodTypeAny, z } from 'zod'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
   const geoSystemeIdParsed = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -157,8 +162,8 @@ const csvCommonValidator = z
   })
 
 const csvCommonLowerValidator = z.object({ nom: z.string(), description: z.string().optional() })
-const csvMetreToJsonValidator = z.array(csvCommonValidator.pipe(csvCommonLowerValidator.extend({ x: csvInputNumberValidator, y: csvInputNumberValidator })))
-const csvDegToJsonValidator = z.array(csvCommonValidator.pipe(csvCommonLowerValidator.extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator })))
+const makeCsvToJsonValidator = <T extends ZodTypeAny>(pointValidator: T) => z.array(csvCommonValidator.pipe(pointValidator))
+
 export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonInformations>) => {
   const user = req.auth
 
@@ -235,6 +240,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
             let points: FeatureCollectionPoints['features']
             switch (uniteId) {
               case 'met': {
+                const csvMetreToJsonValidator = makeCsvToJsonValidator(csvCommonLowerValidator.extend({ x: csvInputNumberValidator, y: csvInputNumberValidator }))
                 const rows = csvMetreToJsonValidator.parse(converted)
                 coordinates = [[rows.map(({ x, y }) => [x, y])]]
                 points = rows.map(ligne => ({
@@ -248,6 +254,7 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
               }
               case 'gon':
               case 'deg': {
+                const csvDegToJsonValidator = makeCsvToJsonValidator(csvCommonLowerValidator.extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator }))
                 const rows = csvDegToJsonValidator.parse(converted)
                 coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
                 points = rows.map(ligne => ({
@@ -324,6 +331,112 @@ export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, re
         const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
         const fileContent = readFileSync(pathFrom)
         const features = featureCollectionPointsValidator.parse(JSON.parse(fileContent.toString()))
+        const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
+        res.json({ geojson4326: conversion, origin: features })
+      } catch (e: any) {
+        console.error(e)
+        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)
+      }
+    } else {
+      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(geojsonImportInput.error)
+    }
+  }
+}
+
+export const geojsonImportForages = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonImportForagesResponse>) => {
+  const user = req.auth
+
+  const geoSystemeId = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+  if (!user || isDefault(user)) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  } else if (!geoSystemeId.success) {
+    console.warn(`le geoSystemeId est obligatoire`)
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const geojsonImportInput = geojsonImportForagesBodyValidator.safeParse(req.body)
+
+    if (geojsonImportInput.success) {
+      try {
+        const filename = geojsonImportInput.data.tempDocumentName
+
+        const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
+        const fileType = geojsonImportInput.data.fileType
+        let features: FeatureCollectionForages
+        switch (fileType) {
+          case 'geojson': {
+            const fileContent = readFileSync(pathFrom)
+            features = featureCollectionForagesValidator.parse(JSON.parse(fileContent.toString()))
+
+            break
+          }
+
+          case 'shp': {
+            const fileContent = readFileSync(pathFrom)
+            const shpParsed = shpjs.parseShp(fileContent)
+            features = featureCollectionForagesValidator.parse(shpParsed)
+
+            break
+          }
+
+          case 'csv': {
+            const fileContent = readFileSync(pathFrom, { encoding: 'utf-8' })
+            const result = xlsx.read(fileContent, { type: 'string', FS: ';', raw: true })
+
+            if (result.SheetNames.length !== 1) {
+              throw new Error(`une erreur est survenue lors de la lecture du csv, il ne devrait y avoir qu'un seul document ${result.SheetNames}`)
+            }
+            const sheet1 = result.Sheets[result.SheetNames[0]]
+            const converted = xlsx.utils.sheet_to_json(sheet1, { raw: true })
+            const uniteId = GeoSystemes[geoSystemeId.data].uniteId
+
+            let coordinates: MultiPolygon['coordinates']
+            let points: FeatureCollectionForages['features']
+
+            switch (uniteId) {
+              case 'met': {
+                const csvMetreToJsonValidator = makeCsvToJsonValidator(
+                  featureForagePropertiesValidator.omit({ profondeur: true }).extend({ x: csvInputNumberValidator, y: csvInputNumberValidator, profondeur: csvInputNumberValidator })
+                )
+
+                const rows = csvMetreToJsonValidator.parse(converted)
+                coordinates = [[rows.map(({ x, y }) => [x, y])]]
+                points = rows.map(ligne => ({
+                  type: 'Feature',
+                  properties: { nom: ligne.nom, description: ligne.description, profondeur: ligne.profondeur, type: ligne.type },
+                  geometry: { type: 'Point', coordinates: [ligne.x, ligne.y] },
+                }))
+
+                coordinates[0][0].push([rows[0].x, rows[0].y])
+                break
+              }
+              case 'gon':
+              case 'deg': {
+                const csvDegToJsonValidator = makeCsvToJsonValidator(
+                  featureForagePropertiesValidator.omit({ profondeur: true }).extend({ longitude: csvInputNumberValidator, latitude: csvInputNumberValidator, profondeur: csvInputNumberValidator })
+                )
+                const rows = csvDegToJsonValidator.parse(converted)
+                coordinates = [[rows.map(({ longitude, latitude }) => [longitude, latitude])]]
+                points = rows.map(ligne => ({
+                  type: 'Feature',
+                  properties: { nom: ligne.nom, description: ligne.description, profondeur: ligne.profondeur, type: ligne.type },
+                  geometry: { type: 'Point', coordinates: [ligne.longitude, ligne.latitude] },
+                }))
+                coordinates[0][0].push([rows[0].longitude, rows[0].latitude])
+                break
+              }
+              default:
+                exhaustiveCheck(uniteId)
+                throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
+            }
+            features = { type: 'FeatureCollection', features: points }
+            break
+          }
+          default: {
+            exhaustiveCheck(fileType)
+            throw new Error('Cas impossible mais typescript ne voit pas que exhaustiveCheck throw une exception')
+          }
+        }
+
         const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
         res.json({ geojson4326: conversion, origin: features })
       } catch (e: any) {

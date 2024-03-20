@@ -175,6 +175,7 @@ export const TitreDemarche = defineComponent<Props>(props => {
             <DsfrPerimetre
               class="fr-pt-3w"
               titreSlug={props.titre.slug}
+              titreTypeId={props.titre.titre_type_id}
               apiClient={props.apiClient}
               calculateNeighbours={true}
               perimetre={{ ...perimetre.value }}

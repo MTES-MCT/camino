@@ -48,21 +48,6 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
 
   const content = () => (
     <form>
-      {fileType.value === 'geojson' || fileType.value === 'shp' ? <Alert type="info" small={true} title={<>Vous ne devez déposer que des fichiers ayant un seul multipolygone.</>} /> : null}
-
-      {fileType.value === 'csv' ? (
-        <Alert
-          type="info"
-          small={true}
-          title={
-            <>
-              Le dépôt csv n'est possible que pour des périmètres simples : un seul polygone sans lacune ayant moins de 20 sommets. Ils doivent avoir les 4 champs suivants : "nom", "description",{' '}
-              {GeoSystemes[systemeGeographique.value].uniteId === 'deg' ? '"longitude", "latitude"' : '"x", "y"'}. Seul le champ description peut être vide.
-            </>
-          }
-        />
-      ) : null}
-
       <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
         <div class="fr-fieldset__element">
           <div class="fr-select-group">
@@ -83,6 +68,21 @@ export const PerimetreImportPopup = caminoDefineComponent<Props>(['apiClient', '
           { legend: { main: 'shape' }, itemId: 'shp' },
         ]}
       />
+      {fileType.value === 'geojson' || fileType.value === 'shp' ? <Alert type="info" small={true} title={<>Vous ne devez déposer que des fichiers ayant un seul multipolygone.</>} /> : null}
+
+      {fileType.value === 'csv' ? (
+        <Alert
+          type="info"
+          small={true}
+          title={
+            <>
+              Le dépôt csv n'est possible que pour des périmètres simples : un seul polygone sans lacune ayant moins de 20 sommets. Ils doivent avoir les 4 champs suivants : "nom", "description",{' '}
+              {GeoSystemes[systemeGeographique.value].uniteId === 'deg' ? '"longitude", "latitude"' : '"x", "y"'}. Seul le champ description peut être vide.
+            </>
+          }
+        />
+      ) : null}
+
       {isNotNullNorUndefined(fileType.value) ? (
         <fieldset class="fr-fieldset" id="fichier">
           <div class="fr-fieldset__element">

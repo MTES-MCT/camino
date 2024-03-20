@@ -29,6 +29,7 @@ export const etapeSaveFormat = etape => {
 
   delete etape.demarche
   delete etape.surface
+  delete etape.geojson4326Forages
 
   etape.substances = etape.substances?.filter(substanceId => !!substanceId)
 
