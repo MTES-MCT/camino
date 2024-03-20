@@ -77,10 +77,16 @@ export type EtapeFondamentale = Etape
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
 
+
+
+export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')
+export type EtapeDocumentId = z.infer<typeof etapeDocumentIdValidator>
+
 export const etapeDocumentValidator = z.object({
+  //FIXME
   id: documentIdValidator,
   description: z.string().nullable(),
-  document_type_id: documentTypeIdValidator,
+  etape_document_type_id: documentTypeIdValidator,
   public_lecture: z.boolean().default(false),
   entreprises_lecture: z.boolean().default(false),
 })

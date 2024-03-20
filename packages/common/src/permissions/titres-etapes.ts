@@ -16,13 +16,14 @@ import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_eta
 import { SDOMZoneId } from '../static/sdom.js'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
 import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
-import { DocumentsTypes, DocumentType, DocumentTypeId, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { DocumentsTypes, DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
 import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { SectionWithValue } from '../sections.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
+import { EtapeDocument } from '../etape.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -158,7 +159,7 @@ export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
-  documents: { typeId: DocumentTypeId; fichier?: unknown; fichierNouveau?: unknown }[] | null | undefined,
+  documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
@@ -267,14 +268,7 @@ export const isEtapeDeposable = (
   },
   demarcheTypeId: DemarcheTypeId,
   titreEtape: IsEtapeCompleteEtape & { statutId: EtapeStatutId },
-  documents:
-    | {
-        typeId: DocumentTypeId
-        fichier?: unknown
-        fichierNouveau?: unknown
-      }[]
-    | null
-    | undefined,
+  etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined
 ): boolean => {
@@ -291,7 +285,7 @@ export const isEtapeDeposable = (
         'modification'
       )
     ) {
-      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, documents, entrepriseDocuments, sdomZones)
+      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones)
       if (!complete.valid) {
         console.warn(complete.errors)
 

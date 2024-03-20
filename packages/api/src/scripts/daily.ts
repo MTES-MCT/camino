@@ -1,10 +1,8 @@
 import '../init.js'
 import { daily } from '../business/daily.js'
-import { documentsCheck } from '../tools/documents/check.js'
 import { consoleOverride } from '../config/logger.js'
 import { mailjetSend } from '../tools/api-mailjet/emails.js'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'
-import { documentsClean } from '../tools/documents/clean.js'
 import * as Console from 'console'
 import pg from 'pg'
 import { config } from '../config/index.js'
@@ -34,10 +32,6 @@ const tasks = async () => {
   writeFileSync(logFile, '')
   try {
     await daily(pool)
-    if (isNotNullNorUndefined(config().CAMINO_STAGE)) {
-      await documentsClean(pool)
-      await documentsCheck(pool)
-    }
   } catch (e) {
     console.error('Erreur durant le daily', e)
   }

@@ -24,7 +24,7 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
-import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
+import { EtapeDocumentId, EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
@@ -256,21 +256,6 @@ interface ITitreDemarche {
   etapes?: ITitreEtape[]
 }
 
-interface IDocument {
-  id: DocumentId
-  typeId: DocumentTypeId
-  date: CaminoDate
-  description?: string | null
-  fichier?: boolean | null
-  fichierTypeId?: FileUploadType | null
-  fichierNouveau?: { file: FileUpload } | null
-  nomTemporaire?: string | null
-  publicLecture?: boolean | null
-  entreprisesLecture?: boolean | null
-  titreEtapeId?: EtapeId | null
-  etape?: ITitreEtape | null
-  suppression?: boolean | null
-}
 
 export interface ITitreEtapePerimetre {
   geojson4326Perimetre: FeatureMultiPolygon | null | undefined
@@ -291,8 +276,7 @@ type ITitreEtape = {
   date: CaminoDate
   duree?: number | null
   contenu?: IContenu | null
-  documents?: IDocument[] | null
-  documentIds?: string[] | null
+  etapeDocumentIds?: EtapeDocumentId[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: CaminoDate | null
@@ -418,7 +402,6 @@ export {
   ITitre,
   ITitreActivite,
   ITitreDemarche,
-  IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
   ITitreEntreprise,

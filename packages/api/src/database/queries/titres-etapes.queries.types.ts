@@ -111,9 +111,9 @@ export interface IGetDocumentsByEtapeIdQueryParams {
 
 /** 'GetDocumentsByEtapeIdQuery' return type */
 export interface IGetDocumentsByEtapeIdQueryResult {
-  description: string;
-  document_type_id: string;
+  description: string | null;
   entreprises_lecture: boolean;
+  etape_document_type_id: string;
   id: string;
   public_lecture: boolean;
 }

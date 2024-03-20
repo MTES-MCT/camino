@@ -8,7 +8,6 @@ import options from '../../src/database/queries/_options.js'
 import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { documentCreate } from '../../src/database/queries/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -183,12 +182,13 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     for (const documentTypeId of documentTypesIds) {
       const id = newDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
       documentIds.push(id)
-      await documentCreate({
-        id,
-        typeId: documentTypeId,
-        date: toCaminoDate('2020-01-01'),
-        fichier: true,
-      })
+      //FIXME
+      // await documentCreate({
+      //   id,
+      //   typeId: documentTypeId,
+      //   date: toCaminoDate('2020-01-01'),
+      //   fichier: true,
+      // })
     }
     const res = await graphQLCall(
       pool,

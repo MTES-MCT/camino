@@ -1,16 +1,13 @@
 import { IContenuElement, IContenuValeur, IDocumentRepertoire } from '../../types.js'
 
-import { documentGet } from '../../database/queries/documents.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
-import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find.js'
-import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync, createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeId } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeId } from 'camino-common/src/etape.js'
 import { DocumentId } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
@@ -30,22 +27,13 @@ export const etapeTelecharger =
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }
-    const titreEtape = await titreEtapeGet(
-      etapeId,
-      {
-        fields: {
-          documents: {
-            id: {},
-          },
-        },
-      },
-      user
-    )
+   
+    //FIXME 
+    const titreEtapeSlug = ''
 
-    if (isNullOrUndefined(titreEtape)) throw new Error("l'étape n'existe pas")
-
-    const documents = titreEtape.documents ?? []
-    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, user)
+    //FIXME
+    const documents: EtapeDocument[] =  []
+    const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
       throw new Error("aucun document n'a été trouvé pour cette demande")
@@ -54,12 +42,13 @@ export const etapeTelecharger =
     const zip = new JSZip()
 
     for (const document of documents) {
-      const path = documentFilePathFind(document)
-      const fileName = slugify(`${document.id}-${DocumentsTypes[document.typeId].nom}`)
+      //FIXME
+      // const path = documentFilePathFind(document)
+      // const fileName = slugify(`${document.id}-${DocumentsTypes[document.typeId].nom}`)
 
-      if (statSync(path).isFile()) {
-        zip.file(`${fileName}.pdf`, readFileSync(path))
-      }
+      // if (statSync(path).isFile()) {
+      //   zip.file(`${fileName}.pdf`, readFileSync(path))
+      // }
     }
     const client = await pool.connect()
 
@@ -74,7 +63,7 @@ export const etapeTelecharger =
         const fileName = slugify(`${entrepriseDocument.id}-${DocumentsTypes[entrepriseDocument.entreprise_document_type_id].nom}`)
         zip.file(`${fileName}.pdf`, stream)
       }
-      const nom = `documents-${titreEtape.slug}.zip`
+      const nom = `documents-${titreEtapeSlug}.zip`
 
       const filePath = `/${DOWNLOADS_DIRECTORY}/${nom}`
       await new Promise<void>(resolve =>
@@ -145,39 +134,31 @@ export const fichier =
       throw new Error('id du document absent')
     }
 
-    const document = await documentGet(
-      documentId,
-      {
-        fields: {
-          etape: { id: {} },
-        },
-      },
-      user
-    )
+    //FIXME
 
-    if (isNullOrUndefined(document) || !(document.fichier ?? false)) {
-      throw new Error(`fichier inexistant ${documentId}`)
-    }
+    // const document = await documentGet(
+    //   documentId,
+    //   {
+    //     fields: {
+    //       etape: { id: {} },
+    //     },
+    //   },
+    //   user
+    // )
 
-    const format = DOWNLOAD_FORMATS.PDF
+    // if (isNullOrUndefined(document) || !(document.fichier ?? false)) {
+    //   throw new Error(`fichier inexistant ${documentId}`)
+    // }
 
-    let dossier
+    // const format = DOWNLOAD_FORMATS.PDF
 
-    const repertoire = documentRepertoireFind(document)
+    // let dossier
 
-    if (repertoire === 'demarches') {
-      dossier = document.etape!.id
-    }
+    // const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
 
-    const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
+    // const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
 
-    const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
-
-    return {
-      nom,
-      format,
-      filePath,
-    }
+    return null
   }
 
 const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuValeur, heritageContenu: { actif: boolean; etapeId?: string | null }): null | string => {

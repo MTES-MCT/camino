@@ -1,14 +1,4 @@
-const documentsRelateTrue: string[] = []
-const documentsRelateFalse: string[] = []
 
-const documents = {
-  graph: ``,
-  update: {
-    insertMissing: true,
-    relate: documentsRelateTrue,
-    unrelate: documentsRelateFalse,
-  },
-}
 
 const entreprisesEtablissements = {
   update: { insertMissing: true },
@@ -43,11 +33,10 @@ const utilisateursTitres = {
 
 const titresEtapesRelateTrue = ['titulaires', 'amodiataires']
 
-const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs', `documents`]
+const titresEtapesRelateFalse = ['titulaires.etablissements', 'titulaires.utilisateurs', 'amodiataires.etablissements', 'amodiataires.utilisateurs']
 
 const titresEtapes = {
   graph: `[
-    documents,
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph}
   ]`,
@@ -129,7 +118,6 @@ const journaux = {
 }
 
 export default {
-  documents,
   entreprises,
   entreprisesEtablissements,
   titres,
@@ -149,9 +137,6 @@ export type FieldsEntreprise = FieldId & {
   amodiataireTitres?: FieldId
 }
 
-export type FieldsDocument = FieldId & {
-  etape?: FieldsEtape
-}
 export type FieldsUtilisateur = FieldId & {
   entreprises?: FieldsEntreprise
 }
@@ -181,7 +166,6 @@ export type FieldsEtape = FieldId & {
   titulaires?: FieldsEntreprise
   amodiataires?: FieldsEntreprise
   demarche?: FieldsDemarche
-  documents?: FieldsDocument
 }
 
 export type FieldsActivite = FieldId & {

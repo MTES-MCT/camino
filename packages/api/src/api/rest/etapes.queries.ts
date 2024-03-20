@@ -1,14 +1,16 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeIdOrSlug, etapeIdValidator } from 'camino-common/src/etape.js'
+import { EtapeId, EtapeIdOrSlug, etapeIdValidator } from 'camino-common/src/etape.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { sql } from '@pgtyped/runtime'
-import { IGetEtapeByIdDbQuery } from './etapes.queries.types.js'
+import { IGetEtapeByIdDbQuery, IGetEtapeDocumentsDbQuery } from './etapes.queries.types.js'
 import { demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
+import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
+import { etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -35,4 +37,32 @@ from
 where (id = $ etapeId !
     or slug = $ etapeId !)
 and archive is false
+`
+
+
+const etapeDocumentValidator = z.object({
+  id: etapeDocumentIdValidator,
+  description: z.string(),
+  etape_id: etapeIdValidator,
+  etape_document_type_id: documentTypeIdValidator
+})
+
+type EtapeDocument = z.infer<typeof etapeDocumentValidator>
+export const getEtapeDocuments = async (pool: Pool): Promise<EtapeDocument[]> => {
+  return dbQueryAndValidate(
+    getEtapeDocumentsDb,
+    undefined,
+    pool,
+    etapeDocumentValidator
+  )
+}
+
+const getEtapeDocumentsDb = sql<Redefine<IGetEtapeDocumentsDbQuery, undefined, EtapeDocument>>`
+select
+    d.id,
+    d.description,
+    d.etape_id,
+    d.etape_document_type_id
+from
+    etapes_documents d
 `
