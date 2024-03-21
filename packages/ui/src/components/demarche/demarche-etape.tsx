@@ -120,7 +120,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
           // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
-          props.etape.documents.map(document => ({ typeId: document.document_type_id, fichier: true })),
+          props.etape.documents.map(document => ({ etape_document_type_id: document.etape_document_type_id, fichier: true })),
           props.etape.entreprises_documents,
           props.demarche.sdom_zones
         )
