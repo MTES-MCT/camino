@@ -16,6 +16,7 @@ import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
 import { ButtonIcon } from '../_ui/button-icon'
 import { ApiClient } from '@/api/api-client'
+import { Alert } from '../_ui/alert'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -335,7 +336,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
             ))}
           </div>
         ) : (
-          <p>Aucun titulaire ou d'amodiataire associé à cette étape.</p>
+          <Alert title="Aucun titulaire ou amodiataire associé à cette étape." type="warning" small />
         )}
         {addPopup.value.open ? (
           <AddEntrepriseDocumentPopup
