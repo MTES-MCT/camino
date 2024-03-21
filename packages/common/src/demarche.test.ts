@@ -258,3 +258,38 @@ test('getDemarcheContenu cxw', () => {
     }
   `)
 })
+
+test('getDemarcheContenu pxg', () => {
+  expect(
+    getDemarcheContenu(
+      [
+        {
+          sections_with_values: [
+            {
+              id: 'pxg',
+              nom: 'Propriétés de la concession',
+              elements: [
+                { id: 'volume', nom: 'Volume maximum de pompage', optionnel: true, type: 'number', value: 3000000, description: 'm³' },
+                {
+                  id: 'debit',
+                  nom: 'Débit volumique maximal de pompage',
+                  type: 'number',
+                  description: '',
+                  optionnel: true,
+                  value: 300,
+                },
+              ],
+            },
+          ],
+          etape_type_id: 'rpu',
+        },
+      ],
+      'pxg'
+    )
+  ).toMatchInlineSnapshot(`
+      {
+        "Débit volumique maximal de pompage": "300 m³/h",
+        "Volume maximum de pompage": "3000000 m³",
+      }
+    `)
+})
