@@ -3,11 +3,7 @@ export const etapeSaveFormat = etape => {
   etape = JSON.parse(JSON.stringify(etape))
   etape.decisionsAnnexesContenu = decisionsAnnexesContenu
 
-  etape.documentIds = etape.documents?.filter(d => d.id !== d.typeId).map(({ id }) => id)
-
   delete etape.slug
-  delete etape.justificatifs
-  delete etape.documents
 
   if (!etape.contenu || !Object.keys(etape.contenu).length) {
     delete etape.contenu

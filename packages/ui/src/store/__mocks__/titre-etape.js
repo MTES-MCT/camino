@@ -1,54 +1,3 @@
-const titreEtapeMetas = {
-  substances: [],
-  entreprises: {
-    elements: [
-      { id: 'ent-1', nom: '1' },
-      { id: 'ent-2', nom: '2' },
-    ],
-  },
-  demarche: {
-    id: 'demarche-id',
-    typeId: 'oct',
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
-  },
-}
-
-const titreEtapeMetasRes = {
-  entreprises: [
-    { id: 'ent-1', nom: '1' },
-    { id: 'ent-2', nom: '2' },
-  ],
-  demarche: {
-    id: 'demarche-id',
-    typeId: 'oct',
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
-  },
-}
-
-const titreEtapeMetasRes2 = {
-  substances: [],
-  entreprises: [
-    { id: 'ent-1', nom: '1' },
-    { id: 'ent-2', nom: '2' },
-  ],
-  demarche: {
-    id: 'demarche-id',
-    typeId: 'oct',
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
-  },
-}
-
-const titreEtapeEdited = {
-  id: 'etape-id',
-  titreDemarcheId: 'demarche-id',
-  date: '2020-01-01',
-  amodiataires: [],
-  titulaires: [],
-  contenu: {},
-  substances: [],
-  documents: [],
-}
-
 const titreEtapeHeritage1 = {
   id: 'etape-id',
   titreDemarcheId: 'demarche-id',
@@ -115,4 +64,4 @@ const titreEtapeHeritageRes2 = {
   contenu: {},
 }
 
-export { titreEtapeMetas, titreEtapeMetasRes, titreEtapeMetasRes2, titreEtapeEdited, titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritage2, titreEtapeHeritageRes2 }
+export { titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritage2, titreEtapeHeritageRes2 }

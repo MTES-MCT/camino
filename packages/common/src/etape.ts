@@ -47,8 +47,6 @@ type EtapeBase = {
   amodiataires: EtapeEntreprise[]
   dateDebut: CaminoDate | null
   administrations?: AdministrationId[]
-  documents?: CaminoDocument[]
-  justificatifs?: unknown[]
   communes?: string[]
 
   geojson4326Perimetre?: FeatureMultiPolygon | null
@@ -77,13 +75,11 @@ export type EtapeFondamentale = Etape
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
 
-
-
 export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')
 export type EtapeDocumentId = z.infer<typeof etapeDocumentIdValidator>
 
 export const etapeDocumentValidator = z.object({
-  //FIXME
+  // FIXME
   id: documentIdValidator,
   description: z.string().nullable(),
   etape_document_type_id: documentTypeIdValidator,

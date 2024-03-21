@@ -36,16 +36,7 @@
     </Bloc>
 
     <Bloc v-if="stepDocuments" id="step-documents" :step="stepDocuments" :complete="stepDocumentsComplete">
-      <DocumentsEdit
-        v-model:documents="etape.documents"
-        :addAction="{ name: 'titreEtapeEdition/documentAdd' }"
-        :removeAction="{ name: 'titreEtapeEdition/documentRemove' }"
-        :documentPopupTitle="documentPopupTitle"
-        :documentsTypes="documentsTypes"
-        :date="etape.date"
-        :user="user"
-        @complete-update="documentsCompleteUpdate"
-      />
+      <EtapeDocumentsEdit :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="documentsCompleteUpdate" :sdomZoneIds="sdomZoneIds" />
     </Bloc>
 
     <Bloc v-if="stepEntrepriseDocuments" id="step-entrepriseDocuments" :step="stepEntrepriseDocuments" :complete="stepEntrepriseDocumentsComplete">
@@ -72,8 +63,8 @@ import { DateEdit } from './date-edit'
 import { FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
-import DocumentsEdit from '../document/multi-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
+import { EtapeDocumentsEdit } from './etape-documents-edit'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { apiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
@@ -90,8 +81,8 @@ export default {
     FondamentalesEdit,
     PerimetreEdit,
     SectionsEdit,
-    DocumentsEdit,
     EntrepriseDocumentsEdit,
+    EtapeDocumentsEdit,
     DateEdit,
   },
 
@@ -103,7 +94,7 @@ export default {
     titreSlug: { type: String, required: true },
     user: { type: Object, required: true },
     etapeIsDemandeEnConstruction: { type: Boolean, required: true },
-    documentPopupTitle: { type: String, required: true },
+    sdomZoneIds: { type: Array, required: true },
   },
 
   emits: ['complete-update', 'type-complete-update', 'change', 'update:etape', 'alertes-update'],
@@ -129,9 +120,6 @@ export default {
         demarcheTypeId: this.demarcheTypeId,
         etapeTypeId: this.etapeType?.id,
       }
-    },
-    documentsTypes() {
-      return this.$store.getters['titreEtapeEdition/documentsTypes']
     },
 
     entreprises() {
@@ -332,7 +320,8 @@ export default {
       this.perimetreComplete = complete
     },
 
-    documentsCompleteUpdate(complete) {
+    documentsCompleteUpdate(etapeDocuments, complete) {
+      this.etape.etapeDocuments = etapeDocuments
       this.documentsComplete = complete
     },
 
@@ -346,6 +335,7 @@ export default {
     },
 
     async sectionsUpdate() {
+      // FIXME
       await this.$store.dispatch('titreEtapeEdition/documentInit', this.etape.documents)
     },
 
