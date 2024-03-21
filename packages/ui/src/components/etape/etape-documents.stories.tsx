@@ -17,21 +17,21 @@ export default meta
 const documents: EtapeDocument[] = [
   {
     id: documentIdValidator.parse('id'),
-    document_type_id: 'atf',
+    etape_document_type_id: 'atf',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'bil',
+    etape_document_type_id: 'bil',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'bil',
+    etape_document_type_id: 'bil',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,

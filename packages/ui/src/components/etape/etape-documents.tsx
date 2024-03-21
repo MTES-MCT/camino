@@ -47,7 +47,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
             {props.etapeDocuments.map(item => (
               <tr>
                 <td>
-                  <EtapeDocumentLink documentId={item.id} documentTypeId={item.document_type_id} />
+                  <EtapeDocumentLink documentId={item.id} documentTypeId={item.etape_document_type_id} />
                 </td>
                 <td>{item.description}</td>
                 {isSuper(props.user) || isAdministration(props.user) ? <td>{getVisibilityLabel(item)}</td> : null}

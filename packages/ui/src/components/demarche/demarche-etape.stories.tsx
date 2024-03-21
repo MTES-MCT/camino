@@ -58,28 +58,28 @@ const routerPushMock: Pick<Router, 'push'> = {
 const documentsDemande: EtapeDocument[] = [
   {
     id: documentIdValidator.parse('id'),
-    document_type_id: 'car',
+    etape_document_type_id: 'car',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'dom',
+    etape_document_type_id: 'dom',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
     id: documentIdValidator.parse('id3'),
-    document_type_id: 'for',
+    etape_document_type_id: 'for',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
   },
   {
     id: documentIdValidator.parse('id4'),
-    document_type_id: 'jpa',
+    etape_document_type_id: 'jpa',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
@@ -134,21 +134,21 @@ const entrepriseDocumentsDemande: EtapeEntrepriseDocument[] = [
 const documents: EtapeDocument[] = [
   {
     id: documentIdValidator.parse('id'),
-    document_type_id: 'aac',
+    etape_document_type_id: 'aac',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'acg',
+    etape_document_type_id: 'acg',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
     id: documentIdValidator.parse('id2'),
-    document_type_id: 'acm',
+    etape_document_type_id: 'acm',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
@@ -625,8 +625,8 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: [
         ...documentsDemande,
-        { id: documentIdValidator.parse('idDoe'), document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
-        { id: documentIdValidator.parse('idDep'), document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: documentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: documentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
       ],
       entreprises_documents: entrepriseDocumentsDemande,
     }}
