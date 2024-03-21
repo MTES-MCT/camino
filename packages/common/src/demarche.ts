@@ -19,6 +19,7 @@ import { capitalize } from './strings.js'
 import { foretIdValidator } from './static/forets.js'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from './perimetre.js'
 import { geoSystemeIdValidator } from './static/geoSystemes.js'
+import { isNotNullNorUndefined } from './typescript-tools.js'
 
 export const demarcheIdValidator = z.string().brand<'DemarcheId'>()
 export type DemarcheId = z.infer<typeof demarcheIdValidator>
@@ -103,7 +104,6 @@ export const demarcheEtapeValidator = z.union([demarcheEtapeFondamentaleValidato
 
 export type DemarcheEtape = z.infer<typeof demarcheEtapeValidator>
 
-// TODO 2023-10-26 : ceci est la traduction de la colonne contenu_ids de la table titres_types
 export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_with_values'> & { etape_type_id: EtapeTypeId })[], titreTypeId: TitreTypeId): Record<string, string> => {
   if (getTitreTypeType(titreTypeId) === TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES) {
     let engagement: number | null = null
@@ -193,6 +193,32 @@ export const getDemarcheContenu = (etapes: (Pick<DemarcheEtapeCommon, 'sections_
             const parsed = z.boolean().safeParse(mecanisationElementWithValue.value)
             mecanisation = parsed.success ? parsed.data : false
             contenu[mecanisationElementWithValue.nom ?? ''] = mecanisation ? 'Oui' : 'Non'
+          }
+        }
+      }
+    }
+
+    return contenu
+  } else if (titreTypeId === TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE) {
+    let volume: unknown | null = null
+    let debit: unknown | null = null
+    const contenu: Record<string, string> = {}
+
+    for (const etape of etapes) {
+      const pxgSectionWithValue = etape.sections_with_values.find(({ id }) => id === 'pxg')
+      if (pxgSectionWithValue !== undefined) {
+        if (volume === null) {
+          const volumeElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'volume')
+          if (volumeElementWithValue !== undefined && isNotNullNorUndefined(volumeElementWithValue.value)) {
+            volume = volumeElementWithValue.value
+            contenu[volumeElementWithValue.nom ?? ''] = `${volume} m³`
+          }
+        }
+        if (debit === null) {
+          const debitElementWithValue = pxgSectionWithValue.elements.find(({ id }) => id === 'debit')
+          if (debitElementWithValue !== undefined && isNotNullNorUndefined(debitElementWithValue.value)) {
+            debit = debitElementWithValue.value
+            contenu[debitElementWithValue.nom ?? ''] = `${debit} m³/h`
           }
         }
       }

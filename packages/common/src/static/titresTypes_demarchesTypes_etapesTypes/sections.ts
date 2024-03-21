@@ -238,6 +238,17 @@ const proprietesDuPermisDExploitation: Section[] = [
   },
 ]
 
+const proprietesGeothermieForages: Section[] = [
+  {
+    id: 'pxg',
+    nom: "Propriétés du permis d'exploitation",
+    elements: [
+      { id: 'debit', nom: 'Débit volumique maximal de pompage', type: 'number', optionnel: true, description: '(m³/h)' },
+      { id: 'volume', nom: 'Volume maximum de pompage', type: 'number', optionnel: true, description: '(m³)' },
+    ],
+  },
+]
+
 const caracteristiquesARM: Section[] = [
   {
     id: 'arm',
@@ -894,6 +905,13 @@ const TDESections = {
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation,
+    },
+  },
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: {
+    [DEMARCHES_TYPES_IDS.Octroi]: {
+      [ETAPES_TYPES.demande]: proprietesGeothermieForages,
+      [ETAPES_TYPES.decisionDeLadministration]: proprietesGeothermieForages,
+      [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesGeothermieForages,
     },
   },
 } as const satisfies {

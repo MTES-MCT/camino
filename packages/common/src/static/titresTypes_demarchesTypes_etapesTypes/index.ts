@@ -2874,6 +2874,7 @@ const TDE = {
       ETAPES_TYPES.saisineDeLautoriteSignataire,
       ETAPES_TYPES.decisionDeLadministration,
       ETAPES_TYPES.publicationDeDecisionAuJORF,
+      ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
       ETAPES_TYPES.abrogationDeLaDecision,
       ETAPES_TYPES.decisionDuJugeAdministratif,
       ETAPES_TYPES.classementSansSuite,
