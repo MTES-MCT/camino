@@ -33,8 +33,8 @@
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
       :titreTypeId="titre.typeId"
       :titreSlug="titre.slug"
-      :documentPopupTitle="documentPopupTitle"
       :etapeType="etapeType"
+      :sdomZoneIds="sdomZoneIds"
       @complete-update="completeUpdate"
       @type-complete-update="typeCompleteUpdate"
       @change="editChange"
@@ -177,10 +177,6 @@ export default {
       return (this.etapeIsDemandeEnConstruction && this.typeComplete) || this.complete
     },
 
-    documentPopupTitle() {
-      return `${cap(this.titre.nom)} | ${cap(this.demarcheType.nom)} | ${this.etapeType ? cap(this.etapeType.nom) : ''}`
-    },
-
     helpVisible() {
       return !(isSuper(this.user) || isAdministrationAdmin(this.user) || isAdministrationEditeur(this.user)) && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType?.id === 'mfr'
     },
@@ -299,15 +295,6 @@ export default {
     alertesUpdate(infos) {
       this.superposition_alertes = infos.superposition_alertes
       this.sdomZoneIds = infos.sdomZoneIds
-
-      if (isNotNullNorUndefined(this.etapeType)) {
-        const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
-
-        this.$store.commit('titreEtapeEdition/metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-        })
-        this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
-      }
     },
 
     editChange() {

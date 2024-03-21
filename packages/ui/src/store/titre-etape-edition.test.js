@@ -4,21 +4,7 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-import {
-  titreEtapeMetas,
-  titreEtapeMetasRes,
-  titreEtapeMetasRes2,
-  titreEtapeEdited,
-  titreEtapeHeritage1,
-  titreEtapeHeritageRes1,
-  titreEtapeHeritageRes2,
-  titreEtapeHeritage2,
-} from './__mocks__/titre-etape'
-import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
-import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
-
+import { titreEtapeHeritage1, titreEtapeHeritageRes1, titreEtapeHeritageRes2, titreEtapeHeritage2 } from './__mocks__/titre-etape'
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
   etapeHeritage: vi.fn(),
@@ -204,74 +190,5 @@ describe('étapes', () => {
     })
 
     expect(actions.apiError).toHaveBeenCalled()
-  })
-
-  test('ajoute un nouveau document', async () => {
-    store.state.titreEtapeEdition.element = {
-      documents: [],
-      typeId: ETAPES_TYPES.decisionDeLadministration,
-    }
-
-    store.state.titreEtapeEdition.metas = {
-      demarche: {
-        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
-        titre: {
-          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
-        },
-      },
-    }
-    await store.dispatch('titreEtapeEdition/documentAdd', {
-      document: { id: 'document-id', typeId: DOCUMENTS_TYPES_IDS.arrete },
-    })
-
-    expect(store.state.titreEtapeEdition.element.documents).toHaveLength(1)
-  })
-
-  test('remplace un document existant par un nouveau', async () => {
-    store.state.titreEtapeEdition.element = {
-      documents: [{ id: 'document-id1', typeId: DOCUMENTS_TYPES_IDS.arrete }],
-      typeId: ETAPES_TYPES.decisionDeLadministration,
-    }
-
-    store.state.titreEtapeEdition.metas = {
-      demarche: {
-        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
-        titre: {
-          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
-        },
-      },
-    }
-    await store.dispatch('titreEtapeEdition/documentAdd', {
-      document: { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
-      idOld: 'document-id1',
-    })
-
-    expect(store.state.titreEtapeEdition.element.documents).toHaveLength(1)
-    expect(store.state.titreEtapeEdition.element.documents[0].id).toEqual('document-id2')
-  })
-
-  test('supprime un document', async () => {
-    store.state.titreEtapeEdition.element = {
-      documents: [
-        { id: 'document-id1', typeId: DOCUMENTS_TYPES_IDS.arrete },
-        { id: 'document-id2', typeId: DOCUMENTS_TYPES_IDS.arrete },
-      ],
-      typeId: ETAPES_TYPES.decisionDeLadministration,
-    }
-
-    store.state.titreEtapeEdition.metas = {
-      demarche: {
-        typeId: DEMARCHES_TYPES_IDS.MutationPartielle,
-        titre: {
-          typeId: TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE,
-        },
-      },
-    }
-    await store.dispatch('titreEtapeEdition/documentRemove', {
-      id: 'document-id2',
-    })
-
-    expect(store.state.titreEtapeEdition.element.documents).toHaveLength(1)
-    expect(store.state.titreEtapeEdition.element.documents[0].id).toEqual('document-id1')
   })
 })

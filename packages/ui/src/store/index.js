@@ -7,13 +7,11 @@ import { urlQueryUpdate } from '../utils/url'
 
 import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
-import document from './document'
 import meta from './meta'
 
 const modules = {
   titreEtape,
   titreEtapeEdition,
-  document,
   meta,
 }
 

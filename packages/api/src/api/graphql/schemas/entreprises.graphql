@@ -1,6 +1,5 @@
 # import * from 'utilisateurs.graphql'
 # import * from 'titres.graphql'
-# import * from 'documents.graphql'
 # import * from 'metas.graphql'
 
 type Entreprise {

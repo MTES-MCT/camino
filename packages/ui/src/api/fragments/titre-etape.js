@@ -1,8 +1,6 @@
 import gql from 'graphql-tag'
 import { fragmentTitreEntreprises } from './entreprises'
 
-import { fragmentDocument } from './documents'
-
 // fragment qui représente l’étape dont on hérite sur une prop
 const fragmentHeritageEtape = gql`
   fragment heritageEtape on Etape {
@@ -148,9 +146,6 @@ const fragmentEtape = gql`
     geojson4326Forages
     geojsonOrigineForages
     substances
-    documents {
-      ...document
-    }
     heritageProps {
       ...heritageProps
     }
@@ -162,8 +157,6 @@ const fragmentEtape = gql`
   }
 
   ${fragmentTitreEntreprises}
-
-  ${fragmentDocument}
 
   ${fragmentHeritageProps}
 `

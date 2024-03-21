@@ -18,14 +18,12 @@ describe('etapeEditFormat', () => {
 
       substances: [],
       contenu: {},
-      documents: [],
     })
 
     expect(
       // @ts-ignore
       etapeEditFormat({
         id: etapeIdValidator.parse('etape-id'),
-        justificatifs: [{ id: 'toto', nom: 'name' }],
       })
     ).toEqual({
       id: 'etape-id',
@@ -33,8 +31,6 @@ describe('etapeEditFormat', () => {
       titulaires: [],
       substances: [],
       contenu: {},
-      documents: [],
-      justificatifs: [{ id: 'toto', nom: 'name' }],
     })
 
     expect(
@@ -48,7 +44,6 @@ describe('etapeEditFormat', () => {
         titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
         contenu: { 'prop-id': 'prop-value' },
         substances: ['auru'],
-        documents: [{ typeId: 'aac' }],
       })
     ).toEqual({
       id: 'etape-id',
@@ -59,7 +54,6 @@ describe('etapeEditFormat', () => {
       titulaires: [{ id: 'titulaire-id', operateur: false }],
       substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
-      documents: [{ fichierNouveau: null, typeId: 'aac' }],
     })
   })
 })

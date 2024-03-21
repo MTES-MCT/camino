@@ -72,7 +72,6 @@ describe('etapeSaveFormat', () => {
 
         substances: ['substance-id-1', undefined],
         contenu: { 'prop-id': 'prop-value' },
-        documents: [{ id: 'tmp', typeId: 'tmp' }, { id: 'doc-id' }],
       })
     ).toEqual({
       amodiataires: [],
@@ -84,7 +83,6 @@ describe('etapeSaveFormat', () => {
       titreDemarcheId: 'demarche-id',
       titulaires: [{ id: 'titulaire-id' }],
       typeId: 'mfr',
-      documentIds: ['doc-id'],
     })
   })
 })

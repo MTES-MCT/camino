@@ -1,19 +1,15 @@
-import { documentEtapeFormat, etapeEditFormat } from '../utils/titre-etape-edit'
+import { etapeEditFormat } from '../utils/titre-etape-edit'
 import { etapeSaveFormat } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
 import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
-import { documentsRequiredAdd } from '../utils/documents'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 
 const state = {
   element: null,
   metas: {
     demarche: null,
     entreprises: [],
-    documentsTypes: [],
-    sdomZonesDocumentTypeIds: [],
   },
   heritageLoaded: false,
   loaded: false,
@@ -25,25 +21,6 @@ const getters = {
       return EtapesTypes[state.element.typeId]
     }
     return null
-  },
-
-  documentsTypes(state) {
-    if (!state.element.typeId) {
-      return []
-    }
-
-    const documentsTypes = getDocuments(state.metas.demarche.titre.typeId, state.metas.demarche.typeId, state.element.typeId)
-
-    // si la démarche est mécanisée il faut ajouter des documents obligatoires
-    if (state.element.contenu && state.element.contenu.arm) {
-      documentsTypes.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !state.element.contenu.arm.mecanise))
-    }
-
-    if (state.metas.sdomZonesDocumentTypeIds?.length) {
-      documentsTypes.filter(dt => state.metas.sdomZonesDocumentTypeIds.includes(dt.id)).forEach(dt => (dt.optionnel = false))
-    }
-
-    return documentsTypes
   },
 }
 
@@ -101,7 +78,7 @@ const actions = {
     commit('dateSet', date)
   },
 
-  async heritageGet({ commit, state, dispatch }, { titreTypeId, demarcheTypeId, etapeTypeId }) {
+  async heritageGet({ commit, state, dispatch }, { etapeTypeId }) {
     try {
       commit('loadingAdd', 'titreEtapeHeritageGet', { root: true })
       commit('heritageLoaded', false)
@@ -113,10 +90,9 @@ const actions = {
       })
 
       const apiEtape = etapeEditFormat(data)
-      const newEtape = etapeHeritageBuild(state.element, apiEtape, titreTypeId, demarcheTypeId, etapeTypeId)
+      const newEtape = etapeHeritageBuild(state.element.date, state.metas.demarche.id, apiEtape)
 
       commit('heritageSet', { etape: newEtape })
-      await dispatch('documentInit', state.element.documents)
 
       commit('heritageLoaded', true)
     } catch (e) {
@@ -126,36 +102,6 @@ const actions = {
         root: true,
       })
     }
-  },
-
-  async documentInit({ state, getters, commit, rootGetters }, documents) {
-    if (!state.element.typeId) {
-      commit('documentsSet', [])
-    } else {
-      documents = documentsRequiredAdd(documents, getters.documentsTypes)
-
-      commit('documentsSet', documents)
-    }
-  },
-
-  async documentAdd({ state, dispatch }, { document, idOld }) {
-    document = documentEtapeFormat(document)
-    const documents = state.element.documents || []
-    if (idOld) {
-      const index = documents.findIndex(({ id }) => id === idOld)
-      documents[index] = document
-    } else {
-      documents.push(document)
-    }
-
-    await dispatch('documentInit', documents)
-  },
-
-  async documentRemove({ state, dispatch }, { id }) {
-    await dispatch(
-      'documentInit',
-      state.element.documents.filter(d => d.id !== id)
-    )
   },
 
   async upsert({ state, commit, dispatch }, { etape }) {
@@ -198,8 +144,6 @@ const mutations = {
     state.metas = {
       demarche: null,
       entreprises: [],
-      documentsTypes: [],
-      sdomZonesDocumentTypeIds: [],
     }
     state.heritageLoaded = false
     state.loaded = false
@@ -217,10 +161,6 @@ const mutations = {
     Object.keys(data).forEach(id => {
       state.metas[id] = data[id]
     })
-  },
-
-  documentsSet(state, documents) {
-    state.element.documents = documents
   },
 }
 
