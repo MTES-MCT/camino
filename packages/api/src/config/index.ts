@@ -5,7 +5,9 @@ import { caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { z } from 'zod'
 
-dotenv.config({ path: resolve(process.cwd(), '../../.env') })
+if (process.env.VITEST !== 'true') {
+  dotenv.config({ path: resolve(process.cwd(), '../../.env') })
+}
 
 const JWT_ALGORITHMS = ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'PS256', 'PS384', 'PS512', 'none'] as const
 
