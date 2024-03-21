@@ -38,3 +38,56 @@ export interface IGetEtapeDocumentsDbQuery {
   result: IGetEtapeDocumentsDbResult;
 }
 
+/** 'GetEtapeDataForEditionDb' parameters type */
+export interface IGetEtapeDataForEditionDbParams {
+  etapeId: string;
+}
+
+/** 'GetEtapeDataForEditionDb' return type */
+export interface IGetEtapeDataForEditionDbResult {
+  demarche_entreprises_lecture: boolean;
+  demarche_public_lecture: boolean;
+  demarche_type_id: string;
+  etape_type_id: string;
+  titre_public_lecture: boolean;
+  titre_type_id: string;
+}
+
+/** 'GetEtapeDataForEditionDb' query type */
+export interface IGetEtapeDataForEditionDbQuery {
+  params: IGetEtapeDataForEditionDbParams;
+  result: IGetEtapeDataForEditionDbResult;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' parameters type */
+export interface IGetAdministrationsLocalesByEtapeIdParams {
+  etapeId: string;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' return type */
+export interface IGetAdministrationsLocalesByEtapeIdResult {
+  administrations_locales: Json;
+}
+
+/** 'GetAdministrationsLocalesByEtapeId' query type */
+export interface IGetAdministrationsLocalesByEtapeIdQuery {
+  params: IGetAdministrationsLocalesByEtapeIdParams;
+  result: IGetAdministrationsLocalesByEtapeIdResult;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' parameters type */
+export interface IGetTitulairesAmodiatairesTitreEtapeParams {
+  etapeId: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' return type */
+export interface IGetTitulairesAmodiatairesTitreEtapeResult {
+  id: string;
+}
+
+/** 'GetTitulairesAmodiatairesTitreEtape' query type */
+export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
+  params: IGetTitulairesAmodiatairesTitreEtapeParams;
+  result: IGetTitulairesAmodiatairesTitreEtapeResult;
+}
+
