@@ -229,7 +229,8 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     },
     layout: {
       'text-field': ['get', 'nom'],
-      'text-allow-overlap': false,
+      'text-overlap': 'never',
+      'symbol-sort-key': ['get', 'index'],
     },
   },
   [titresValidesLineName]: {
@@ -289,11 +290,13 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return {
       type: 'FeatureCollection',
       features:
-        props.perimetre.geojson4326_forages?.features.map(feature => {
+        props.perimetre.geojson4326_forages?.features.map((feature, index) => {
           return {
             ...feature,
             properties: {
               ...feature.properties,
+              // Ajoute l’index pour gérer l’overlap entre les différents forages
+              index: -index,
               strokeColor: feature.properties.type === 'captage' ? '#00A95F' : '#845d48',
               latitude: feature.geometry.coordinates[1],
               longitude: feature.geometry.coordinates[0],

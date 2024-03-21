@@ -1223,6 +1223,29 @@ describe('geojsonImportForages', () => {
     `)
   })
 
+  test('geojson invalide car le nom est vide', async () => {
+    const feature: FeatureCollectionForages = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [1051195.108314365847036, 6867800.046355471946299] },
+          properties: { nom: '  ', description: 'Une description du point A', profondeur: 11.1, type: 'rejet' },
+        },
+      ],
+    }
+    const fileName = `existing_temp_file_${idGenerate()}.geojson`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, JSON.stringify(feature))
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'geojson',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+
   test('geojson valide avec conversion', async () => {
     const feature: FeatureCollectionForages = {
       type: 'FeatureCollection',
@@ -1314,7 +1337,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12,12;captage`
     expect(testedWithError.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
-  test('csv invalide en 2972', async () => {
+  test('csv invalide en 2972 car mauvais type', async () => {
     const fileName = `existing_temp_file_${idGenerate()}.csv`
     mkdirSync(dir, { recursive: true })
     writeFileSync(
@@ -1322,6 +1345,23 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12,12;captage`
       `nom;description;x;y;profondeur;type
 A;Point A;1051195.108314365847036;6867800.046355471946299;1212;1212
 B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;12,12`
+    )
+    const body: GeojsonImportForagesBody = {
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
+    expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  })
+  test('csv invalide en 2972 car nom obligatoire', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom;description;x;y;profondeur;type
+;Point A;1051195.108314365847036;6867800.046355471946299;1212;rejet
+B;Point B;1063526.397924559889361;6867885.978687250986695;12.12;captage`
     )
     const body: GeojsonImportForagesBody = {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),

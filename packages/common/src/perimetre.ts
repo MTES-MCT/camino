@@ -92,7 +92,7 @@ export type GenericFeatureCollection<T extends z.ZodTypeAny> = z.infer<ReturnTyp
 export const featureCollectionPointsValidator = makeFeatureCollectionValidator(featurePointValidator)
 export type FeatureCollectionPoints = z.infer<typeof featureCollectionPointsValidator>
 
-export const featureForagePropertiesValidator = z.object({ nom: z.string(), description: z.string().nullish(), type: z.enum(['captage', 'rejet']), profondeur: z.number() })
+export const featureForagePropertiesValidator = z.object({ nom: z.string().trim().min(1), description: z.string().nullish(), type: z.enum(['captage', 'rejet']), profondeur: z.number() })
 const featureForageValidator = z.object({ type: z.literal('Feature'), geometry: pointValidator, properties: featureForagePropertiesValidator })
 
 export const featureCollectionForagesValidator = makeFeatureCollectionValidator(featureForageValidator)
