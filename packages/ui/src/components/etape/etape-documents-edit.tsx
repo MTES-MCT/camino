@@ -1,15 +1,17 @@
-import { EtapeId } from 'camino-common/src/etape'
+import { EtapeDocument, EtapeId } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { CaminoDate } from 'camino-common/src/date'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { DocumentType } from 'camino-common/src/static/documentsTypes'
+import { LoadingElement } from '../_ui/functional-loader'
+import { AsyncData } from '../../api/client-rest'
 
 // FIXME initialiser la date du document à la date de l’étape
 interface Props {
@@ -20,9 +22,9 @@ interface Props {
   }
   sdomZoneIds: SDOMZoneId[]
   completeUpdate: (etapeDocuments: unknown[], complete: boolean) => void
-  etapeId: EtapeId
+  etapeId: EtapeId | undefined
   etapeDate: CaminoDate
-  apiClient: Pick<ApiClient, 'uploadTempDocument'>
+  apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
   contenu: { arm?: { mecanise?: boolean } } | undefined
 }
 
@@ -51,7 +53,39 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     return documentsTypes
   })
 
-  return () => <div>{JSON.stringify(documentTypeIds.value)}</div>
+  const etapeDocuments = ref<AsyncData<EtapeDocument[]>>({ status: 'LOADING' })
+
+  const loadEtapeDocuments = async () => {
+    if( isNotNullNorUndefined(props.etapeId)){
+      etapeDocuments.value = { status: 'LOADING' }
+      try {
+        const result = await props.apiClient.getEtapeDocumentsByEtapeId(props.etapeId)
+
+        etapeDocuments.value = { status: 'LOADED', value: result }
+      } catch (e: any) {
+        console.error('error', e)
+        etapeDocuments.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite",
+        }
+      }
+    } else {
+      etapeDocuments.value = { status: 'LOADED', value: [] }
+    }
+  }
+
+  onMounted(async () => {
+    await loadEtapeDocuments()
+  })
+
+  return () => (
+    <LoadingElement
+      data={etapeDocuments.value}
+      renderItem={items => (
+        <>{items.map(i => <div>{i.id} / {i.description}</div>)}</>
+      )}
+    />
+  )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833

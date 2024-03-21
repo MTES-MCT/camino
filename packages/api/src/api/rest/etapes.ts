@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, EtapeDocument } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
@@ -16,15 +16,16 @@ import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
 import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
-import { getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
+import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { etapeDeposer, etapeSupprimer } from '../graphql/resolvers/titres-etapes.js'
+import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeDataForEdition } from './etapes.queries.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -44,6 +45,32 @@ export const getEtapeEntrepriseDocuments =
       }
     }
   }
+
+export const getEtapeDocuments =
+(pool: Pool) =>
+async (req: CaminoRequest, res: CustomResponse<EtapeDocument[]>): Promise<void> => {
+  const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+  const user = req.auth
+
+  if (!etapeIdParsed.success) {
+    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+
+      const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
+
+      const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+      const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeIdParsed.data, pool))
+      const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeIdParsed.data, pool))
+
+      const result = await getDocumentsByEtapeId( etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {demarche_type_id: etapeData.demarche_type_id, entreprises_lecture: etapeData.demarche_entreprises_lecture, public_lecture: etapeData.demarche_public_lecture, titre_public_lecture: etapeData.titre_public_lecture} )
+      res.json(result)
+    } catch (e) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      console.error(e)
+    }
+  }
+}
 
 export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
