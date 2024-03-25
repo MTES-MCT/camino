@@ -219,7 +219,7 @@ export default {
       if (this.heritageLoaded && hasDocuments) {
         steps.push({
           id: 'documents',
-          name: `Documents liés à l’étape ${EtapesTypes[this.etape.typeId].nom}`,
+          name: `Liste des documents`,
         })
       }
 
