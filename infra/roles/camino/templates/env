@@ -38,8 +38,6 @@ DOC_URL=https://docs.{{ base_host }}
 
 API_OPENFISCA_URL="http://openfisca:8000"
 
-STORYBOOK_HOST=storybook.{{ base_host }}
-
 # certificat ssh (docker compose)
 LETSENCRYPT_EMAIL=camino@beta.gouv.fr
 

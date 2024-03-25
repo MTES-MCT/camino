@@ -22,3 +22,4 @@ nav:
       - 'Base de données': '04-deploiement/03-base-de-donnees.md'
       - Fichiers: '04-deploiement/04-fichiers.md'
       - Scripts: '04-deploiement/05-utils.md'
+  - Storybook: '/storybook'

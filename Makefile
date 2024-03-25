@@ -3,6 +3,8 @@ _docs:
 
 docs/build: _docs
 	cd docs-sources && mkdocs build -d ../docs
+	GIT_SHA=dontcare npm run storybook:build -w packages/ui
+
 docs/serve: _docs
 	cd docs-sources && mkdocs serve -a localhost:8080
 
