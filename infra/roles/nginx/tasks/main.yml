@@ -22,6 +22,14 @@
     group: users
     mode: u=rw,g=r,o=r
   become: True
+- name: Ajoute la redirection storybook à nginx
+  ansible.builtin.copy:
+    src: redirect.conf
+    dest: /srv/www/nginx-proxy/redirect.conf
+    owner: camino
+    group: users
+    mode: u=rw,g=r,o=r
+  become: True
 
 - name: Install docker support for python
   ansible.builtin.apt:

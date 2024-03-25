@@ -15,6 +15,7 @@ services:
       - "443:443"
     volumes:
       - /srv/www/nginx-proxy/proxy.conf:/etc/nginx/proxy.conf
+      - /srv/www/nginx-proxy/redirect.conf:/etc/nginx/conf.d/redirect.conf
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html

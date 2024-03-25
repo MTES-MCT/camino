@@ -9,7 +9,7 @@ on:
         description: 'le token docker'
         required: true
 jobs:
-  storybook:
+  doc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
