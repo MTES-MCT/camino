@@ -44,8 +44,8 @@ services:
       - /srv/backups/dump/:/dump/
     restart: unless-stopped
   docs:
-    container_name: camino_api_docs
-    image: caminofr/camino-api-docs:${CAMINO_TAG}
+    container_name: camino_docs
+    image: caminofr/camino-docs:${CAMINO_TAG}
     environment:
       VIRTUAL_HOST: ${DOC_HOST}
       VIRTUAL_PORT: ${DOC_PORT}
@@ -68,20 +68,6 @@ services:
       ENV: ${ENV}
     expose:
       - ${UI_PORT}
-    networks:
-      - default
-      - nginx-proxy
-    restart: unless-stopped
-  storybook:
-    container_name: camino_ui_storybook
-    image: caminofr/camino-ui-storybook:${CAMINO_TAG}
-    environment:
-      VIRTUAL_HOST: ${STORYBOOK_HOST}
-      VIRTUAL_PORT: ${STORYBOOK_PORT}
-      LETSENCRYPT_HOST: ${STORYBOOK_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-    expose:
-      - ${STORYBOOK_PORT}
     networks:
       - default
       - nginx-proxy

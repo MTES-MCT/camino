@@ -8,5 +8,6 @@ RUN make install
 RUN make docs/build
 
 FROM nginx:1.25.3
+ADD storybook_nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=builder /project/docs /usr/share/nginx/html
 COPY --from=builder /project/packages/ui/storybook-static /usr/share/nginx/html/storybook
