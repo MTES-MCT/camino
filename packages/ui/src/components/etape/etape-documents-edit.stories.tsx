@@ -18,7 +18,7 @@ export default meta
 const documents: EtapeDocument[] = [
   {
     id: documentIdValidator.parse('id'),
-    etape_document_type_id: 'atf',
+    etape_document_type_id: 'dep',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
@@ -32,16 +32,9 @@ const documents: EtapeDocument[] = [
   },
   {
     id: documentIdValidator.parse('id2'),
-    etape_document_type_id: 'bil',
+    etape_document_type_id: 'doe',
     description: null,
     public_lecture: true,
-    entreprises_lecture: true,
-  },
-  {
-    id: documentIdValidator.parse('id2'),
-    etape_document_type_id: 'bil',
-    description: null,
-    public_lecture: false,
     entreprises_lecture: true,
   },
 ]
@@ -84,6 +77,56 @@ export const Rempli: StoryFn = () => (
   />
 )
 
+export const Complet: StoryFn = () => (
+  <EtapeDocumentsEdit
+  apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve([{
+    id: documentIdValidator.parse('id'),
+    etape_document_type_id: 'dep',
+    description: 'Une description',
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id2'),
+    etape_document_type_id: 'dom',
+    description: 'Une autre description',
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id3'),
+    etape_document_type_id: 'for',
+    description: null,
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id4'),
+    etape_document_type_id: 'jpa',
+    description: null,
+    public_lecture: false,
+    entreprises_lecture: false,
+  },
+  {
+    id: documentIdValidator.parse('id5'),
+    etape_document_type_id: 'car',
+    description: null,
+    public_lecture: false,
+    entreprises_lecture: false,
+  }
+
+]) }}
+  contenu={{}}
+    etapeDate={caminoDateValidator.parse('2023-02-03')}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    sdomZoneIds={[]}
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    etapeStatutId="fai"
+    completeUpdate={completeUpdateAction}
+  />
+)
+
+
 export const ArmMecanise: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
@@ -116,8 +159,8 @@ export const SdomZone: StoryFn = () => (
     contenu={{ arm: { mecanise: true } }}
     etapeDate={caminoDateValidator.parse('2023-02-03')}
     etapeId={etapeIdValidator.parse('etapeId')}
-    sdomZoneIds={['1']}
-    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    sdomZoneIds={['1', '2']}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     etapeStatutId="fai"
     completeUpdate={completeUpdateAction}
   />

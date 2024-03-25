@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon } from './perimetre.js'
 import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
+import { tempDocumentNameValidator } from './document.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -88,3 +89,7 @@ export const etapeDocumentValidator = z.object({
 })
 
 export type EtapeDocument = z.infer<typeof etapeDocumentValidator>
+
+export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ tempDocumentName: tempDocumentNameValidator })
+export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
+
