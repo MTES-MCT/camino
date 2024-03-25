@@ -14,18 +14,27 @@ interface Props {
   titulaires: Pick<EntreprisesByEtapeId, 'id' | 'nom'>[]
   user: User
 }
-export const EtapeDocuments: FunctionalComponent<Props> = props => {
-  const getVisibilityLabel = (etapeDocument: EtapeDocument): string => {
-    if (etapeDocument.public_lecture) {
-      return 'Public'
-    }
 
-    if (etapeDocument.entreprises_lecture) {
-      return 'Visible seulement par les entreprises titulaires'
-    }
+export const VisibilityLabel = {
+  'public': 'Public',
+  'entreprises': 'Visible seulement par les entreprises titulaires',
+  'administrations': 'Visible seulement par les administrations'
+}
 
-    return 'Visible seulement par les administrations'
+export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_lecture' | 'entreprises_lecture'>): string => {
+  if (etapeDocument.public_lecture) {
+    return VisibilityLabel.public
   }
+
+  if (etapeDocument.entreprises_lecture) {
+    return VisibilityLabel.entreprises
+  }
+
+  return VisibilityLabel.administrations
+}
+
+export const EtapeDocuments: FunctionalComponent<Props> = props => {
+
 
   if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {
     return null

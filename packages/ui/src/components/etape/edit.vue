@@ -36,7 +36,7 @@
     </Bloc>
 
     <Bloc v-if="stepDocuments" id="step-documents" :step="stepDocuments" :complete="stepDocumentsComplete">
-      <EtapeDocumentsEdit :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="documentsCompleteUpdate" :sdomZoneIds="sdomZoneIds" />
+      <EtapeDocumentsEdit :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="documentsCompleteUpdate" :sdomZoneIds="sdomZoneIds" :user="user" :contenu="etape.contenu" :etapeStatutId="etape.statutId" />
     </Bloc>
 
     <Bloc v-if="stepEntrepriseDocuments" id="step-entrepriseDocuments" :step="stepEntrepriseDocuments" :complete="stepEntrepriseDocumentsComplete">
