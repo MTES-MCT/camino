@@ -68,8 +68,54 @@ export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery {
   result: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult;
 }
 
-/** 'InsertTitreEtapeDocumentDb' parameters type */
-export interface IInsertTitreEtapeDocumentDbParams {
+/** 'UpdateEtapeDocumentFileDb' parameters type */
+export interface IUpdateEtapeDocumentFileDbParams {
+  id: string;
+  largeobject_id: number;
+}
+
+/** 'UpdateEtapeDocumentFileDb' return type */
+export type IUpdateEtapeDocumentFileDbResult = void;
+
+/** 'UpdateEtapeDocumentFileDb' query type */
+export interface IUpdateEtapeDocumentFileDbQuery {
+  params: IUpdateEtapeDocumentFileDbParams;
+  result: IUpdateEtapeDocumentFileDbResult;
+}
+
+/** 'UpdateEtapeDocumentInfoDb' parameters type */
+export interface IUpdateEtapeDocumentInfoDbParams {
+  description?: string | null | void;
+  entreprises_lecture: boolean;
+  id: string;
+  public_lecture: boolean;
+}
+
+/** 'UpdateEtapeDocumentInfoDb' return type */
+export type IUpdateEtapeDocumentInfoDbResult = void;
+
+/** 'UpdateEtapeDocumentInfoDb' query type */
+export interface IUpdateEtapeDocumentInfoDbQuery {
+  params: IUpdateEtapeDocumentInfoDbParams;
+  result: IUpdateEtapeDocumentInfoDbResult;
+}
+
+/** 'DeleteEtapeDocumentsDb' parameters type */
+export interface IDeleteEtapeDocumentsDbParams {
+  ids: readonly (string)[];
+}
+
+/** 'DeleteEtapeDocumentsDb' return type */
+export type IDeleteEtapeDocumentsDbResult = void;
+
+/** 'DeleteEtapeDocumentsDb' query type */
+export interface IDeleteEtapeDocumentsDbQuery {
+  params: IDeleteEtapeDocumentsDbParams;
+  result: IDeleteEtapeDocumentsDbResult;
+}
+
+/** 'InsertEtapeDocumentDb' parameters type */
+export interface IInsertEtapeDocumentDbParams {
   description?: string | null | void;
   entreprises_lecture: boolean;
   etape_document_type_id: string;
@@ -79,13 +125,13 @@ export interface IInsertTitreEtapeDocumentDbParams {
   public_lecture: boolean;
 }
 
-/** 'InsertTitreEtapeDocumentDb' return type */
-export type IInsertTitreEtapeDocumentDbResult = void;
+/** 'InsertEtapeDocumentDb' return type */
+export type IInsertEtapeDocumentDbResult = void;
 
-/** 'InsertTitreEtapeDocumentDb' query type */
-export interface IInsertTitreEtapeDocumentDbQuery {
-  params: IInsertTitreEtapeDocumentDbParams;
-  result: IInsertTitreEtapeDocumentDbResult;
+/** 'InsertEtapeDocumentDb' query type */
+export interface IInsertEtapeDocumentDbQuery {
+  params: IInsertEtapeDocumentDbParams;
+  result: IInsertEtapeDocumentDbResult;
 }
 
 /** 'GetTitulairesByEtapeIdQueryDb' parameters type */

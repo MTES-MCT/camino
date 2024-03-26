@@ -23,7 +23,6 @@ import { AdministrationId, administrationIdValidator } from 'camino-common/src/s
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
 import { User } from 'camino-common/src/roles.js'
 import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects.js'
-import { IGetLargeobjectIdByActiviteDocumentIdInternalQuery } from './activites.queries.types.js'
 import { canReadDocument } from './permissions/documents.js'
 import { memoize } from 'camino-common/src/typescript-tools.js'
 
