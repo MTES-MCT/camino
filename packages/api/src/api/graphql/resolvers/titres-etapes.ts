@@ -26,9 +26,9 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { EtapeDocument, EtapeId, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeId, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, insertTitreEtapeDocuments, insertTitreEtapeEntrepriseDocument } from '../../../database/queries/titres-etapes.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -215,7 +215,6 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & {etapeDocuments: unk
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    //FIXME créer les etape_documents
     const etapeDocumentsParsed = z.array(tempEtapeDocumentValidator).safeParse(etape.etapeDocuments)
 
     if (!etapeDocumentsParsed.success) {
@@ -286,7 +285,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & {etapeDocuments: unk
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
-    await insertTitreEtapeDocuments(context.pool, etapeUpdated.id, etapeDocuments)
+    await insertEtapeDocuments(context.pool, etapeUpdated.id, etapeDocuments)
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
@@ -347,7 +346,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape  & {etapeDocuments: unknown}}, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -410,9 +409,15 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
     const entrepriseDocuments: EntrepriseDocument[] = await validateAndGetEntrepriseDocuments(context.pool, etape, titreDemarche.titre, user)
     delete etape.entrepriseDocumentIds
 
-    //FIXME créer/modifier/supprimer les etapeDocuments
-    const etapeDocuments: EtapeDocument[] = []
+    const etapeDocumentsParsed = z.array(etapeDocumentModificationValidator).safeParse(etape.etapeDocuments)
 
+    if (!etapeDocumentsParsed.success) {
+      console.warn(etapeDocumentsParsed.error)
+      throw new Error('Les documents envoyés ne sont pas conformes')
+    }
+
+    const etapeDocuments = etapeDocumentsParsed.data
+    delete etape.etapeDocuments
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
       if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
@@ -478,6 +483,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape }, context: Context
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
+    await updateEtapeDocuments(context.pool, user, etapeUpdated.id, etapeUpdated.statutId, etapeDocuments)
     await deleteTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id })
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })

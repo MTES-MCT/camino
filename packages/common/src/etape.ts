@@ -94,5 +94,7 @@ export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
 
 
 
-export const etapeDocumentModificationValidator = z.union([etapeDocumentValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() }), tempEtapeDocumentValidator])
+const etapeDocumentWithFileModificationValidator = etapeDocumentValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() })
+export type EtapeDocumentWithFileModification = z.infer<typeof etapeDocumentWithFileModificationValidator>
+export const etapeDocumentModificationValidator = z.union([etapeDocumentWithFileModificationValidator, tempEtapeDocumentValidator])
 export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>
