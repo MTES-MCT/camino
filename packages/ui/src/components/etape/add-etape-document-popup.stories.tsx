@@ -22,16 +22,23 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   },
 }
 export const Default: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{...testBlankUser, role: 'admin', administrationId: 'aut-97300-01'}} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }} apiClient={apiClient} />
 )
-
 
 export const Entreprise: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{...testBlankUser, role: 'entreprise', entreprises: []}} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car', 'doe', 'jpa']} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} apiClient={apiClient} />
 )
 
-
-
 export const UnSeulDocumentPossible: StoryFn = () => (
-  <AddEtapeDocumentPopup close={close} documentTypeIds={['car']} user={{...testBlankUser, role: 'entreprise', entreprises: []}} apiClient={apiClient} />
+  <AddEtapeDocumentPopup close={close} documentTypeIds={['car']} user={{ ...testBlankUser, role: 'entreprise', entreprises: [] }} apiClient={apiClient} />
+)
+
+export const DocumentInitial: StoryFn = () => (
+  <AddEtapeDocumentPopup
+    close={close}
+    documentTypeIds={['car']}
+    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'car', tempDocumentName: tempDocumentNameValidator.parse('value') }}
+    user={{ ...testBlankUser, role: 'super' }}
+    apiClient={apiClient}
+  />
 )
