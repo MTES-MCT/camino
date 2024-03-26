@@ -266,7 +266,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                         {isNotNullNorUndefined(j.id) && j.id !== '' ? (
                           <a
                             class="mt-s"
-                            href={getDownloadRestRoute('/fichiers/:documentId', { documentId: j.id })}
+                            href={getDownloadRestRoute('/download/entrepriseDocuments/:documentId', { documentId: j.id })}
                             title={`Télécharger le document ${j.entrepriseDocumentType.nom} - nouvelle fenêtre`}
                             target="_blank"
                           >
