@@ -20,5 +20,5 @@ export const etapeApiClient: EtapeApiClient = {
     await putWithJson('/rest/etapes/:etapeId/depot', { etapeId }, undefined)
   },
 
-  getEtapeDocumentsByEtapeId: async (etapeId) => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
+  getEtapeDocumentsByEtapeId: async etapeId => getWithJson('/rest/etapes/:etapeId/etapeDocuments', { etapeId }),
 }

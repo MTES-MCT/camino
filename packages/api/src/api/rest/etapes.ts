@@ -47,30 +47,34 @@ export const getEtapeEntrepriseDocuments =
   }
 
 export const getEtapeDocuments =
-(pool: Pool) =>
-async (req: CaminoRequest, res: CustomResponse<EtapeDocument[]>): Promise<void> => {
-  const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
-  const user = req.auth
+  (pool: Pool) =>
+  async (req: CaminoRequest, res: CustomResponse<EtapeDocument[]>): Promise<void> => {
+    const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
+    const user = req.auth
 
-  if (!etapeIdParsed.success) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
-  } else {
-    try {
+    if (!etapeIdParsed.success) {
+      res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
+    } else {
+      try {
+        const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
 
-      const etapeData = await getEtapeDataForEdition(pool, etapeIdParsed.data)
+        const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+        const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeIdParsed.data, pool))
+        const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeIdParsed.data, pool))
 
-      const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
-      const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeIdParsed.data, pool))
-      const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeIdParsed.data, pool))
-
-      const result = await getDocumentsByEtapeId( etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {demarche_type_id: etapeData.demarche_type_id, entreprises_lecture: etapeData.demarche_entreprises_lecture, public_lecture: etapeData.demarche_public_lecture, titre_public_lecture: etapeData.titre_public_lecture} )
-      res.json(result)
-    } catch (e) {
-      res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-      console.error(e)
+        const result = await getDocumentsByEtapeId(etapeIdParsed.data, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+          demarche_type_id: etapeData.demarche_type_id,
+          entreprises_lecture: etapeData.demarche_entreprises_lecture,
+          public_lecture: etapeData.demarche_public_lecture,
+          titre_public_lecture: etapeData.titre_public_lecture,
+        })
+        res.json(result)
+      } catch (e) {
+        res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        console.error(e)
+      }
     }
   }
-}
 
 export const deleteEtape = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth

@@ -26,9 +26,16 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { getSections, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
-import { EtapeDocument, EtapeId, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
+import { EtapeId, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
-import { deleteTitreEtapeEntrepriseDocument, getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
+import {
+  deleteTitreEtapeEntrepriseDocument,
+  getDocumentsByEtapeId,
+  getEntrepriseDocumentIdsByEtapeId,
+  insertEtapeDocuments,
+  insertTitreEtapeEntrepriseDocument,
+  updateEtapeDocuments,
+} from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -181,7 +188,7 @@ const getForagesProperties = async (
   }
 }
 
-const etapeCreer = async ({ etape }: { etape: ITitreEtape & {etapeDocuments: unknown} }, context: Context, info: GraphQLResolveInfo) => {
+const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -346,7 +353,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape  & {etapeDocuments: unknown}}, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -544,11 +551,11 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
     )
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
-    
+
     const titre = titreDemarche.titre
     if (isNullOrUndefined(titre)) throw new Error("le titre n'est pas chargé")
     if (isNullOrUndefined(titre.administrationsLocales)) throw new Error('les administrations locales du titre ne sont pas chargées')
-    
+
     if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
     if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
 
@@ -563,7 +570,12 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
     const entreprisesTitulairesOuAmodiataires = memoize(() => {
       return Promise.resolve([...(titre.titulaires ?? []).map(({ id }) => id), ...(titre.amodiataires ?? []).map(({ id }) => id)])
     })
-    const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {demarche_type_id: titreDemarche.typeId, entreprises_lecture: titreDemarche.entreprisesLecture ?? false, public_lecture: titreDemarche.publicLecture ?? false, titre_public_lecture: titre.publicLecture ?? false})
+    const etapeDocuments = await getDocumentsByEtapeId(id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, titreEtape.typeId, {
+      demarche_type_id: titreDemarche.typeId,
+      entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+      public_lecture: titreDemarche.publicLecture ?? false,
+      titre_public_lecture: titre.publicLecture ?? false,
+    })
 
     const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
     // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
@@ -640,30 +652,24 @@ const etapeDeposer = async ({ id }: { id: EtapeId }, { user, pool }: Context) =>
         etapeDecisionAnnexe = await titreEtapeCreate(etapeDecisionAnnexe as ITitreEtape, userSuper, titreDemarche.titreId)
 
         const documentTypeIds = decisionAnnexesElements.filter(({ type }) => type === 'file').map(({ id }) => id) ?? []
-        for (const documentTypeId of documentTypeIds) {
-            //FIXME
-
+        for (const _documentTypeId of documentTypeIds) {
+          // FIXME
           // const fileName = decisionContenu[documentTypeId]
-
           // if (isDocumentTypeId(documentTypeId)) {
           //   const id = newDocumentId(decisionContenu.date, documentTypeId)
-            // const document: IDocument = {
-            //   id,
-            //   typeId: documentTypeId,
-            //   date: decisionContenu.date,
-            //   fichier: true,
-            //   entreprisesLecture: true,
-            //   titreEtapeId: etapeDecisionAnnexe.id,
-            //   fichierTypeId: 'pdf',
-            // }
-
-            // const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
-
-            // const newDocumentPath = documentFilePathFind(document, true)
-
-            // await fileRename(filePath, newDocumentPath)
-
-            // await documentCreate(document)
+          // const document: IDocument = {
+          //   id,
+          //   typeId: documentTypeId,
+          //   date: decisionContenu.date,
+          //   fichier: true,
+          //   entreprisesLecture: true,
+          //   titreEtapeId: etapeDecisionAnnexe.id,
+          //   fichierTypeId: 'pdf',
+          // }
+          // const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
+          // const newDocumentPath = documentFilePathFind(document, true)
+          // await fileRename(filePath, newDocumentPath)
+          // await documentCreate(document)
           // }
         }
       }

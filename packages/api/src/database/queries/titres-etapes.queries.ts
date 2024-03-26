@@ -32,9 +32,7 @@ import { newEtapeDocumentId } from '../models/_format/id-create.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId } from '../largeobjects.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
-import { getEtapeDocuments } from '../../api/rest/etapes.queries.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
-import { titre } from '../../api/rest/index.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -94,56 +92,75 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const updateEtapeDocuments = async (pool: Pool, user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments:EtapeDocumentModification[] ) => {
+export const updateEtapeDocuments = async (pool: Pool, user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments: EtapeDocumentModification[]) => {
   const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
 
-  const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification  => 'id' in document)
-  const etapeDocumentIdsToUpdate = etapeDocumentToUpdate.map(({id}) =>  id)
-  const toDeleteDocuments = documentsInDb.filter(({id}) => !etapeDocumentIdsToUpdate.includes(id))
-  const toInsertDocuments = etapeDocuments.filter((document): document is TempEtapeDocument  => !('id' in document))
+  const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
+  const etapeDocumentIdsToUpdate = etapeDocumentToUpdate.map(({ id }) => id)
+  const toDeleteDocuments = documentsInDb.filter(({ id }) => !etapeDocumentIdsToUpdate.includes(id))
+  const toInsertDocuments = etapeDocuments.filter((document): document is TempEtapeDocument => !('id' in document))
 
   if (isNotNullNorUndefinedNorEmpty(etapeDocumentToUpdate)) {
     for (const documentToUpdate of etapeDocumentToUpdate) {
-      if (isNotNullNorUndefined(documentToUpdate.temp_document_name)){
+      if (isNotNullNorUndefined(documentToUpdate.temp_document_name)) {
         const largeobject_id = await createLargeObject(pool, documentToUpdate.temp_document_name)
-        await dbQueryAndValidate(updateEtapeDocumentFileDb, {id: documentToUpdate.id, largeobject_id}, pool, z.void())
+        await dbQueryAndValidate(updateEtapeDocumentFileDb, { id: documentToUpdate.id, largeobject_id }, pool, z.void())
       }
-      await dbQueryAndValidate(updateEtapeDocumentInfoDb, {id: documentToUpdate.id, public_lecture: documentToUpdate.public_lecture, entreprises_lecture: documentToUpdate.entreprises_lecture, description: documentToUpdate.description}, pool, z.void())
+      await dbQueryAndValidate(
+        updateEtapeDocumentInfoDb,
+        { id: documentToUpdate.id, public_lecture: documentToUpdate.public_lecture, entreprises_lecture: documentToUpdate.entreprises_lecture, description: documentToUpdate.description },
+        pool,
+        z.void()
+      )
     }
   }
   if (isNotNullNorUndefinedNorEmpty(toInsertDocuments)) {
     await insertEtapeDocuments(pool, titre_etape_id, toInsertDocuments)
   }
   if (isNotNullNorUndefinedNorEmpty(toDeleteDocuments)) {
-    if (!canDeleteEtapeDocument(etapeStatutId)) { 
+    if (!canDeleteEtapeDocument(etapeStatutId)) {
       throw new Error('Impossible de supprimer les documents')
     }
 
-    await dbQueryAndValidate(deleteEtapeDocumentsDb, {ids: toDeleteDocuments.map(({id}) => id)}, pool, z.void())
+    await dbQueryAndValidate(deleteEtapeDocumentsDb, { ids: toDeleteDocuments.map(({ id }) => id) }, pool, z.void())
   }
 }
-const updateEtapeDocumentFileDb = sql<Redefine<IUpdateEtapeDocumentFileDbQuery, { id: EtapeDocumentId, largeobject_id: LargeObjectId }, void>>`
-update etapes_documents set largeobject_id = $largeobject_id! where id = $id!
+const updateEtapeDocumentFileDb = sql<Redefine<IUpdateEtapeDocumentFileDbQuery, { id: EtapeDocumentId; largeobject_id: LargeObjectId }, void>>`
+update
+    etapes_documents
+set
+    largeobject_id = $ largeobject_id !
+where
+    id = $ id !
 `
-const updateEtapeDocumentInfoDb = sql<Redefine<IUpdateEtapeDocumentInfoDbQuery, { id: EtapeDocumentId, public_lecture: boolean, entreprises_lecture: boolean, description:string | null,  }, void>>`
-update etapes_documents set public_lecture = $public_lecture!, entreprises_lecture = $entreprises_lecture!, description = $description where id = $id!
+const updateEtapeDocumentInfoDb = sql<Redefine<IUpdateEtapeDocumentInfoDbQuery, { id: EtapeDocumentId; public_lecture: boolean; entreprises_lecture: boolean; description: string | null }, void>>`
+update
+    etapes_documents
+set
+    public_lecture = $ public_lecture !,
+    entreprises_lecture = $ entreprises_lecture !,
+    description = $ description
+where
+    id = $ id !
 `
 const deleteEtapeDocumentsDb = sql<Redefine<IDeleteEtapeDocumentsDbQuery, { ids: EtapeDocumentId[] }, void>>`
-delete from etapes_documents where id in $$ids!
+delete from etapes_documents
+where id in $$ ids !
 `
 
 export const insertEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]) => {
-
   for (const document of etapeDocuments) {
     const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
     const largeobject_id = await createLargeObject(pool, document.temp_document_name)
-    await dbQueryAndValidate(insertEtapeDocumentDb, {...document, etape_id: titre_etape_id, id, largeobject_id}, pool, z.void())
+    await dbQueryAndValidate(insertEtapeDocumentDb, { ...document, etape_id: titre_etape_id, id, largeobject_id }, pool, z.void())
   }
 }
 
-const insertEtapeDocumentDb = sql<Redefine<IInsertEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId, largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>>`
+const insertEtapeDocumentDb = sql<
+  Redefine<IInsertEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId; largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>
+>`
 insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
-    values ($id!, $etape_document_type_id!, $etape_id!, $description, $public_lecture!, $entreprises_lecture!, $largeobject_id!)
+    values ($ id !, $ etape_document_type_id !, $ etape_id !, $ description, $ public_lecture !, $ entreprises_lecture !, $ largeobject_id !)
 `
 
 export const getTitulairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {

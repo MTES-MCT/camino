@@ -213,7 +213,6 @@ input InputEtapeModification {
   geojsonOrigineGeoSystemeId: String
 }
 
-
 input InputEtapeDocumentModification {
   id: ID
   temp_document_name: String

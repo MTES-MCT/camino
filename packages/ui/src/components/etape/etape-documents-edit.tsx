@@ -161,16 +161,18 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
         <>
           {!complete.value ? <Alert title="Il manque des documents obligatoires." small={true} type="warning" /> : null}
 
-          {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(requiredDocuments.value) ? <EtapeDocumentsTable
-            add={addDocument}
-            edit={editDocument}
-            delete={removeDocument}
-            caption="Documents obligatoires"
-            emptyRequiredDocuments={emptyRequiredDocuments.value}
-            documents={requiredDocuments.value}
-            etapeStatutId={props.etapeStatutId}
-          /> : null}
-          
+          {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(requiredDocuments.value) ? (
+            <EtapeDocumentsTable
+              add={addDocument}
+              edit={editDocument}
+              delete={removeDocument}
+              caption="Documents obligatoires"
+              emptyRequiredDocuments={emptyRequiredDocuments.value}
+              documents={requiredDocuments.value}
+              etapeStatutId={props.etapeStatutId}
+            />
+          ) : null}
+
           {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
             <>
               <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">

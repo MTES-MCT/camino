@@ -38,8 +38,6 @@ import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
-
-
 export const titreTypeIdByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const typeIds = await dbQueryAndValidate(getTitreTypeIdByActiviteId, { activiteId }, pool, titreTypeIdObjectValidator)
   if (typeIds.length === 0) {
@@ -162,8 +160,6 @@ const activiteDocumentDeleteDb = sql<Redefine<IActiviteDeleteDbQuery, { activite
 delete from activites_documents
 where activite_id = $ activiteId !
 `
-
-
 
 export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, pool: Pool): Promise<ActiviteDocument[]> => {
   return dbQueryAndValidate(

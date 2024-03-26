@@ -194,7 +194,6 @@ export const SdomZone: StoryFn = () => (
   />
 )
 
-
 export const PasDeDocumentsObligatoires: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
@@ -207,7 +206,6 @@ export const PasDeDocumentsObligatoires: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
   />
 )
-
 
 export const Loading: StoryFn = () => (
   <EtapeDocumentsEdit

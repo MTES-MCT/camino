@@ -255,7 +255,6 @@ interface ITitreDemarche {
   etapes?: ITitreEtape[]
 }
 
-
 export interface ITitreEtapePerimetre {
   geojson4326Perimetre: FeatureMultiPolygon | null | undefined
   geojson4326Points: FeatureCollectionPoints | null | undefined

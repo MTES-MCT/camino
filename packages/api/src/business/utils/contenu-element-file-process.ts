@@ -87,10 +87,10 @@ const sectionElementFilesGet = (sectionElement: DeepReadonly<SectionElement>, co
   return files
 }
 
-//FIXME à vérifier
+// FIXME à vérifier
 const contenuFilesPathGet = (repertoire: IDocumentRepertoire, parentId: string) => `files/${repertoire}/${parentId}`
 
-//FIXME à mettre en bdd (ou pas)
+// FIXME à mettre en bdd (ou pas)
 const contenuElementFilesCreate = async (newFiles: FileUpload[], repertoire: IDocumentRepertoire, parentId: string) => {
   if (newFiles.length) {
     const dirPath = `files/${repertoire}/${parentId}`

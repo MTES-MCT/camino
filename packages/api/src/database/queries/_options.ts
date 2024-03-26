@@ -1,5 +1,3 @@
-
-
 const entreprisesEtablissements = {
   update: { insertMissing: true },
 }

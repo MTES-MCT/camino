@@ -1,5 +1,5 @@
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
-import { EtapeDocument } from '../etape';
+import { EtapeDocument } from '../etape'
 
 export const isDocumentsComplete = (
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
@@ -11,7 +11,7 @@ export const isDocumentsComplete = (
     documentsTypes
       .filter(dt => !dt.optionnel)
       .forEach(dt => {
-        if (!documents?.find(d => d.etape_document_type_id === dt.id )) {
+        if (!documents?.find(d => d.etape_document_type_id === dt.id)) {
           errors.push(`le document "${dt.id}" est obligatoire`)
         }
       })

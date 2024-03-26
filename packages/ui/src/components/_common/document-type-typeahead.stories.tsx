@@ -12,4 +12,4 @@ export default meta
 const documentTypeIdSelected = action('documentTypeIdSelected')
 
 export const Default: StoryFn = () => <DocumentTypeTypeahead documentTypeIds={['car', 'doe']} documentTypeIdSelected={documentTypeIdSelected} alwaysOpen={true} />
-export const WithDocumentTypeAlreadySelected: StoryFn = () => <DocumentTypeTypeahead documentTypeIds={['car', 'doe']} initialValue='car' documentTypeIdSelected={documentTypeIdSelected} />
+export const WithDocumentTypeAlreadySelected: StoryFn = () => <DocumentTypeTypeahead documentTypeIds={['car', 'doe']} initialValue="car" documentTypeIdSelected={documentTypeIdSelected} />
