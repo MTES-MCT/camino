@@ -178,12 +178,11 @@ input InputEtapeCreation {
 }
 
 input InputEtapeDocumentCreation {
-  date: String!
-  tempDocumentName: String!
-  etapeDocumentTypeId: String!
+  temp_document_name: String!
+  etape_document_type_id: String!
   description: String
-  publicLecture: Boolean
-  entreprisesLecture: Boolean
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
 }
 
 input InputEtapeModification {
@@ -216,13 +215,12 @@ input InputEtapeModification {
 
 
 input InputEtapeDocumentModification {
-  id: ID!
-  date: String!
-  tempDocumentName: String!
-  etapeDocumentTypeId: String!
+  id: ID
+  temp_document_name: String
+  etape_document_type_id: String!
   description: String
-  publicLecture: Boolean
-  entreprisesLecture: Boolean
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
 }
 
 input InputEtapeFiltre {

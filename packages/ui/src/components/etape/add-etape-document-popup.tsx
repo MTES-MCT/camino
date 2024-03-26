@@ -4,22 +4,19 @@ import { FunctionalPopup } from '../_ui/functional-popup'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
 import { ApiClient } from '@/api/api-client'
-import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
+import { TempDocumentName } from 'camino-common/src/document'
 import { NonEmptyArray, Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { TempEtapeDocument, etapeDocumentValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape'
+import { EtapeDocumentModification, TempEtapeDocument, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { VisibilityLabel } from './etape-documents'
 import { isEntrepriseOrBureauDEtude, User } from 'camino-common/src/roles'
 import { DocumentTypeTypeahead } from '../_common/document-type-typeahead'
-import { z } from 'zod'
 
-export const addEtapeDocumentPopupValidator = z.union([etapeDocumentValidator.extend({ tempDocumentName: tempDocumentNameValidator.optional() }), tempEtapeDocumentValidator])
-export type AddEtapeDocumentPopupInputOutput = z.infer<typeof addEtapeDocumentPopupValidator>
 interface Props {
-  close: (document: AddEtapeDocumentPopupInputOutput | null) => void
+  close: (document: EtapeDocumentModification | null) => void
   documentTypeIds: NonEmptyArray<DocumentTypeId>
-  initialDocument?: AddEtapeDocumentPopupInputOutput
+  initialDocument?: EtapeDocumentModification
   apiClient: Pick<ApiClient, 'uploadTempDocument'>
   user: User
 }
@@ -33,7 +30,7 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
   const etapeDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>(props.initialDocument?.description ?? '')
   const tempDocumentName = ref<TempDocumentName | undefined>(
-    isNotNullNorUndefined(props.initialDocument) && 'tempDocumentName' in props.initialDocument ? props.initialDocument.tempDocumentName : undefined
+    isNotNullNorUndefined(props.initialDocument) && 'temp_document_name' in props.initialDocument ? props.initialDocument.temp_document_name : undefined
   )
 
   const etapeDocumentVisibility = ref<DocumentVisibility | null>(
@@ -97,7 +94,7 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
     </form>
   )
 
-  const tempDocument = computed<Nullable<Omit<TempEtapeDocument, 'tempDocumentName'>>>(() => ({
+  const tempDocument = computed<Nullable<Omit<TempEtapeDocument, 'temp_document_name'>>>(() => ({
     etape_document_type_id: etapeDocumentTypeId.value,
     description: documentDescription.value,
     public_lecture: etapeDocumentVisibility.value !== null ? etapeDocumentVisibility.value === 'public' : null,
@@ -105,7 +102,7 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
   }))
 
   const canSave = computed<boolean>(() => {
-    return tempEtapeDocumentValidator.omit({ tempDocumentName: true }).safeParse(tempDocument.value).success && (etapeDocumentFile.value !== null || isNotNullNorUndefined(props.initialDocument))
+    return tempEtapeDocumentValidator.omit({ temp_document_name: true }).safeParse(tempDocument.value).success && (etapeDocumentFile.value !== null || isNotNullNorUndefined(props.initialDocument))
   })
 
   return () => (
@@ -113,9 +110,9 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
       title={props.documentTypeIds.length === 1 ? `${isNotNullNorUndefined(props.initialDocument) ? 'Éditer' : 'Ajouter'} ${DocumentsTypes[props.documentTypeIds[0]].nom}` : "Ajout d'un document"}
       content={content}
       close={() => {
-        const value = { ...props.initialDocument, ...tempDocument.value, tempDocumentName: tempDocumentName.value }
+        const value = { ...props.initialDocument, ...tempDocument.value, temp_document_name: tempDocumentName.value }
 
-        const parsed = addEtapeDocumentPopupValidator.safeParse(value)
+        const parsed = etapeDocumentModificationValidator.safeParse(value)
 
         if (parsed.success) {
           props.close(parsed.data)

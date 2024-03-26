@@ -38,6 +38,25 @@ export interface IGetEtapeDocumentsDbQuery {
   result: IGetEtapeDocumentsDbResult;
 }
 
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' parameters type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
+  etapeDocumentId: string;
+}
+
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' return type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
+  entreprises_lecture: boolean;
+  etape_id: string;
+  largeobject_id: number | null;
+  public_lecture: boolean;
+}
+
+/** 'GetLargeobjectIdByEtapeDocumentIdInternal' query type */
+export interface IGetLargeobjectIdByEtapeDocumentIdInternalQuery {
+  params: IGetLargeobjectIdByEtapeDocumentIdInternalParams;
+  result: IGetLargeobjectIdByEtapeDocumentIdInternalResult;
+}
+
 /** 'GetEtapeDataForEditionDb' parameters type */
 export interface IGetEtapeDataForEditionDbParams {
   etapeId: string;

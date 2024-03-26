@@ -1,7 +1,6 @@
 import { Meta, StoryFn, StoryObj } from '@storybook/vue3'
-import { documentIdValidator } from 'camino-common/src/entreprise'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
-import { EtapeDocument, etapeIdValidator } from 'camino-common/src/etape'
+import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { ApiClient } from '../../api/api-client'
 import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
@@ -18,21 +17,21 @@ export default meta
 
 const documents: EtapeDocument[] = [
   {
-    id: documentIdValidator.parse('id'),
+    id: etapeDocumentIdValidator.parse('id'),
     etape_document_type_id: 'dep',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id-car'),
+    id: etapeDocumentIdValidator.parse('id-car'),
     etape_document_type_id: 'car',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id2'),
+    id: etapeDocumentIdValidator.parse('id2'),
     etape_document_type_id: 'doe',
     description: null,
     public_lecture: true,
@@ -85,35 +84,35 @@ export const Complet: StoryFn = () => (
       getEtapeDocumentsByEtapeId: () =>
         Promise.resolve([
           {
-            id: documentIdValidator.parse('id'),
+            id: etapeDocumentIdValidator.parse('id'),
             etape_document_type_id: 'dep',
             description: 'Une description',
             public_lecture: false,
             entreprises_lecture: false,
           },
           {
-            id: documentIdValidator.parse('id2'),
+            id: etapeDocumentIdValidator.parse('id2'),
             etape_document_type_id: 'dom',
             description: 'Une autre description',
             public_lecture: false,
             entreprises_lecture: false,
           },
           {
-            id: documentIdValidator.parse('id3'),
+            id: etapeDocumentIdValidator.parse('id3'),
             etape_document_type_id: 'for',
             description: null,
             public_lecture: false,
             entreprises_lecture: false,
           },
           {
-            id: documentIdValidator.parse('id4'),
+            id: etapeDocumentIdValidator.parse('id4'),
             etape_document_type_id: 'jpa',
             description: null,
             public_lecture: false,
             entreprises_lecture: false,
           },
           {
-            id: documentIdValidator.parse('id5'),
+            id: etapeDocumentIdValidator.parse('id5'),
             etape_document_type_id: 'car',
             description: null,
             public_lecture: false,
@@ -194,6 +193,21 @@ export const SdomZone: StoryFn = () => (
     user={{ ...testBlankUser, role: 'super' }}
   />
 )
+
+
+export const PasDeDocumentsObligatoires: StoryFn = () => (
+  <EtapeDocumentsEdit
+    apiClient={apiClient}
+    contenu={{}}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    sdomZoneIds={['1', '2']}
+    tde={{ titreTypeId: 'prm', demarcheTypeId: 'pro', etapeTypeId: 'mfr' }}
+    etapeStatutId="fai"
+    completeUpdate={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super' }}
+  />
+)
+
 
 export const Loading: StoryFn = () => (
   <EtapeDocumentsEdit

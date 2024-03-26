@@ -37,7 +37,7 @@ export const DocumentInitial: StoryFn = () => (
   <AddEtapeDocumentPopup
     close={close}
     documentTypeIds={['car']}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'car', tempDocumentName: tempDocumentNameValidator.parse('value') }}
+    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'car', temp_document_name: tempDocumentNameValidator.parse('value') }}
     user={{ ...testBlankUser, role: 'super' }}
     apiClient={apiClient}
   />

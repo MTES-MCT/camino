@@ -1,9 +1,9 @@
 import { FunctionalComponent } from 'vue'
-import { EtapeDocument } from 'camino-common/src/etape'
+import { EtapeDocument, EtapeDocumentId } from 'camino-common/src/etape'
 import { User, isAdministration, isSuper } from 'camino-common/src/roles'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { getDownloadRestRoute } from '../../api/client-rest'
-import { DocumentId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise'
 import { EntreprisesByEtapeId } from 'camino-common/src/demarche'
 import { EntrepriseDocumentLink } from '../entreprise/entreprise-documents'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
@@ -82,7 +82,7 @@ export const EtapeDocuments: FunctionalComponent<Props> = props => {
   )
 }
 
-type EtapeDocumentLinkProps = { documentId: DocumentId; documentTypeId: DocumentTypeId }
+type EtapeDocumentLinkProps = { documentId: EtapeDocumentId; documentTypeId: DocumentTypeId }
 const EtapeDocumentLink: FunctionalComponent<EtapeDocumentLinkProps> = props => {
   return (
     <a

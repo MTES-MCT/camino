@@ -7,7 +7,7 @@ import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeDocument, EtapeId } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeDocumentId, EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 
@@ -16,6 +16,7 @@ import { join } from 'node:path'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
+import { getLargeobjectIdByEtapeDocumentId } from './etapes.queries.js'
 export type NewDownload = (params: Record<string, unknown>, user: User, pool: Pool) => Promise<{ loid: number | null; fileName: string }>
 
 export const DOWNLOADS_DIRECTORY = 'downloads'
@@ -125,6 +126,13 @@ export const streamLargeObjectInResponse = async (pool: Pool, res: express.Respo
   }
 }
 
+export const etapeDocumentDownload: NewDownload = async (params, user, pool) => {
+  const etapeDocumentId = etapeDocumentIdValidator.parse(params.documentId)
+  const activiteDocumentLargeObjectId = await getLargeobjectIdByEtapeDocumentId(pool, user, etapeDocumentId)
+
+  return { loid: activiteDocumentLargeObjectId, fileName: etapeDocumentId }
+}
+
 const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuValeur, heritageContenu: { actif: boolean; etapeId?: string | null }): null | string => {
   if (Array.isArray(contenu)) {
     const contenuArray = contenu as IContenuElement[]
@@ -148,6 +156,7 @@ const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuVa
   return null
 }
 
+// FIXME
 export const etapeFichier =
   (_pool: Pool) =>
   async ({ params: { etapeId, fichierNom } }: { params: { etapeId?: EtapeId; fichierNom?: string } }, user: User) => {

@@ -1,5 +1,5 @@
 import { CaminoDate } from './date.js'
-import { EntrepriseId, documentIdValidator } from './entreprise.js'
+import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
@@ -80,8 +80,7 @@ export const etapeDocumentIdValidator = z.string().brand('EtapeDocumentId')
 export type EtapeDocumentId = z.infer<typeof etapeDocumentIdValidator>
 
 export const etapeDocumentValidator = z.object({
-  // FIXME
-  id: documentIdValidator,
+  id: etapeDocumentIdValidator,
   description: z.string().nullable(),
   etape_document_type_id: documentTypeIdValidator,
   public_lecture: z.boolean().default(false),
@@ -90,6 +89,10 @@ export const etapeDocumentValidator = z.object({
 
 export type EtapeDocument = z.infer<typeof etapeDocumentValidator>
 
-export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ tempDocumentName: tempDocumentNameValidator })
+export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
 export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
 
+
+
+export const etapeDocumentModificationValidator = z.union([etapeDocumentValidator.extend({ temp_document_name: tempDocumentNameValidator.optional() }), tempEtapeDocumentValidator])
+export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>

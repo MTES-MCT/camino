@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
+import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
@@ -10,6 +10,7 @@ import {
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
   IGetEtapeDocumentsDbQuery,
+  IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
 } from './etapes.queries.types.js'
 import { demarcheIdValidator } from 'camino-common/src/demarche.js'
@@ -20,6 +21,11 @@ import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
 import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise.js'
+import { User } from 'camino-common/src/roles.js'
+import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects.js'
+import { IGetLargeobjectIdByActiviteDocumentIdInternalQuery } from './activites.queries.types.js'
+import { canReadDocument } from './permissions/documents.js'
+import { memoize } from 'camino-common/src/typescript-tools.js'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -69,6 +75,55 @@ select
 from
     etapes_documents d
 `
+
+
+const loidByEtapeDocumentIdValidator = z.object({
+  largeobject_id: largeObjectIdValidator, 
+  etape_id: etapeIdValidator,
+  public_lecture: z.boolean(),
+  entreprises_lecture: z.boolean(),
+})
+export const getLargeobjectIdByEtapeDocumentId = async (pool: Pool, user: User, etapeDocumentId: EtapeDocumentId): Promise<LargeObjectId | null> => {
+  const result = await dbQueryAndValidate(
+    getLargeobjectIdByEtapeDocumentIdInternal,
+    {
+      etapeDocumentId,
+    },
+    pool,
+    loidByEtapeDocumentIdValidator
+  )
+
+  if (result.length === 1) {
+    const etapeDocument = result[0]
+    const etapeData = await getEtapeDataForEdition(pool, etapeDocument.etape_id)
+
+    const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
+    const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeDocument.etape_id, pool))
+    const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeDocument.etape_id, pool))
+
+    if (await canReadDocument(etapeDocument,    user, titreTypeId,    administrationsLocales,    entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {demarche_type_id: etapeData.demarche_type_id, entreprises_lecture: etapeData.demarche_entreprises_lecture, public_lecture: etapeData.demarche_public_lecture, titre_public_lecture: etapeData.titre_public_lecture})) {
+      return etapeDocument.largeobject_id
+    }
+  }
+
+  return null
+}
+const getLargeobjectIdByEtapeDocumentIdInternal = sql<
+  Redefine<IGetLargeobjectIdByEtapeDocumentIdInternalQuery, { etapeDocumentId: EtapeDocumentId }, z.infer<typeof loidByEtapeDocumentIdValidator>>
+>`
+select
+    d.largeobject_id,
+    d.etape_id,
+    d.public_lecture,
+    d.entreprises_lecture
+from
+    etapes_documents d
+where
+    d.id = $ etapeDocumentId !
+LIMIT 1
+`
+
+
 
 export const getEtapeDataForEdition = async (pool: Pool, etapeId: EtapeId) => {
   return (await dbQueryAndValidate(getEtapeDataForEditionDb, { etapeId }, pool, getEtapeDataForEditionValidator))[0]

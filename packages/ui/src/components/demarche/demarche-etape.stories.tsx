@@ -2,13 +2,13 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { DemarcheEtape } from './demarche-etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EtapeEntrepriseDocument, documentIdValidator, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
@@ -57,28 +57,28 @@ const routerPushMock: Pick<Router, 'push'> = {
 }
 const documentsDemande: EtapeDocument[] = [
   {
-    id: documentIdValidator.parse('id'),
+    id: etapeDocumentIdValidator.parse('id'),
     etape_document_type_id: 'car',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id2'),
+    id: etapeDocumentIdValidator.parse('id2'),
     etape_document_type_id: 'dom',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id3'),
+    id: etapeDocumentIdValidator.parse('id3'),
     etape_document_type_id: 'for',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id4'),
+    id: etapeDocumentIdValidator.parse('id4'),
     etape_document_type_id: 'jpa',
     description: null,
     public_lecture: false,
@@ -133,21 +133,21 @@ const entrepriseDocumentsDemande: EtapeEntrepriseDocument[] = [
 
 const documents: EtapeDocument[] = [
   {
-    id: documentIdValidator.parse('id'),
+    id: etapeDocumentIdValidator.parse('id'),
     etape_document_type_id: 'aac',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id2'),
+    id: etapeDocumentIdValidator.parse('id2'),
     etape_document_type_id: 'acg',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id2'),
+    id: etapeDocumentIdValidator.parse('id2'),
     etape_document_type_id: 'acm',
     description: null,
     public_lecture: false,
@@ -625,8 +625,8 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
       documents: [
         ...documentsDemande,
-        { id: documentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
-        { id: documentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: etapeDocumentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: etapeDocumentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
       ],
       entreprises_documents: entrepriseDocumentsDemande,
     }}

@@ -1,4 +1,4 @@
-import { EtapeDocument, EtapeId, TempEtapeDocument } from 'camino-common/src/etape'
+import { EtapeDocument, EtapeDocumentModification, EtapeId, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -16,7 +16,7 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes'
 import { getVisibilityLabel } from './etape-documents'
 import { Alert } from '../_ui/alert'
-import { AddEtapeDocumentPopup, AddEtapeDocumentPopupInputOutput, addEtapeDocumentPopupValidator } from './add-etape-document-popup'
+import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { z } from 'zod'
 
@@ -61,7 +61,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     return dts
   })
 
-  const etapeDocuments = ref<AsyncData<(AddEtapeDocumentPopupInputOutput & WithIndex)[]>>({ status: 'LOADING' })
+  const etapeDocuments = ref<AsyncData<(EtapeDocumentModification & WithIndex)[]>>({ status: 'LOADING' })
 
   const loadEtapeDocuments = async () => {
     if (isNotNullNorUndefined(props.etapeId)) {
@@ -119,7 +119,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
       addOrEditPopupOpen.value = { open: true, documentTypeIds: additionnalDocumentTypeIds.value }
     }
   }
-  const closeAddPopup = (newDocument: AddEtapeDocumentPopupInputOutput | null) => {
+  const closeAddPopup = (newDocument: EtapeDocumentModification | null) => {
     if (newDocument !== null && addOrEditPopupOpen.value.open && etapeDocuments.value.status === 'LOADED') {
       const index = addOrEditPopupOpen.value.document?.index
       if (isNullOrUndefined(index)) {
@@ -136,7 +136,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     () => etapeDocuments.value,
     () => {
       if (etapeDocuments.value.status === 'LOADED') {
-        props.completeUpdate(z.array(addEtapeDocumentPopupValidator).parse(etapeDocuments.value.value), complete.value)
+        props.completeUpdate(z.array(etapeDocumentModificationValidator).parse(etapeDocuments.value.value), complete.value)
       }
     },
     { deep: true, immediate: true }
@@ -161,7 +161,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
         <>
           {!complete.value ? <Alert title="Il manque des documents obligatoires." small={true} type="warning" /> : null}
 
-          <EtapeDocumentsTable
+          {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(requiredDocuments.value) ? <EtapeDocumentsTable
             add={addDocument}
             edit={editDocument}
             delete={removeDocument}
@@ -169,10 +169,10 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
             emptyRequiredDocuments={emptyRequiredDocuments.value}
             documents={requiredDocuments.value}
             etapeStatutId={props.etapeStatutId}
-          />
+          /> : null}
+          
           {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
             <>
-              {' '}
               <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
                 <EtapeDocumentsTable
                   add={addDocument}
