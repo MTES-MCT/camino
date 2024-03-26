@@ -28,7 +28,7 @@ export type IGetEtapeDocumentsDbParams = void;
 export interface IGetEtapeDocumentsDbResult {
   description: string | null;
   etape_document_type_id: string;
-  etape_id: string | null;
+  etape_id: string;
   id: string;
 }
 
