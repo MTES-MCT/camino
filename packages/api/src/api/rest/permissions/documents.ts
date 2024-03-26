@@ -8,7 +8,7 @@ import { CanReadDemarche } from './demarches.js'
 import { canReadEtape } from './etapes.js'
 import { EtapeDocument } from 'camino-common/src/etape.js'
 
-//FIXME faire canEditDocument et l’utiliser pour créer/modifier/supprimer un document
+// FIXME faire canEditDocument et l’utiliser pour créer/modifier/supprimer un document
 // c’est presque pareil que canReadDocument mais faut vérifier canEditEtape
 
 export const canReadDocument = async (

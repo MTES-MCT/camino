@@ -1,5 +1,4 @@
-
-//FIXME qui a le droit de voir les documents
+// FIXME qui a le droit de voir les documents
 // export const documentsQueryModify = (q: QueryBuilder<Documents, Documents | Documents[]>, user: User) => {
 //   q.select('documents.*')
 
@@ -35,5 +34,5 @@
 //   q.select(raw('(not exists(?))', [etapeStatutNotAco()]).as('suppression'))
 // }
 
-//FIXME droit de supprimer si l’étape est en construction
+// FIXME droit de supprimer si l’étape est en construction
 // const etapeStatutNotAco = () => TitresEtapes.query().whereRaw('?? = ??', ['id', 'documents.titreEtapeId']).andWhereRaw('?? != ?', ['titresEtapes.statutId', 'aco'])

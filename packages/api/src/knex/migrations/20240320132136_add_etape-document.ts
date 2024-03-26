@@ -1,8 +1,9 @@
+/* eslint-disable no-restricted-syntax */
 import { EtapeId } from 'camino-common/src/etape'
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex) => {
-  //TODO 20-03-2024 rendre largeobject_id not null après la migration
+  // TODO 20-03-2024 rendre largeobject_id not null après la migration
   // await knex.raw('ALTER TABLE etapes_documents ALTER COLUMN largeobject_id SET NOT NULL')
 
   await knex.raw(
@@ -15,18 +16,17 @@ export const up = async (knex: Knex) => {
     'insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture) (SELECT id, type_id as etape_document_type_id, titre_etape_id, description, public_lecture, entreprises_lecture from documents where titre_etape_id is not null and fichier is not null and fichier_type_id is not null)'
   )
 
-  const result: {rows: { titre_etape_id: EtapeId, description: string }[]} = await knex.raw('SELECT titre_etape_id, description from documents where titre_etape_id is null or fichier is null or fichier_type_id is  null')
+  const result: { rows: { titre_etape_id: EtapeId; description: string }[] } = await knex.raw(
+    'SELECT titre_etape_id, description from documents where titre_etape_id is null or fichier is null or fichier_type_id is  null'
+  )
 
-  for(const document of result.rows){
-    
+  for (const document of result.rows) {
     await knex.raw(`update titres_etapes set notes = concat(notes, '${document.description.replace(/'/g, '’')}') where id = '${document.titre_etape_id}'`)
   }
-
-
 
   // await knex.schema.dropTable('documents')
 }
 
 export const down = () => ({})
 
-//FIXME une entreprise (ou bureau d’études) peut seulement choisir public ou « entreprise »
+// FIXME une entreprise (ou bureau d’études) peut seulement choisir public ou « entreprise »

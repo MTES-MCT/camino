@@ -28,7 +28,7 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
-//FIXME à transformer
+// FIXME à transformer
 describe.skip('documentSupprimer', () => {
   const documentSupprimerQuery = queryImport('documents-supprimer')
 
@@ -61,7 +61,7 @@ describe.skip('documentSupprimer', () => {
       typeId: 'oct',
     })
 
-    const titreEtape = await titreEtapeCreate(
+    const _titreEtape = await titreEtapeCreate(
       {
         typeId: 'mfr',
         statutId: 'aco',

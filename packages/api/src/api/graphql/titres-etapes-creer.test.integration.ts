@@ -203,7 +203,7 @@ describe('etapeCreer', () => {
     const idFor = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'for')
     const idJpa = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'jpa')
     const idCar = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'car')
-    //FIXME
+    // FIXME
     // await documentCreate({
     //   id: idDom,
     //   typeId: 'dom',

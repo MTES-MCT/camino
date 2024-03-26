@@ -182,7 +182,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     for (const documentTypeId of documentTypesIds) {
       const id = newEtapeDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
       documentIds.push(id)
-      //FIXME
+      // FIXME
       // await documentCreate({
       //   id,
       //   typeId: documentTypeId,

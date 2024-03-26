@@ -7,7 +7,7 @@ import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeDocument, EtapeDocumentId, EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 

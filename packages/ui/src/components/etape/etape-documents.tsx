@@ -16,9 +16,9 @@ interface Props {
 }
 
 export const VisibilityLabel = {
-  'public': 'Public',
-  'entreprises': 'Visible seulement par les entreprises titulaires',
-  'administrations': 'Visible seulement par les administrations'
+  public: 'Public',
+  entreprises: 'Visible seulement par les entreprises titulaires',
+  administrations: 'Visible seulement par les administrations',
 }
 
 export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_lecture' | 'entreprises_lecture'>): string => {
@@ -34,8 +34,6 @@ export const getVisibilityLabel = (etapeDocument: Pick<EtapeDocument, 'public_le
 }
 
 export const EtapeDocuments: FunctionalComponent<Props> = props => {
-
-
   if (isNullOrUndefinedOrEmpty(props.etapeDocuments) && isNullOrUndefinedOrEmpty(props.entrepriseDocuments)) {
     return null
   }
