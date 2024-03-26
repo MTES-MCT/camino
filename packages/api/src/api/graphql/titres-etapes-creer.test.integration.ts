@@ -10,7 +10,7 @@ import { userSuper } from '../../database/user-super'
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
-import { newDocumentId } from '../../database/models/_format/id-create.js'
+import { newEtapeDocumentId } from '../../database/models/_format/id-create.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 
 vi.mock('../../tools/dir-create', () => ({
@@ -199,10 +199,10 @@ describe('etapeCreer', () => {
 
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
-    const idDom = newDocumentId(toCaminoDate('2020-01-01'), 'dom')
-    const idFor = newDocumentId(toCaminoDate('2020-01-01'), 'for')
-    const idJpa = newDocumentId(toCaminoDate('2020-01-01'), 'jpa')
-    const idCar = newDocumentId(toCaminoDate('2020-01-01'), 'car')
+    const idDom = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'dom')
+    const idFor = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'for')
+    const idJpa = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'jpa')
+    const idCar = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'car')
     //FIXME
     // await documentCreate({
     //   id: idDom,
@@ -255,6 +255,7 @@ describe('etapeCreer', () => {
             },
           },
           substances: ['auru'],
+          // FIXME
           documentIds: [idDom, idFor, idJpa, idCar],
           geojson4326Perimetre: {
             type: 'Feature',

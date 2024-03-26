@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
-import { NewDownload, etapeFichier, etapeTelecharger, fichier, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
+import { NewDownload, etapeDocumentDownload, etapeFichier, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
@@ -98,10 +98,10 @@ const getConfig = (_pool: Pool) => async (_req: CaminoRequest, res: CustomRespon
 
 const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<key> }> = {
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
-  '/download/fichiers/:documentId': { download: fichier },
+  '/download/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/download/entrepriseDocuments/:documentId': { newDownload: entrepriseDocumentDownload },
   '/download/activiteDocuments/:documentId': { newDownload: activiteDocumentDownload },
-  '/fichiers/:documentId': { download: fichier },
+  '/fichiers/:documentId': { newDownload: etapeDocumentDownload },
   '/titres/:id': { download: titre },
   '/titres': { download: titres },
   '/titres_qgis': { download: titres },

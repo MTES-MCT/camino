@@ -14,9 +14,6 @@ import type { TitreId } from './validators/titres.js'
 export const entrepriseIdValidator = z.string().brand<'EntrepriseId'>()
 export type EntrepriseId = z.infer<typeof entrepriseIdValidator>
 export const isEntrepriseId = (eid: string): eid is EntrepriseId => entrepriseIdValidator.safeParse(eid).success
-export const documentIdValidator = z.string().brand<'DocumentId'>()
-
-export type DocumentId = z.infer<typeof documentIdValidator>
 
 export const sirenValidator = z
   .string()

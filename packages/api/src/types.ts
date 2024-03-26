@@ -10,10 +10,9 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
-import { DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
@@ -24,7 +23,7 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
 import { TitreId, TitreSlug } from 'camino-common/src/validators/titres.js'
-import { EtapeDocumentId, EtapeId, EtapeSlug } from 'camino-common/src/etape'
+import { EtapeId, EtapeSlug } from 'camino-common/src/etape'
 import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
@@ -276,7 +275,6 @@ type ITitreEtape = {
   date: CaminoDate
   duree?: number | null
   contenu?: IContenu | null
-  etapeDocumentIds?: EtapeDocumentId[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: CaminoDate | null

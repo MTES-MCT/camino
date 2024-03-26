@@ -68,6 +68,26 @@ export interface IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryQuery {
   result: IGetEntrepriseDocumentLargeObjectIdsByEtapeIdQueryResult;
 }
 
+/** 'InsertTitreEtapeDocumentDb' parameters type */
+export interface IInsertTitreEtapeDocumentDbParams {
+  description?: string | null | void;
+  entreprises_lecture: boolean;
+  etape_document_type_id: string;
+  etape_id: string;
+  id: string;
+  largeobject_id: number;
+  public_lecture: boolean;
+}
+
+/** 'InsertTitreEtapeDocumentDb' return type */
+export type IInsertTitreEtapeDocumentDbResult = void;
+
+/** 'InsertTitreEtapeDocumentDb' query type */
+export interface IInsertTitreEtapeDocumentDbQuery {
+  params: IInsertTitreEtapeDocumentDbParams;
+  result: IInsertTitreEtapeDocumentDbResult;
+}
+
 /** 'GetTitulairesByEtapeIdQueryDb' parameters type */
 export interface IGetTitulairesByEtapeIdQueryDbParams {
   etapeId: string;

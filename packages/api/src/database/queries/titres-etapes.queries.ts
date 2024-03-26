@@ -9,8 +9,9 @@ import {
   IGetAmodiatairesByEtapeIdQueryDbQuery,
   IInsertTitreEtapeEntrepriseDocumentInternalQuery,
   IGetDocumentsByEtapeIdQueryQuery,
+  IInsertTitreEtapeDocumentDbQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeDocument, etapeDocumentValidator, EtapeId } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeDocumentId, etapeDocumentValidator, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
@@ -24,6 +25,9 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { CanReadDemarche } from '../../api/rest/permissions/demarches.js'
+import { newEtapeDocumentId } from '../models/_format/id-create.js'
+import { getCurrent } from 'camino-common/src/date.js'
+import { createLargeObject, LargeObjectId } from '../largeobjects.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -82,6 +86,21 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
 
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
+
+
+export const insertTitreEtapeDocuments = async (pool: Pool, titre_etape_id: EtapeId, etapeDocuments: TempEtapeDocument[]) => {
+
+  for (const document of etapeDocuments) {
+    const id = newEtapeDocumentId(getCurrent(), document.etape_document_type_id)
+    const largeobject_id = await createLargeObject(pool, document.temp_document_name)
+    await dbQueryAndValidate(insertTitreEtapeDocumentDb, {...document, etape_id: titre_etape_id, id, largeobject_id}, pool, z.void())
+  }
+}
+
+const insertTitreEtapeDocumentDb = sql<Redefine<IInsertTitreEtapeDocumentDbQuery, { etape_id: EtapeId; id: EtapeDocumentId, largeobject_id: LargeObjectId } & Omit<TempEtapeDocument, 'temp_document_name'>, void>>`
+insert into etapes_documents (id, etape_document_type_id, etape_id, description, public_lecture, entreprises_lecture, largeobject_id)
+    values ($id!, $etape_document_type_id!, $etape_id!, $description, $public_lecture!, $entreprises_lecture!, $largeobject_id!)
+`
 
 export const getTitulairesByEtapeIdQuery = async (etapeId: EtapeId, pool: Pool): Promise<EntreprisesByEtapeId[]> => {
   return dbQueryAndValidate(getTitulairesByEtapeIdQueryDb, { etapeId }, pool, entreprisesByEtapeIdValidator)

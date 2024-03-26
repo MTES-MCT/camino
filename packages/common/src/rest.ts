@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ZodType, z } from 'zod'
 import {
-  documentIdValidator,
   entrepriseDocumentIdValidator,
   entrepriseDocumentInputValidator,
   etapeEntrepriseDocumentValidator,
@@ -26,7 +25,7 @@ import {
 } from './titres.js'
 import { adminUserNotNullValidator, userValidator } from './roles.js'
 import { caminoAnneeValidator, caminoDateValidator } from './date.js'
-import { etapeDocumentValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
+import { etapeDocumentIdValidator, etapeDocumentValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeTypeEtapeStatutWithMainStepValidator } from './etape.js'
 import {
   statistiquesDGTMValidator,
   statistiquesDataGouvValidator,
@@ -199,10 +198,10 @@ export const CaminoRestRoutes = {
   },
   '/deconnecter': { get: { output: z.string() } },
   '/changerMotDePasse': { get: { output: z.string() } },
-  '/download/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
+  '/download/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
   '/download/entrepriseDocuments/:documentId': { params: { documentId: entrepriseDocumentIdValidator }, newDownload: true },
   '/download/activiteDocuments/:documentId': { params: { documentId: activiteDocumentIdValidator }, newDownload: true },
-  '/fichiers/:documentId': { params: { documentId: z.union([documentIdValidator, entrepriseDocumentIdValidator]) }, download: true },
+  '/fichiers/:documentId': { params: { documentId: etapeDocumentIdValidator }, newDownload: true },
   '/titres/:id': { params: { id: titreIdValidator }, download: true },
   '/titres': { download: true },
   '/titres_qgis': { download: true },

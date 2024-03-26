@@ -8,7 +8,7 @@ import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 
 import { afterAll, afterEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { newDocumentId } from '../../database/models/_format/id-create.js'
+import { newEtapeDocumentId } from '../../database/models/_format/id-create.js'
 import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 console.info = vi.fn()
@@ -73,7 +73,7 @@ describe.skip('documentSupprimer', () => {
       titre.id
     )
 
-    const documentId = newDocumentId(getCurrent(), 'fac')
+    const documentId = newEtapeDocumentId(getCurrent(), 'fac')
     // await documentCreate({
     //   id: documentId,
     //   typeId: 'fac',

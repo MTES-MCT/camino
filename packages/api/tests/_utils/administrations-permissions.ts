@@ -5,7 +5,7 @@ import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
-import { newDemarcheId, newDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
@@ -180,7 +180,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const documentIds = []
 
     for (const documentTypeId of documentTypesIds) {
-      const id = newDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
+      const id = newEtapeDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
       documentIds.push(id)
       //FIXME
       // await documentCreate({
