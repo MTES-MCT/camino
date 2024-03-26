@@ -3,12 +3,11 @@ import { IContenuElement, IContenuValeur, IDocumentRepertoire } from '../../type
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 
 import JSZip from 'jszip'
-import { statSync, readFileSync, createWriteStream } from 'node:fs'
+import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
 import { EtapeDocument, EtapeId } from 'camino-common/src/etape.js'
-import { DocumentId } from 'camino-common/src/entreprise.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 
@@ -27,12 +26,12 @@ export const etapeTelecharger =
     if (!etapeId) {
       throw new Error("id d'étape absent")
     }
-   
-    //FIXME 
+
+    // FIXME
     const titreEtapeSlug = ''
 
-    //FIXME
-    const documents: EtapeDocument[] =  []
+    // FIXME
+    const documents: EtapeDocument[] = []
     const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
@@ -41,11 +40,10 @@ export const etapeTelecharger =
 
     const zip = new JSZip()
 
-    for (const document of documents) {
-      //FIXME
+    for (const _document of documents) {
+      // FIXME
       // const path = documentFilePathFind(document)
       // const fileName = slugify(`${document.id}-${DocumentsTypes[document.typeId].nom}`)
-
       // if (statSync(path).isFile()) {
       //   zip.file(`${fileName}.pdf`, readFileSync(path))
       // }
@@ -126,40 +124,6 @@ export const streamLargeObjectInResponse = async (pool: Pool, res: express.Respo
     client.release()
   }
 }
-
-export const fichier =
-  (_pool: Pool) =>
-  async ({ params: { documentId } }: { params: { documentId?: DocumentId } }, user: User) => {
-    if (!documentId) {
-      throw new Error('id du document absent')
-    }
-
-    //FIXME
-
-    // const document = await documentGet(
-    //   documentId,
-    //   {
-    //     fields: {
-    //       etape: { id: {} },
-    //     },
-    //   },
-    //   user
-    // )
-
-    // if (isNullOrUndefined(document) || !(document.fichier ?? false)) {
-    //   throw new Error(`fichier inexistant ${documentId}`)
-    // }
-
-    // const format = DOWNLOAD_FORMATS.PDF
-
-    // let dossier
-
-    // const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
-
-    // const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
-
-    return null
-  }
 
 const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuValeur, heritageContenu: { actif: boolean; etapeId?: string | null }): null | string => {
   if (Array.isArray(contenu)) {

@@ -1,17 +1,21 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeId, EtapeIdOrSlug, etapeIdValidator } from 'camino-common/src/etape.js'
+import { EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { sql } from '@pgtyped/runtime'
-import { IGetAdministrationsLocalesByEtapeIdQuery, IGetEtapeByIdDbQuery, IGetEtapeDataForEditionDbQuery, IGetEtapeDocumentsDbQuery, IGetTitulairesAmodiatairesTitreEtapeQuery } from './etapes.queries.types.js'
+import {
+  IGetAdministrationsLocalesByEtapeIdQuery,
+  IGetEtapeByIdDbQuery,
+  IGetEtapeDataForEditionDbQuery,
+  IGetEtapeDocumentsDbQuery,
+  IGetTitulairesAmodiatairesTitreEtapeQuery,
+} from './etapes.queries.types.js'
 import { demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
-import { etapeDocumentIdValidator } from 'camino-common/src/etape.js'
-import { IGetTitresModifiesByMonthDbQuery } from './journal.queries.types.js'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes.js'
 import { AdministrationId, administrationIdValidator } from 'camino-common/src/static/administrations.js'
@@ -44,22 +48,16 @@ where (id = $ etapeId !
 and archive is false
 `
 
-
 const etapeDocumentValidator = z.object({
   id: etapeDocumentIdValidator,
   description: z.string(),
   etape_id: etapeIdValidator,
-  etape_document_type_id: documentTypeIdValidator
+  etape_document_type_id: documentTypeIdValidator,
 })
 
 type EtapeDocument = z.infer<typeof etapeDocumentValidator>
 export const getEtapeDocuments = async (pool: Pool): Promise<EtapeDocument[]> => {
-  return dbQueryAndValidate(
-    getEtapeDocumentsDb,
-    undefined,
-    pool,
-    etapeDocumentValidator
-  )
+  return dbQueryAndValidate(getEtapeDocumentsDb, undefined, pool, etapeDocumentValidator)
 }
 
 const getEtapeDocumentsDb = sql<Redefine<IGetEtapeDocumentsDbQuery, undefined, EtapeDocument>>`
@@ -71,7 +69,6 @@ select
 from
     etapes_documents d
 `
-
 
 export const getEtapeDataForEdition = async (pool: Pool, etapeId: EtapeId) => {
   return (await dbQueryAndValidate(getEtapeDataForEditionDb, { etapeId }, pool, getEtapeDataForEditionValidator))[0]
@@ -86,8 +83,7 @@ const getEtapeDataForEditionValidator = z.object({
   titre_public_lecture: z.boolean(),
 })
 
-
-const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, {etapeId: EtapeId}, z.infer<typeof getEtapeDataForEditionValidator>>>`
+const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, z.infer<typeof getEtapeDataForEditionValidator>>>`
 select
     te.type_id as etape_type_id,
     td.type_id as demarche_type_id,
@@ -99,7 +95,8 @@ from
     titres_etapes te
     join titres_demarches td on td.id = te.titre_demarche_id
     join titres t on t.id = td.titre_id
-where te.id = $etapeId!
+where
+    te.id = $ etapeId !
 `
 
 export const administrationsLocalesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<AdministrationId[]> => {
@@ -117,7 +114,7 @@ export const administrationsLocalesByEtapeId = async (etapeId: EtapeId, pool: Po
 const administrationsLocalesValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
 const getAdministrationsLocalesByEtapeId = sql<Redefine<IGetAdministrationsLocalesByEtapeIdQuery, { etapeId: EtapeId }, z.infer<typeof administrationsLocalesValidator>>>`
 select
-tepoints.administrations_locales
+    tepoints.administrations_locales
 from
     titres_etapes te
     join titres_demarches td on td.id = te.titre_demarche_id
@@ -126,7 +123,6 @@ from
 where
     te.id = $ etapeId !
 `
-
 
 export const entreprisesTitulairesOuAmoditairesByEtapeId = async (etapeId: EtapeId, pool: Pool): Promise<EntrepriseId[]> => {
   const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreEtape, { etapeId }, pool, entrepriseIdObjectValidator)
@@ -145,7 +141,8 @@ from
     join titres t on t.id = td.titre_id
     left join titres_titulaires tt on tt.titre_etape_id = t.props_titre_etapes_ids ->> 'titulaires'
     left join titres_amodiataires tta on tta.titre_etape_id = t.props_titre_etapes_ids ->> 'amodiataires'
-where te.id = $ etapeId !
-and (tt.entreprise_id = e.id
-    or tta.entreprise_id = e.id)
+where
+    te.id = $ etapeId !
+    and (tt.entreprise_id = e.id
+        or tta.entreprise_id = e.id)
 `
