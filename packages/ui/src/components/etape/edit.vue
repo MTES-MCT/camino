@@ -55,7 +55,7 @@
     </Bloc>
 
     <Bloc v-if="stepDecisionsAnnexes" id="step-decisionsAnnexes" :step="stepDecisionsAnnexes" :complete="stepDecisionsAnnexesComplete">
-      <DecisionsAnnexesEdit :etape="etape" @complete-update="decisionsAnnexesComplete = $event" />
+      <div>FIXME</div>
     </Bloc>
 
     <div class="dsfr">
@@ -76,17 +76,16 @@ import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
-import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
 import { apiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
+import { hasEtapeAvisDocuments } from 'camino-common/src/permissions/titres-etapes'
 
 export default {
   components: {
-    DecisionsAnnexesEdit,
     Bloc,
     TypeEdit,
     FondamentalesEdit,
@@ -240,7 +239,7 @@ export default {
         steps.push({ id: 'entrepriseDocuments', name: 'Documents d’entreprise' })
       }
 
-      if (this.etape.decisionsAnnexesSections) {
+      if (hasEtapeAvisDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id, this.etape.statutId)) {
         steps.push({ id: 'decisionsAnnexes', name: 'Décisions annexes' })
       }
 
@@ -313,7 +312,6 @@ export default {
     if (this.etapeType?.id === 'mfr') {
       this.help.arm = {
         sections: 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)',
-        documents: 'Toutes les pièces obligatoires, spécifiques à la demande, doivent être déposées dans cette rubrique en format pdf.',
         entrepriseDocuments:
           "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel.",
       }
@@ -346,8 +344,7 @@ export default {
     },
 
     async sectionsUpdate() {
-      // FIXME
-      await this.$store.dispatch('titreEtapeEdition/documentInit', this.etape.documents)
+      // FIXME à tester si on change la mécanisation
     },
 
     completeUpdate() {

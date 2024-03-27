@@ -41,7 +41,7 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { secteurMaritimeValidator } from 'camino-common/src/static/facades.js'
 
-type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'documents'>
+type SuperEtapeDemarcheTitreGet = OmitDistributive<DemarcheEtape, 'etape_documents'>
 type SuperDemarcheTitreGet = Omit<TitreGet['demarches'][0], 'etapes'> & { etapes: SuperEtapeDemarcheTitreGet[]; public_lecture: boolean; entreprises_lecture: boolean; titre_public_lecture: boolean }
 
 export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug): Promise<TitreGet | null> => {
@@ -77,7 +77,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           entrepriseDocuments.push(...(await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: etape.id }, pool, user)))
         }
 
-        const etapeCommon: Omit<DemarcheEtapeCommon, 'documents'> = {
+        const etapeCommon: Omit<DemarcheEtapeCommon, 'etape_documents'> = {
           date: etape.date,
           ordre: etape.ordre,
           notes: etape.notes,
@@ -86,8 +86,6 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
           etape_statut_id: etape.etape_statut_id,
           sections_with_values: contenu,
           entreprises_documents: entrepriseDocuments,
-          decisions_annexes_contenu: isNotNullNorUndefined(etape.decisions_annexes_contenu) ? etape.decisions_annexes_contenu : null,
-          decisions_annexes_sections: isNotNullNorUndefined(etape.decisions_annexes_sections) ? etape.decisions_annexes_sections : null,
         }
         if (isEtapeTypeIdFondamentale(etape.etape_type_id)) {
           let perimetre: DemarcheEtapeFondamentale['fondamentale']['perimetre'] = null
@@ -141,7 +139,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
             }
           }
 
-          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'documents'> = {
+          const etapeFondamentale: Omit<DemarcheEtapeFondamentale, 'etape_documents'> = {
             etape_type_id: etape.etape_type_id,
             fondamentale: {
               amodiataires,
@@ -157,7 +155,7 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
 
           formatedEtapes.push(etapeFondamentale)
         } else {
-          const etapeNonFondamentale: Omit<DemarcheEtapeNonFondamentale, 'documents'> = { etape_type_id: etape.etape_type_id, ...etapeCommon }
+          const etapeNonFondamentale: Omit<DemarcheEtapeNonFondamentale, 'etape_documents'> = { etape_type_id: etape.etape_type_id, ...etapeCommon }
 
           formatedEtapes.push(etapeNonFondamentale)
         }
@@ -208,14 +206,14 @@ export const getTitre = async (pool: Pool, user: User, idOrSlug: TitreIdOrSlug):
         for (const superEtape of superDemarche.etapes) {
           const canRead: boolean = await canReadEtape(user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche)
           if (canRead) {
-            const documents: EtapeDocument[] = []
+            const etape_documents: EtapeDocument[] = []
             const documentsTypes = getDocuments(titre.titre_type_id, superDemarche.demarche_type_id, superEtape.etape_type_id)
             if (documentsTypes.length > 0) {
-              documents.push(
+              etape_documents.push(
                 ...(await getDocumentsByEtapeId(superEtape.id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, superEtape.etape_type_id, superDemarche))
               )
             }
-            etapes.push({ ...superEtape, documents })
+            etapes.push({ ...superEtape, etape_documents })
           }
         }
 

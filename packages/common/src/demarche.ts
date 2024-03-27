@@ -10,7 +10,6 @@ import { etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { sectionWithValueValidator } from './sections.js'
 import { etapeDocumentValidator, etapeIdValidator, etapeSlugValidator } from './etape.js'
 import { sdomZoneIdValidator } from './static/sdom.js'
-import { sectionValidator } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { numberFormat } from './number.js'
 import { DeviseId, deviseIdValidator, DEVISES_IDS, Devises } from './static/devise.js'
 import { TITRES_TYPES_TYPES_IDS } from './static/titresTypesTypes.js'
@@ -38,11 +37,6 @@ export const entreprisesByEtapeIdValidator = z.object({
 
 export type EntreprisesByEtapeId = z.infer<typeof entreprisesByEtapeIdValidator>
 
-/**
- * @deprecated don't expose, don't use
- */
-const contenuValidator = z.record(z.string(), z.record(z.string(), z.unknown().optional()).optional()).nullable()
-
 const demarcheEtapeCommonValidator = z.object({
   etape_statut_id: etapeStatutIdValidator,
   date: caminoDateValidator,
@@ -52,9 +46,7 @@ const demarcheEtapeCommonValidator = z.object({
   slug: etapeSlugValidator,
   sections_with_values: z.array(sectionWithValueValidator),
   entreprises_documents: z.array(etapeEntrepriseDocumentValidator),
-  documents: z.array(etapeDocumentValidator),
-  decisions_annexes_contenu: contenuValidator,
-  decisions_annexes_sections: z.array(sectionValidator).nullable(),
+  etape_documents: z.array(etapeDocumentValidator),
 })
 
 export type DemarcheEtapeCommon = z.infer<typeof demarcheEtapeCommonValidator>

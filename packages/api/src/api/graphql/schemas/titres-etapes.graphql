@@ -71,11 +71,6 @@ type Etape {
 
   contenu: Json
 
-  "Les sections des décisions annexes nécessaires à la demande"
-  decisionsAnnexesSections: Json
-  "Le contenu des décisions annexes nécessaires à la demande"
-  decisionsAnnexesContenu: Json
-
   notes: String
 
   "Périmètre géographique du titre"
@@ -174,6 +169,7 @@ input InputEtapeCreation {
   contenu: Json
   etapeDocuments: [InputEtapeDocumentCreation]
   entrepriseDocumentIds: [ID]
+  etapeAvisDocmuents: [ID]
   notes: String
 }
 
@@ -203,7 +199,7 @@ input InputEtapeModification {
   contenu: Json
   etapeDocuments: [InputEtapeDocumentModification]
   entrepriseDocumentIds: [ID]
-  decisionsAnnexesContenu: Json
+  etapeAvisDocmuents: [ID]
   notes: String
   geojson4326Perimetre: Json
   geojson4326Points: Json

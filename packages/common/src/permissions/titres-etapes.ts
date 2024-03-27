@@ -11,11 +11,11 @@ import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTyp
 
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
-import { Section, getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
 import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
-import { DeepReadonly, NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
 import { DocumentsTypes, DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
@@ -149,8 +149,6 @@ type IsEtapeCompleteEtape = {
   */
   contenu?: Contenu
   sectionsWithValue?: SectionWithValue[]
-  decisionsAnnexesSections?: DeepReadonly<Section[]> | null
-  decisionsAnnexesContenu?: Contenu
   geojson4326Perimetre?: null | FeatureMultiPolygon
   substances?: null | SubstanceLegaleId[]
   duree?: number | null
@@ -181,10 +179,10 @@ export const isEtapeComplete = (
     }
   }
 
-  // les décisions annexes sont complètes
-  if (titreEtape.decisionsAnnexesSections) {
-    errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
-  }
+  // FIXME les décisions annexes sont complètes
+  // if (titreEtape.decisionsAnnexesSections) {
+  //   errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
+  // }
 
   const dts: DocumentType[] = [...documentsTypes]
   if (isNotNullNorUndefined(sdomZones)) {
@@ -300,3 +298,6 @@ export const isEtapeDeposable = (
 }
 
 export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId): boolean => etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION
+
+export const hasEtapeAvisDocuments = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId): boolean =>
+  titreTypeId === 'axm' && demarcheTypeId === 'oct' && etapeTypeId === 'mfr' && etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION

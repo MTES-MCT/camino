@@ -151,8 +151,6 @@ const fragmentEtape = gql`
     }
     contenu
     heritageContenu
-    decisionsAnnexesSections
-    decisionsAnnexesContenu
     notes
   }
 

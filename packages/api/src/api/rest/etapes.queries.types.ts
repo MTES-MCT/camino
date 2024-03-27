@@ -28,7 +28,7 @@ export type IGetEtapeDocumentsDbParams = void;
 export interface IGetEtapeDocumentsDbResult {
   description: string | null;
   etape_document_type_id: string;
-  etape_id: string;
+  etape_id: string | null;
   id: string;
 }
 
@@ -46,7 +46,7 @@ export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
 /** 'GetLargeobjectIdByEtapeDocumentIdInternal' return type */
 export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
   entreprises_lecture: boolean;
-  etape_id: string;
+  etape_id: string | null;
   largeobject_id: number | null;
   public_lecture: boolean;
 }

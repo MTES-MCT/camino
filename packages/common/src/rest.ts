@@ -210,7 +210,7 @@ export const CaminoRestRoutes = {
   '/activites': { download: true },
   '/utilisateurs': { download: true },
   '/etape/zip/:etapeId': { params: { etapeId: etapeIdValidator }, download: true },
-  '/etape/:etapeId/:fichierNom': { params: { etapeId: etapeIdValidator, fichierNom: z.string() }, download: true },
+  '/etape/:etapeId/:fichierNom': { params: { etapeId: etapeIdValidator, fichierNom: z.string() }, newDownload: true },
   '/entreprises': { download: true },
 } as const satisfies { [k in CaminoRestRoute]: CaminoRoute<k> }
 

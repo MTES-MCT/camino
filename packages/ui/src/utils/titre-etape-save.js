@@ -1,19 +1,11 @@
 export const etapeSaveFormat = etape => {
-  const decisionsAnnexesContenu = etape.decisionsAnnexesContenu
   etape = JSON.parse(JSON.stringify(etape))
-  etape.decisionsAnnexesContenu = decisionsAnnexesContenu
 
   delete etape.slug
 
   if (!etape.contenu || !Object.keys(etape.contenu).length) {
     delete etape.contenu
   }
-
-  if (!etape.decisionsAnnexesContenu || !Object.keys(etape.decisionsAnnexesContenu).length) {
-    delete etape.decisionsAnnexesContenu
-  }
-
-  delete etape.decisionsAnnexesSections
 
   const props = ['date', 'dateDebut', 'dateFin', 'duree']
 
