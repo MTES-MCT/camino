@@ -46,6 +46,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { z } from 'zod'
+import { fromEither } from 'camino-common/src/either.js'
 
 export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -175,10 +176,19 @@ const getForagesProperties = async (
   pool: Pool
 ): Promise<Pick<ITitreEtape, 'geojson4326Forages' | 'geojsonOrigineForages'>> => {
   if (canHaveForages(titreTypeId) && isNotNullNorUndefined(geojsonOrigineForages) && isNotNullNorUndefined(geojsonOrigineGeoSystemeId)) {
-    return {
-      geojson4326Forages: await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages),
-      geojsonOrigineForages,
-    }
+    const points = await convertPoints(pool, geojsonOrigineGeoSystemeId, GEO_SYSTEME_IDS.WGS84, geojsonOrigineForages)
+
+    return fromEither(
+      points,
+      () => ({
+        geojson4326Forages: null,
+        geojsonOrigineForages: null,
+      }),
+      value => ({
+        geojson4326Forages: value,
+        geojsonOrigineForages,
+      })
+    )
   }
 
   return {

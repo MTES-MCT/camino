@@ -4,6 +4,7 @@ import { ApiClient } from '@/api/api-client'
 import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { PointsImportPopup } from './points-import-popup'
+import { Right } from 'camino-common/src/either'
 
 const meta: Meta = {
   title: 'Components/Etape/ImportPoints',
@@ -24,7 +25,7 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'> =
       type: 'FeatureCollection',
     }
 
-    return Promise.resolve({ geojson4326: result, origin: result })
+    return Promise.resolve(Right({ geojson4326: result, origin: result }))
   },
   uploadTempDocument(document) {
     geojsonImport(document)

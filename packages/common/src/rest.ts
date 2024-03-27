@@ -56,6 +56,7 @@ import { administrationActiviteTypeEmailValidator } from './administrations.js'
 type CaminoRoute<T extends string> = (keyof ZodParseUrlParams<T> extends never ? {} : { params: ZodParseUrlParams<T> }) & {
   get?: { output: ZodType }
   post?: { input: ZodType; output: ZodType }
+  newPost?: { input: ZodType; output: ZodType }
   put?: { input: ZodType; output: ZodType }
   delete?: true
   download?: true
@@ -189,7 +190,8 @@ export const CaminoRestRoutes = {
   },
   '/rest/geojson_points/import/:geoSystemeId': {
     params: { geoSystemeId: geoSystemeIdValidator },
-    post: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
+    // TODO 2024-03-27: return Either instead
+    newPost: { input: geojsonImportPointBodyValidator, output: geojsonImportPointResponseValidator },
   },
   '/rest/geojson_forages/import/:geoSystemeId': {
     params: { geoSystemeId: geoSystemeIdValidator },
@@ -234,19 +236,20 @@ isTrue<Expect<ZodParseUrlParams<'/titre/:id'>, { id: ZodType }>>
 isFalse<Expect<ZodParseUrlParams<'/titre/:id'>, {}>>
 isTrue<Expect<ZodParseUrlParams<'/titre/:titreId/:demarcheId'>, { titreId: ZodType; demarcheId: ZodType }>>
 
-type can<T, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
+type can<T, Method extends 'newPost' | 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = T extends CaminoRestRoute
   ? (typeof CaminoRestRoutes)[T] extends { [m in Method]: any }
     ? T
     : never
   : never
 
-type CaminoRestRouteList<Route, Method extends 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Rest]
+type CaminoRestRouteList<Route, Method extends 'newPost' | 'post' | 'get' | 'put' | 'delete' | 'download' | 'newDownload'> = Route extends readonly [infer First, ...infer Rest]
   ? First extends can<First, Method>
     ? [First, ...CaminoRestRouteList<Rest, Method>]
     : CaminoRestRouteList<Rest, Method>
   : []
 
 export type GetRestRoutes = CaminoRestRouteList<typeof IDS, 'get'>[number]
+export type NewPostRestRoutes = CaminoRestRouteList<typeof IDS, 'newPost'>[number]
 export type PostRestRoutes = CaminoRestRouteList<typeof IDS, 'post'>[number]
 export type DeleteRestRoutes = CaminoRestRouteList<typeof IDS, 'delete'>[number]
 export type DownloadRestRoutes = CaminoRestRouteList<typeof IDS, 'download'>[number]

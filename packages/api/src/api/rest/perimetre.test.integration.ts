@@ -1,6 +1,6 @@
 import { userSuper } from '../../database/user-super.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { restPostCall } from '../../../tests/_utils/index.js'
+import { restNewPostCall, restPostCall } from '../../../tests/_utils/index.js'
 import { test, expect, vi, beforeAll, afterAll, describe } from 'vitest'
 import type { Pool } from 'pg'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
@@ -931,7 +931,7 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   })
 
@@ -947,7 +947,7 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {
@@ -1007,7 +1007,7 @@ describe('geojsonImportPoints', () => {
       tempDocumentName: tempDocumentNameValidator.parse(fileName),
     }
 
-    const tested = await restPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
+    const tested = await restNewPostCall(dbPool, '/rest/geojson_points/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGF93 / Lambert-93'] }, userSuper, body)
     expect(tested.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(tested.body).toMatchInlineSnapshot(`
       {

@@ -4,7 +4,7 @@ import { DeepReadonly, FunctionalComponent, HTMLAttributes, defineComponent, ref
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonImportPointsResponse, GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -16,6 +16,7 @@ import { PointsImportPopup } from './points-import-popup'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ForagesImportPopup } from './forages-import-popup'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
+import { CaminoError, Either, map } from 'camino-common/src/either'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport' | 'geojsonForagesImport'>
@@ -126,14 +127,18 @@ export const PerimetreEdit = defineComponent<Props>(props => {
     }
   }
 
-  const resultPoints = (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => {
-    if ('geojson4326' in value) {
-      importError.value = false
-      props.onPointsChange(value.geojson4326, value.origin)
-    } else {
-      importError.value = true
-      console.error(value)
-    }
+  const resultPoints = (value: Either<CaminoError, GeojsonImportPointsResponse>) => {
+    map(
+      value,
+      error => {
+        importError.value = true
+        console.error(error)
+      },
+      result => {
+        importError.value = false
+        props.onPointsChange(result.geojson4326, result.origin)
+      }
+    )
   }
 
   const resultForages = (value: { geojson4326: FeatureCollectionForages; origin: FeatureCollectionForages } | Error) => {

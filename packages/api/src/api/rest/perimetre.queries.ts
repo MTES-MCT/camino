@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
+import { Redefine, dbQueryAndValidate, newDbQueryAndValidate } from '../../pg-database.js'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
@@ -15,27 +15,28 @@ import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
+import { CaminoError, Either, Right, mapRight } from 'camino-common/src/either.js'
 
 export const convertPoints = async <T extends z.ZodTypeAny>(
   pool: Pool,
   fromGeoSystemeId: GeoSystemeId,
   toGeoSystemeId: GeoSystemeId,
   geojsonPoints: GenericFeatureCollection<T>
-): Promise<GenericFeatureCollection<T>> => {
+): Promise<Either<CaminoError, GenericFeatureCollection<T>>> => {
   if (fromGeoSystemeId === toGeoSystemeId) {
-    return geojsonPoints
+    return Right(geojsonPoints)
   }
 
   const multiPoint: MultiPoint = { type: 'MultiPoint', coordinates: geojsonPoints.features.map(feature => feature.geometry.coordinates) }
 
-  const result = await dbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(multiPoint) }, pool, z.object({ geojson: multiPointsValidator }))
+  const result = await newDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(multiPoint) }, pool, z.object({ geojson: multiPointsValidator }))
 
-  return {
+  return mapRight(result, value => ({
     type: 'FeatureCollection',
     features: geojsonPoints.features.map((feature, index) => {
-      return { ...feature, geometry: { type: 'Point', coordinates: result[0].geojson.coordinates[index] } }
+      return { ...feature, geometry: { type: 'Point', coordinates: value[0].geojson.coordinates[index] } }
     }),
-  }
+  }))
 }
 
 const convertMultiPointDb = sql<Redefine<IConvertMultiPointDbQuery, { fromGeoSystemeId: GeoSystemeId; toGeoSystemeId: GeoSystemeId; geojson: string }, { geojson: MultiPoint }>>`

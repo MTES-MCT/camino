@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { Index } from '../types.js'
+import { CaminoApiError, Index } from '../types.js'
 import type { Pool } from 'pg'
 
 import express from 'express'
@@ -36,6 +36,7 @@ import {
   DownloadRestRoutes,
   CaminoRestRoute,
   NewDownloadRestRoutes,
+  NewPostRestRoutes,
 } from 'camino-common/src/rest.js'
 import { CaminoConfig, caminoConfigValidator } from 'camino-common/src/static/config.js'
 import { CaminoRequest, CustomResponse } from '../api/rest/express-type.js'
@@ -52,6 +53,8 @@ import { getDataGouvStats } from '../api/rest/statistiques/datagouv.js'
 import { addAdministrationActiviteTypeEmails, deleteAdministrationActiviteTypeEmails, getAdministrationActiviteTypeEmails, getAdministrationUtilisateurs } from '../api/rest/administrations.js'
 import { titreDemandeCreer } from '../api/rest/titre-demande.js'
 import { config } from '../config/index.js'
+import { Either, isLeft } from 'camino-common/src/either.js'
+import { HTTP_STATUS } from 'camino-common/src/http.js'
 
 interface IRestResolverResult {
   nom: string
@@ -73,6 +76,8 @@ type IRestResolver = (
 ) => Promise<IRestResolverResult | null>
 
 type RestGetCall<Route extends GetRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['get']['output']>>) => Promise<void>
+
+type RestNewPostCall<Route extends NewPostRestRoutes> = (pool: Pool) => (req: CaminoRequest) => Promise<Either<CaminoApiError, z.infer<(typeof CaminoRestRoutes)[Route]['newPost']['output']>>>
 type RestPostCall<Route extends PostRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['post']['output']>>) => Promise<void>
 type RestPutCall<Route extends PutRestRoutes> = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<z.infer<(typeof CaminoRestRoutes)[Route]['put']['output']>>) => Promise<void>
 type RestDeleteCall = (pool: Pool) => (req: CaminoRequest, res: CustomResponse<void | Error>) => Promise<void>
@@ -80,6 +85,7 @@ type RestDownloadCall = (pool: Pool) => IRestResolver
 
 type Transform<Route> = (Route extends GetRestRoutes ? { get: RestGetCall<Route> } : {}) &
   (Route extends PostRestRoutes ? { post: RestPostCall<Route> } : {}) &
+  (Route extends NewPostRestRoutes ? { newPost: RestNewPostCall<Route> } : {}) &
   (Route extends PutRestRoutes ? { put: RestPutCall<Route> } : {}) &
   (Route extends DeleteRestRoutes ? { delete: RestDeleteCall } : {}) &
   (Route extends NewDownloadRestRoutes ? { newDownload: NewDownload } : {}) &
@@ -151,7 +157,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/activites/:activiteId': { get: getActivite, put: updateActivite, delete: deleteActivite },
   '/rest/communes': { get: getCommunes },
   '/rest/geojson/import/:geoSystemeId': { post: geojsonImport },
-  '/rest/geojson_points/import/:geoSystemeId': { post: geojsonImportPoints },
+  '/rest/geojson_points/import/:geoSystemeId': { newPost: geojsonImportPoints },
   '/rest/geojson_forages/import/:geoSystemeId': { post: geojsonImportForages },
   '/rest/geojson_points/:geoSystemeId': { post: convertGeojsonPointsToGeoSystemeId },
   '/deconnecter': { get: logout },
@@ -172,6 +178,25 @@ export const restWithPool = (dbPool: Pool) => {
       if ('post' in maRoute) {
         console.info(`POST ${route}`)
         rest.post(route, restCatcher(maRoute.post(dbPool)))
+      }
+      if ('newPost' in maRoute) {
+        console.info(`POST ${route}`)
+        rest.post(route, async (req: CaminoRequest, res: express.Response, _next: express.NextFunction) => {
+          try {
+            const response = await maRoute.newPost(dbPool)(req)
+
+            if (isLeft(response)) {
+              console.warn(`problem with route ${route}: ${response.value.message}`)
+              res.status(response.value.status).json(response.value)
+            } else {
+              res.json(response.value)
+            }
+          } catch (e) {
+            console.error('catching error on post route', route, e)
+            console.error('with body', req.body)
+            res.status(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR).json(e)
+          }
+        })
       }
       if ('put' in maRoute) {
         console.info(`PUT ${route}`)
