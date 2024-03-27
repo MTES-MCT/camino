@@ -29,6 +29,8 @@ import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { CaminoError } from 'camino-common/src/either.js'
+import { HttpStatus } from 'camino-common/src/http.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -271,6 +273,8 @@ interface IDocument {
   etape?: ITitreEtape | null
   suppression?: boolean | null
 }
+
+export type CaminoApiError = CaminoError & { status: HttpStatus }
 
 export interface ITitreEtapePerimetre {
   geojson4326Perimetre: FeatureMultiPolygon | null | undefined

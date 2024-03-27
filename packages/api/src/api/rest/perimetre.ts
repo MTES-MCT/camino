@@ -41,6 +41,8 @@ import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import xlsx from 'xlsx'
 import { ZodTypeAny, z } from 'zod'
+import { CaminoError, Either, Left, isRight, map, mapRight, zodParseEither } from 'camino-common/src/either.js'
+import { CaminoApiError } from '../../types.js'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
   const geoSystemeIdParsed = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
@@ -50,7 +52,12 @@ export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: Ca
     res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
   } else {
     try {
-      res.json(await convertPoints(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data))
+      const conversion = await convertPoints(pool, GEO_SYSTEME_IDS.WGS84, geoSystemeIdParsed.data, geojsonParsed.data)
+      if (isRight(conversion)) {
+        res.json(conversion.value)
+      } else {
+        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(conversion.value)
+      }
     } catch (e) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       console.error(e)
@@ -282,26 +289,30 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
         const geojson4326FeatureCollectionPoints =
           geojsonOriginFeatureCollectionPoints !== null ? await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, geojsonOriginFeatureCollectionPoints) : null
 
-        const geojson4326MultiPolygon: MultiPolygon = geojson4326FeatureMultiPolygon.geometry
+        if (isNullOrUndefined(geojson4326FeatureCollectionPoints) || isRight(geojson4326FeatureCollectionPoints)) {
+          const geojson4326MultiPolygon: MultiPolygon = geojson4326FeatureMultiPolygon.geometry
 
-        z.array(polygon4326CoordinatesValidator).min(1).parse(geojson4326MultiPolygon.coordinates)
+          z.array(polygon4326CoordinatesValidator).min(1).parse(geojson4326MultiPolygon.coordinates)
 
-        const geoInfo = await getGeojsonInformation(pool, geojson4326MultiPolygon)
-        const result: GeojsonInformations = {
-          superposition_alertes: await getAlertesSuperposition(geojson4326MultiPolygon, geojsonImportInput.data.titreTypeId, geojsonImportInput.data.titreSlug, user, pool),
-          communes: geoInfo.communes,
-          foretIds: geoInfo.forets,
-          sdomZoneIds: geoInfo.sdom,
-          secteurMaritimeIds: geoInfo.secteurs,
-          surface: geoInfo.surface,
-          geojson4326_perimetre: { type: 'Feature', geometry: geojson4326MultiPolygon, properties: {} },
-          geojson4326_points: geojson4326FeatureCollectionPoints,
-          geojson_origine_perimetre: geojsonOriginFeatureMultiPolygon,
-          geojson_origine_points: geojsonOriginFeatureCollectionPoints,
-          geojson_origine_geo_systeme_id: geoSystemeId.data,
+          const geoInfo = await getGeojsonInformation(pool, geojson4326MultiPolygon)
+          const result: GeojsonInformations = {
+            superposition_alertes: await getAlertesSuperposition(geojson4326MultiPolygon, geojsonImportInput.data.titreTypeId, geojsonImportInput.data.titreSlug, user, pool),
+            communes: geoInfo.communes,
+            foretIds: geoInfo.forets,
+            sdomZoneIds: geoInfo.sdom,
+            secteurMaritimeIds: geoInfo.secteurs,
+            surface: geoInfo.surface,
+            geojson4326_perimetre: { type: 'Feature', geometry: geojson4326MultiPolygon, properties: {} },
+            geojson4326_points: geojson4326FeatureCollectionPoints?.value ?? null,
+            geojson_origine_perimetre: geojsonOriginFeatureMultiPolygon,
+            geojson_origine_points: geojsonOriginFeatureCollectionPoints,
+            geojson_origine_geo_systeme_id: geoSystemeId.data,
+          }
+
+          res.json(result)
+        } else {
+          res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
         }
-
-        res.json(result)
       } catch (e: any) {
         console.error(e)
         res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)
@@ -312,36 +323,49 @@ export const geojsonImport = (pool: Pool) => async (req: CaminoRequest, res: Cus
   }
 }
 
-export const geojsonImportPoints = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonImportPointsResponse>) => {
-  const user = req.auth
+export const geojsonImportPoints =
+  (pool: Pool) =>
+  async (req: CaminoRequest): Promise<Either<CaminoApiError, GeojsonImportPointsResponse>> => {
+    const user = req.auth
 
-  const geoSystemeId = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
-  if (!user || isDefault(user)) {
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-  } else if (!geoSystemeId.success) {
-    console.warn(`le geoSystemeId est obligatoire`)
-    res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
-  } else {
-    const geojsonImportInput = geojsonImportPointBodyValidator.safeParse(req.body)
-
-    if (geojsonImportInput.success) {
-      try {
-        const filename = geojsonImportInput.data.tempDocumentName
-
-        const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
-        const fileContent = readFileSync(pathFrom)
-        const features = featureCollectionPointsValidator.parse(JSON.parse(fileContent.toString()))
-        const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
-        res.json({ geojson4326: conversion, origin: features })
-      } catch (e: any) {
-        console.error(e)
-        res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)
-      }
+    const geoSystemeId = geoSystemeIdValidator.safeParse(req.params.geoSystemeId)
+    if (!user || isDefault(user)) {
+      return Left({ message: "Pas assez de droits pour l'utilisateur", status: HTTP_STATUS.HTTP_STATUS_FORBIDDEN })
+    } else if (!geoSystemeId.success) {
+      return Left({ message: 'le geoSystemeId est obligatoire', status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST })
     } else {
-      res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(geojsonImportInput.error)
+      const geojsonImportInput = geojsonImportPointBodyValidator.safeParse(req.body)
+
+      if (geojsonImportInput.success) {
+        try {
+          const filename = geojsonImportInput.data.tempDocumentName
+
+          const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
+          const fileContent = readFileSync(pathFrom)
+
+          const features = zodParseEither(featureCollectionPointsValidator, JSON.parse(fileContent.toString()))
+          const convertions = mapRight(features, async (featureR) => {
+            return await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, featureR)
+          })
+          
+          return map(await convertions,
+              (error: CaminoError): CaminoApiError => {
+                const newError: CaminoApiError = { ...error, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
+  
+                return newError
+              },
+              (value: typeof features) => ({ geojson4326: value, origin: features })
+            )
+  
+          
+        } catch (e: any) {
+          return Left({ message: 'une erreur est apparue', status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST, extra: e })
+        }
+      } else {
+        return Left({ message: 'les points ne sont pas valides', status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST, zodError: geojsonImportInput.error })
+      }
     }
   }
-}
 
 export const geojsonImportForages = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<GeojsonImportForagesResponse>) => {
   const user = req.auth
@@ -438,7 +462,11 @@ export const geojsonImportForages = (pool: Pool) => async (req: CaminoRequest, r
         }
 
         const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
-        res.json({ geojson4326: conversion, origin: features })
+        if (isRight(conversion)) {
+          res.json({ geojson4326: conversion.value, origin: features })
+        } else {
+          res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(conversion.value)
+        }
       } catch (e: any) {
         console.error(e)
         res.status(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST).send(e)

@@ -4,14 +4,15 @@ import { InputFile } from '../_ui/dsfr-input-file'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
-import { FeatureCollectionPoints } from 'camino-common/src/perimetre'
+import { GeojsonImportPointsResponse } from 'camino-common/src/perimetre'
 import { Alert } from '../_ui/alert'
 import { GeoSystemeTypeahead } from '../_common/geosysteme-typeahead'
+import { CaminoError, Either, Left } from 'camino-common/src/either'
 
 interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonPointsImport'>
   geoSystemeId: GeoSystemeId
-  result: (value: { geojson4326: FeatureCollectionPoints; origin: FeatureCollectionPoints } | Error) => void
+  result: (value: Either<CaminoError, GeojsonImportPointsResponse>) => void
   close: () => void
 }
 
@@ -55,12 +56,12 @@ export const PointsImportPopup = caminoDefineComponent<Props>(['apiClient', 'clo
       validate={{
         action: async () => {
           if (importFile.value !== null) {
-            const tempFile = await props.apiClient.uploadTempDocument(importFile.value)
             try {
+              const tempFile = await props.apiClient.uploadTempDocument(importFile.value)
               const result = await props.apiClient.geojsonPointsImport({ tempDocumentName: tempFile }, props.geoSystemeId)
               props.result(result)
             } catch (e: any) {
-              props.result(new Error("Erreur lors de l'import"))
+              props.result(Left({ message: "Erreur lors de l'import" }))
             }
           }
         },
