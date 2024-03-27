@@ -9,7 +9,7 @@ import {
   PerimetreInformations,
 } from 'camino-common/src/perimetre'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { getWithJson, postWithJson } from '../../api/client-rest'
+import { getWithJson, newPostWithJson, postWithJson } from '../../api/client-rest'
 import { EtapeIdOrSlug } from 'camino-common/src/etape'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
 
@@ -30,7 +30,7 @@ export const perimetreApiClient: PerimetreApiClient = {
     return postWithJson('/rest/geojson/import/:geoSystemeId', { geoSystemeId }, body)
   },
   geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => {
-    return postWithJson('/rest/geojson_points/import/:geoSystemeId', { geoSystemeId }, body)
+    return newPostWithJson('/rest/geojson_points/import/:geoSystemeId', { geoSystemeId }, body)
   },
   geojsonForagesImport: (body: GeojsonImportForagesBody, geoSystemeId: GeoSystemeId) => {
     return postWithJson('/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId }, body)

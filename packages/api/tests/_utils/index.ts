@@ -11,7 +11,7 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole, UserNotNull } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
-import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams } from 'camino-common/src/rest.js'
+import { CaminoRestRoutes, DeleteRestRoutes, getRestRoute, GetRestRoutes, PostRestRoutes, PutRestRoutes, CaminoRestParams, NewPostRestRoutes } from 'camino-common/src/rest.js'
 import { z } from 'zod'
 import { newUtilisateurId } from '../../src/database/models/_format/id-create.js'
 import { idUserKeycloakRecognised } from '../keycloak.js'
@@ -46,12 +46,27 @@ export const restCall = async <Route extends GetRestRoutes>(
   return jwtSet(req, user)
 }
 
+/** @deprecated use restNewPostCall and rename after full migration */
 export const restPostCall = async <Route extends PostRestRoutes>(
   pool: Pool,
   caminoRestRoute: Route,
   params: CaminoRestParams<Route>,
   user: TestUser | undefined,
   body: z.infer<(typeof CaminoRestRoutes)[Route]['post']['input']>
+): Promise<request.Test> => {
+  const req = request(app(pool))
+    .post(getRestRoute(caminoRestRoute, params))
+    .send(body ?? undefined)
+
+  return jwtSet(req, user)
+}
+
+export const restNewPostCall = async <Route extends NewPostRestRoutes>(
+  pool: Pool,
+  caminoRestRoute: Route,
+  params: CaminoRestParams<Route>,
+  user: TestUser | undefined,
+  body: z.infer<(typeof CaminoRestRoutes)[Route]['newPost']['input']>
 ): Promise<request.Test> => {
   const req = request(app(pool))
     .post(getRestRoute(caminoRestRoute, params))

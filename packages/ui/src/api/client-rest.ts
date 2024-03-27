@@ -10,6 +10,7 @@ import {
   GetRestRoutes,
   PostRestRoutes,
   PutRestRoutes,
+  NewPostRestRoutes,
 } from 'camino-common/src/rest'
 import { z } from 'zod'
 
@@ -31,6 +32,7 @@ export const getDownloadRestRoute = <T extends DownloadRestRoutes | NewDownloadR
   return getUiRestRoute(route, params, searchParams)
 }
 
+// TODO 2024-03-27: duplicate this and return Either instead of throwing error
 const callFetch = async <T extends CaminoRestRoute>(
   path: T,
   params: CaminoRestParams<T>,
@@ -74,6 +76,12 @@ export const postWithJson = async <T extends PostRestRoutes>(
   params: CaminoRestParams<T>,
   body: z.infer<(typeof CaminoRestRoutes)[T]['post']['input']>
 ): Promise<z.infer<(typeof CaminoRestRoutes)[T]['post']['output']>> => await callFetch(path, params, 'post', {}, body)
+
+export const newPostWithJson = async <T extends NewPostRestRoutes>(
+  path: T,
+  params: CaminoRestParams<T>,
+  body: z.infer<(typeof CaminoRestRoutes)[T]['newPost']['input']>
+): Promise<z.infer<(typeof CaminoRestRoutes)[T]['newPost']['output']>> => await callFetch(path, params, 'post', {}, body)
 
 export const putWithJson = async <T extends PutRestRoutes>(
   path: T,
