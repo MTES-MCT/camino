@@ -5,7 +5,6 @@
   "private": true,
   "main": "./src/index.js",
   "type": "module",
-  
   "scripts": {
     "build": "tsc",
     "daily": "node --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
@@ -71,6 +70,7 @@
     "express-graphql": "^0.12.0",
     "express-jwt": "^8.4.1",
     "express-rate-limit": "^6.7.0",
+    "fp-ts": "^2.16.5",
     "graphql": "^16.6.0",
     "graphql-fields": "^2.0.3",
     "graphql-scalars": "^1.22.2",
