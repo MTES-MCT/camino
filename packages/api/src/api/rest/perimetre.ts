@@ -41,7 +41,7 @@ import { canReadEtape } from './permissions/etapes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import xlsx from 'xlsx'
 import { ZodTypeAny, z } from 'zod'
-import { CaminoError, Either, Left, isRight, map } from 'camino-common/src/either.js'
+import { CaminoError, Either, Left, isRight, map, mapRight, zodParseEither } from 'camino-common/src/either.js'
 import { CaminoApiError } from '../../types.js'
 
 export const convertGeojsonPointsToGeoSystemeId = (pool: Pool) => async (req: CaminoRequest, res: CustomResponse<FeatureCollectionPoints>) => {
@@ -342,18 +342,22 @@ export const geojsonImportPoints =
 
           const pathFrom = join(process.cwd(), `/files/tmp/${filename}`)
           const fileContent = readFileSync(pathFrom)
-          const features = featureCollectionPointsValidator.parse(JSON.parse(fileContent.toString()))
-          const conversion = await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, features)
 
-          return map(
-            conversion,
-            (error: CaminoError): CaminoApiError => {
-              const newError: CaminoApiError = { ...error, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
-
-              return newError
-            },
-            (value: typeof features) => ({ geojson4326: value, origin: features })
-          )
+          const features = zodParseEither(featureCollectionPointsValidator, JSON.parse(fileContent.toString()))
+          const convertions = mapRight(features, async (featureR) => {
+            return await convertPoints(pool, geoSystemeId.data, GEO_SYSTEME_IDS.WGS84, featureR)
+          })
+          
+          return map(await convertions,
+              (error: CaminoError): CaminoApiError => {
+                const newError: CaminoApiError = { ...error, status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST }
+  
+                return newError
+              },
+              (value: typeof features) => ({ geojson4326: value, origin: features })
+            )
+  
+          
         } catch (e: any) {
           return Left({ message: 'une erreur est apparue', status: HTTP_STATUS.HTTP_STATUS_BAD_REQUEST, extra: e })
         }

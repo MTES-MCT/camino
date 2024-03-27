@@ -1,4 +1,4 @@
-import { ZodError } from 'zod'
+import { ZodError, ZodTypeAny } from 'zod'
 
 export interface Left<A> {
   value: A
@@ -40,12 +40,21 @@ export function map<A, B, C, D>(either: Either<A, B>, mapLeft: (left: A) => C, m
   return isLeft(either) ? Left(mapLeft(either.value)) : Right(mapRight(either.value))
 }
 
-export function flatMapRight<A, B, D>(either: Either<A, B>, fmapRight: (left: B) => D): Either<A, D> {
-  return isRight(either) ? Right(fmapRight(either.value)) : either
+export function mapRight<A, B, D>(either: Either<A, B>, mRight: (left: B) => Either<A, D>): Either<A, D> {
+  return isRight(either) ? mRight(either.value) : either
 }
 
 export type CaminoError = {
   message: string
   extra?: unknown
   zodError?: ZodError
+}
+
+export const zodParseEither = <T extends ZodTypeAny>(validator: T, item: unknown ):Either<CaminoError, T['_output']> => {
+  const parsed = validator.safeParse(item)
+  if (parsed.success) {
+    return Right(parsed.data)
+  }
+
+  return Left({ message: 'unparseable', zodError: parsed.error })
 }

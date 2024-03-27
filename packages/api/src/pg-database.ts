@@ -2,7 +2,7 @@ import { TaggedQuery } from '@pgtyped/runtime'
 import type { Pool } from 'pg'
 import { z } from 'zod'
 import type { ZodType, ZodTypeDef } from 'zod'
-import { Right, type Either, Left, type CaminoError } from 'camino-common/src/either.js'
+import { type Either, Left, type CaminoError, zodParseEither } from 'camino-common/src/either.js'
 
 export type Redefine<T, P, O> = T extends { params: infer A; result: infer B }
   ? { inputs: keyof A; outputs: keyof B } extends { inputs: keyof P; outputs: keyof O }
@@ -35,12 +35,7 @@ export const newDbQueryAndValidate = async <Params, Result, T extends ZodType<Re
     // eslint-disable-next-line no-restricted-syntax
     const result = await query.run(params, pool)
 
-    const parsed = z.array(validator).safeParse(result)
-    if (parsed.success) {
-      return Right(parsed.data)
-    }
-
-    return Left({ message: 'unparseable query result', zodError: parsed.error })
+    return zodParseEither(z.array(validator), result)
   } catch (e) {
     let extra = ''
     if (typeof e === 'string') {
@@ -52,3 +47,4 @@ export const newDbQueryAndValidate = async <Params, Result, T extends ZodType<Re
     return Left({ message: 'error while accessing the database', extra })
   }
 }
+

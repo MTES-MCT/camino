@@ -15,7 +15,7 @@ import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
-import { CaminoError, Either, Right, flatMapRight } from 'camino-common/src/either.js'
+import { CaminoError, Either, Right, mapRight } from 'camino-common/src/either.js'
 
 export const convertPoints = async <T extends z.ZodTypeAny>(
   pool: Pool,
@@ -31,7 +31,7 @@ export const convertPoints = async <T extends z.ZodTypeAny>(
 
   const result = await newDbQueryAndValidate(convertMultiPointDb, { fromGeoSystemeId, toGeoSystemeId, geojson: JSON.stringify(multiPoint) }, pool, z.object({ geojson: multiPointsValidator }))
 
-  return flatMapRight(result, value => ({
+  return mapRight(result, value => ({
     type: 'FeatureCollection',
     features: geojsonPoints.features.map((feature, index) => {
       return { ...feature, geometry: { type: 'Point', coordinates: value[0].geojson.coordinates[index] } }
