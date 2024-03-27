@@ -194,8 +194,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -292,7 +291,7 @@ export const NoSnapshotDemande: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -318,8 +317,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       date,
       notes: 'Super note',
       fondamentale: {
@@ -351,7 +349,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
           ],
         },
       ],
-      documents,
+      etape_documents: documents,
       entreprises_documents: [
         ...entrepriseDocuments,
         {
@@ -386,8 +384,7 @@ export const DemandeNoMap: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       date,
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
@@ -418,7 +415,7 @@ export const DemandeNoMap: StoryFn = () => (
           ],
         },
       ],
-      documents,
+      etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
     }}
   />
@@ -438,8 +435,7 @@ export const DemandeNonDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -453,7 +449,7 @@ export const DemandeNonDeposable: StoryFn = () => (
         perimetre: null,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -510,8 +506,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -538,7 +533,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: documentsDemande,
+      etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
     }}
   />
@@ -595,8 +590,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -623,7 +617,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [
+      etape_documents: [
         ...documentsDemande,
         { id: etapeDocumentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
         { id: etapeDocumentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
@@ -684,8 +678,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -712,7 +705,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: documentsDemande,
+      etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
     }}
   />
@@ -732,9 +725,7 @@ export const Depot: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date,
       sections_with_values: [],
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
-      documents,
+      etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
     }}
     apiClient={apiClient}
@@ -755,9 +746,8 @@ export const AvisDefavorable: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
       date,
       sections_with_values: [],
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
-      documents: [],
+
+      etape_documents: [],
       entreprises_documents: [],
     }}
     apiClient={apiClient}
@@ -797,8 +787,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: null,
         duree: null,
@@ -822,7 +811,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         },
       },
       sections_with_values: [],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -861,8 +850,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: null,
         duree: null,
@@ -886,7 +874,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
         },
       },
       sections_with_values: [],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />

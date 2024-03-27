@@ -18,7 +18,7 @@ import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
-import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
@@ -107,16 +107,6 @@ type IContenuValeur = string | number | string[] | boolean | IContenuElement[] |
 
 interface IContenuElement {
   [elementId: string]: IContenuValeur
-}
-
-interface IDecisionAnnexeContenuElement extends IContenuElement {
-  date: CaminoDate
-  statutId: EtapeStatutId
-  [elementId: string]: IContenuValeur
-}
-
-interface IDecisionAnnexeContenu {
-  [sectionId: string]: IDecisionAnnexeContenuElement
 }
 
 interface IContenu {
@@ -289,8 +279,6 @@ type ITitreEtape = {
   secteursMaritime?: SecteursMaritimes[] | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
-  decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
-  decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
 } & Partial<ITitreEtapePerimetre>
 
@@ -416,5 +404,4 @@ export {
   IHeritageProps,
   IHeritageContenu,
   IJournaux,
-  IDecisionAnnexeContenu,
 }

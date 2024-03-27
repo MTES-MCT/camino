@@ -97,7 +97,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
     deposePopupVisible.value = !deposePopupVisible.value
   }
 
-  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.documents.length > 0))
+  const canDownloadZip = computed<boolean>(() => props.etape.etape_type_id === ETAPES_TYPES.demande && (props.etape.entreprises_documents.length > 0 || props.etape.etape_documents.length > 0))
 
   const canEditOrDeleteEtape = computed<boolean>(() =>
     canEditEtape(props.user, props.etape.etape_type_id, props.etape.etape_statut_id, props.demarche.titulaires, props.demarche.administrationsLocales, props.demarche.demarche_type_id, props.titre)
@@ -116,11 +116,8 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             substances: props.etape.fondamentale.substances,
             duree: props.etape.fondamentale.duree,
             geojson4326Perimetre: props.etape.fondamentale.perimetre?.geojson4326_perimetre ?? null,
-            decisionsAnnexesContenu: props.etape.decisions_annexes_contenu,
-            decisionsAnnexesSections: props.etape.decisions_annexes_sections,
           },
-          // TODO 2023-11-15 hack pas très propres en attendant de pouvoir supprimer le code vue
-          props.etape.documents.map(document => ({ etape_document_type_id: document.etape_document_type_id, fichier: true })),
+          props.etape.etape_documents,
           props.etape.entreprises_documents,
           props.demarche.sdom_zones
         )
@@ -258,7 +255,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         />
       ) : null}
 
-      <EtapeDocuments etapeDocuments={props.etape.documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
+      <EtapeDocuments etapeDocuments={props.etape.etape_documents} entrepriseDocuments={props.etape.entreprises_documents} titulaires={props.demarche.titulaires} user={props.user} />
 
       {removePopupVisible.value ? (
         <RemoveEtapePopup

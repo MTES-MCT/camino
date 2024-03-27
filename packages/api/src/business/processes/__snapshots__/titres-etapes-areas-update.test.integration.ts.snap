@@ -19,8 +19,6 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "date": "2022-03-09",
     "dateDebut": null,
     "dateFin": null,
-    "decisionsAnnexesContenu": null,
-    "decisionsAnnexesSections": null,
     "duree": null,
     "forets": [
       "DBR",
@@ -153,8 +151,6 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
       "date": "2022-03-09",
       "dateDebut": null,
       "dateFin": null,
-      "decisionsAnnexesContenu": null,
-      "decisionsAnnexesSections": null,
       "duree": null,
       "forets": [
         "DBR",

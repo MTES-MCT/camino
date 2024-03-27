@@ -12,7 +12,6 @@ import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { contenuValidator } from './activites.queries.js'
-import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
@@ -42,8 +41,6 @@ const getEtapesByDemarcheIdDbValidator = z.object({
   contenu: contenuValidator.nullable(),
   sdom_zones: z.array(sdomZoneIdValidator).nullable(),
   forets: z.array(foretIdValidator).nullable(),
-  decisions_annexes_contenu: contenuValidator.nullable(),
-  decisions_annexes_sections: z.array(sectionValidator).nullable(),
   geojson4326_perimetre: multiPolygonValidator.nullable(),
   geojson4326_points: featureCollectionPointsValidator.nullable(),
   geojson_origine_points: featureCollectionPointsValidator.nullable(),
@@ -78,8 +75,6 @@ select
     e.slug,
     e.sdom_zones,
     e.forets,
-    e.decisions_annexes_contenu,
-    e.decisions_annexes_sections,
     ST_AsGeoJSON (e.geojson4326_perimetre, 40)::json as geojson4326_perimetre,
     e.geojson4326_points as geojson4326_points,
     e.geojson_origine_points,

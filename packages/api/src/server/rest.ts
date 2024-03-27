@@ -8,7 +8,7 @@ import { join } from 'path'
 import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index.js'
-import { NewDownload, etapeDocumentDownload, etapeFichier, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
+import { NewDownload, etapeDocumentDownload, etapeAvisDocument, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, titresONF, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres.js'
 import {
   creerEntreprise,
@@ -110,7 +110,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/activites': { download: activites },
   '/utilisateurs': { download: utilisateurs },
   '/etape/zip/:etapeId': { download: etapeTelecharger },
-  '/etape/:etapeId/:fichierNom': { download: etapeFichier },
+  '/etape/:etapeId/:fichierNom': { newDownload: etapeAvisDocument },
   '/entreprises': { download: entreprises },
   // NE PAS TOUCHER A CES ROUTES, ELLES SONT UTILISÉES HORS UI
 

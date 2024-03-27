@@ -40,8 +40,6 @@ class TitresEtapes extends Model {
       contenu: { type: ['object', 'null'] },
       heritageContenu: { type: ['object', 'null'] },
       heritageProps: { type: ['object', 'null'] },
-      decisionsAnnexesSections: {},
-      decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
       communes: { type: ['array', 'null'] },

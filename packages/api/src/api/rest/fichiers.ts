@@ -1,7 +1,3 @@
-import { IContenuElement, IContenuValeur, IDocumentRepertoire } from '../../types.js'
-
-import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
-
 import JSZip from 'jszip'
 import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
@@ -13,7 +9,6 @@ import { LargeObjectManager } from 'pg-large-object'
 
 import express from 'express'
 import { join } from 'node:path'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { slugify } from 'camino-common/src/strings.js'
 import { getLargeobjectIdByEtapeDocumentId } from './etapes.queries.js'
@@ -133,71 +128,7 @@ export const etapeDocumentDownload: NewDownload = async (params, user, pool) => 
   return { loid: activiteDocumentLargeObjectId, fileName: etapeDocumentId }
 }
 
-const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuValeur, heritageContenu: { actif: boolean; etapeId?: string | null }): null | string => {
-  if (Array.isArray(contenu)) {
-    const contenuArray = contenu as IContenuElement[]
-    for (let i = 0; i < contenuArray.length; i++) {
-      const contenuElement = contenuArray[i]
-      for (const contenuElementAttr of Object.keys(contenuElement)) {
-        const etapeIdFound = etapeIdPathGet(etapeId, fichierNom, contenuElement[contenuElementAttr], heritageContenu)
-        if (isNotNullNorUndefined(etapeIdFound)) {
-          return etapeIdFound
-        }
-      }
-    }
-  } else if (contenu === fichierNom) {
-    if (heritageContenu.actif) {
-      return heritageContenu.etapeId!
-    } else {
-      return etapeId
-    }
-  }
-
-  return null
-}
-
 // FIXME
-export const etapeFichier =
-  (_pool: Pool) =>
-  async ({ params: { etapeId, fichierNom } }: { params: { etapeId?: EtapeId; fichierNom?: string } }, user: User) => {
-    if (!etapeId) {
-      throw new Error('id de l’étape absent')
-    }
-    if (isNullOrUndefined(fichierNom)) {
-      throw new Error('nom du fichier absent')
-    }
-
-    const etape = await titreEtapeGet(etapeId, { fields: {} }, user)
-
-    if (isNullOrUndefined(etape)) {
-      throw new Error(`étape ${etapeId} non trouvée, impossible de récupérer les documents associés`)
-    }
-
-    let etapeIdPath
-
-    if (etape.contenu) {
-      // recherche dans quel élément de quelle section est stocké ce fichier, pour savoir si l’héritage est activé
-      for (const sectionId of Object.keys(etape.contenu)) {
-        for (const elementId of Object.keys(etape.contenu[sectionId])) {
-          etapeIdPath = etapeIdPathGet(etape.id, fichierNom, etape.contenu[sectionId][elementId], etape.heritageContenu![sectionId][elementId])
-        }
-      }
-    }
-
-    if (isNullOrUndefined(etapeIdPath) && etape.decisionsAnnexesContenu) {
-      etapeIdPath = etape.id
-    }
-
-    if (isNullOrUndefined(etapeIdPath)) {
-      throw new Error(`fichier inexistant pour l'étape ${etapeId}`)
-    }
-    const repertoire = 'demarches' as IDocumentRepertoire
-
-    const filePath = `${repertoire}/${etapeIdPath}/${fichierNom}`
-
-    return {
-      nom: fichierNom.slice(5),
-      format: DOWNLOAD_FORMATS.PDF,
-      filePath,
-    }
-  }
+export const etapeAvisDocument: NewDownload = async (_params, _user, _pool) => {
+  return { loid: null, fileName: 'null' }
+}
