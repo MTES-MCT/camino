@@ -12,11 +12,12 @@ import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { getWithJson, newPostWithJson, postWithJson } from '../../api/client-rest'
 import { EtapeIdOrSlug } from 'camino-common/src/etape'
 import { DemarcheIdOrSlug } from 'camino-common/src/demarche'
+import { CaminoError, Either } from 'camino-common/src/either'
 
 export interface PerimetreApiClient {
   getGeojsonByGeoSystemeId: (geojson: FeatureCollectionPoints, geoSystemeId: GeoSystemeId) => Promise<FeatureCollectionPoints>
   geojsonImport: (body: GeojsonImportBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonInformations | Error>
-  geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportPointsResponse | Error>
+  geojsonPointsImport: (body: GeojsonImportPointsBody, geoSystemeId: GeoSystemeId) => Promise<Either<CaminoError, GeojsonImportPointsResponse>>
   geojsonForagesImport: (body: GeojsonImportForagesBody, geoSystemeId: GeoSystemeId) => Promise<GeojsonImportForagesResponse | Error>
   getPerimetreInfosByEtapeId: (etapeId: EtapeIdOrSlug) => Promise<PerimetreInformations>
   getPerimetreInfosByDemarcheId: (demarcheId: DemarcheIdOrSlug) => Promise<PerimetreInformations>

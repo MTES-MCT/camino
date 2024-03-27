@@ -40,9 +40,6 @@ export function map<A, B, C, D>(either: Either<A, B>, mapLeft: (left: A) => C, m
   return isLeft(either) ? Left(mapLeft(either.value)) : Right(mapRight(either.value))
 }
 
-export function flatmapLeft<A, B, C>(either: Either<A, B>, fmapLeft: (left: A) => C): Either<C, B> {
-  return isLeft(either) ? Left(fmapLeft(either.value)) : either
-}
 export function flatMapRight<A, B, D>(either: Either<A, B>, fmapRight: (left: B) => D): Either<A, D> {
   return isRight(either) ? Right(fmapRight(either.value)) : either
 }

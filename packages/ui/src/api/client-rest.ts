@@ -1,3 +1,4 @@
+import { CaminoError, Either, Left, Right } from 'camino-common/src/either'
 import { HTTP_STATUS } from 'camino-common/src/http'
 import {
   CaminoRestParams,
@@ -32,7 +33,7 @@ export const getDownloadRestRoute = <T extends DownloadRestRoutes | NewDownloadR
   return getUiRestRoute(route, params, searchParams)
 }
 
-// TODO 2024-03-27: duplicate this and return Either instead of throwing error
+/** @deprecated use newCallFetch */
 const callFetch = async <T extends CaminoRestRoute>(
   path: T,
   params: CaminoRestParams<T>,
@@ -81,7 +82,25 @@ export const newPostWithJson = async <T extends NewPostRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
   body: z.infer<(typeof CaminoRestRoutes)[T]['newPost']['input']>
-): Promise<z.infer<(typeof CaminoRestRoutes)[T]['newPost']['output']>> => await callFetch(path, params, 'post', {}, body)
+): Promise<Either<CaminoError, z.infer<(typeof CaminoRestRoutes)[T]['newPost']['output']>>> => {
+  const url = getUiRestRoute(path, params, {})
+
+  const defaultOptions = {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+  }
+
+  const fetched = await fetch(url, { ...defaultOptions, body: JSON.stringify(body) })
+  if (fetched.ok) {
+    const bodyResponse = await fetched.json()
+    return Right(bodyResponse)
+  }
+  if (fetched.status === HTTP_STATUS.HTTP_STATUS_UNAUTHORIZED) {
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+  }
+  const bodyErrorResponse = await fetched.json()
+  return Left(bodyErrorResponse)
+}
 
 export const putWithJson = async <T extends PutRestRoutes>(
   path: T,
