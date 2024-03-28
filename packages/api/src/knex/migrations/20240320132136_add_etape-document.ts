@@ -25,6 +25,9 @@ export const up = async (knex: Knex) => {
     await knex.raw(`update titres_etapes set notes = concat(notes, '${document.description.replace(/'/g, '’')}') where id = '${document.titre_etape_id}'`)
   }
 
+  knex.raw('ALTER TABLE titres_etapes DROP column decisions_annexes_sections')
+  knex.raw('ALTER TABLE titres_etapes DROP column decisions_annexes_contenu')
+
   // await knex.schema.dropTable('documents')
 }
 

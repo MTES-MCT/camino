@@ -1,10 +1,5 @@
 import { shallowRef } from 'vue'
 import { createStore } from 'vuex'
-import { saveAs } from 'file-saver'
-
-import router from '../router'
-import { urlQueryUpdate } from '../utils/url'
-
 import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
 import meta from './meta'
@@ -26,10 +21,6 @@ const state = {
     loaded: 0,
     total: 0,
   },
-}
-
-function isOnPristineLandingPage(query) {
-  return query.centre === '46.227103425310766,2.499999999999991' && query.vueId === 'carte' && Object.keys(query).length === 3
 }
 
 const actions = {
@@ -80,62 +71,6 @@ const actions = {
     setTimeout(() => {
       commit('messageRemove', id)
     }, 4500)
-  },
-
-  async reload({ dispatch, rootState }, { name, id }) {
-    if (!id) {
-      router.push({ name })
-    } else {
-      const idOld = rootState.route.params.id
-
-      if (id !== idOld) {
-        router.replace({ name, params: { id } })
-      } else {
-        await dispatch(`${name}/get`, id)
-      }
-    }
-  },
-
-  async downloadDocument({ dispatch }, document) {
-    if (document.fichierNouveau) {
-      saveAs(document.fichierNouveau)
-      dispatch('messageAdd', {
-        type: 'success',
-        value: `fichier téléchargé : ${document.fichierNouveau.name}`,
-      })
-    } else {
-      await dispatch('download', `/download/fichiers/${document.id}`)
-    }
-  },
-
-  async download({ dispatch, commit }, path) {
-    try {
-      saveAs(`/apiUrl${path}`)
-
-      dispatch('messageAdd', {
-        type: 'success',
-        value: `fichier téléchargé`,
-      })
-    } catch (e) {
-      dispatch('apiError', `téléchargement : ${path}, ${e}`)
-    } finally {
-      commit('loadingRemove', 'fileLoading')
-      commit('fileLoad', { loaded: 0, total: 0 })
-    }
-  },
-
-  async urlQueryUpdate({ rootState }, { params, definitions }) {
-    const { status, query } = urlQueryUpdate(params, rootState.route.query, definitions)
-
-    if (status === 'updated') {
-      await router.push({ query })
-    } else if (status === 'created') {
-      await router.replace({ query })
-    }
-
-    if (isOnPristineLandingPage(query)) {
-      history.replaceState({}, null, '/')
-    }
   },
 }
 

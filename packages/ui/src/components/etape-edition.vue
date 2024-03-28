@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { cap, dateFormat } from '@/utils'
+import { dateFormat } from '@/utils'
 import { InputDate } from './_ui/input-date'
 import Edit from './etape/edit.vue'
 import { getCurrent } from 'camino-common/src/date'
