@@ -213,15 +213,87 @@ export const LegacyGeoSysteme: StoryFn = () => (
 const geojsonForages: FeatureCollectionForages = {
   type: 'FeatureCollection',
   features: [
-    { type: 'Feature', properties: { nom: 'C1', description: 'Captage 1', profondeur: 42, type: 'captage' }, geometry: { type: 'Point', coordinates: [-52.5620583466962, 4.23454263425535] } },
-    { type: 'Feature', properties: { nom: 'R1', description: 'Rejet 1', profondeur: 42, type: 'rejet' }, geometry: { type: 'Point', coordinates: [-52.5640583466962, 4.23754263425535] } },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [4.821788094643814, 45.725204601507926],
+      },
+      properties: {
+        nom: 'A',
+        type: 'rejet',
+        profondeur: 3,
+        description: 'ceci est une description',
+      },
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [4.823550614394235, 45.725288143217156],
+      },
+      properties: {
+        nom: 'B',
+        type: 'captage',
+        profondeur: 4,
+      },
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [4.823866086187904, 45.725152316677836],
+      },
+      properties: {
+        nom: 'D',
+        type: 'rejet',
+        profondeur: 10,
+      },
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [4.823173965600932, 45.721951486049164],
+      },
+      properties: {
+        nom: 'X',
+        type: 'piézomètre',
+        profondeur: 52,
+      },
+    },
   ],
 }
+
+const perimetreForages: FeatureMultiPolygon = {
+  type: 'Feature',
+  properties: {},
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: [
+      [
+        [
+          [4.822103744867218, 45.726602759388356],
+          [4.820457868136398, 45.72661133750498],
+          [4.822001395399144, 45.71998407507634],
+          [4.822271981827943, 45.71961040284889],
+          [4.823443813756128, 45.72005082114589],
+          [4.828145558734241, 45.722631804228726],
+          [4.827027831384014, 45.723442567682575],
+          [4.827092269107372, 45.724225156310794],
+          [4.8242350940655605, 45.72649622899734],
+          [4.822103744867218, 45.726602759388356],
+        ],
+      ],
+    ],
+  },
+}
+
 const etapeWithForages: Props['etape'] = {
   ...etapeEmptyHeritage,
-  geojson4326Perimetre: perimetre,
+  geojson4326Perimetre: perimetreForages,
   surface: km2Validator.parse(2),
-  geojsonOriginePerimetre: perimetre,
+  geojsonOriginePerimetre: perimetreForages,
   geojsonOriginePoints: null,
   geojsonOrigineGeoSystemeId: '4326',
   geojson4326Forages: geojsonForages,

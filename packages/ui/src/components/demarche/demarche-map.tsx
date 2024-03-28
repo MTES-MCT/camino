@@ -3,7 +3,7 @@ import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpe
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
-import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
+import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, ForageType, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
 import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -214,10 +214,8 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     type: 'circle',
     source: foragesSourceName,
     paint: {
-      'circle-color': '#fcc63a',
-      'circle-radius': 16,
-      'circle-stroke-width': 4,
-      'circle-stroke-color': ['get', 'strokeColor'],
+      'circle-color': ['get', 'color'],
+      'circle-radius': 4,
     },
   },
   [contourForagesLabel]: {
@@ -226,11 +224,15 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     source: foragesSourceName,
     paint: {
       'text-color': '#000000',
+      'text-halo-color': '#fff',
+      'text-halo-width': 2,
     },
     layout: {
+      'text-size': 12,
       'text-field': ['get', 'nom'],
       'text-overlap': 'never',
       'symbol-sort-key': ['get', 'index'],
+      'text-offset': [0, 1],
     },
   },
   [titresValidesLineName]: {
@@ -254,6 +256,12 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     },
   },
 }
+
+const forageColor = {
+  captage: '#60e0eb',
+  rejet: '#a94645',
+  piézomètre: '#FF732C',
+} as const satisfies Record<ForageType, string>
 
 export const DemarcheMap = defineComponent<Props>(props => {
   const mapRef = ref<HTMLDivElement | null>(null)
@@ -297,7 +305,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
               ...feature.properties,
               // Ajoute l’index pour gérer l’overlap entre les différents forages
               index: -index,
-              strokeColor: feature.properties.type === 'captage' ? '#00A95F' : '#845d48',
+              color: forageColor[feature.properties.type],
               latitude: feature.geometry.coordinates[1],
               longitude: feature.geometry.coordinates[0],
             },
