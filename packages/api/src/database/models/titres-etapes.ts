@@ -8,7 +8,6 @@ import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etap
 import { idGenerate } from './_format/id-create.js'
 import TitresDemarches from './titres-demarches.js'
 import Entreprises from './entreprises.js'
-import Document from './documents.js'
 import Journaux from './journaux.js'
 import { etapeSlugValidator } from 'camino-common/src/etape.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
@@ -41,8 +40,6 @@ class TitresEtapes extends Model {
       contenu: { type: ['object', 'null'] },
       heritageContenu: { type: ['object', 'null'] },
       heritageProps: { type: ['object', 'null'] },
-      decisionsAnnexesSections: {},
-      decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
       communes: { type: ['array', 'null'] },
@@ -90,15 +87,6 @@ class TitresEtapes extends Model {
           extra: ['operateur'],
         },
         to: 'entreprises.id',
-      },
-    },
-
-    documents: {
-      relation: Model.HasManyRelation,
-      modelClass: Document,
-      join: {
-        from: 'titresEtapes.id',
-        to: 'documents.titreEtapeId',
       },
     },
     journaux: {

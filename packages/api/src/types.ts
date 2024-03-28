@@ -10,16 +10,15 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
-import { DocumentTypeId, FileUploadType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
-import { DocumentId, EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 import { DemarcheId, DemarcheSlug } from 'camino-common/src/demarche.js'
 import type { Pool } from 'pg'
-import { Section, SectionElement } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes.js'
 import { CommuneId } from 'camino-common/src/static/communes.js'
 import { ForetId } from 'camino-common/src/static/forets.js'
@@ -108,16 +107,6 @@ type IContenuValeur = string | number | string[] | boolean | IContenuElement[] |
 
 interface IContenuElement {
   [elementId: string]: IContenuValeur
-}
-
-interface IDecisionAnnexeContenuElement extends IContenuElement {
-  date: CaminoDate
-  statutId: EtapeStatutId
-  [elementId: string]: IContenuValeur
-}
-
-interface IDecisionAnnexeContenu {
-  [sectionId: string]: IDecisionAnnexeContenuElement
 }
 
 interface IContenu {
@@ -256,22 +245,6 @@ interface ITitreDemarche {
   etapes?: ITitreEtape[]
 }
 
-interface IDocument {
-  id: DocumentId
-  typeId: DocumentTypeId
-  date: CaminoDate
-  description?: string | null
-  fichier?: boolean | null
-  fichierTypeId?: FileUploadType | null
-  fichierNouveau?: { file: FileUpload } | null
-  nomTemporaire?: string | null
-  publicLecture?: boolean | null
-  entreprisesLecture?: boolean | null
-  titreEtapeId?: EtapeId | null
-  etape?: ITitreEtape | null
-  suppression?: boolean | null
-}
-
 export interface ITitreEtapePerimetre {
   geojson4326Perimetre: FeatureMultiPolygon | null | undefined
   geojson4326Points: FeatureCollectionPoints | null | undefined
@@ -291,8 +264,6 @@ type ITitreEtape = {
   date: CaminoDate
   duree?: number | null
   contenu?: IContenu | null
-  documents?: IDocument[] | null
-  documentIds?: string[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: CaminoDate | null
@@ -308,8 +279,6 @@ type ITitreEtape = {
   secteursMaritime?: SecteursMaritimes[] | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
-  decisionsAnnexesSections?: DeepReadonly<(Omit<Section, 'elements'> & { elements: (SectionElement & { sectionId?: string })[] })[]> | null
-  decisionsAnnexesContenu?: IDecisionAnnexeContenu | null
   notes?: string | null
 } & Partial<ITitreEtapePerimetre>
 
@@ -418,7 +387,6 @@ export {
   ITitre,
   ITitreActivite,
   ITitreDemarche,
-  IDocument,
   ITitreEtape,
   ITitreEtapeFiltre,
   ITitreEntreprise,
@@ -436,5 +404,4 @@ export {
   IHeritageProps,
   IHeritageContenu,
   IJournaux,
-  IDecisionAnnexeContenu,
 }

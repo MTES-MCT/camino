@@ -2,13 +2,13 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { DemarcheEtape } from './demarche-etape'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EtapeEntrepriseDocument, documentIdValidator, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
 import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { testBlankUser } from 'camino-common/src/tests-utils'
-import { EtapeDocument, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
 import { ApiClient } from '@/api/api-client'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
@@ -57,29 +57,29 @@ const routerPushMock: Pick<Router, 'push'> = {
 }
 const documentsDemande: EtapeDocument[] = [
   {
-    id: documentIdValidator.parse('id'),
-    document_type_id: 'car',
+    id: etapeDocumentIdValidator.parse('id'),
+    etape_document_type_id: 'car',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id2'),
-    document_type_id: 'dom',
+    id: etapeDocumentIdValidator.parse('id2'),
+    etape_document_type_id: 'dom',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id3'),
-    document_type_id: 'for',
+    id: etapeDocumentIdValidator.parse('id3'),
+    etape_document_type_id: 'for',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id4'),
-    document_type_id: 'jpa',
+    id: etapeDocumentIdValidator.parse('id4'),
+    etape_document_type_id: 'jpa',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
@@ -133,22 +133,22 @@ const entrepriseDocumentsDemande: EtapeEntrepriseDocument[] = [
 
 const documents: EtapeDocument[] = [
   {
-    id: documentIdValidator.parse('id'),
-    document_type_id: 'aac',
+    id: etapeDocumentIdValidator.parse('id'),
+    etape_document_type_id: 'aac',
     description: 'Une description',
     public_lecture: false,
     entreprises_lecture: false,
   },
   {
-    id: documentIdValidator.parse('id2'),
-    document_type_id: 'acg',
+    id: etapeDocumentIdValidator.parse('id2'),
+    etape_document_type_id: 'acg',
     description: null,
     public_lecture: true,
     entreprises_lecture: true,
   },
   {
-    id: documentIdValidator.parse('id2'),
-    document_type_id: 'acm',
+    id: etapeDocumentIdValidator.parse('id2'),
+    etape_document_type_id: 'acm',
     description: null,
     public_lecture: false,
     entreprises_lecture: true,
@@ -194,8 +194,7 @@ export const NoSnapshotDemande: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -292,7 +291,7 @@ export const NoSnapshotDemande: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -318,8 +317,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       date,
       notes: 'Super note',
       fondamentale: {
@@ -351,7 +349,7 @@ export const DemandeMultipleEntreprisesDocuments: StoryFn = () => (
           ],
         },
       ],
-      documents,
+      etape_documents: documents,
       entreprises_documents: [
         ...entrepriseDocuments,
         {
@@ -386,8 +384,7 @@ export const DemandeNoMap: StoryFn = () => (
       slug: etapeSlugValidator.parse('etape-slug'),
       etape_type_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.FAIT.etapeStatutId,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       date,
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
@@ -418,7 +415,7 @@ export const DemandeNoMap: StoryFn = () => (
           ],
         },
       ],
-      documents,
+      etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
     }}
   />
@@ -438,8 +435,7 @@ export const DemandeNonDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -453,7 +449,7 @@ export const DemandeNonDeposable: StoryFn = () => (
         perimetre: null,
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -510,8 +506,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -538,7 +533,7 @@ export const DemandeArmMecaniseNonDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: documentsDemande,
+      etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
     }}
   />
@@ -595,8 +590,7 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -623,10 +617,10 @@ export const DemandeArmMecaniseDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: true, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: [
+      etape_documents: [
         ...documentsDemande,
-        { id: documentIdValidator.parse('idDoe'), document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
-        { id: documentIdValidator.parse('idDep'), document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: etapeDocumentIdValidator.parse('idDoe'), etape_document_type_id: 'doe', public_lecture: true, entreprises_lecture: true, description: null },
+        { id: etapeDocumentIdValidator.parse('idDep'), etape_document_type_id: 'dep', public_lecture: true, entreprises_lecture: true, description: null },
       ],
       entreprises_documents: entrepriseDocumentsDemande,
     }}
@@ -684,8 +678,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: toCaminoDate('2023-10-25'),
         duree: 12,
@@ -712,7 +705,7 @@ export const DemandeArmNonMecaniseDeposable: StoryFn = () => (
         },
       },
       sections_with_values: [{ id: 'arm', elements: [{ id: 'mecanise', type: 'radio', value: false, nom: 'Mécanisation' }], nom: 'Arm' }],
-      documents: documentsDemande,
+      etape_documents: documentsDemande,
       entreprises_documents: entrepriseDocumentsDemande,
     }}
   />
@@ -732,9 +725,7 @@ export const Depot: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.depotDeLaDemande.FAIT.etapeStatutId,
       date,
       sections_with_values: [],
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
-      documents,
+      etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
     }}
     apiClient={apiClient}
@@ -755,9 +746,8 @@ export const AvisDefavorable: StoryFn = () => (
       etape_statut_id: EtapesTypesEtapesStatuts.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_.DEFAVORABLE.etapeStatutId,
       date,
       sections_with_values: [],
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
-      documents: [],
+
+      etape_documents: [],
       entreprises_documents: [],
     }}
     apiClient={apiClient}
@@ -797,8 +787,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: null,
         duree: null,
@@ -822,7 +811,7 @@ export const DemandeAvecSeulementPerimetre: StoryFn = () => (
         },
       },
       sections_with_values: [],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />
@@ -861,8 +850,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
       etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
       etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
       date,
-      decisions_annexes_contenu: {},
-      decisions_annexes_sections: [],
+
       fondamentale: {
         date_debut: null,
         duree: null,
@@ -886,7 +874,7 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
         },
       },
       sections_with_values: [],
-      documents: [],
+      etape_documents: [],
       entreprises_documents: [],
     }}
   />

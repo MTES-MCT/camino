@@ -36,16 +36,18 @@
     </Bloc>
 
     <Bloc v-if="stepDocuments" id="step-documents" :step="stepDocuments" :complete="stepDocumentsComplete">
-      <DocumentsEdit
-        v-model:documents="etape.documents"
-        :addAction="{ name: 'titreEtapeEdition/documentAdd' }"
-        :removeAction="{ name: 'titreEtapeEdition/documentRemove' }"
-        :documentPopupTitle="documentPopupTitle"
-        :documentsTypes="documentsTypes"
-        :date="etape.date"
-        :user="user"
-        @complete-update="documentsCompleteUpdate"
-      />
+      <div class="dsfr">
+        <EtapeDocumentsEdit
+          :apiClient="apiClient"
+          :tde="tde"
+          :etapeId="etape.id"
+          :completeUpdate="documentsCompleteUpdate"
+          :sdomZoneIds="sdomZoneIds"
+          :user="user"
+          :contenu="etape.contenu"
+          :etapeStatutId="etape.statutId"
+        />
+      </div>
     </Bloc>
 
     <Bloc v-if="stepEntrepriseDocuments" id="step-entrepriseDocuments" :step="stepEntrepriseDocuments" :complete="stepEntrepriseDocumentsComplete">
@@ -53,7 +55,7 @@
     </Bloc>
 
     <Bloc v-if="stepDecisionsAnnexes" id="step-decisionsAnnexes" :step="stepDecisionsAnnexes" :complete="stepDecisionsAnnexesComplete">
-      <DecisionsAnnexesEdit :etape="etape" @complete-update="decisionsAnnexesComplete = $event" />
+      <div>FIXME</div>
     </Bloc>
 
     <div class="dsfr">
@@ -72,26 +74,25 @@ import { DateEdit } from './date-edit'
 import { FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
-import DocumentsEdit from '../document/multi-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
-import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
+import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { apiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
+import { hasEtapeAvisDocuments } from 'camino-common/src/permissions/titres-etapes'
 
 export default {
   components: {
-    DecisionsAnnexesEdit,
     Bloc,
     TypeEdit,
     FondamentalesEdit,
     PerimetreEdit,
     SectionsEdit,
-    DocumentsEdit,
     EntrepriseDocumentsEdit,
+    EtapeDocumentsEdit,
     DateEdit,
   },
 
@@ -103,7 +104,7 @@ export default {
     titreSlug: { type: String, required: true },
     user: { type: Object, required: true },
     etapeIsDemandeEnConstruction: { type: Boolean, required: true },
-    documentPopupTitle: { type: String, required: true },
+    sdomZoneIds: { type: Array, required: true },
   },
 
   emits: ['complete-update', 'type-complete-update', 'change', 'update:etape', 'alertes-update'],
@@ -129,9 +130,6 @@ export default {
         demarcheTypeId: this.demarcheTypeId,
         etapeTypeId: this.etapeType?.id,
       }
-    },
-    documentsTypes() {
-      return this.$store.getters['titreEtapeEdition/documentsTypes']
     },
 
     entreprises() {
@@ -231,7 +229,7 @@ export default {
       if (this.heritageLoaded && hasDocuments) {
         steps.push({
           id: 'documents',
-          name: `Documents liés à l’étape ${EtapesTypes[this.etape.typeId].nom}`,
+          name: `Liste des documents`,
         })
       }
 
@@ -241,7 +239,7 @@ export default {
         steps.push({ id: 'entrepriseDocuments', name: 'Documents d’entreprise' })
       }
 
-      if (this.etape.decisionsAnnexesSections) {
+      if (hasEtapeAvisDocuments(this.titreTypeId, this.demarcheTypeId, this.etapeType?.id, this.etape.statutId)) {
         steps.push({ id: 'decisionsAnnexes', name: 'Décisions annexes' })
       }
 
@@ -314,7 +312,6 @@ export default {
     if (this.etapeType?.id === 'mfr') {
       this.help.arm = {
         sections: 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)',
-        documents: 'Toutes les pièces obligatoires, spécifiques à la demande, doivent être déposées dans cette rubrique en format pdf.',
         entrepriseDocuments:
           "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel.",
       }
@@ -332,7 +329,8 @@ export default {
       this.perimetreComplete = complete
     },
 
-    documentsCompleteUpdate(complete) {
+    documentsCompleteUpdate(etapeDocuments, complete) {
+      this.etape.etapeDocuments = etapeDocuments
       this.documentsComplete = complete
     },
 
@@ -346,7 +344,7 @@ export default {
     },
 
     async sectionsUpdate() {
-      await this.$store.dispatch('titreEtapeEdition/documentInit', this.etape.documents)
+      // FIXME à tester si on change la mécanisation
     },
 
     completeUpdate() {

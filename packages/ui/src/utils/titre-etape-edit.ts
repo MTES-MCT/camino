@@ -1,11 +1,7 @@
 import { cloneAndClean } from './index'
-import { CaminoDocument, Etape } from 'camino-common/src/etape'
+import { Etape } from 'camino-common/src/etape'
 
-type CaminoDocumentEdit = CaminoDocument & {
-  fichierNouveau: null
-}
-
-type EtapeEdit = Omit<Etape, 'administrations' | 'documents'> & { documents: CaminoDocument[] }
+type EtapeEdit = Omit<Etape, 'administrations'>
 export const etapeEditFormat = (etape: Etape): EtapeEdit => {
   const newEtape: Etape = cloneAndClean(etape)
 
@@ -33,16 +29,6 @@ export const etapeEditFormat = (etape: Etape): EtapeEdit => {
     newEtapePointEnhanced.contenu = {}
   }
 
-  if (!newEtapePointEnhanced.documents) {
-    newEtapePointEnhanced.documents = []
-  } else {
-    newEtapePointEnhanced.documents = newEtapePointEnhanced.documents.map(documentEtapeFormat)
-  }
-
   // @ts-ignore
   return newEtapePointEnhanced
-}
-
-export const documentEtapeFormat = (document: CaminoDocument): CaminoDocumentEdit => {
-  return { ...document, fichierNouveau: null }
 }

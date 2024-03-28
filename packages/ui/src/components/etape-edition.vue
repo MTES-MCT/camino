@@ -33,8 +33,8 @@
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
       :titreTypeId="titre.typeId"
       :titreSlug="titre.slug"
-      :documentPopupTitle="documentPopupTitle"
       :etapeType="etapeType"
+      :sdomZoneIds="sdomZoneIds"
       @complete-update="completeUpdate"
       @type-complete-update="typeCompleteUpdate"
       @change="editChange"
@@ -57,17 +57,17 @@
 
     <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky" style="z-index: 100000">
       <div class="tablet-blob-1-3" />
-      <FormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" @save="save" @depose="depose" />
+      <PureFormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" save="save" depose="depose" />
     </div>
   </div>
 </template>
 
 <script>
-import { cap, dateFormat } from '@/utils'
+import { dateFormat } from '@/utils'
 import { InputDate } from './_ui/input-date'
 import Edit from './etape/edit.vue'
 import { getCurrent } from 'camino-common/src/date'
-import FormSaveBtn from './etape/pure-form-save-btn.vue'
+import { PureFormSaveBtn } from './etape/pure-form-save-btn'
 import DeposePopup from './etape/depose-popup.vue'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
@@ -80,7 +80,7 @@ import { userKey, entreprisesKey } from '@/moi'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
-  components: { Edit, InputDate, FormSaveBtn },
+  components: { Edit, InputDate, PureFormSaveBtn },
 
   beforeRouteLeave(_, __, next) {
     if (this.isFormDirty && !confirm(this.promptMsg)) {
@@ -175,10 +175,6 @@ export default {
 
     isFormComplete() {
       return (this.etapeIsDemandeEnConstruction && this.typeComplete) || this.complete
-    },
-
-    documentPopupTitle() {
-      return `${cap(this.titre.nom)} | ${cap(this.demarcheType.nom)} | ${this.etapeType ? cap(this.etapeType.nom) : ''}`
     },
 
     helpVisible() {
@@ -299,15 +295,6 @@ export default {
     alertesUpdate(infos) {
       this.superposition_alertes = infos.superposition_alertes
       this.sdomZoneIds = infos.sdomZoneIds
-
-      if (isNotNullNorUndefined(this.etapeType)) {
-        const documentTypeIds = documentTypeIdsBySdomZonesGet(infos.sdomZoneIds, this.titre.typeId, this.demarche.typeId, this.etapeType.id)
-
-        this.$store.commit('titreEtapeEdition/metasSet', {
-          sdomZonesDocumentTypeIds: documentTypeIds,
-        })
-        this.$store.dispatch('titreEtapeEdition/documentInit', this.editedEtape.documents)
-      }
     },
 
     editChange() {

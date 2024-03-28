@@ -38,12 +38,6 @@ import { SimplePromiseFn } from 'camino-common/src/typescript-tools.js'
 import { ActiviteDocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
 import { sectionValidator } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
-export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
-  const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreActivite, { activiteId }, pool, entrepriseIdObjectValidator)
-
-  return entreprises.map(({ id }) => id)
-}
-
 export const titreTypeIdByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const typeIds = await dbQueryAndValidate(getTitreTypeIdByActiviteId, { activiteId }, pool, titreTypeIdObjectValidator)
   if (typeIds.length === 0) {
@@ -167,6 +161,17 @@ delete from activites_documents
 where activite_id = $ activiteId !
 `
 
+export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, pool: Pool): Promise<ActiviteDocument[]> => {
+  return dbQueryAndValidate(
+    getActiviteDocumentsInternal,
+    {
+      activiteId,
+    },
+    pool,
+    activiteDocumentValidator
+  )
+}
+
 export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
   const admins = await dbQueryAndValidate(getAdministrationsLocalesByActiviteId, { activiteId }, pool, administrationsLocalesValidator)
   if (admins.length > 1) {
@@ -177,17 +182,6 @@ export const administrationsLocalesByActiviteId = async (activiteId: ActiviteIdO
   }
 
   return admins[0].administrations_locales
-}
-
-export const getActiviteDocumentsByActiviteId = async (activiteId: ActiviteId, pool: Pool): Promise<ActiviteDocument[]> => {
-  return dbQueryAndValidate(
-    getActiviteDocumentsInternal,
-    {
-      activiteId,
-    },
-    pool,
-    activiteDocumentValidator
-  )
 }
 
 const administrationsLocalesValidator = z.object({ administrations_locales: z.array(administrationIdValidator) })
@@ -214,6 +208,12 @@ where
     ta.id = $ activiteId !
     or ta.slug = $ activiteId !
 `
+
+export const entreprisesTitulairesOuAmoditairesByActiviteId = async (activiteId: ActiviteIdOrSlug, pool: Pool) => {
+  const entreprises = await dbQueryAndValidate(getTitulairesAmodiatairesTitreActivite, { activiteId }, pool, entrepriseIdObjectValidator)
+
+  return entreprises.map(({ id }) => id)
+}
 
 const entrepriseIdObjectValidator = z.object({ id: entrepriseIdValidator })
 const getTitulairesAmodiatairesTitreActivite = sql<Redefine<IGetTitulairesAmodiatairesTitreActiviteQuery, { activiteId: ActiviteIdOrSlug }, z.infer<typeof entrepriseIdObjectValidator>>>`

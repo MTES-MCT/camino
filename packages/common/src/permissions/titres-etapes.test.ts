@@ -245,12 +245,7 @@ const etapeComplete: Parameters<typeof isEtapeComplete>[0] = {
   duree: 4,
 }
 
-const armDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', fichier: true },
-  { typeId: 'dom', fichier: true },
-  { typeId: 'for', fichier: true },
-  { typeId: 'jpa', fichier: true },
-]
+const armDocuments: Parameters<typeof isEtapeComplete>[3] = [{ etape_document_type_id: 'car' }, { etape_document_type_id: 'dom' }, { etape_document_type_id: 'for' }, { etape_document_type_id: 'jpa' }]
 const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
   { entreprise_document_type_id: 'cur' },
   { entreprise_document_type_id: 'jid' },
@@ -261,13 +256,13 @@ const armEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
 ]
 
 const axmDocuments: Parameters<typeof isEtapeComplete>[3] = [
-  { typeId: 'car', fichier: true },
-  { typeId: 'lem', fichier: true },
-  { typeId: 'idm', fichier: true },
-  { typeId: 'mes', fichier: true },
-  { typeId: 'met', fichier: true },
-  { typeId: 'sch', fichier: true },
-  { typeId: 'prg', fichier: true },
+  { etape_document_type_id: 'car' },
+  { etape_document_type_id: 'lem' },
+  { etape_document_type_id: 'idm' },
+  { etape_document_type_id: 'mes' },
+  { etape_document_type_id: 'met' },
+  { etape_document_type_id: 'sch' },
+  { etape_document_type_id: 'prg' },
 ]
 
 const axmEntrepriseDocuments: Parameters<typeof isEtapeComplete>[4] = [
