@@ -215,7 +215,7 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
     source: foragesSourceName,
     paint: {
       'circle-color': ['get', 'color'],
-      'circle-radius': 8,
+      'circle-radius': 4,
     },
   },
   [contourForagesLabel]: {
@@ -228,10 +228,11 @@ const overlayConfigs: Record<OverlayLayerId, LayerSpecification> = {
       'text-halo-width': 2,
     },
     layout: {
+      'text-size': 12,
       'text-field': ['get', 'nom'],
       'text-overlap': 'never',
       'symbol-sort-key': ['get', 'index'],
-      'text-offset': [0, 1.25],
+      'text-offset': [0, 1],
     },
   },
   [titresValidesLineName]: {
