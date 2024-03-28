@@ -7,7 +7,7 @@ import { CommonTitre } from 'camino-common/src/titres'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
-import { FeatureMultiPolygon, GeojsonPoint } from 'camino-common/src/perimetre'
+import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
 
 const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
@@ -106,7 +106,7 @@ export const clustersBuild = () =>
   }, {})
 
 export interface TitreWithPerimetre extends CommonTitre {
-  geojson4326Perimetre?: FeatureMultiPolygon
+  geojson4326Perimetre?: MultiPolygon
   geojson4326Centre?: GeojsonPoint
 }
 type CaminoMarker = {
