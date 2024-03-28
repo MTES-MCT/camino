@@ -377,7 +377,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
               }
 
               // TODO 2023-12-04 un jour on espère pouvoir virer le ! parce que le filter l'empêche
-              return { ...titreValide.geojson4326Perimetre!, properties }
+              return { type: 'Feature', properties, geometry: titreValide.geojson4326Perimetre! }
             }),
         })
       } catch (e) {
