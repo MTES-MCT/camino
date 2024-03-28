@@ -171,64 +171,6 @@ describe("état général de l'application", () => {
 
     expect(state.error).toEqual(null)
   })
-
-  test("recharge la page si l'id du titre n'a pas changé", async () => {
-    store.state.route.params = { id: 'titre-id' }
-    await store.dispatch('reload', { name: 'titre', id: 'titre-id' })
-
-    expect(modules.titre.actions.get).toHaveBeenCalled()
-  })
-
-  test("charge la nouvelle page si l'id du titre a changé", async () => {
-    store.state.route.params = { id: 'id-test' }
-    await store.dispatch('reload', { name: 'titre', id: 'titre-id-new' })
-    expect(router.default.replace).toHaveBeenCalled()
-  })
-
-  test("ne recharge pas la page si l'id n'a pas changé", async () => {
-    store.state.route.params = { id: 'id-test' }
-    await store.dispatch('reload', { name: 'titre', id: 'id-test' })
-
-    expect(router.default.replace).not.toHaveBeenCalled()
-    expect(modules.titre.actions.get).toHaveBeenCalled()
-  })
-
-  test("recharge la page si il n'y a pas d'id", async () => {
-    store.state.titre.element = { id: 'id-test', nom: 'marne' }
-    await store.dispatch('reload', { name: 'titres' })
-
-    expect(router.default.push).toHaveBeenCalled()
-  })
-
-  test("met à jour les paramètres d'url", async () => {
-    await store.dispatch('urlQueryUpdate', {
-      params: { typesIds: null },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
-    })
-
-    expect(router.default.push).not.toHaveBeenCalled()
-    expect(router.default.replace).not.toHaveBeenCalled()
-
-    await store.dispatch('urlQueryUpdate', {
-      params: { typesIds: ['pr', 'ar'] },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
-    })
-
-    expect(router.default.replace).toHaveBeenCalledWith({
-      query: { typesIds: 'pr,ar' },
-    })
-
-    store.state.route.query.typesIds = 'pr,ar'
-
-    await store.dispatch('urlQueryUpdate', {
-      params: { typesIds: ['cx'] },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
-    })
-
-    expect(router.default.push).toHaveBeenCalledWith({
-      query: { typesIds: 'cx' },
-    })
-  })
 })
 
 describe("état général de l'application", () => {
@@ -264,46 +206,5 @@ describe("état général de l'application", () => {
     // expect(setTimeout).toHaveBeenCalled()
     // expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4500)
     expect(messageRemoveMock).toHaveBeenCalled()
-  })
-
-  test('télécharge un document du serveur', async () => {
-    const messageAddMock = vi.fn()
-    actions.messageAdd = messageAddMock
-    store = createStore({ state, actions, mutations })
-
-    await store.dispatch('downloadDocument', { id: 'toot' })
-
-    expect(fileSaver.saveAs).toHaveBeenCalledWith('/apiUrl/download/fichiers/toot')
-    expect(messageAddMock).toHaveBeenCalled()
-    expect(state.loading).toEqual([])
-  })
-
-  test('télécharge un nouveau document depuis le navigateur', async () => {
-    const messageAddMock = vi.fn()
-    actions.messageAdd = messageAddMock
-    store = createStore({ state, actions, mutations })
-
-    await store.dispatch('downloadDocument', {
-      fichierNouveau: { name: 'document-titre' },
-    })
-
-    expect(fileSaver.saveAs).toHaveBeenCalled()
-    expect(messageAddMock).toHaveBeenCalled()
-    expect(state.loading).toEqual([])
-  })
-
-  test('télécharge du contenu', async () => {
-    const messageAddMock = vi.fn()
-    actions.messageAdd = messageAddMock
-    store = createStore({ state, actions, mutations })
-
-    const section = 'titres'
-    const params = { typeIds: ['m', 'w'] }
-
-    await store.dispatch('download', `/${section}?${params}`)
-
-    expect(fileSaver.saveAs).toHaveBeenCalledWith(`/apiUrl/${section}?${params}`)
-    expect(messageAddMock).toHaveBeenCalled()
-    expect(state.loading).toEqual([])
   })
 })

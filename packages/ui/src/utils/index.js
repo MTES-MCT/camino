@@ -33,28 +33,4 @@ const typenameOmit = (key, value) => (key === '__typename' ? undefined : value)
 
 const cloneAndClean = json => JSON.parse(JSON.stringify(json), typenameOmit)
 
-// récupère les paramètres depuis les préférences utilisateurs
-const paramsBuild = (apiParams, preferences) =>
-  apiParams.reduce((params, { id, type }) => {
-    let v = preferences[id]
-
-    if (type === 'strings' || type === 'objects') {
-      v = v && v.length ? v : null
-    } else if (type === 'number') {
-      v = v ? Number(v) : null
-    } else if (type === 'numbers') {
-      v = v && v.length ? v.map(Number) : null
-    } else {
-      v = v ? v.toString() : null
-    }
-
-    if (v) {
-      params[id] = v
-    }
-
-    return params
-  }, {})
-
-const cap = string => string[0].toUpperCase() + string.slice(1)
-
-export { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, paramsBuild, cap }
+export { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean }

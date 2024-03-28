@@ -1,4 +1,4 @@
-import { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, paramsBuild } from './index'
+import { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean } from './index'
 import { describe, expect, test } from 'vitest'
 
 // dateFormat
@@ -47,38 +47,4 @@ describe('textNumberFormat et textToNumberFormat', () => {
 describe('cloneAndClean', () => {
   test(`transforme un json en occultant les propriétés __typename`, () =>
     expect(cloneAndClean({ id: 'id', value: 'value', __typename: 'typename' })).toEqual({ id: 'id', value: 'value', __typename: undefined }))
-})
-
-describe('paramsBuild', () => {
-  const params = [
-    { id: 'page', type: 'number', min: 0 },
-    { id: 'intervalle', type: 'number', min: 10, max: 500 },
-    { id: 'colonne', type: 'string', elements: ['nom', 'type', 'abreviation'] },
-    { id: 'ordre', type: 'string', elements: ['asc', 'desc'] },
-    { id: 'typesIds', type: 'strings', elements: ['aaa', 'bbb'] },
-    { id: 'noms', type: 'string' },
-    { id: 'numbers', type: 'numbers' },
-  ]
-
-  const preferences = {
-    page: 1,
-    intervalle: 200,
-    ordre: 'asc',
-    colonne: 'type',
-    noms: 'one two',
-    typesIds: ['aaa'],
-    numbers: ['1', '2'],
-  }
-
-  test('formate les paramètres', () => {
-    expect(paramsBuild(params, preferences)).toEqual({
-      intervalle: 200,
-      ordre: 'asc',
-      page: 1,
-      colonne: 'type',
-      noms: 'one two',
-      typesIds: ['aaa'],
-      numbers: [1, 2],
-    })
-  })
 })
