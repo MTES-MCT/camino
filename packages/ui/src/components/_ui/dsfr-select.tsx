@@ -2,7 +2,7 @@ import { NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { isEventWithTarget, random } from '../../utils/vue-tsx-utils'
 import { HTMLAttributes } from 'vue'
 
-export type Item<T> = { id: T; label: string }
+export type Item<T> = { id: T; label: string; disabled?: boolean }
 type Props<T, Items extends Readonly<NonEmptyArray<Item<T>>>> = {
   id?: string
   items: Items
@@ -34,8 +34,8 @@ export const DsfrSelect = <T, Items extends Readonly<NonEmptyArray<Item<T>>>>(pr
         value={props.initialValue}
         onChange={event => (isEventWithTarget(event) ? props.valueChanged(event.target.value as T) : null)}
       >
-        {props.items.map(({ id, label }) => (
-          <option value={id} selected={props.initialValue === id}>
+        {props.items.map(({ id, label, disabled }) => (
+          <option value={id} selected={props.initialValue === id} disabled={disabled}>
             {label}
           </option>
         ))}

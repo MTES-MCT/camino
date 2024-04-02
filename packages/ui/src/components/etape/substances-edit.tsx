@@ -1,103 +1,126 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId, SubstanceLegale } from 'camino-common/src/static/substancesLegales'
-import { computed } from 'vue'
+import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { computed, ref } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { TagList } from '@/components/_ui/tag-list'
-import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapeFondamentale, EtapeWithHeritage } from 'camino-common/src/etape'
-import { ButtonIcon } from '../_ui/button-icon'
-import { Button } from '../_ui/button'
+import { EtapeFondamentale, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
+import {isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DsfrButtonIcon } from '../_ui/dsfr-button'
+import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
 
 export type Props = {
-  substances: (SubstanceLegaleId | undefined)[]
+  substances: SubstanceLegaleId[]
   heritageProps: EtapeWithHeritage<'substances', Pick<EtapeFondamentale, 'substances' | 'typeId' | 'date'>>['heritageProps']
   domaineId: DomaineId
+  updateSubstances: (substances: SubstanceLegaleId[]) => void
+  updateHeritage: (subtances: Props['heritageProps']['substances']) => void
 }
-export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'domaineId'], props => {
-  const substancesLength = computed<number>(() => props.substances?.filter(substanceId => substanceId).length)
+export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'domaineId', 'updateSubstances', 'updateHeritage'], props => {
 
-  const substancesByDomaine = computed<SubstanceLegale[]>(() => SubstancesLegales.filter(({ domaineIds }) => domaineIds.includes(props.domaineId)).sort((a, b) => a.nom.localeCompare(b.nom)))
+  const editedSubstances = ref<(SubstanceLegaleId | undefined)[]>(structuredClone(props.substances))
+  const heritageActif = ref<Props['heritageProps']['substances']>(props.heritageProps.substances)
+
+  const substancesLength = computed<number>(() => editedSubstances.value.filter(substanceId => substanceId).length)
+
+  const updateHeritage = (actif: Props['heritageProps']['substances']) => {
+    heritageActif.value = actif
+    props.updateHeritage(actif)
+  }
+
+
+
+  const substancesToDisplay = computed<SubstanceLegaleId[]>( ()=> {
+    return SubstancesLegales
+    .filter(({ domaineIds }) => domaineIds.includes(props.domaineId)).sort((a, b) => a.nom.localeCompare(b.nom))
+    .filter(({id}) => !editedSubstances.value.some(substanceId => substanceId === id))
+    .map(({id}) => id)
+
+  })
 
   const substanceNoms = computed<string[]>(() => {
     return props.heritageProps.substances.etape?.substances.filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId).map(substanceId => SubstancesLegale[substanceId].nom) || []
   })
 
   const substanceAdd = (): void => {
-    props.substances.push(undefined)
+    editedSubstances.value.push(undefined)
   }
 
-  const substanceRemove = (index: number): SubstanceLegaleId | undefined => {
-    return props.substances.splice(index, 1)[0]
+  const substanceRemove = (index: number) => (): SubstanceLegaleId | undefined =>  {
+    return editedSubstances.value.splice(index, 1)[0]
   }
 
-  const substanceMoveDown = (index: number): void => {
-    const substance = substanceRemove(index)
-    props.substances.splice(index + 1, 0, substance)
+  const substanceMoveDown = (index: number) => () => {
+    const substance = substanceRemove(index)()
+    editedSubstances.value.splice(index + 1, 0, substance)
   }
 
-  const substanceMoveUp = (index: number): void => {
-    const substance = substanceRemove(index)
-    props.substances.splice(index - 1, 0, substance)
+  const substanceMoveUp = (index: number) => () => {
+    const substance = substanceRemove(index)()
+    editedSubstances.value.splice(index - 1, 0, substance)
+  }
+
+  const substanceUpdate = (index: number) => (id: SubstanceLegaleId | null) => {
+    if (id !== null) {
+      editedSubstances.value[index] = id
+    }
   }
 
   return () => (
-    <div>
-      <h3 class="mb-s">Substances</h3>
+    <div class='dsfr'>
+      <h3>Substances</h3>
       <HeritageEdit
-        prop={props.heritageProps.substances}
+        prop={heritageActif.value}
         propId="substances"
         write={() => (
-          <>
-            {props.substances.map((_substance, n) => (
-              <div key={n}>
-                <div class="flex mb-s">
-                  <select v-model={props.substances[n]} class="p-s mr-s">
-                    {substancesByDomaine.value.map(s => (
-                      <option key={s.id} value={s.id} disabled={props.substances.some(substanceId => substanceId === s.id)}>
-                        {s.nom}
-                      </option>
-                    ))}
-                  </select>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            {editedSubstances.value.map((substance, n) => (
+              <div key={substance ?? ''}>
+                <div style={{display: 'flex'}} class='fr-mt-2w'>
+                  <SubstanceLegaleTypeahead initialValue={substance} substanceLegaleIds={isNotNullNorUndefined(substance) ? [...substancesToDisplay.value, substance] : substancesToDisplay.value} substanceLegaleSelected={substanceUpdate(n)} />
                   {substancesLength.value && n + 1 < substancesLength.value ? (
-                    <ButtonIcon class="btn-border py-s px-m rnd-l-xs" onClick={() => substanceMoveDown(n)} title="Diminuer l’importance de la substance" icon="move-down" />
+                    <DsfrButtonIcon onClick={substanceMoveDown(n)}
+                    title={`Diminuer l’importance de la substance ${isNotNullNorUndefined(substance) ? SubstancesLegale[substance].nom : ''}`}
+                    buttonType='secondary'
+                    class='fr-ml-2w'
+                    icon="fr-icon-arrow-down-fill"/>
                   ) : null}
 
-                  {substancesLength.value && n > 0 && props.substances[n] ? (
-                    <ButtonIcon
-                      class={['btn-border', 'py-s', 'px-m', !(substancesLength.value && n + 1 < substancesLength.value) ? 'rnd-l-xs' : null]}
-                      onClick={() => substanceMoveUp(n)}
-                      title="Augmenter l’importance de la substances"
-                      icon="move-up"
+                  {substancesLength.value && n > 0 &&isNotNullNorUndefined(substance) ? (
+                    <DsfrButtonIcon
+                      onClick={substanceMoveUp(n)}
+                      title={`Augmenter l’importance de la substance ${ SubstancesLegale[substance].nom}`}
+                      buttonType='secondary'
+                      icon="fr-icon-arrow-up-fill"
+                      class='fr-ml-2w'
                     />
                   ) : null}
 
-                  <ButtonIcon
-                    class={['btn', 'py-s', 'px-m', 'rnd-r-xs', !props.substances[n] || substancesLength.value === 1 ? 'rnd-l-xs' : null]}
-                    onClick={() => substanceRemove(n)}
-                    title="Supprimer la substance"
-                    icon="minus"
+                  <DsfrButtonIcon
+                    onClick={substanceRemove(n)}
+                    title={`Supprimer la substance ${isNotNullNorUndefined(substance) ? SubstancesLegale[substance].nom : ''}`}
+                    buttonType='secondary'
+                    icon="fr-icon-delete-bin-line"
+                    class='fr-ml-2w'
                   />
                 </div>
               </div>
             ))}
 
-            {props.substances?.every(substanceId => !!substanceId) ? (
-              <Button
-                class="btn small rnd-xs py-s px-m full-x flex mb-s"
+            {editedSubstances.value.every(substanceId => isNotNullNorUndefined(substanceId)) ? (
+              <DsfrButtonIcon
                 onClick={substanceAdd}
+                buttonType='primary'
+                icon='fr-icon-add-line'
                 title="Ajouter une substance"
-                render={() => (
-                  <>
-                    <span class="mt-xxs">Ajouter une substance</span>
-                    <Icon name="plus" size="M" class="flex-right" aria-hidden="true" />
-                  </>
-                )}
+                class='fr-mt-2w'
+                style={{alignSelf: 'end'}}
               />
             ) : null}
-          </>
+          </div>
         )}
         read={() => <TagList class="mb-s" elements={substanceNoms.value} />}
+        updateHeritage={updateHeritage}
       />
     </div>
   )

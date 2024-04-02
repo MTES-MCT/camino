@@ -68,7 +68,7 @@ import { InputDate } from './_ui/input-date'
 import Edit from './etape/edit.vue'
 import { getCurrent } from 'camino-common/src/date'
 import { PureFormSaveBtn } from './etape/pure-form-save-btn'
-import DeposePopup from './etape/depose-popup.vue'
+import { DeposeEtapePopup } from './demarche/depose-etape-popup'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -80,7 +80,7 @@ import { userKey, entreprisesKey } from '@/moi'
 
 // TODO 2023-06-14 Revoir comment est gérer le droit de déposer l’étape
 export default {
-  components: { Edit, InputDate, PureFormSaveBtn },
+  components: { Edit, InputDate, PureFormSaveBtn, DeposeEtapePopup },
 
   beforeRouteLeave(_, __, next) {
     if (this.isFormDirty && !confirm(this.promptMsg)) {

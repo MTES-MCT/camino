@@ -5,7 +5,7 @@ import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 
 import titreUpdateTask from '../../business/titre-update.js'
 import { titreDemarcheUpdate } from '../../business/titre-demarche-update.js'
-import titreEtapeUpdateTask from '../../business/titre-etape-update.js'
+import {titreEtapeUpdateTask} from '../../business/titre-etape-update.js'
 import { userSuper } from '../../database/user-super.js'
 import { User, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'

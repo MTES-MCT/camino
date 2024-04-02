@@ -15,6 +15,7 @@ type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   write: () => JSX.Element
   read: (heritagePropEtape: T | undefined) => JSX.Element
   class?: HTMLAttributes['class']
+  updateHeritage: (update: HeritageProp<T>) => void
 }
 export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T>) => {
   const hasHeritage = computed<boolean>(() => {
@@ -25,6 +26,16 @@ export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T ext
     return props.prop.actif ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape?.date)})` : undefined
   })
 
+  const updateHeritage = () => {
+    const etape = props.prop.etape
+    const newHeritage = !props.prop.actif
+    if (!newHeritage) {
+      props.updateHeritage({etape, actif: newHeritage})
+    } else if (isNotNullNorUndefined(etape)) {
+      props.updateHeritage({etape, actif: newHeritage})
+    }
+  }
+
   return () => (
     <div class={['mb-s', props.class]}>
       {!props.prop.actif ? props.write() : <div>{hasHeritage.value ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
@@ -33,9 +44,7 @@ export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T ext
         <div class="dsfr">
           <DsfrToggle
             initialValue={props.prop.actif}
-            valueChanged={() => {
-              props.prop.actif = !props.prop.actif
-            }}
+            valueChanged={updateHeritage}
             legendLabel="Hériter de l’étape précédente"
             legendHint={legendHint.value}
           />
@@ -46,4 +55,4 @@ export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T ext
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class']
+HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class', 'updateHeritage']

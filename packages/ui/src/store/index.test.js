@@ -1,14 +1,11 @@
 import { actions, mutations } from './index'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
-import * as fileSaver from 'file-saver'
-import * as router from '../router'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('file-saver', () => ({ saveAs: vi.fn() }))
 vi.mock('./titre', () => ({ default: { titre: vi.fn() } }))
 vi.mock('./titre-creation', () => ({ default: { titreCreation: vi.fn() } }))
-vi.mock('./titre-etape', () => ({ default: { titreEtape: vi.fn() } }))
 vi.mock('./titre-etape-edition', () => ({ default: { titreEtape: vi.fn() } }))
 vi.mock('./titres-demarches', () => ({ default: { titresDemarches: vi.fn() } }))
 vi.mock('./utilisateur', () => ({ default: { utilisateur: vi.fn() } }))

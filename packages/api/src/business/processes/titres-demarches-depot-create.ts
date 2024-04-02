@@ -3,7 +3,7 @@ import type { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types.
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
-import titreEtapeUpdateTask from '../titre-etape-update.js'
+import {titreEtapeUpdateTask} from '../titre-etape-update.js'
 import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email.js'
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { titreUrlGet } from '../utils/urls-get.js'

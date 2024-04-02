@@ -6,15 +6,6 @@ const state = {
   elementsSelectedIndex: {},
 }
 
-const idsFind = (element, definition) =>
-  definition.ids
-    ? definition.ids.reduce((ids, id) => {
-        ids[id] = element[id]
-
-        return ids
-      }, {})
-    : { id: element.id }
-
 const getters = {
   elements: state => id => state.elementsIndex[id],
   elementSelected: state => id => state.elementsSelectedIndex[id],

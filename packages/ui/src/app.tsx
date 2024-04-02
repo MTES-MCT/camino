@@ -67,6 +67,7 @@ export const App = defineComponent(() => {
 
       <Transition name="fade">{isNotNullNorUndefined(popup.value.component) ? <div class="absolute full bg-inverse-alpha" style="z-index: 100002" /> : null}</Transition>
 
+{/* FIXME kill it with fire */}
       <Transition name="slide-top">{isNotNullNorUndefined(popup.value.component) ? <popup.value.component {...popup.value.props} /> : null}</Transition>
 
       <Transition name="fade">

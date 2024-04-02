@@ -3,7 +3,7 @@ import { GraphQLUpload } from 'graphql-upload'
 
 import { titres, titreCreer, titre } from './resolvers/titres.js'
 
-import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer } from './resolvers/titres-etapes.js'
+import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer } from './resolvers/titres-etapes.js'
 
 import { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
@@ -90,7 +90,6 @@ export default {
   etapeCreer,
   etapeModifier,
   etapeSupprimer,
-  etapeDeposer,
   activiteDeposer,
   newsletterInscrire,
   titreDemandeCreer,

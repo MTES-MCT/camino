@@ -57,10 +57,3 @@ export const etapeModifier = apiGraphQLFetch(gql`
   }
 `)
 
-export const etapeDeposer = apiGraphQLFetch(gql`
-  mutation EtapeDeposer($id: ID!) {
-    etapeDeposer(id: $id) {
-      slug
-    }
-  }
-`)

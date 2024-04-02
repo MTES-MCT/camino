@@ -24,3 +24,10 @@ export const AlreadySelectedItem: StoryFn = () => <DsfrSelect id="select" legend
 
 export const Disabled: StoryFn = () => <DsfrSelect id="select" disabled={true} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
 export const Required: StoryFn = () => <DsfrSelect id="select" required={true} legend={{ main: 'label de cadix' }} items={items} initialValue={'id1'} valueChanged={onvalueChangedAction} />
+
+
+export const ElementDisabled: StoryFn = () => <DsfrSelect id="select" required={true} legend={{ main: 'label de cadix' }} items={[
+  { id: 'id1', label: 'premier label' },
+  { id: 'id2', label: 'second label' },
+  { id: 'id3', label: 'troisième label désactivé', disabled: true },
+]} initialValue={'id1'} valueChanged={onvalueChangedAction} />

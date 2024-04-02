@@ -1,11 +1,9 @@
 import { shallowRef } from 'vue'
 import { createStore } from 'vuex'
-import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
 import meta from './meta'
 
 const modules = {
-  titreEtape,
   titreEtapeEdition,
   meta,
 }
