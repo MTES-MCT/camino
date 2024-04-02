@@ -4,7 +4,6 @@ import {
   checkboxElementValidator,
   checkboxesElementValidator,
   dateElementValidator,
-  fileElementValidator,
   numberElementValidator,
   radioElementValidator,
   selectElementWithOptionsValidator,
@@ -16,9 +15,6 @@ import { isNotNullNorUndefined } from './typescript-tools.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
-const fileElementWithValueValidator = fileElementValidator.extend({ value: z.string().nullable() })
-type FileElementWithValue = z.infer<typeof fileElementWithValueValidator>
-
 const textElementWithValueValidator = textElementValidator.extend({ value: z.string().nullable() })
 
 const urlElementWithValueValidator = urlElementValidator.extend({ value: z.string().nullable() })
@@ -27,6 +23,7 @@ const numberElementWithValueValidator = numberElementValidator.extend({ value: z
 type NumberElementWithValue = z.infer<typeof numberElementWithValueValidator>
 
 const radioElementWithValueValidator = radioElementValidator.extend({ value: z.boolean().nullable() })
+type RadioElementWithValue = z.infer<typeof radioElementWithValueValidator>
 
 const checkboxElementWithValueValidator = checkboxElementValidator.extend({ value: z.boolean().nullable() })
 
@@ -37,7 +34,6 @@ const selectElementWithValueValidator = selectElementWithOptionsValidator.extend
 })
 
 const elementWithValueValidator = z.union([
-  fileElementWithValueValidator,
   dateElementWithValueValidator,
   textElementWithValueValidator,
   urlElementWithValueValidator,
@@ -50,12 +46,11 @@ const elementWithValueValidator = z.union([
 
 export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
-export const isFileElement = (element: ElementWithValue): element is FileElementWithValue => {
-  return element.type === 'file'
-}
-
 export const isNumberElement = (element: ElementWithValue): element is NumberElementWithValue => {
   return element.type === 'number' || element.type === 'integer'
+}
+export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
+  return element.type === 'radio'
 }
 
 export const sectionWithValueValidator = z.object({ id: z.string(), nom: z.string().optional(), elements: z.array(elementWithValueValidator) })

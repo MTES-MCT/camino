@@ -932,7 +932,6 @@ const basicElementValidator = z.object({
 })
 
 export const dateElementValidator = basicElementValidator.extend({ type: z.literal('date') })
-export const fileElementValidator = basicElementValidator.extend({ type: z.literal('file') })
 export const textElementValidator = basicElementValidator.extend({ type: z.enum(['text', 'textarea']) })
 export const urlElementValidator = basicElementValidator.extend({ type: z.literal('url') })
 export const numberElementValidator = basicElementValidator.extend({ type: z.enum(['number', 'integer']), uniteId: uniteIdValidator.optional() })
@@ -957,7 +956,6 @@ const selectElementValidator = z.union([selectElementWithMetasValidator, selectE
 type SelectElement = z.infer<typeof selectElementValidator>
 
 const sectionsElementValidator = z.union([
-  fileElementValidator,
   dateElementValidator,
   textElementValidator,
   urlElementValidator,

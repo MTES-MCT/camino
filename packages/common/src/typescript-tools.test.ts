@@ -21,6 +21,8 @@ test('isNullOrUndefinedOrEmpty', () => {
   expect(isNullOrUndefinedOrEmpty(undefined)).toBe(true)
   expect(isNullOrUndefinedOrEmpty([])).toBe(true)
   expect(isNullOrUndefinedOrEmpty([1])).toBe(false)
+  expect(isNullOrUndefinedOrEmpty('  ')).toBe(true)
+  expect(isNullOrUndefinedOrEmpty(' a ')).toBe(false)
 })
 
 test('isNotNullNorUndefinedNorEmpty', () => {
@@ -28,6 +30,8 @@ test('isNotNullNorUndefinedNorEmpty', () => {
   expect(isNotNullNorUndefinedNorEmpty(undefined)).toBe(false)
   expect(isNotNullNorUndefinedNorEmpty([])).toBe(false)
   expect(isNotNullNorUndefinedNorEmpty([1])).toBe(true)
+  expect(isNotNullNorUndefinedNorEmpty('  ')).toBe(false)
+  expect(isNotNullNorUndefinedNorEmpty(' a ')).toBe(true)
 })
 
 test('onlyUnique', () => {

@@ -1,6 +1,5 @@
 import { SectionElement } from './new-section-element'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { action } from '@storybook/addon-actions'
 import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
@@ -9,11 +8,8 @@ const meta: Meta = {
 }
 export default meta
 
-const fileDownload = action('fileDownload')
-
 export const Text: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'text',
@@ -26,7 +22,6 @@ export const Text: StoryFn = () => (
 
 export const GranulatsMarins: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'volumeGranulatsExtrait',
       type: 'number',
@@ -39,7 +34,6 @@ export const GranulatsMarins: StoryFn = () => (
 
 export const JORF: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'jorf',
       type: 'text',
@@ -52,7 +46,6 @@ export const JORF: StoryFn = () => (
 
 export const Url: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'url',
@@ -63,22 +56,8 @@ export const Url: StoryFn = () => (
   />
 )
 
-export const File: StoryFn = () => (
-  <SectionElement
-    fileDownload={fileDownload}
-    element={{
-      id: 'id',
-      type: 'file',
-      nom: 'Un fichier',
-      description: 'description',
-      value: 'superfichier.pdf',
-    }}
-  />
-)
-
 export const Date: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'date',
@@ -91,7 +70,6 @@ export const Date: StoryFn = () => (
 
 export const Checkboxes: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'checkboxes',
@@ -109,7 +87,6 @@ export const Checkboxes: StoryFn = () => (
 
 export const Select: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'select',
@@ -127,7 +104,6 @@ export const Select: StoryFn = () => (
 
 export const Number: StoryFn = () => (
   <SectionElement
-    fileDownload={fileDownload}
     element={{
       id: 'id',
       type: 'number',
@@ -140,7 +116,6 @@ export const Number: StoryFn = () => (
 export const Radio: StoryFn = () => (
   <div>
     <SectionElement
-      fileDownload={fileDownload}
       element={{
         id: 'id',
         type: 'radio',
@@ -149,7 +124,6 @@ export const Radio: StoryFn = () => (
       }}
     />
     <SectionElement
-      fileDownload={fileDownload}
       element={{
         id: 'id',
         type: 'radio',

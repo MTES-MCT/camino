@@ -42,24 +42,18 @@
         </option>
       </select>
     </div>
-
-    <div v-else-if="element.type === 'file'">
-      <SectionElementFileEdit :contenu="contenu" :elementId="element.id" @update:contenu="newValue => emits('update:contenu', newValue)" />
-    </div>
   </div>
 </template>
 
 <script>
 import { InputDate } from '../_ui/input-date'
 import { InputNumber } from '../_ui/input-number'
-import SectionElementFileEdit from './section-element-file-edit.vue'
 import { numberFormat } from 'camino-common/src/number'
 
 export default {
   components: {
     InputDate,
     InputNumber,
-    SectionElementFileEdit,
   },
 
   props: {
