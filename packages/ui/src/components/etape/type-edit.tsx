@@ -18,8 +18,8 @@ type Props = {
     typeId: EtapeTypeId | null
     id?: EtapeId | null
     date: CaminoDate
-    titreDemarcheId: DemarcheId
   }
+  demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
 }
@@ -58,7 +58,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
   )
 }
 
-export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange'], props => {
+export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId'], props => {
   const etapeTypeSearch = ref<string>('')
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
@@ -69,7 +69,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
     () => props.etape.date,
     async newEtapeDate => {
       try {
-        possibleEtapes.value = { status: 'LOADED', value: await props.apiClient.getEtapesTypesEtapesStatuts(props.etape.titreDemarcheId, props.etape?.id ?? null, newEtapeDate) }
+        possibleEtapes.value = { status: 'LOADED', value: await props.apiClient.getEtapesTypesEtapesStatuts(props.demarcheId, props.etape?.id ?? null, newEtapeDate) }
         if (etapeTypeId.value) {
           possibleStatuts.value = possibleEtapes.value.value.filter(possible => possible.etapeTypeId === etapeTypeId.value).map(({ etapeStatutId }) => etapeStatutId)
         }

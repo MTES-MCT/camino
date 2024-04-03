@@ -1,4 +1,4 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
 import { dateFormat } from '../../utils/index'
 import { Tag } from '../_ui/tag'
 import { InputDate } from '../_ui/input-date'
@@ -10,53 +10,73 @@ import { CaminoDate } from 'camino-common/src/date'
 import { SubstancesEdit } from './substances-edit'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
-import { Etape, EtapeEntreprise, EtapeFondamentale, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
+import { EtapeEntreprise, EtapeFondamentale, HeritageProp } from 'camino-common/src/etape'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { watch, computed, ref } from 'vue'
+import { watch, computed, ref, DeepReadonly } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
-type EtapeFondamentaleEdit = Pick<EtapeFondamentale, 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'duree' | 'heritageProps'>
+export type EtapeFondamentaleEdit = Pick<EtapeFondamentale, 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'duree' | 'heritageProps'>
 export interface Props {
-  etape: EtapeFondamentaleEdit & Pick<EtapeFondamentale, 'typeId'>
+  etape: DeepReadonly<EtapeFondamentaleEdit & Pick<EtapeFondamentale, 'typeId'>>
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
   user: User
   entreprises: Entreprise[]
-  completeUpdate: (etape: EtapeFondamentaleEdit, complete: boolean) => void
+  completeUpdate: (etape: DeepReadonly<EtapeFondamentaleEdit>, complete: boolean) => void
 }
 export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate'], (props) => {
-  const ans = ref<number>(isNotNullNorUndefined(props.etape.duree) && props.etape.duree > 0 ? Math.floor(props.etape.duree / 12) : 0)
-  const mois = ref<number>(isNotNullNorUndefined(props.etape.duree) && props.etape.duree > 0 ? Math.floor(props.etape.duree % 12) : 0)
+  
+  const [editedEtape, setEditedEtape] = useState(props.etape)
 
-  const editedEtape = ref<EtapeFondamentaleEdit>(structuredClone(props.etape))
+  const ans = ref<number>(isNotNullNorUndefined(editedEtape.value.duree) && editedEtape.value.duree > 0 ? Math.floor(editedEtape.value.duree / 12) : 0)
+  const mois = ref<number>(isNotNullNorUndefined(editedEtape.value.duree) && editedEtape.value.duree > 0 ? Math.floor(editedEtape.value.duree % 12) : 0)
+  // // TODO 2024-04-03 ceci devrait disparaitre le jour où on retravaille l'héritage props
+  // watch(() => props.etape, () => {
+  //   editedEtape.value = props.etape
+  // })
 
-  const entreprisesDisabled = computed<EntrepriseId[]>(() => [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id))
+  const entreprisesDisabled = computed<EntrepriseId[]>(() => [...editedEtape.value.amodiataires, ...editedEtape.value.titulaires].map(({ id }) => id))
 
   const dateDebutChanged = (dateDebut: CaminoDate | null) => {
-    editedEtape.value = {...editedEtape.value, dateDebut}
+    setEditedEtape({...editedEtape.value, dateDebut})
   }
 
   const dateFinChanged = (dateFin: CaminoDate | null) => {
-    editedEtape.value = {...editedEtape.value, dateFin}
+    setEditedEtape({...editedEtape.value, dateFin})
+  }
+  const substancesChanged = (substances: DeepReadonly<SubstanceLegaleId[]>) => {
+    setEditedEtape({...editedEtape.value, substances})
+  }
+  const updateSubstancesHeritage = (substancesHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "substances" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, substances: substancesHeritage}})
   }
 
-  const updateSubstancesHeritage = (heritage: HeritageProp<Pick<EtapeFondamentale, "substances" | "typeId" | "date">>) => {
-
-        editedEtape.value = {...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, substances: heritage}}
-
+  const updateDureeHeritage = (dureeHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "duree" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, duree: dureeHeritage}})
+  }
+  const updateDateDebutHeritage = (dateDebutHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "dateDebut" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, dateDebut: dateDebutHeritage}})
+  }
+  const updateDateFinHeritage = (dateFinHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "dateFin" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, dateFin: dateFinHeritage}})
+  }
+  const updateTitulairesHeritage = (titulairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "titulaires" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, titulaires: titulairesHeritage}})
+  }
+  const updateAmodiatairesHeritage = (amodiatairesHeritage: DeepReadonly<HeritageProp<Pick<EtapeFondamentale, "amodiataires" | "typeId" | "date">>>) => {
+        setEditedEtape({...editedEtape.value, heritageProps: {...editedEtape.value.heritageProps, amodiataires: amodiatairesHeritage}})
   }
 
-  const updateSubstances = () => {
-    // FIXME
-  }
 
-  watch(() => editedEtape, () => {
-    const complete = props.etape.typeId !== ETAPES_TYPES.demande || (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
+
+  watch(() => editedEtape.value, () => {
+    const complete = editedEtape.value.typeId !== ETAPES_TYPES.demande || (editedEtape.value.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
 
     props.completeUpdate(editedEtape.value, complete),
     {immediate: true}
@@ -65,24 +85,24 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
   const dureeOptionalCheck = computed<boolean>(() => {
-    return titreEtapesDureeOptionalCheck(props.etape.typeId, props.demarcheTypeId, props.titreTypeId)
+    return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
   })
 
 
-  const titulairesUpdate = (titulaires: EtapeEntreprise[]) => {
+  const titulairesUpdate = (titulaires: DeepReadonly<EtapeEntreprise[]>) => {
     const newTitulaires = titulaires.map(titulaire => ({
       id: titulaire.id,
       operateur: titulaire.operateur,
     }))
-    editedEtape.value = {...editedEtape.value, titulaires: newTitulaires}
+    setEditedEtape({...editedEtape.value, titulaires: newTitulaires})
   }
 
-  const amodiatairesUpdate = (amodiataires: EtapeEntreprise[]) => {
+  const amodiatairesUpdate = (amodiataires: DeepReadonly<EtapeEntreprise[]>) => {
     const newAmodiataires = amodiataires.map(amodiataire => ({
       id: amodiataire.id,
       operateur: amodiataire.operateur,
     }))
-    editedEtape.value = {...editedEtape.value, amodiataires: newAmodiataires}
+    setEditedEtape({...editedEtape.value, amodiataires: newAmodiataires})
   }
 
   const getEntrepriseNom = (etapeEntreprise: EtapeEntreprise): string => {
@@ -96,7 +116,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   }
 
   const updateDuree = (): void => {
-    editedEtape.value = {...editedEtape.value, duree: mois.value + ans.value * 12}
+    setEditedEtape({...editedEtape.value, duree: mois.value + ans.value * 12})
   }
 
   return () => (
@@ -109,6 +129,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           </div>
 
           <HeritageEdit
+            updateHeritage={updateDureeHeritage}
             prop={props.etape.heritageProps.duree}
             class="tablet-blob-2-3"
             propId="duree"
@@ -151,7 +172,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </div>
       ) : null}
 
-      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user) ? (
+      {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
         <>
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -159,6 +180,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               <p class="h6 italic mb-0">Optionnel</p>
             </div>
             <HeritageEdit
+              updateHeritage={updateDateDebutHeritage}
               prop={props.etape.heritageProps.dateDebut}
               class="tablet-blob-2-3"
               propId="dateDebut"
@@ -169,7 +191,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </>
       ) : null}
 
-      {canEditDates(props.titreTypeId, props.demarcheTypeId, props.etape.typeId, props.user) ? (
+      {canEditDates(props.titreTypeId, props.demarcheTypeId, editedEtape.value.typeId, props.user) ? (
         <>
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -177,6 +199,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
               <p class="h6 italic mb-0">Optionnel</p>
             </div>
             <HeritageEdit
+              updateHeritage={updateDateFinHeritage}
               prop={props.etape.heritageProps.dateFin}
               class="tablet-blob-2-3"
               propId="dateFin"
@@ -192,7 +215,8 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           <h3 class="mb-s">Titulaires</h3>
           <p class="h6 italic">Optionnel</p>
           <HeritageEdit
-            prop={props.etape.heritageProps.titulaires}
+            updateHeritage={updateTitulairesHeritage}
+            prop={editedEtape.value.heritageProps.titulaires}
             propId="titulaires"
             write={() => (
               <AutocompleteEntreprise
@@ -223,7 +247,8 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           <p class="h6 italic">Optionnel</p>
 
           <HeritageEdit
-            prop={props.etape.heritageProps.amodiataires}
+            updateHeritage={updateAmodiatairesHeritage}
+            prop={editedEtape.value.heritageProps.amodiataires}
             propId="amodiataires"
             write={() => (
               <AutocompleteEntreprise
@@ -248,7 +273,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         </>
       ) : null}
 
-      <SubstancesEdit substances={props.etape.substances} heritageProps={props.etape.heritageProps} domaineId={domaineId.value} updateHeritage={updateSubstancesHeritage} updateSubstances={updateSubstances}/>
+      <SubstancesEdit substances={props.etape.substances} heritageProps={props.etape.heritageProps} domaineId={domaineId.value} updateHeritage={updateSubstancesHeritage} updateSubstances={substancesChanged}/>
     </div>
   )
 })

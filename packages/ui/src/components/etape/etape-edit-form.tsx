@@ -1,14 +1,14 @@
-import { computed, defineComponent, onMounted, ref } from "vue"
+import { DeepReadonly, computed, defineComponent, onMounted, ref, watch } from "vue"
 
 import { TypeEdit } from './type-edit'
 import { Bloc } from './bloc'
 import { DateEdit } from './date-edit'
-import { FondamentalesEdit } from './fondamentales-edit'
+import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
-import { ApiClient, apiClient } from '../../api/api-client'
+import { ApiClient } from '../../api/api-client'
 import { Section, getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { EtapeType, EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
@@ -20,14 +20,17 @@ import { DemarcheTypeId } from "camino-common/src/static/demarchesTypes"
 import { TitreTypeId } from "camino-common/src/static/titresTypes"
 import { TitreSlug } from "camino-common/src/validators/titres"
 import { SDOMZoneId } from "camino-common/src/static/sdom"
-import { DeepReadonly, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from "camino-common/src/typescript-tools"
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from "camino-common/src/typescript-tools"
 import { Entreprise, EntrepriseDocumentId } from "camino-common/src/entreprise"
 import { AsyncData } from "../../api/client-rest"
 import { CaminoDate } from "camino-common/src/date"
 import { EtapeStatutId } from "camino-common/src/static/etapesStatuts"
+import { DemarcheId } from "camino-common/src/demarche"
+import { useState } from "@/utils/vue-tsx-utils"
 
-type Props =   {
-  etape: Etape,
+export type Props = {
+  etape: DeepReadonly<Etape>,
+  demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   titreSlug: TitreSlug,
@@ -35,45 +38,82 @@ type Props =   {
   etapeIsDemandeEnConstruction: boolean
   sdomZoneIds: SDOMZoneId[],
   entreprises: Entreprise[],
-  apiClient: Pick<ApiClient, 'getEntrepriseDocuments'>,
-  completeUpdate: (etape: Etape, complete: boolean) => void,
+  apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'getEtapesTypesEtapesStatuts' | 'getEtapeHeritage'>,
+  completeUpdate: (etape: DeepReadonly<Etape>, complete: boolean) => void,
   alertesUpdate: () => void
 }
 
 
 export const EtapeEditForm = defineComponent<Props>((props) => {
 
-  onMounted(() => {
-    props.completeUpdate(props.etape, complete.value)
+  const [etape, setEtape] = useState(props.etape)
+
+  onMounted(async () => {
+    props.completeUpdate(etape.value, complete.value)
+    await reloadHeritage()
   })
 
-  const heritageData = ref<AsyncData<unknown>>({status: 'LOADING'})
-  const fondamentalesComplete = ref<boolean>( false)
-      const perimetreComplete = ref<boolean>( false)
-      const sectionsComplete = ref<boolean>( false)
-      const documentsComplete = ref<boolean>( false)
-      const entrepriseDocumentsComplete = ref<boolean>( false)
-      const decisionsAnnexesComplete = ref<boolean>( false)
+  watch(() => etape.value, () => {
+    props.completeUpdate(etape.value, complete.value)
+  })
 
-  const tde = computed<{titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId | null}>(() => {
+  const reloadHeritage = async () => {
+    if (isNotNullNorUndefined(etape.value.date) && isNotNullNorUndefined(etape.value.typeId)) {
+
+    
+    try {
+      heritageData.value = { status: 'LOADING' }
+
+      
+      const value = await props.apiClient.getEtapeHeritage(props.demarcheId, etape.value.date, etape.value.typeId)
+      heritageData.value = {status: 'LOADED', value}
+    } catch (e: any) {
+      console.error('error', e)
+      heritageData.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
+      }
+    }
+  }
+  }
+
+
+  const heritageData = ref<AsyncData<unknown>>({ status: 'LOADING' })
+  const fondamentalesComplete = ref<boolean>(false)
+  const perimetreComplete = ref<boolean>(false)
+  const sectionsComplete = ref<boolean>(false)
+  const documentsComplete = ref<boolean>(false)
+  const entrepriseDocumentsComplete = ref<boolean>(false)
+  const decisionsAnnexesComplete = ref<boolean>(false)
+
+  const tde = computed<{ titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId | null }>(() => {
     return {
       titreTypeId: props.titreTypeId,
       demarcheTypeId: props.demarcheTypeId,
-      etapeTypeId: props.etape.typeId ?? null,
+      etapeTypeId: etape.value.typeId ?? null,
     }
   })
 
+  
+
+  const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>, complete: boolean) => {
+    fondamentalesComplete.value = complete
+    console.log('plop')
+    setEtape({...etape.value, ...etapeFondamentale})
+    // etape.value = {...etape.value, ...etapeFondamentale}
+  }
+
   const titulairesAndAmodiataires = computed<Entreprise[]>(() => {
-    const titulaireIds = props.etape.titulaires.map(({ id }) => id)
-    const amodiatairesIds = props.etape.amodiataires.map(({ id }) => id)
+    const titulaireIds = etape.value.titulaires.map(({ id }) => id)
+    const amodiatairesIds = etape.value.amodiataires.map(({ id }) => id)
 
     return props.entreprises.filter(({ id }) => titulaireIds.includes(id) || amodiatairesIds.includes(id))
   })
 
 
-  const etapeType = computed<EtapeType | null> (() => {
-    if( isNotNullNorUndefined(props.etape.typeId)){
-      return EtapesTypes[props.etape.typeId]
+  const etapeType = computed<EtapeType | null>(() => {
+    if (isNotNullNorUndefined(etape.value.typeId)) {
+      return EtapesTypes[etape.value.typeId]
     }
     return null
   })
@@ -84,7 +124,7 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
       return true
     }
 
-    if (isNullOrUndefined(props.etape.date) || isNotNullNorUndefined(props.etape.typeId)) {
+    if (isNullOrUndefined(etape.value.date) || isNullOrUndefined(etape.value.typeId)) {
       return false
     }
 
@@ -92,7 +132,7 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
       return true
     }
 
-    return isNotNullNorUndefined( props.etape.statutId)
+    return isNotNullNorUndefined(etape.value.statutId)
   })
 
   const complete = computed<boolean>(() => {
@@ -135,13 +175,13 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
     const steps = []
 
     if (userIsAdmin.value) {
-      steps.push(        'type')
+      steps.push('type')
     }
 
     if (heritageData.value.status === 'LOADED' && isNotNullNorUndefined(etapeType.value)) {
       if (etapeType.value.fondamentale) {
-        steps.push(         'fondamentales')
-        steps.push(          'points')
+        steps.push('fondamentales')
+        steps.push('points')
       }
       if (isNotNullNorUndefinedNorEmpty([...sections.value])) {
         steps.push('sections')
@@ -149,18 +189,18 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
       const hasDocuments = getDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id).length > 0
 
       if (hasDocuments) {
-        steps.push(          'documents')
+        steps.push('documents')
       }
 
-    const hasEntrepriseDocuments =  getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id).length > 0
+      const hasEntrepriseDocuments = getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id).length > 0
 
-    if (hasEntrepriseDocuments) {
-      steps.push('entrepriseDocuments')
-    }
+      if (hasEntrepriseDocuments) {
+        steps.push('entrepriseDocuments')
+      }
 
-    if (hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id, props.etape.statutId)) {
-      steps.push('decisionsAnnexes',)
-    }
+      if (hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id, etape.value.statutId)) {
+        steps.push('decisionsAnnexes')
+      }
 
     }
 
@@ -203,12 +243,12 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
 
   const sections = computed<DeepReadonly<Section[]>>(() => {
 
-    if( isNullOrUndefined(props.etape.typeId)){
+    if (isNullOrUndefined(etape.value.typeId)) {
       return []
     }
 
     try {
-      return getSections(props.titreTypeId, props.demarcheTypeId, props.etape.typeId)
+      return getSections(props.titreTypeId, props.demarcheTypeId, etape.value.typeId)
     } catch (e) {
       return []
     }
@@ -220,34 +260,21 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
 
   const documentsCompleteUpdate = (etapeDocuments: EtapeDocument[], newDocumentsComplete: boolean) => {
     documentsComplete.value = newDocumentsComplete
-    props.completeUpdate({...props.etape, etapeDocuments}, complete.value)
-  },
+    props.completeUpdate({ ...etape.value, etapeDocuments }, complete.value)
+  }
 
   const entrepriseDocumentsCompleteUpdate = (entrepriseDocumentIds: EntrepriseDocumentId[], newEntrepriseDocumentsComplete: boolean) => {
     entrepriseDocumentsComplete.value = newEntrepriseDocumentsComplete
-    props.completeUpdate({...props.etape, entrepriseDocumentIds}, complete.value)
-  },
-
-  const onDateChanged = (date: CaminoDate) => {
-    props.completeUpdate({...props.etape, date}, complete.value)
+    props.completeUpdate({ ...etape.value, entrepriseDocumentIds }, complete.value)
   }
 
-
-  const onEtapeChange =  (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => {
-    //FIXME
-        //   if (this.etape.typeId !== etapeTypeId) {
-    //     await this.$store.dispatch('titreEtapeEdition/heritageGet', {
-    //       ...this.tde,
-    //       etapeTypeId,
-    //     })
-    //   }
-    //   // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
-    //   // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
-    //   this.etape.statutId = etapeStatutId
-    //   this.etape.typeId = etapeTypeId
-    //   this.$emit('type-complete-update', this.typeComplete)
-    //   this.$emit('update:etape', this.etape)
+  const onDateChanged = async (date: CaminoDate | null) => {
+    if (isNotNullNorUndefined(date)) {
+      setEtape({...etape.value, date})
+      await reloadHeritage()
+    }
   }
+
 
 
 
@@ -258,100 +285,120 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
 
 
 
-return () =>
-  <div class="mb">
-    { stepType.value ? <Bloc step={{name: 'Type', help: null}} complete={typeComplete.value}>
-      { userIsAdmin.value ? <DateEdit date={props.etape.date} onDateChanged={onDateChanged} /> : null}
+  const onEtapeTypeChange = async (etapeStatutId: EtapeStatutId | null, etapeTypeId: EtapeTypeId | null) => {
 
-      <TypeEdit etape={etape} apiClient={apiClient} onEtapeChange={onEtapeTypeChange} />
-    </Bloc>: null}
+    const needUpdate: boolean = etapeTypeId !== etape.value.typeId
 
-    { stepFondamentales.value ? <Bloc step={{name: 'Propriétés', help: null}} complete={stepFondamentalesComplete.value}>
-      <FondamentalesEdit
-        etape={props.etape}
-        demarcheTypeId={props.demarcheTypeId}
-        titreTypeId={props.titreTypeId}
-        user={props.user}
-        entreprises={props.entreprises}
-        completeUpdate="fondamentalesCompleteUpdate"
-      />
-    </Bloc> : null }
+    if (etapeStatutId !== null && etapeStatutId !== etape.value.statutId) {
+      setEtape({...etape.value, statutId: etapeStatutId})
+    }
+    if (etapeTypeId !== null && etapeTypeId !== etape.value.typeId) {
+      setEtape({...etape.value, typeId: etapeTypeId})
+    }
 
-    { stepPoints.value ? <Bloc step={{name: 'Périmètre', help: null}} complete={stepPerimetreComplete.value}>
-      <PerimetreEdit
-        :etape="etape"
-        :titreTypeId="titreTypeId"
-        :titreSlug="titreSlug"
-        :apiClient="apiClient"
-        :onEtapeChange="onEtapePerimetreChange"
-        :onPointsChange="onEtapePointsChange"
-        :onForagesChange="onEtapeForagesChange"
-        :completeUpdate="perimetreCompleteUpdate"
-      />
-    </Bloc> : null }
 
-    { stepSections.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={stepSectionsComplete.value}>
-      <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
-    </Bloc> : null }
+    if (needUpdate) {
+      await reloadHeritage()
+    }
 
-    { stepDocuments.value ? <Bloc step={{name: 'Liste des documents', help: null}} complete={stepDocumentsComplete.value}>
-      <div class="dsfr">
-        <EtapeDocumentsEdit
-          :apiClient="apiClient"
-          :tde="tde"
-          :etapeId="etape.id"
-          :completeUpdate="documentsCompleteUpdate"
-          :sdomZoneIds="sdomZoneIds"
-          :user="user"
-          :contenu="etape.contenu"
-          :etapeStatutId="etape.statutId"
+  }
+  return () =>
+    <div class="mb">
+      {stepType.value ? <Bloc step={{ name: 'Type', help: null }} complete={typeComplete.value}>
+        {userIsAdmin.value ? <DateEdit date={etape.value.date} onDateChanged={onDateChanged} /> : null}
+
+        <TypeEdit etape={etape.value} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} />
+      </Bloc> : null}
+
+      {stepFondamentales.value ? <Bloc step={{ name: 'Propriétés', help: null }} complete={stepFondamentalesComplete.value}>
+        <FondamentalesEdit
+          etape={etape.value}
+          demarcheTypeId={props.demarcheTypeId}
+          titreTypeId={props.titreTypeId}
+          user={props.user}
+          entreprises={props.entreprises}
+          completeUpdate={fondamentalesCompleteUpdate}
         />
-      </div>
-    </Bloc> : null }
+      </Bloc> : null}
 
-    { stepEntrepriseDocuments.value ? <Bloc step={{name: 'Documents d’entreprise', help: isHelpVisible.value ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel." : null}} complete={stepEntrepriseDocumentsComplete.value}>
-      <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
-    </Bloc> : null }
+      {/* { stepPoints.value ? <Bloc step={{name: 'Périmètre', help: null}} complete={stepPerimetreComplete.value}>
+        <PerimetreEdit
+          :etape="etape"
+          :titreTypeId="titreTypeId"
+          :titreSlug="titreSlug"
+          :apiClient="apiClient"
+          :onEtapeChange="onEtapePerimetreChange"
+          :onPointsChange="onEtapePointsChange"
+          :onForagesChange="onEtapeForagesChange"
+          :completeUpdate="perimetreCompleteUpdate"
+        />
+      </Bloc> : null }
 
-    { stepDecisionsAnnexes.value ? <Bloc step={{name: 'Décisions annexes', help: null}} complete={stepDecisionsAnnexesComplete.value}>
-      <div>FIXME</div>
-    </Bloc>
+      { stepSections.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={stepSectionsComplete.value}>
+        <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
+      </Bloc> : null }
 
-    <div class="dsfr">
-      <div class="fr-input-group">
-        <label class="fr-label" for="notes">Notes</label>
-        <textarea id="notes" v-model="etape.notes" class="fr-input" name="notes"></textarea>
-      </div>
+      { stepDocuments.value ? <Bloc step={{name: 'Liste des documents', help: null}} complete={stepDocumentsComplete.value}>
+        <div class="dsfr">
+          <EtapeDocumentsEdit
+            :apiClient="apiClient"
+            :tde="tde"
+            :etapeId="etape.id"
+            :completeUpdate="documentsCompleteUpdate"
+            :sdomZoneIds="sdomZoneIds"
+            :user="user"
+            :contenu="etape.contenu"
+            :etapeStatutId="etape.statutId"
+          />
+        </div>
+      </Bloc> : null }
+
+      { stepEntrepriseDocuments.value ? <Bloc step={{name: 'Documents d’entreprise', help: isHelpVisible.value ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel." : null}} complete={stepEntrepriseDocumentsComplete.value}>
+        <EntrepriseDocumentsEdit :entreprises="titulairesAndAmodiataires" :apiClient="apiClient" :tde="tde" :etapeId="etape.id" :completeUpdate="entrepriseDocumentsCompleteUpdate" />
+      </Bloc> : null }
+
+      { stepDecisionsAnnexes.value ? <Bloc step={{name: 'Décisions annexes', help: null}} complete={stepDecisionsAnnexesComplete.value}>
+        <div>FIXME</div>
+      </Bloc>
+
+      <div class="dsfr">
+        <div class="fr-input-group">
+          <label class="fr-label" for="notes">Notes</label>
+          <textarea id="notes" v-model="etape.notes" class="fr-input" name="notes"></textarea>
+        </div>
+      </div> */}
     </div>
-  </div>
 
 
 
-    // onEtapePerimetreChange(perimetreInfos) {
-    //   // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
-    //   // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
-    //   this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
-    //   this.etape.geojson4326Points = perimetreInfos.geojson4326_points
-    //   this.etape.geojsonOriginePerimetre = perimetreInfos.geojson_origine_perimetre
-    //   this.etape.geojsonOriginePoints = perimetreInfos.geojson_origine_points
-    //   this.etape.geojsonOrigineGeoSystemeId = perimetreInfos.geojson_origine_geo_systeme_id
+  // onEtapePerimetreChange(perimetreInfos) {
+  //   // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
+  //   // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
+  //   this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
+  //   this.etape.geojson4326Points = perimetreInfos.geojson4326_points
+  //   this.etape.geojsonOriginePerimetre = perimetreInfos.geojson_origine_perimetre
+  //   this.etape.geojsonOriginePoints = perimetreInfos.geojson_origine_points
+  //   this.etape.geojsonOrigineGeoSystemeId = perimetreInfos.geojson_origine_geo_systeme_id
 
-    //   this.etape.geojson4326Forages = perimetreInfos.geojson4326_forages
-    //   this.etape.geojsonOrigineForages = perimetreInfos.geojson_origine_forages
+  //   this.etape.geojson4326Forages = perimetreInfos.geojson4326_forages
+  //   this.etape.geojsonOrigineForages = perimetreInfos.geojson_origine_forages
 
-    //   this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
-    //   this.$emit('update:etape', this.etape)
-    // },
-    // onEtapePointsChange(geojson4326Points, geojsonOriginePoints) {
-    //   this.etape.geojson4326Points = geojson4326Points
-    //   this.etape.geojsonOriginePoints = geojsonOriginePoints
-    //   this.$emit('update:etape', this.etape)
-    // },
-    // onEtapeForagesChange(geojson4326Forages, geojsonOrigineForages) {
-    //   this.etape.geojson4326Forages = geojson4326Forages
-    //   this.etape.geojsonOrigineForages = geojsonOrigineForages
-    //   this.$emit('update:etape', this.etape)
-    // },
+  //   this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
+  //   this.$emit('update:etape', this.etape)
+  // },
+  // onEtapePointsChange(geojson4326Points, geojsonOriginePoints) {
+  //   this.etape.geojson4326Points = geojson4326Points
+  //   this.etape.geojsonOriginePoints = geojsonOriginePoints
+  //   this.$emit('update:etape', this.etape)
+  // },
+  // onEtapeForagesChange(geojson4326Forages, geojsonOrigineForages) {
+  //   this.etape.geojson4326Forages = geojson4326Forages
+  //   this.etape.geojsonOrigineForages = geojsonOrigineForages
+  //   this.$emit('update:etape', this.etape)
+  // },
 
 
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EtapeEditForm.props = ['etape', 'demarcheId', 'demarcheTypeId', 'titreTypeId', 'titreSlug', 'user', 'etapeIsDemandeEnConstruction', 'sdomZoneIds', 'entreprises', 'apiClient', 'completeUpdate', 'alertesUpdate',]

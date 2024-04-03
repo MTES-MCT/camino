@@ -3,7 +3,7 @@ import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
 import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
-import { etapeStatutIdValidator } from './static/etapesStatuts.js'
+import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
 import { z } from 'zod'
@@ -11,6 +11,7 @@ import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon 
 import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
+import { DeepReadonly } from './typescript-tools.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -21,12 +22,7 @@ export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
-export type HeritageProp<T> =
-  | {
-      actif: true
-      etape: T
-    }
-  | { actif: false; etape?: T }
+export type HeritageProp<T> ={ actif: boolean; etape?: T }
 
 export interface EtapeEntreprise {
   id: EntrepriseId
@@ -43,10 +39,10 @@ type EtapeBase = {
   contenu: { [key: string]: unknown }
   date: CaminoDate
   typeId: EtapeTypeId
+  statutId: EtapeStatutId
   substances: SubstanceLegaleId[]
   titulaires: EtapeEntreprise[]
   amodiataires: EtapeEntreprise[]
-  dateDebut: CaminoDate | null
   administrations?: AdministrationId[]
   communes?: string[]
 
@@ -60,14 +56,18 @@ type EtapeBase = {
   surface?: KM2 | null
 
   notes: null | string
-} & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate | null })
+  duree: number; 
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | undefined | null
+}
 
-type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
+export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type EtapeWithHeritage<K extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'typeId' | 'date' | EtapePropsFromHeritagePropName<K>>> = T & {
+export type EtapeWithHeritage<HeritagePropsKeys extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'typeId' | 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>>> = T & {
   heritageProps: {
-    [key in K]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<K>>>
+    [key in HeritagePropsKeys]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<key>>>
   }
+  heritageContenu: unknown
 }
 
 export type Etape = EtapeWithHeritage<keyof MappingHeritagePropsNameEtapePropsName, EtapeBase>

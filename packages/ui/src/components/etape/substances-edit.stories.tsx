@@ -19,7 +19,7 @@ const updateHeritage = action('updateHeritage')
 const heritageProps: Props['heritageProps']['substances'] = {
   actif: true,
   etape: {
-    substances: [SubstancesLegale.auru.id],
+    substances: [SubstancesLegale.auru.id, SubstancesLegale.arge.id],
     date: toCaminoDate('2020-01-01'),
     typeId: 'mfr',
   },

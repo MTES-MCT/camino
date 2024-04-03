@@ -1,32 +1,38 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
 import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { computed, ref } from 'vue'
+import { DeepReadonly, computed, ref, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { TagList } from '@/components/_ui/tag-list'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapeFondamentale, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
+import { EtapeFondamentale, EtapeWithHeritage } from 'camino-common/src/etape'
 import {isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
+import { DsfrTag } from '../_ui/tag'
+import { capitalize } from 'camino-common/src/strings'
 
 export type Props = {
-  substances: SubstanceLegaleId[]
-  heritageProps: EtapeWithHeritage<'substances', Pick<EtapeFondamentale, 'substances' | 'typeId' | 'date'>>['heritageProps']
+  substances: DeepReadonly<SubstanceLegaleId[]>
+  heritageProps: DeepReadonly<EtapeWithHeritage<'substances', Pick<EtapeFondamentale, 'substances' | 'typeId' | 'date'>>['heritageProps']>
   domaineId: DomaineId
-  updateSubstances: (substances: SubstanceLegaleId[]) => void
+  updateSubstances: (substances: DeepReadonly<SubstanceLegaleId[]>) => void
   updateHeritage: (subtances: Props['heritageProps']['substances']) => void
 }
 export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageProps', 'domaineId', 'updateSubstances', 'updateHeritage'], props => {
 
-  const editedSubstances = ref<(SubstanceLegaleId | undefined)[]>(structuredClone(props.substances))
-  const heritageActif = ref<Props['heritageProps']['substances']>(props.heritageProps.substances)
+  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<(SubstanceLegaleId | undefined)[]>>(props.substances)
+  const [heritageActif, setHeritageActif] = useState<Props['heritageProps']['substances']>(props.heritageProps.substances)
 
   const substancesLength = computed<number>(() => editedSubstances.value.filter(substanceId => substanceId).length)
 
   const updateHeritage = (actif: Props['heritageProps']['substances']) => {
-    heritageActif.value = actif
+    setHeritageActif(actif)
     props.updateHeritage(actif)
   }
+
+  watch(() => editedSubstances.value, () => {
+    props.updateSubstances(editedSubstances.value.filter(isNotNullNorUndefined))
+  }, {deep: true})
 
 
 
@@ -43,26 +49,49 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
   })
 
   const substanceAdd = (): void => {
-    editedSubstances.value.push(undefined)
+    setEditedSubstances([...editedSubstances.value, undefined])
   }
 
-  const substanceRemove = (index: number) => (): SubstanceLegaleId | undefined =>  {
-    return editedSubstances.value.splice(index, 1)[0]
+  const substanceRemove = (index: number) => (): void =>  {
+    setEditedSubstances(editedSubstances.value.filter((_, myIndex) => index !== myIndex))
   }
 
   const substanceMoveDown = (index: number) => () => {
-    const substance = substanceRemove(index)()
-    editedSubstances.value.splice(index + 1, 0, substance)
+    const mySubstance = editedSubstances.value[index]
+    const myPrevious = editedSubstances.value[index + 1]
+    
+    setEditedSubstances(editedSubstances.value.map((substance, myIndex) => {
+      if (myIndex === index) {
+        return myPrevious
+      } else if (myIndex === index + 1) {
+        return mySubstance
+      }
+      return substance
+    }))
   }
 
   const substanceMoveUp = (index: number) => () => {
-    const substance = substanceRemove(index)()
-    editedSubstances.value.splice(index - 1, 0, substance)
+    const mySubstance = editedSubstances.value[index]
+    const myPrevious = editedSubstances.value[index - 1]
+    
+    setEditedSubstances(editedSubstances.value.map((substance, myIndex) => {
+      if (myIndex === index) {
+        return myPrevious
+      } else if (myIndex === index - 1) {
+        return mySubstance
+      }
+      return substance
+    }))
   }
 
   const substanceUpdate = (index: number) => (id: SubstanceLegaleId | null) => {
     if (id !== null) {
-      editedSubstances.value[index] = id
+      setEditedSubstances(editedSubstances.value.map((substance, myIndex) => {
+        if (myIndex === index) {
+          return id
+        } 
+        return substance
+      }))
     }
   }
 
@@ -119,7 +148,7 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
             ) : null}
           </div>
         )}
-        read={() => <TagList class="mb-s" elements={substanceNoms.value} />}
+        read={() => <>{ substanceNoms.value.map(sub =>  <DsfrTag class='fr-mr-1w' ariaLabel={capitalize(sub)} />)}</>}
         updateHeritage={updateHeritage}
       />
     </div>

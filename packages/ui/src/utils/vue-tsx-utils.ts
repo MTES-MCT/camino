@@ -1,4 +1,4 @@
-import { DefineComponent, defineComponent, Ref, RenderFunction, SetupContext } from 'vue'
+import { DeepReadonly, DefineComponent, defineComponent, readonly, ref, Ref, RenderFunction, SetupContext } from 'vue'
 
 type PushFront<TailT extends any[], HeadT> = ((head: HeadT, ...tail: TailT) => void) extends (...arr: infer ArrT) => void ? ArrT : never
 
@@ -31,4 +31,14 @@ export const setSeed = (value: number): void => {
 export const random = () => {
   const x = Math.sin(seed++) * 10000
   return x - Math.floor(x)
+}
+
+
+export function useState<T>(initialState: T): [Readonly<Ref<DeepReadonly<T>>>, (value: T)=> void] {
+  const state = ref<T>(initialState) as Ref<T>
+  const setState = (newState: T) => {
+    state.value = newState;
+  };
+  
+  return [readonly(state), setState];
 }

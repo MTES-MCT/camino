@@ -1,29 +1,35 @@
 import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
-import { HTMLAttributes, computed, defineComponent } from 'vue'
-import { HeritageProp } from 'camino-common/src/etape'
-import { EtapeHeritage } from './heritage-edit.types'
+import { DeepReadonly, HTMLAttributes, computed, defineComponent } from 'vue'
+import { Etape, HeritageProp } from 'camino-common/src/etape'
 import { EtapeHeritageProps, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 
-type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
-  prop: HeritageProp<T>
+type Props<P extends EtapeHeritageProps, T extends Pick<Etape, 'typeId' | 'date'>> = {
+  prop: DeepReadonly<HeritageProp<T>>
   propId: P
   write: () => JSX.Element
-  read: (heritagePropEtape: T | undefined) => JSX.Element
+  read: (heritagePropEtape?: DeepReadonly<T>) => JSX.Element
   class?: HTMLAttributes['class']
-  updateHeritage: (update: HeritageProp<T>) => void
+  updateHeritage: (update: Props<P, T>['prop']) => void
 }
-export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T>) => {
+export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends Pick<Etape, 'typeId' | 'date'>>(props: Props<P, T>) => {
   const hasHeritage = computed<boolean>(() => {
     return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => hasValeurCheck(field, props.prop.etape))
   })
 
   const legendHint = computed<string | undefined>(() => {
-    return props.prop.actif ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape?.date)})` : undefined
+
+    const e = props.prop.etape
+    if( props.prop.actif && isNotNullNorUndefined(e)){
+      const toto = e.typeId
+      const bite = EtapesTypes[e.typeId]
+    }
+
+    return props.prop.actif && isNotNullNorUndefined(props.prop.etape) ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape.date)})` : undefined
   })
 
   const updateHeritage = () => {

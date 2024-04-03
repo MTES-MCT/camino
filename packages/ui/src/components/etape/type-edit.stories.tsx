@@ -29,12 +29,12 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
 export const Simple: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     apiClient={apiClientMock}
     etape={{
       statutId: ETAPES_STATUTS.FAIT,
       typeId: ETAPES_TYPES.demande,
+      date: toCaminoDate('2022-01-01')
     }}
   />
 )
@@ -42,12 +42,12 @@ export const Simple: StoryFn = () => (
 export const DemandeAvecUnSeulStatut: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
       typeId: ETAPES_TYPES.classementSansSuite,
+      date: toCaminoDate('2022-01-01')
     }}
   />
 )
@@ -55,12 +55,12 @@ export const DemandeAvecUnSeulStatut: StoryFn = () => (
 export const DemandeSansStatut: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
       typeId: ETAPES_TYPES.demande,
+      date: toCaminoDate('2022-01-01')
     }}
   />
 )
@@ -68,12 +68,12 @@ export const DemandeSansStatut: StoryFn = () => (
 export const DemandeEnConstruction: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
       typeId: ETAPES_TYPES.demande,
+      date: toCaminoDate('2022-01-01')
     }}
   />
 )
@@ -81,12 +81,12 @@ export const DemandeEnConstruction: StoryFn = () => (
 export const NouvelleDemande: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={apiClientMock}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
       typeId: null,
+      date: toCaminoDate('2022-01-01')
     }}
   />
 )
@@ -94,7 +94,6 @@ export const NouvelleDemande: StoryFn = () => (
 export const Empty: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
         return Promise.resolve([])
@@ -104,6 +103,8 @@ export const Empty: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
+      date: toCaminoDate('2022-01-01')
+
     }}
   />
 )
@@ -111,7 +112,6 @@ export const Empty: StoryFn = () => (
 export const NoEtape: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
         return Promise.resolve([])
@@ -121,6 +121,8 @@ export const NoEtape: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: 'mfr',
+      date: toCaminoDate('2022-01-01')
+
     }}
   />
 )
@@ -128,7 +130,6 @@ export const NoEtape: StoryFn = () => (
 export const SelectedEtapeNotPossible: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{
       getEtapesTypesEtapesStatuts: () => {
         return Promise.resolve([{ etapeTypeId: 'mcd', etapeStatutId: 'fai', mainStep: false }])
@@ -138,6 +139,8 @@ export const SelectedEtapeNotPossible: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: 'mfr',
+      date: toCaminoDate('2022-01-01')
+
     }}
   />
 )
@@ -145,12 +148,13 @@ export const SelectedEtapeNotPossible: StoryFn = () => (
 export const Loading: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{ getEtapesTypesEtapesStatuts: () => new Promise(() => ({})) }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
       typeId: null,
+      date: toCaminoDate('2022-01-01')
+
     }}
   />
 )
@@ -158,12 +162,14 @@ export const Loading: StoryFn = () => (
 export const WithError: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
-    etapeDate={toCaminoDate('2022-01-01')}
     apiClient={{ getEtapesTypesEtapesStatuts: () => Promise.reject(new Error('Cassé')) }}
     demarcheId={demarcheIdValidator.parse('demarcheID')}
     etape={{
       statutId: null,
       typeId: null,
+      date: toCaminoDate('2022-01-01')
+
     }}
+    
   />
 )
