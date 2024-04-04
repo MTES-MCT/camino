@@ -1,6 +1,6 @@
 import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeFondamentale, etapeIdValidator } from 'camino-common/src/etape'
+import { FullEtapeHeritage, etapeIdValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -13,7 +13,7 @@ const meta: Meta = {
 }
 export default meta
 
-const etape: EtapeFondamentale = {
+const etape: FullEtapeHeritage = {
   id: etapeIdValidator.parse('id'),
   heritageContenu: {},
   statutId: 'aco',
@@ -27,6 +27,14 @@ const etape: EtapeFondamentale = {
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
   notes: null,
+  geojson4326Forages: undefined,
+  geojson4326Perimetre: undefined,
+  geojson4326Points: undefined,
+  surface: undefined,
+  geojsonOriginePerimetre: undefined,
+  geojsonOriginePoints: undefined,
+  geojsonOrigineGeoSystemeId: undefined,
+  geojsonOrigineForages: undefined,
   heritageProps: {
     dateDebut: {
       actif: false,
@@ -82,7 +90,7 @@ const entreprises = [
 
 const completeUpdate = action('completeUpdate')
 
-export const AxmDemandeSuper: StoryFn = () => <FondamentalesEdit 
+export const AxmDemandeSuper: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -95,7 +103,7 @@ export const AxmDemandeSuper: StoryFn = () => <FondamentalesEdit
 />
 
 
-export const ArmDemandeONF: StoryFn = () => <FondamentalesEdit 
+export const ArmDemandeONF: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -108,7 +116,7 @@ export const ArmDemandeONF: StoryFn = () => <FondamentalesEdit
     entreprises={entreprises}
 />
 
-export const ArmDemandeOperateur: StoryFn = () => <FondamentalesEdit 
+export const ArmDemandeOperateur: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -117,7 +125,7 @@ export const ArmDemandeOperateur: StoryFn = () => <FondamentalesEdit
     entreprises={entreprises}
 />
 
-export const ArmJorfONF: StoryFn = () => <FondamentalesEdit 
+export const ArmJorfONF: StoryFn = () => <FondamentalesEdit
     etape={{ ...etape, typeId: 'dpu' }}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -128,7 +136,7 @@ export const ArmJorfONF: StoryFn = () => <FondamentalesEdit
 
 
 
-export const AxmDemandeONF: StoryFn = () => <FondamentalesEdit 
+export const AxmDemandeONF: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -137,7 +145,7 @@ export const AxmDemandeONF: StoryFn = () => <FondamentalesEdit
     entreprises={entreprises}
 />
 
-export const PrmDemandeONF: StoryFn = () => <FondamentalesEdit 
+export const PrmDemandeONF: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='oct'
@@ -146,7 +154,7 @@ export const PrmDemandeONF: StoryFn = () => <FondamentalesEdit
     entreprises={entreprises}
 />
 
-export const PrmDeplacementDePerimetreONF: StoryFn = () => <FondamentalesEdit 
+export const PrmDeplacementDePerimetreONF: StoryFn = () => <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
     demarcheTypeId='dep'

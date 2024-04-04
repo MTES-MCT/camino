@@ -1,14 +1,15 @@
 import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
 import { DeepReadonly, HTMLAttributes, computed, defineComponent } from 'vue'
-import { Etape, HeritageProp } from 'camino-common/src/etape'
+import {  FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
 import { EtapeHeritageProps, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 
-type Props<P extends EtapeHeritageProps, T extends Pick<Etape, 'typeId' | 'date'>> = {
+type EtapeHeritageEdit = Pick<FullEtapeHeritage, 'typeId' | 'date'>
+type Props<P extends EtapeHeritageProps, T extends EtapeHeritageEdit> = {
   prop: DeepReadonly<HeritageProp<T>>
   propId: P
   write: () => JSX.Element
@@ -16,18 +17,12 @@ type Props<P extends EtapeHeritageProps, T extends Pick<Etape, 'typeId' | 'date'
   class?: HTMLAttributes['class']
   updateHeritage: (update: Props<P, T>['prop']) => void
 }
-export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends Pick<Etape, 'typeId' | 'date'>>(props: Props<P, T>) => {
+export const HeritageEdit = defineComponent(<P extends EtapeHeritageProps, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
   const hasHeritage = computed<boolean>(() => {
     return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => hasValeurCheck(field, props.prop.etape))
   })
 
   const legendHint = computed<string | undefined>(() => {
-
-    const e = props.prop.etape
-    if( props.prop.actif && isNotNullNorUndefined(e)){
-      const toto = e.typeId
-      const bite = EtapesTypes[e.typeId]
-    }
 
     return props.prop.actif && isNotNullNorUndefined(props.prop.etape) ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape.date)})` : undefined
   })

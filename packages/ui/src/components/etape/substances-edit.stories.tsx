@@ -16,7 +16,7 @@ export default meta
 const updateSubstancesAction = action('updateSubstances')
 const updateHeritage = action('updateHeritage')
 
-const heritageProps: Props['heritageProps']['substances'] = {
+const heritageProps: Props['heritageSubstances'] = {
   actif: true,
   etape: {
     substances: [SubstancesLegale.auru.id, SubstancesLegale.arge.id],
@@ -24,7 +24,7 @@ const heritageProps: Props['heritageProps']['substances'] = {
     typeId: 'mfr',
   },
 }
-export const SansHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageProps={{ substances: { ...heritageProps, actif: false } }}/>
+export const SansHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageSubstances={ { ...heritageProps, actif: false } }/>
 
 
-export const AvecHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageProps={{ substances: { ...heritageProps } }}/>
+export const AvecHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageSubstances={{  ...heritageProps  }}/>

@@ -2,16 +2,17 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
-import { Etape, EtapeDocument, EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
+import { Etape, EtapeDocument, EtapeId, EtapeTypeEtapeStatutWithMainStep, FullEtapeHeritage } from 'camino-common/src/etape'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import gql from 'graphql-tag'
+import { DeepReadonly } from 'vue'
 
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
-  getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<Pick<Etape, 'heritageProps' | 'heritageContenu'>>
+  getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<FullEtapeHeritage, 'heritageProps' | 'heritageContenu'>>>
 }
 
 export const etapeApiClient: EtapeApiClient = {

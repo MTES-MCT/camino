@@ -122,7 +122,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
                 <div class="mb tablet-blob-2-3">
                   <TypeAheadSingle
                     overrideItem={etapeTypeExistante.value}
-                    disabled={isNotNullNorUndefined(props.etape.typeId)}
+                    disabled={isNotNullNorUndefined(etapeTypeId.value)}
                     props={{
                       id: 'select-etape-type',
                       placeholder: '',

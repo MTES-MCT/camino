@@ -1,4 +1,4 @@
-import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted } from 'vue'
+import { FunctionalComponent, HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, onUnmounted, DeepReadonly } from 'vue'
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { z } from 'zod'
@@ -15,7 +15,7 @@ import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
 import { canHaveForages } from 'camino-common/src/permissions/titres'
 import { capitalize } from 'camino-common/src/strings'
-import { CaminoMapLibre } from '@/typings/maplibre-gl'
+import { CaminoLngLatBounds, CaminoMapLibre } from '@/typings/maplibre-gl'
 
 const contoursSourceName = 'Contours'
 const pointsSourceName = 'Points'
@@ -28,7 +28,7 @@ const titresValidesFillName = 'TitresValidesFill'
 const titresValidesLineName = 'TitresValidesLine'
 
 type Props = {
-  perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }
+  perimetre: DeepReadonly<{ geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }>
   maxMarkers: number
   style?: HTMLAttributes['style']
   class?: HTMLAttributes['class']
@@ -285,7 +285,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     return values
   })
 
-  const points = computed<FeatureCollectionPoints>(() => {
+  const points = computed<DeepReadonly<FeatureCollectionPoints>>(() => {
     return {
       type: 'FeatureCollection',
       features: props.perimetre.geojson4326_points.features.map(feature => {
@@ -294,7 +294,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
-  const forages = computed<FeatureCollectionForages>(() => {
+  const forages = computed<DeepReadonly<FeatureCollectionForages>>(() => {
     return {
       type: 'FeatureCollection',
       features:
@@ -314,8 +314,8 @@ export const DemarcheMap = defineComponent<Props>(props => {
     }
   })
 
-  const bounds = computed<LngLatBounds>(() => {
-    const bounds = new LngLatBounds()
+  const bounds = computed<CaminoLngLatBounds>(() => {
+    const bounds: CaminoLngLatBounds = new LngLatBounds() as CaminoLngLatBounds
     props.perimetre.geojson4326_perimetre.geometry.coordinates.forEach(top => {
       top.forEach(lowerLever => lowerLever.forEach(coordinates => bounds.extend(coordinates)))
     })

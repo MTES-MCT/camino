@@ -1,15 +1,16 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { EtapeFondamentale, EtapeId, etapeIdValidator } from 'camino-common/src/etape'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { EtapeId, FullEtapeHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { Entreprise, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { action } from '@storybook/addon-actions'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
-import { ApiClient } from '@/api/api-client'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { DeepReadonly } from 'vue'
+import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
 
 const meta: Meta = {
   title: 'Components/Etape/Edition',
@@ -20,7 +21,7 @@ const meta: Meta = {
 export default meta
 
 
-const heritageProps: EtapeFondamentale['heritageProps'] = {
+const heritageProps: FullEtapeHeritage['heritageProps'] = {
   dateDebut: {
     actif: false,
   },
@@ -53,7 +54,27 @@ const heritageProps: EtapeFondamentale['heritageProps'] = {
     actif: false,
   },
 }
-const etape: DeepReadonly<EtapeFondamentale> = {
+
+const perimetre: FeatureMultiPolygon = {
+  type: 'Feature',
+  properties: {},
+
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: [
+      [
+        [
+          [-52.54, 4.22269896902571],
+          [-52.55, 4.22438936251509],
+          [-52.55, 4.24113309117193],
+          [-52.54, 4.22269896902571],
+        ],
+      ],
+    ],
+  },
+}
+
+const etape: DeepReadonly<FullEtapeHeritage> = {
   id: etapeIdValidator.parse('id'),
   statutId: 'fai',
   typeId: 'mfr',
@@ -67,13 +88,25 @@ const etape: DeepReadonly<EtapeFondamentale> = {
   amodiataires: [],
   notes: null,
   heritageProps,
-  heritageContenu: {}
+  heritageContenu: {},
+  geojson4326Forages: undefined,
+  geojson4326Perimetre: undefined,
+  geojson4326Points: undefined,
+  surface: undefined,
+  geojsonOriginePerimetre: undefined,
+  geojsonOriginePoints: undefined,
+  geojsonOrigineGeoSystemeId: undefined,
+  geojsonOrigineForages: undefined
 }
 
 const completeUpdate = action('completeUpdate')
 const alertesUpdate = action('alertesUpdate')
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
 const getEtapeHeritageAction = action('getEtapeHeritage')
+const geojsonImportAction = action('geojsonImport')
+const uploadTempDocumentAction = action('uploadTempDocumentAction')
+const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
+
 const apiClient: Props['apiClient'] = {
   getEntrepriseDocuments() {
     return Promise.resolve([])
@@ -92,10 +125,36 @@ const apiClient: Props['apiClient'] = {
 heritageContenu: {},
 heritageProps
     })
-  }
-}
+  },
+  geojsonImport(body, geoSystemeId) {
+    geojsonImportAction(body, geoSystemeId)
 
-export const Default: StoryFn = () => <EtapeEditForm 
+    return Promise.reject(new Error('plop'))
+  },
+  geojsonPointsImport(body, geoSystemeId) {
+    geojsonImportAction(body, geoSystemeId)
+
+    return Promise.reject(new Error('plop'))
+  },
+  geojsonForagesImport(body, geoSystemeId) {
+    geojsonImportAction(body, geoSystemeId)
+
+    return Promise.reject(new Error('plop'))
+  },
+  uploadTempDocument(document) {
+    uploadTempDocumentAction(document)
+
+    return Promise.resolve(tempDocumentNameValidator.parse('name'))
+  },
+  getGeojsonByGeoSystemeId(geojson, geoSystemeId) {
+    getGeojsonByGeoSystemeIdAction(geojson, geoSystemeId)
+
+    return Promise.resolve(geojson)
+  },
+}
+const entreprises: Entreprise[] = [ ...Array(10) ].map((_e, i) => ({id: entrepriseIdValidator.parse(`entrepriseId${i}`), nom: `Nom de l'entreprise ${i}`, legal_siren: `legal_siren${i}`}))
+export const Default: StoryFn = () => <EtapeEditForm
+    initTab='points'
     alertesUpdate={alertesUpdate}
     apiClient={apiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
@@ -104,21 +163,36 @@ export const Default: StoryFn = () => <EtapeEditForm
     titreTypeId='axm'
     sdomZoneIds={[]}
     etape={etape}
-    etapeIsDemandeEnConstruction={false}
     completeUpdate={completeUpdate}
     user= {{
       role: 'super',
       ...testBlankUser,
     }}
-    entreprises={[
-      {
-        id: newEntrepriseId('optionId1'),
-        nom: 'optionNom1',
-        legal_siren: null,
-      }
-    ]}
+    entreprises={entreprises}
+/>
+
+export const EtapeModification: StoryFn = () => <EtapeEditForm
+    initTab='points'
+    alertesUpdate={alertesUpdate}
+    apiClient={apiClient}
+    demarcheId={demarcheIdValidator.parse('demarcheId')}
+    demarcheTypeId='oct'
+    titreSlug={titreSlugValidator.parse('titre-slug')}
+    titreTypeId='axm'
+    sdomZoneIds={[]}
+    etape={{...etape, geojson4326Perimetre: perimetre, geojsonOriginePerimetre: perimetre, geojsonOrigineGeoSystemeId: '4326'}}
+    completeUpdate={completeUpdate}
+    user= {{
+      role: 'super',
+      ...testBlankUser,
+    }}
+    entreprises={entreprises}
 />
 
 // FIXME tests avec
 // - heritageContenu
-// - 
+// - avec aide (arm/axm)
+// - étape en construction
+// - avec du sdom
+// - avec une arm mécanisé
+// - demande AXM d'une entreprise (avec les 3 étapes imbriquées)

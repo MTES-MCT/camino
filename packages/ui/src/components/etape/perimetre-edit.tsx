@@ -1,6 +1,6 @@
 import { HeritageEdit } from './heritage-edit'
 import { PerimetreImportPopup } from './perimetre-import-popup'
-import { FunctionalComponent, HTMLAttributes, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { DeepReadonly, FunctionalComponent, HTMLAttributes, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -10,7 +10,7 @@ import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Alert } from '../_ui/alert'
 import { KM2 } from 'camino-common/src/number'
-import { EtapeWithHeritage, EtapeFondamentale } from 'camino-common/src/etape'
+import { EtapePropsFromHeritagePropName, HeritageProp, FullEtapeHeritage } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { PointsImportPopup } from './points-import-popup'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
@@ -19,35 +19,20 @@ import { canHaveForages } from 'camino-common/src/permissions/titres'
 
 export interface Props {
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGeojsonByGeoSystemeId' | 'geojsonPointsImport' | 'geojsonForagesImport'>
-  etape: {
+  etape: DeepReadonly<{
     typeId: EtapeTypeId
     heritageProps: {
-      perimetre: EtapeWithHeritage<
-        'perimetre',
-        Pick<
-          EtapeFondamentale,
-          | 'geojson4326Perimetre'
-          | 'surface'
-          | 'geojson4326Points'
-          | 'typeId'
-          | 'date'
-          | 'geojsonOriginePerimetre'
-          | 'geojsonOriginePoints'
-          | 'geojsonOrigineGeoSystemeId'
-          | 'geojsonOrigineForages'
-          | 'geojson4326Forages'
-        >
-      >['heritageProps']['perimetre']
+      perimetre: HeritageProp<Pick<FullEtapeHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'perimetre'>>>
     }
-    geojson4326Perimetre: FeatureMultiPolygon | null
-    geojson4326Points: FeatureCollectionPoints | null
+    geojson4326Perimetre: FeatureMultiPolygon | null | undefined
+    geojson4326Points: FeatureCollectionPoints | null | undefined
     geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
-    geojsonOriginePoints: FeatureCollectionPoints | null
-    geojson4326Forages: FeatureCollectionForages | null
-    geojsonOrigineForages: FeatureCollectionForages | null
-    geojsonOrigineGeoSystemeId: GeoSystemeId | null
-    surface: KM2 | null
-  }
+    geojsonOriginePoints: FeatureCollectionPoints | null | undefined
+    geojson4326Forages: FeatureCollectionForages | null | undefined
+    geojsonOrigineForages: FeatureCollectionForages | null | undefined
+    geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
+    surface: KM2 | null | undefined
+  }>
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
   completeUpdate: (complete: boolean) => void
@@ -59,15 +44,7 @@ export interface Props {
 
 type DisplayPerimetreProps = {
   apiClient: Pick<ApiClient, 'getGeojsonByGeoSystemeId'>
-  etape: {
-    geojson4326Perimetre: FeatureMultiPolygon | null | undefined
-    geojson4326Points: FeatureCollectionPoints | null
-    geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
-    geojsonOriginePoints: FeatureCollectionPoints | null
-    geojson4326Forages: FeatureCollectionForages | null
-    geojsonOrigineForages: FeatureCollectionForages | null
-    geojsonOrigineGeoSystemeId: GeoSystemeId | null
-  }
+  etape: Props['etape']
   surface: KM2 | null
   titreSlug: TitreSlug
   titreTypeId: TitreTypeId
@@ -83,13 +60,13 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
           calculateNeighbours={false}
           apiClient={props.apiClient}
           perimetre={{
-            geojson4326_points: props.etape.geojson4326Points,
+            geojson4326_points: props.etape.geojson4326Points ?? null,
             geojson4326_perimetre: props.etape.geojson4326Perimetre,
             geojson_origine_perimetre: props.etape.geojsonOriginePerimetre,
-            geojson_origine_points: props.etape.geojsonOriginePoints,
+            geojson_origine_points: props.etape.geojsonOriginePoints ?? null,
             geojson_origine_geo_systeme_id: props.etape.geojsonOrigineGeoSystemeId,
-            geojson4326_forages: props.etape.geojson4326Forages,
-            geojson_origine_forages: props.etape.geojsonOrigineForages,
+            geojson4326_forages: props.etape.geojson4326Forages ?? null,
+            geojson_origine_forages: props.etape.geojsonOrigineForages ?? null,
           }}
           titreSlug={props.titreSlug}
           titreTypeId={props.titreTypeId}
@@ -110,6 +87,10 @@ export const PerimetreEdit = defineComponent<Props>(props => {
   const importForagesPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
+
+  const updateHeritage = () => {
+
+  }
   const complete = computed(() => {
     return props.etape.typeId !== 'mfr' || props.etape.geojson4326Perimetre !== null
   })
@@ -146,7 +127,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
     importForagesPopup.value = false
   }
 
-  const surface = ref<KM2 | null>(props.etape.surface)
+  const surface = ref<KM2 | null>(props.etape.surface ?? null)
 
   const result = (value: GeojsonInformations | Error) => {
     if ('geojson4326_perimetre' in value) {
@@ -183,6 +164,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
     <div class="dsfr">
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
+        updateHeritage={updateHeritage}
         propId="perimetre"
         write={() => (
           <div>

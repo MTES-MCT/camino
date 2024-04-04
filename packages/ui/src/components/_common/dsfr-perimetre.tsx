@@ -1,4 +1,4 @@
-import { defineComponent, HTMLAttributes, defineAsyncComponent, computed } from 'vue'
+import { defineComponent, HTMLAttributes, defineAsyncComponent, computed, DeepReadonly } from 'vue'
 import { Tab, Tabs } from '../_ui/tabs'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Router } from 'vue-router'
@@ -13,7 +13,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 export type TabId = 'carte' | 'points'
 
 type Props = {
-  perimetre: {
+  perimetre: DeepReadonly<{
     geojson4326_perimetre: FeatureMultiPolygon
     geojson4326_points: FeatureCollectionPoints | null
     geojson_origine_geo_systeme_id: GeoSystemeId
@@ -21,7 +21,7 @@ type Props = {
     geojson_origine_points: FeatureCollectionPoints | null
     geojson4326_forages: FeatureCollectionForages | null
     geojson_origine_forages: FeatureCollectionForages | null
-  }
+  }>
   titreSlug: TitreSlug
   titreTypeId: TitreTypeId
   initTab?: TabId
@@ -38,14 +38,14 @@ const maxRows = 20
  *
  */
 export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
-  const geojson4326Points = computed<FeatureCollectionPoints>(() => {
+  const geojson4326Points = computed<DeepReadonly<FeatureCollectionPoints>>(() => {
     if (isNotNullNorUndefined(props.perimetre.geojson4326_points)) {
       return props.perimetre.geojson4326_points
     }
 
     return transformMultipolygonToPoints(props.perimetre.geojson4326_perimetre)
   })
-  const geojsonOriginePoints = computed<FeatureCollectionPoints>(() => {
+  const geojsonOriginePoints = computed<DeepReadonly<FeatureCollectionPoints>>(() => {
     if (isNotNullNorUndefined(props.perimetre.geojson_origine_points)) {
       return props.perimetre.geojson_origine_points
     }
@@ -80,14 +80,14 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
 })
 
 type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {
-  perimetre: {
+  perimetre: DeepReadonly<{
     geojson4326_perimetre: FeatureMultiPolygon
     geojson4326_points: FeatureCollectionPoints
     geojson_origine_geo_systeme_id: GeoSystemeId
     geojson_origine_perimetre: FeatureMultiPolygon
     geojson_origine_points: FeatureCollectionPoints
     geojson4326_forages: FeatureCollectionForages | null
-  }
+  }>
 }
 const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
   const neighbours = props.calculateNeighbours ? { apiClient: props.apiClient, titreSlug: props.titreSlug, router: props.router } : null
@@ -98,14 +98,14 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
     return DemarcheMap
   })
 
-  const geojson_origine = computed<FeatureCollection>(() => ({
+  const geojson_origine = computed<DeepReadonly<FeatureCollection>>(() => ({
     type: 'FeatureCollection',
     crs: { type: 'name', properties: { name: `urn:ogc:def:crs:EPSG::${props.perimetre.geojson_origine_geo_systeme_id}` } },
     properties: null,
     features: [props.perimetre.geojson_origine_perimetre, ...props.perimetre.geojson_origine_points.features],
   }))
 
-  const geojson_4326 = computed<FeatureCollection>(() => ({
+  const geojson_4326 = computed<DeepReadonly<FeatureCollection>>(() => ({
     type: 'FeatureCollection',
     crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::4326' } },
     properties: null,

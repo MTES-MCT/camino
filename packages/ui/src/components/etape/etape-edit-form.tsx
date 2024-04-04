@@ -2,7 +2,6 @@ import { DeepReadonly, computed, defineComponent, onMounted, ref, watch } from "
 
 import { TypeEdit } from './type-edit'
 import { Bloc } from './bloc'
-import { DateEdit } from './date-edit'
 import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
 import SectionsEdit from './sections-edit.vue'
@@ -15,7 +14,7 @@ import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_dem
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { hasEtapeAvisDocuments } from 'camino-common/src/permissions/titres-etapes'
-import { Etape, EtapeDocument } from "camino-common/src/etape"
+import { Etape, EtapeDocument, FullEtapeHeritage } from "camino-common/src/etape"
 import { DemarcheTypeId } from "camino-common/src/static/demarchesTypes"
 import { TitreTypeId } from "camino-common/src/static/titresTypes"
 import { TitreSlug } from "camino-common/src/validators/titres"
@@ -27,6 +26,9 @@ import { CaminoDate } from "camino-common/src/date"
 import { EtapeStatutId } from "camino-common/src/static/etapesStatuts"
 import { DemarcheId } from "camino-common/src/demarche"
 import { useState } from "@/utils/vue-tsx-utils"
+import { DateTypeEdit, EtapeDateTypeEdit } from "./date-type-edit"
+import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations } from "camino-common/src/perimetre"
+import { LoadingElement } from "../_ui/functional-loader"
 
 export type Props = {
   etape: DeepReadonly<Etape>,
@@ -35,12 +37,12 @@ export type Props = {
   titreTypeId: TitreTypeId,
   titreSlug: TitreSlug,
   user: User,
-  etapeIsDemandeEnConstruction: boolean
   sdomZoneIds: SDOMZoneId[],
   entreprises: Entreprise[],
-  apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'getEtapesTypesEtapesStatuts' | 'getEtapeHeritage'>,
+  initTab?: 'points' | 'carte',
+  apiClient: Pick<ApiClient, 'getEntrepriseDocuments' | 'getEtapesTypesEtapesStatuts' | 'getEtapeHeritage' | "uploadTempDocument" | "geojsonImport" | "getGeojsonByGeoSystemeId" | "geojsonPointsImport" | "geojsonForagesImport">,
   completeUpdate: (etape: DeepReadonly<Etape>, complete: boolean) => void,
-  alertesUpdate: () => void
+  alertesUpdate: (alertes: Pick<GeojsonInformations, 'superposition_alertes' | 'sdomZoneIds'>) => void
 }
 
 
@@ -60,11 +62,12 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
   const reloadHeritage = async () => {
     if (isNotNullNorUndefined(etape.value.date) && isNotNullNorUndefined(etape.value.typeId)) {
 
-    
+
     try {
       heritageData.value = { status: 'LOADING' }
 
-      
+      //FIXME est-ce qu’on devrait faire l’appel tout le temps ? Ou est-ce qu’on devrait arrêter de récupérer l’héritage dans l’étape quand on est en cours de modification ?
+
       const value = await props.apiClient.getEtapeHeritage(props.demarcheId, etape.value.date, etape.value.typeId)
       heritageData.value = {status: 'LOADED', value}
     } catch (e: any) {
@@ -77,9 +80,9 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
   }
   }
 
-
-  const heritageData = ref<AsyncData<unknown>>({ status: 'LOADING' })
+  const heritageData = ref<AsyncData<DeepReadonly<Pick<FullEtapeHeritage, 'heritageProps' | 'heritageContenu'>>>>({ status: 'LOADING' })
   const fondamentalesComplete = ref<boolean>(false)
+  const dateTypeComplete = ref<boolean>(false)
   const perimetreComplete = ref<boolean>(false)
   const sectionsComplete = ref<boolean>(false)
   const documentsComplete = ref<boolean>(false)
@@ -94,13 +97,22 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
     }
   })
 
-  
 
   const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>, complete: boolean) => {
     fondamentalesComplete.value = complete
-    console.log('plop')
     setEtape({...etape.value, ...etapeFondamentale})
-    // etape.value = {...etape.value, ...etapeFondamentale}
+  }
+
+  const perimetreCompleteUpdate = (complete: boolean) => {
+    perimetreComplete.value = complete
+  }
+
+  const dateTypeCompleteUpdate = async (etapeDateType: EtapeDateTypeEdit, complete: boolean) => {
+    dateTypeComplete.value = complete
+    if(isNotNullNorUndefined(etapeDateType.typeId) && isNotNullNorUndefined(etapeDateType.statutId)){
+      setEtape({...etape.value, date: etapeDateType.date, typeId: etapeDateType.typeId, statutId: etapeDateType.statutId})
+      await reloadHeritage()
+    }
   }
 
   const titulairesAndAmodiataires = computed<Entreprise[]>(() => {
@@ -111,135 +123,46 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
   })
 
 
-  const etapeType = computed<EtapeType | null>(() => {
-    if (isNotNullNorUndefined(etape.value.typeId)) {
-      return EtapesTypes[etape.value.typeId]
-    }
-    return null
-  })
-
-
-  const typeComplete = computed<boolean>(() => {
-    if (!stepType.value) {
-      return true
-    }
-
-    if (isNullOrUndefined(etape.value.date) || isNullOrUndefined(etape.value.typeId)) {
-      return false
-    }
-
-    if (userIsAdmin.value && props.etapeIsDemandeEnConstruction) {
-      return true
-    }
-
-    return isNotNullNorUndefined(etape.value.statutId)
-  })
-
   const complete = computed<boolean>(() => {
     return (
-      typeComplete.value &&
-      stepFondamentalesComplete.value &&
-      stepPerimetreComplete.value &&
-      stepSectionsComplete.value &&
-      stepDocumentsComplete.value &&
-      stepEntrepriseDocumentsComplete.value &&
-      stepDecisionsAnnexesComplete.value
+      (!stepDateTypeIsVisible.value || dateTypeComplete.value) &&
+      (!stepFondamentalesIsVisible.value || fondamentalesComplete.value) &&
+      (!stepPerimetreIsVisible.value || perimetreComplete.value) &&
+      (!stepSectionsIsVisible.value || sectionsComplete.value) &&
+      (!stepDocumentsIsVisible.value || documentsComplete.value) &&
+      (!stepEntrepriseDocumentsIsVisible.value || entrepriseDocumentsComplete.value) &&
+      (!stepDecisionsAnnexesIsVisible.value || decisionsAnnexesComplete.value)
     )
   })
 
-  const stepFondamentalesComplete = computed<boolean>(() => {
-    return !stepFondamentales.value || fondamentalesComplete.value
-  })
-
-  const stepPerimetreComplete = computed<boolean>(() => {
-    return !stepFondamentales.value || perimetreComplete.value
-  })
-
-  const stepSectionsComplete = computed<boolean>(() => {
-    return !stepSections.value || sectionsComplete.value
-  })
-
-  const stepDocumentsComplete = computed<boolean>(() => {
-    return !stepDocuments.value || documentsComplete.value
-  })
-
-  const stepEntrepriseDocumentsComplete = computed<boolean>(() => {
-    return !stepEntrepriseDocuments.value || entrepriseDocumentsComplete.value
-  })
-
-  const stepDecisionsAnnexesComplete = computed<boolean>(() => {
-    return !stepDecisionsAnnexes.value || decisionsAnnexesComplete.value
-  })
-
-  const steps = computed<string[]>(() => {
-    const steps = []
-
-    if (userIsAdmin.value) {
-      steps.push('type')
-    }
-
-    if (heritageData.value.status === 'LOADED' && isNotNullNorUndefined(etapeType.value)) {
-      if (etapeType.value.fondamentale) {
-        steps.push('fondamentales')
-        steps.push('points')
-      }
-      if (isNotNullNorUndefinedNorEmpty([...sections.value])) {
-        steps.push('sections')
-      }
-      const hasDocuments = getDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id).length > 0
-
-      if (hasDocuments) {
-        steps.push('documents')
-      }
-
-      const hasEntrepriseDocuments = getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id).length > 0
-
-      if (hasEntrepriseDocuments) {
-        steps.push('entrepriseDocuments')
-      }
-
-      if (hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etapeType.value.id, etape.value.statutId)) {
-        steps.push('decisionsAnnexes')
-      }
-
-    }
-
-
-
-    return steps
-  })
-
-  const stepType = computed<boolean>(() => {
-    return steps.value.some(s => s === 'type')
-  })
-
-  const stepFondamentales = computed<boolean>(() => {
-    return steps.value.some(s => s === 'fondamentales')
-  })
-
-  const stepPoints = computed<boolean>(() => {
-    return steps.value.some(s => s === 'points')
-  })
-
-  const stepSections = computed<boolean>(() => {
-    return steps.value.some(s => s === 'sections')
-  })
-
-  const stepDocuments = computed<boolean>(() => {
-    return steps.value.some(s => s === 'documents')
-  })
-
-  const stepEntrepriseDocuments = computed<boolean>(() => {
-    return steps.value.some(s => s === 'entrepriseDocuments')
-  })
-
-  const stepDecisionsAnnexes = computed<boolean>(() => {
-    return steps.value.some(s => s === 'decisionsAnnexes')
-  })
-
-  const userIsAdmin = computed<boolean>(() => {
+  const stepDateTypeIsVisible = computed<boolean>(() => {
     return isSuper(props.user) || isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)
   })
+
+  const stepFondamentalesIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefined(etape.value.typeId) ?  EtapesTypes[etape.value.typeId].fondamentale : false
+  })
+
+  const stepPerimetreIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefined(etape.value.typeId) ?  EtapesTypes[etape.value.typeId].fondamentale : false
+  })
+
+  const stepSectionsIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefinedNorEmpty([...sections.value])
+  })
+
+  const stepDocumentsIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefined(etape.value.typeId) ? getDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0 : false
+  })
+
+  const stepEntrepriseDocumentsIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefined(etape.value.typeId) ? getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0 : false
+  })
+
+  const stepDecisionsAnnexesIsVisible = computed<boolean>(() => {
+    return isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId) ? hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId, etape.value.statutId) : false
+  })
+
 
   const sections = computed<DeepReadonly<Section[]>>(() => {
 
@@ -255,64 +178,52 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
   })
 
   const isHelpVisible = computed<boolean>(() => {
-    return etapeType.value?.id === 'mfr' && ['arm', 'axm'].includes(props.titreTypeId)
+    return etape.value.typeId === 'mfr' && ['arm', 'axm'].includes(props.titreTypeId)
   })
 
-  const documentsCompleteUpdate = (etapeDocuments: EtapeDocument[], newDocumentsComplete: boolean) => {
-    documentsComplete.value = newDocumentsComplete
-    props.completeUpdate({ ...etape.value, etapeDocuments }, complete.value)
+  // const documentsCompleteUpdate = (etapeDocuments: EtapeDocument[], newDocumentsComplete: boolean) => {
+  //   documentsComplete.value = newDocumentsComplete
+  //   props.completeUpdate({ ...etape.value, etapeDocuments }, complete.value)
+  // }
+
+  // const entrepriseDocumentsCompleteUpdate = (entrepriseDocumentIds: EntrepriseDocumentId[], newEntrepriseDocumentsComplete: boolean) => {
+  //   entrepriseDocumentsComplete.value = newEntrepriseDocumentsComplete
+  //   props.completeUpdate({ ...etape.value, entrepriseDocumentIds }, complete.value)
+  // }
+
+   const onEtapePerimetreChange = (perimetreInfos: GeojsonInformations) => {
+    setEtape({...etape.value,
+    geojson4326Perimetre: perimetreInfos.geojson4326_perimetre,
+    geojson4326Points: perimetreInfos.geojson4326_points,
+    geojsonOriginePerimetre: perimetreInfos.geojson_origine_perimetre,
+    geojsonOriginePoints: perimetreInfos.geojson_origine_points,
+    geojsonOrigineGeoSystemeId: perimetreInfos.geojson_origine_geo_systeme_id
+  })
+
+    props.alertesUpdate({ superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
+  }
+  const onEtapePointsChange = (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => {
+    setEtape({...etape.value,
+    geojson4326Points: geojson4326Points,
+    geojsonOriginePoints: geojsonOriginePoints,})
+  }
+  const onEtapeForagesChange = (geojson4326Forages: FeatureCollectionForages, geojsonOrigineForages: FeatureCollectionForages) => {
+    setEtape({...etape.value,
+    geojson4326Forages: geojson4326Forages,
+    geojsonOrigineForages: geojsonOrigineForages,})
   }
 
-  const entrepriseDocumentsCompleteUpdate = (entrepriseDocumentIds: EntrepriseDocumentId[], newEntrepriseDocumentsComplete: boolean) => {
-    entrepriseDocumentsComplete.value = newEntrepriseDocumentsComplete
-    props.completeUpdate({ ...etape.value, entrepriseDocumentIds }, complete.value)
-  }
-
-  const onDateChanged = async (date: CaminoDate | null) => {
-    if (isNotNullNorUndefined(date)) {
-      setEtape({...etape.value, date})
-      await reloadHeritage()
-    }
-  }
-
-
-
-
-  // async sectionsUpdate() {
-  //   // FIXME à tester si on change la mécanisation
-  // },
-
-
-
-
-  const onEtapeTypeChange = async (etapeStatutId: EtapeStatutId | null, etapeTypeId: EtapeTypeId | null) => {
-
-    const needUpdate: boolean = etapeTypeId !== etape.value.typeId
-
-    if (etapeStatutId !== null && etapeStatutId !== etape.value.statutId) {
-      setEtape({...etape.value, statutId: etapeStatutId})
-    }
-    if (etapeTypeId !== null && etapeTypeId !== etape.value.typeId) {
-      setEtape({...etape.value, typeId: etapeTypeId})
-    }
-
-
-    if (needUpdate) {
-      await reloadHeritage()
-    }
-
-  }
   return () =>
     <div class="mb">
-      {stepType.value ? <Bloc step={{ name: 'Type', help: null }} complete={typeComplete.value}>
-        {userIsAdmin.value ? <DateEdit date={etape.value.date} onDateChanged={onDateChanged} /> : null}
-
-        <TypeEdit etape={etape.value} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} />
+      {stepDateTypeIsVisible.value ? <Bloc step={{ name: 'Type', help: null }} complete={dateTypeComplete.value}>
+        <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId}/>
       </Bloc> : null}
 
-      {stepFondamentales.value ? <Bloc step={{ name: 'Propriétés', help: null }} complete={stepFondamentalesComplete.value}>
+      <LoadingElement data={heritageData.value} renderItem={(heritage) => <>
+      { isNotNullNorUndefined(etape.value.typeId) ? <>
+        {stepFondamentalesIsVisible.value ? <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentalesComplete.value}>
         <FondamentalesEdit
-          etape={etape.value}
+          etape={{...props.etape, typeId: etape.value.typeId, ...heritage}}
           demarcheTypeId={props.demarcheTypeId}
           titreTypeId={props.titreTypeId}
           user={props.user}
@@ -321,20 +232,28 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
         />
       </Bloc> : null}
 
-      {/* { stepPoints.value ? <Bloc step={{name: 'Périmètre', help: null}} complete={stepPerimetreComplete.value}>
+
+      { stepPerimetreIsVisible.value ? <Bloc step={{name: 'Périmètre', help: null}} complete={perimetreComplete.value}>
         <PerimetreEdit
-          :etape="etape"
-          :titreTypeId="titreTypeId"
-          :titreSlug="titreSlug"
-          :apiClient="apiClient"
-          :onEtapeChange="onEtapePerimetreChange"
-          :onPointsChange="onEtapePointsChange"
-          :onForagesChange="onEtapeForagesChange"
-          :completeUpdate="perimetreCompleteUpdate"
+          etape={{...props.etape, typeId: etape.value.typeId, ...heritage}}
+          titreTypeId={props.titreTypeId}
+          titreSlug={props.titreSlug}
+          apiClient={props.apiClient}
+
+          onEtapeChange={onEtapePerimetreChange}
+          onPointsChange={onEtapePointsChange}
+          onForagesChange={onEtapeForagesChange}
+          completeUpdate={perimetreCompleteUpdate}
         />
       </Bloc> : null }
 
-      { stepSections.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={stepSectionsComplete.value}>
+
+      </> : null }
+      </>} />
+
+
+
+      {/* { stepSections.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={stepSectionsComplete.value}>
         <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
       </Bloc> : null }
 
@@ -371,34 +290,10 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
 
 
 
-  // onEtapePerimetreChange(perimetreInfos) {
-  //   // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
-  //   // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
-  //   this.etape.geojson4326Perimetre = perimetreInfos.geojson4326_perimetre
-  //   this.etape.geojson4326Points = perimetreInfos.geojson4326_points
-  //   this.etape.geojsonOriginePerimetre = perimetreInfos.geojson_origine_perimetre
-  //   this.etape.geojsonOriginePoints = perimetreInfos.geojson_origine_points
-  //   this.etape.geojsonOrigineGeoSystemeId = perimetreInfos.geojson_origine_geo_systeme_id
 
-  //   this.etape.geojson4326Forages = perimetreInfos.geojson4326_forages
-  //   this.etape.geojsonOrigineForages = perimetreInfos.geojson_origine_forages
-
-  //   this.$emit('alertes-update', { superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
-  //   this.$emit('update:etape', this.etape)
-  // },
-  // onEtapePointsChange(geojson4326Points, geojsonOriginePoints) {
-  //   this.etape.geojson4326Points = geojson4326Points
-  //   this.etape.geojsonOriginePoints = geojsonOriginePoints
-  //   this.$emit('update:etape', this.etape)
-  // },
-  // onEtapeForagesChange(geojson4326Forages, geojsonOrigineForages) {
-  //   this.etape.geojson4326Forages = geojson4326Forages
-  //   this.etape.geojsonOrigineForages = geojsonOrigineForages
-  //   this.$emit('update:etape', this.etape)
-  // },
 
 
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-EtapeEditForm.props = ['etape', 'demarcheId', 'demarcheTypeId', 'titreTypeId', 'titreSlug', 'user', 'etapeIsDemandeEnConstruction', 'sdomZoneIds', 'entreprises', 'apiClient', 'completeUpdate', 'alertesUpdate',]
+EtapeEditForm.props = ['etape', 'demarcheId', 'demarcheTypeId', 'titreTypeId', 'titreSlug', 'user', 'sdomZoneIds', 'entreprises', 'apiClient', 'completeUpdate', 'alertesUpdate', 'initTab']

@@ -1,6 +1,6 @@
 import { contentTypes } from 'camino-common/src/rest'
 import { GeoSysteme, GeoSystemes, GeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { defineComponent, FunctionalComponent } from 'vue'
+import { DeepReadonly, defineComponent, FunctionalComponent } from 'vue'
 import { DsfrLink } from '../_ui/dsfr-button'
 import { TableRow, TextColumnData } from '../_ui/table'
 import { TableAuto, Column } from '../_ui/table-auto'
@@ -12,8 +12,8 @@ import { NotNullableKeys, isNotNullNorUndefined } from 'camino-common/src/typesc
 import { GeoSystemeTypeahead } from './geosysteme-typeahead'
 
 interface Props {
-  geojson_origine_points: FeatureCollectionPoints
-  geojson_origine_forages: FeatureCollectionForages | null
+  geojson_origine_points: DeepReadonly<FeatureCollectionPoints>
+  geojson_origine_forages: DeepReadonly<FeatureCollectionForages> | null
   geo_systeme_id: GeoSystemeId
   titreSlug: TitreSlug
   maxRows: number
@@ -25,7 +25,7 @@ const labels = {
   gon: { x: 'longitude', y: 'latitude' },
 } as const satisfies Record<GeoSysteme['uniteId'], { x: string; y: string }>
 
-const geoJsonToArray = (perimetre: FeatureCollectionPoints | FeatureCollectionForages): TableRow<string>[] => {
+const geoJsonToArray = (perimetre: DeepReadonly<FeatureCollectionPoints | FeatureCollectionForages>): TableRow<string>[] => {
   return perimetre.features.map<TableRow<string>>((feature, index) => {
     const x_deg = toDegresMinutes(feature.geometry.coordinates[0])
     const y_deg = toDegresMinutes(feature.geometry.coordinates[1])
@@ -157,7 +157,7 @@ export const TabCaminoTable = defineComponent<Props>(props => {
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 TabCaminoTable.props = ['geojson_origine_points', 'geojson_origine_forages', 'geo_systeme_id', 'titreSlug', 'maxRows']
 
-export const transformMultipolygonToPoints = (geojson_perimetre: FeatureMultiPolygon): FeatureCollectionPoints => {
+export const transformMultipolygonToPoints = (geojson_perimetre: DeepReadonly<FeatureMultiPolygon>): DeepReadonly<FeatureCollectionPoints> => {
   const currentPoints: (FeatureCollectionPoints['features'][0] & { properties: { latitude: string; longitude: string } })[] = []
   let index = 0
   geojson_perimetre.geometry.coordinates.forEach((topLevel, topLevelIndex) =>

@@ -11,7 +11,7 @@ import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon 
 import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
-import { DeepReadonly } from './typescript-tools.js'
+import { DeepReadonly, NotNullableKeys } from './typescript-tools.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -34,26 +34,26 @@ export interface CaminoDocument {
   typeId: DocumentTypeId
 }
 
-type EtapeBase = {
+export type Etape = {
   id: EtapeId
   contenu: { [key: string]: unknown }
   date: CaminoDate
-  typeId: EtapeTypeId
-  statutId: EtapeStatutId
+  typeId: EtapeTypeId | null
+  statutId: EtapeStatutId | null
   substances: SubstanceLegaleId[]
   titulaires: EtapeEntreprise[]
   amodiataires: EtapeEntreprise[]
   administrations?: AdministrationId[]
   communes?: string[]
 
-  geojson4326Perimetre?: FeatureMultiPolygon | null
-  geojson4326Points?: FeatureCollectionPoints | null
-  geojsonOriginePerimetre?: FeatureMultiPolygon | null
-  geojsonOriginePoints?: FeatureCollectionPoints | null
-  geojsonOrigineGeoSystemeId?: GeoSystemeId | null
-  geojson4326Forages?: FeatureCollectionForages | null
-  geojsonOrigineForages?: FeatureCollectionForages | null
-  surface?: KM2 | null
+  geojson4326Perimetre: FeatureMultiPolygon | null | undefined
+  geojson4326Points: FeatureCollectionPoints | null | undefined
+  geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
+  geojsonOriginePoints: FeatureCollectionPoints | null | undefined
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
+  geojson4326Forages: FeatureCollectionForages | null | undefined
+  geojsonOrigineForages: FeatureCollectionForages | null | undefined
+  surface: KM2 | null | undefined
 
   notes: null | string
   duree: number; 
@@ -63,15 +63,14 @@ type EtapeBase = {
 
 export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type EtapeWithHeritage<HeritagePropsKeys extends keyof MappingHeritagePropsNameEtapePropsName, T extends Pick<EtapeBase, 'typeId' | 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>>> = T & {
+export type FullEtapeHeritage = EtapeWithHeritage<keyof MappingHeritagePropsNameEtapePropsName, Omit<Etape, 'typeId'> & {typeId: EtapeTypeId}>
+
+type EtapeWithHeritage<HeritagePropsKeys extends keyof MappingHeritagePropsNameEtapePropsName, T extends (Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & {typeId: EtapeTypeId})> = T & {
   heritageProps: {
     [key in HeritagePropsKeys]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<key>>>
   }
   heritageContenu: unknown
 }
-
-export type Etape = EtapeWithHeritage<keyof MappingHeritagePropsNameEtapePropsName, EtapeBase>
-export type EtapeFondamentale = Etape
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })
 export type EtapeTypeEtapeStatutWithMainStep = z.infer<typeof etapeTypeEtapeStatutWithMainStepValidator>
