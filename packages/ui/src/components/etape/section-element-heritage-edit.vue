@@ -4,7 +4,7 @@
     <div v-else>
       <slot v-if="hasHeritage" name="read" :heritagePropEtape="prop.etape" />
       <div v-else class="border p-s mb-s">Non renseigné</div>
-      <p class="h6 italic mb-s">
+      <p v-if="prop.etape" class="h6 italic mb-s">
         Hérité de :
         <span class="cap-first">{{ EtapesTypes[prop.etape.typeId].nom }}</span> ({{ dateFormat(prop.etape.date) }})
       </p>
@@ -20,12 +20,12 @@
 import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
-import { Etape, HeritageProp } from 'camino-common/src/etape'
+import { FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 // TODO 2022-11-14 surement à merger avec heritage-edit.vue
 const props = defineProps<{
-  prop: HeritageProp<Etape>
+  prop: HeritageProp<FullEtapeHeritage>
   propId: string
   sectionId: string
 }>()
