@@ -11,7 +11,7 @@ import {
   urlElementValidator,
 } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { z } from 'zod'
-import { isNotNullNorUndefined } from './typescript-tools.js'
+import { DeepReadonly, isNotNullNorUndefined } from './typescript-tools.js'
 
 const dateElementWithValueValidator = dateElementValidator.extend({ value: caminoDateValidator.nullable() })
 
@@ -46,10 +46,10 @@ const elementWithValueValidator = z.union([
 
 export type ElementWithValue = z.infer<typeof elementWithValueValidator>
 
-export const isNumberElement = (element: ElementWithValue): element is NumberElementWithValue => {
+export const isNumberElement = (element: DeepReadonly<ElementWithValue>): element is DeepReadonly<NumberElementWithValue> => {
   return element.type === 'number' || element.type === 'integer'
 }
-export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
+export const isRadioElement = (element: DeepReadonly<ElementWithValue>): element is DeepReadonly<RadioElementWithValue> => {
   return element.type === 'radio'
 }
 

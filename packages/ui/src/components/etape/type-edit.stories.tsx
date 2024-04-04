@@ -25,7 +25,6 @@ const apiClientMock: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'> = {
     ])
   },
 }
-// TODO 2023-01-09: changer la notion de etapeIsDemandeEnConstruction qui devrait être géree par le composant type-edit directement
 export const Simple: StoryFn = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
@@ -170,6 +169,6 @@ export const WithError: StoryFn = () => (
       date: toCaminoDate('2022-01-01')
 
     }}
-    
+
   />
 )

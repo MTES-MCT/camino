@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch, DeepReadonly } from 'vue'
 import { ElementWithValue, isNumberElement, isRadioElement, SectionWithValue } from 'camino-common/src/sections'
 import { exhaustiveCheck, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
@@ -11,35 +11,45 @@ import { DsfrInputCheckboxes } from '../_ui/dsfr-input-checkboxes'
 import { capitalize } from 'camino-common/src/strings'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
+import { useState } from '../../utils/vue-tsx-utils'
 
 interface Props {
-  sectionsWithValue: SectionWithValue[]
-  completeUpdate: (complete: boolean, newContenu: SectionWithValue[]) => void
+  sectionsWithValue: DeepReadonly<SectionWithValue[]>
+  completeUpdate: (complete: boolean, newContenu: Props['sectionsWithValue']) => void
 }
 
 export const SectionsEdit = defineComponent<Props>(props => {
-  const sectionsWithValue = ref<SectionWithValue[]>([])
+  const [sectionsWithValue, setSectionsWithValue] = useState<DeepReadonly<SectionWithValue[]>>([])
 
   watch(
     () => props.sectionsWithValue,
     () => {
-      sectionsWithValue.value = [...props.sectionsWithValue]
+      setSectionsWithValue([...props.sectionsWithValue])
       props.completeUpdate(sectionsWithValueCompleteValidate(props.sectionsWithValue).length === 0, props.sectionsWithValue)
     },
     { immediate: true }
   )
 
-  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: ElementWithValue) => {
-    const newSection = { ...sectionsWithValue.value[sectionIndex] }
-
-    newSection.elements = [...newSection.elements]
-    newSection.elements.splice(elementIndex, 1, elementWithValue)
-
-    const newSectionsWithValue: SectionWithValue[] = [...sectionsWithValue.value]
-    newSectionsWithValue.splice(sectionIndex, 1, newSection)
+  const onValueChange = (elementIndex: number, sectionIndex: number) => (elementWithValue: DeepReadonly<ElementWithValue>) => {
+    const newSectionsWithValue: DeepReadonly<SectionWithValue[]> = sectionsWithValue.value.map((section, index) => {
+      if (index === sectionIndex) {
+        return {
+          ...section,
+          elements: section.elements.map((element, oldElementIndex) => {
+            if (oldElementIndex === elementIndex) {
+              return elementWithValue
+            } else {
+              return element
+            }
+          }),
+        }
+      } else {
+        return section
+      }
+    })
+    setSectionsWithValue(newSectionsWithValue)
 
     const complete: boolean = sectionsWithValueCompleteValidate(newSectionsWithValue).length === 0
-    sectionsWithValue.value = newSectionsWithValue
     props.completeUpdate(complete, newSectionsWithValue)
   }
 
@@ -67,15 +77,15 @@ export const SectionsEdit = defineComponent<Props>(props => {
 SectionsEdit.props = ['sectionsWithValue', 'completeUpdate']
 
 interface SectionElementEditProps {
-  element: ElementWithValue
-  onValueChange: (value: ElementWithValue) => void
+  element: DeepReadonly<ElementWithValue>
+  onValueChange: (value: SectionElementEditProps['element']) => void
 }
-const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
+export const SectionElementEdit = defineComponent<SectionElementEditProps>(props => {
   let sectionElementEditInput: JSX.Element | null = null
 
   const complete = ref<boolean>(sectionElementWithValueCompleteValidate(props.element))
 
-  const onValueChange = (value: ElementWithValue) => {
+  const onValueChange = (value: DeepReadonly<ElementWithValue>) => {
     complete.value = sectionElementWithValueCompleteValidate(value)
     props.onValueChange(value)
   }

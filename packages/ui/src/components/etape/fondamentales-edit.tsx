@@ -28,7 +28,7 @@ export interface Props {
   titreTypeId: TitreTypeId
   user: User
   entreprises: Entreprise[]
-  completeUpdate: (etape: DeepReadonly<EtapeFondamentaleEdit>, complete: boolean) => void
+  completeUpdate: (etape: Props['etape'], complete: boolean) => void
 }
 export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate'], (props) => {
 

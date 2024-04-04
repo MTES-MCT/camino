@@ -78,7 +78,7 @@ const etape: DeepReadonly<FullEtapeHeritage> = {
   id: etapeIdValidator.parse('id'),
   statutId: 'fai',
   typeId: 'mfr',
-  contenu: {},
+  contenu: {arm: {mecanise: true, franchissements: 2}},
   date: toCaminoDate('2022-02-02'),
   dateDebut: toCaminoDate('2022-02-02'),
   dateFin: undefined,
@@ -88,7 +88,7 @@ const etape: DeepReadonly<FullEtapeHeritage> = {
   amodiataires: [],
   notes: null,
   heritageProps,
-  heritageContenu: {},
+  heritageContenu: {arm: {mecanise: {actif: false}, franchissements: {actif: false}}},
   geojson4326Forages: undefined,
   geojson4326Perimetre: undefined,
   geojson4326Points: undefined,
@@ -160,7 +160,7 @@ export const Default: StoryFn = () => <EtapeEditForm
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId='oct'
     titreSlug={titreSlugValidator.parse('titre-slug')}
-    titreTypeId='axm'
+    titreTypeId='arm'
     sdomZoneIds={[]}
     etape={etape}
     completeUpdate={completeUpdate}

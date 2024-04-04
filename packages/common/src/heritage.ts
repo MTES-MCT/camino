@@ -16,6 +16,7 @@ export const mappingHeritagePropsNameEtapePropsName = {
   duree: ['duree'],
   substances: ['substances'],
   perimetre: ['geojson4326Perimetre', 'geojson4326Points', 'surface', 'geojsonOriginePerimetre', 'geojsonOriginePoints', 'geojsonOrigineGeoSystemeId', 'geojson4326Forages', 'geojsonOrigineForages'],
-} as const satisfies Record<EtapeHeritageProps, Readonly<string[]>>
+  contenu: ['contenu']
+} as const satisfies Record<EtapeHeritageProps | 'contenu', Readonly<string[]>>
 
 export type MappingHeritagePropsNameEtapePropsName = typeof mappingHeritagePropsNameEtapePropsName

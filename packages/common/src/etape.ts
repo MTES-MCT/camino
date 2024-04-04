@@ -12,6 +12,7 @@ import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
 import { DeepReadonly, NotNullableKeys } from './typescript-tools.js'
+import { ElementWithValue } from './sections.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -36,7 +37,7 @@ export interface CaminoDocument {
 
 export type Etape = {
   id: EtapeId
-  contenu: { [key: string]: unknown }
+  contenu: Record<string, Record<string, ElementWithValue['value']>>
   date: CaminoDate
   typeId: EtapeTypeId | null
   statutId: EtapeStatutId | null
@@ -63,13 +64,13 @@ export type Etape = {
 
 export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type FullEtapeHeritage = EtapeWithHeritage<keyof MappingHeritagePropsNameEtapePropsName, Omit<Etape, 'typeId'> & {typeId: EtapeTypeId}>
+export type FullEtapeHeritage = EtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId'> & {typeId: EtapeTypeId}>
 
-type EtapeWithHeritage<HeritagePropsKeys extends keyof MappingHeritagePropsNameEtapePropsName, T extends (Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & {typeId: EtapeTypeId})> = T & {
+type EtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends (Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & {typeId: EtapeTypeId})> = T & {
   heritageProps: {
     [key in HeritagePropsKeys]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<key>>>
   }
-  heritageContenu: unknown
+  heritageContenu: Record<string, Record<string, HeritageProp<Pick<FullEtapeHeritage, 'contenu' | 'typeId' | 'date'>>>>
 }
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })

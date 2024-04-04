@@ -4,7 +4,6 @@ import { TypeEdit } from './type-edit'
 import { Bloc } from './bloc'
 import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
-import SectionsEdit from './sections-edit.vue'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
@@ -29,6 +28,7 @@ import { useState } from "@/utils/vue-tsx-utils"
 import { DateTypeEdit, EtapeDateTypeEdit } from "./date-type-edit"
 import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations } from "camino-common/src/perimetre"
 import { LoadingElement } from "../_ui/functional-loader"
+import { SectionsEdit } from "./sections-edit"
 
 export type Props = {
   etape: DeepReadonly<Etape>,
@@ -140,42 +140,29 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
   })
 
   const stepFondamentalesIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefined(etape.value.typeId) ?  EtapesTypes[etape.value.typeId].fondamentale : false
+    return isNotNullNorUndefined(etape.value.typeId) &&  EtapesTypes[etape.value.typeId].fondamentale
   })
 
   const stepPerimetreIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefined(etape.value.typeId) ?  EtapesTypes[etape.value.typeId].fondamentale : false
+    return isNotNullNorUndefined(etape.value.typeId) &&  EtapesTypes[etape.value.typeId].fondamentale
   })
 
   const stepSectionsIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefinedNorEmpty([...sections.value])
+    return isNotNullNorUndefined(etape.value.typeId) && getSections(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0
   })
 
   const stepDocumentsIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefined(etape.value.typeId) ? getDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0 : false
+    return isNotNullNorUndefined(etape.value.typeId) && getDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0
   })
 
   const stepEntrepriseDocumentsIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefined(etape.value.typeId) ? getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0 : false
+    return isNotNullNorUndefined(etape.value.typeId) && getEntrepriseDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId).length > 0
   })
 
   const stepDecisionsAnnexesIsVisible = computed<boolean>(() => {
-    return isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId) ? hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId, etape.value.statutId) : false
+    return isNotNullNorUndefined(etape.value.typeId) && isNotNullNorUndefined(etape.value.statutId) && hasEtapeAvisDocuments(props.titreTypeId, props.demarcheTypeId, etape.value.typeId, etape.value.statutId)
   })
 
-
-  const sections = computed<DeepReadonly<Section[]>>(() => {
-
-    if (isNullOrUndefined(etape.value.typeId)) {
-      return []
-    }
-
-    try {
-      return getSections(props.titreTypeId, props.demarcheTypeId, etape.value.typeId)
-    } catch (e) {
-      return []
-    }
-  })
 
   const isHelpVisible = computed<boolean>(() => {
     return etape.value.typeId === 'mfr' && ['arm', 'axm'].includes(props.titreTypeId)
@@ -213,6 +200,10 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
     geojsonOrigineForages: geojsonOrigineForages,})
   }
 
+  const sectionCompleteUpdate = () => {
+    //FIXME
+  }
+
   return () =>
     <div class="mb">
       {stepDateTypeIsVisible.value ? <Bloc step={{ name: 'Type', help: null }} complete={dateTypeComplete.value}>
@@ -247,17 +238,14 @@ export const EtapeEditForm = defineComponent<Props>((props) => {
         />
       </Bloc> : null }
 
-
-      </> : null }
-      </>} />
-
-
-
-      {/* { stepSections.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={stepSectionsComplete.value}>
-        <SectionsEdit :etape="etape" :sections="sections" @update:etape="newValue => $emit('update:etape', newValue)" @complete-update="sectionsCompleteUpdate" @sections-update="sectionsUpdate" />
+      { stepSectionsIsVisible.value ? <Bloc step={{name: 'Propriétés spécifiques', help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null}} complete={sectionsComplete.value}>
+        <SectionsEdit etape={{...props.etape, typeId: etape.value.typeId, ...heritage}} titreTypeId={props.titreTypeId} demarcheTypeId={props.demarcheTypeId} completeUpdate={sectionCompleteUpdate}  />
       </Bloc> : null }
 
-      { stepDocuments.value ? <Bloc step={{name: 'Liste des documents', help: null}} complete={stepDocumentsComplete.value}>
+      </> : null }
+
+      </>} />
+      { /*  stepDocuments.value ? <Bloc step={{name: 'Liste des documents', help: null}} complete={stepDocumentsComplete.value}>
         <div class="dsfr">
           <EtapeDocumentsEdit
             :apiClient="apiClient"
