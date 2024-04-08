@@ -10,6 +10,7 @@ import { EtapeApiClient } from './etape-api-client'
 const meta: Meta = {
   title: 'Components/Etape/TypeEdit',
   component: TypeEdit,
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -33,7 +34,7 @@ export const Simple: StoryFn = () => (
     etape={{
       statutId: ETAPES_STATUTS.FAIT,
       typeId: ETAPES_TYPES.demande,
-      date: toCaminoDate('2022-01-01')
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -46,7 +47,7 @@ export const DemandeAvecUnSeulStatut: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: ETAPES_TYPES.classementSansSuite,
-      date: toCaminoDate('2022-01-01')
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -59,7 +60,7 @@ export const DemandeSansStatut: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: ETAPES_TYPES.demande,
-      date: toCaminoDate('2022-01-01')
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -72,7 +73,7 @@ export const DemandeEnConstruction: StoryFn = () => (
     etape={{
       statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
       typeId: ETAPES_TYPES.demande,
-      date: toCaminoDate('2022-01-01')
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -85,7 +86,7 @@ export const NouvelleDemande: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
-      date: toCaminoDate('2022-01-01')
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -102,8 +103,7 @@ export const Empty: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
-      date: toCaminoDate('2022-01-01')
-
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -120,8 +120,7 @@ export const NoEtape: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: 'mfr',
-      date: toCaminoDate('2022-01-01')
-
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -138,8 +137,7 @@ export const SelectedEtapeNotPossible: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: 'mfr',
-      date: toCaminoDate('2022-01-01')
-
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -152,8 +150,7 @@ export const Loading: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
-      date: toCaminoDate('2022-01-01')
-
+      date: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -166,9 +163,7 @@ export const WithError: StoryFn = () => (
     etape={{
       statutId: null,
       typeId: null,
-      date: toCaminoDate('2022-01-01')
-
+      date: toCaminoDate('2022-01-01'),
     }}
-
   />
 )

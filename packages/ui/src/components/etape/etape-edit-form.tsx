@@ -216,9 +216,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="mb">
+    <div class="dsfr">
       {stepDateTypeIsVisible.value ? (
-        <Bloc step={{ name: 'Type', help: null }} complete={dateTypeComplete.value}>
+        <Bloc step={{ name: 'Informations principales', help: null }} complete={dateTypeComplete.value}>
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
         </Bloc>
       ) : null}
@@ -228,7 +228,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         renderItem={heritage => (
           <>
             {isNotNullNorUndefined(etape.value.typeId) ? (
-              <>
+              <div>
                 {stepFondamentalesIsVisible.value ? (
                   <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentalesComplete.value}>
                     <FondamentalesEdit
@@ -276,19 +276,17 @@ export const EtapeEditForm = defineComponent<Props>(props => {
 
                 {stepDocumentsIsVisible.value ? (
                   <Bloc step={{ name: 'Liste des documents', help: null }} complete={documentsComplete.value}>
-                    <div class="dsfr">
-                      <EtapeDocumentsEdit
-                        apiClient={props.apiClient}
-                        tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etape.value.typeId }}
-                        etapeId={etape.value.id}
-                        completeUpdate={documentsCompleteUpdate}
-                        sdomZoneIds={props.sdomZoneIds}
-                        user={props.user}
-                        // FIXME Mais si c’est hérité ça marche ?
-                        contenu={etape.value.contenu}
-                        etapeStatutId={etape.value.statutId}
-                      />
-                    </div>
+                    <EtapeDocumentsEdit
+                      apiClient={props.apiClient}
+                      tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etape.value.typeId }}
+                      etapeId={etape.value.id}
+                      completeUpdate={documentsCompleteUpdate}
+                      sdomZoneIds={props.sdomZoneIds}
+                      user={props.user}
+                      // FIXME Mais si c’est hérité ça marche ?
+                      contenu={etape.value.contenu}
+                      etapeStatutId={etape.value.statutId}
+                    />
                   </Bloc>
                 ) : null}
 
@@ -316,10 +314,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         <div>FIXME</div>
       </Bloc>  */}
 
-                <div class="dsfr">
-                  <DsfrTextarea initialValue={etape.value.notes} legend={{ main: 'Notes' }} valueChanged={onUpdateNotes} />
-                </div>
-              </>
+                <DsfrTextarea initialValue={etape.value.notes} class="fr-mt-2w" legend={{ main: 'Notes' }} valueChanged={onUpdateNotes} />
+              </div>
             ) : null}
           </>
         )}

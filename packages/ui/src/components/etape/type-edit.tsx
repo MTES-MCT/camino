@@ -1,16 +1,17 @@
-import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { computed, ref, FunctionalComponent, watch } from 'vue'
-import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { computed, ref, FunctionalComponent, watch, DeepReadonly } from 'vue'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
+import { DsfrSelect, Item } from '../_ui/dsfr-select'
 
 type Props = {
   etape: {
@@ -26,36 +27,17 @@ type Props = {
 
 interface SelectStatutProps {
   statutId: EtapeStatutId | null
-  statutIds: EtapeStatutId[]
+  statutIds: NonEmptyArray<EtapeStatutId>
   onStatutChange: (statutId: EtapeStatutId | null) => void
 }
 
-const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element => {
-  const etapeStatutIdSelected: EtapeStatutId | null = props.statutId
+const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element | null => {
+  // @ts-ignore FIXME
+  const items: DeepReadonly<NonEmptyArray<Item<EtapeStatutId>>> = props.statutIds.map(statutId => ({ id: statutId, label: EtapesStatuts[statutId].nom, disabled: props.statutId === statutId }))
 
-  return (
-    <div>
-      <div class="tablet-blobs">
-        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>Statut</h5>
-        </div>
-        <div class="mb tablet-blob-2-3">
-          <select onChange={event => props.onStatutChange(isEventWithTarget(event) && isStatut(event.target.value) ? event.target.value : null)} class="p-s">
-            {props.statutIds.length > 1 && etapeStatutIdSelected === null ? <option value={null} selected={true}></option> : null}
-            {props.statutIds.map(etapeStatutId => {
-              const etapeStatut = EtapesStatuts[etapeStatutId]
+  const initialValue = isNotNullNorUndefined(props.statutId) ? props.statutId : props.statutIds.length === 1 ? props.statutIds[0] : null
 
-              return (
-                <option key={etapeStatut.id} value={etapeStatut.id} selected={etapeStatutIdSelected === etapeStatut.id} disabled={etapeStatutIdSelected === etapeStatut.id}>
-                  {etapeStatut.nom}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-      </div>
-    </div>
-  )
+  return <DsfrSelect initialValue={initialValue} items={items} legend={{ main: 'Statut' }} required={true} id="select-etape-statut-id" valueChanged={props.onStatutChange} />
 }
 
 export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId'], props => {
@@ -115,49 +97,46 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
         <>
           {noItemsText.value === null ? (
             <>
-              <div class="tablet-blobs">
-                <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-                  <h5>Type</h5>
-                </div>
-                <div class="mb tablet-blob-2-3">
-                  <TypeAheadSingle
-                    overrideItem={etapeTypeExistante.value}
-                    disabled={isNotNullNorUndefined(etapeTypeId.value)}
-                    props={{
-                      id: 'select-etape-type',
-                      placeholder: '',
-                      items: [...items]
-                        .sort((a, _b) => (a.mainStep ? -1 : 1))
-                        .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
-                        .filter(({ nom }) => {
-                          return nom.toLowerCase().includes(etapeTypeSearch.value)
-                        })
-                        .filter(onlyUnique),
-                      minInputLength: 0,
-                      itemKey: 'id',
-                      itemChipLabel: item => item.nom,
-                      displayItemInList: item => displayItemInList(item, items),
-                      onSelectItem: (type: EtapeType | undefined) => {
-                        if (type) {
-                          etapeTypeSearch.value = ''
-                          possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
-                          if (possibleStatuts.value.length === 1) {
-                            etapeStatutId.value = possibleStatuts.value[0]
-                          } else {
-                            etapeStatutId.value = null
-                          }
-
-                          etapeTypeId.value = type.id
-                          props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+              <div class="fr-input-group">
+                <label class="fr-label fr-mb-1w" for="select-etape-type">
+                  Type *
+                </label>
+                <TypeAheadSingle
+                  overrideItem={etapeTypeExistante.value}
+                  disabled={isNotNullNorUndefined(etapeTypeId.value)}
+                  props={{
+                    id: 'select-etape-type',
+                    placeholder: '',
+                    items: [...items]
+                      .sort((a, _b) => (a.mainStep ? -1 : 1))
+                      .map(({ etapeTypeId }) => EtapesTypes[etapeTypeId])
+                      .filter(({ nom }) => {
+                        return nom.toLowerCase().includes(etapeTypeSearch.value)
+                      })
+                      .filter(onlyUnique),
+                    minInputLength: 0,
+                    itemKey: 'id',
+                    itemChipLabel: item => item.nom,
+                    displayItemInList: item => displayItemInList(item, items),
+                    onSelectItem: (type: EtapeType | undefined) => {
+                      if (type) {
+                        etapeTypeSearch.value = ''
+                        possibleStatuts.value = items.filter(({ etapeTypeId }) => etapeTypeId === type.id).map(({ etapeStatutId }) => etapeStatutId)
+                        if (possibleStatuts.value.length === 1) {
+                          etapeStatutId.value = possibleStatuts.value[0]
+                        } else {
+                          etapeStatutId.value = null
                         }
-                      },
-                      onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
-                    }}
-                  />
-                </div>
-              </div>
 
-              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || possibleStatuts.value.length === 0 ? null : (
+                        etapeTypeId.value = type.id
+                        props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                      }
+                    },
+                    onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
+                  }}
+                />
+              </div>
+              {(etapeTypeId.value === ETAPES_TYPES.demande && etapeStatutId.value === ETAPES_STATUTS.EN_CONSTRUCTION) || !isNonEmptyArray(possibleStatuts.value) ? null : (
                 <SelectStatut
                   statutIds={possibleStatuts.value}
                   statutId={etapeStatutId.value}
@@ -169,12 +148,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
               )}
             </>
           ) : (
-            <div class="dsfr tablet-blobs">
-              <div class="tablet-blob-1-3"></div>
-              <div class="mb tablet-blob-2-3">
-                <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
-              </div>
-            </div>
+            <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
           )}
         </>
       )}

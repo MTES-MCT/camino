@@ -21,12 +21,19 @@ const meta: Meta = {
 }
 export default meta
 
+const entreprises: Entreprise[] = [...Array(10)].map((_e, i) => ({ id: entrepriseIdValidator.parse(`entrepriseId${i}`), nom: `Nom de l'entreprise ${i}`, legal_siren: `legal_siren${i}` }))
+
 const heritageProps: FullEtapeHeritage['heritageProps'] = {
   dateDebut: {
     actif: false,
   },
   dateFin: {
     actif: false,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      dateFin: toCaminoDate('2022-01-01'),
+    },
   },
   duree: {
     actif: false,
@@ -48,7 +55,16 @@ const heritageProps: FullEtapeHeritage['heritageProps'] = {
     actif: false,
   },
   amodiataires: {
-    actif: false,
+    actif: true,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      amodiataires: [
+        { id: entreprises[0].id, operateur: false },
+        { id: entreprises[1].id, operateur: false },
+        { id: entreprises[2].id, operateur: false },
+      ],
+    },
   },
   perimetre: {
     actif: false,
@@ -170,7 +186,7 @@ const apiClient: Props['apiClient'] = {
     return Promise.resolve(entrepriseDocumentIdValidator.parse('entrepriseDocumentId'))
   },
 }
-const entreprises: Entreprise[] = [...Array(10)].map((_e, i) => ({ id: entrepriseIdValidator.parse(`entrepriseId${i}`), nom: `Nom de l'entreprise ${i}`, legal_siren: `legal_siren${i}` }))
+
 export const Default: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
@@ -199,7 +215,7 @@ export const EtapeModification: StoryFn = () => (
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
-    titreTypeId="axm"
+    titreTypeId="cxw"
     sdomZoneIds={[]}
     etape={{ ...etape, geojson4326Perimetre: perimetre, geojsonOriginePerimetre: perimetre, geojsonOrigineGeoSystemeId: '4326' }}
     completeUpdate={completeUpdate}

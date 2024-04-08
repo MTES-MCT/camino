@@ -7,11 +7,11 @@ import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',
   component: SubstancesEdit,
-  argTypes: {heritageProps: {actif: true}},
-  args: {heritageProps: {actif: true}},
+  argTypes: { heritageProps: { actif: true } },
+  args: { heritageProps: { actif: true } },
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
-
 
 const updateSubstancesAction = action('updateSubstances')
 const updateHeritage = action('updateHeritage')
@@ -24,7 +24,16 @@ const heritageProps: Props['heritageSubstances'] = {
     typeId: 'mfr',
   },
 }
-export const SansHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageSubstances={ { ...heritageProps, actif: false } }/>
+export const SansHeritage: StoryFn = () => (
+  <SubstancesEdit
+    substances={[SubstancesLegale.auru.id]}
+    updateHeritage={updateHeritage}
+    updateSubstances={updateSubstancesAction}
+    domaineId="m"
+    heritageSubstances={{ ...heritageProps, actif: false }}
+  />
+)
 
-
-export const AvecHeritage: StoryFn = () => <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction}  domaineId='m' heritageSubstances={{  ...heritageProps  }}/>
+export const AvecHeritage: StoryFn = () => (
+  <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{ ...heritageProps }} />
+)

@@ -10,6 +10,7 @@ const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
   component: FondamentalesEdit,
   argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -85,80 +86,84 @@ const entreprises = [
     id: newEntrepriseId('optionId3'),
     nom: 'optionNom3',
     legal_siren: null,
-  }
+  },
 ]
 
 const completeUpdate = action('completeUpdate')
 
-export const AxmDemandeSuper: StoryFn = () => <FondamentalesEdit
+export const AxmDemandeSuper: StoryFn = () => (
+  <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='axm'
-    user= {{
+    demarcheTypeId="oct"
+    titreTypeId="axm"
+    user={{
       role: 'super',
       ...testBlankUser,
     }}
     entreprises={entreprises}
-/>
+  />
+)
 
-
-export const ArmDemandeONF: StoryFn = () => <FondamentalesEdit
+export const ArmDemandeONF: StoryFn = () => (
+  <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='arm'
-    user= {{
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    user={{
       role: 'admin',
       administrationId: 'ope-onf-973-01',
       ...testBlankUser,
     }}
     entreprises={entreprises}
-/>
+  />
+)
 
-export const ArmDemandeOperateur: StoryFn = () => <FondamentalesEdit
-    etape={etape}
-    completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='arm'
-    user= {{ role: 'entreprise', entreprises: [], ...testBlankUser }}
-    entreprises={entreprises}
-/>
+export const ArmDemandeOperateur: StoryFn = () => (
+  <FondamentalesEdit etape={etape} completeUpdate={completeUpdate} demarcheTypeId="oct" titreTypeId="arm" user={{ role: 'entreprise', entreprises: [], ...testBlankUser }} entreprises={entreprises} />
+)
 
-export const ArmJorfONF: StoryFn = () => <FondamentalesEdit
+export const ArmJorfONF: StoryFn = () => (
+  <FondamentalesEdit
     etape={{ ...etape, typeId: 'dpu' }}
     completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='arm'
-    user= {{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
-/>
+  />
+)
 
-
-
-export const AxmDemandeONF: StoryFn = () => <FondamentalesEdit
+export const AxmDemandeONF: StoryFn = () => (
+  <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='axm'
-    user= {{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
+    demarcheTypeId="oct"
+    titreTypeId="axm"
+    user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
-/>
+  />
+)
 
-export const PrmDemandeONF: StoryFn = () => <FondamentalesEdit
+export const PrmDemandeONF: StoryFn = () => (
+  <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
-    demarcheTypeId='oct'
-    titreTypeId='prm'
-    user= {{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
+    demarcheTypeId="oct"
+    titreTypeId="prm"
+    user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
-/>
+  />
+)
 
-export const PrmDeplacementDePerimetreONF: StoryFn = () => <FondamentalesEdit
+export const PrmDeplacementDePerimetreONF: StoryFn = () => (
+  <FondamentalesEdit
     etape={etape}
     completeUpdate={completeUpdate}
-    demarcheTypeId='dep'
-    titreTypeId='prm'
-    user= {{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
+    demarcheTypeId="dep"
+    titreTypeId="prm"
+    user={{ role: 'admin', administrationId: 'ope-onf-973-01', ...testBlankUser }}
     entreprises={entreprises}
-/>
+  />
+)

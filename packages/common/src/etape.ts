@@ -11,7 +11,6 @@ import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon 
 import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
-import { DeepReadonly, NotNullableKeys } from './typescript-tools.js'
 import { ElementWithValue } from './sections.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
@@ -23,7 +22,7 @@ export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
-export type HeritageProp<T> ={ actif: boolean; etape?: T }
+export type HeritageProp<T> = { actif: boolean; etape?: T }
 
 export interface EtapeEntreprise {
   id: EntrepriseId
@@ -57,20 +56,21 @@ export type Etape = {
   surface: KM2 | null | undefined
 
   notes: null | string
-  duree: number; 
+  duree: number
   dateDebut: CaminoDate | null
   dateFin: CaminoDate | undefined | null
 }
 
 export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type FullEtapeHeritage = EtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId'> & {typeId: EtapeTypeId}>
+export type FullEtapeHeritage = EtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId'> & { typeId: EtapeTypeId }>
 
-type EtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends (Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & {typeId: EtapeTypeId})> = T & {
+export type HeritageContenu = Record<string, Record<string, HeritageProp<Pick<FullEtapeHeritage, 'contenu' | 'typeId' | 'date'>>>>
+type EtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {
   heritageProps: {
     [key in HeritagePropsKeys]: HeritageProp<Pick<T, 'typeId' | 'date' | EtapePropsFromHeritagePropName<key>>>
   }
-  heritageContenu: Record<string, Record<string, HeritageProp<Pick<FullEtapeHeritage, 'contenu' | 'typeId' | 'date'>>>>
+  heritageContenu: HeritageContenu
 }
 
 export const etapeTypeEtapeStatutWithMainStepValidator = z.object({ etapeTypeId: etapeTypeIdValidator, etapeStatutId: etapeStatutIdValidator, mainStep: z.boolean() })

@@ -87,10 +87,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
   const importForagesPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
-
-  const updateHeritage = () => {
-
-  }
+  const updateHeritage = () => {}
   const complete = computed(() => {
     return props.etape.typeId !== 'mfr' || props.etape.geojson4326Perimetre !== null
   })
@@ -161,7 +158,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
   }
 
   return () => (
-    <div class="dsfr">
+    <div>
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
         updateHeritage={updateHeritage}
