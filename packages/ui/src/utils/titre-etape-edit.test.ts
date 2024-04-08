@@ -42,7 +42,7 @@ describe('etapeEditFormat', () => {
         duree: 240,
         administrations: ['aut-97300-01'],
         titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
-        contenu: { 'prop-id': 'prop-value' },
+        contenu: { 'section-id': { 'element-id': 'prop-value' } },
         substances: ['auru'],
       })
     ).toEqual({

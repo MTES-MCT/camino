@@ -1,8 +1,7 @@
-import { hasValeurCheck } from '@/utils/contenu'
 import { dateFormat } from '@/utils'
 import { DeepReadonly, HTMLAttributes, computed, defineComponent } from 'vue'
-import {  FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
-import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
+import { FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
+import { MappingHeritagePropsNameEtapePropsName, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -17,13 +16,20 @@ type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends Eta
   class?: HTMLAttributes['class']
   updateHeritage: (update: Props<P, T>['prop']) => void
 }
+
 export const HeritageEdit = defineComponent(<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
   const hasHeritage = computed<boolean>(() => {
-    return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => hasValeurCheck(field, props.prop.etape))
+    return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => {
+      // @ts-ignore FIXME c’était planqué dans un fichier JS. Le but est de savoir si une valeur est présente dans l’étape héritée
+      const valeur = props.prop.etape && props.prop.etape[field]
+
+      if ((!Array.isArray(valeur) && isNotNullNorUndefined(valeur)) || valeur.length > 0) return true
+
+      return false
+    })
   })
 
   const legendHint = computed<string | undefined>(() => {
-
     return props.prop.actif && isNotNullNorUndefined(props.prop.etape) ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape.date)})` : undefined
   })
 
@@ -31,9 +37,9 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
     const etape = props.prop.etape
     const newHeritage = !props.prop.actif
     if (!newHeritage) {
-      props.updateHeritage({etape, actif: newHeritage})
+      props.updateHeritage({ etape, actif: newHeritage })
     } else if (isNotNullNorUndefined(etape)) {
-      props.updateHeritage({etape, actif: newHeritage})
+      props.updateHeritage({ etape, actif: newHeritage })
     }
   }
 
@@ -43,12 +49,7 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div class="dsfr">
-          <DsfrToggle
-            initialValue={props.prop.actif}
-            valueChanged={updateHeritage}
-            legendLabel="Hériter de l’étape précédente"
-            legendHint={legendHint.value}
-          />
+          <DsfrToggle initialValue={props.prop.actif} valueChanged={updateHeritage} legendLabel="Hériter de l’étape précédente" legendHint={legendHint.value} />
         </div>
       ) : null}
     </div>

@@ -297,7 +297,7 @@ export const isEtapeDeposable = (
   return false
 }
 
-export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId): boolean => etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION
+export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId | null): boolean => etapeStatutId === null || etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION
 
 export const hasEtapeAvisDocuments = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId): boolean =>
   titreTypeId === 'axm' && demarcheTypeId === 'oct' && etapeTypeId === 'mfr' && etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION

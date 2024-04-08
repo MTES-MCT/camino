@@ -27,7 +27,7 @@ export interface EntrepriseApiClient {
 }
 export const uiEntrepriseDocumentInputValidator = entrepriseDocumentInputValidator.omit({ tempDocumentName: true })
 
-type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
+export type UiEntrepriseDocumentInput = z.infer<typeof uiEntrepriseDocumentInputValidator>
 
 export const entrepriseApiClient: EntrepriseApiClient = {
   getFiscaliteEntreprise: async (annee, entrepriseId): Promise<Fiscalite> => {

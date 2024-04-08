@@ -26,7 +26,7 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  etapeStatutId: EtapeStatutId
+  etapeStatutId: EtapeStatutId | null
   sdomZoneIds: SDOMZoneId[]
   completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], complete: boolean) => void
   etapeId: EtapeId | undefined
@@ -215,7 +215,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
 type PropsTable = {
   caption: string
   documents: ((EtapeDocument | TempEtapeDocument) & WithIndex)[]
-  etapeStatutId: EtapeStatutId
+  etapeStatutId: EtapeStatutId | null
   emptyRequiredDocuments: DocumentTypeId[]
   add: (documentTypeId: DocumentTypeId) => void
   edit: (document: (EtapeDocument | TempEtapeDocument) & WithIndex) => void
