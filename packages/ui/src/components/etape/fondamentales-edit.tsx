@@ -19,7 +19,6 @@ import { User } from 'camino-common/src/roles'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { DsfrInput } from '../_ui/dsfr-input'
-import { InputDate } from '../_ui/dsfr-input-date'
 
 export type EtapeFondamentaleEdit = Pick<FullEtapeHeritage, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'duree' | 'heritageProps'>
 export interface Props {
@@ -72,6 +71,10 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
     setEditedEtape({ ...editedEtape.value, heritageProps: { ...editedEtape.value.heritageProps, amodiataires: amodiatairesHeritage } })
   }
 
+  const dureeOptionalCheck = computed<boolean>(() => {
+    return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
+  })
+
   watch(
     () => editedEtape.value,
     () => {
@@ -85,10 +88,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   )
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
-
-  const dureeOptionalCheck = computed<boolean>(() => {
-    return titreEtapesDureeOptionalCheck(editedEtape.value.typeId, props.demarcheTypeId, props.titreTypeId)
-  })
 
   const titulairesUpdate = (titulaires: DeepReadonly<EtapeEntreprise[]>) => {
     const newTitulaires = titulaires.map(titulaire => ({
@@ -163,7 +162,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           updateHeritage={updateDateDebutHeritage}
           prop={props.etape.heritageProps.dateDebut}
           propId="dateDebut"
-          write={() => <InputDate legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} />}
+          write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut} valueChanged={dateDebutChanged} />}
           read={heritagePropEtape => <div>{dateFormat(heritagePropEtape?.dateDebut)}</div>}
         />
       ) : null}
@@ -173,7 +172,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           updateHeritage={updateDateFinHeritage}
           prop={props.etape.heritageProps.dateFin}
           propId="dateFin"
-          write={() => <InputDate legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin} dateChanged={dateFinChanged} />}
+          write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin} valueChanged={dateFinChanged} />}
           read={heritagePropEtape => <div>{dateFormat(heritagePropEtape?.dateFin)}</div>}
         />
       ) : null}

@@ -2,7 +2,6 @@ import { computed, defineComponent, ref, watch, DeepReadonly } from 'vue'
 import { ElementWithValue, isNumberElement, isRadioElement, SectionWithValue } from 'camino-common/src/sections'
 import { exhaustiveCheck, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { numberFormat } from 'camino-common/src/number'
-import { InputDate } from '../_ui/dsfr-input-date'
 import { sectionElementWithValueCompleteValidate, sectionsWithValueCompleteValidate } from 'camino-common/src/permissions/sections'
 import { DsfrInput } from '../_ui/dsfr-input'
 import { DsfrTextarea } from '../_ui/dsfr-textarea'
@@ -12,6 +11,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { DsfrInputRadio } from '../_ui/dsfr-input-radio'
 import { DsfrSelect } from '../_ui/dsfr-select'
 import { useState } from '../../utils/vue-tsx-utils'
+import { CaminoDate } from 'camino-common/src/date'
 
 interface Props {
   sectionsWithValue: DeepReadonly<SectionWithValue[]>
@@ -111,10 +111,11 @@ export const SectionElementEdit = defineComponent<SectionElementEditProps>(props
       break
     case 'date':
       sectionElementEditInput = (
-        <InputDate
+        <DsfrInput
+          type={{ type: 'date' }}
           required={required}
           initialValue={element.value}
-          dateChanged={date => {
+          valueChanged={(date: CaminoDate | null) => {
             onValueChange({ ...element, value: date })
           }}
           legend={{ main: element.nom ?? '', description: element.description }}

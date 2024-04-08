@@ -2,13 +2,13 @@ import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
 import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId } from 'camino-common/src/etape'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { watch, DeepReadonly, FunctionalComponent } from 'vue'
+import { watch, DeepReadonly } from 'vue'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TypeEdit } from './type-edit'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { ApiClient } from '../../api/api-client'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { InputDate } from '../_ui/dsfr-input-date'
+import { DsfrInput } from '../_ui/dsfr-input'
 
 export type EtapeDateTypeEdit = DeepReadonly<{
   statutId: EtapeStatutId | null
@@ -51,18 +51,8 @@ export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId',
 
   return () => (
     <>
-      <DateEdit date={props.etape.date} onDateChanged={onDateChanged} />
+      <DsfrInput type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
       <TypeEdit etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} />
     </>
   )
 })
-
-type DateEditProps = {
-  date: CaminoDate | null
-  onDateChanged: (date: CaminoDate | null) => void
-}
-
-const DateEdit: FunctionalComponent<DateEditProps> = props => {
-  // FIXME dans le DSFR ils disent qu’on peut aussi utiliser un input type="date" , ça serait pas mieux ? (en fait c’est aussi ça sur le figma)
-  return <InputDate dateChanged={props.onDateChanged} initialValue={props.date} legend={{ main: 'Date' }} />
-}

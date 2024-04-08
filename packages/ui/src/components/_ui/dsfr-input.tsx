@@ -1,9 +1,14 @@
 import { caminoDefineComponent, isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { ref } from 'vue'
 
 type TextInputType = {
   type: 'text'
+}
+
+type DateInputType = {
+  type: 'date'
 }
 
 type NumberInputType = {
@@ -18,7 +23,7 @@ type BaseProps = {
   required?: boolean
 }
 
-type Props = BaseProps & (TextProps | NumberProps)
+type Props = BaseProps & (TextProps | NumberProps | DateProps)
 
 type TextProps = {
   type: TextInputType
@@ -32,8 +37,15 @@ type NumberProps = {
   initialValue?: number | null
 }
 
+type DateProps = {
+  type: DateInputType
+  valueChanged: (value: CaminoDate | null) => void
+  initialValue?: CaminoDate | null
+}
+
 const isTextProps = (props: Props): props is BaseProps & TextProps => props.type.type === 'text'
 const isNumberProps = (props: Props): props is BaseProps & NumberProps => props.type.type === 'number'
+const isDateProps = (props: Props): props is BaseProps & DateProps => props.type.type === 'date'
 
 export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'valueChanged', 'legend', 'disabled', 'required', 'type'], props => {
   const id = props.id ?? `input_${(random() * 1000).toFixed()}`
@@ -48,6 +60,9 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
         const valueAsNumber = e.target.valueAsNumber
         value.value = valueAsNumber
         props.valueChanged(isNaN(valueAsNumber) ? null : valueAsNumber)
+      } else if (isDateProps(props)) {
+        const dateParsed = caminoDateValidator.safeParse(e.target.value)
+        props.valueChanged(dateParsed.success ? dateParsed.data : null)
       }
     }
   }
