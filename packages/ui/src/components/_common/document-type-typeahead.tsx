@@ -29,8 +29,8 @@ export const DocumentTypeTypeahead = defineComponent(<T extends DocumentTypeId>(
       documentTypeFiltered.value = sortedByUs.value.filter(documentType => documentType.nom.toLowerCase().includes(formatedSearch.toLowerCase()))
     }
   }
-  
-return () => (
+
+  return () => (
     <TypeAheadSingle
       overrideItem={documentTypeSelected.value}
       props={{

@@ -7,7 +7,7 @@ type Props = {
   alwaysOpen?: boolean
   substanceLegaleIds: SubstanceLegaleId[]
   initialValue?: SubstanceLegaleId
-  substanceLegaleSelected: (substanceLegaleId:  SubstanceLegaleId | null) => void
+  substanceLegaleSelected: (substanceLegaleId: SubstanceLegaleId | null) => void
 }
 
 export const SubstanceLegaleTypeahead = defineComponent((props: Props) => {
@@ -30,7 +30,7 @@ export const SubstanceLegaleTypeahead = defineComponent((props: Props) => {
     }
   }
 
-return () => (
+  return () => (
     <TypeAheadSingle
       overrideItem={substanceSelected.value}
       props={{

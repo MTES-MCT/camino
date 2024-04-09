@@ -16,7 +16,7 @@ const updateHeritage = action('updateHeritage')
 
 export const HeritageDisabled: StoryFn = () => (
   <HeritageEdit
-  updateHeritage={updateHeritage}
+    updateHeritage={updateHeritage}
     prop={{ actif: false, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
     write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
@@ -26,8 +26,7 @@ export const HeritageDisabled: StoryFn = () => (
 
 export const HeritageEnabled: StoryFn = () => (
   <HeritageEdit
-  updateHeritage={updateHeritage}
-
+    updateHeritage={updateHeritage}
     prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
     write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
@@ -36,5 +35,11 @@ export const HeritageEnabled: StoryFn = () => (
 )
 
 export const NoHeritage: StoryFn = () => (
-  <HeritageEdit   updateHeritage={updateHeritage}   prop={{ actif: false }} propId="dateDebut" write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />} read={() => <div class="border p-s mb-s bold">Pas de date</div>} />
+  <HeritageEdit
+    updateHeritage={updateHeritage}
+    prop={{ actif: false }}
+    propId="dateDebut"
+    write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
+    read={() => <div class="border p-s mb-s bold">Pas de date</div>}
+  />
 )
