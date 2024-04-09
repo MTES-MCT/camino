@@ -53,7 +53,7 @@ describe('etapeEditFormat', () => {
       amodiataires: [],
       titulaires: [{ id: 'titulaire-id', operateur: false }],
       substances: ['auru'],
-      contenu: { 'prop-id': 'prop-value' },
+      contenu: { 'section-id': { 'element-id': 'prop-value' } },
     })
   })
 })
