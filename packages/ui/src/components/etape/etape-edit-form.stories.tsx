@@ -124,7 +124,7 @@ const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 
-const apiClient: Props['apiClient'] = {
+export const etapeEditFormApiClient: Props['apiClient'] = {
   getEntrepriseDocuments() {
     return Promise.resolve([])
   },
@@ -191,7 +191,7 @@ export const Default: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
     alertesUpdate={alertesUpdate}
-    apiClient={apiClient}
+    apiClient={etapeEditFormApiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
@@ -211,7 +211,7 @@ export const EtapeModification: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
     alertesUpdate={alertesUpdate}
-    apiClient={apiClient}
+    apiClient={etapeEditFormApiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}

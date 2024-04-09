@@ -42,7 +42,7 @@ export const EtapeEdition = defineComponent(() => {
   )
 })
 
-type Props = {
+export type Props = {
   etapeIdOrSlug: EtapeIdOrSlug | null
   demarcheIdOrSlug: DemarcheIdOrSlug | null
   user: User
@@ -62,6 +62,8 @@ type Props = {
     | 'creerEntrepriseDocument'
     | 'getEtape'
     | 'getDemarcheByIdOrSlug'
+    | 'getPerimetreInfosByDemarcheId'
+    | 'getPerimetreInfosByEtapeId'
   >
 }
 
@@ -93,12 +95,12 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
           },
         })
 
-        perimetreInfos = await apiClient.getPerimetreInfosByEtapeId(etape.id)
+        perimetreInfos = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
         setDemarche({ status: 'LOADED', value: demarche })
 
-        perimetreInfos = await apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
+        perimetreInfos = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
       }
 
       setPerimetreInfos(perimetreInfos)
