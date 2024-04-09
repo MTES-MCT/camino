@@ -49,12 +49,16 @@ export interface IGetDemarcheByIdOrSlugDbParams {
 
 /** 'GetDemarcheByIdOrSlugDb' return type */
 export interface IGetDemarcheByIdOrSlugDbResult {
+  demarche_description: string | null;
   demarche_id: string;
   demarche_slug: string | null;
   demarche_type_id: string;
   entreprises_lecture: boolean;
   public_lecture: boolean;
   titre_id: string;
+  titre_nom: string;
+  titre_slug: string;
+  titre_type_id: string;
 }
 
 /** 'GetDemarcheByIdOrSlugDb' query type */

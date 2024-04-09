@@ -1,4 +1,3 @@
-import { shallowRef } from 'vue'
 import { createStore } from 'vuex'
 import titreEtapeEdition from './titre-etape-edition'
 import meta from './meta'
@@ -11,7 +10,6 @@ const modules = {
 const state = {
   config: {},
   messages: [],
-  popup: { component: null, props: null, messages: [], loading: false },
   error: null,
   menu: { component: null },
   loading: [],
@@ -82,35 +80,8 @@ const mutations = {
     state.messages.splice(index, 1)
   },
 
-  popupOpen(state, { component, props }) {
-    state.popup.component = shallowRef(component)
-    state.popup.props = props
-    state.popup.messages = []
-  },
-
-  popupClose(state) {
-    state.popup.component = null
-    state.popup.props = null
-    state.popup.messages = []
-    state.popup.loading = false
-  },
-
   errorUpdate(state, error) {
     state.error = error
-  },
-
-  popupLoad(state) {
-    state.popup.loading = true
-  },
-
-  popupMessagesRemove(state) {
-    state.popup.messages = []
-    state.popup.loading = false
-  },
-
-  popupMessageAdd(state, message) {
-    state.popup.messages.push(message)
-    state.popup.loading = false
   },
 
   loadingAdd(state, name) {

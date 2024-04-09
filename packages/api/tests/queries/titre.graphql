@@ -58,9 +58,6 @@ fragment etape on Etape {
     ...entreprise
   }
   substances
-  documents {
-    ...document
-  }
 }
 
 fragment entreprise on Entreprise {

@@ -6,6 +6,7 @@ import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import gql from 'graphql-tag'
 import { deleteWithJson, getWithJson, putWithJson } from '../../api/client-rest'
 import { SectionWithValue } from 'camino-common/src/sections'
+import { DeepReadonly } from 'vue'
 
 export interface UiGraphqlActivite {
   id: string
@@ -31,7 +32,7 @@ export interface ActiviteApiClient {
   updateActivite: (
     activiteId: ActiviteId,
     activiteTypeId: ActivitesTypesId,
-    sectionsWithValue: SectionWithValue[],
+    sectionsWithValue: DeepReadonly<SectionWithValue[]>,
     activiteDocumentIds: ActiviteDocumentId[],
     newTempDocuments: TempActiviteDocument[]
   ) => Promise<void>
@@ -128,7 +129,7 @@ export const activiteApiClient: ActiviteApiClient = {
   updateActivite: async (
     activiteId: ActiviteId,
     _activiteTypeId: ActivitesTypesId,
-    sectionsWithValue: SectionWithValue[],
+    sectionsWithValue: DeepReadonly<SectionWithValue[]>,
     activiteDocumentIds: ActiviteDocumentId[],
     newTempDocuments: TempActiviteDocument[]
   ) => {
@@ -138,6 +139,7 @@ export const activiteApiClient: ActiviteApiClient = {
         activiteId,
       },
       {
+        // @ts-ignore FIXME pb avec le DeepReadonly
         sectionsWithValue,
         activiteDocumentIds,
         newTempDocuments,

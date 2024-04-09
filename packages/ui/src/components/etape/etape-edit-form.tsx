@@ -209,6 +209,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     if (heritageData.value.status === 'LOADED') {
       heritageData.value = { status: 'LOADED', value: { ...heritageData.value.value, heritageContenu: sectionsEtape.heritageContenu } }
     }
+
+    // FIXME à tester si on change la mécanisation
   }
 
   const onUpdateNotes = (notes: string) => {

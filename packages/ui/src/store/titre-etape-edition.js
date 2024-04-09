@@ -2,8 +2,7 @@ import { etapeEditFormat } from '../utils/titre-etape-edit'
 import { etapeSaveFormat } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
-import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeMetas } from '../api/titres-etapes'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { etape, etapeCreer, etapeHeritage, etapeModifier } from '../api/titres-etapes'
 
 const state = {
   element: null,
@@ -13,15 +12,6 @@ const state = {
   },
   heritageLoaded: false,
   loaded: false,
-}
-
-const getters = {
-  etapeType(state) {
-    if (state.element?.typeId) {
-      return EtapesTypes[state.element.typeId]
-    }
-    return null
-  },
 }
 
 const actions = {
@@ -43,10 +33,6 @@ const actions = {
 
       await dispatch('metasGet', { titreDemarcheId, entreprises })
 
-      if (id) {
-        await dispatch('dateUpdate', { date: state.element.date })
-      }
-
       commit('load')
     } catch (e) {
       console.error(e)
@@ -54,28 +40,6 @@ const actions = {
     } finally {
       commit('loadingRemove', 'titreEtapeInit', { root: true })
     }
-  },
-
-  async metasGet({ commit, dispatch }, { titreDemarcheId, entreprises }) {
-    try {
-      commit('loadingAdd', 'titreEtapeMetasGet', { root: true })
-
-      const demarche = await titreEtapeMetas({
-        titreDemarcheId,
-      })
-
-      commit('metasSet', { demarche, entreprises })
-    } catch (e) {
-      console.error(e)
-
-      dispatch('pageError', null, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreEtapeMetasGet', { root: true })
-    }
-  },
-
-  async dateUpdate({ commit }, { date }) {
-    commit('dateSet', date)
   },
 
   async heritageGet({ commit, state, dispatch }, { etapeTypeId }) {
@@ -126,48 +90,8 @@ const actions = {
   },
 }
 
-const mutations = {
-  load(state) {
-    state.loaded = true
-  },
-
-  set(state, etape) {
-    state.element = etape
-  },
-
-  dateSet(state, date) {
-    state.element.date = date
-  },
-
-  reset(state) {
-    state.element = null
-    state.metas = {
-      demarche: null,
-      entreprises: [],
-    }
-    state.heritageLoaded = false
-    state.loaded = false
-  },
-
-  heritageSet(state, { etape }) {
-    state.element = etape
-  },
-
-  heritageLoaded(state, loaded) {
-    state.heritageLoaded = loaded
-  },
-
-  metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      state.metas[id] = data[id]
-    })
-  },
-}
-
 export default {
   namespaced: true,
   state,
-  getters,
   actions,
-  mutations,
 }

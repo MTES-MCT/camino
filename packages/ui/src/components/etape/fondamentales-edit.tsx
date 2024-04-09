@@ -21,7 +21,7 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { DsfrInput } from '../_ui/dsfr-input'
 
 export type EtapeFondamentaleEdit = Pick<FullEtapeHeritage, 'typeId' | 'dateDebut' | 'dateFin' | 'duree' | 'titulaires' | 'amodiataires' | 'substances' | 'duree' | 'heritageProps'>
-export interface Props {
+interface Props {
   etape: DeepReadonly<EtapeFondamentaleEdit>
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId

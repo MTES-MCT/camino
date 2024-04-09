@@ -24,8 +24,6 @@ export const App = defineComponent(() => {
 
   const messages = computed<{ type: 'error' | 'success'; value: string }[]>(() => store.state.messages)
 
-  const popup = computed(() => store.state.popup)
-
   const loading = computed(() => store.state.loading.length > 0)
 
   const fileLoading = computed(() => store.state.fileLoading)
@@ -64,11 +62,6 @@ export const App = defineComponent(() => {
       <div class="messages">
         <Messages messages={messages.value} />
       </div>
-
-      <Transition name="fade">{isNotNullNorUndefined(popup.value.component) ? <div class="absolute full bg-inverse-alpha" style="z-index: 100002" /> : null}</Transition>
-
-{/* FIXME kill it with fire */}
-      <Transition name="slide-top">{isNotNullNorUndefined(popup.value.component) ? <popup.value.component {...popup.value.props} /> : null}</Transition>
 
       <Transition name="fade">
         {loading.value || (isNotNullNorUndefined(fileLoading.value) && isNotNullNorUndefined(fileLoading.value.total) && fileLoading.value.total !== 0) ? (

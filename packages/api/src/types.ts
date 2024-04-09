@@ -135,7 +135,6 @@ interface ICommune {
 }
 
 export const DOCUMENTS_REPERTOIRES = ['demarches', 'tmp'] as const
-type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IEntrepriseEtablissement {
   id: string
@@ -379,9 +378,7 @@ export {
   Index,
   ICommune,
   IContenu,
-  IContenuElement,
   IContenuValeur,
-  IDocumentRepertoire,
   IEntreprise,
   IEntrepriseEtablissement,
   ITitre,

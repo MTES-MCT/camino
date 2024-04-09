@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { sql } from '@pgtyped/runtime'
-import { DemarcheId, DemarcheIdOrSlug, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche.js'
+import { DemarcheId, DemarcheIdOrSlug } from 'camino-common/src/demarche.js'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { IGetDemarcheByIdOrSlugDbQuery, IGetEtapesByDemarcheIdDbQuery } from './demarches.queries.types.js'
 import { z } from 'zod'
@@ -17,8 +17,7 @@ import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { Pool } from 'pg'
 import { featureCollectionForagesValidator, featureCollectionPointsValidator, featureMultiPolygonValidator, multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { etapeHeritagePropsValidator } from 'camino-common/src/heritage.js'
-import { titreIdValidator } from 'camino-common/src/validators/titres.js'
-import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes.js'
+import { getDemarcheByIdOrSlugValidator as commonGetDemarcheByIdOrSlugValidator } from 'camino-common/src/titres.js'
 import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes.js'
 
 const getEtapesByDemarcheIdDbValidator = z.object({
@@ -91,11 +90,7 @@ order by
     date desc
 `
 
-const getDemarcheByIdOrSlugValidator = z.object({
-  demarche_id: demarcheIdValidator,
-  demarche_slug: demarcheSlugValidator,
-  demarche_type_id: demarcheTypeIdValidator,
-  titre_id: titreIdValidator,
+const getDemarcheByIdOrSlugValidator = commonGetDemarcheByIdOrSlugValidator.extend({
   entreprises_lecture: z.boolean(),
   public_lecture: z.boolean(),
 })
@@ -108,15 +103,20 @@ export const getDemarcheByIdOrSlug = async (pool: Pool, idOrSlug: DemarcheIdOrSl
 
 const getDemarcheByIdOrSlugDb = sql<Redefine<IGetDemarcheByIdOrSlugDbQuery, { idOrSlug: DemarcheIdOrSlug }, GetDemarcheByIdOrSlugValidator>>`
 select
-    id as demarche_id,
-    slug as demarche_slug,
-    type_id as demarche_type_id,
-    entreprises_lecture,
-    public_lecture,
-    titre_id
+    td.id as demarche_id,
+    td.slug as demarche_slug,
+    td.type_id as demarche_type_id,
+    td.description as demarche_description,
+    td.entreprises_lecture,
+    td.public_lecture,
+    t.id as titre_id,
+    t.slug as titre_slug,
+    t.type_id as titre_type_id,
+    t.nom as titre_nom
 from
-    titres_demarches
-where (id = $ idOrSlug !
-    or slug = $ idOrSlug !)
-and archive is false
+    titres_demarches td
+    join titres t on t.id = td.titre_id
+where (td.id = $ idOrSlug !
+    or td.slug = $ idOrSlug !)
+and td.archive is false
 `

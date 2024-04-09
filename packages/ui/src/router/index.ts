@@ -4,7 +4,7 @@ import store from '../store'
 import { Dashboard } from '../components/dashboard'
 import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import { Titres } from '../components/titres'
-import EtapeEdition from '../components/etape-edition.vue'
+import { EtapeEdition } from '../components/etape-edition'
 
 const TitreCreation = async () => {
   const { TitreCreation } = await import('../components/titre-creation')

@@ -52,7 +52,6 @@ describe("état général de l'application", () => {
     state = {
       config: {},
       messages: [],
-      popup: { component: null, props: null, messages: [], loading: false },
       error: null,
       loading: [],
       loaded: false,
@@ -82,47 +81,12 @@ describe("état général de l'application", () => {
     expect(state.messages).toEqual([message])
   })
 
-  test('met la popup en état de chargement', () => {
-    store.commit('popupLoad')
-
-    expect(state.popup.loading).toBe(true)
-  })
-
   test('supprime un message', () => {
     const message = { id: 42, message: 'message très important' }
     store.commit('messageAdd', message)
     store.commit('messageRemove', 42)
 
     expect(state.messages).toEqual([])
-  })
-
-  test('ferme la pop-up', () => {
-    const component = 'open'
-    const props = 'open'
-    store.commit('popupOpen', { component, props })
-    store.commit('popupClose')
-
-    expect(state.popup).toMatchObject({
-      component: { _value: null },
-      props: null,
-      messages: [],
-      loading: false,
-    })
-  })
-
-  test('ajoute un message de la pop-up', () => {
-    const message = 'message très important'
-    store.commit('popupMessageAdd', message)
-
-    expect(state.popup.messages).toEqual([message])
-  })
-
-  test('supprime les messages de la pop-up', () => {
-    const message = 'message très important'
-    store.commit('popupMessageAdd', message)
-    store.commit('popupMessagesRemove')
-
-    expect(state.popup.messages).toEqual([])
   })
 
   test("trace si un appel à l'api est en cours", () => {

@@ -17,14 +17,7 @@ vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn(),
 }))
-vi.mock('../../tools/file-stream-create', () => ({
-  __esModule: true,
-  default: vi.fn(),
-}))
-vi.mock('../../tools/file-delete', () => ({
-  __esModule: true,
-  default: vi.fn(),
-}))
+
 console.info = vi.fn()
 console.error = vi.fn()
 let dbPool: Pool

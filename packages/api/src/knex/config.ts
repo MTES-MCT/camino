@@ -13,7 +13,7 @@ const connection = {
   password: config().PGPASSWORD,
 }
 
-export const simpleKnexConfig = {
+const simpleKnexConfig = {
   client: 'pg',
   connection,
   migrations: {

@@ -2,24 +2,6 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
-export const titreEtapeMetas = apiGraphQLFetch(
-  gql`
-    query TitreEtapeMetas($titreDemarcheId: ID!) {
-      demarche(id: $titreDemarcheId) {
-        id
-        slug
-        description
-        typeId
-        titre {
-          id
-          slug
-          nom
-          typeId
-        }
-      }
-    }
-  `
-)
 
 export const etape = apiGraphQLFetch(gql`
   query Etape($id: ID!) {
@@ -56,4 +38,3 @@ export const etapeModifier = apiGraphQLFetch(gql`
     }
   }
 `)
-

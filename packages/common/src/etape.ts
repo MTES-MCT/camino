@@ -2,7 +2,7 @@ import { CaminoDate } from './date.js'
 import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
-import { DocumentTypeId, documentTypeIdValidator } from './static/documentsTypes.js'
+import { documentTypeIdValidator } from './static/documentsTypes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
@@ -30,10 +30,6 @@ export interface EtapeEntreprise {
 }
 
 // TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
-export interface CaminoDocument {
-  typeId: DocumentTypeId
-}
-
 export type Etape = {
   id: EtapeId
   contenu: Record<string, Record<string, ElementWithValue['value']>>

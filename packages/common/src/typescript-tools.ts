@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
@@ -57,27 +59,47 @@ export const getEntries = <T extends string, U>(object: Record<T, U>, filter: (k
 // @ts-ignore use with caution
 export const getEntriesHardcore = <T extends string, U>(object: Record<T, U>): [T, U][] => Object.entries<U>(object)
 
-declare const RefSymbol: unique symbol;
+declare const RefSymbol: unique symbol
 interface Ref<T = any> {
-  value: T;
+  value: T
   /**
    * Type differentiator only.
    * We need this to be in public d.ts but don't want it to show up in IDE
    * autocomplete, so we use a private Symbol instead.
    */
-  [RefSymbol]: true;
+  [RefSymbol]: true
 }
 
 // export type DeepReadonly<T> = {
 //   readonly [K in keyof T]: DeepReadonly<T[K]>
 // }
 
-type Primitive = string | number | boolean | bigint | symbol | undefined | null;
-type Builtin = Primitive | Function | Date | Error | RegExp;
+type Primitive = string | number | boolean | bigint | symbol | undefined | null
+type Builtin = Primitive | Function | Date | Error | RegExp
 // DeepReadonly from vue
-export type DeepReadonly<T> = T extends Builtin ? T : T extends Map<infer K, infer V> ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>> : T extends ReadonlyMap<infer K, infer V> ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>> : T extends WeakMap<infer K, infer V> ? WeakMap<DeepReadonly<K>, DeepReadonly<V>> : T extends Set<infer U> ? ReadonlySet<DeepReadonly<U>> : T extends ReadonlySet<infer U> ? ReadonlySet<DeepReadonly<U>> : T extends WeakSet<infer U> ? WeakSet<DeepReadonly<U>> : T extends Promise<infer U> ? Promise<DeepReadonly<U>> : T extends Ref<infer U> ? Readonly<Ref<DeepReadonly<U>>> : T extends {} ? {
-  readonly [K in keyof T]: DeepReadonly<T[K]>;
-} : Readonly<T>;
+export type DeepReadonly<T> = T extends Builtin
+  ? T
+  : T extends Map<infer K, infer V>
+  ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends WeakMap<infer K, infer V>
+  ? WeakMap<DeepReadonly<K>, DeepReadonly<V>>
+  : T extends Set<infer U>
+  ? ReadonlySet<DeepReadonly<U>>
+  : T extends ReadonlySet<infer U>
+  ? ReadonlySet<DeepReadonly<U>>
+  : T extends WeakSet<infer U>
+  ? WeakSet<DeepReadonly<U>>
+  : T extends Promise<infer U>
+  ? Promise<DeepReadonly<U>>
+  : T extends Ref<infer U>
+  ? Readonly<Ref<DeepReadonly<U>>>
+  : T extends {}
+  ? {
+      readonly [K in keyof T]: DeepReadonly<T[K]>
+    }
+  : Readonly<T>
 
 export const exhaustiveCheck = (param: never): never => {
   throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
@@ -87,8 +109,8 @@ export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
 }
 
-export const isTrue = <T extends true>(_t: T) => { }
-export const isFalse = <T extends false>(_t: T) => { }
+export const isTrue = <T extends true>(_t: T) => {}
+export const isFalse = <T extends false>(_t: T) => {}
 
 export type Expect<T, E> = T extends E ? (E extends T ? true : false) : false
 

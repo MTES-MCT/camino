@@ -23,7 +23,7 @@ describe('teste isDocumentsComplete', () => {
     const errors = isDocumentsComplete(
       [
         {
-          etape_document_type_id: 'arr',
+          etape_document_type_id: 'aac',
         },
       ],
       [{ id: 'arr', optionnel: false }]

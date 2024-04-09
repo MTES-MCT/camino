@@ -65,9 +65,6 @@ Promise.resolve().then(async (): Promise<void> => {
   const app = createApp(App)
   app.provide(userKey, user)
   app.provide(entreprisesKey, ref(entreprises))
-  // TODO 2024-03-04 à supprimer quand on a plus etape-edition.vue
-  app.config.globalProperties.user = user
-  app.config.globalProperties.entreprises = entreprises
   if (isNotNullNorUndefined(configFromJson.CAMINO_STAGE)) {
     try {
       if (!configFromJson.SENTRY_DSN) throw new Error('dsn manquant')
