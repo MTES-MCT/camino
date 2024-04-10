@@ -20,7 +20,7 @@ type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends Eta
 export const HeritageEdit = defineComponent(<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
   const hasHeritage = computed<boolean>(() => {
     return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => {
-      // @ts-ignore FIXME c’était planqué dans un fichier JS. Le but est de savoir si une valeur est présente dans l’étape héritée
+      // @ts-ignore le but est de savoir si une valeur est présente dans l’étape héritée, mais on a limité les champs dans T
       const valeur = props.prop.etape && props.prop.etape[field]
 
       if ((!Array.isArray(valeur) && isNotNullNorUndefined(valeur)) || valeur.length > 0) return true

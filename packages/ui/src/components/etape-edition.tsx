@@ -151,7 +151,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
                       title="Page contact - site externe"
                     >
                       Contactez-nous
-                    </DsfrLink>{' '}
+                    </DsfrLink>
                   </span>
                 }
                 type="info"

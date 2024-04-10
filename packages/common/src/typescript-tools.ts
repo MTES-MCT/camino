@@ -101,12 +101,46 @@ export type DeepReadonly<T> = T extends Builtin
     }
   : Readonly<T>
 
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+
+export type DeepMutable<T> = T extends Builtin
+  ? T
+  : T extends Map<infer K, infer V>
+  ? Map<DeepMutable<K>, DeepMutable<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? Map<DeepMutable<K>, DeepMutable<V>>
+  : T extends WeakMap<infer K, infer V>
+  ? WeakMap<DeepMutable<K>, DeepMutable<V>>
+  : T extends Set<infer U>
+  ? Set<DeepMutable<U>>
+  : T extends ReadonlySet<infer U>
+  ? Set<DeepMutable<U>>
+  : T extends WeakSet<infer U>
+  ? WeakSet<DeepMutable<U>>
+  : T extends Promise<infer U>
+  ? Promise<DeepMutable<U>>
+  : T extends Ref<infer U>
+  ? Mutable<Ref<DeepMutable<U>>>
+  : T extends {}
+  ? {
+      -readonly [K in keyof T]: DeepMutable<T[K]>
+    }
+  : Mutable<T>
+
 export const exhaustiveCheck = (param: never): never => {
   throw new Error(`Unreachable case: ${JSON.stringify(param)}`)
 }
 export type NonEmptyArray<T> = [T, ...T[]]
 export const isNonEmptyArray = <T>(arr: T[]): arr is NonEmptyArray<T> => {
   return arr.length > 0
+}
+
+export const map = <T, U>(array: NonEmptyArray<T>, transform: (item: T) => U): NonEmptyArray<U> => {
+  const [first, ...rest] = array
+
+  return [transform(first), ...rest.map(transform)]
 }
 
 export const isTrue = <T extends true>(_t: T) => {}

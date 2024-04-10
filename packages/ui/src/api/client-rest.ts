@@ -11,6 +11,7 @@ import {
   PostRestRoutes,
   PutRestRoutes,
 } from 'camino-common/src/rest'
+import { DeepReadonly } from 'vue'
 import { z } from 'zod'
 
 type Loading = { status: 'LOADING' }
@@ -78,5 +79,5 @@ export const postWithJson = async <T extends PostRestRoutes>(
 export const putWithJson = async <T extends PutRestRoutes>(
   path: T,
   params: CaminoRestParams<T>,
-  body: z.infer<(typeof CaminoRestRoutes)[T]['put']['input']>
+  body: DeepReadonly<z.infer<(typeof CaminoRestRoutes)[T]['put']['input']>>
 ): Promise<z.infer<(typeof CaminoRestRoutes)[T]['put']['output']>> => await callFetch(path, params, 'put', {}, body)

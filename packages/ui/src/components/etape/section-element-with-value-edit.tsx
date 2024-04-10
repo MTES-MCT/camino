@@ -17,7 +17,7 @@ type Props = {
 export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => {
   const read = (etape?: DeepReadonly<Pick<FullEtapeHeritage, 'contenu' | 'typeId' | 'date'>>) => {
     if (isNotNullNorUndefined(etape)) {
-      // @ts-ignore FIXME regarder si on peut narrow l'élément value
+      // @ts-ignore regarder si on peut narrow l'élément value
       return <SectionElement element={{ ...props.elementWithValue, value: etape.contenu[props.sectionId][props.elementWithValue.id] }} />
     } else {
       return <></>

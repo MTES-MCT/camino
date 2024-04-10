@@ -43,9 +43,8 @@ export const SectionsEdit = defineComponent<Props>(props => {
     { immediate: true }
   )
 
-  const heritageContenu = computed<HeritageContenu>(() => {
-    // @ts-ignore FIXME
-    const heritage: HeritageContenu = { ...props.etape.heritageContenu }
+  const heritageContenu = computed<DeepReadonly<HeritageContenu>>(() => {
+    const heritage: HeritageContenu = structuredClone(props.etape.heritageContenu)
     for (const section of sectionsWithValue.value) {
       if (isNullOrUndefined(heritage[section.id])) {
         heritage[section.id] = {}

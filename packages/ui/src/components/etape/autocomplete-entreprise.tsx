@@ -32,6 +32,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
   const selectableEntities = computed(() => props.allEntities.filter(entity => isNullOrUndefinedOrEmpty(props.nonSelectableEntities) || !props.nonSelectableEntities.some(id => id === entity.id)))
 
   const onSelectEntreprises = (entreprises: { id: EntrepriseId }[]) => {
+    // FIXME virer opérateur
     setMySelectedEntities(entreprises.map(entity => ({ ...entity, operateur: false })) ?? [])
   }
 

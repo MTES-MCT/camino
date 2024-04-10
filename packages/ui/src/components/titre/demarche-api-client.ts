@@ -99,6 +99,7 @@ export const demarcheApiClient: DemarcheApiClient = {
     `)({ id: demarcheId })
   },
 
+  // FIXME virer l’ancien appel graphql !?
   getDemarcheByIdOrSlug: async (demarcheIdOrSlug: DemarcheIdOrSlug) => {
     return getWithJson('/rest/demarches/:demarcheIdOrSlug', { demarcheIdOrSlug })
   },

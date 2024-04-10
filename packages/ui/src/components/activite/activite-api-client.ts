@@ -139,7 +139,6 @@ export const activiteApiClient: ActiviteApiClient = {
         activiteId,
       },
       {
-        // @ts-ignore FIXME pb avec le DeepReadonly
         sectionsWithValue,
         activiteDocumentIds,
         newTempDocuments,

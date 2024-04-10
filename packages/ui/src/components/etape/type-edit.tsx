@@ -1,6 +1,6 @@
 import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { computed, ref, FunctionalComponent, watch, DeepReadonly } from 'vue'
+import { computed, ref, FunctionalComponent, watch } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -8,7 +8,7 @@ import { CaminoDate } from 'camino-common/src/date'
 import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
-import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefinedOrEmpty, map, onlyUnique } from 'camino-common/src/typescript-tools'
 import { Alert } from '../_ui/alert'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
@@ -32,8 +32,7 @@ interface SelectStatutProps {
 }
 
 const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element | null => {
-  // @ts-ignore FIXME
-  const items: DeepReadonly<NonEmptyArray<Item<EtapeStatutId>>> = props.statutIds.map(statutId => ({ id: statutId, label: EtapesStatuts[statutId].nom, disabled: props.statutId === statutId }))
+  const items: NonEmptyArray<Item<EtapeStatutId>> = map(props.statutIds, statutId => ({ id: statutId, label: EtapesStatuts[statutId].nom, disabled: props.statutId === statutId }))
 
   const initialValue = isNotNullNorUndefined(props.statutId) ? props.statutId : props.statutIds.length === 1 ? props.statutIds[0] : null
 
