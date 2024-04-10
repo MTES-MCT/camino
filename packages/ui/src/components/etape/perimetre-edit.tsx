@@ -1,9 +1,9 @@
 import { HeritageEdit } from './heritage-edit'
 import { PerimetreImportPopup } from './perimetre-import-popup'
-import { DeepReadonly, FunctionalComponent, HTMLAttributes, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { DeepReadonly, FunctionalComponent, HTMLAttributes, defineComponent, ref} from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
@@ -35,7 +35,6 @@ export interface Props {
   }>
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
-  completeUpdate: (complete: boolean) => void
   onEtapeChange: (geojsonInformations: GeojsonInformations) => void
   onPointsChange: (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => void
   onForagesChange: (geojson4326Forages: FeatureCollectionForages, geojsonOrigineForages: FeatureCollectionForages) => void
@@ -81,26 +80,28 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
   return null
 }
 
+
+export const perimetreStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>): boolean => {
+  return EtapesTypes[etape.typeId].fondamentale
+}
+export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'geojson4326Perimetre'>>): boolean => {
+  if( !perimetreStepIsVisible(etape) ){
+    return true
+  }
+
+  return etape.typeId !== 'mfr' || etape.geojson4326Perimetre !== null
+}
+
 export const PerimetreEdit = defineComponent<Props>(props => {
   const importPerimetrePopup = ref<boolean>(false)
   const importPointsPopup = ref<boolean>(false)
   const importForagesPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
-  const updateHeritage = () => {}
-  const complete = computed(() => {
-    return props.etape.typeId !== 'mfr' || props.etape.geojson4326Perimetre !== null
-  })
-
-  const completeUpdate = () => {
-    props.completeUpdate(complete.value)
+  const updateHeritage = () => {
+    //FIXME
   }
 
-  watch(complete, () => completeUpdate())
-
-  onMounted(() => {
-    completeUpdate()
-  })
 
   const openPerimetrePopup = () => {
     importPerimetrePopup.value = true
@@ -221,4 +222,4 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'completeUpdate', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange']
+PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange']

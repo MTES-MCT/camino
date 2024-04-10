@@ -4,7 +4,7 @@ import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
-import { EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
+import { Etape, EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
 import { entreprisesKey, userKey } from '../moi'
 import { User } from 'camino-common/src/roles'
 import { Entreprise } from 'camino-common/src/entreprise'
@@ -16,8 +16,8 @@ import { LoadingElement } from './_ui/functional-loader'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DsfrLink } from './_ui/dsfr-button'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { GraphqlEtape } from './etape/etape-api-client'
 import { capitalize } from 'camino-common/src/strings'
+import { EtapeEditForm } from './etape/etape-edit-form'
 
 export const EtapeEdition = defineComponent(() => {
   const router = useRouter()
@@ -68,45 +68,56 @@ export type Props = {
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [etape, setEtape] = useState<AsyncData<DeepReadonly<GraphqlEtape>>>({ status: 'LOADING' })
-  const [demarche, setDemarche] = useState<AsyncData<DeepReadonly<GetDemarcheByIdOrSlugValidator>>>({ status: 'LOADING' })
-
-  const [_perimetreInfos, setPerimetreInfos] = useState<DeepReadonly<PerimetreInformations | null>>(null)
+  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{etape: Etape, demarche: GetDemarcheByIdOrSlugValidator, perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
 
   onMounted(async () => {
     try {
-      let perimetreInfos: PerimetreInformations | null = null
 
-      // FIXME là c’est le bordel, j’ai l’impression qu’il faut qu’un seul objet qui stocke tout
       if (isNotNullNorUndefined(props.etapeIdOrSlug)) {
         const etape = await props.apiClient.getEtape(props.etapeIdOrSlug)
-        setEtape({ status: 'LOADED', value: etape })
-        setDemarche({
-          status: 'LOADED',
-          value: {
-            demarche_description: etape.demarche.description,
-            demarche_id: etape.titreDemarcheId,
-            demarche_slug: etape.demarche.slug,
-            demarche_type_id: etape.demarche.typeId,
-            titre_id: etape.demarche.titre.id,
-            titre_nom: etape.demarche.titre.nom,
-            titre_slug: etape.demarche.titre.slug,
-            titre_type_id: etape.demarche.titre.typeId,
-          },
-        })
+        const demarche = {
+          demarche_description: etape.demarche.description,
+          demarche_id: etape.titreDemarcheId,
+          demarche_slug: etape.demarche.slug,
+          demarche_type_id: etape.demarche.typeId,
+          titre_id: etape.demarche.titre.id,
+          titre_nom: etape.demarche.titre.nom,
+          titre_slug: etape.demarche.titre.slug,
+          titre_type_id: etape.demarche.titre.typeId,
+        }
 
-        perimetreInfos = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
+        const perimetre  = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
+        setAsyncData({status: 'LOADED', value: {etape, demarche, perimetre}})
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
-        setDemarche({ status: 'LOADED', value: demarche })
-
-        perimetreInfos = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
+        const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
+        setAsyncData({ status: 'LOADED', value: {etape: {
+          id: null,
+          contenu: {},
+          date: null,
+          typeId: null,
+          statutId: null,
+          substances: [],
+          titulaires: [],
+          amodiataires: [],
+          geojson4326Perimetre: null,
+          geojson4326Points: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojson4326Forages: null,
+          geojsonOrigineForages: null,
+          surface: null,
+          notes: null,
+          duree: null,
+          dateDebut: null,
+          dateFin: null
+        }, demarche, perimetre}})
       }
 
-      setPerimetreInfos(perimetreInfos)
     } catch (e: any) {
       console.error('error', e)
-      setDemarche({ status: 'ERROR', message: e.message ?? "Une erreur s'est produite" })
+      setAsyncData({ status: 'ERROR', message: e.message ?? "Une erreur s'est produite" })
     }
   })
 
@@ -118,11 +129,22 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
     return false
   })
 
+  const alertesUpdate = (perimetre: PerimetreInformations) => {
+    if( asyncData.value.status === 'LOADED' ) {
+      setAsyncData({status: 'LOADED', value: {...asyncData.value.value, perimetre}})
+    }
+  }
+
+
+  const completeUpdate = () => {
+    //FIXME
+  }
+
   return () => (
     <div class="dsfr">
       <LoadingElement
-        data={demarche.value}
-        renderItem={demarche => (
+        data={asyncData.value}
+        renderItem={({etape, demarche, perimetre}) => (
           <>
             <div>
               <DsfrLink to={{ name: 'titre', params: { id: demarche.titre_slug } }} disabled={false} title={demarche.titre_nom} icon={null} />
@@ -133,7 +155,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               </span>
             </div>
 
-            <h1>{etape.value.status === 'LOADED' ? `Étapes - ${capitalize(EtapesTypes[etape.value.value.typeId].nom)}` : 'Création d’une étape'}</h1>
+            <h1>{etape.typeId !== null ? `Étapes - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
 
             {helpVisible.value ? (
               <Alert
@@ -157,6 +179,9 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
                 type="info"
               />
             ) : null}
+
+            <EtapeEditForm etape={etape} demarcheId={demarche.demarche_id} demarcheTypeId={demarche.demarche_type_id} titreSlug={demarche.titre_slug} titreTypeId={demarche.titre_type_id} user={props.user} entreprises={props.entreprises}
+            apiClient={props.apiClient} sdomZoneIds={perimetre.sdomZoneIds} alertesUpdate={alertesUpdate} completeUpdate={completeUpdate} />
           </>
         )}
       />
@@ -169,33 +194,8 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
         //         <InputDate :initialValue="newDate" :dateChanged="dateChanged" class="mb" />
         //       </div>
         //     </div>
-        //     <Edit
-        //       v-else
-        //       :etape="editedEtape"
-        //       :demarcheTypeId="demarcheType.id"
-        //       :user="user"
-        //       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-        //       :titreTypeId="titre.typeId"
-        //       :titreSlug="titre.slug"
-        //       :etapeType="etapeType"
-        //       :sdomZoneIds="sdomZoneIds"
-        //       @complete-update="completeUpdate"
-        //       @type-complete-update="typeCompleteUpdate"
-        //       @change="editChange"
-        //       @alertes-update="alertesUpdate"
-        //     />
-        //     <div v-if="loading" class="tablet-blobs">
-        //       <div class="tablet-blob-1-3" />
-        //       <div class="tablet-blob-2-3">
-        //         <div class="p-s bold mb">Enregistrement en cours…</div>
-        //       </div>
-        //     </div>
-        //     <div v-else-if="dateIsVisible" class="tablet-blobs mb">
-        //       <div class="tablet-blob-1-3" />
-        //       <div class="tablet-blob-2-3">
-        //         <button ref="date-button" class="btn btn-primary" :disabled="!newDate" :class="{ disabled: !newDate }" @click="dateUpdate">Valider</button>
-        //       </div>
-        //     </div>
+
+
         //     <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky" style="z-index: 100000">
         //       <div class="tablet-blob-1-3" />
         //       <PureFormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" save="save" depose="depose" />
@@ -209,7 +209,6 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entreprises', 'apiClient']
 
-// <script>
 // import { dateFormat } from '@/utils'
 // import { InputDate } from './_ui/input-date'
 // import { getCurrent } from 'camino-common/src/date'
@@ -249,29 +248,7 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //   },
 
 //   computed: {
-//     loaded() {
-//       return this.$store.state.titreEtapeEdition.loaded
-//     },
 
-//     etapeId() {
-//       return this.$route.params.id
-//     },
-
-//     editedEtape() {
-//       return this.$store.state.titreEtapeEdition.element
-//     },
-
-//     etapeType() {
-//       return this.$store.getters['titreEtapeEdition/etapeType']
-//     },
-
-//     demarche() {
-//       return this.$store.state.titreEtapeEdition.metas.demarche
-//     },
-
-//     demarcheDescription() {
-//       return this.demarche?.description ? `(${this.demarche.description})` : ''
-//     },
 
 //     alertes() {
 //       const alertes = []
@@ -295,21 +272,6 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //       return alertes
 //     },
 
-//     demarcheType() {
-//       return DemarchesTypes[this.demarche.typeId]
-//     },
-
-//     titre() {
-//       return this.demarche.titre
-//     },
-
-//     dateIsVisible() {
-//       return !this.editedEtape?.date
-//     },
-
-//     loading() {
-//       return this.$store.state.loading.includes('titreEtapeUpdate') || this.$store.state.loading.includes('titreEtapeMetasGet') || this.$store.state.loading.includes('titreEtapeGet')
-//     },
 
 //     etapeIsDemandeEnConstruction() {
 //       return this.etapeType?.id === 'mfr' && this.editedEtape?.statutId === 'aco'
@@ -337,31 +299,10 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //     window.removeEventListener('beforeunload', this.beforeWindowUnload)
 //   },
 
-//   unmounted() {
-//     this.$store.commit('titreEtapeEdition/reset')
-//   },
 
 //   methods: {
-//     dateChanged(date) {
-//       this.newDate = date
-//     },
-//     async init() {
-//       const titreDemarcheId = this.$route.query['demarche-id']
-//       await this.$store.dispatch('titreEtapeEdition/init', {
-//         titreDemarcheId,
-//         id: this.etapeId,
-//         entreprises: this.entreprises,
-//         date: this.newDate,
-//       })
 
-//       let perimetreInfos = null
-//       if (isNotNullNorUndefined(this.etapeId)) {
-//         perimetreInfos = await apiClient.getPerimetreInfosByEtapeId(this.etapeId)
-//       } else {
-//         perimetreInfos = await apiClient.getPerimetreInfosByDemarcheId(titreDemarcheId)
-//       }
-//       this.alertesUpdate(perimetreInfos)
-//     },
+
 
 //     beforeWindowUnload(e) {
 //       if (!this.isFormDirty) return true
@@ -428,19 +369,6 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //       }
 //     },
 
-//     completeUpdate(complete) {
-//       this.complete = complete
-//     },
-
-//     typeCompleteUpdate(complete) {
-//       this.typeComplete = complete
-//     },
-
-//     alertesUpdate(infos) {
-//       this.superposition_alertes = infos.superposition_alertes
-//       this.sdomZoneIds = infos.sdomZoneIds
-//     },
-
 //     editChange() {
 //       if (!this.loaded) return
 //       this.isFormDirty = true
@@ -451,10 +379,5 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //         date: this.newDate,
 //       })
 //     },
-
-//     dateFormat(date) {
-//       return dateFormat(date)
-//     },
 //   },
 // }
-// </script>

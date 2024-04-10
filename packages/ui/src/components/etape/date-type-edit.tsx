@@ -9,20 +9,33 @@ import { DemarcheId } from 'camino-common/src/demarche'
 import { ApiClient } from '../../api/api-client'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { DsfrInput } from '../_ui/dsfr-input'
+import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 
 export type EtapeDateTypeEdit = DeepReadonly<{
   statutId: EtapeStatutId | null
   typeId: EtapeTypeId | null
-  id: EtapeId | null | undefined
-  date: CaminoDate
+  id: EtapeId | null
+  date: CaminoDate | null
 }>
 
 export interface Props {
   etape: EtapeDateTypeEdit
   demarcheId: DemarcheId
   apiClient: Pick<ApiClient, 'getEtapesTypesEtapesStatuts'>
-  completeUpdate: (etape: Props['etape'], complete: boolean) => void
+  completeUpdate: (etape: Props['etape']) => void
 }
+
+export const dateTypeStepIsVisible = (user: User): boolean => {
+  return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
+}
+export const dateTypeStepIsComplete = (etape: EtapeDateTypeEdit, user: User): boolean => {
+if( !dateTypeStepIsVisible(user) ){
+  return true
+}
+
+return  isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)
+}
+
 export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId', 'apiClient', 'completeUpdate'], props => {
   const [date, setDate] = useState(props.etape.date)
   const [typeStatut, setTypeStatut] = useState({ etapeTypeId: props.etape.typeId, etapeStatutId: props.etape.statutId })
@@ -30,11 +43,8 @@ export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId',
   watch(
     () => [date.value, typeStatut.value],
     () => {
-      const complete = isNotNullNorUndefined(date.value) && isNotNullNorUndefined(typeStatut.value.etapeTypeId) && isNotNullNorUndefined(typeStatut.value.etapeStatutId)
-
-      props.completeUpdate({ id: props.etape.id, date: date.value, typeId: typeStatut.value.etapeTypeId, statutId: typeStatut.value.etapeStatutId }, complete)
-    },
-    { immediate: true }
+      props.completeUpdate({ id: props.etape.id, date: date.value, typeId: typeStatut.value.etapeTypeId, statutId: typeStatut.value.etapeStatutId })
+    }
   )
 
   const onDateChanged = (date: CaminoDate | null) => {
@@ -52,7 +62,7 @@ export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId',
   return () => (
     <>
       <DsfrInput type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
-      <TypeEdit etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} />
+      { isNotNullNorUndefined(date.value) ? <TypeEdit etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} /> : null}
     </>
   )
 })

@@ -1,9 +1,9 @@
-import { EtapeDocument, EtapeDocumentModification, EtapeId, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
+import { EtapeDocument, EtapeDocumentModification, EtapeId, FullEtapeHeritage, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
-import { FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
@@ -15,7 +15,6 @@ import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes'
 import { getVisibilityLabel } from './etape-documents'
-import { Alert } from '../_ui/alert'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { z } from 'zod'
@@ -27,29 +26,29 @@ interface Props {
     etapeTypeId: EtapeTypeId
   }
   etapeStatutId: EtapeStatutId | null
-  sdomZoneIds: SDOMZoneId[]
-  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], complete: boolean) => void
-  etapeId: EtapeId | undefined
+  sdomZoneIds: DeepReadonly<SDOMZoneId[]>
+  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => void
+  etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
-  contenu: { arm?: { mecanise?: boolean } } | undefined
+  contenu: DeepReadonly<{ arm?: { mecanise?: boolean } }>
   user: User
 }
 
 type WithIndex = { index: number }
-export const EtapeDocumentsEdit = defineComponent<Props>(props => {
-  const documentTypes = computed<DocumentType[]>(() => {
-    const dts = getDocuments(props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.etapeTypeId)
+
+const getDocumentsTypes = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, sdomZoneIds: DeepReadonly<SDOMZoneId[]>) => {
+  const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
-    if (isNotNullNorUndefined(props.contenu) && isNotNullNorUndefined(props.contenu.arm)) {
+    if (isNotNullNorUndefined(etape.contenu) && isNotNullNorUndefined(etape.contenu.arm)) {
       for (const documentType of dts) {
         if (['doe', 'dep'].includes(documentType.id)) {
-          documentType.optionnel = !(props.contenu.arm.mecanise ?? false)
+          documentType.optionnel = !(etape.contenu.arm.mecanise ?? false)
         }
       }
     }
 
-    const sdomZonesDocumentTypeIds = documentTypeIdsBySdomZonesGet(props.sdomZoneIds, props.tde.titreTypeId, props.tde.demarcheTypeId, props.tde.etapeTypeId)
+    const sdomZonesDocumentTypeIds = documentTypeIdsBySdomZonesGet(sdomZoneIds, titreTypeId, demarcheTypeId, etape.typeId)
     if (isNotNullNorUndefinedNorEmpty(sdomZonesDocumentTypeIds)) {
       for (const documentType of dts) {
         if (sdomZonesDocumentTypeIds.includes(documentType.id)) {
@@ -59,6 +58,24 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     }
 
     return dts
+}
+
+export const etapeDocumentsStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+  return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
+}
+export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, sdomZoneIds: DeepReadonly<SDOMZoneId[]>): boolean => {
+  if( !etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId) ){
+    return true
+  }
+
+  const documentTypes = getDocumentsTypes({contenu: etape.contenu, typeId: etape.typeId}, demarcheTypeId, titreTypeId, sdomZoneIds)
+
+  return documentTypes.every(({ optionnel, id }) => optionnel || etapeDocuments.some(({ etape_document_type_id }) => etape_document_type_id === id))
+}
+
+export const EtapeDocumentsEdit = defineComponent<Props>(props => {
+  const documentTypes = computed<DocumentType[]>(() => {
+    return getDocumentsTypes({contenu: props.contenu, typeId: props.tde.etapeTypeId}, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
   })
 
   const etapeDocuments = ref<AsyncData<(EtapeDocumentModification & WithIndex)[]>>({ status: 'LOADING' })
@@ -109,10 +126,6 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     return []
   })
 
-  const complete = computed<boolean>(() => {
-    return emptyRequiredDocuments.value.length === 0
-  })
-
   const addOrEditPopupOpen = ref<{ open: true; documentTypeIds: NonEmptyArray<DocumentTypeId>; document?: (EtapeDocument | TempEtapeDocument) & WithIndex } | { open: false }>({ open: false })
   const openAddPopupAdditionnalDocument = () => {
     if (isNonEmptyArray(additionnalDocumentTypeIds.value)) {
@@ -136,10 +149,10 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     () => etapeDocuments.value,
     () => {
       if (etapeDocuments.value.status === 'LOADED') {
-        props.completeUpdate(z.array(etapeDocumentModificationValidator).parse(etapeDocuments.value.value), complete.value)
+        props.completeUpdate(z.array(etapeDocumentModificationValidator).parse(etapeDocuments.value.value))
       }
     },
-    { deep: true, immediate: true }
+    { deep: true }
   )
 
   const addDocument = (documentTypeId: DocumentTypeId) => {
@@ -159,8 +172,6 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
       data={etapeDocuments.value}
       renderItem={_items => (
         <>
-          {!complete.value ? <Alert title="Il manque des documents obligatoires." small={true} type="warning" /> : null}
-
           {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(requiredDocuments.value) ? (
             <EtapeDocumentsTable
               add={addDocument}

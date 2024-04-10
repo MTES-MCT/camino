@@ -12,11 +12,11 @@ import { EtapeEntreprise, FullEtapeHeritage, HeritageProp } from 'camino-common/
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { watch, computed, ref, DeepReadonly } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { DsfrInput } from '../_ui/dsfr-input'
 
@@ -26,9 +26,22 @@ interface Props {
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
   user: User
-  entreprises: Entreprise[]
-  completeUpdate: (etape: Props['etape'], complete: boolean) => void
+  entreprises: DeepReadonly<Entreprise[]>
+  completeUpdate: (etape: Props['etape']) => void
 }
+
+export const fondamentaleStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>): boolean => {
+    return EtapesTypes[etape.typeId].fondamentale
+}
+export const fondamentaleStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'substances' | 'duree'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+  if( !fondamentaleStepIsVisible(etape) ){
+    return true
+  }
+
+  return etape.typeId !== ETAPES_TYPES.demande ||
+  isNotNullNorUndefinedNorEmpty(etape.substances?.filter(isNotNullNorUndefined)) && (titreEtapesDureeOptionalCheck(etape.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(etape.duree) && etape.duree > 0))
+}
+
 export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate'], props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
 
@@ -78,13 +91,8 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   watch(
     () => editedEtape.value,
     () => {
-      const complete =
-        editedEtape.value.typeId !== ETAPES_TYPES.demande ||
-        (editedEtape.value.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
-
-      props.completeUpdate(editedEtape.value, complete)
-    },
-    { immediate: true }
+      props.completeUpdate(editedEtape.value)
+    }
   )
 
   const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))

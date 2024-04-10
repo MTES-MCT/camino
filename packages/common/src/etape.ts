@@ -31,9 +31,9 @@ export interface EtapeEntreprise {
 
 // TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans
 export type Etape = {
-  id: EtapeId
+  id: EtapeId | null
   contenu: Record<string, Record<string, ElementWithValue['value']>>
-  date: CaminoDate
+  date: CaminoDate | null
   typeId: EtapeTypeId | null
   statutId: EtapeStatutId | null
   substances: SubstanceLegaleId[]
@@ -42,24 +42,24 @@ export type Etape = {
   administrations?: AdministrationId[]
   communes?: string[]
 
-  geojson4326Perimetre: FeatureMultiPolygon | null | undefined
-  geojson4326Points: FeatureCollectionPoints | null | undefined
-  geojsonOriginePerimetre: FeatureMultiPolygon | null | undefined
-  geojsonOriginePoints: FeatureCollectionPoints | null | undefined
-  geojsonOrigineGeoSystemeId: GeoSystemeId | null | undefined
-  geojson4326Forages: FeatureCollectionForages | null | undefined
-  geojsonOrigineForages: FeatureCollectionForages | null | undefined
-  surface: KM2 | null | undefined
+  geojson4326Perimetre: FeatureMultiPolygon | null 
+  geojson4326Points: FeatureCollectionPoints | null 
+  geojsonOriginePerimetre: FeatureMultiPolygon | null 
+  geojsonOriginePoints: FeatureCollectionPoints | null 
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null 
+  geojson4326Forages: FeatureCollectionForages | null 
+  geojsonOrigineForages: FeatureCollectionForages | null 
+  surface: KM2 | null 
 
   notes: null | string
-  duree: number
+  duree: number | null
   dateDebut: CaminoDate | null
-  dateFin: CaminoDate | undefined | null
+  dateFin: CaminoDate  | null
 }
 
 export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type FullEtapeHeritage = EtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId'> & { typeId: EtapeTypeId }>
+export type FullEtapeHeritage = EtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId, date: CaminoDate, statutId: EtapeStatutId }>
 
 export type HeritageContenu = Record<string, Record<string, HeritageProp<Pick<FullEtapeHeritage, 'contenu' | 'typeId' | 'date'>>>>
 type EtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {

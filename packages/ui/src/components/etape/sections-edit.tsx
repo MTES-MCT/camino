@@ -1,4 +1,4 @@
-import { DeepReadonly, computed, defineComponent, watch } from 'vue'
+import { DeepReadonly, computed, defineComponent, toRaw, watch } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { FullEtapeHeritage, HeritageContenu } from 'camino-common/src/etape'
@@ -14,7 +14,21 @@ type Props = {
   titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
   etape: SectionsEditEtape
-  completeUpdate: (etape: Props['etape'], complete: boolean) => void
+  completeUpdate: (etape: Props['etape']) => void
+}
+
+export const sectionsStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+  return getSections(titreTypeId, demarcheTypeId, etape.typeId).length > 0
+}
+export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+  if( !sectionsStepIsVisible(etape, demarcheTypeId, titreTypeId) ){
+    return true
+  }
+
+  const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
+  const sectionsWithValue = getSectionsWithValue(sections, etape.contenu)
+  return sectionsWithValueCompleteValidate(sectionsWithValue).length === 0
+
 }
 export const SectionsEdit = defineComponent<Props>(props => {
   const [editedEtape, setEditedEtape] = useState(props.etape)
@@ -37,14 +51,12 @@ export const SectionsEdit = defineComponent<Props>(props => {
   watch(
     () => editedEtape.value,
     () => {
-      const complete = sectionsWithValueCompleteValidate(sectionsWithValue.value).length === 0
-      props.completeUpdate(editedEtape.value, complete)
-    },
-    { immediate: true }
+      props.completeUpdate(editedEtape.value)
+    }
   )
 
   const heritageContenu = computed<DeepReadonly<HeritageContenu>>(() => {
-    const heritage: HeritageContenu = structuredClone(props.etape.heritageContenu)
+    const heritage: HeritageContenu = structuredClone(toRaw(props.etape.heritageContenu))
     for (const section of sectionsWithValue.value) {
       if (isNullOrUndefined(heritage[section.id])) {
         heritage[section.id] = {}

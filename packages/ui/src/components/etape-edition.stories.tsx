@@ -9,6 +9,7 @@ import { etapeEditFormApiClient } from './etape/etape-edit-form.stories'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { PerimetreInformations } from 'camino-common/src/perimetre'
 import { caminoDateValidator } from 'camino-common/src/date'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/EtapeEdition',
@@ -109,7 +110,7 @@ const apiClient: Props['apiClient'] = {
 }
 
 export const Creation: StoryFn = () => (
-  <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={null} demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')} etapeIdOrSlug={null} />
+  <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={{...testBlankUser, role: 'super'}} demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')} etapeIdOrSlug={null} />
 )
 
 export const Modification: StoryFn = () => (

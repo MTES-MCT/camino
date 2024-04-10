@@ -8,7 +8,7 @@ import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 interface Props {
   nonSelectableEntities?: EntrepriseId[]
   selectedEntities?: DeepReadonly<EtapeEntreprise[]>
-  allEntities: Entreprise[]
+  allEntities: DeepReadonly<Entreprise[]>
   name: 'titulaires' | 'amodiataires'
   onEntreprisesUpdate: (entreprise: DeepReadonly<EtapeEntreprise[]>) => void
 }
