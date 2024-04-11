@@ -84,12 +84,13 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
 export const perimetreStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>): boolean => {
   return EtapesTypes[etape.typeId].fondamentale
 }
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'geojson4326Perimetre'>>): boolean => {
+export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'geojson4326Perimetre'|'heritageProps'  >>): boolean => {
   if( !perimetreStepIsVisible(etape) ){
     return true
   }
 
-  return etape.typeId !== 'mfr' || etape.geojson4326Perimetre !== null
+  const geojson4326Perimetre = etape.heritageProps.perimetre.actif ? etape.heritageProps.perimetre.etape?.geojson4326Perimetre : etape.geojson4326Perimetre
+  return etape.typeId !== 'mfr' || isNotNullNorUndefined(geojson4326Perimetre)
 }
 
 export const PerimetreEdit = defineComponent<Props>(props => {

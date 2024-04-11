@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
+import { DeepReadonly, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools.js'
 import type { ITitre, ITitreEtape } from '../../types.js'
 
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
@@ -8,21 +8,21 @@ import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-v
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
-const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: T, suppression: boolean, titreDemarcheEtapes?: T[] | null): T[] => {
+const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(titreEtape: DeepReadonly<T>, suppression: boolean, titreDemarcheEtapes?: DeepReadonly<T[]> | null): DeepReadonly<T[]> => {
   if (isNullOrUndefinedOrEmpty(titreDemarcheEtapes)) {
     return [titreEtape]
   }
 
   // si nous n’ajoutons pas une nouvelle étape
   // on supprime l’étape en cours de modification ou de suppression
-  const titreEtapes = titreDemarcheEtapes.reduce((acc: T[], te) => {
+  const titreEtapes = titreDemarcheEtapes.reduce((acc: DeepReadonly<T[]>, te) => {
     if (te.id !== titreEtape.id) {
-      acc.push(te)
+      acc = [...acc, te]
     }
 
     // modification
     if (!suppression && te.id === titreEtape.id) {
-      acc.push(titreEtape)
+      acc = [...acc, titreEtape]
     }
 
     return acc
@@ -30,7 +30,7 @@ const titreDemarcheEtapesBuild = <T extends Pick<Partial<ITitreEtape>, 'id'>>(ti
 
   // création
   if (!titreEtape.id) {
-    titreEtapes.push(titreEtape)
+    return [...titreEtapes, titreEtape]
   }
 
   return titreEtapes

@@ -72,7 +72,8 @@ export const SectionsEdit = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div>
+    <div class='fr-grid-row'>
+    <div class="fr-col-12 fr-col-xl-6">
       {sectionsWithValue.value.map(sectionWithValue => (
         <div key={sectionWithValue.id}>
           {isNotNullNorUndefinedNorEmpty(sectionWithValue.nom) ? <h3>{sectionWithValue.nom}</h3> : null}
@@ -89,6 +90,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
           ))}
         </div>
       ))}
+    </div>
     </div>
   )
 })

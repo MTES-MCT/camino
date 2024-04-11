@@ -3,13 +3,14 @@ import { action } from '@storybook/addon-actions'
 import { vueRouter } from 'storybook-vue3-router'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
+import { FullEtapeHeritage, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { etapeEditFormApiClient } from './etape/etape-edit-form.stories'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { PerimetreInformations } from 'camino-common/src/perimetre'
-import { caminoDateValidator } from 'camino-common/src/date'
+import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const meta: Meta = {
   title: 'Components/EtapeEdition',
@@ -20,6 +21,7 @@ const meta: Meta = {
 export default meta
 
 const getEtapeAction = action('getEtape')
+const getEtapeHeritageAction = action('getEtapeHeritage')
 const getDemarcheByIdOrSlugAction = action('getDemarcheByIdOrSlug')
 const getPerimetreInfosByDemarcheIdAction = action('getPerimetreInfosByDemarcheId')
 const getPerimetreInfosByEtapeIdAction = action('getPerimetreInfosByEtapeId')
@@ -40,6 +42,54 @@ const entreprises = [
 const perimetreInformations: PerimetreInformations = {
   sdomZoneIds: ['1'],
   superposition_alertes: [{ nom: 'Titre Tutu', slug: titreSlugValidator.parse('slug-tutu'), titre_statut_id: 'mod' }],
+}
+
+const heritageProps: FullEtapeHeritage['heritageProps'] = {
+  dateDebut: {
+    actif: false,
+  },
+  dateFin: {
+    actif: false,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      dateFin: toCaminoDate('2022-01-01'),
+    },
+  },
+  duree: {
+    actif: false,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      duree: 12,
+    },
+  },
+  substances: {
+    actif: true,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      substances: ['arge'],
+    },
+  },
+  titulaires: {
+    actif: false,
+  },
+  amodiataires: {
+    actif: true,
+    etape: {
+      date: toCaminoDate('2022-01-01'),
+      typeId: 'mfr',
+      amodiataires: [
+        { id: entreprises[0].id, operateur: false },
+        { id: entreprises[1].id, operateur: false },
+        { id: entreprises[2].id, operateur: false },
+      ],
+    },
+  },
+  perimetre: {
+    actif: false,
+  },
 }
 
 const apiClient: Props['apiClient'] = {
@@ -109,10 +159,109 @@ const apiClient: Props['apiClient'] = {
   },
 }
 
-export const Creation: StoryFn = () => (
-  <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={{...testBlankUser, role: 'super'}} demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')} etapeIdOrSlug={null} />
-)
+export const Creation: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={{...testBlankUser, role: 'super'}} demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')} etapeIdOrSlug={null} />
 
-export const Modification: StoryFn = () => (
-  <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={null} demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
-)
+export const Modification: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={null} demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+
+
+export const AffichageAide: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={{...apiClient, 
+  getEtape(etapeIdOrSlug) {
+    getEtapeAction(etapeIdOrSlug)
+
+    return Promise.resolve({
+      id: etapeIdValidator.parse('etape-id'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      typeId: 'mfr',
+      statutId: 'fai',
+      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+      date: caminoDateValidator.parse('2023-02-01'),
+      dateDebut: null,
+      dateFin: null,
+      duree: null,
+      substances: [],
+      titulaires: [],
+      amodiataires: [],
+      contenu: {},
+      notes: null,
+      geojson4326Forages: null,
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      surface: null,
+      demarche: {
+        slug: demarcheSlugValidator.parse('demarche-slug'),
+        typeId: 'oct',
+        description: 'Super description',
+        titre: {
+          id: titreIdValidator.parse('titre-id'),
+          slug: titreSlugValidator.parse('titre-slug'),
+          nom: 'Nom du titre',
+          typeId: 'arm',
+        },
+      },
+    })
+  },
+}} user={null} demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+
+
+
+export const DemandeArmComplete: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={{...apiClient, 
+  getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+    getEtapeHeritageAction(titreDemarcheId, date, typeId)
+
+    return Promise.resolve({
+      heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
+      heritageProps,
+    })
+  },
+  getEtape(etapeIdOrSlug) {
+    getEtapeAction(etapeIdOrSlug)
+
+    return Promise.resolve({
+      id: etapeIdValidator.parse('etape-id'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      typeId: 'mfr',
+      statutId: 'fai',
+      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+      date: caminoDateValidator.parse('2023-02-01'),
+      dateDebut: null,
+      dateFin: null,
+      duree: 6,
+      substances: [],
+      titulaires: [{id: entreprises[0].id, operateur: false}],
+      amodiataires: [],
+      contenu: {},
+      notes: null,
+      geojson4326Forages: null,
+      geojson4326Perimetre: null,
+      geojson4326Points: null,
+      geojsonOrigineForages: null,
+      geojsonOrigineGeoSystemeId: null,
+      geojsonOriginePerimetre: null,
+      geojsonOriginePoints: null,
+      surface: null,
+      demarche: {
+        slug: demarcheSlugValidator.parse('demarche-slug'),
+        typeId: 'oct',
+        description: 'Super description',
+        titre: {
+          id: titreIdValidator.parse('titre-id'),
+          slug: titreSlugValidator.parse('titre-slug'),
+          nom: 'Nom du titre',
+          typeId: 'arm',
+        },
+      },
+    })
+  },
+}} user={{...testBlankUser, role: 'super'}} demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+
+
+// FIXME tests avec
+// - heritageContenu
+// - étape en construction
+// - avec du sdom
+// - avec une arm mécanisé
+// - demande AXM d'une entreprise (avec les 3 étapes imbriquées)

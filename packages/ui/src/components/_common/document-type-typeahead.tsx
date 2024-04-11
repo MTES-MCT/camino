@@ -1,11 +1,11 @@
 import { Ref, computed, defineComponent, ref } from 'vue'
 import { TypeAheadSingle } from '../_ui/typeahead-single'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DeepReadonly, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 
 type Props<T extends DocumentTypeId> = {
   alwaysOpen?: boolean
-  documentTypeIds: T[]
+  documentTypeIds: DeepReadonly<T[]>
   initialValue?: T
   documentTypeIdSelected: (documentTypeId: T | null) => void
 }
@@ -17,9 +17,9 @@ export const DocumentTypeTypeahead = defineComponent(<T extends DocumentTypeId>(
     props.documentTypeIdSelected(isNotNullNorUndefined(documentType) ? documentType.id : null)
   }
 
-  const sortedByUs = computed<{ id: T; nom: string }[]>(() => [...props.documentTypeIds].map(dtId => DocumentsTypes[dtId]).sort((a, b) => a.nom.localeCompare(b.nom)))
+  const sortedByUs = computed<DeepReadonly<{ id: T; nom: string }[]>>(() => [...props.documentTypeIds].map(dtId => DocumentsTypes[dtId]).sort((a, b) => a.nom.localeCompare(b.nom)))
 
-  const documentTypeFiltered = ref<{ id: T; nom: string }[]>(sortedByUs.value) as Ref<{ id: T; nom: string }[]>
+  const documentTypeFiltered = ref<DeepReadonly<{ id: T; nom: string }[]>>(sortedByUs.value) as Ref<DeepReadonly<{ id: T; nom: string }[]>>
   const documentTypeOnInput = (search: string) => {
     const formatedSearch = search.trim().toLowerCase()
 

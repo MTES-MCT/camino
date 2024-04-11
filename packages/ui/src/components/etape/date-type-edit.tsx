@@ -60,9 +60,11 @@ export const DateTypeEdit = caminoDefineComponent<Props>(['etape', 'demarcheId',
   }
 
   return () => (
-    <>
-      <DsfrInput type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
-      { isNotNullNorUndefined(date.value) ? <TypeEdit etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} /> : null}
-    </>
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-xl-6">
+        <DsfrInput type={{ type: 'date' }} valueChanged={onDateChanged} initialValue={props.etape.date} legend={{ main: 'Date' }} />
+        { isNotNullNorUndefined(date.value) ? <TypeEdit etape={{ ...props.etape, date: date.value }} demarcheId={props.demarcheId} apiClient={props.apiClient} onEtapeChange={onEtapeTypeChange} /> : null}
+      </div>
+    </div>
   )
 })

@@ -9,7 +9,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
 import { TitreWithPerimetre } from '../titres/mapUtil'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { couleurParDomaine } from '../_common/domaine'
 import { TitreTypeId, getDomaineId } from 'camino-common/src/static/titresTypes'
 import { Router } from 'vue-router'
@@ -468,7 +468,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       mapLibre.on('moveend', moveend)
 
       mapLibre.on('click', contourPointsName, e => {
-        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+        if (e.features !== null && e.features !== undefined && e.features.length > 0) {
           new Popup({ closeButton: false, maxWidth: '500' })
             .setLngLat(e.lngLat)
             .setHTML(
@@ -481,7 +481,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       })
 
       mapLibre.on('click', contourForagesName, e => {
-        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+        if (e.features !== null && e.features !== undefined && e.features.length > 0) {
           const properties = featureForagePropertiesValidator.safeParse(e.features[0].properties)
           if (properties.success) {
             new Popup({ closeButton: false, maxWidth: '500' })
@@ -504,7 +504,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       })
 
       mapLibre.on('mouseenter', titresValidesFillName, e => {
-        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+        if (e.features !== null && e.features !== undefined && e.features.length > 0) {
           const titreProperties = e.features[0].properties as TitreValideProperties
 
           popup.setLngLat(e.lngLat).setHTML(`<div class="fr-text--lg fr-m-0">${titreProperties.nom}</div>`).addTo(mapLibre)
@@ -516,7 +516,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       })
 
       mapLibre.on('click', titresValidesFillName, e => {
-        if (isNotNullNorUndefinedNorEmpty(e.features)) {
+        if (e.features !== null && e.features !== undefined && e.features.length > 0) {
           const titreProperties = e.features[0].properties as TitreValideProperties
           props.neighbours?.router.push({ name: 'titre', params: { id: titreProperties.slug } })
         }

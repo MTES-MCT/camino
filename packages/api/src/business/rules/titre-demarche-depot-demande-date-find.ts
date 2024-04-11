@@ -1,3 +1,4 @@
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { ITitreEtape } from '../../types.js'
 
 // si il y a un dépot de la demande
@@ -5,7 +6,7 @@ import { ITitreEtape } from '../../types.js'
 // sinon
 // retourne la date de la première étape
 
-export const titreDemarcheDepotDemandeDateFind = (titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined): undefined | string => {
+export const titreDemarcheDepotDemandeDateFind = (titreEtapes: DeepReadonly<Pick<ITitreEtape, 'date' | 'typeId'>[]> | undefined): undefined | string => {
   if (!titreEtapes || titreEtapes.length === 0) {
     return undefined
   }

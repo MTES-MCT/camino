@@ -21,7 +21,6 @@ export default meta
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
-const completeUpdateAction = action('completeUpdate')
 const onEtapeChangeAction = action('onEtapeChange')
 const onPointsChangeAction = action('onPointsChange')
 const onForagesChangeAction = action('onForagesChange')
@@ -73,9 +72,6 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
   },
 }
 
-const completeUpdate = (value: boolean) => {
-  completeUpdateAction(value)
-}
 
 const onEtapeChange = (geojsonInformations: GeojsonInformations) => {
   onEtapeChangeAction(geojsonInformations)
@@ -107,7 +103,6 @@ export const EmptyNoHeritage: StoryFn = () => (
     etape={etapeNoHeritage}
     titreTypeId="arm"
     titreSlug={titreSlug}
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
@@ -137,7 +132,6 @@ const etapeEmptyHeritage: Props['etape'] = {
 export const EmptyHeritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeEmptyHeritage}
@@ -171,7 +165,6 @@ const etapeHeritage: Props['etape'] = {
 export const Heritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeHeritage}
@@ -194,7 +187,6 @@ const etape: Props['etape'] = {
 export const FilledNoHeritage: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etape}
@@ -217,7 +209,6 @@ const etapeLegacy: Props['etape'] = {
 export const LegacyGeoSysteme: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeLegacy}
@@ -321,7 +312,6 @@ const etapeWithForages: Props['etape'] = {
 export const WithForages: StoryFn = () => (
   <PerimetreEdit
     initTab="points"
-    completeUpdate={completeUpdate}
     onEtapeChange={onEtapeChange}
     apiClient={apiClient}
     etape={etapeWithForages}

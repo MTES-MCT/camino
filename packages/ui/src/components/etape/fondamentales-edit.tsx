@@ -33,13 +33,16 @@ interface Props {
 export const fondamentaleStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>): boolean => {
     return EtapesTypes[etape.typeId].fondamentale
 }
-export const fondamentaleStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'substances' | 'duree'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
+export const fondamentaleStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'substances' | 'duree' | 'heritageProps'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if( !fondamentaleStepIsVisible(etape) ){
     return true
   }
 
+
+  const substances: Readonly<SubstanceLegaleId[]> = etape.heritageProps.substances.actif ?  (etape.heritageProps.substances.etape?.substances ?? []) : etape.substances
+  const duree: number | null | undefined = etape.heritageProps.duree.actif ?  etape.heritageProps.duree.etape?.duree : etape.duree
   return etape.typeId !== ETAPES_TYPES.demande ||
-  isNotNullNorUndefinedNorEmpty(etape.substances?.filter(isNotNullNorUndefined)) && (titreEtapesDureeOptionalCheck(etape.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(etape.duree) && etape.duree > 0))
+  isNotNullNorUndefinedNorEmpty(substances) && (titreEtapesDureeOptionalCheck(etape.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(duree) && duree > 0))
 }
 
 export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarcheTypeId', 'titreTypeId', 'user', 'entreprises', 'completeUpdate'], props => {
@@ -52,7 +55,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   //   editedEtape.value = props.etape
   // })
 
-  const entreprisesDisabled = computed<EntrepriseId[]>(() => [...editedEtape.value.amodiataires, ...editedEtape.value.titulaires].map(({ id }) => id))
 
   const dateDebutChanged = (dateDebut: CaminoDate | null) => {
     setEditedEtape({ ...editedEtape.value, dateDebut })
@@ -127,8 +129,10 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
     setEditedEtape({ ...editedEtape.value, duree: mois.value + ans.value * 12 })
   }
 
+
   return () => (
-    <div>
+    <div class="fr-grid-row">
+    <div class="fr-col-12 fr-col-xl-6">
       {canEditDuree(props.titreTypeId, props.demarcheTypeId) ? (
         <HeritageEdit
           updateHeritage={updateDureeHeritage}
@@ -159,7 +163,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           )}
           read={heritagePropEtape => (
             <div>
-              <PropDuree duree={heritagePropEtape?.duree} />
+              <PropDuree duree={heritagePropEtape?.duree ?? undefined} />
             </div>
           )}
         />
@@ -191,6 +195,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             <label class="fr-label" for="filters_autocomplete_titulaires">
               <h6>Titulaires</h6>
             </label>
+
             <HeritageEdit
               updateHeritage={updateTitulairesHeritage}
               prop={editedEtape.value.heritageProps.titulaires}
@@ -199,7 +204,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                 <AutocompleteEntreprise
                   allEntities={props.entreprises}
                   selectedEntities={props.etape.titulaires}
-                  nonSelectableEntities={entreprisesDisabled.value}
+                  nonSelectableEntities={editedEtape.value.amodiataires.map(({id}) => id)}
                   name="titulaires"
                   onEntreprisesUpdate={titulairesUpdate}
                 />
@@ -231,7 +236,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
                 <AutocompleteEntreprise
                   allEntities={props.entreprises}
                   selectedEntities={props.etape.amodiataires}
-                  nonSelectableEntities={entreprisesDisabled.value}
+                  nonSelectableEntities={editedEtape.value.titulaires.map(({id}) => id)}
                   name="amodiataires"
                   onEntreprisesUpdate={amodiatairesUpdate}
                 />
@@ -255,6 +260,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
         updateHeritage={updateSubstancesHeritage}
         updateSubstances={substancesChanged}
       />
+    </div>
     </div>
   )
 })

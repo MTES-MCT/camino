@@ -6,7 +6,7 @@ import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 
 interface Props {
-  nonSelectableEntities?: EntrepriseId[]
+  nonSelectableEntities?: DeepReadonly<EntrepriseId[]>
   selectedEntities?: DeepReadonly<EtapeEntreprise[]>
   allEntities: DeepReadonly<Entreprise[]>
   name: 'titulaires' | 'amodiataires'
@@ -25,11 +25,12 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
     () => mySelectedEntities.value,
     () => {
       props.onEntreprisesUpdate(mySelectedEntities.value)
-    },
-    { immediate: true }
+    }
   )
 
-  const selectableEntities = computed(() => props.allEntities.filter(entity => isNullOrUndefinedOrEmpty(props.nonSelectableEntities) || !props.nonSelectableEntities.some(id => id === entity.id)))
+  const selectableEntities = computed(() => {
+    return props.allEntities.filter(entity => isNullOrUndefinedOrEmpty(props.nonSelectableEntities) || !props.nonSelectableEntities.some(id => id === entity.id))
+  })
 
   const onSelectEntreprises = (entreprises: { id: EntrepriseId }[]) => {
     // FIXME virer opérateur

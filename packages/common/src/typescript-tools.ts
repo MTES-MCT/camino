@@ -7,32 +7,34 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
-export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
+export function isNotNullNorUndefinedNorEmpty<U>(value:  DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
+export function isNotNullNorUndefinedNorEmpty<U>(value:  U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
-export function isNotNullNorUndefinedNorEmpty(value: string | any[] | null | undefined) {
+export function isNotNullNorUndefinedNorEmpty(value: string |  DeepReadonly<any[]> | null | undefined) {
   if (Array.isArray(value)) {
     if (!isNullOrUndefined(value)) {
       return isNonEmptyArray(value)
     }
-  } else {
+  } else  if (typeof value === 'string') {
     return value !== null && value !== undefined && value.trim() !== ''
   }
 
   return false
 }
 
-export function isNullOrUndefinedOrEmpty<U>(value: U[] | null | undefined): value is null | undefined
+export function isNullOrUndefinedOrEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is null | undefined
 export function isNullOrUndefinedOrEmpty(value: string | null | undefined): value is null | undefined
-export function isNullOrUndefinedOrEmpty(value: string | any[] | null | undefined) {
+export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
   if (value === null || value === undefined) {
     return true
   }
 
   if (Array.isArray(value)) {
     return value.length === 0
-  } else {
+  } else if (typeof value === 'string') {
     return value.trim() === ''
   }
+  return false
 }
 
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {

@@ -37,7 +37,7 @@ interface InnerEntrepriseDocument {
   entrepriseDocumentType: EntrepriseDocumentType
 }
 
-type SelectedEntrepriseDocument = {
+export type SelectedEntrepriseDocument = {
   id: EntrepriseDocumentId,
   entrepriseId: EntrepriseId,
   documentTypeId: EntrepriseDocumentTypeId
@@ -65,9 +65,15 @@ export const EntrepriseDocumentsEdit = caminoDefineComponent<Props>(['completeUp
   const loadEtapeEntrepriseDocuments = async () => {
     etapeEntrepriseDocumentIds.value = { status: 'LOADING' }
     try {
-      const etapeDocuments = await props.apiClient.getEtapeEntrepriseDocuments(props.etapeId)
+      if (isNotNullNorUndefined(props.etapeId)) {
 
-      etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: etapeDocuments.map(({ id }) => id) }
+        const etapeDocuments = await props.apiClient.getEtapeEntrepriseDocuments(props.etapeId)
+        etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: etapeDocuments.map(({ id }) => id) }
+      } else {
+        etapeEntrepriseDocumentIds.value = { status: 'LOADED', value: [] }
+
+      }
+
     } catch (e: any) {
       console.error('error', e)
       etapeEntrepriseDocumentIds.value = {
@@ -195,7 +201,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
     }
 
     const completeUpdate = () => {
-      props.completeUpdate(getEntriesHardcore(entreprisesEntrepriseDocumentsIndex.value).flatMap(([entrepriseId, innerEntrepriseDocument]) => innerEntrepriseDocument.filter(({id}) => isNotNullNorUndefined(id)).map(innerDocument => ({entrepriseId, id: innerDocument.id, documentTypeId: innerDocument.entrepriseDocumentType}))))
+      props.completeUpdate(getEntriesHardcore(entreprisesEntrepriseDocumentsIndex.value).flatMap(([entrepriseId, innerEntrepriseDocument]) => innerEntrepriseDocument.filter((document): document is Omit<InnerEntrepriseDocument, 'id'> & {id: EntrepriseDocumentId} => isNotNullNorUndefinedNorEmpty(document.id)).map(innerDocument => ({entrepriseId, id: innerDocument.id, documentTypeId: innerDocument.entrepriseDocumentType.id}))))
     }
 
     const entreprisedocumentsUpdate = (entreprisedocument: InnerEntrepriseDocument, entrepriseId: EntrepriseId) => (documentId: EntrepriseDocumentId | 'newDocument' | null) => {
