@@ -187,8 +187,6 @@ const EtapeEditFormInternal = defineComponent<{
 
   const sectionCompleteUpdate = (sectionsEtape: SectionsEditEtape) => {
     props.setEtape({ ...etapeFlattened.value, contenu: sectionsEtape.contenu, heritageContenu: sectionsEtape.heritageContenu }, props.etapeDocuments, props.entrepriseDocuments)
-
-    // FIXME à tester si on change la mécanisation
   }
 
   const onUpdateNotes = (notes: string) => {
@@ -270,7 +268,6 @@ const EtapeEditFormInternal = defineComponent<{
             completeUpdate={documentsCompleteUpdate}
             sdomZoneIds={props.sdomZoneIds}
             user={props.user}
-            // FIXME Mais si c’est hérité ça marche ?
             contenu={etapeFlattened.value.contenu}
             etapeStatutId={etapeFlattened.value.statutId}
           />

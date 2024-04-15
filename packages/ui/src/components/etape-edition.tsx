@@ -6,7 +6,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
 import { Etape, EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
 import { entreprisesKey, userKey } from '../moi'
-import { User } from 'camino-common/src/roles'
+import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { useState } from '../utils/vue-tsx-utils'
 import { AsyncData } from '../api/client-rest'
@@ -15,9 +15,10 @@ import { PerimetreInformations } from 'camino-common/src/perimetre'
 import { LoadingElement } from './_ui/functional-loader'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DsfrLink } from './_ui/dsfr-button'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import { EtapeEditForm } from './etape/etape-edit-form'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 
 export const EtapeEdition = defineComponent<Props>((props) => {
@@ -67,6 +68,10 @@ export type Props = {
     | 'getPerimetreInfosByDemarcheId'
     | 'getPerimetreInfosByEtapeId'
   >
+}
+
+const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTypeId | null): boolean => {
+  return !(isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && ['axm', 'arm'].includes(titreTypeId) && etapeTypeId === 'mfr'
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
@@ -123,13 +128,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
     }
   })
 
-  const helpVisible = computed<boolean>(() => {
-    // FIXME
-    // if( demarche.value.status === 'LOADED' ) {
-    //   return !(isSuper(props.user) || isAdministrationAdmin(props.user) || isAdministrationEditeur(props.user)) && ['axm', 'arm'].includes(demarche.value.value.titre_type_id) && this.etapeType?.id === 'mfr'
-    // }
-    return false
-  })
+
 
   const alertesUpdate = (perimetre: PerimetreInformations) => {
     if( asyncData.value.status === 'LOADED' ) {
@@ -159,7 +158,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
 
             <h1>{etape.typeId !== null ? `Étapes - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
 
-            {helpVisible.value ? (
+            {helpVisible(props.user, demarche.titre_type_id, etape.typeId) ? (
               <Alert
                 small={true}
                 title={
@@ -188,16 +187,6 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
         )}
       />
       {
-        //     <div v-if="dateIsVisible" class="tablet-blobs">
-        //       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-        //         <h5>Date</h5>
-        //       </div>
-        //       <div class="tablet-blob-2-3">
-        //         <InputDate :initialValue="newDate" :dateChanged="dateChanged" class="mb" />
-        //       </div>
-        //     </div>
-
-
         //     <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky" style="z-index: 100000">
         //       <div class="tablet-blob-1-3" />
         //       <PureFormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" save="save" depose="depose" />
