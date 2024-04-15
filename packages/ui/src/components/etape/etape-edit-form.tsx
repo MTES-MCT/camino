@@ -137,7 +137,7 @@ const EtapeEditFormInternal = defineComponent<{
 
 
   const etapeFlattened = computed<DeepReadonly<EtapeWithHeritage>>(() => {
-    return flattenEtapeWithHeritage(props.etape, props.etape)
+    return flattenEtapeWithHeritage(props.titreTypeId, props.demarcheTypeId, props.etape, props.etape)
   })
 
 

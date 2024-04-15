@@ -12,7 +12,10 @@ import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
 import { ElementWithValue } from './sections.js'
-import { DeepReadonly } from './typescript-tools.js'
+import { DeepReadonly, isNullOrUndefined } from './typescript-tools.js'
+import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { DemarcheTypeId } from './static/demarchesTypes.js'
+import { TitreTypeId } from './static/titresTypes.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -94,7 +97,7 @@ export type EtapeDocumentWithFileModification = z.infer<typeof etapeDocumentWith
 export const etapeDocumentModificationValidator = z.union([etapeDocumentWithFileModificationValidator, tempEtapeDocumentValidator])
 export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>
 
-export const flattenEtapeWithHeritage = (etape: DeepReadonly<Etape>, heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>): DeepReadonly<EtapeWithHeritage> => {
+export const flattenEtapeWithHeritage = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etape: DeepReadonly<Etape>, heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>): DeepReadonly<EtapeWithHeritage> => {
 
 
   const substances: Readonly<SubstanceLegaleId[]> = heritage.heritageProps.substances.actif ?  (heritage.heritageProps.substances.etape?.substances ?? []) : etape.substances
@@ -127,6 +130,16 @@ export const flattenEtapeWithHeritage = (etape: DeepReadonly<Etape>, heritage: D
     }
   }
 
+  const sections =  getSections(titreTypeId, demarcheTypeId, heritage.typeId)
 
-  return {...etape, ...heritage, substances, duree, amodiataires, titulaires, dateDebut, dateFin, ...perimetre}
+  let newContenu: DeepReadonly<Etape['contenu']> = {}
+    for (const section of sections) {
+        newContenu = {...newContenu, [section.id]: {}}
+      for (const element of section.elements) {
+          newContenu = { ...newContenu, [section.id]: {...newContenu[section.id], [element.id]: heritage.heritageContenu[section.id]?.[element.id]?.actif ? heritage.heritageContenu[section.id][element.id].etape?.contenu[section.id]?.[element.id] ?? null : etape.contenu[section.id]?.[element.id] ?? null} }
+      }
+    }
+
+
+  return {...etape, ...heritage, substances, duree, amodiataires, titulaires, dateDebut, dateFin, ...perimetre, contenu: newContenu}
 }
