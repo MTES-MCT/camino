@@ -5,13 +5,8 @@ import { PerimetreEdit } from './perimetre-edit'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
-import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
-import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { User} from 'camino-common/src/roles'
-import { hasEtapeAvisDocuments } from 'camino-common/src/permissions/titres-etapes'
-import { Etape, EtapeDocument, EtapeWithHeritage, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
+import { Etape, EtapeDocument, EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -26,9 +21,6 @@ import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations,
 import { LoadingElement } from '../_ui/functional-loader'
 import { SectionsEdit, SectionsEditEtape } from './sections-edit'
 import { DsfrTextarea } from '../_ui/dsfr-textarea'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { CaminoDate } from 'camino-common/src/date'
-import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { SelectedEntrepriseDocument, entrepriseDocumentsStepIsComplete, entrepriseDocumentsStepIsVisible, etapeDocumentsStepIsComplete, etapeDocumentsStepIsVisible, fondamentaleStepIsComplete, fondamentaleStepIsVisible, perimetreStepIsComplete, perimetreStepIsVisible, sectionsStepIsComplete, sectionsStepIsVisible } from 'camino-common/src/permissions/etape-form'
 
 export type Props = {
@@ -62,6 +54,7 @@ export type Props = {
 type Heritage = DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'date' | 'typeId' | 'statutId'>>
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState(props.etape)
+  const [heritage, setHeritage] = useState<DeepReadonly<Heritage> | null>(null)
 
   const [entrepriseDocuments, setEntrepriseDocuments] = useState<DeepReadonly<SelectedEntrepriseDocument[]>>([])
   const [etapeDocuments, setEtapeDocuments] = useState<DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>>([])
@@ -84,7 +77,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       try {
         heritageData.value = { status: 'LOADING' }
         const value = await props.apiClient.getEtapeHeritage(demarcheId, etape.date, etape.typeId)
-        heritageData.value = { status: 'LOADED', value: {...value, date: etape.date, typeId: etape.typeId, statutId: etape.statutId} }
+        const heritageComplete = {...value, date: etape.date, typeId: etape.typeId, statutId: etape.statutId} 
+        setHeritage(heritageComplete)
+        heritageData.value = { status: 'LOADED', value: heritageComplete }
       } catch (e: any) {
         console.error('error', e)
         heritageData.value = {
@@ -109,7 +104,9 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   })
 
   const setEtapeAndDocument = (etape: DeepReadonly<EtapeWithHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => {
+    console.log('setEtapeAndDocument', JSON.stringify(etape.substances))
     setEtape(etape)
+    setHeritage(etape)
     setEtapeDocuments(etapeDocuments)
     setEntrepriseDocuments(entrepriseDocuments)
   }
@@ -124,15 +121,14 @@ export const EtapeEditForm = defineComponent<Props>(props => {
       ) : null}
       {stepInternalIsVisible.value ? <LoadingElement
         data={heritageData.value}
-        renderItem={heritage => <EtapeEditFormInternal {...props} etape={etape.value} heritage={heritage} entrepriseDocuments={entrepriseDocuments.value} etapeDocuments={etapeDocuments.value} setEtape={setEtapeAndDocument}/>}
+        renderItem={item => <EtapeEditFormInternal {...props} etape={isNotNullNorUndefined(heritage.value) ? {...etape.value, ...heritage.value} : {...etape.value, ...item}} entrepriseDocuments={entrepriseDocuments.value} etapeDocuments={etapeDocuments.value} setEtape={setEtapeAndDocument}/>}
       /> : null}
     </div>
   )
 })
 
 const EtapeEditFormInternal = defineComponent<{
-  etape: DeepReadonly<Etape>
-  heritage: Heritage
+  etape: DeepReadonly<EtapeWithHeritage>
   etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
   entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>,
   setEtape: (etape: DeepReadonly<EtapeWithHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => void
@@ -141,7 +137,7 @@ const EtapeEditFormInternal = defineComponent<{
 
 
   const etapeFlattened = computed<DeepReadonly<EtapeWithHeritage>>(() => {
-    return flattenEtapeWithHeritage(props.etape, props.heritage)
+    return flattenEtapeWithHeritage(props.etape, props.etape)
   })
 
 
@@ -175,6 +171,13 @@ const EtapeEditFormInternal = defineComponent<{
 
     props.alertesUpdate({ superposition_alertes: perimetreInfos.superposition_alertes, sdomZoneIds: perimetreInfos.sdomZoneIds })
   }
+
+  const onEtapePerimetreHeritageChange = (perimetre: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'perimetre'>>>>) => {
+    props.setEtape({
+      ...props.etape,
+      heritageProps: {...props.etape.heritageProps, perimetre }
+    }, props.etapeDocuments, props.entrepriseDocuments)
+  }
   const onEtapePointsChange = (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => {
     props.setEtape({ ...etapeFlattened.value, geojson4326Points, geojsonOriginePoints }, props.etapeDocuments, props.entrepriseDocuments)
   }
@@ -183,11 +186,7 @@ const EtapeEditFormInternal = defineComponent<{
   }
 
   const sectionCompleteUpdate = (sectionsEtape: SectionsEditEtape) => {
-    props.setEtape({ ...etapeFlattened.value, contenu: sectionsEtape.contenu }, props.etapeDocuments, props.entrepriseDocuments)
-    // FIXME faudrait pas faire ça partout ? Et on peut pas mieux faire ?
-    // if (heritageData.value.status === 'LOADED') {
-    //   heritageData.value = { status: 'LOADED', value: { ...heritageData.value.value, heritageContenu: sectionsEtape.heritageContenu } }
-    // }
+    props.setEtape({ ...etapeFlattened.value, contenu: sectionsEtape.contenu, heritageContenu: sectionsEtape.heritageContenu }, props.etapeDocuments, props.entrepriseDocuments)
 
     // FIXME à tester si on change la mécanisation
   }
@@ -198,7 +197,7 @@ const EtapeEditFormInternal = defineComponent<{
 
 
   const fondamentalesCompleteUpdate = (etapeFondamentale: DeepReadonly<EtapeFondamentaleEdit>,) => {
-    props.setEtape({ ...etapeFlattened.value, ...etapeFondamentale }, props.etapeDocuments, props.entrepriseDocuments)
+    props.setEtape({ ...props.etape, ...etapeFondamentale }, props.etapeDocuments, props.entrepriseDocuments)
   }
 
   const titulairesAndAmodiataires = computed<Entreprise[]>(() => {
@@ -217,6 +216,7 @@ const EtapeEditFormInternal = defineComponent<{
         <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId)}>
           <FondamentalesEdit
             etape={etapeFlattened.value}
+          
             demarcheTypeId={props.demarcheTypeId}
             titreTypeId={props.titreTypeId}
             user={props.user}
@@ -252,9 +252,11 @@ const EtapeEditFormInternal = defineComponent<{
             titreTypeId={props.titreTypeId}
             titreSlug={props.titreSlug}
             apiClient={props.apiClient}
+            initTab={props.initTab}
             onEtapeChange={onEtapePerimetreChange}
             onPointsChange={onEtapePointsChange}
             onForagesChange={onEtapeForagesChange}
+            onHeritageChange={onEtapePerimetreHeritageChange}
           />
         </Bloc>
       ) : null}

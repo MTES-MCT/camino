@@ -104,7 +104,7 @@ export const flattenEtapeWithHeritage = (etape: DeepReadonly<Etape>, heritage: D
   const dateDebut: CaminoDate | null = heritage.heritageProps.dateDebut.actif ?  heritage.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut
   const dateFin: CaminoDate | null = heritage.heritageProps.dateFin.actif ?  heritage.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin
 
-  let perimetre: DeepReadonly<Pick<Etape, MappingHeritagePropsNameEtapePropsName['perimetre'][number]>> = {
+  let perimetre: DeepReadonly<Pick<Etape, EtapePropsFromHeritagePropName<'perimetre'>>> = {
     geojson4326Perimetre: etape.geojson4326Perimetre,
     geojson4326Points: etape.geojson4326Points,
     geojsonOriginePerimetre: etape.geojsonOriginePerimetre,

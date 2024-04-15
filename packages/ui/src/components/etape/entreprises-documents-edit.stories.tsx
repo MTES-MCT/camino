@@ -33,7 +33,7 @@ export const Loading: StoryFn = () => (
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
 
-        return Promise.resolve([])
+        return new Promise(() => ({}))
       },
       uploadTempDocument: document => {
         uploadTempDocumentAction(document)
@@ -446,5 +446,51 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
     ]}
     completeUpdate={completeUpdateAction}
     etapeId={etapeIdValidator.parse('etapeIdAgain')}
+  />
+)
+
+
+
+// FIXME cette story devrait pouvoir ajouter un document optionnel
+export const ArmDocumentOptionnel: StoryFn = () => (
+  <EntrepriseDocumentsEdit
+    tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mod' }}
+    apiClient={{
+      creerEntrepriseDocument: async (entrepriseId, entrepriseDocumentInput) => {
+        creerEntrepriseDocumentAction(entrepriseId, entrepriseDocumentInput)
+
+        return toEntrepriseDocumentId(toCaminoDate('2023-05-17'), 'arm', 'hash')
+      },
+      uploadTempDocument: document => {
+        uploadTempDocumentAction(document)
+
+        return Promise.resolve(tempDocumentNameValidator.parse(new Date().toISOString()))
+      },
+
+      getEntrepriseDocuments: async id => {
+        getEntrepriseDocumentsAction(id)
+        const entrepriseDocuments: EntrepriseDocument[] = [
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'idm', 'uueoau'),
+            description: '',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'idm',
+            can_delete_document: true,
+            entreprise_id: id,
+          },
+        ]
+
+        return entrepriseDocuments
+      },
+      getEtapeEntrepriseDocuments: etapeId => {
+        getEtapeEntrepriseDocumentsAction(etapeId)
+
+        return Promise.resolve([
+        ])
+      },
+    }}
+    entreprises={[{ id: newEntrepriseId('id'), nom: 'nom entreprise' }]}
+    completeUpdate={completeUpdateAction}
+    etapeId={etapeIdValidator.parse('hello')}
   />
 )

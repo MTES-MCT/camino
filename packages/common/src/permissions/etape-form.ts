@@ -23,6 +23,8 @@ export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<EtapeWit
     if( !fondamentaleStepIsVisible(flattened.typeId) ){
       return true
     }
+
+    console.log('fondamentaleStepIsComplete', JSON.stringify(flattened.substances))
   
     return flattened.typeId !== ETAPES_TYPES.demande ||
     isNotNullNorUndefinedNorEmpty(flattened.substances) && (dureeOptionalCheck(flattened.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(flattened.duree) && flattened.duree > 0))
@@ -112,6 +114,7 @@ export const entrepriseDocumentsStepIsComplete = (etape: DeepReadonly<Pick<Etape
 
   const entrepriseIds = [...etape.titulaires, ...etape.amodiataires].map(({id}) => id).filter(onlyUnique)
 
+  console.log('entreprisesIds', entrepriseIds, documentTypes, entreprisesDocuments)
   return entrepriseIds.every(eId => documentTypes.every(({ optionnel, id }) => optionnel || entreprisesDocuments.some(({ documentTypeId, entrepriseId }) => documentTypeId === id && entrepriseId === eId)))
 }
 

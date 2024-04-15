@@ -3,7 +3,7 @@ import { dateFormat } from '@/utils'
 import { DeepReadonly, FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -27,7 +27,7 @@ interface Props {
     etapeTypeId: EtapeTypeId
   }
   completeUpdate: (etapeEntrepriseDocuments: SelectedEntrepriseDocument[]) => void
-  entreprises: Entreprise[]
+  entreprises: DeepReadonly<Entreprise[]>
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'getEntrepriseDocuments' | 'getEtapeEntrepriseDocuments' | 'uploadTempDocument'>
 }
@@ -110,7 +110,9 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
           loadingEntrepriseDocuments[entreprise.id] = await props.apiClient.getEntrepriseDocuments(entreprise.id)
         }
         entrepriseDocuments.value = { status: 'LOADED', value: loadingEntrepriseDocuments }
-        await reset()
+
+      indexReset()
+      entreprisedocumentsReset()
       } catch (e: any) {
         console.error('error', e)
         entrepriseDocuments.value = {
@@ -120,30 +122,6 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       }
     }
 
-    const complete = computed<boolean>(() => {
-      const entreprisedocuments: EntrepriseDocument[] = []
-      const documents = entrepriseDocuments.value
-      if (documents.status === 'LOADED') {
-        props.entreprises.forEach(entreprise => {
-          documents.value[entreprise.id]?.forEach(document => {
-            if (etapeEntrepriseDocumentIds.value.some(id => id === document.id)) {
-              entreprisedocuments.push(document)
-            }
-          })
-        })
-
-        return tdeEntrepriseDocuments.value.every(
-          tdeEntrepriseDocument => tdeEntrepriseDocument.optionnel || entreprisedocuments.find(({ entreprise_document_type_id }) => entreprise_document_type_id === tdeEntrepriseDocument.id)
-        )
-      }
-
-      return false
-    })
-
-    const reset = async () => {
-      indexReset()
-      entreprisedocumentsReset()
-    }
 
     const indexReset = () => {
       const entrepriseDocumentsLoaded = entrepriseDocuments.value
@@ -189,7 +167,6 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       } else {
         entreprisedocument.id = documentId ?? ''
         entreprisedocumentsReset()
-        completeUpdate()
       }
     }
 
@@ -205,7 +182,6 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       }
 
       entreprisedocumentsReset()
-      completeUpdate()
     }
 
     const entreprisedocumentsReset = () => {
@@ -218,21 +194,19 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
           etapeEntrepriseDocumentIds.value.push(id)
         })
       })
+      completeUpdate()
     }
 
-    watch(() => complete.value, completeUpdate)
     watch(
       () => props.entreprises,
-      async () => {
-        await loadEntrepriseDocuments()
-      },
-      { deep: true }
+      async (old, newValue) => {
+        if (!stringArrayEquals(old.map(({id}) => id), newValue.map(({id}) => id))) {
+          await loadEntrepriseDocuments()
+        }
+      }
     )
-    watch(() => props.tde, reset, { deep: true })
-
     onMounted(async () => {
       await loadEntrepriseDocuments()
-      completeUpdate()
     })
 
     return () => (
@@ -314,7 +288,6 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
 
                 etapeEntrepriseDocumentIds.value.push(newDocumentId)
                 await loadEntrepriseDocuments()
-                completeUpdate()
 
                 return newDocumentId
               },

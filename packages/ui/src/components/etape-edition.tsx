@@ -19,7 +19,8 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import { EtapeEditForm } from './etape/etape-edit-form'
 
-export const EtapeEdition = defineComponent(() => {
+
+export const EtapeEdition = defineComponent<Props>((props) => {
   const router = useRouter()
   const user = inject(userKey)
   const entreprises = inject(entreprisesKey, ref([]))
@@ -43,6 +44,7 @@ export const EtapeEdition = defineComponent(() => {
 })
 
 export type Props = {
+  initTab?: 'points' | 'carte'
   etapeIdOrSlug: EtapeIdOrSlug | null
   demarcheIdOrSlug: DemarcheIdOrSlug | null
   user: User
@@ -180,7 +182,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               />
             ) : null}
 
-            <EtapeEditForm etape={etape} demarcheId={demarche.demarche_id} demarcheTypeId={demarche.demarche_type_id} titreSlug={demarche.titre_slug} titreTypeId={demarche.titre_type_id} user={props.user} entreprises={props.entreprises}
+            <EtapeEditForm initTab={props.initTab} etape={etape} demarcheId={demarche.demarche_id} demarcheTypeId={demarche.demarche_type_id} titreSlug={demarche.titre_slug} titreTypeId={demarche.titre_type_id} user={props.user} entreprises={props.entreprises}
             apiClient={props.apiClient} sdomZoneIds={perimetre.sdomZoneIds} alertesUpdate={alertesUpdate} completeUpdate={completeUpdate} />
           </>
         )}
@@ -207,7 +209,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entreprises', 'apiClient']
+PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entreprises', 'apiClient', 'initTab']
 
 // import { dateFormat } from '@/utils'
 // import { InputDate } from './_ui/input-date'

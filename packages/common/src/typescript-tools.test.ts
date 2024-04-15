@@ -1,4 +1,4 @@
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique } from './typescript-tools.js'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty, memoize, onlyUnique, stringArrayEquals } from './typescript-tools.js'
 import { Role } from './roles.js'
 import { AdministrationId } from './static/administrations.js'
 import { Departements } from './static/departement.js'
@@ -56,4 +56,12 @@ test('memoize', async () => {
   expect(await memoized()).toBe(12)
   expect(await memoized()).toBe(12)
   expect(called).toBe(1)
+})
+test('stringArrayEquals', () => {
+  expect(stringArrayEquals(['un'], ['un'])).toBe(true)
+  expect(stringArrayEquals([], [])).toBe(true)
+  expect(stringArrayEquals(['un'], ['deux'])).toBe(false)
+  expect(stringArrayEquals(['un'], ['un', 'deux'])).toBe(false)
+  expect(stringArrayEquals(['un', 'deux'], ['un'])).toBe(false)
+  expect(stringArrayEquals([], ['un'])).toBe(false)
 })

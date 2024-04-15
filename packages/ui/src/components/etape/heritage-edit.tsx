@@ -23,14 +23,8 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
       // @ts-ignore le but est de savoir si une valeur est présente dans l’étape héritée, mais on a limité les champs dans T
       const valeur = props.prop.etape && props.prop.etape[field]
 
-      if ((!Array.isArray(valeur) && isNotNullNorUndefined(valeur)) || valeur.length > 0) return true
-
-      return false
+      return (isNotNullNorUndefined(valeur) && (!Array.isArray(valeur) || valeur.length > 0))
     })
-  })
-
-  const legendHint = computed<string | undefined>(() => {
-    return props.prop.actif && isNotNullNorUndefined(props.prop.etape) ? `Hérité de : ${capitalize(EtapesTypes[props.prop.etape.typeId].nom)} (${dateFormat(props.prop.etape.date)})` : undefined
   })
 
   const updateHeritage = () => {
@@ -49,7 +43,7 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div class="dsfr">
-          <DsfrToggle initialValue={props.prop.actif} valueChanged={updateHeritage} legendLabel="Hériter de l’étape précédente" legendHint={legendHint.value} />
+          <DsfrToggle initialValue={props.prop.actif} valueChanged={updateHeritage} legendLabel={`Hériter de l’étape "${capitalize(EtapesTypes[props.prop.etape.typeId].nom)}" du ${dateFormat(props.prop.etape.date)}`} />
         </div>
       ) : null}
     </div>

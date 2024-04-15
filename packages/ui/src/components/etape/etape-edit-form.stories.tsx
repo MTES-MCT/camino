@@ -124,7 +124,7 @@ const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 
-export const etapeEditFormApiClient: Props['apiClient'] = {
+const etapeEditFormApiClient: Props['apiClient'] = {
   getEntrepriseDocuments() {
     return Promise.resolve([])
   },

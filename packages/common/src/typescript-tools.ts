@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
+
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
@@ -165,4 +166,9 @@ export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
 
     return cache
   }) as Memoized<T>
+}
+
+
+export const stringArrayEquals = (array1: string[], array2: string[]): boolean  => {
+  return array1.length === array2.length && array1.every((value, index) => array2[index] === value)
 }

@@ -2,7 +2,7 @@ import { caminoDefineComponent, useState } from '@/utils/vue-tsx-utils'
 import { DeepReadonly, computed, watch } from 'vue'
 import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
-import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
+import { isNullOrUndefinedOrEmpty, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { TypeAheadSmartMultiple } from '../_ui/typeahead-smart-multiple'
 
 interface Props {
@@ -17,8 +17,11 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
 
   watch(
     () => props.selectedEntities,
-    entities => {
-      setMySelectedEntities(entities?.map(entity => ({ ...entity })) ?? [])
+    (newEntities, oldEntities) => {
+      if (!stringArrayEquals(newEntities?.map(({id}) => id) ?? [], oldEntities?.map(({id}) => id) ?? [])) {
+
+        setMySelectedEntities(newEntities?.map(entity => ({ ...entity })) ?? [])
+      }
     }
   )
   watch(

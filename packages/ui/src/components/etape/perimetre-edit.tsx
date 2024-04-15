@@ -36,6 +36,7 @@ export interface Props {
   titreTypeId: TitreTypeId
   titreSlug: TitreSlug
   onEtapeChange: (geojsonInformations: GeojsonInformations) => void
+  onHeritageChange: (heritage: Props['etape']['heritageProps']['perimetre']) => void
   onPointsChange: (geojson4326Points: FeatureCollectionPoints, geojsonOriginePoints: FeatureCollectionPoints) => void
   onForagesChange: (geojson4326Forages: FeatureCollectionForages, geojsonOrigineForages: FeatureCollectionForages) => void
   initTab?: 'points' | 'carte'
@@ -86,10 +87,9 @@ export const PerimetreEdit = defineComponent<Props>(props => {
   const importForagesPopup = ref<boolean>(false)
   const importError = ref<boolean>(false)
 
-  const updateHeritage = () => {
-    //FIXME
+  const updateHeritage = (heritage: Props['etape']['heritageProps']['perimetre']) => {
+    props.onHeritageChange(heritage)
   }
-
 
   const openPerimetrePopup = () => {
     importPerimetrePopup.value = true
@@ -210,4 +210,4 @@ export const PerimetreEdit = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange']
+PerimetreEdit.props = ['etape', 'apiClient', 'titreTypeId', 'titreSlug', 'onEtapeChange', 'initTab', 'onPointsChange', 'onForagesChange', 'onHeritageChange']
