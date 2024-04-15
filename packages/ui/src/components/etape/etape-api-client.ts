@@ -3,7 +3,7 @@ import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { Etape, EtapeDocument, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, FullEtapeHeritage, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { Etape, EtapeDocument, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
 import { featureCollectionForagesValidator, featureCollectionMultipolygonValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
 import { elementWithValueValidator } from 'camino-common/src/sections'
@@ -71,7 +71,7 @@ export interface EtapeApiClient {
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
-  getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<FullEtapeHeritage, 'heritageProps' | 'heritageContenu'>>>
+  getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
 }
 

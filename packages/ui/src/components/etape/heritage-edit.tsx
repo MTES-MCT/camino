@@ -1,13 +1,13 @@
 import { dateFormat } from '@/utils'
 import { DeepReadonly, HTMLAttributes, computed, defineComponent } from 'vue'
-import { FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
+import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { MappingHeritagePropsNameEtapePropsName, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 
-type EtapeHeritageEdit = Pick<FullEtapeHeritage, 'typeId' | 'date'>
+type EtapeHeritageEdit = Pick<EtapeWithHeritage, 'typeId' | 'date'>
 type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit> = {
   prop: DeepReadonly<HeritageProp<T>>
   propId: P

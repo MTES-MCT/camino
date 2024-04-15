@@ -10,7 +10,7 @@ import { DsfrPerimetre } from '../_common/dsfr-perimetre'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { Alert } from '../_ui/alert'
 import { KM2 } from 'camino-common/src/number'
-import { EtapePropsFromHeritagePropName, HeritageProp, FullEtapeHeritage } from 'camino-common/src/etape'
+import { EtapePropsFromHeritagePropName, HeritageProp, EtapeWithHeritage } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { PointsImportPopup } from './points-import-popup'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
@@ -22,7 +22,7 @@ export interface Props {
   etape: DeepReadonly<{
     typeId: EtapeTypeId
     heritageProps: {
-      perimetre: HeritageProp<Pick<FullEtapeHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'perimetre'>>>
+      perimetre: HeritageProp<Pick<EtapeWithHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'perimetre'>>>
     }
     geojson4326Perimetre: FeatureMultiPolygon | null | undefined
     geojson4326Points: FeatureCollectionPoints | null | undefined
@@ -78,19 +78,6 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
   }
 
   return null
-}
-
-
-export const perimetreStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>): boolean => {
-  return EtapesTypes[etape.typeId].fondamentale
-}
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'geojson4326Perimetre'|'heritageProps'  >>): boolean => {
-  if( !perimetreStepIsVisible(etape) ){
-    return true
-  }
-
-  const geojson4326Perimetre = etape.heritageProps.perimetre.actif ? etape.heritageProps.perimetre.etape?.geojson4326Perimetre : etape.geojson4326Perimetre
-  return etape.typeId !== 'mfr' || isNotNullNorUndefined(geojson4326Perimetre)
 }
 
 export const PerimetreEdit = defineComponent<Props>(props => {

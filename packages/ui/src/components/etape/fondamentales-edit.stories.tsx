@@ -1,6 +1,6 @@
 import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { FullEtapeHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -14,7 +14,7 @@ const meta: Meta = {
 }
 export default meta
 
-const etape: FullEtapeHeritage = {
+const etape: EtapeWithHeritage = {
   id: etapeIdValidator.parse('id'),
   heritageContenu: {},
   statutId: 'aco',

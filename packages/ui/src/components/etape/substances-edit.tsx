@@ -3,7 +3,7 @@ import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-c
 import { DeepReadonly, computed, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapePropsFromHeritagePropName, FullEtapeHeritage, HeritageProp } from 'camino-common/src/etape'
+import { EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
@@ -12,7 +12,7 @@ import { capitalize } from 'camino-common/src/strings'
 
 export type Props = {
   substances: DeepReadonly<SubstanceLegaleId[]>
-  heritageSubstances: DeepReadonly<HeritageProp<Pick<FullEtapeHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'substances'>>>>
+  heritageSubstances: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'typeId' | 'date' | EtapePropsFromHeritagePropName<'substances'>>>>
   domaineId: DomaineId
   updateSubstances: (substances: DeepReadonly<SubstanceLegaleId[]>) => void
   updateHeritage: (subtances: Props['heritageSubstances']) => void

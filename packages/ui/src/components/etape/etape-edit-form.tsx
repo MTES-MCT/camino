@@ -1,17 +1,17 @@
 import { DeepReadonly, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { Bloc } from './bloc'
-import { EtapeFondamentaleEdit, FondamentalesEdit, fondamentaleStepIsComplete, fondamentaleStepIsVisible } from './fondamentales-edit'
-import { PerimetreEdit, perimetreStepIsComplete, perimetreStepIsVisible } from './perimetre-edit'
-import { EntrepriseDocumentsEdit, SelectedEntrepriseDocument, entrepriseDocumentsStepIsComplete, entrepriseDocumentsStepIsVisible } from './entreprises-documents-edit'
-import { EtapeDocumentsEdit, etapeDocumentsStepIsComplete, etapeDocumentsStepIsVisible } from './etape-documents-edit'
+import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
+import { PerimetreEdit } from './perimetre-edit'
+import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
+import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
 import { getSections } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
-import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
+import { User} from 'camino-common/src/roles'
 import { hasEtapeAvisDocuments } from 'camino-common/src/permissions/titres-etapes'
-import { Etape, EtapeDocument, FullEtapeHeritage, TempEtapeDocument } from 'camino-common/src/etape'
+import { Etape, EtapeDocument, EtapeWithHeritage, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -24,9 +24,12 @@ import { useState } from '@/utils/vue-tsx-utils'
 import { DateTypeEdit, EtapeDateTypeEdit, dateTypeStepIsComplete, dateTypeStepIsVisible } from './date-type-edit'
 import { FeatureCollectionForages, FeatureCollectionPoints, GeojsonInformations, PerimetreInformations } from 'camino-common/src/perimetre'
 import { LoadingElement } from '../_ui/functional-loader'
-import { SectionsEdit, SectionsEditEtape, sectionsStepIsComplete, sectionsStepIsVisible } from './sections-edit'
+import { SectionsEdit, SectionsEditEtape } from './sections-edit'
 import { DsfrTextarea } from '../_ui/dsfr-textarea'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { CaminoDate } from 'camino-common/src/date'
+import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
+import { SelectedEntrepriseDocument, entrepriseDocumentsStepIsComplete, entrepriseDocumentsStepIsVisible, etapeDocumentsStepIsComplete, etapeDocumentsStepIsVisible, fondamentaleStepIsComplete, fondamentaleStepIsVisible, perimetreStepIsComplete, perimetreStepIsVisible, sectionsStepIsComplete, sectionsStepIsVisible } from 'camino-common/src/permissions/etape-form'
 
 export type Props = {
   etape: DeepReadonly<Etape>
@@ -56,7 +59,7 @@ export type Props = {
   alertesUpdate: (alertes: PerimetreInformations) => void
 }
 
-type Heritage = DeepReadonly<Pick<FullEtapeHeritage, 'heritageProps' | 'heritageContenu' | 'date' | 'typeId' | 'statutId'>>
+type Heritage = DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'date' | 'typeId' | 'statutId'>>
 export const EtapeEditForm = defineComponent<Props>(props => {
   const [etape, setEtape] = useState(props.etape)
 
@@ -105,7 +108,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     return heritageData.value.status === 'LOADED'
   })
 
-  const setEtapeAndDocument = (etape: DeepReadonly<FullEtapeHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => {
+  const setEtapeAndDocument = (etape: DeepReadonly<EtapeWithHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => {
     setEtape(etape)
     setEtapeDocuments(etapeDocuments)
     setEntrepriseDocuments(entrepriseDocuments)
@@ -127,26 +130,20 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   )
 })
 
-// FIXME on devrait peut-être utiliser une classe plutôt que FullEtapeHeritage, comme ça on aurait des accesseurs directs aux valeurs héritées ou non...
-// Sinon, il faut faire attention à chaque fois qu'on accède à une valeur héritable, pour chercher sa valeur au bon endroit
 const EtapeEditFormInternal = defineComponent<{
   etape: DeepReadonly<Etape>
   heritage: Heritage
   etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
   entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>,
-  setEtape: (etape: DeepReadonly<FullEtapeHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => void
+  setEtape: (etape: DeepReadonly<EtapeWithHeritage>, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>) => void
 } & Omit<Props, 'etape' | 'completeUpdate'>>((props) => {
 
 
-  // FIXME nos cerveaux du lundi --> c'est ici qu'on était, on se battait sur comment ne pas se faire avoir par nos objets et leurs valeurs héritées ou pas.
-  const etapeFlattened = computed<DeepReadonly<FullEtapeHeritage>>(() => {
 
-
-      const substances: Readonly<SubstanceLegaleId[]> = props.heritage.heritageProps.substances.actif ?  (props.heritage.heritageProps.substances.etape?.substances ?? []) : props.etape.substances
-      const duree: number | null = props.heritage.heritageProps.duree.actif ?  props.heritage.heritageProps.duree.etape?.duree ?? null : props.etape.duree
-
-      return {...props.etape, ...props.heritage, substances, duree}
+  const etapeFlattened = computed<DeepReadonly<EtapeWithHeritage>>(() => {
+    return flattenEtapeWithHeritage(props.etape, props.heritage)
   })
+
 
   // const internalComplete = computed<boolean>(() => {
   //   return (
@@ -216,10 +213,10 @@ const EtapeEditFormInternal = defineComponent<{
   })
 
   return () => <div>
-      {fondamentaleStepIsVisible(props.etape) ? (
-        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId)}>
+      {fondamentaleStepIsVisible(etapeFlattened.value.typeId) ? (
+        <Bloc step={{ name: 'Propriétés', help: null }} complete={fondamentaleStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId)}>
           <FondamentalesEdit
-            etape={props.etape}
+            etape={etapeFlattened.value}
             demarcheTypeId={props.demarcheTypeId}
             titreTypeId={props.titreTypeId}
             user={props.user}
@@ -231,16 +228,16 @@ const EtapeEditFormInternal = defineComponent<{
 
 
 
-    {sectionsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
+    {sectionsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{
             name: 'Propriétés spécifiques',
             help: isHelpVisible.value ? 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)' : null,
           }}
-          complete={sectionsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId)}
+          complete={sectionsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId)}
         >
           <SectionsEdit
-            etape={props.etape}
+            etape={etapeFlattened.value}
             titreTypeId={props.titreTypeId}
             demarcheTypeId={props.demarcheTypeId}
             completeUpdate={sectionCompleteUpdate}
@@ -248,10 +245,10 @@ const EtapeEditFormInternal = defineComponent<{
         </Bloc>
       ) : null}
 
-      {perimetreStepIsVisible(props.etape) ? (
-        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(props.etape)}>
+      {perimetreStepIsVisible(etapeFlattened.value) ? (
+        <Bloc step={{ name: 'Périmètre', help: null }} complete={perimetreStepIsComplete(etapeFlattened.value)}>
           <PerimetreEdit
-            etape={props.etape}
+            etape={etapeFlattened.value}
             titreTypeId={props.titreTypeId}
             titreSlug={props.titreSlug}
             apiClient={props.apiClient}
@@ -262,24 +259,24 @@ const EtapeEditFormInternal = defineComponent<{
         </Bloc>
       ) : null}
 
-      {etapeDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
-        <Bloc step={{ name: 'Liste des documents', help: null }} complete={etapeDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.etapeDocuments, props.sdomZoneIds)}>
+      {etapeDocumentsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
+        <Bloc step={{ name: 'Liste des documents', help: null }} complete={etapeDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.etapeDocuments, props.sdomZoneIds)}>
           <EtapeDocumentsEdit
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
-            etapeId={props.etape.id}
+            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
+            etapeId={etapeFlattened.value.id}
             completeUpdate={documentsCompleteUpdate}
             sdomZoneIds={props.sdomZoneIds}
             user={props.user}
             // FIXME Mais si c’est hérité ça marche ?
-            contenu={props.etape.contenu}
-            etapeStatutId={props.etape.statutId}
+            contenu={etapeFlattened.value.contenu}
+            etapeStatutId={etapeFlattened.value.statutId}
           />
         </Bloc>
       ) : null}
 
 
-      {entrepriseDocumentsStepIsVisible(props.etape, props.demarcheTypeId, props.titreTypeId) ? (
+      {entrepriseDocumentsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{
             name: 'Documents d’entreprise',
@@ -287,12 +284,12 @@ const EtapeEditFormInternal = defineComponent<{
               ? "Les documents d’entreprise sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces documents d’entreprise sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
               : null,
           }}
-          complete={entrepriseDocumentsStepIsComplete(props.etape, props.demarcheTypeId, props.titreTypeId, props.entrepriseDocuments)}
+          complete={entrepriseDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.entrepriseDocuments)}
         >
           <EntrepriseDocumentsEdit
             entreprises={titulairesAndAmodiataires.value}
             apiClient={props.apiClient}
-            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: props.etape.typeId }}
+            tde={{ titreTypeId: props.titreTypeId, demarcheTypeId: props.demarcheTypeId, etapeTypeId: etapeFlattened.value.typeId }}
             etapeId={props.etape.id}
             completeUpdate={entrepriseDocumentsCompleteUpdate}
           />

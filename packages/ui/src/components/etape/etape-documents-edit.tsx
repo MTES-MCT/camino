@@ -1,13 +1,11 @@
-import { EtapeDocument, EtapeDocumentModification, EtapeId, FullEtapeHeritage, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
+import { EtapeDocument, EtapeDocumentModification, EtapeId, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
 import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents'
 import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
-import { documentTypeIdsBySdomZonesGet } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sdom'
 import { DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
@@ -18,6 +16,7 @@ import { getVisibilityLabel } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
 import { z } from 'zod'
+import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
 
 interface Props {
   tde: {
@@ -35,43 +34,6 @@ interface Props {
 }
 
 type WithIndex = { index: number }
-
-const getDocumentsTypes = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, sdomZoneIds: DeepReadonly<SDOMZoneId[]>) => {
-  const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
-
-    // si la démarche est mécanisée il faut ajouter des documents obligatoires
-    if (isNotNullNorUndefined(etape.contenu) && isNotNullNorUndefined(etape.contenu.arm)) {
-      for (const documentType of dts) {
-        if (['doe', 'dep'].includes(documentType.id)) {
-          documentType.optionnel = !(etape.contenu.arm.mecanise ?? false)
-        }
-      }
-    }
-
-    const sdomZonesDocumentTypeIds = documentTypeIdsBySdomZonesGet(sdomZoneIds, titreTypeId, demarcheTypeId, etape.typeId)
-    if (isNotNullNorUndefinedNorEmpty(sdomZonesDocumentTypeIds)) {
-      for (const documentType of dts) {
-        if (sdomZonesDocumentTypeIds.includes(documentType.id)) {
-          documentType.optionnel = false
-        }
-      }
-    }
-
-    return dts
-}
-
-export const etapeDocumentsStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
-}
-export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, sdomZoneIds: DeepReadonly<SDOMZoneId[]>): boolean => {
-  if( !etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId) ){
-    return true
-  }
-
-  const documentTypes = getDocumentsTypes({contenu: etape.contenu, typeId: etape.typeId}, demarcheTypeId, titreTypeId, sdomZoneIds)
-
-  return documentTypes.every(({ optionnel, id }) => optionnel || etapeDocuments.some(({ etape_document_type_id }) => etape_document_type_id === id))
-}
 
 export const EtapeDocumentsEdit = defineComponent<Props>(props => {
   const documentTypes = computed<DocumentType[]>(() => {

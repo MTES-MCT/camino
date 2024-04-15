@@ -1,6 +1,6 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Etape, EtapeDocument, EtapeId, FullEtapeHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { Etape, EtapeDocument, EtapeId, EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -23,7 +23,7 @@ export default meta
 
 const entreprises: Entreprise[] = [...Array(10)].map((_e, i) => ({ id: entrepriseIdValidator.parse(`entrepriseId${i}`), nom: `Nom de l'entreprise ${i}`, legal_siren: `legal_siren${i}` }))
 
-const heritageProps: FullEtapeHeritage['heritageProps'] = {
+const heritageProps: EtapeWithHeritage['heritageProps'] = {
   dateDebut: {
     actif: false,
   },

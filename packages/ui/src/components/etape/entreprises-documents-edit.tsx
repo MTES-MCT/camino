@@ -3,19 +3,20 @@ import { dateFormat } from '@/utils'
 import { DeepReadonly, FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty, onlyUnique } from 'camino-common/src/typescript-tools'
+import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEntrepriseDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments'
-import { EtapeId, FullEtapeHeritage } from 'camino-common/src/etape'
+import { EtapeId } from 'camino-common/src/etape'
 import { LoadingElement } from '../_ui/functional-loader'
 import { ApiClient } from '@/api/api-client'
 import { Alert } from '../_ui/alert'
 import { DsfrButtonIcon, DsfrLink } from '../_ui/dsfr-button'
 import { DsfrSelect, Item } from '../_ui/dsfr-select'
+import { SelectedEntrepriseDocument } from 'camino-common/src/permissions/etape-form'
 
 type Entreprise = { id: EntrepriseId; nom: string }
 
@@ -35,28 +36,6 @@ interface InnerEntrepriseDocument {
   id: EntrepriseDocumentId | ''
   documents: EntrepriseDocument[]
   entrepriseDocumentType: EntrepriseDocumentType
-}
-
-export type SelectedEntrepriseDocument = {
-  id: EntrepriseDocumentId,
-  entrepriseId: EntrepriseId,
-  documentTypeId: EntrepriseDocumentTypeId
-}
-
-export const entrepriseDocumentsStepIsVisible = (etape: Pick<FullEtapeHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return isNotNullNorUndefined(etape.typeId) && getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
-}
-export const entrepriseDocumentsStepIsComplete = (etape: DeepReadonly<Pick<FullEtapeHeritage, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, entreprisesDocuments: DeepReadonly<SelectedEntrepriseDocument[]>): boolean => {
-
-  if( !entrepriseDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId) ){
-    return true
-  }
-
-  const documentTypes = getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId)
-
-  const entrepriseIds = [...etape.titulaires, ...etape.amodiataires].map(({id}) => id).filter(onlyUnique)
-
-  return entrepriseIds.every(eId => documentTypes.every(({ optionnel, id }) => optionnel || entreprisesDocuments.some(({ documentTypeId, entrepriseId }) => documentTypeId === id && entrepriseId === eId)))
 }
 
 export const EntrepriseDocumentsEdit = caminoDefineComponent<Props>(['completeUpdate', 'tde', 'entreprises', 'etapeId', 'apiClient'], props => {

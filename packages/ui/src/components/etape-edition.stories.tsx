@@ -4,7 +4,7 @@ import { vueRouter } from 'storybook-vue3-router'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { FullEtapeHeritage, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeWithHeritage, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { etapeEditFormApiClient } from './etape/etape-edit-form.stories'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { PerimetreInformations } from 'camino-common/src/perimetre'
@@ -44,7 +44,7 @@ const perimetreInformations: PerimetreInformations = {
   superposition_alertes: [{ nom: 'Titre Tutu', slug: titreSlugValidator.parse('slug-tutu'), titre_statut_id: 'mod' }],
 }
 
-const heritageProps: FullEtapeHeritage['heritageProps'] = {
+const heritageProps: EtapeWithHeritage['heritageProps'] = {
   dateDebut: {
     actif: false,
   },
