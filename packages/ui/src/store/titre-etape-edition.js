@@ -15,33 +15,6 @@ const state = {
 }
 
 const actions = {
-  async init({ commit, state, dispatch }, { titreDemarcheId, id, entreprises }) {
-    try {
-      commit('loadingAdd', 'titreEtapeInit', { root: true })
-
-      if (id) {
-        const newEtape = await etape({ id })
-
-        commit('set', etapeEditFormat(newEtape))
-
-        commit('heritageLoaded', true)
-
-        titreDemarcheId = state.element.titreDemarcheId
-      } else {
-        commit('set', etapeEditFormat({ titreDemarcheId }))
-      }
-
-      await dispatch('metasGet', { titreDemarcheId, entreprises })
-
-      commit('load')
-    } catch (e) {
-      console.error(e)
-      dispatch('pageError', null, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreEtapeInit', { root: true })
-    }
-  },
-
   async heritageGet({ commit, state, dispatch }, { etapeTypeId }) {
     try {
       commit('loadingAdd', 'titreEtapeHeritageGet', { root: true })
@@ -54,6 +27,7 @@ const actions = {
       })
 
       const apiEtape = etapeEditFormat(data)
+      // FIXME c’est pas à récupérer ce truc ?
       const newEtape = etapeHeritageBuild(state.element.date, state.metas.demarche.id, apiEtape)
 
       commit('heritageSet', { etape: newEtape })

@@ -169,7 +169,6 @@ input InputEtapeCreation {
   contenu: Json
   etapeDocuments: [InputEtapeDocumentCreation]
   entrepriseDocumentIds: [ID]
-  etapeAvisDocmuents: [ID]
   notes: String
 }
 
@@ -199,7 +198,6 @@ input InputEtapeModification {
   contenu: Json
   etapeDocuments: [InputEtapeDocumentModification]
   entrepriseDocumentIds: [ID]
-  etapeAvisDocmuents: [ID]
   notes: String
   geojson4326Perimetre: Json
   geojson4326Points: Json

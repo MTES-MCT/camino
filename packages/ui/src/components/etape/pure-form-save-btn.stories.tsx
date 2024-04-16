@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/Etape/FormSaveBtn',
   component: PureFormSaveBtn,
-  argTypes: {},
+  decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
 }
 export default meta
 
@@ -38,4 +38,4 @@ export const CompletudeDeLaDemandeComplete: StoryFn = () => (
   <PureFormSaveBtn canSave={true} showDepose={false} canDepose={true} alertes={[{ message: 'alerte', url: 'google.com' }]} save={onSave} depose={onDepose} />
 )
 
-export const SansMessage: StoryFn = () => <PureFormSaveBtn canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} />
+export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} />

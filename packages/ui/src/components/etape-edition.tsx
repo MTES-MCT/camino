@@ -1,7 +1,7 @@
 import { DeepReadonly, computed, defineComponent, inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiClient, apiClient } from '../api/api-client'
-import { DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
+import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
 import { Etape, EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
@@ -20,8 +20,7 @@ import { capitalize } from 'camino-common/src/strings'
 import { EtapeEditForm } from './etape/etape-edit-form'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
-
-export const EtapeEdition = defineComponent<Props>((props) => {
+export const EtapeEdition = defineComponent(() => {
   const router = useRouter()
   const user = inject(userKey)
   const entreprises = inject(entreprisesKey, ref([]))
@@ -33,10 +32,14 @@ export const EtapeEdition = defineComponent<Props>((props) => {
     return etapeIdOrSlugValidator.nullable().parse(router.currentRoute.value.params.id ?? null)
   })
 
+  const goToDemarche = (demarcheId: DemarcheId) => {
+    router.push({ name: 'demarche', params: { demarcheId } })
+  }
+
   return () => (
     <>
       {isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value) ? (
-        <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} />
+        <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} goToDemarche={goToDemarche} />
       ) : (
         <Alert small={true} title="Erreur lors du chargement, la page est introuvable" type="error" />
       )}
@@ -50,6 +53,7 @@ export type Props = {
   demarcheIdOrSlug: DemarcheIdOrSlug | null
   user: User
   entreprises: Entreprise[]
+  goToDemarche: (demarcheId: DemarcheId) => void
   apiClient: Pick<
     ApiClient,
     | 'getEntrepriseDocuments'
@@ -67,6 +71,8 @@ export type Props = {
     | 'getDemarcheByIdOrSlug'
     | 'getPerimetreInfosByDemarcheId'
     | 'getPerimetreInfosByEtapeId'
+    | 'etapeCreer'
+    | 'etapeModifier'
   >
 }
 
@@ -75,11 +81,10 @@ const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTyp
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{etape: Etape, demarche: GetDemarcheByIdOrSlugValidator, perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
+  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: Etape; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
 
   onMounted(async () => {
     try {
-
       if (isNotNullNorUndefined(props.etapeIdOrSlug)) {
         const etape = await props.apiClient.getEtape(props.etapeIdOrSlug)
         const demarche = {
@@ -93,59 +98,52 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
           titre_type_id: etape.demarche.titre.typeId,
         }
 
-        const perimetre  = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
-        setAsyncData({status: 'LOADED', value: {etape, demarche, perimetre}})
+        const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
+        setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
         const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
-        setAsyncData({ status: 'LOADED', value: {etape: {
-          id: null,
-          contenu: {},
-          date: null,
-          typeId: null,
-          statutId: null,
-          substances: [],
-          titulaires: [],
-          amodiataires: [],
-          geojson4326Perimetre: null,
-          geojson4326Points: null,
-          geojsonOriginePerimetre: null,
-          geojsonOriginePoints: null,
-          geojsonOrigineGeoSystemeId: null,
-          geojson4326Forages: null,
-          geojsonOrigineForages: null,
-          surface: null,
-          notes: null,
-          duree: null,
-          dateDebut: null,
-          dateFin: null
-        }, demarche, perimetre}})
+        setAsyncData({
+          status: 'LOADED',
+          value: {
+            etape: {
+              id: null,
+              contenu: {},
+              date: null,
+              typeId: null,
+              statutId: null,
+              substances: [],
+              titulaires: [],
+              amodiataires: [],
+              geojson4326Perimetre: null,
+              geojson4326Points: null,
+              geojsonOriginePerimetre: null,
+              geojsonOriginePoints: null,
+              geojsonOrigineGeoSystemeId: null,
+              geojson4326Forages: null,
+              geojsonOrigineForages: null,
+              surface: null,
+              notes: null,
+              duree: null,
+              dateDebut: null,
+              dateFin: null,
+            },
+            demarche,
+            perimetre,
+          },
+        })
       }
-
     } catch (e: any) {
       console.error('error', e)
       setAsyncData({ status: 'ERROR', message: e.message ?? "Une erreur s'est produite" })
     }
   })
 
-
-
-  const alertesUpdate = (perimetre: PerimetreInformations) => {
-    if( asyncData.value.status === 'LOADED' ) {
-      setAsyncData({status: 'LOADED', value: {...asyncData.value.value, perimetre}})
-    }
-  }
-
-
-  const completeUpdate = () => {
-    //FIXME
-  }
-
   return () => (
     <div class="dsfr">
       <LoadingElement
         data={asyncData.value}
-        renderItem={({etape, demarche, perimetre}) => (
+        renderItem={({ etape, demarche, perimetre }) => (
           <>
             <div>
               <DsfrLink to={{ name: 'titre', params: { id: demarche.titre_slug } }} disabled={false} title={demarche.titre_nom} icon={null} />
@@ -181,24 +179,28 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               />
             ) : null}
 
-            <EtapeEditForm initTab={props.initTab} etape={etape} demarcheId={demarche.demarche_id} demarcheTypeId={demarche.demarche_type_id} titreSlug={demarche.titre_slug} titreTypeId={demarche.titre_type_id} user={props.user} entreprises={props.entreprises}
-            apiClient={props.apiClient} sdomZoneIds={perimetre.sdomZoneIds} alertesUpdate={alertesUpdate} completeUpdate={completeUpdate} />
+            <EtapeEditForm
+              initTab={props.initTab}
+              etape={etape}
+              demarcheId={demarche.demarche_id}
+              demarcheTypeId={demarche.demarche_type_id}
+              titreSlug={demarche.titre_slug}
+              titreTypeId={demarche.titre_type_id}
+              user={props.user}
+              entreprises={props.entreprises}
+              apiClient={props.apiClient}
+              perimetre={perimetre}
+              goToDemarche={props.goToDemarche}
+            />
           </>
         )}
       />
-      {
-        //     <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky" style="z-index: 100000">
-        //       <div class="tablet-blob-1-3" />
-        //       <PureFormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" save="save" depose="depose" />
-        //     </div>
-        //   </div>
-      }
     </div>
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entreprises', 'apiClient', 'initTab']
+PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entreprises', 'apiClient', 'initTab', 'goToDemarche']
 
 // import { dateFormat } from '@/utils'
 // import { InputDate } from './_ui/input-date'
@@ -240,30 +242,6 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 
 //   computed: {
 
-
-//     alertes() {
-//       const alertes = []
-//       if (this.superposition_alertes.length > 0) {
-//         alertes.push(
-//           ...this.superposition_alertes.map(t => ({
-//             message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titre_statut_id) ? TitresStatuts[t.titre_statut_id].nom : ''} » est superposé à ce titre`,
-//             url: `/titres/${t.slug}`,
-//           }))
-//         )
-//       }
-
-//       // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
-//       if (['mfr', 'mcr'].includes(this.etapeType?.id) && this.titre.typeId === 'axm') {
-//         const zoneId = this.sdomZoneIds.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
-//         if (zoneId) {
-//           alertes.push({ message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}` })
-//         }
-//       }
-
-//       return alertes
-//     },
-
-
 //     etapeIsDemandeEnConstruction() {
 //       return this.etapeType?.id === 'mfr' && this.editedEtape?.statutId === 'aco'
 //     },
@@ -290,10 +268,7 @@ PureEtapeEdition.props = ['etapeIdOrSlug', 'demarcheIdOrSlug', 'user', 'entrepri
 //     window.removeEventListener('beforeunload', this.beforeWindowUnload)
 //   },
 
-
 //   methods: {
-
-
 
 //     beforeWindowUnload(e) {
 //       if (!this.isFormDirty) return true

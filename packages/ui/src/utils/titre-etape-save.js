@@ -19,17 +19,6 @@ export const etapeSaveFormat = etape => {
   delete etape.surface
   delete etape.geojson4326Forages
 
-  etape.substances = etape.substances?.filter(substanceId => !!substanceId)
-
-  const propsIds = ['titulaires', 'amodiataires', 'administrations']
-
-  // supprime les champs dont les ids sont vides
-  propsIds.forEach(propId => {
-    if (etape[propId]) {
-      etape[propId] = etape[propId].filter(({ id }) => id)
-    }
-  })
-
   if (etape.heritageProps) {
     Object.keys(etape.heritageProps).forEach(id => {
       delete etape.heritageProps[id].etape

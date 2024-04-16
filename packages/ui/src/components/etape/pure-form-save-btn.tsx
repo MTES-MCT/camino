@@ -1,20 +1,21 @@
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { FunctionalComponent } from 'vue'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Alert } from '../_ui/alert'
 import { DsfrButton, DsfrLink } from '../_ui/dsfr-button'
 
+export type EtapeAlerte = { message: string; url?: string }
 type Props = {
-  alertes?: { message: string; url: string }[]
+  alertes: EtapeAlerte[]
   canSave: boolean
   canDepose: boolean
   showDepose: boolean
 
   save: () => void
   depose: () => void
-}
+} & Pick<HTMLAttributes, 'class' | 'style'>
 export const PureFormSaveBtn: FunctionalComponent<Props> = props => {
   return (
-    <div class="dsfr">
+    <div class={props.class} style={props.style}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {props.alertes?.map(alerte => (
           <Alert
@@ -23,7 +24,7 @@ export const PureFormSaveBtn: FunctionalComponent<Props> = props => {
             type="warning"
             title={
               <>
-                {isNotNullNorUndefined(alerte.url) && alerte.url.length > 0 ? (
+                {isNotNullNorUndefinedNorEmpty(alerte.url) ? (
                   <DsfrLink disabled={false} icon={null} title={alerte.message} href={alerte.url} target="_blank">
                     {alerte.url}
                   </DsfrLink>

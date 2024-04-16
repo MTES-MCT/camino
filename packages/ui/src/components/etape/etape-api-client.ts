@@ -2,20 +2,30 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { Etape, EtapeDocument, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { TempDocumentName } from 'camino-common/src/document'
+import { EntrepriseDocumentId, EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeDocument, EtapeDocumentId, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
-import { featureCollectionForagesValidator, featureCollectionMultipolygonValidator, featureCollectionPointsValidator, featureMultiPolygonValidator } from 'camino-common/src/perimetre'
-import { elementWithValueValidator } from 'camino-common/src/sections'
+import {
+  FeatureCollectionForages,
+  FeatureCollectionPoints,
+  FeatureMultiPolygon,
+  featureCollectionForagesValidator,
+  featureCollectionMultipolygonValidator,
+  featureCollectionPointsValidator,
+  featureMultiPolygonValidator,
+} from 'camino-common/src/perimetre'
+import { ElementWithValue } from 'camino-common/src/sections'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
+import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
+import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
-import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
-import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
+import { GeoSystemeId, geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
+import { SubstanceLegaleId, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
+import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import gql from 'graphql-tag'
-import { DeepReadonly } from 'vue'
 import { z } from 'zod'
 
 const graphqlEtapeValidator = z.object({
@@ -66,6 +76,58 @@ const graphqlEtapeValidator = z.object({
 })
 
 export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+type GraphqlInputEtapeEntreprise = { id: EntrepriseId; operateur: boolean }
+
+type GraphqlInputHeritageProps = {
+  dateDebut: GraphqlInputHeritageProp
+  dateFin: GraphqlInputHeritageProp
+  duree: GraphqlInputHeritageProp
+  perimetre: GraphqlInputHeritageProp
+  substances: GraphqlInputHeritageProp
+  titulaires: GraphqlInputHeritageProp
+  amodiataires: GraphqlInputHeritageProp
+}
+
+type GraphqlInputHeritageProp = {
+  actif: boolean
+}
+
+type GraphqlInputEtapeDocument = {
+  id?: EtapeDocumentId
+  temp_document_name?: TempDocumentName
+  etape_document_type_id: DocumentTypeId
+  description: string | null
+  public_lecture: boolean
+  entreprises_lecture: boolean
+}
+
+export type GraphqlEtapeCreation = {
+  typeId: EtapeTypeId
+  statutId: EtapeStatutId
+  titreDemarcheId: DemarcheId
+  date: CaminoDate
+  duree: number | null
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  substances: SubstanceLegaleId[]
+  geojson4326Perimetre: FeatureMultiPolygon | null
+  geojson4326Points: FeatureCollectionPoints | null
+  geojsonOriginePoints: FeatureCollectionPoints | null
+  geojsonOriginePerimetre: FeatureMultiPolygon | null
+  geojsonOrigineForages: FeatureCollectionForages | null
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null
+  titulaires: GraphqlInputEtapeEntreprise[]
+  amodiataires: GraphqlInputEtapeEntreprise[]
+  heritageProps: GraphqlInputHeritageProps
+  heritageContenu: Record<string, Record<string, GraphqlInputHeritageProp>>
+  contenu: Record<string, Record<string, ElementWithValue['value']>>
+  etapeDocuments: GraphqlInputEtapeDocument[]
+  entrepriseDocumentIds: EntrepriseDocumentId[]
+  notes: string | null
+}
+
+// FIXME
+export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeValidator>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
@@ -73,6 +135,8 @@ export interface EtapeApiClient {
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
   getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
+  etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
+  etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
 }
 
 export const etapeApiClient: EtapeApiClient = {
@@ -220,5 +284,29 @@ export const etapeApiClient: EtapeApiClient = {
       typeId,
     })
     return data
+  },
+
+  etapeCreer: async etape => {
+    const result = await apiGraphQLFetch(gql`
+      mutation EtapeCreer($etape: InputEtapeCreation!) {
+        etapeCreer(etape: $etape) {
+          id
+        }
+      }
+    `)({ etape })
+
+    return result.id
+  },
+
+  etapeModifier: async etape => {
+    const result = await apiGraphQLFetch(gql`
+      mutation EtapeModifier($etape: InputEtapeModification!) {
+        etapeModifier(etape: $etape) {
+          id
+        }
+      }
+    `)({ etape })
+
+    return result.id
   },
 }

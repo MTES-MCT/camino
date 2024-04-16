@@ -33,6 +33,9 @@ const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
+const goToDemarcheAction = action('goToDemarche')
+const etapeCreerAction = action('etapeCreer')
+const etapeModifierAction = action('etapeModifier')
 
 const entreprises = [
   { id: entrepriseIdValidator.parse('fr-899600233'), nom: '10 A', legal_siren: '899600233' },
@@ -111,6 +114,16 @@ const perimetre: FeatureMultiPolygon = {
 }
 
 const apiClient: Props['apiClient'] = {
+  etapeCreer(etape) {
+    etapeCreerAction(etape)
+
+    return Promise.resolve(etapeIdValidator.parse('etapeIdSaved'))
+  },
+  etapeModifier(etape) {
+    etapeModifierAction(etape)
+
+    return Promise.resolve(etape.id)
+  },
   getEntrepriseDocuments(id) {
     return Promise.resolve([
       {
@@ -302,235 +315,270 @@ const apiClient: Props['apiClient'] = {
   },
 }
 
-export const Creation: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={{...testBlankUser, role: 'super'}} initTab='points' demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')} etapeIdOrSlug={null} />
+export const Creation: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={apiClient}
+    user={{ ...testBlankUser, role: 'super' }}
+    initTab="points"
+    demarcheIdOrSlug={demarcheIdOrSlugValidator.parse('demarche-id')}
+    etapeIdOrSlug={null}
+  />
+)
 
-export const Modification: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={apiClient} user={null} demarcheIdOrSlug={null} initTab='points' etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+export const Modification: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={apiClient}
+    user={null}
+    demarcheIdOrSlug={null}
+    initTab="points"
+    etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}
+  />
+)
 
+export const AffichageAide: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={{
+      ...apiClient,
+      getEtape(etapeIdOrSlug) {
+        getEtapeAction(etapeIdOrSlug)
 
-export const AffichageAide: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={{...apiClient, 
-  getEtape(etapeIdOrSlug) {
-    getEtapeAction(etapeIdOrSlug)
-
-    return Promise.resolve({
-      id: etapeIdValidator.parse('etape-id'),
-      slug: etapeSlugValidator.parse('etape-slug'),
-      typeId: 'mfr',
-      statutId: 'fai',
-      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-      date: caminoDateValidator.parse('2023-02-01'),
-      dateDebut: null,
-      dateFin: null,
-      duree: null,
-      substances: [],
-      titulaires: [],
-      amodiataires: [],
-      contenu: {},
-      notes: null,
-      geojson4326Forages: null,
-      geojson4326Perimetre: null,
-      geojson4326Points: null,
-      geojsonOrigineForages: null,
-      geojsonOrigineGeoSystemeId: null,
-      geojsonOriginePerimetre: null,
-      geojsonOriginePoints: null,
-      surface: null,
-      demarche: {
-        slug: demarcheSlugValidator.parse('demarche-slug'),
-        typeId: 'oct',
-        description: 'Super description',
-        titre: {
-          id: titreIdValidator.parse('titre-id'),
-          slug: titreSlugValidator.parse('titre-slug'),
-          nom: 'Nom du titre',
-          typeId: 'arm',
-        },
-      },
-    })
-  },
-}} user={null} demarcheIdOrSlug={null} initTab='points' etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
-
-
-
-export const DemandeArmComplete: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={{...apiClient, 
-  getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritageAction(titreDemarcheId, date, typeId)
-
-    return Promise.resolve({
-      heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
-      heritageProps: {
-        dateDebut: {
-          actif: false,
-        },
-        dateFin: {
-          actif: false,
-          
-        },
-        duree: {
-          actif: false,
-        },
-        substances: {
-          actif: false,
-        },
-        titulaires: {
-          actif: false,
-        },
-        amodiataires: {
-          actif: false,
-        },
-        perimetre: {
-          actif: false,
-        },
-      },
-    })
-  },
-  getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
-    getEtapeEntrepriseDocumentsAction(etapeId)
-
-    const id = entreprises[0].id
-    return Promise.resolve([
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
-        description: '',
-        date: toCaminoDate('2023-06-23'),
-        entreprise_document_type_id: 'jct',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-03'), 'atf', 'ueoau'),
-        description: "Attestation sur l'honneur",
-        date: toCaminoDate('2023-06-03'),
-        entreprise_document_type_id: 'atf',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'cur', 'ueoau'),
-        description: 'Jon. Doe',
-        date: toCaminoDate('2023-06-23'),
-        entreprise_document_type_id: 'cur',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jid', 'eaoueo'),
-        description: 'Jon. Doe',
-        date: toCaminoDate('2023-06-23'),
-        entreprise_document_type_id: 'jid',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'idm', 'ueoaue'),
-        description: 'Facture pelle',
-        date: toCaminoDate('2023-06-23'),
-        entreprise_document_type_id: 'idm',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-08'), 'kbi', 'ueoau'),
-        description: '',
-        date: toCaminoDate('2023-06-08'),
-        entreprise_document_type_id: 'kbi',
-        entreprise_id: id,
-      },
-      {
-        id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jcf', 'uueoau'),
-        description: '',
-        date: toCaminoDate('2023-06-23'),
-        entreprise_document_type_id: 'jcf',
-        entreprise_id: id,
-      },
-    ])
-  },
-  getEtapeDocumentsByEtapeId(etapeId: EtapeId): Promise<EtapeDocument[]> {
-    getEtapeDocumentsByEtapeIdAction(etapeId)
-
-    return Promise.resolve([
-      { 
-      id: etapeDocumentIdValidator.parse('id1'),
-      description: null,
-      etape_document_type_id: 'car',
-      public_lecture: true,
-      entreprises_lecture: true,
-      },
-      { 
-        id: etapeDocumentIdValidator.parse('id2'),
-        description: null,
-        etape_document_type_id: 'dep',
-        public_lecture: true,
-        entreprises_lecture: true,
-        },
-        { 
-          id: etapeDocumentIdValidator.parse('id2'),
-          description: null,
-          etape_document_type_id: 'doe',
-          public_lecture: true,
-          entreprises_lecture: true,
-          }
-          ,
-        { 
-          id: etapeDocumentIdValidator.parse('id2'),
-          description: null,
-          etape_document_type_id: 'dom',
-          public_lecture: true,
-          entreprises_lecture: true,
+        return Promise.resolve({
+          id: etapeIdValidator.parse('etape-id'),
+          slug: etapeSlugValidator.parse('etape-slug'),
+          typeId: 'mfr',
+          statutId: 'fai',
+          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+          date: caminoDateValidator.parse('2023-02-01'),
+          dateDebut: null,
+          dateFin: null,
+          duree: null,
+          substances: [],
+          titulaires: [],
+          amodiataires: [],
+          contenu: {},
+          notes: null,
+          geojson4326Forages: null,
+          geojson4326Perimetre: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+          demarche: {
+            slug: demarcheSlugValidator.parse('demarche-slug'),
+            typeId: 'oct',
+            description: 'Super description',
+            titre: {
+              id: titreIdValidator.parse('titre-id'),
+              slug: titreSlugValidator.parse('titre-slug'),
+              nom: 'Nom du titre',
+              typeId: 'arm',
+            },
           },
-          { 
+        })
+      },
+    }}
+    user={null}
+    demarcheIdOrSlug={null}
+    initTab="points"
+    etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}
+  />
+)
+
+export const DemandeArmComplete: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={{
+      ...apiClient,
+      getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+        getEtapeHeritageAction(titreDemarcheId, date, typeId)
+
+        return Promise.resolve({
+          heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
+          heritageProps: {
+            dateDebut: {
+              actif: false,
+            },
+            dateFin: {
+              actif: false,
+            },
+            duree: {
+              actif: false,
+            },
+            substances: {
+              actif: false,
+            },
+            titulaires: {
+              actif: false,
+            },
+            amodiataires: {
+              actif: false,
+            },
+            perimetre: {
+              actif: false,
+            },
+          },
+        })
+      },
+      getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
+        getEtapeEntrepriseDocumentsAction(etapeId)
+
+        const id = entreprises[0].id
+
+        return Promise.resolve([
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jct', 'ueoau'),
+            description: '',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'jct',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-03'), 'atf', 'ueoau'),
+            description: "Attestation sur l'honneur",
+            date: toCaminoDate('2023-06-03'),
+            entreprise_document_type_id: 'atf',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'cur', 'ueoau'),
+            description: 'Jon. Doe',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'cur',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jid', 'eaoueo'),
+            description: 'Jon. Doe',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'jid',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'idm', 'ueoaue'),
+            description: 'Facture pelle',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'idm',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-08'), 'kbi', 'ueoau'),
+            description: '',
+            date: toCaminoDate('2023-06-08'),
+            entreprise_document_type_id: 'kbi',
+            entreprise_id: id,
+          },
+          {
+            id: toEntrepriseDocumentId(toCaminoDate('2023-06-23'), 'jcf', 'uueoau'),
+            description: '',
+            date: toCaminoDate('2023-06-23'),
+            entreprise_document_type_id: 'jcf',
+            entreprise_id: id,
+          },
+        ])
+      },
+      getEtapeDocumentsByEtapeId(etapeId: EtapeId): Promise<EtapeDocument[]> {
+        getEtapeDocumentsByEtapeIdAction(etapeId)
+
+        return Promise.resolve([
+          {
+            id: etapeDocumentIdValidator.parse('id1'),
+            description: null,
+            etape_document_type_id: 'car',
+            public_lecture: true,
+            entreprises_lecture: true,
+          },
+          {
+            id: etapeDocumentIdValidator.parse('id2'),
+            description: null,
+            etape_document_type_id: 'dep',
+            public_lecture: true,
+            entreprises_lecture: true,
+          },
+          {
+            id: etapeDocumentIdValidator.parse('id2'),
+            description: null,
+            etape_document_type_id: 'doe',
+            public_lecture: true,
+            entreprises_lecture: true,
+          },
+          {
+            id: etapeDocumentIdValidator.parse('id2'),
+            description: null,
+            etape_document_type_id: 'dom',
+            public_lecture: true,
+            entreprises_lecture: true,
+          },
+          {
             id: etapeDocumentIdValidator.parse('id2'),
             description: null,
             etape_document_type_id: 'for',
             public_lecture: true,
             entreprises_lecture: true,
-            },
-            { 
-              id: etapeDocumentIdValidator.parse('id2'),
-              description: null,
-              etape_document_type_id: 'jpa',
-              public_lecture: true,
-              entreprises_lecture: true,
-              }
-  ])
-  },
-  getEtape(etapeIdOrSlug) {
-    getEtapeAction(etapeIdOrSlug)
-
-    return Promise.resolve({
-      id: etapeIdValidator.parse('etape-id'),
-      slug: etapeSlugValidator.parse('etape-slug'),
-      typeId: 'mfr',
-      statutId: 'fai',
-      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-      date: caminoDateValidator.parse('2023-02-01'),
-      dateDebut: null,
-      dateFin: null,
-      duree: 6,
-      substances: ['arge'],
-      titulaires: [{id: entreprises[0].id, operateur: false}],
-      amodiataires: [],
-      contenu: {arm: {mecanise: true, franchissements: 9}},
-      notes: null,
-      geojson4326Forages: null,
-      geojson4326Perimetre: perimetre,
-      geojson4326Points: null,
-      geojsonOrigineForages: null,
-      geojsonOrigineGeoSystemeId: '4326',
-      geojsonOriginePerimetre: perimetre,
-      geojsonOriginePoints: null,
-      surface: null,
-      demarche: {
-        slug: demarcheSlugValidator.parse('demarche-slug'),
-        typeId: 'oct',
-        description: 'Super description',
-        titre: {
-          id: titreIdValidator.parse('titre-id'),
-          slug: titreSlugValidator.parse('titre-slug'),
-          nom: 'Nom du titre',
-          typeId: 'arm',
-        },
+          },
+          {
+            id: etapeDocumentIdValidator.parse('id2'),
+            description: null,
+            etape_document_type_id: 'jpa',
+            public_lecture: true,
+            entreprises_lecture: true,
+          },
+        ])
       },
-    })
-  },
-}} user={{...testBlankUser, role: 'super'}} initTab='points' demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+      getEtape(etapeIdOrSlug) {
+        getEtapeAction(etapeIdOrSlug)
 
-
-
+        return Promise.resolve({
+          id: etapeIdValidator.parse('etape-id'),
+          slug: etapeSlugValidator.parse('etape-slug'),
+          typeId: 'mfr',
+          statutId: 'aco',
+          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+          date: caminoDateValidator.parse('2023-02-01'),
+          dateDebut: null,
+          dateFin: null,
+          duree: 6,
+          substances: ['arge'],
+          titulaires: [{ id: entreprises[0].id, operateur: false }],
+          amodiataires: [],
+          contenu: { arm: { mecanise: true, franchissements: 9 } },
+          notes: null,
+          geojson4326Forages: null,
+          geojson4326Perimetre: perimetre,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: '4326',
+          geojsonOriginePerimetre: perimetre,
+          geojsonOriginePoints: null,
+          surface: null,
+          demarche: {
+            slug: demarcheSlugValidator.parse('demarche-slug'),
+            typeId: 'oct',
+            description: 'Super description',
+            titre: {
+              id: titreIdValidator.parse('titre-id'),
+              slug: titreSlugValidator.parse('titre-slug'),
+              nom: 'Nom du titre',
+              typeId: 'arm',
+            },
+          },
+        })
+      },
+    }}
+    user={{ ...testBlankUser, role: 'super' }}
+    initTab="points"
+    demarcheIdOrSlug={null}
+    etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}
+  />
+)
 
 const modHeritageProps: EtapeWithHeritage['heritageProps'] = {
   dateDebut: {
@@ -570,7 +618,7 @@ const modHeritageProps: EtapeWithHeritage['heritageProps'] = {
     etape: {
       date: toCaminoDate('2022-01-01'),
       typeId: 'mfr',
-      titulaires: [{id: entreprises[0].id, operateur: false}],
+      titulaires: [{ id: entreprises[0].id, operateur: false }],
     },
   },
   amodiataires: {
@@ -588,70 +636,90 @@ const modHeritageProps: EtapeWithHeritage['heritageProps'] = {
       geojsonOrigineGeoSystemeId: '4326',
       geojsonOriginePerimetre: perimetre,
       geojsonOriginePoints: null,
-      surface: null
-      
+      surface: null,
     },
   },
 }
 
+export const ModificationDemandeHeritee: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={{
+      ...apiClient,
+      getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+        getEtapeHeritageAction(titreDemarcheId, date, typeId)
 
-export const ModificationDemandeHeritee: StoryFn = () => <PureEtapeEdition entreprises={entreprises} apiClient={{...apiClient, 
-  getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritageAction(titreDemarcheId, date, typeId)
-
-    return Promise.resolve({
-      heritageContenu: { arm: { mecanise: { actif: true, etape: {
-        date: toCaminoDate('2022-01-01'),
-        typeId: 'mfr',
-        contenu: {arm: {mecanise: true}},
-      } }, franchissements: {actif: true, etape: {
-        date: toCaminoDate('2022-01-01'),
-        typeId: 'mfr',
-        contenu: {arm: {franchissements: 2}},
-      }} } },
-      heritageProps: modHeritageProps,
-    })
-  },
-  getEtape(etapeIdOrSlug) {
-    getEtapeAction(etapeIdOrSlug)
-
-    return Promise.resolve({
-      id: etapeIdValidator.parse('etape-id'),
-      slug: etapeSlugValidator.parse('etape-slug'),
-      typeId: 'mod',
-      statutId: 'fai',
-      titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
-      date: caminoDateValidator.parse('2023-02-01'),
-      dateDebut: null,
-      dateFin: null,
-      duree: 6,
-      substances: [],
-      titulaires: [],
-      amodiataires: [],
-      contenu: {},
-      notes: null,
-      geojson4326Forages: null,
-      geojson4326Perimetre: null,
-      geojson4326Points: null,
-      geojsonOrigineForages: null,
-      geojsonOrigineGeoSystemeId: null,
-      geojsonOriginePerimetre: null,
-      geojsonOriginePoints: null,
-      surface: null,
-      demarche: {
-        slug: demarcheSlugValidator.parse('demarche-slug'),
-        typeId: 'oct',
-        description: 'Super description',
-        titre: {
-          id: titreIdValidator.parse('titre-id'),
-          slug: titreSlugValidator.parse('titre-slug'),
-          nom: 'Nom du titre',
-          typeId: 'arm',
-        },
+        return Promise.resolve({
+          heritageContenu: {
+            arm: {
+              mecanise: {
+                actif: true,
+                etape: {
+                  date: toCaminoDate('2022-01-01'),
+                  typeId: 'mfr',
+                  contenu: { arm: { mecanise: true } },
+                },
+              },
+              franchissements: {
+                actif: true,
+                etape: {
+                  date: toCaminoDate('2022-01-01'),
+                  typeId: 'mfr',
+                  contenu: { arm: { franchissements: 2 } },
+                },
+              },
+            },
+          },
+          heritageProps: modHeritageProps,
+        })
       },
-    })
-  },
-}} user={{...testBlankUser, role: 'super'}} initTab='points' demarcheIdOrSlug={null} etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')} />
+      getEtape(etapeIdOrSlug) {
+        getEtapeAction(etapeIdOrSlug)
+
+        return Promise.resolve({
+          id: etapeIdValidator.parse('etape-id'),
+          slug: etapeSlugValidator.parse('etape-slug'),
+          typeId: 'mod',
+          statutId: 'fai',
+          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+          date: caminoDateValidator.parse('2023-02-01'),
+          dateDebut: null,
+          dateFin: null,
+          duree: 6,
+          substances: [],
+          titulaires: [],
+          amodiataires: [],
+          contenu: {},
+          notes: null,
+          geojson4326Forages: null,
+          geojson4326Perimetre: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+          demarche: {
+            slug: demarcheSlugValidator.parse('demarche-slug'),
+            typeId: 'oct',
+            description: 'Super description',
+            titre: {
+              id: titreIdValidator.parse('titre-id'),
+              slug: titreSlugValidator.parse('titre-slug'),
+              nom: 'Nom du titre',
+              typeId: 'arm',
+            },
+          },
+        })
+      },
+    }}
+    user={{ ...testBlankUser, role: 'super' }}
+    initTab="points"
+    demarcheIdOrSlug={null}
+    etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}
+  />
+)
 
 // FIXME tests avec
 // - heritageContenu

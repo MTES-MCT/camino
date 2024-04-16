@@ -113,8 +113,9 @@ const etape: DeepReadonly<Etape> = {
   geojsonOrigineForages: null,
 }
 
-const completeUpdate = action('completeUpdate')
-const alertesUpdate = action('alertesUpdate')
+const goToDemarcheAction = action('goToDemarche')
+const etapeCreerAction = action('etapeCreer')
+const etapeModifierAction = action('etapeModifier')
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
 const getEtapeHeritageAction = action('getEtapeHeritage')
 const geojsonImportAction = action('geojsonImport')
@@ -125,6 +126,16 @@ const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 
 const etapeEditFormApiClient: Props['apiClient'] = {
+  etapeCreer(etape) {
+    etapeCreerAction(etape)
+
+    return Promise.resolve(etapeIdValidator.parse('etapeIdSaved'))
+  },
+  etapeModifier(etape) {
+    etapeModifierAction(etape)
+
+    return Promise.resolve(etape.id)
+  },
   getEntrepriseDocuments() {
     return Promise.resolve([])
   },
@@ -190,40 +201,38 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 export const Default: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
-    alertesUpdate={alertesUpdate}
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
     apiClient={etapeEditFormApiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
     titreTypeId="arm"
-    sdomZoneIds={[]}
     etape={etape}
-    completeUpdate={completeUpdate}
     user={{
       role: 'super',
       ...testBlankUser,
     }}
     entreprises={entreprises}
+    goToDemarche={goToDemarcheAction}
   />
 )
 
 export const EtapeModification: StoryFn = () => (
   <EtapeEditForm
     initTab="points"
-    alertesUpdate={alertesUpdate}
     apiClient={etapeEditFormApiClient}
     demarcheId={demarcheIdValidator.parse('demarcheId')}
     demarcheTypeId="oct"
     titreSlug={titreSlugValidator.parse('titre-slug')}
     titreTypeId="cxw"
-    sdomZoneIds={[]}
+    perimetre={{ sdomZoneIds: [], superposition_alertes: [] }}
     etape={{ ...etape, geojson4326Perimetre: perimetre, geojsonOriginePerimetre: perimetre, geojsonOrigineGeoSystemeId: '4326' }}
-    completeUpdate={completeUpdate}
     user={{
       role: 'super',
       ...testBlankUser,
     }}
     entreprises={entreprises}
+    goToDemarche={goToDemarcheAction}
   />
 )
 
