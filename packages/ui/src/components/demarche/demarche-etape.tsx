@@ -272,11 +272,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
         <DeposeEtapePopup
           close={closeDeposePopup}
           apiClient={props.apiClient}
-          demarcheTypeId={props.demarche.demarche_type_id}
-          etapeTypeId={props.etape.etape_type_id}
           id={props.etape.id}
-          titreTypeId={props.titre.typeId}
-          titreNom={props.titre.nom}
         />
       ) : null}
     </div>

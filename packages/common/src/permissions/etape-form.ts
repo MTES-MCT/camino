@@ -24,8 +24,6 @@ export const fondamentaleStepIsComplete = (flattened: DeepReadonly<Pick<EtapeWit
       return true
     }
 
-    console.log('fondamentaleStepIsComplete', JSON.stringify(flattened.substances))
-  
     return flattened.typeId !== ETAPES_TYPES.demande ||
     isNotNullNorUndefinedNorEmpty(flattened.substances) && (dureeOptionalCheck(flattened.typeId, demarcheTypeId, titreTypeId) || (isNotNullNorUndefined(flattened.duree) && flattened.duree > 0))
   }
@@ -65,10 +63,10 @@ export const getDocumentsTypes = (etape: DeepReadonly<Pick<EtapeWithHeritage, 't
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
-    if (isNotNullNorUndefined(etape.contenu) && isNotNullNorUndefined(etape.contenu.arm)) {
+    if (isNotNullNorUndefined(etape.contenu) && isNotNullNorUndefined(etape.contenu.arm) && etape.contenu.arm.mecanise === true) {
       for (const documentType of dts) {
         if (['doe', 'dep'].includes(documentType.id)) {
-          documentType.optionnel = !(etape.contenu.arm.mecanise ?? false)
+          documentType.optionnel = false
         }
       }
     }
@@ -114,7 +112,6 @@ export const entrepriseDocumentsStepIsComplete = (etape: DeepReadonly<Pick<Etape
 
   const entrepriseIds = [...etape.titulaires, ...etape.amodiataires].map(({id}) => id).filter(onlyUnique)
 
-  console.log('entreprisesIds', entrepriseIds, documentTypes, entreprisesDocuments)
   return entrepriseIds.every(eId => documentTypes.every(({ optionnel, id }) => optionnel || entreprisesDocuments.some(({ documentTypeId, entrepriseId }) => documentTypeId === id && entrepriseId === eId)))
 }
 

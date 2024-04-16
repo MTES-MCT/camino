@@ -14,7 +14,6 @@ const getters = {
 const actions = {
   async get({ dispatch, commit, state }, id) {
     try {
-      commit('loadingAdd', 'metaGet', { root: true })
 
       if (metasIndex[id]) {
         const definition = metasIndex[id]
@@ -30,10 +29,8 @@ const actions = {
         }
       }
     } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'metaGet', { root: true })
-    }
+      console.error(e)
+    } 
   },
 
   elementSelect({ commit }, { id, element }) {

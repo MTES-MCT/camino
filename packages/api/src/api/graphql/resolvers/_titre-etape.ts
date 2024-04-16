@@ -9,8 +9,9 @@ import { DeepReadonly, getKeys } from 'camino-common/src/typescript-tools.js'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { ETAPE_HERITAGE_PROPS, isHeritageProps } from 'camino-common/src/heritage.js'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
-const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] | null) => {
+const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes?: ITitreEtape[] | null) => {
   const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => EtapesTypes[e.typeId].fondamentale && e.date <= date) ?? [])
 
   const heritageProps = ETAPE_HERITAGE_PROPS.reduce((acc: IHeritageProps, id) => {
@@ -46,7 +47,7 @@ const titreEtapeHeritagePropsBuild = (date: string, titreEtapes?: ITitreEtape[] 
   return newTitreEtape
 }
 
-const titreEtapeHeritageContenuBuild = (date: string, etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes?: ITitreEtape[] | null) => {
+const titreEtapeHeritageContenuBuild = (date: CaminoDate, etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes?: ITitreEtape[] | null) => {
   if (!titreEtapes) {
     titreEtapes = []
   }
@@ -105,7 +106,7 @@ const titreEtapeHeritageContenuBuild = (date: string, etapeTypeId: EtapeTypeId, 
   return { contenu, heritageContenu }
 }
 
-export const titreEtapeHeritageBuild = (date: string, etapeTypeId: EtapeTypeId, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => {
+export const titreEtapeHeritageBuild = (date: CaminoDate, etapeTypeId: EtapeTypeId, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) => {
   let titreEtape = {} as ITitreEtape
 
   const etapeType = EtapesTypes[etapeTypeId]

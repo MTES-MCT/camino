@@ -61,7 +61,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   }
 
   const updateDureeHeritage = (dureeHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'duree' | 'typeId' | 'date'>>>) => {
-    console.log('trilili', dureeHeritage)
     setEditedEtape({ ...editedEtape.value, heritageProps: { ...editedEtape.value.heritageProps, duree: dureeHeritage } })
   }
   const updateDateDebutHeritage = (dateDebutHeritage: DeepReadonly<HeritageProp<Pick<EtapeWithHeritage, 'dateDebut' | 'typeId' | 'date'>>>) => {
@@ -123,7 +122,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   const updateAnsDuree = (value: number | null) => {
       ans.value = value ?? 0
       updateDuree()
-    
+
   }
   const updateMoisDuree = (value: number | null) => {
     mois.value = value ?? 0
@@ -194,7 +193,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           prop={editedEtape.value.heritageProps.dateFin}
           propId="dateFin"
           write={() => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin} valueChanged={dateFinChanged} />}
-          read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin} valueChanged={() => {}} disabled={true} />}
+          read={heritagePropEtape => <DsfrInput type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={heritagePropEtape?.dateFin} valueChanged={() => {}} disabled={true} />}
         />
       ) : null}
 
@@ -260,7 +259,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             />
           </div>
         </>
-      ) : null} 
+      ) : null}
 
       <SubstancesEdit
         substances={props.etape.substances}

@@ -17,24 +17,6 @@ import { canCreateTravaux, canCreateOrEditDemarche, canDeleteDemarche } from 'ca
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { userSuper } from '../../../database/user-super.js'
 
-export const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    const titreDemarche = await titreDemarcheGet(id, { fields }, user)
-
-    if (!titreDemarche) {
-      throw new Error("la démarche n'existe pas")
-    }
-
-    return titreDemarcheFormat(titreDemarche, fields.elements)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 export const demarches = async (
   {
     page,

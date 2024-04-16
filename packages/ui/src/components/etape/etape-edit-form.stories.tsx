@@ -114,6 +114,7 @@ const etape: DeepReadonly<Etape> = {
 }
 
 const goToDemarcheAction = action('goToDemarche')
+const deposeEtapeAction = action('deposeEtape')
 const etapeCreerAction = action('etapeCreer')
 const etapeModifierAction = action('etapeModifier')
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
@@ -126,6 +127,10 @@ const getEtapeEntrepriseDocumentsAction = action('getEtapeEntrepriseDocuments')
 const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 
 const etapeEditFormApiClient: Props['apiClient'] = {
+  deposeEtape(etapeId) {
+    deposeEtapeAction(etapeId)
+    return Promise.resolve(undefined)
+  },
   etapeCreer(etape) {
     etapeCreerAction(etape)
 

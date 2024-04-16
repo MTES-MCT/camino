@@ -4,7 +4,7 @@ import { EtapeFondamentaleEdit, FondamentalesEdit } from './fondamentales-edit'
 import { PerimetreEdit } from './perimetre-edit'
 import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
-import { ApiClient, apiClient } from '../../api/api-client'
+import { ApiClient } from '../../api/api-client'
 import { User } from 'camino-common/src/roles'
 import { Etape, EtapeDocument, EtapeId, EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -36,6 +36,7 @@ import {
 } from 'camino-common/src/permissions/etape-form'
 import { EtapeAlerte, PureFormSaveBtn } from './pure-form-save-btn'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 
 export type Props = {
   etape: DeepReadonly<Etape>
@@ -63,6 +64,7 @@ export type Props = {
     | 'creerEntrepriseDocument'
     | 'etapeCreer'
     | 'etapeModifier'
+    | 'deposeEtape'
   >
 }
 
@@ -114,7 +116,6 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>,
     entrepriseDocuments: DeepReadonly<SelectedEntrepriseDocument[]>
   ) => {
-    console.log('setEtapeAndDocument', JSON.stringify(etape.substances))
     setEtape(etape)
     setHeritage(etape)
     setEtapeDocuments(etapeDocuments)
@@ -179,16 +180,16 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     if (canSave.value && isNotNullNorUndefined(heritage.value)) {
       let etapeId: EtapeId | null
       if (isNotNullNorUndefined(props.etape.id)) {
-        // etapeId = await apiClient.etapeModifier()
-        etapeId = await apiClient.etapeCreer({
+        etapeId = await props.apiClient.etapeModifier({
           ...etape.value,
           ...heritage.value,
+          id: props.etape.id,
           titreDemarcheId: props.demarcheId,
           entrepriseDocumentIds: entrepriseDocuments.value.map(({ id }) => id),
           etapeDocuments: etapeDocuments.value,
         })
       } else {
-        etapeId = await apiClient.etapeCreer({
+        etapeId = await props.apiClient.etapeCreer({
           ...etape.value,
           ...heritage.value,
           titreDemarcheId: props.demarcheId,
@@ -210,18 +211,20 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     }
   }
 
+  const etapeIdToDepose = ref<EtapeId | null>(null)
   const depose = async () => {
     if (canDepose.value) {
-      const _etapeId = await save()
-
-      // FIXME ouvrir popup
-      // FIXME reroute
+      const etapeId = await save()
+      etapeIdToDepose.value = etapeId
     }
   }
 
+  const closeDeposePopup = () => {
+    etapeIdToDepose.value = null
+  }
+
   return () => (
-    // FIXME je pense que la div devrait être un form (gestion du submit au clavier natif ?!)
-    <div class="dsfr">
+    <form class="dsfr">
       {dateTypeStepIsVisible(props.user) ? (
         <Bloc step={{ name: 'Informations principales', help: null }} complete={dateTypeStepIsComplete(etape.value, props.user)}>
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
@@ -251,11 +254,21 @@ export const EtapeEditForm = defineComponent<Props>(props => {
                 save={saveAndReroute}
                 depose={depose}
               />
+              {isNotNullNorUndefined(etapeIdToDepose.value) ? (
+                <DeposeEtapePopup
+                  close={closeDeposePopup}
+                  apiClient={{...props.apiClient, deposeEtape: async (titreEtapeId) => {
+                    await props.apiClient.deposeEtape(titreEtapeId)
+                    props.goToDemarche(props.demarcheId)
+                  },}}
+                  id={etapeIdToDepose.value}
+                />
+              ) : null}
             </>
           )}
         />
       ) : null}
-    </div>
+    </form>
   )
 })
 

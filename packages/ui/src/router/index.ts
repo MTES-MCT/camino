@@ -489,12 +489,5 @@ router.beforeEach(async (to, from, next) => {
   next()
 })
 
-router.afterEach((to, from) => {
-  // si on enlève l’erreur dans le beforeEach, cela va enlever l’erreur et tenter d’afficher l’ancien composant qui va
-  // potentiellement regénérer une erreur. Il faut donc attendre que la route soit changée pour l’enlever.
-  if (store.state.error && to.name !== from.name) {
-    store.dispatch('errorRemove')
-  }
-})
 
 export default router

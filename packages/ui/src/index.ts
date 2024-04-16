@@ -1,6 +1,5 @@
 import './styles/styles.css'
 import { createApp, ref } from 'vue'
-import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/browser'
 
@@ -60,7 +59,6 @@ const checkEventSource = () => {
 checkEventSource()
 Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
-  sync(store, router)
   const [configFromJson, user, entreprises]: [CaminoConfig, User, Entreprise[]] = await Promise.all([getWithJson('/config', {}), getWithJson('/moi', {}), getWithJson('/rest/entreprises', {})])
   const app = createApp(App)
   app.provide(userKey, user)

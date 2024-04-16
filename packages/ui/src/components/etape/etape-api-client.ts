@@ -126,8 +126,7 @@ export type GraphqlEtapeCreation = {
   notes: string | null
 }
 
-// FIXME
-export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeValidator>
+export type GraphqlEtapeModification = GraphqlEtapeCreation & {id: EtapeId}
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>

@@ -24,6 +24,7 @@ const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
 const onEtapeChangeAction = action('onEtapeChange')
 const onPointsChangeAction = action('onPointsChange')
 const onForagesChangeAction = action('onForagesChange')
+const onHeritageChangeAction = action('onHeritageChange')
 
 const perimetre: FeatureMultiPolygon = {
   type: 'Feature',
@@ -82,6 +83,9 @@ const onPointsChange = (geojson4326Points: FeatureCollectionPoints) => {
 const onForagesChange = (geojson4326Forages: FeatureCollectionForages) => {
   onForagesChangeAction(geojson4326Forages)
 }
+const onHeritageChange = (heritage: Props['etape']['heritageProps']['perimetre']) => {
+  onHeritageChangeAction(heritage)
+}
 const etapeNoHeritage: Props['etape'] = {
   typeId: 'mfr',
   heritageProps: { perimetre: { actif: false } },
@@ -106,6 +110,7 @@ export const EmptyNoHeritage: StoryFn = () => (
     onEtapeChange={onEtapeChange}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 const etapeEmptyHeritage: Props['etape'] = {
@@ -139,6 +144,7 @@ export const EmptyHeritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -172,6 +178,7 @@ export const Heritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -194,6 +201,7 @@ export const FilledNoHeritage: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -216,6 +224,7 @@ export const LegacyGeoSysteme: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )
 
@@ -319,5 +328,6 @@ export const WithForages: StoryFn = () => (
     titreSlug={titreSlug}
     onPointsChange={onPointsChange}
     onForagesChange={onForagesChange}
+    onHeritageChange={onHeritageChange}
   />
 )

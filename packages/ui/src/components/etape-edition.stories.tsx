@@ -22,6 +22,7 @@ const meta: Meta = {
 export default meta
 
 const getEtapeAction = action('getEtape')
+const deposeEtapeAction = action('deposeEtape')
 const getEtapeHeritageAction = action('getEtapeHeritage')
 const getDemarcheByIdOrSlugAction = action('getDemarcheByIdOrSlug')
 const getPerimetreInfosByDemarcheIdAction = action('getPerimetreInfosByDemarcheId')
@@ -114,6 +115,10 @@ const perimetre: FeatureMultiPolygon = {
 }
 
 const apiClient: Props['apiClient'] = {
+  deposeEtape(etapeId) {
+    deposeEtapeAction(etapeId)
+    return Promise.resolve(undefined)
+  },
   etapeCreer(etape) {
     etapeCreerAction(etape)
 

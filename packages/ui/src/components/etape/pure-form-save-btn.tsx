@@ -37,11 +37,11 @@ export const PureFormSaveBtn: FunctionalComponent<Props> = props => {
         ))}
 
         <div style={{ display: 'flex', justifyContent: 'end' }} class="fr-mt-2w">
-          <DsfrButton buttonType={props.showDepose ? 'secondary' : 'primary'} disabled={!props.canSave} onClick={props.save} title="Enregistrer l'étape">
+          <DsfrButton buttonType={props.showDepose ? 'secondary' : 'primary'} type={props.showDepose ? 'button' : 'submit'} disabled={!props.canSave} onClick={props.save} title="Enregistrer l'étape">
             Enregistrer
           </DsfrButton>
           {props.showDepose ? (
-            <DsfrButton buttonType="primary" class="fr-ml-2w" title="Enregistrer puis déposer l'étape" disabled={!props.canDepose} onClick={props.depose}>
+            <DsfrButton buttonType="primary" type="submit" class="fr-ml-2w" title="Enregistrer puis déposer l'étape" disabled={!props.canDepose} onClick={props.depose}>
               Enregistrer et déposer
             </DsfrButton>
           ) : null}

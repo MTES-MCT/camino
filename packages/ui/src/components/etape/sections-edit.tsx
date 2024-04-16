@@ -37,7 +37,6 @@ export const SectionsEdit = defineComponent<Props>(props => {
   watch(
     () => editedEtape.value,
     () => {
-      console.log('plop editedEtape')
       props.completeUpdate(editedEtape.value)
     }
   )

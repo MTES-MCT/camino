@@ -15,21 +15,18 @@ import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import { userSuper } from '../../../database/user-super.js'
 import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
-import { objectClone } from '../../../tools/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { isNonEmptyArray, isNotNullNorUndefined, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateEtape, canEditDates, canEditDuree, canEditEtape, isEtapeDeposable } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import { EtapeId, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import {
   deleteTitreEtapeEntrepriseDocument,
-  getDocumentsByEtapeId,
-  getEntrepriseDocumentIdsByEtapeId,
   insertEtapeDocuments,
   insertTitreEtapeEntrepriseDocument,
   updateEtapeDocuments,
@@ -45,6 +42,7 @@ import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { z } from 'zod'
+import { DemarcheId } from 'camino-common/src/demarche.js'
 
 export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -123,7 +121,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   }
 }
 
-const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; titreDemarcheId: string; typeId: EtapeTypeId }, { user }: Context) => {
+const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId }, { user }: Context) => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
