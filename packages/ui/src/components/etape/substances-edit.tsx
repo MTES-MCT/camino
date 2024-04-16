@@ -4,7 +4,7 @@ import { DeepReadonly, computed, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
 import { DsfrTag } from '../_ui/tag'
@@ -109,6 +109,7 @@ export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'herit
       <HeritageEdit
         prop={heritageActif.value}
         propId="substances"
+        hasHeritage={isNotNullNorUndefinedNorEmpty(heritageActif.value.etape?.substances)}
         write={() => (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {editedSubstances.value.map((substance, n) => (

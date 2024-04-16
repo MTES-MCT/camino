@@ -58,3 +58,35 @@ export const AvecHeritage: StoryFn = () => (
   }} />
 )
 
+export const DecisionJorf: StoryFn = () => (
+  <SectionsEdit completeUpdate={completeUpdate} demarcheTypeId='pro' titreTypeId='pcc' etape={{
+    typeId: 'dpu',
+    heritageContenu: {
+        "publication": {
+          "jorf": {
+            "actif": true,
+            "etape": {
+              "typeId": "dex",
+              "date": toCaminoDate("2000-05-16"),
+              "contenu": {},
+            }
+          },
+          "nor": {
+            "actif": true,
+            "etape": {
+              "typeId": "dex",
+              "date": toCaminoDate("2000-05-16"),
+              "contenu": {},
+            }
+          }
+        }
+      },
+      "contenu": {
+        "publication": {
+          "nor": "ECOI0000235A",
+          "jorf": "JORFTEXT000000399877"
+        }
+      }
+  }} />
+)
+

@@ -11,7 +11,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Nullable, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { AsyncData } from '../../api/client-rest'
 import { DemarcheId } from 'camino-common/src/demarche'
@@ -39,7 +39,7 @@ import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { DeposeEtapePopup } from '../demarche/depose-etape-popup'
 
 export type Props = {
-  etape: DeepReadonly<Etape>
+  etape: DeepReadonly<Etape & Pick<Nullable<EtapeWithHeritage>, 'heritageContenu' | 'heritageProps'>>
   demarcheId: DemarcheId
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeId
@@ -53,7 +53,7 @@ export type Props = {
     ApiClient,
     | 'getEntrepriseDocuments'
     | 'getEtapesTypesEtapesStatuts'
-    | 'getEtapeHeritage'
+    | 'getEtapeHeritagePotentiel'
     | 'uploadTempDocument'
     | 'geojsonImport'
     | 'getGeojsonByGeoSystemeId'
@@ -79,14 +79,21 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const heritageData = ref<AsyncData<Heritage>>({ status: 'LOADING' })
 
   onMounted(async () => {
-    await reloadHeritage(props.demarcheId, etape.value)
+    if( isNotNullNorUndefined(props.etape.id) && isNotNullNorUndefined(props.etape.date) && isNotNullNorUndefined(props.etape.typeId) && isNotNullNorUndefined(props.etape.statutId) && isNotNullNorUndefined(props.etape.heritageContenu) && isNotNullNorUndefined(props.etape.heritageProps) ){
+      const heritageComplete = { date: props.etape.date, typeId: props.etape.typeId, statutId: props.etape.statutId, heritageProps: props.etape.heritageProps, heritageContenu: props.etape.heritageContenu }
+      setHeritage(heritageComplete)
+      heritageData.value = { status: 'LOADED', value: heritageComplete }
+    }else{
+      await reloadHeritage(props.demarcheId, etape.value)
+    }
   })
 
   const reloadHeritage = async (demarcheId: DemarcheId, etape: Pick<Etape, 'date' | 'typeId' | 'statutId'>) => {
     if (isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)) {
       try {
+        //FIXME on récupère le mauvais héritage en modification
         heritageData.value = { status: 'LOADING' }
-        const value = await props.apiClient.getEtapeHeritage(demarcheId, etape.date, etape.typeId)
+        const value = await props.apiClient.getEtapeHeritagePotentiel(demarcheId, etape.date, etape.typeId)
         const heritageComplete = { ...value, date: etape.date, typeId: etape.typeId, statutId: etape.statutId }
         setHeritage(heritageComplete)
         heritageData.value = { status: 'LOADED', value: heritageComplete }
@@ -224,7 +231,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   }
 
   return () => (
-    <form class="dsfr">
+    <form class="dsfr" onSubmit={(e) => e.preventDefault()}>
       {dateTypeStepIsVisible(props.user) ? (
         <Bloc step={{ name: 'Informations principales', help: null }} complete={dateTypeStepIsComplete(etape.value, props.user)}>
           <DateTypeEdit etape={props.etape} apiClient={props.apiClient} completeUpdate={dateTypeCompleteUpdate} demarcheId={props.demarcheId} />
@@ -235,7 +242,6 @@ export const EtapeEditForm = defineComponent<Props>(props => {
           data={heritageData.value}
           renderItem={item => (
             <>
-              {' '}
               <EtapeEditFormInternal
                 {...props}
                 etape={isNotNullNorUndefined(heritage.value) ? { ...etape.value, ...heritage.value } : { ...etape.value, ...item }}

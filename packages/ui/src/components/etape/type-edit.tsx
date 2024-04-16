@@ -1,6 +1,6 @@
 import { EtapesStatuts, EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, ETAPES_TYPES, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { computed, ref, FunctionalComponent, watch } from 'vue'
+import { computed, ref, FunctionalComponent, watch, HTMLAttributes } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeApiClient } from './etape-api-client'
@@ -23,7 +23,8 @@ type Props = {
   demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
-}
+
+} & Pick<HTMLAttributes, 'class'>
 
 interface SelectStatutProps {
   statutId: EtapeStatutId | null
@@ -39,7 +40,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
   return <DsfrSelect initialValue={initialValue} items={items} legend={{ main: 'Statut' }} required={true} id="select-etape-statut-id" valueChanged={props.onStatutChange} />
 }
 
-export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId'], props => {
+export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onEtapeChange', 'demarcheId', 'class'], props => {
   const etapeTypeSearch = ref<string>('')
   const etapeTypeId = ref<EtapeTypeId | null>(props.etape.typeId ?? null)
   const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
@@ -91,11 +92,12 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
 
   return () => (
     <LoadingElement
+      class={props.class}
       data={possibleEtapes.value}
       renderItem={items => (
         <>
           {noItemsText.value === null ? (
-            <>
+            <div class={props.class}>
               <div class="fr-input-group">
                 <label class="fr-label fr-mb-1w" for="select-etape-type">
                   Type *
@@ -145,7 +147,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
                   }}
                 />
               )}
-            </>
+            </div>
           ) : (
             <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
           )}

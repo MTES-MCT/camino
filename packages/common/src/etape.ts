@@ -12,7 +12,7 @@ import { KM2 } from './number.js'
 import { GeoSystemeId } from './static/geoSystemes.js'
 import { tempDocumentNameValidator } from './document.js'
 import { ElementWithValue } from './sections.js'
-import { DeepReadonly, isNullOrUndefined } from './typescript-tools.js'
+import { DeepReadonly } from './typescript-tools.js'
 import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
@@ -30,7 +30,7 @@ export type HeritageProp<T> = { actif: boolean; etape?: T }
 
 export interface EtapeEntreprise {
   id: EntrepriseId
-  operateur: boolean
+  operateur: boolean | null
 }
 
 // TODO 2023-06-14 Utiliser seulement par l’ui, à bouger dedans

@@ -118,7 +118,7 @@ const deposeEtapeAction = action('deposeEtape')
 const etapeCreerAction = action('etapeCreer')
 const etapeModifierAction = action('etapeModifier')
 const getEtapesTypesEtapesStatutsAction = action('getEtapesTypesEtapesStatuts')
-const getEtapeHeritageAction = action('getEtapeHeritage')
+const getEtapeHeritagePotentielAction = action('getEtapeHeritagePotentiel')
 const geojsonImportAction = action('geojsonImport')
 const uploadTempDocumentAction = action('uploadTempDocumentAction')
 const getGeojsonByGeoSystemeIdAction = action('getGeojsonByGeoSystemeId')
@@ -153,8 +153,8 @@ const etapeEditFormApiClient: Props['apiClient'] = {
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritageAction(titreDemarcheId, date, typeId)
+  getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+    getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
     return Promise.resolve({
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },

@@ -23,7 +23,7 @@ export default meta
 
 const getEtapeAction = action('getEtape')
 const deposeEtapeAction = action('deposeEtape')
-const getEtapeHeritageAction = action('getEtapeHeritage')
+const getEtapeHeritagePotentielAction = action('getEtapeHeritagePotentiel')
 const getDemarcheByIdOrSlugAction = action('getDemarcheByIdOrSlug')
 const getPerimetreInfosByDemarcheIdAction = action('getPerimetreInfosByDemarcheId')
 const getPerimetreInfosByEtapeIdAction = action('getPerimetreInfosByEtapeId')
@@ -207,8 +207,8 @@ const apiClient: Props['apiClient'] = {
       { etapeTypeId: 'mod', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-    getEtapeHeritageAction(titreDemarcheId, date, typeId)
+  getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+    getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
     return Promise.resolve({
       heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
@@ -403,8 +403,8 @@ export const DemandeArmComplete: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-        getEtapeHeritageAction(titreDemarcheId, date, typeId)
+      getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
         return Promise.resolve({
           heritageContenu: { arm: { mecanise: { actif: false }, franchissements: { actif: false } } },
@@ -652,8 +652,8 @@ export const ModificationDemandeHeritee: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritage(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
-        getEtapeHeritageAction(titreDemarcheId, date, typeId)
+      getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
         return Promise.resolve({
           heritageContenu: {

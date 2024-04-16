@@ -2,32 +2,35 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { deleteWithJson, getWithJson, putWithJson } from '@/api/client-rest'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { TempDocumentName } from 'camino-common/src/document'
-import { EntrepriseDocumentId, EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeDocument, EtapeDocumentId, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { tempDocumentNameValidator } from 'camino-common/src/document'
+import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { EtapeDocument, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
 import {
-  FeatureCollectionForages,
-  FeatureCollectionPoints,
-  FeatureMultiPolygon,
   featureCollectionForagesValidator,
-  featureCollectionMultipolygonValidator,
   featureCollectionPointsValidator,
   featureMultiPolygonValidator,
 } from 'camino-common/src/perimetre'
-import { ElementWithValue } from 'camino-common/src/sections'
 import { demarcheTypeIdValidator } from 'camino-common/src/static/demarchesTypes'
-import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { EtapeStatutId, etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
+import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes'
+import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
-import { GeoSystemeId, geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
-import { SubstanceLegaleId, substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
+import { geoSystemeIdValidator } from 'camino-common/src/static/geoSystemes'
+import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesLegales'
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import gql from 'graphql-tag'
 import { z } from 'zod'
 
+const contenuValidator = z.record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
+const dureeValidator = z.number().nullable()
+const entrepriseValidator = z.array(
+  z.object({
+    id: entrepriseIdValidator,
+    operateur: z.boolean().nullable(),
+  })
+)
 const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -46,22 +49,12 @@ const graphqlEtapeValidator = z.object({
   date: caminoDateValidator,
   dateDebut: caminoDateValidator.nullable(),
   dateFin: caminoDateValidator.nullable(),
-  duree: z.number().nullable(),
+  duree: dureeValidator,
   substances: z.array(substanceLegaleIdValidator),
   typeId: etapeTypeIdValidator,
   statutId: etapeStatutIdValidator,
-  titulaires: z.array(
-    z.object({
-      id: entrepriseIdValidator,
-      operateur: z.boolean(),
-    })
-  ),
-  amodiataires: z.array(
-    z.object({
-      id: entrepriseIdValidator,
-      operateur: z.boolean(),
-    })
-  ),
+  titulaires: entrepriseValidator,
+  amodiataires: entrepriseValidator,
   geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
   geojson4326Points: featureCollectionPointsValidator.nullable(),
   geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
@@ -71,68 +64,94 @@ const graphqlEtapeValidator = z.object({
   geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
   surface: km2Validator.nullable(),
   // Record<string, Record<string, ElementWithValue['value']>>
-  contenu: z.record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable())),
+  contenu: contenuValidator,
   notes: z.string().nullable(),
+  heritageProps: z.object({
+    duree: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator})}),
+    dateDebut: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable()})}),
+    dateFin: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable()})}),
+    substances: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator)})}),
+    titulaires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator})}),
+    amodiataires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator})}),
+    perimetre: z.object({ actif: z.boolean(), etape: z.object({
+      typeId: etapeTypeIdValidator, date: caminoDateValidator,
+      geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
+      geojson4326Points: featureCollectionPointsValidator.nullable(),
+      geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
+      geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
+      geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
+      geojson4326Forages: featureCollectionForagesValidator.nullable(),
+      geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
+      surface: km2Validator.nullable(),
+    })})
+  }).nullable(),
+  heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator}).nullable()}))).nullable() ,
 })
 
 export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
-type GraphqlInputEtapeEntreprise = { id: EntrepriseId; operateur: boolean }
 
-type GraphqlInputHeritageProps = {
-  dateDebut: GraphqlInputHeritageProp
-  dateFin: GraphqlInputHeritageProp
-  duree: GraphqlInputHeritageProp
-  perimetre: GraphqlInputHeritageProp
-  substances: GraphqlInputHeritageProp
-  titulaires: GraphqlInputHeritageProp
-  amodiataires: GraphqlInputHeritageProp
+const graphqlInputHeritagePropValidator = z.object({
+  actif: z.boolean()
+})
+
+const graphqlInputHeritagePropsValidator = z.object({
+  dateDebut: graphqlInputHeritagePropValidator,
+  dateFin: graphqlInputHeritagePropValidator,
+  duree: graphqlInputHeritagePropValidator,
+  perimetre: graphqlInputHeritagePropValidator,
+  substances: graphqlInputHeritagePropValidator,
+  titulaires: graphqlInputHeritagePropValidator,
+  amodiataires: graphqlInputHeritagePropValidator
+})
+
+
+
+const graphqlInputEtapeDocumentValidator = z.object({
+  id: etapeDocumentIdValidator.optional(),
+  temp_document_name: tempDocumentNameValidator.optional(),
+  etape_document_type_id: documentTypeIdValidator,
+  description: z.string().nullable(),
+  public_lecture: z.boolean(),
+  entreprises_lecture: z.boolean()
+})
+
+const graphqlEtapeCreationValidator = graphqlEtapeValidator.pick({
+  typeId: true,
+  statutId: true,
+  date: true,
+  duree: true,
+  dateDebut: true,
+  dateFin: true,
+  substances: true,
+  geojson4326Perimetre: true,
+  geojson4326Points: true,
+  geojsonOriginePoints: true,
+  geojsonOriginePerimetre: true,
+  geojsonOrigineForages: true,
+  geojsonOrigineGeoSystemeId: true,
+  titulaires: true,
+  amodiataires: true,
+  notes: true,
+  contenu: true
+}).extend({
+  titreDemarcheId: demarcheIdValidator,
+  heritageProps: graphqlInputHeritagePropsValidator,
+  heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean()}))),
+  etapeDocuments: z.array(graphqlInputEtapeDocumentValidator),
+  entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
 }
+)
 
-type GraphqlInputHeritageProp = {
-  actif: boolean
-}
+export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
 
-type GraphqlInputEtapeDocument = {
-  id?: EtapeDocumentId
-  temp_document_name?: TempDocumentName
-  etape_document_type_id: DocumentTypeId
-  description: string | null
-  public_lecture: boolean
-  entreprises_lecture: boolean
-}
-
-export type GraphqlEtapeCreation = {
-  typeId: EtapeTypeId
-  statutId: EtapeStatutId
-  titreDemarcheId: DemarcheId
-  date: CaminoDate
-  duree: number | null
-  dateDebut: CaminoDate | null
-  dateFin: CaminoDate | null
-  substances: SubstanceLegaleId[]
-  geojson4326Perimetre: FeatureMultiPolygon | null
-  geojson4326Points: FeatureCollectionPoints | null
-  geojsonOriginePoints: FeatureCollectionPoints | null
-  geojsonOriginePerimetre: FeatureMultiPolygon | null
-  geojsonOrigineForages: FeatureCollectionForages | null
-  geojsonOrigineGeoSystemeId: GeoSystemeId | null
-  titulaires: GraphqlInputEtapeEntreprise[]
-  amodiataires: GraphqlInputEtapeEntreprise[]
-  heritageProps: GraphqlInputHeritageProps
-  heritageContenu: Record<string, Record<string, GraphqlInputHeritageProp>>
-  contenu: Record<string, Record<string, ElementWithValue['value']>>
-  etapeDocuments: GraphqlInputEtapeDocument[]
-  entrepriseDocumentIds: EntrepriseDocumentId[]
-  notes: string | null
-}
-
-export type GraphqlEtapeModification = GraphqlEtapeCreation & {id: EtapeId}
+const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({id: etapeIdValidator})
+export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
-  getEtapeHeritage: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
+  getEtapeHeritagePotentiel: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
@@ -193,12 +212,91 @@ export const etapeApiClient: EtapeApiClient = {
           substances
           contenu
           notes
+
+          heritageProps {
+            dateDebut {
+              etape {
+                date
+                typeId
+                dateDebut
+              }
+              actif
+            }
+            dateFin {
+              etape {
+                date
+                typeId
+                dateFin
+              }
+              actif
+            }
+            duree {
+              etape {
+                date
+                typeId
+                duree
+              }
+              actif
+            }
+            perimetre {
+              etape {
+                date
+                typeId
+                geojson4326Perimetre
+                geojson4326Points
+                geojsonOriginePoints
+                geojsonOriginePerimetre
+                geojsonOrigineGeoSystemeId
+                geojson4326Forages
+                geojsonOrigineForages
+                surface
+              }
+              actif
+            }
+            substances {
+              etape {
+                date
+                typeId
+                substances
+              }
+              actif
+            }
+            titulaires {
+              etape {
+                date
+                typeId
+                titulaires {
+                  id
+                  operateur
+                }
+              }
+              actif
+            }
+            amodiataires {
+              etape {
+                date
+                typeId
+                amodiataires {
+                  id
+                  operateur
+                }
+              }
+              actif
+            }
+          }
+
+          heritageContenu
         }
       }
     `)({ id: etapeIdOrSlug })
+    const result = graphqlEtapeValidator.safeParse(data)
+    if( result.success){
+      return result.data
+    }
+    console.log(result.error.message)
     return graphqlEtapeValidator.parse(data)
   },
-  getEtapeHeritage: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => {
+  getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => {
     const data = await apiGraphQLFetch(gql`
       query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!) {
         etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId) {
@@ -292,7 +390,7 @@ export const etapeApiClient: EtapeApiClient = {
           id
         }
       }
-    `)({ etape })
+    `)({ etape: graphqlEtapeCreationValidator.parse(etape) })
 
     return result.id
   },
@@ -304,7 +402,7 @@ export const etapeApiClient: EtapeApiClient = {
           id
         }
       }
-    `)({ etape })
+    `)({ etape: graphqlEtapeModificationValidator.parse(etape) })
 
     return result.id
   },

@@ -11,21 +11,15 @@ type EtapeHeritageEdit = Pick<EtapeWithHeritage, 'typeId' | 'date'>
 type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit> = {
   prop: DeepReadonly<HeritageProp<T>>
   propId: P
+  hasHeritage: boolean
   write: () => JSX.Element
   read: (heritagePropEtape?: DeepReadonly<T>) => JSX.Element
+
   class?: HTMLAttributes['class']
   updateHeritage: (update: Props<P, T>['prop']) => void
 }
 
 export const HeritageEdit = defineComponent(<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
-  const hasHeritage = computed<boolean>(() => {
-    return mappingHeritagePropsNameEtapePropsName[props.propId].some(field => {
-      // @ts-ignore le but est de savoir si une valeur est présente dans l’étape héritée, mais on a limité les champs dans T
-      const valeur = props.prop.etape && props.prop.etape[field]
-
-      return (isNotNullNorUndefined(valeur) && (!Array.isArray(valeur) || valeur.length > 0))
-    })
-  })
 
   const updateHeritage = () => {
     const etape = props.prop.etape
@@ -39,7 +33,7 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 
   return () => (
     <div class={['mb-s', props.class]}>
-      {!props.prop.actif ? props.write() : <div>{hasHeritage.value ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
+      {!props.prop.actif ? props.write() : <div>{props.hasHeritage ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div class="dsfr">
@@ -51,4 +45,4 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class', 'updateHeritage']
+HeritageEdit.props = ['prop', 'propId', 'write', 'read', 'display', 'class', 'updateHeritage', 'hasHeritage']

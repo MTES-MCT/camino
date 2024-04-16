@@ -18,7 +18,7 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
   const read = (etape?: DeepReadonly<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>) => {
     if (isNotNullNorUndefined(etape)) {
       // @ts-ignore regarder si on peut narrow l'élément value
-      return <SectionElement element={{ ...props.elementWithValue, value: etape.contenu[props.sectionId][props.elementWithValue.id] }} />
+      return <SectionElement element={{ ...props.elementWithValue, value: etape.contenu[props.sectionId]?.[props.elementWithValue.id] }} />
     } else {
       return <></>
     }
@@ -28,5 +28,8 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
     return <SectionElementEdit element={props.elementWithValue} onValueChange={props.updateElement} />
   }
 
-  return <HeritageEdit prop={props.elementHeritage} propId="contenu" read={read} write={write} updateHeritage={props.updateHeritage} />
+  const heritageValue = props.elementHeritage.etape?.contenu?.[props.sectionId]?.[props.elementWithValue.id]
+  const hasHeritageValue: boolean = (isNotNullNorUndefined(heritageValue) && (!Array.isArray(heritageValue) || heritageValue.length > 0))
+
+  return <HeritageEdit prop={props.elementHeritage} hasHeritage={hasHeritageValue} propId="contenu" read={read} write={write} updateHeritage={props.updateHeritage} />
 }

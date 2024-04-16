@@ -4,7 +4,7 @@ import { ApiClient, apiClient } from '../api/api-client'
 import { DemarcheId, DemarcheIdOrSlug, demarcheIdOrSlugValidator } from 'camino-common/src/demarche'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Alert } from './_ui/alert'
-import { Etape, EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
+import { EtapeIdOrSlug, etapeIdOrSlugValidator } from 'camino-common/src/etape'
 import { entreprisesKey, userKey } from '../moi'
 import { User, isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { Entreprise } from 'camino-common/src/entreprise'
@@ -17,7 +17,7 @@ import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { DsfrLink } from './_ui/dsfr-button'
 import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
-import { EtapeEditForm } from './etape/etape-edit-form'
+import { EtapeEditForm, Props as EtapeEditFormProps } from './etape/etape-edit-form'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 export const EtapeEdition = defineComponent(() => {
@@ -58,7 +58,7 @@ export type Props = {
     ApiClient,
     | 'getEntrepriseDocuments'
     | 'getEtapesTypesEtapesStatuts'
-    | 'getEtapeHeritage'
+    | 'getEtapeHeritagePotentiel'
     | 'uploadTempDocument'
     | 'geojsonImport'
     | 'getGeojsonByGeoSystemeId'
@@ -82,7 +82,7 @@ const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTyp
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: Etape; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
+  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
 
   onMounted(async () => {
     try {
@@ -100,7 +100,15 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
         }
 
         const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
-        setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
+        setAsyncData({ status: 'LOADED', value: { etape: {...etape, heritageProps: etape.heritageProps ?? {
+          dateDebut: {actif: false},
+  dateFin: {actif: false},
+  duree: {actif: false},
+  perimetre: {actif: false},
+  substances: {actif: false},
+  titulaires: {actif: false},
+  amodiataires: {actif: false}
+        }, heritageContenu: etape.heritageContenu ?? {}}, demarche, perimetre } })
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
         const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)
@@ -128,6 +136,8 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               duree: null,
               dateDebut: null,
               dateFin: null,
+              heritageContenu: null,
+              heritageProps: null
             },
             demarche,
             perimetre,
