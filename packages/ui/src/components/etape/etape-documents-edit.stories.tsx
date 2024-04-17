@@ -6,6 +6,7 @@ import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { useArgs } from '@storybook/preview-api'
+import { entrepriseIdValidator } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocumentsEdit',
@@ -42,7 +43,7 @@ const documents: EtapeDocument[] = [
 const uploadTempDocumentAction = action('uploadTempDocument')
 
 const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'> = {
-  getEtapeDocumentsByEtapeId: () => Promise.resolve(documents),
+  getEtapeDocumentsByEtapeId: () => Promise.resolve({etapeDocuments: documents, asl: null, dae: null}),
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
 
@@ -54,7 +55,7 @@ const completeUpdateAction = action('completeUpdate')
 
 export const Empty: StoryFn = () => (
   <EtapeDocumentsEdit
-    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve([]) }}
+    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve({etapeDocuments: [], asl: null, dae: null}) }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
@@ -82,7 +83,7 @@ export const Complet: StoryFn = () => (
     apiClient={{
       ...apiClient,
       getEtapeDocumentsByEtapeId: () =>
-        Promise.resolve([
+        Promise.resolve({etapeDocuments: [
           {
             id: etapeDocumentIdValidator.parse('id'),
             etape_document_type_id: 'dep',
@@ -118,7 +119,7 @@ export const Complet: StoryFn = () => (
             public_lecture: false,
             entreprises_lecture: false,
           },
-        ]),
+        ], asl: null, dae: null}),
     }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
@@ -178,6 +179,45 @@ export const EnConstruction: StoryFn = () => (
     etapeStatutId="aco"
     completeUpdate={completeUpdateAction}
     user={{ ...testBlankUser, role: 'super' }}
+  />
+)
+export const OctroiAxmUtilisateurSuper: StoryFn = () => (
+  <EtapeDocumentsEdit
+    apiClient={apiClient}
+    contenu={{ arm: { mecanise: true } }}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    sdomZoneIds={[]}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    etapeStatutId="aco"
+    completeUpdate={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'super'}}
+  />
+)
+
+
+export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
+  <EtapeDocumentsEdit
+    apiClient={apiClient}
+    contenu={{ arm: { mecanise: true } }}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    sdomZoneIds={[]}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    etapeStatutId="aco"
+    completeUpdate={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1'}] }}
+  />
+)
+
+export const OctroiAxmUtilisateurEntrepriseRempli: StoryFn = () => (
+  <EtapeDocumentsEdit
+    apiClient={apiClient}
+    contenu={{ arm: { mecanise: true } }}
+    etapeId={etapeIdValidator.parse('etapeId')}
+    sdomZoneIds={[]}
+    tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
+    etapeStatutId="aco"
+    completeUpdate={completeUpdateAction}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1'}] }}
   />
 )
 

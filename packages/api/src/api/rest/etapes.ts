@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, EtapeDocument } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
@@ -53,7 +53,7 @@ export const getEtapeEntrepriseDocuments =
 
 export const getEtapeDocuments =
   (pool: Pool) =>
-  async (req: CaminoRequest, res: CustomResponse<EtapeDocument[]>): Promise<void> => {
+  async (req: CaminoRequest, res: CustomResponse<GetEtapeDocumentsByEtapeId>): Promise<void> => {
     const etapeIdParsed = etapeIdValidator.safeParse(req.params.etapeId)
     const user = req.auth
 
@@ -73,7 +73,7 @@ export const getEtapeDocuments =
           public_lecture: etapeData.demarche_public_lecture,
           titre_public_lecture: etapeData.titre_public_lecture,
         })
-        res.json(result)
+        res.json({etapeDocuments: result, asl: null, dae: null})
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)

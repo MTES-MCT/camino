@@ -108,7 +108,7 @@ export const FunctionalPopup = caminoDefineComponent<Props>(['id', 'title', 'con
                             </button>
                           </li>
                           <li>
-                            <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={() => props.close()}>
+                            <button class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary" aria-controls={id} onClick={props.close}>
                               Annuler
                             </button>
                           </li>

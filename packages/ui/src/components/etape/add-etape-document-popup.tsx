@@ -1,5 +1,5 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { InputFile } from '../_ui/dsfr-input-file'
@@ -25,7 +25,7 @@ type DocumentVisibility = (typeof visibility)[number]
 
 const visibility = ['administrations', 'entreprises', 'public'] as const
 
-export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'apiClient', 'documentTypeIds', 'user', 'initialDocument'], props => {
+export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
   const etapeDocumentTypeId = ref<DocumentTypeId | null>(props.documentTypeIds.length === 1 ? props.documentTypeIds[0] : null)
   const etapeDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>(props.initialDocument?.description ?? '')
@@ -110,21 +110,21 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
       title={props.documentTypeIds.length === 1 ? `${isNotNullNorUndefined(props.initialDocument) ? 'Éditer' : 'Ajouter'} ${DocumentsTypes[props.documentTypeIds[0]].nom}` : "Ajout d'un document"}
       content={content}
       close={() => {
-        const value = { ...props.initialDocument, ...tempDocument.value, temp_document_name: tempDocumentName.value }
-
-        const parsed = etapeDocumentModificationValidator.safeParse(value)
-
-        if (parsed.success) {
-          props.close(parsed.data)
-        } else {
-          console.log(parsed.error)
-          props.close(null)
-        }
+        props.close(null)
       }}
       validate={{
         action: async () => {
           if (etapeDocumentFile.value !== null) {
             tempDocumentName.value = await props.apiClient.uploadTempDocument(etapeDocumentFile.value)
+          }
+          const value = { ...props.initialDocument, ...tempDocument.value, temp_document_name: tempDocumentName.value }
+
+          const parsed = etapeDocumentModificationValidator.safeParse(value)
+
+          if (parsed.success) {
+            props.close(parsed.data)
+          } else {
+            console.error(parsed.error)
           }
         },
       }}
@@ -132,3 +132,6 @@ export const AddEtapeDocumentPopup = caminoDefineComponent<Props>(['close', 'api
     />
   )
 })
+
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+AddEtapeDocumentPopup.props = ['close', 'apiClient', 'documentTypeIds', 'user', 'initialDocument']

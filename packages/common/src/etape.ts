@@ -1,8 +1,8 @@
-import { CaminoDate } from './date.js'
+import { CaminoDate, caminoDateValidator } from './date.js'
 import { EntrepriseId } from './entreprise.js'
 import { EtapeHeritageProps, MappingHeritagePropsNameEtapePropsName } from './heritage.js'
 import { AdministrationId } from './static/administrations.js'
-import { documentTypeIdValidator } from './static/documentsTypes.js'
+import { DOCUMENTS_TYPES_IDS, documentTypeIdValidator } from './static/documentsTypes.js'
 import { EtapeStatutId, etapeStatutIdValidator } from './static/etapesStatuts.js'
 import { EtapeTypeId, etapeTypeIdValidator } from './static/etapesTypes.js'
 import { SubstanceLegaleId } from './static/substancesLegales.js'
@@ -16,6 +16,7 @@ import { DeepReadonly } from './typescript-tools.js'
 import { getSections } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { DemarcheTypeId } from './static/demarchesTypes.js'
 import { TitreTypeId } from './static/titresTypes.js'
+import { User, isEntrepriseOrBureauDEtude } from './roles.js'
 
 export const etapeIdValidator = z.string().brand<'EtapeId'>()
 export type EtapeId = z.infer<typeof etapeIdValidator>
@@ -89,6 +90,36 @@ export const etapeDocumentValidator = z.object({
 
 export type EtapeDocument = z.infer<typeof etapeDocumentValidator>
 
+const documentComplementaireObligatoireCommon = z.object({
+  date: caminoDateValidator,
+  etapeStatutId: etapeStatutIdValidator,
+})
+export const documentTypeIdComplementaireObligatoireDAE = DOCUMENTS_TYPES_IDS.arretePrefectoral
+
+export const documentComplementaireObligatoireDAEValidator = documentComplementaireObligatoireCommon.extend({
+  etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireDAE),
+  arretePrefectoral: z.string()
+})
+
+export const documentTypeIdComplementaireObligatoireASL = DOCUMENTS_TYPES_IDS.lettre
+export const documentComplementaireObligatoireASLValidator = documentComplementaireObligatoireCommon.extend({
+  etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireASL),
+})
+
+export const getEtapeDocumentsByEtapeIdValidator =  z.object({etapeDocuments: z.array(etapeDocumentValidator), dae: etapeDocumentValidator.and(documentComplementaireObligatoireDAEValidator).nullable(), asl: etapeDocumentValidator.and(documentComplementaireObligatoireASLValidator).nullable() })
+
+export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
+
+
+export const needAslAndDae = (tde: {
+  etapeTypeId: EtapeTypeId
+  demarcheTypeId: DemarcheTypeId
+  titreTypeId: TitreTypeId
+},
+etapeStatutId: EtapeStatutId, user: User): boolean => {
+  return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && etapeStatutId === 'aco'
+}
+
 export const tempEtapeDocumentValidator = etapeDocumentValidator.omit({ id: true }).extend({ temp_document_name: tempDocumentNameValidator })
 export type TempEtapeDocument = z.infer<typeof tempEtapeDocumentValidator>
 
@@ -96,6 +127,9 @@ const etapeDocumentWithFileModificationValidator = etapeDocumentValidator.extend
 export type EtapeDocumentWithFileModification = z.infer<typeof etapeDocumentWithFileModificationValidator>
 export const etapeDocumentModificationValidator = z.union([etapeDocumentWithFileModificationValidator, tempEtapeDocumentValidator])
 export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>
+
+export const documentComplementaireDaeEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireDAEValidator)
+export type DocumentComplementaireDaeEtapeDocumentModification =  z.infer<typeof documentComplementaireDaeEtapeDocumentModificationValidator>
 
 export const flattenEtapeWithHeritage = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etape: DeepReadonly<Etape>, heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>): DeepReadonly<EtapeWithHeritage> => {
 

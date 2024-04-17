@@ -1,4 +1,4 @@
-import { EtapeDocument, EtapeDocumentModification, EtapeId, TempEtapeDocument, etapeDocumentModificationValidator } from 'camino-common/src/etape'
+import { DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, EtapeDocumentModification, EtapeId, GetEtapeDocumentsByEtapeId, TempEtapeDocument, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, needAslAndDae } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -15,8 +15,8 @@ import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-eta
 import { getVisibilityLabel } from './etape-documents'
 import { AddEtapeDocumentPopup } from './add-etape-document-popup'
 import { User } from 'camino-common/src/roles'
-import { z } from 'zod'
 import { getDocumentsTypes } from 'camino-common/src/permissions/etape-form'
+import { AddEtapeDaeDocumentPopup } from './add-etape-dae-document-popup'
 
 interface Props {
   tde: {
@@ -24,9 +24,9 @@ interface Props {
     demarcheTypeId: DemarcheTypeId
     etapeTypeId: EtapeTypeId
   }
-  etapeStatutId: EtapeStatutId | null
+  etapeStatutId: EtapeStatutId
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
-  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => void
+  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
   contenu: DeepReadonly<{ arm?: { mecanise?: boolean } }>
@@ -35,12 +35,10 @@ interface Props {
 
 type WithIndex = { index: number }
 
+type EtapeDocumentModificationWithIndex = (EtapeDocumentModification & WithIndex)
 export const EtapeDocumentsEdit = defineComponent<Props>(props => {
-  const documentTypes = computed<DocumentType[]>(() => {
-    return getDocumentsTypes({contenu: props.contenu, typeId: props.tde.etapeTypeId}, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
-  })
-
-  const etapeDocuments = ref<AsyncData<(EtapeDocumentModification & WithIndex)[]>>({ status: 'LOADING' })
+  
+  const etapeDocuments = ref<AsyncData<GetEtapeDocumentsByEtapeId>>({ status: 'LOADING' })
 
   const loadEtapeDocuments = async () => {
     if (isNotNullNorUndefined(props.etapeId)) {
@@ -48,7 +46,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
       try {
         const result = await props.apiClient.getEtapeDocumentsByEtapeId(props.etapeId)
 
-        etapeDocuments.value = { status: 'LOADED', value: result.map((document, index) => ({ ...document, index })) }
+        etapeDocuments.value = { status: 'LOADED', value: result}
       } catch (e: any) {
         console.error('error', e)
         etapeDocuments.value = {
@@ -57,7 +55,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
         }
       }
     } else {
-      etapeDocuments.value = { status: 'LOADED', value: [] }
+      etapeDocuments.value = { status: 'LOADED', value: {etapeDocuments: [], asl: null, dae: null} }
     }
   }
 
@@ -65,134 +63,204 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
     await loadEtapeDocuments()
   })
 
-  const requiredDocuments = computed<PropsTable['documents']>(() => {
-    if (etapeDocuments.value.status === 'LOADED') {
-      return etapeDocuments.value.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && !dt.optionnel))
-    }
+  return () => (
+    <LoadingElement
+      data={etapeDocuments.value}
+      renderItem={items => (<EtapeDocumentsLoaded {...items} {...props} />)}
+    />
+  )
+})
 
-    return []
+type EtapeDocumentsLoadedProps = GetEtapeDocumentsByEtapeId & Props
+const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) => {
+
+  const daeDocument = ref<DocumentComplementaireDaeEtapeDocumentModification | null>(props.dae)
+  const aslDocument = ref<GetEtapeDocumentsByEtapeId['asl']>(props.asl)
+  const etapeDocuments = ref<EtapeDocumentModificationWithIndex[]>(props.etapeDocuments.map((document, index) => ({ ...document, index })))
+
+  watch(
+    () => [etapeDocuments.value, daeDocument.value],
+    () => {
+      props.completeUpdate(etapeDocuments.value, daeDocument.value)
+    },
+    { deep: true }
+  )
+
+  const addOrEditPopupOpen = ref<{ open: true; documentTypeIds: NonEmptyArray<DocumentTypeId>; document?: (EtapeDocument | TempEtapeDocument) & WithIndex } | { open: false }>({ open: false })
+
+  const addOrEditDaePopupOpen = ref<boolean>(false)
+
+
+  const documentTypes = computed<DocumentType[]>(() => {
+    return getDocumentsTypes({contenu: props.contenu, typeId: props.tde.etapeTypeId}, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
   })
 
+  const needAslAndDaeCompute = computed<boolean>(() => {
+    return needAslAndDae(props.tde, props.etapeStatutId, props.user)
+  })
+
+
+  const completeRequiredDocuments = computed<PropsTable['documents']>(() => {
+    const documents: PropsTable['documents'] = etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && !dt.optionnel))
+
+    if (needAslAndDaeCompute.value) {
+      if (isNotNullNorUndefined(daeDocument.value)) {
+        // FIXME inline description
+        documents.push({...daeDocument.value, index: 'dae'})
+      }
+      // FIXME
+      // if (isNotNullNorUndefined(aslDocument.value)) {
+      //   documents.push({...aslDocument.value, index: 'asl'})
+      // }
+    }
+    return documents
+
+  })
   const emptyRequiredDocuments = computed<DocumentTypeId[]>(() => {
-    return documentTypes.value.filter(({ optionnel, id }) => !optionnel && !requiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id)).map(({ id }) => id)
+    const documents = documentTypes.value.filter(({ optionnel, id }) => !optionnel && !completeRequiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id)).map(({ id }) => id)
+
+    if (needAslAndDaeCompute.value) {
+      if (isNullOrUndefined(daeDocument.value)) {
+        documents.push(documentTypeIdComplementaireObligatoireDAE)
+      }
+      if (isNullOrUndefined(aslDocument.value)) {
+        documents.push(documentTypeIdComplementaireObligatoireASL)
+      }
+    }
+
+    return documents
   })
   const additionnalDocumentTypeIds = computed<DocumentTypeId[]>(() => {
     return documentTypes.value.filter(dt => dt.optionnel).map(({ id }) => id)
   })
 
   const additionnalDocuments = computed<PropsTable['documents']>(() => {
-    if (etapeDocuments.value.status === 'LOADED') {
-      return etapeDocuments.value.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && dt.optionnel))
-    }
+      return etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && dt.optionnel))
 
-    return []
   })
-
-  const addOrEditPopupOpen = ref<{ open: true; documentTypeIds: NonEmptyArray<DocumentTypeId>; document?: (EtapeDocument | TempEtapeDocument) & WithIndex } | { open: false }>({ open: false })
   const openAddPopupAdditionnalDocument = () => {
     if (isNonEmptyArray(additionnalDocumentTypeIds.value)) {
       addOrEditPopupOpen.value = { open: true, documentTypeIds: additionnalDocumentTypeIds.value }
     }
   }
   const closeAddPopup = (newDocument: EtapeDocumentModification | null) => {
-    if (newDocument !== null && addOrEditPopupOpen.value.open && etapeDocuments.value.status === 'LOADED') {
+    if (newDocument !== null && addOrEditPopupOpen.value.open) {
       const index = addOrEditPopupOpen.value.document?.index
       if (isNullOrUndefined(index)) {
-        etapeDocuments.value.value.push({ ...newDocument, index: etapeDocuments.value.value.length })
+        etapeDocuments.value.push({ ...newDocument, index: etapeDocuments.value.length })
       } else {
-        etapeDocuments.value.value[index] = { ...newDocument, index }
+        etapeDocuments.value[index] = { ...newDocument, index }
       }
     }
 
     addOrEditPopupOpen.value = { open: false }
   }
 
-  watch(
-    () => etapeDocuments.value,
-    () => {
-      if (etapeDocuments.value.status === 'LOADED') {
-        props.completeUpdate(z.array(etapeDocumentModificationValidator).parse(etapeDocuments.value.value))
-      }
-    },
-    { deep: true }
-  )
+  const closeAddDaePopup = (newDocument: DocumentComplementaireDaeEtapeDocumentModification | null) => {
+    if (newDocument !== null) {
+      daeDocument.value = newDocument
+    }
+
+    addOrEditDaePopupOpen.value = false
+  }
 
   const addDocument = (documentTypeId: DocumentTypeId) => {
-    addOrEditPopupOpen.value = { open: true, documentTypeIds: [documentTypeId] }
-  }
-  const editDocument = (document: (EtapeDocument | TempEtapeDocument) & WithIndex) => {
-    addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
-  }
-  const removeDocument = (document: (EtapeDocument | TempEtapeDocument) & WithIndex) => {
-    if (etapeDocuments.value.status === 'LOADED') {
-      etapeDocuments.value.value.splice(document.index, 1)
+    if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
+      addOrEditDaePopupOpen.value = true
+      // FIXME ASL
+    } else {
+      addOrEditPopupOpen.value = { open: true, documentTypeIds: [documentTypeId] }
     }
   }
-
-  return () => (
-    <LoadingElement
-      data={etapeDocuments.value}
-      renderItem={_items => (
-        <>
-          {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(requiredDocuments.value) ? (
-            <EtapeDocumentsTable
-              add={addDocument}
-              edit={editDocument}
-              delete={removeDocument}
-              caption="Documents obligatoires"
-              emptyRequiredDocuments={emptyRequiredDocuments.value}
-              documents={requiredDocuments.value}
-              etapeStatutId={props.etapeStatutId}
-            />
-          ) : null}
-
-          {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
-            <>
-              <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
-                <EtapeDocumentsTable
-                  add={addDocument}
-                  edit={editDocument}
-                  delete={removeDocument}
-                  caption="Documents complémentaires"
-                  emptyRequiredDocuments={[]}
-                  documents={additionnalDocuments.value}
-                  etapeStatutId={props.etapeStatutId}
-                />
-                <DsfrButtonIcon
-                  style={{ alignSelf: 'end' }}
-                  class="fr-mt-1w"
-                  icon="fr-icon-add-line"
-                  buttonType="secondary"
-                  title="Ajouter un document complémentaire"
-                  label="Ajouter"
-                  onClick={openAddPopupAdditionnalDocument}
-                />
-              </div>
-              {addOrEditPopupOpen.value.open ? (
-                <AddEtapeDocumentPopup
-                  documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
-                  apiClient={props.apiClient}
-                  close={closeAddPopup}
-                  user={props.user}
-                  initialDocument={addOrEditPopupOpen.value.document}
-                />
-              ) : null}
-            </>
-          ) : null}
-        </>
-      )}
+  const editDocument = (documentIndex: number | 'asl' | 'dae') => {
+    console.log('documentIndex', documentIndex)
+    switch (documentIndex) {
+      case 'asl':
+        // FIXME
+      case 'dae':
+        addOrEditDaePopupOpen.value = true
+        break
+      default:
+        const document = etapeDocuments.value[documentIndex]
+        addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
+    }
+    
+  }
+  const removeDocument = (documentIndex: number| 'asl' | 'dae') => {
+    switch (documentIndex) {
+      case 'asl':
+      case 'dae':
+        // FIXME
+        break
+      default:
+        etapeDocuments.value.splice(documentIndex, 1)
+    }
+      
+  }
+  return () => <>
+  {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(completeRequiredDocuments.value) ? (
+    <EtapeDocumentsTable
+      add={addDocument}
+      edit={editDocument}
+      delete={removeDocument}
+      caption="Documents obligatoires"
+      emptyRequiredDocuments={emptyRequiredDocuments.value}
+      documents={completeRequiredDocuments.value}
+      etapeStatutId={props.etapeStatutId}
     />
-  )
+  ) : null}
+
+  {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
+    <>
+      <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
+        <EtapeDocumentsTable
+          add={addDocument}
+          edit={editDocument}
+          delete={removeDocument}
+          caption="Documents complémentaires"
+          emptyRequiredDocuments={[]}
+          documents={additionnalDocuments.value}
+          etapeStatutId={props.etapeStatutId}
+        />
+        <DsfrButtonIcon
+          style={{ alignSelf: 'end' }}
+          class="fr-mt-1w"
+          icon="fr-icon-add-line"
+          buttonType="secondary"
+          title="Ajouter un document complémentaire"
+          label="Ajouter"
+          onClick={openAddPopupAdditionnalDocument}
+        />
+      </div>
+      {addOrEditPopupOpen.value.open ? (
+        <AddEtapeDocumentPopup
+          documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
+          apiClient={props.apiClient}
+          close={closeAddPopup}
+          user={props.user}
+          initialDocument={addOrEditPopupOpen.value.document}
+        />
+      ) : null}
+      {addOrEditDaePopupOpen.value ? (
+        <AddEtapeDaeDocumentPopup
+          apiClient={props.apiClient}
+          close={closeAddDaePopup}
+          initialDocument={daeDocument.value}
+        />
+      ) : null}
+    </>
+  ) : null}
+</>
 })
 
 type PropsTable = {
   caption: string
-  documents: ((EtapeDocument | TempEtapeDocument) & WithIndex)[]
+  documents: ((EtapeDocument | TempEtapeDocument) & {index: number | 'asl' | 'dae'})[]
   etapeStatutId: EtapeStatutId | null
   emptyRequiredDocuments: DocumentTypeId[]
   add: (documentTypeId: DocumentTypeId) => void
-  edit: (document: (EtapeDocument | TempEtapeDocument) & WithIndex) => void
-  delete: (document: (EtapeDocument | TempEtapeDocument) & WithIndex) => void
+  edit: (documentIndex: number | 'asl' | 'dae') => void
+  delete: (documentIndex: number | 'asl' | 'dae') => void
 }
 const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable) => {
   return (
@@ -219,7 +287,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
                 <DsfrButtonIcon
                   icon="fr-icon-edit-line"
                   title={`Modifier le document de ${DocumentsTypes[document.etape_document_type_id].nom}`}
-                  onClick={() => props.edit(document)}
+                  onClick={() => props.edit(document.index)}
                   buttonType="secondary"
                   buttonSize="sm"
                 />
@@ -228,7 +296,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
                     icon="fr-icon-delete-bin-line"
                     class="fr-ml-1w"
                     title={`Supprimer le document de ${DocumentsTypes[document.etape_document_type_id].nom}`}
-                    onClick={() => props.delete(document)}
+                    onClick={() => props.delete(document.index)}
                     buttonType="secondary"
                     buttonSize="sm"
                   />
@@ -260,3 +328,5 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
 EtapeDocumentsEdit.props = ['tde', 'completeUpdate', 'etapeId', 'apiClient', 'sdomZoneIds', 'contenu', 'etapeStatutId', 'user']
+// @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
+EtapeDocumentsLoaded.props = ['tde', 'completeUpdate', 'etapeId', 'apiClient', 'sdomZoneIds', 'contenu', 'etapeStatutId', 'user', 'asl', 'dae', 'etapeDocuments']

@@ -7,6 +7,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Etape/Document/Ajout',
+  // @ts-ignore
   component: AddEtapeDocumentPopup,
 }
 export default meta

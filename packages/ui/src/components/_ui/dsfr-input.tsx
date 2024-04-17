@@ -62,7 +62,9 @@ export const DsfrInput = caminoDefineComponent<Props>(['id', 'initialValue', 'va
         props.valueChanged(isNaN(valueAsNumber) ? null : valueAsNumber)
       } else if (isDateProps(props)) {
         const dateParsed = caminoDateValidator.safeParse(e.target.value)
-        props.valueChanged(dateParsed.success ? dateParsed.data : null)
+        const newValue = dateParsed.success ? dateParsed.data : null
+        value.value = newValue
+        props.valueChanged(newValue)
       }
     }
   }

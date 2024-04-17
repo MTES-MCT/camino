@@ -290,6 +290,7 @@ const EtapeEditFormInternal = defineComponent<
     return flattenEtapeWithHeritage(props.titreTypeId, props.demarcheTypeId, props.etape, props.etape)
   })
 
+  // FIXME continuer à remonter le daeDocument
   const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[]) => {
     props.setEtape(etapeFlattened.value, etapeDocuments, props.entrepriseDocuments)
   }

@@ -240,11 +240,3 @@ export const EtapeModification: StoryFn = () => (
     goToDemarche={goToDemarcheAction}
   />
 )
-
-// FIXME tests avec
-// - heritageContenu
-// - avec aide (arm/axm)
-// - étape en construction
-// - avec du sdom
-// - avec une arm mécanisé
-// - demande AXM d'une entreprise (avec les 3 étapes imbriquées)

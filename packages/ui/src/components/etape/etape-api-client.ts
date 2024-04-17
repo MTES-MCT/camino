@@ -4,7 +4,7 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeDocument, EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
 import {
   featureCollectionForagesValidator,
@@ -161,7 +161,7 @@ export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
-  getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
+  getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<GetEtapeDocumentsByEtapeId>
   getEtapeHeritagePotentiel: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
