@@ -206,13 +206,13 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                     if (item.raw.titresInstructionExploration > 1) {
                       return (
                         <div>
-                          <p class="bold text-center">Demandes en cours d'instruction (initiale et modification en instance)</p>
+                          <p class="bold text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     } else {
                       return (
                         <div>
-                          <p class="bold text-center">Demande en cours d'instruction (initiale et modification en instance)</p>
+                          <p class="bold text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     }
@@ -225,7 +225,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                       query: {
                         domainesIds: 'w',
                         typesIds: 'ar,ap,pr',
-                        statutsIds: 'dmi,mod',
+                        statutsIds: 'dmi,mod,sup',
                         vueId: 'table',
                       },
                     }}
@@ -277,13 +277,13 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                     if (item.raw.titresInstructionExploitation > 1) {
                       return (
                         <div>
-                          <p class="bold text-center">Demandes en cours d'instruction (initiale et modification en instance)</p>
+                          <p class="bold text-center">Demandes en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     } else {
                       return (
                         <div>
-                          <p class="bold text-center">Demande en cours d'instruction (initiale et modification en instance)</p>
+                          <p class="bold text-center">Demande en cours d'instruction (initiale, modification en instance et survie provisoire)</p>
                         </div>
                       )
                     }
@@ -297,7 +297,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                       query: {
                         domainesIds: 'w',
                         typesIds: 'ax,cx,px',
-                        statutsIds: 'dmi,mod',
+                        statutsIds: 'dmi,mod,sup',
                         vueId: 'table',
                       },
                     }}
@@ -388,6 +388,7 @@ export const PureGranulatsMarins = caminoDefineComponent<Props>(['currentDate', 
                 enConstruction: id === anneeCurrent - 1, // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
               }
             })
+
             // TODO 2023-09-13 utiliser le dsfrSelect un fois la PR https://github.com/MTES-MCT/camino/pull/635 mergée
             return (
               <>
