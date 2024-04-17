@@ -13,8 +13,8 @@ import { communeIdValidator } from 'camino-common/src/static/communes.js'
 import { secteurDbIdValidator } from 'camino-common/src/static/facades.js'
 import { foretIdValidator } from 'camino-common/src/static/forets.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 import { KM2, km2Validator, m2Validator } from 'camino-common/src/number.js'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools.js'
 
 export const convertPoints = async <T extends z.ZodTypeAny>(
   pool: Pool,

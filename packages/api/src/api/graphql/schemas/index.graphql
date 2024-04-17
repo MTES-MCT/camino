@@ -82,7 +82,7 @@ type Query {
   "Étape d’une démarche en fonction de son id"
   etape(id: ID!): Etape
 
-  etapeHeritage(date: String!, titreDemarcheId: ID!, typeId: ID!): EtapeHeritage
+  etapeHeritage(date: String!, titreDemarcheId: ID!, typeId: ID!, etapeId: ID): EtapeHeritage
 
   "Liste des activités"
   activites(

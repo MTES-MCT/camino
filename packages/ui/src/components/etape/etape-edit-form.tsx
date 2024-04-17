@@ -88,12 +88,11 @@ export const EtapeEditForm = defineComponent<Props>(props => {
     }
   })
 
-  const reloadHeritage = async (demarcheId: DemarcheId, etape: Pick<Etape, 'date' | 'typeId' | 'statutId'>) => {
+  const reloadHeritage = async (demarcheId: DemarcheId, etape: Pick<Etape, 'date' | 'typeId' | 'statutId' | 'id'>) => {
     if (isNotNullNorUndefined(etape.date) && isNotNullNorUndefined(etape.typeId) && isNotNullNorUndefined(etape.statutId)) {
       try {
-        //FIXME on récupère le mauvais héritage en modification
         heritageData.value = { status: 'LOADING' }
-        const value = await props.apiClient.getEtapeHeritagePotentiel(demarcheId, etape.date, etape.typeId)
+        const value = await props.apiClient.getEtapeHeritagePotentiel(demarcheId, etape.date, etape.typeId, etape.id)
         const heritageComplete = { ...value, date: etape.date, typeId: etape.typeId, statutId: etape.statutId }
         setHeritage(heritageComplete)
         heritageData.value = { status: 'LOADED', value: heritageComplete }

@@ -20,10 +20,11 @@ import { substanceLegaleIdValidator } from 'camino-common/src/static/substancesL
 import { titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { DeepReadonly } from 'camino-common/src/typescript-tools'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
+import { nullToDefault } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
 import { z } from 'zod'
 
-const contenuValidator = z.record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable()))
+const contenuValidator = z.record(z.string(), z.record(z.string(), z.union([caminoDateValidator, z.string(), z.number(), z.boolean(), z.array(z.string())]).nullable())).nullable().transform(nullToDefault({}))
 const dureeValidator = z.number().nullable()
 const entrepriseValidator = z.array(
   z.object({
@@ -31,6 +32,16 @@ const entrepriseValidator = z.array(
     operateur: z.boolean().nullable(),
   })
 )
+
+const defaultHeritageProps = {
+  dateDebut: {actif: false},
+dateFin: {actif: false},
+duree: {actif: false},
+perimetre: {actif: false},
+substances: {actif: false},
+titulaires: {actif: false},
+amodiataires: {actif: false}
+}
 const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -67,12 +78,12 @@ const graphqlEtapeValidator = z.object({
   contenu: contenuValidator,
   notes: z.string().nullable(),
   heritageProps: z.object({
-    duree: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator})}),
-    dateDebut: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable()})}),
-    dateFin: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable()})}),
-    substances: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator)})}),
-    titulaires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator})}),
-    amodiataires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator})}),
+    duree: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator}).nullable()}),
+    dateDebut: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable()}).nullable()}),
+    dateFin: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable()}).nullable()}),
+    substances: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator)}).nullable()}),
+    titulaires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator}).nullable()}),
+    amodiataires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator}).nullable()}),
     perimetre: z.object({ actif: z.boolean(), etape: z.object({
       typeId: etapeTypeIdValidator, date: caminoDateValidator,
       geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
@@ -83,9 +94,9 @@ const graphqlEtapeValidator = z.object({
       geojson4326Forages: featureCollectionForagesValidator.nullable(),
       geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
       surface: km2Validator.nullable(),
-    })})
-  }).nullable(),
-  heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator}).nullable()}))).nullable() ,
+    }).nullable()})
+  }).nullable().transform(nullToDefault(defaultHeritageProps)),
+  heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator}).nullable().optional()}))).nullable().transform(nullToDefault({})) ,
 })
 
 export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
@@ -151,7 +162,7 @@ export interface EtapeApiClient {
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>
   deposeEtape: (titreEtapeId: EtapeId) => Promise<void>
   getEtapeDocumentsByEtapeId: (etapeId: EtapeId) => Promise<EtapeDocument[]>
-  getEtapeHeritagePotentiel: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
+  getEtapeHeritagePotentiel: (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => Promise<DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu'>>>
   getEtape: (etapeIdOrSlug: EtapeIdOrSlug) => Promise<DeepReadonly<GraphqlEtape>>
   etapeCreer: (etape: DeepReadonly<GraphqlEtapeCreation>) => Promise<EtapeId>
   etapeModifier: (etape: DeepReadonly<GraphqlEtapeModification>) => Promise<EtapeId>
@@ -296,10 +307,10 @@ export const etapeApiClient: EtapeApiClient = {
     console.log(result.error.message)
     return graphqlEtapeValidator.parse(data)
   },
-  getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) => {
+  getEtapeHeritagePotentiel: async (titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId, etapeId: EtapeId | null) => {
     const data = await apiGraphQLFetch(gql`
-      query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!) {
-        etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId) {
+      query EtapeHeritage($titreDemarcheId: ID!, $date: String!, $typeId: ID!, $etapeId: ID) {
+        etapeHeritage(titreDemarcheId: $titreDemarcheId, date: $date, typeId: $typeId, etapeId: $etapeId) {
           heritageProps {
             dateDebut {
               etape {
@@ -379,6 +390,7 @@ export const etapeApiClient: EtapeApiClient = {
       titreDemarcheId,
       date,
       typeId,
+      etapeId
     })
     return data
   },

@@ -121,7 +121,7 @@ const etape = async ({ id }: { id: EtapeId }, { user }: Context, info: GraphQLRe
   }
 }
 
-const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId }, { user }: Context) => {
+const etapeHeritage = async ({ date, titreDemarcheId, typeId, etapeId }: { date: CaminoDate; titreDemarcheId: DemarcheId; typeId: EtapeTypeId; etapeId: EtapeId | null }, { user }: Context) => {
   try {
     let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
@@ -141,7 +141,7 @@ const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: CaminoDa
       userSuper
     )
 
-    const titreEtape = titreEtapeHeritageBuild(date, typeId, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
+    const titreEtape = titreEtapeHeritageBuild(date, typeId, titreDemarche!, titreDemarche!.titre!.typeId, titreDemarche!.typeId, etapeId)
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
       throw new Error(`le type du titre de l'étape ${titreEtape.id} n'est pas chargé`)

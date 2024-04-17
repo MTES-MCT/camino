@@ -41,6 +41,7 @@ export const EtapeEdition = defineComponent(() => {
       {isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value) ? (
         <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} goToDemarche={goToDemarche} />
       ) : (
+        // FIXME utiliser CaminoAccessError
         <Alert small={true} title="Erreur lors du chargement, la page est introuvable" type="error" />
       )}
     </>
@@ -100,15 +101,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
         }
 
         const perimetre = await props.apiClient.getPerimetreInfosByEtapeId(etape.id)
-        setAsyncData({ status: 'LOADED', value: { etape: {...etape, heritageProps: etape.heritageProps ?? {
-          dateDebut: {actif: false},
-  dateFin: {actif: false},
-  duree: {actif: false},
-  perimetre: {actif: false},
-  substances: {actif: false},
-  titulaires: {actif: false},
-  amodiataires: {actif: false}
-        }, heritageContenu: etape.heritageContenu ?? {}}, demarche, perimetre } })
+        setAsyncData({ status: 'LOADED', value: { etape, demarche, perimetre } })
       } else if (isNotNullNorUndefined(props.demarcheIdOrSlug)) {
         const demarche = await props.apiClient.getDemarcheByIdOrSlug(props.demarcheIdOrSlug)
         const perimetre = await props.apiClient.getPerimetreInfosByDemarcheId(demarche.demarche_id)

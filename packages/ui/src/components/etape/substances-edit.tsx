@@ -4,7 +4,7 @@ import { DeepReadonly, computed, watch } from 'vue'
 import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrButtonIcon } from '../_ui/dsfr-button'
 import { SubstanceLegaleTypeahead } from '../_common/substance-legale-typeahead'
 import { DsfrTag } from '../_ui/tag'
@@ -18,7 +18,7 @@ export type Props = {
   updateHeritage: (subtances: Props['heritageSubstances']) => void
 }
 export const SubstancesEdit = caminoDefineComponent<Props>(['substances', 'heritageSubstances', 'domaineId', 'updateSubstances', 'updateHeritage'], props => {
-  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<(SubstanceLegaleId | undefined)[]>>(props.substances)
+  const [editedSubstances, setEditedSubstances] = useState<DeepReadonly<(SubstanceLegaleId | undefined)[]>>(isNullOrUndefinedOrEmpty(props.substances) ? [undefined] : props.substances)
   const [heritageActif, setHeritageActif] = useState<Props['heritageSubstances']>(props.heritageSubstances)
 
   const substancesLength = computed<number>(() => editedSubstances.value.filter(substanceId => substanceId).length)

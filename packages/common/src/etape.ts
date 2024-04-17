@@ -26,7 +26,7 @@ export type EtapeSlug = z.infer<typeof etapeSlugValidator>
 export const etapeIdOrSlugValidator = z.union([etapeIdValidator, etapeSlugValidator])
 export type EtapeIdOrSlug = z.infer<typeof etapeIdOrSlugValidator>
 
-export type HeritageProp<T> = { actif: boolean; etape?: T }
+export type HeritageProp<T> = { actif: boolean; etape?: T | null }
 
 export interface EtapeEntreprise {
   id: EntrepriseId

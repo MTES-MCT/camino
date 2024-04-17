@@ -153,6 +153,9 @@ type IsEtapeCompleteEtape = {
   substances?: null | SubstanceLegaleId[]
   duree?: number | null
 }
+
+
+    // TODO 2024-04-17 utiliser toutes les stepIsComplete 
 export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
