@@ -100,6 +100,8 @@ export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithH
 
       return isNotNullNorUndefined(daeDocument) && isNotNullNorUndefined(aslDocument)
     }
+
+    return true
   }
 
   return false

@@ -145,7 +145,9 @@ const getEtapeDataForEditionValidator = z.object({
   titre_public_lecture: z.boolean(),
 })
 
-const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, z.infer<typeof getEtapeDataForEditionValidator>>>`
+export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
+
+const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, GetEtapeDataForEdition >>`
 select
     te.type_id as etape_type_id,
     te.statut_id as etape_statut_id,
@@ -228,5 +230,5 @@ export const  getEtapeByDemarcheIdAndEtapeTypeId = async (pool: Pool, etapeTypeI
 }
 
 const getEtapeByDemarcheIdAndEtapeTypeIdDb = sql<Redefine<IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery, {etapeTypeId: EtapeTypeId, demarcheId: DemarcheId}, EtapeByDemarcheIdAndEtapeTypeId>>`
-select te.id as etape_id, te.statut_id as etape_statut_id, te.date, te.contenu from titres_etapes te where te.type_id = $etapeTypeId! and te.titre_demarche_id = $demarcheId!
+select te.id as etape_id, te.statut_id as etape_statut_id, te.date, te.contenu from titres_etapes te where te.type_id = $etapeTypeId! and te.titre_demarche_id = $demarcheId! and te.archive is false
 `

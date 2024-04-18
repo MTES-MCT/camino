@@ -262,7 +262,7 @@ const etapeCreer = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: un
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, null, null)
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
@@ -479,7 +479,7 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
 
     etape = { ...etape, ...(await getForagesProperties(titreTypeId, etape.geojsonOrigineGeoSystemeId, etape.geojsonOrigineForages, context.pool)) }
 
-    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, titreEtapeOld)
+    const rulesErrors = titreEtapeUpdationValidate(etape, titreDemarche, titreDemarche.titre, etapeDocuments, entrepriseDocuments, sdomZones, user, daeDocument, aslDocument, titreEtapeOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

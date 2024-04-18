@@ -110,7 +110,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
         documents.push({...daeDocument.value, index: 'dae', description: `${daeDocument.value.description}
 - Statut : ${EtapesStatuts[daeDocument.value.etape_statut_id].nom}
 - Date : ${dateFormat(daeDocument.value.date)}
-- Arrêté : ${daeDocument.value.arrete_prefectoral}
+- Arrêté : ${daeDocument.value.arrete_prefectoral ?? ''}
 `,
 })
       }
@@ -197,9 +197,10 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
       case 'dae':
         addOrEditDaePopupOpen.value = true
         break
-      default:
+      default:{
         const document = etapeDocuments.value[documentIndex]
         addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
+      }
     }
 
   }

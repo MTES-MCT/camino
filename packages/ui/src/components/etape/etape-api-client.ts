@@ -42,6 +42,33 @@ substances: {actif: false},
 titulaires: {actif: false},
 amodiataires: {actif: false}
 }
+
+const heritagePropsValidator = z.object({
+  duree: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator}).nullable()}),
+  dateDebut: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable()}).nullable()}),
+  dateFin: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable()}).nullable()}),
+  substances: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator)}).nullable()}),
+  titulaires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator}).nullable()}),
+  amodiataires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator}).nullable()}),
+  perimetre: z.object({ actif: z.boolean(), etape: z.object({
+    typeId: etapeTypeIdValidator, date: caminoDateValidator,
+    geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
+    geojson4326Points: featureCollectionPointsValidator.nullable(),
+    geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
+    geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
+    geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
+    geojson4326Forages: featureCollectionForagesValidator.nullable(),
+    geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
+    surface: km2Validator.nullable(),
+  }).nullable()})
+}).nullable().transform(nullToDefault(defaultHeritageProps))
+
+
+const heritageContenuValidator = z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator}).nullable().optional()}))).nullable().transform(nullToDefault({}))
+const heritageValidator = z.object({
+  heritageProps: heritagePropsValidator,
+  heritageContenu: heritageContenuValidator
+})
 const graphqlEtapeValidator = z.object({
   id: etapeIdValidator,
   slug: etapeSlugValidator,
@@ -77,26 +104,8 @@ const graphqlEtapeValidator = z.object({
   // Record<string, Record<string, ElementWithValue['value']>>
   contenu: contenuValidator,
   notes: z.string().nullable(),
-  heritageProps: z.object({
-    duree: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, duree: dureeValidator}).nullable()}),
-    dateDebut: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateDebut: caminoDateValidator.nullable()}).nullable()}),
-    dateFin: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, dateFin: caminoDateValidator.nullable()}).nullable()}),
-    substances: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, substances: z.array(substanceLegaleIdValidator)}).nullable()}),
-    titulaires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, titulaires: entrepriseValidator}).nullable()}),
-    amodiataires: z.object({ actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, amodiataires: entrepriseValidator}).nullable()}),
-    perimetre: z.object({ actif: z.boolean(), etape: z.object({
-      typeId: etapeTypeIdValidator, date: caminoDateValidator,
-      geojson4326Perimetre: featureMultiPolygonValidator.nullable(),
-      geojson4326Points: featureCollectionPointsValidator.nullable(),
-      geojsonOriginePoints: featureCollectionPointsValidator.nullable(),
-      geojsonOriginePerimetre: featureMultiPolygonValidator.nullable(),
-      geojsonOrigineGeoSystemeId: geoSystemeIdValidator.nullable(),
-      geojson4326Forages: featureCollectionForagesValidator.nullable(),
-      geojsonOrigineForages: featureCollectionForagesValidator.nullable(),
-      surface: km2Validator.nullable(),
-    }).nullable()})
-  }).nullable().transform(nullToDefault(defaultHeritageProps)),
-  heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean(), etape: z.object({typeId: etapeTypeIdValidator, date: caminoDateValidator, contenu: contenuValidator}).nullable().optional()}))).nullable().transform(nullToDefault({})) ,
+  heritageProps: heritagePropsValidator,
+  heritageContenu: heritageContenuValidator
 })
 
 export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
@@ -385,7 +394,7 @@ export const etapeApiClient: EtapeApiClient = {
       typeId,
       etapeId
     })
-    return data
+    return heritageValidator.parse(data)
   },
 
   etapeCreer: async etape => {

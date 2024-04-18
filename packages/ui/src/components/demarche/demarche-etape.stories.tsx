@@ -879,3 +879,51 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
     }}
   />
 )
+
+export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'axm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{ demarche_type_id: 'oct', titulaires: [], administrationsLocales: [], sdom_zones: [], etapes: [
+      {},
+      {}
+    ] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('entrepriseid1'), nom: 'nom entreprise'}] }}
+    router={routerPushMock}
+    apiClient={apiClient}
+    initTab="points"
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      notes: '',
+      etape_type_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+      date,
+
+      fondamentale: {
+        date_debut: null,
+        duree: null,
+        date_fin: null,
+        substances: [],
+        titulaires: [],
+        amodiataires: [],
+        perimetre: {
+          geojson4326_points: null,
+          geojson4326_perimetre: demandeAvecGrosseNote,
+          geojson_origine_geo_systeme_id: '4326',
+          geojson_origine_perimetre: demandeAvecGrosseNote,
+          geojson_origine_points: null,
+          geojson4326_forages: null,
+          geojson_origine_forages: null,
+          surface: 0,
+          communes: [],
+          sdom_zones: [],
+          forets: [],
+          secteurs_maritimes: [],
+        },
+      },
+      sections_with_values: [],
+      etape_documents: [],
+      entreprises_documents: [],
+    }}
+  />
+)

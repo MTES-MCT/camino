@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae, documentTypeIdComplementaireObligatoireDAE } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
@@ -16,16 +16,16 @@ import { CaminoMachines } from '../../business/rules-demarches/machines.js'
 import { titreEtapesSortAscByOrdre } from '../../business/utils/titre-etapes-sort.js'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { SimplePromiseFn, isNotNullNorUndefined, isNullOrUndefined, memoize, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getEtapesTDE, isTDEExist } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 import { Pool } from 'pg'
-import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
+import { EntrepriseId, EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { etapeSupprimer, statutIdAndDateGet } from '../graphql/resolvers/titres-etapes.js'
-import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
+import { GetEtapeDataForEdition, administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { objectClone } from '../../tools/index.js'
 import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
@@ -33,6 +33,9 @@ import { getGeojsonInformation } from './perimetre.queries.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
 import { valeurFind } from 'camino-common/src/sections.js'
 import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { CanReadDemarche } from './permissions/demarches.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -51,6 +54,85 @@ export const getEtapeEntrepriseDocuments =
         console.error(e)
       }
     }
+  }
+
+  const getDaeDocument = async(pool: Pool,
+    user: User,
+    titreTypeId: SimplePromiseFn<TitreTypeId>,
+    titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+    entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+    etapeData: GetEtapeDataForEdition) => {
+   
+      const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
+            if( isNotNullNorUndefined(daeEtape)){
+
+              const daeEtapeDocuments = await getDocumentsByEtapeId(daeEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+                demarche_type_id: etapeData.demarche_type_id,
+                entreprises_lecture: etapeData.demarche_entreprises_lecture,
+                public_lecture: etapeData.demarche_public_lecture,
+                titre_public_lecture: etapeData.titre_public_lecture,
+              })
+
+              const daeArreteDocument = daeEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === documentTypeIdComplementaireObligatoireDAE)
+              if( isNotNullNorUndefined(daeArreteDocument)){
+
+                const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, 'dae'), daeEtape.contenu)
+                const elementWithValue = getElementWithValue(sectionsWithValue, 'mea', 'arrete')
+                const arrete_prefectoral = isNotNullNorUndefined(elementWithValue) ? valeurFind(elementWithValue) : null
+
+                return {
+                  id: daeArreteDocument.id,
+                  date: daeEtape.date,
+                  etape_statut_id: daeEtape.etape_statut_id,
+                  arrete_prefectoral,
+                  description: daeArreteDocument.description,
+                  entreprises_lecture: daeArreteDocument.entreprises_lecture,
+                  public_lecture: daeArreteDocument.public_lecture,
+                  etape_document_type_id: documentTypeIdComplementaireObligatoireDAE
+                }
+              }
+           
+            }
+
+            return null
+  }
+
+  const getAslDocument = async(pool: Pool,
+    user: User,
+    titreTypeId: SimplePromiseFn<TitreTypeId>,
+    titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+    entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+    etapeData: GetEtapeDataForEdition): Promise<GetEtapeDocumentsByEtapeId['asl'] | null> => {
+   
+      const aslEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', etapeData.demarche_id)
+      if( isNotNullNorUndefined(aslEtape)){
+
+        const aslEtapeDocuments = await getDocumentsByEtapeId(aslEtape.etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+          demarche_type_id: etapeData.demarche_type_id,
+          entreprises_lecture: etapeData.demarche_entreprises_lecture,
+          public_lecture: etapeData.demarche_public_lecture,
+          titre_public_lecture: etapeData.titre_public_lecture,
+        })
+
+        const aslEtapeDocumentTypeId = 'let'
+
+        const aslLettreDocument = aslEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === aslEtapeDocumentTypeId)
+        if( isNotNullNorUndefined(aslLettreDocument)){
+
+          return {
+            id: aslLettreDocument.id,
+            date: aslEtape.date,
+            etape_statut_id: aslEtape.etape_statut_id,
+            description: aslLettreDocument.description,
+            entreprises_lecture: aslLettreDocument.entreprises_lecture,
+            public_lecture: aslLettreDocument.public_lecture,
+            etape_document_type_id: aslEtapeDocumentTypeId
+          }
+        }
+     
+      }
+
+            return null
   }
 
 export const getEtapeDocuments =
@@ -79,69 +161,8 @@ export const getEtapeDocuments =
         let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
         let asl: null | GetEtapeDocumentsByEtapeId['asl'] = null
         if( needAslAndDae({etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id}, etapeData.etape_statut_id, user)){ 
-        
-            const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
-            if( isNotNullNorUndefined(daeEtape)){
-
-              const daeEtapeDocuments = await getDocumentsByEtapeId(daeEtape.etape_id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-                demarche_type_id: etapeData.demarche_type_id,
-                entreprises_lecture: etapeData.demarche_entreprises_lecture,
-                public_lecture: etapeData.demarche_public_lecture,
-                titre_public_lecture: etapeData.titre_public_lecture,
-              })
-
-              const daeEtapeDocumentTypeId = 'arp'
-              const daeArreteDocument = daeEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === daeEtapeDocumentTypeId)
-              if( isNotNullNorUndefined(daeArreteDocument)){
-
-                const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, etapeData.etape_type_id), daeEtape.contenu)
-                const elementWithValue = getElementWithValue(sectionsWithValue, 'mae', 'arrete')
-                const arrete_prefectoral = isNotNullNorUndefined(elementWithValue) ? valeurFind(elementWithValue) : null
-
-                dae = {
-                  id: daeArreteDocument.id,
-                  date: daeEtape.date,
-                  etape_statut_id: daeEtape.etape_statut_id,
-                  arrete_prefectoral,
-                  description: daeArreteDocument.description,
-                  entreprises_lecture: daeArreteDocument.entreprises_lecture,
-                  public_lecture: daeArreteDocument.public_lecture,
-                  etape_document_type_id: daeEtapeDocumentTypeId
-                }
-              }
-           
-            }
-
-
-            const aslEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', etapeData.demarche_id)
-            if( isNotNullNorUndefined(aslEtape)){
-
-              const aslEtapeDocuments = await getDocumentsByEtapeId(aslEtape.etape_id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
-                demarche_type_id: etapeData.demarche_type_id,
-                entreprises_lecture: etapeData.demarche_entreprises_lecture,
-                public_lecture: etapeData.demarche_public_lecture,
-                titre_public_lecture: etapeData.titre_public_lecture,
-              })
-
-              const aslEtapeDocumentTypeId = 'let'
-
-              const aslLettreDocument = aslEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === aslEtapeDocumentTypeId)
-              if( isNotNullNorUndefined(aslLettreDocument)){
-
-                asl = {
-                  id: aslLettreDocument.id,
-                  date: aslEtape.date,
-                  etape_statut_id: aslEtape.etape_statut_id,
-                  description: aslLettreDocument.description,
-                  entreprises_lecture: aslLettreDocument.entreprises_lecture,
-                  public_lecture: aslLettreDocument.public_lecture,
-                  etape_document_type_id: aslEtapeDocumentTypeId
-                }
-              }
-           
-            }
-
-            
+            dae = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
+            asl = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData)
         }
 
         res.json({etapeDocuments: result, asl, dae})
@@ -227,6 +248,30 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
     })
 
     const entrepriseDocuments = await getEntrepriseDocumentIdsByEtapeId({ titre_etape_id: titreEtape.id }, pool, userSuper)
+
+    const daeDocument = await getDaeDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
+      demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+      demarche_public_lecture: titreDemarche.publicLecture ?? false,
+      demarche_id: titreDemarche.id,
+      demarche_type_id: titreDemarche.typeId,
+      etape_statut_id: titreEtape.statutId,
+      etape_type_id: titreEtape.typeId,
+      titre_public_lecture: titre.publicLecture ?? false,
+      titre_type_id: titre.typeId
+    })
+
+
+    const aslDocument = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
+      demarche_entreprises_lecture: titreDemarche.entreprisesLecture ?? false,
+      demarche_public_lecture: titreDemarche.publicLecture ?? false,
+      demarche_id: titreDemarche.id,
+      demarche_type_id: titreDemarche.typeId,
+      etape_statut_id: titreEtape.statutId,
+      etape_type_id: titreEtape.typeId,
+      titre_public_lecture: titre.publicLecture ?? false,
+      titre_type_id: titre.typeId
+    })
+
     // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
     const deposable = isEtapeDeposable(
       user,
@@ -235,7 +280,9 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       titreEtape,
       etapeDocuments,
       entrepriseDocuments,
-      sdomZones
+      sdomZones,
+      daeDocument,
+      aslDocument
     )
     if (!deposable) throw new Error('droits insuffisants')
 

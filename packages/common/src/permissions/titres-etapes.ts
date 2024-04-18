@@ -23,7 +23,7 @@ import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/d
 import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { SectionWithValue } from '../sections.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
-import { EtapeDocument } from '../etape.js'
+import { EtapeDocument, GetEtapeDocumentsByEtapeId, needAslAndDae } from '../etape.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -144,6 +144,7 @@ const canCreateOrEditEtape = (
 
 type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
+  statutId: EtapeStatutId
   /** 
    @deprecated use sectionsWithValue
   */
@@ -162,7 +163,10 @@ export const isEtapeComplete = (
   demarcheTypeId: DemarcheTypeId,
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined
+  sdomZones: SDOMZoneId[] | null | undefined,
+  daeDocument: Omit<GetEtapeDocumentsByEtapeId['dae'], 'id'> | null,
+  aslDocument: Omit<GetEtapeDocumentsByEtapeId['asl'], 'id'> | null,
+  user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
 
@@ -182,8 +186,15 @@ export const isEtapeComplete = (
     }
   }
 
+  if(needAslAndDae({etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId}, titreEtape.statutId, user)){
+    if( isNullOrUndefined(daeDocument)){
+      errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
+    }
+    if( isNullOrUndefined(aslDocument)){
+      errors.push('La lettre de décision du propriétaire du sol est obligatoire')
+    }
+  }
 
-  //FIXME
 
   const dts: DocumentType[] = [...documentsTypes]
   if (isNotNullNorUndefined(sdomZones)) {
@@ -266,10 +277,12 @@ export const isEtapeDeposable = (
     administrationsLocales: AdministrationId[]
   },
   demarcheTypeId: DemarcheTypeId,
-  titreEtape: IsEtapeCompleteEtape & { statutId: EtapeStatutId },
+  titreEtape: IsEtapeCompleteEtape,
   etapeDocuments: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
-  sdomZones: SDOMZoneId[] | null | undefined
+  sdomZones: SDOMZoneId[] | null | undefined,
+  daeDocument: GetEtapeDocumentsByEtapeId['dae'],
+  aslDocument: GetEtapeDocumentsByEtapeId['asl'],
 ): boolean => {
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION) {
     if (
@@ -284,7 +297,7 @@ export const isEtapeDeposable = (
         'modification'
       )
     ) {
-      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones)
+      const complete = isEtapeComplete(titreEtape, titre.typeId, demarcheTypeId, etapeDocuments, entrepriseDocuments, sdomZones, daeDocument, aslDocument, user)
       if (!complete.valid) {
         console.warn(complete.errors)
 
