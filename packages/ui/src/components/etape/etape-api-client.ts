@@ -4,7 +4,7 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, etapeDocumentIdValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentIdValidator, etapeDocumentModificationValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
 import {
   featureCollectionForagesValidator,
@@ -115,17 +115,6 @@ const graphqlInputHeritagePropsValidator = z.object({
   amodiataires: graphqlInputHeritagePropValidator
 })
 
-
-
-const graphqlInputEtapeDocumentValidator = z.object({
-  id: etapeDocumentIdValidator.optional(),
-  temp_document_name: tempDocumentNameValidator.optional(),
-  etape_document_type_id: documentTypeIdValidator,
-  description: z.string().nullable(),
-  public_lecture: z.boolean(),
-  entreprises_lecture: z.boolean()
-})
-
 const graphqlEtapeCreationValidator = graphqlEtapeValidator.pick({
   typeId: true,
   statutId: true,
@@ -148,14 +137,16 @@ const graphqlEtapeCreationValidator = graphqlEtapeValidator.pick({
   titreDemarcheId: demarcheIdValidator,
   heritageProps: graphqlInputHeritagePropsValidator,
   heritageContenu: z.record(z.string(), z.record(z.string(), z.object({actif: z.boolean()}))),
-  etapeDocuments: z.array(graphqlInputEtapeDocumentValidator),
-  entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
+  etapeDocuments: z.array(etapeDocumentModificationValidator),
+  entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator)
 }
 )
 
 export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
 
-const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({id: etapeIdValidator})
+const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
+  id: etapeIdValidator,
+  daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable()})
 export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>

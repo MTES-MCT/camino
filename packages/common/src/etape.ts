@@ -92,13 +92,13 @@ export type EtapeDocument = z.infer<typeof etapeDocumentValidator>
 
 const documentComplementaireObligatoireCommon = z.object({
   date: caminoDateValidator,
-  etapeStatutId: etapeStatutIdValidator,
+  etape_statut_id: etapeStatutIdValidator,
 })
 export const documentTypeIdComplementaireObligatoireDAE = DOCUMENTS_TYPES_IDS.arretePrefectoral
 
 export const documentComplementaireObligatoireDAEValidator = documentComplementaireObligatoireCommon.extend({
   etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireDAE),
-  arretePrefectoral: z.string()
+  arrete_prefectoral: z.string().nullable()
 })
 
 export const documentTypeIdComplementaireObligatoireASL = DOCUMENTS_TYPES_IDS.lettre

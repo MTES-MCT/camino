@@ -24,8 +24,8 @@ export const AddEtapeDaeDocumentPopup = defineComponent<Props>(props => {
   const etapeDocumentFile = ref<File | null>(null)
   const documentDescription = ref<string>(props.initialDocument?.description ?? '')
   const [documentDate, setDocumentDate] = useState(props.initialDocument?.date ?? null)
-  const [etapeStatutId, setEtapeStatutId] = useState(props.initialDocument?.etapeStatutId ?? null)
-  const [arretePrefectoral, setArretePrefectoral] = useState(props.initialDocument?.arretePrefectoral ?? null)
+  const [etapeStatutId, setEtapeStatutId] = useState(props.initialDocument?.etape_statut_id ?? null)
+  const [arretePrefectoral, setArretePrefectoral] = useState(props.initialDocument?.arrete_prefectoral ?? null)
   const tempDocumentName = ref<TempDocumentName | undefined>(
     isNotNullNorUndefined(props.initialDocument) && 'temp_document_name' in props.initialDocument ? props.initialDocument.temp_document_name : undefined
   )
@@ -39,7 +39,7 @@ export const AddEtapeDaeDocumentPopup = defineComponent<Props>(props => {
   const etapeStatutItems = computed(() => {
     const etapeStatus = getEtapesStatuts(ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_)
     if (isNonEmptyArray(etapeStatus)) {
-      
+
       return map(etapeStatus, ({id, nom}) => ({id, label: nom}))
     }
     throw new Error('cas impossible')
@@ -80,8 +80,8 @@ export const AddEtapeDaeDocumentPopup = defineComponent<Props>(props => {
     public_lecture: false,
     entreprises_lecture: true,
     date: documentDate.value,
-    etapeStatutId: etapeStatutId.value,
-    arretePrefectoral: arretePrefectoral.value    
+    etape_statut_id: etapeStatutId.value,
+    arrete_prefectoral: arretePrefectoral.value
   }))
 
   const canSave = computed<boolean>(() => {
@@ -92,7 +92,7 @@ export const AddEtapeDaeDocumentPopup = defineComponent<Props>(props => {
     <FunctionalPopup
       title={`${isNotNullNorUndefined(props.initialDocument) ? 'Éditer' : 'Ajouter'} '${DocumentsTypes[etapeDocumentTypeId].nom}' pour la décision de l'autorité environnementale`}
       content={content}
-    
+
       close={() => {
         props.close(null)
 

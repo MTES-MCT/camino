@@ -23,7 +23,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { EtapeId, etapeDocumentModificationValidator, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
+import { EtapeId, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentModificationValidator, needAslAndDae, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import {
   deleteTitreEtapeEntrepriseDocument,
@@ -43,6 +43,9 @@ import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { z } from 'zod'
 import { DemarcheId } from 'camino-common/src/demarche.js'
+import { titre } from '../../rest/index.js'
+import { getEtapesByDemarcheId } from '../../rest/demarches.queries.js'
+import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
 
 export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -342,7 +345,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown, daeDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -414,6 +417,24 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
 
     const etapeDocuments = etapeDocumentsParsed.data
     delete etape.etapeDocuments
+
+
+    const needToCreateAslAndDae = needAslAndDae({etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId}, etape.statutId, user)
+    let daeDocument = null
+    if( needToCreateAslAndDae){
+      const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.safeParse(etape.daeDocument)
+      if (!daeDocumentParsed.success) {
+        console.warn(daeDocumentParsed.error)
+        throw new Error('L’arrêté préfectoral n’est pas conforme')
+      }
+
+      daeDocument = daeDocumentParsed.data
+
+      //FIXME asl
+    }
+    delete etape.daeDocument
+
+
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
       if (isNotNullNorUndefined(etape.geojsonOriginePerimetre) && isNotNullNorUndefined(etape.geojsonOriginePoints)) {
@@ -475,6 +496,27 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     for (const document of entrepriseDocuments) {
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
+
+    if(needToCreateAslAndDae && daeDocument !== null){
+
+      const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'dae', titreDemarche.id)
+
+      const daeEtape = await titreEtapeUpsert({
+        id: daeEtapeInDb?.etape_id ?? undefined,
+        typeId: 'dae',
+        statutId: daeDocument.etape_statut_id,
+        titreDemarcheId: titreDemarche.id,
+        date: daeDocument.date,
+        contenu: {
+          mea:{ arrete: daeDocument.arrete_prefectoral}
+        },
+      }, user!, titreDemarche.titreId)
+
+        await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
+
+      //FIXME asl
+    }
+
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 

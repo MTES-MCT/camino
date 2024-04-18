@@ -10,6 +10,7 @@ export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, 
   try {
     const demarcheIdOrSlugParsed = demarcheIdOrSlugValidator.safeParse(req.params.demarcheIdOrSlug)
     const user = req.auth
+    // FIXME à revoir la vérif de l’accès à la démarche
     if (!isSuper(user)) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
     } else if (!demarcheIdOrSlugParsed.success) {

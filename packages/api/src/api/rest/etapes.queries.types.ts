@@ -28,7 +28,7 @@ export type IGetEtapeDocumentsDbParams = void;
 export interface IGetEtapeDocumentsDbResult {
   description: string | null;
   etape_document_type_id: string;
-  etape_id: string | null;
+  etape_id: string;
   id: string;
 }
 
@@ -46,7 +46,7 @@ export interface IGetLargeobjectIdByEtapeDocumentIdInternalParams {
 /** 'GetLargeobjectIdByEtapeDocumentIdInternal' return type */
 export interface IGetLargeobjectIdByEtapeDocumentIdInternalResult {
   entreprises_lecture: boolean;
-  etape_id: string | null;
+  etape_id: string;
   largeobject_id: number | null;
   public_lecture: boolean;
 }
@@ -65,8 +65,10 @@ export interface IGetEtapeDataForEditionDbParams {
 /** 'GetEtapeDataForEditionDb' return type */
 export interface IGetEtapeDataForEditionDbResult {
   demarche_entreprises_lecture: boolean;
+  demarche_id: string;
   demarche_public_lecture: boolean;
   demarche_type_id: string;
+  etape_statut_id: string;
   etape_type_id: string;
   titre_public_lecture: boolean;
   titre_type_id: string;
@@ -108,5 +110,25 @@ export interface IGetTitulairesAmodiatairesTitreEtapeResult {
 export interface IGetTitulairesAmodiatairesTitreEtapeQuery {
   params: IGetTitulairesAmodiatairesTitreEtapeParams;
   result: IGetTitulairesAmodiatairesTitreEtapeResult;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' parameters type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams {
+  demarcheId: string;
+  etapeTypeId: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' return type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult {
+  contenu: Json | null;
+  date: string;
+  etape_id: string;
+  etape_statut_id: string;
+}
+
+/** 'GetEtapeByDemarcheIdAndEtapeTypeIdDb' query type */
+export interface IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery {
+  params: IGetEtapeByDemarcheIdAndEtapeTypeIdDbParams;
+  result: IGetEtapeByDemarcheIdAndEtapeTypeIdDbResult;
 }
 

@@ -1,19 +1,20 @@
 /* eslint-disable no-restricted-syntax */
 import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
-import { etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
 import { Redefine, dbQueryAndValidate } from '../../pg-database.js'
 import { sql } from '@pgtyped/runtime'
 import {
   IGetAdministrationsLocalesByEtapeIdQuery,
+  IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery,
   IGetEtapeByIdDbQuery,
   IGetEtapeDataForEditionDbQuery,
   IGetEtapeDocumentsDbQuery,
   IGetLargeobjectIdByEtapeDocumentIdInternalQuery,
   IGetTitulairesAmodiatairesTitreEtapeQuery,
 } from './etapes.queries.types.js'
-import { demarcheIdValidator } from 'camino-common/src/demarche.js'
+import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { sdomZoneIdValidator } from 'camino-common/src/static/sdom.js'
 import { multiPolygonValidator } from 'camino-common/src/perimetre.js'
 import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
@@ -24,7 +25,10 @@ import { EntrepriseId, entrepriseIdValidator } from 'camino-common/src/entrepris
 import { User } from 'camino-common/src/roles.js'
 import { LargeObjectId, largeObjectIdValidator } from '../../database/largeobjects.js'
 import { canReadDocument } from './permissions/documents.js'
-import { memoize } from 'camino-common/src/typescript-tools.js'
+import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typescript-tools.js'
+import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
+import { caminoDateValidator } from 'camino-common/src/date.js'
+import { contenuValidator } from './activites.queries.js'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -132,6 +136,8 @@ export const getEtapeDataForEdition = async (pool: Pool, etapeId: EtapeId) => {
 
 const getEtapeDataForEditionValidator = z.object({
   etape_type_id: etapeTypeIdValidator,
+  demarche_id: demarcheIdValidator,
+  etape_statut_id: etapeStatutIdValidator,
   demarche_type_id: demarcheTypeIdValidator,
   titre_type_id: titreTypeIdValidator,
   demarche_public_lecture: z.boolean(),
@@ -142,6 +148,8 @@ const getEtapeDataForEditionValidator = z.object({
 const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, z.infer<typeof getEtapeDataForEditionValidator>>>`
 select
     te.type_id as etape_type_id,
+    te.statut_id as etape_statut_id,
+    te.titre_demarche_id as demarche_id,
     td.type_id as demarche_type_id,
     t.type_id as titre_type_id,
     td.public_lecture as demarche_public_lecture,
@@ -201,4 +209,24 @@ where
     te.id = $ etapeId !
     and (tt.entreprise_id = e.id
         or tta.entreprise_id = e.id)
+`
+
+const getEtapeByDemarcheIdAndEtapeTypeIdValidator = z.object({
+  etape_id: etapeIdValidator,
+  etape_statut_id: etapeStatutIdValidator,
+  date: caminoDateValidator,
+  contenu: contenuValidator.nullable()
+})
+type EtapeByDemarcheIdAndEtapeTypeId = z.infer<typeof getEtapeByDemarcheIdAndEtapeTypeIdValidator>
+export const  getEtapeByDemarcheIdAndEtapeTypeId = async (pool: Pool, etapeTypeId: EtapeTypeId, demarcheId: DemarcheId): Promise<EtapeByDemarcheIdAndEtapeTypeId | null> => {
+  const result = await dbQueryAndValidate(getEtapeByDemarcheIdAndEtapeTypeIdDb, {etapeTypeId, demarcheId}, pool, getEtapeByDemarcheIdAndEtapeTypeIdValidator)
+
+  if( isNotNullNorUndefinedNorEmpty(result)){
+    return result[0]
+  }
+  return null
+}
+
+const getEtapeByDemarcheIdAndEtapeTypeIdDb = sql<Redefine<IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery, {etapeTypeId: EtapeTypeId, demarcheId: DemarcheId}, EtapeByDemarcheIdAndEtapeTypeId>>`
+select te.id as etape_id, te.statut_id as etape_statut_id, te.date, te.contenu from titres_etapes te where te.type_id = $etapeTypeId! and te.titre_demarche_id = $demarcheId!
 `

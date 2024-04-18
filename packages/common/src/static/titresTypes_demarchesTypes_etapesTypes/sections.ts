@@ -1016,6 +1016,20 @@ export const getElementValeurs = (element: DeepReadonly<SelectElement>): { id: s
   return []
 }
 
+export const getElementWithValue = (sectionsWithValue: SectionWithValue[], sectionId: string, elementId: string): ElementWithValue | null => {
+                for(const section of sectionsWithValue){
+                  if( section.id === sectionId){
+                    for(const element of section.elements){
+                      if( element.id === elementId){
+                        return element
+                      }
+                    }
+                  }
+                }
+
+                return null
+}
+
 export const getSectionsWithValue = (sections: DeepReadonly<Section[]>, contenu: Contenu): SectionWithValue[] => {
   const sectionsWithValue: SectionWithValue[] = []
 

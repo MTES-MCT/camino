@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CaminoRequest, CustomResponse } from './express-type.js'
-import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId } from 'camino-common/src/etape.js'
+import { EtapeTypeEtapeStatutWithMainStep, etapeIdValidator, EtapeId, GetEtapeDocumentsByEtapeId, needAslAndDae } from 'camino-common/src/etape.js'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date.js'
@@ -25,12 +25,14 @@ import { Pool } from 'pg'
 import { EtapeEntrepriseDocument } from 'camino-common/src/entreprise.js'
 import { getDocumentsByEtapeId, getEntrepriseDocumentIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { etapeSupprimer, statutIdAndDateGet } from '../graphql/resolvers/titres-etapes.js'
-import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeDataForEdition } from './etapes.queries.js'
+import { administrationsLocalesByEtapeId, entreprisesTitulairesOuAmoditairesByEtapeId, getEtapeByDemarcheIdAndEtapeTypeId, getEtapeDataForEdition } from './etapes.queries.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { objectClone } from '../../tools/index.js'
 import { titreEtapeAdministrationsEmailsSend } from '../graphql/resolvers/_titre-etape-email.js'
 import { getGeojsonInformation } from './perimetre.queries.js'
 import { titreEtapeUpdateTask } from '../../business/titre-etape-update.js'
+import { valeurFind } from 'camino-common/src/sections.js'
+import { getElementWithValue, getSections, getSectionsWithValue } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 export const getEtapeEntrepriseDocuments =
   (pool: Pool) =>
@@ -73,7 +75,45 @@ export const getEtapeDocuments =
           public_lecture: etapeData.demarche_public_lecture,
           titre_public_lecture: etapeData.titre_public_lecture,
         })
-        res.json({etapeDocuments: result, asl: null, dae: null})
+
+        let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
+        if( needAslAndDae({etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id}, etapeData.etape_statut_id, user)){ 
+        
+            const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
+            if( isNotNullNorUndefined(daeEtape)){
+
+              const daeEtapeDocuments = await getDocumentsByEtapeId(daeEtape.etape_id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+                demarche_type_id: etapeData.demarche_type_id,
+                entreprises_lecture: etapeData.demarche_entreprises_lecture,
+                public_lecture: etapeData.demarche_public_lecture,
+                titre_public_lecture: etapeData.titre_public_lecture,
+              })
+
+              const daeArreteDocument = daeEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === 'arp')
+              if( isNotNullNorUndefined(daeArreteDocument)){
+
+                const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, etapeData.etape_type_id), daeEtape.contenu)
+                const elementWithValue = getElementWithValue(sectionsWithValue, 'mae', 'arrete')
+                const arrete_prefectoral = isNotNullNorUndefined(elementWithValue) ? valeurFind(elementWithValue) : null
+
+                dae = {
+                  id: daeArreteDocument.id,
+                  date: daeEtape.date,
+                  etape_statut_id: daeEtape.etape_statut_id,
+                  arrete_prefectoral,
+                  description: daeArreteDocument.description,
+                  entreprises_lecture: daeArreteDocument.entreprises_lecture,
+                  public_lecture: daeArreteDocument.public_lecture,
+                  etape_document_type_id: 'arp'
+                }
+              }
+           
+            }
+
+            
+        }
+
+        res.json({etapeDocuments: result, asl: null, dae})
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)

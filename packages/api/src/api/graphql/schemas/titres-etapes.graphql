@@ -172,6 +172,18 @@ input InputEtapeCreation {
   notes: String
 }
 
+input DaeDocument {
+  id: String
+  temp_document_name: String
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
+  etape_statut_id: String!
+  date: String!
+  arrete_prefectoral: String
+}
+
 input InputEtapeDocumentCreation {
   temp_document_name: String!
   etape_document_type_id: String!
@@ -205,6 +217,7 @@ input InputEtapeModification {
   geojsonOriginePerimetre: Json
   geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
+  daeDocument: DaeDocument
 }
 
 input InputEtapeDocumentModification {

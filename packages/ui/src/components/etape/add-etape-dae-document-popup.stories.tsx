@@ -2,7 +2,6 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { ApiClient } from '@/api/api-client'
-import { testBlankUser } from 'camino-common/src/tests-utils'
 import { AddEtapeDaeDocumentPopup } from './add-etape-dae-document-popup'
 import { toCaminoDate } from 'camino-common/src/date'
 import { etapeDocumentIdValidator } from 'camino-common/src/etape'
@@ -32,7 +31,7 @@ export const SansDocumentInitial: StoryFn = () => (
 export const DocumentInitialTemporaire: StoryFn = () => (
   <AddEtapeDaeDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', temp_document_name: tempDocumentNameValidator.parse('value'), arretePrefectoral: 'toto', date: toCaminoDate('2023-01-02'), etapeStatutId: 'exe' }}
+    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', temp_document_name: tempDocumentNameValidator.parse('value'), arrete_prefectoral: 'toto', date: toCaminoDate('2023-01-02'), etape_statut_id: 'exe' }}
     apiClient={apiClient}
   />
 )
@@ -40,7 +39,7 @@ export const DocumentInitialTemporaire: StoryFn = () => (
 export const DocumentInitialDejaSauvegarde: StoryFn = () => (
   <AddEtapeDaeDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', id: etapeDocumentIdValidator.parse('documentId'), arretePrefectoral: 'toto', date: toCaminoDate('2023-01-02'), etapeStatutId: 'req' }}
+    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', id: etapeDocumentIdValidator.parse('documentId'), arrete_prefectoral: 'toto', date: toCaminoDate('2023-01-02'), etape_statut_id: 'req' }}
     apiClient={apiClient}
   />
 )

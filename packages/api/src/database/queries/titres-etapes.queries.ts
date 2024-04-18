@@ -92,7 +92,7 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
   return result.filter(r => canSeeEntrepriseDocuments(user, r.entreprise_id))
 }
 
-export const updateEtapeDocuments = async (pool: Pool, user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments: EtapeDocumentModification[]) => {
+export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments: EtapeDocumentModification[]) => {
   const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
 
   const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
