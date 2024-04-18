@@ -90,7 +90,7 @@ const perimetre: FeatureMultiPolygon = {
   },
 }
 
-const etape: DeepReadonly<Etape> = {
+const etape: Props['etape'] = {
   id: etapeIdValidator.parse('id'),
   statutId: 'fai',
   typeId: 'mfr',
@@ -111,6 +111,8 @@ const etape: DeepReadonly<Etape> = {
   geojsonOriginePoints: null,
   geojsonOrigineGeoSystemeId: null,
   geojsonOrigineForages: null,
+  heritageContenu: null,
+  heritageProps: null
 }
 
 const goToDemarcheAction = action('goToDemarche')
@@ -153,7 +155,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
       { etapeTypeId: 'mdp', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+  getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
     getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
     return Promise.resolve({
@@ -186,10 +188,10 @@ const etapeEditFormApiClient: Props['apiClient'] = {
 
     return Promise.resolve(geojson)
   },
-  getEtapeDocumentsByEtapeId(etapeId: EtapeId): Promise<EtapeDocument[]> {
+  getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve([])
+    return Promise.resolve({etapeDocuments:[], dae: null, asl: null})
   },
   getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
     getEtapeEntrepriseDocumentsAction(etapeId)

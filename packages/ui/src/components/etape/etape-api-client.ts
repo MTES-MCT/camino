@@ -4,7 +4,7 @@ import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { entrepriseDocumentIdValidator, entrepriseIdValidator } from 'camino-common/src/entreprise'
-import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentIdValidator, etapeDocumentModificationValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeId, EtapeIdOrSlug, EtapeTypeEtapeStatutWithMainStep, EtapeWithHeritage, GetEtapeDocumentsByEtapeId, documentComplementaireAslEtapeDocumentModificationValidator, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentIdValidator, etapeDocumentModificationValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { km2Validator } from 'camino-common/src/number'
 import {
   featureCollectionForagesValidator,
@@ -146,7 +146,9 @@ export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
 
 const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
   id: etapeIdValidator,
-  daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable()})
+  daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
+  aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
+})
 export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>

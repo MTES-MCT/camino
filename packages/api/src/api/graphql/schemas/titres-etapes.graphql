@@ -184,6 +184,17 @@ input DaeDocument {
   arrete_prefectoral: String
 }
 
+input AslDocument {
+  id: String
+  temp_document_name: String
+  etape_document_type_id: String!
+  description: String
+  public_lecture: Boolean!
+  entreprises_lecture: Boolean!
+  etape_statut_id: String!
+  date: String!
+}
+
 input InputEtapeDocumentCreation {
   temp_document_name: String!
   etape_document_type_id: String!
@@ -218,6 +229,7 @@ input InputEtapeModification {
   geojsonOrigineForages: Json
   geojsonOrigineGeoSystemeId: String
   daeDocument: DaeDocument
+  aslDocument: AslDocument
 }
 
 input InputEtapeDocumentModification {

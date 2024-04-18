@@ -95,16 +95,6 @@ export const titreDemandeCreer = (pool: Pool) => async (req: CaminoRequest, res:
           titulaires: [titulaire],
         }
 
-        // if (isBureauDEtudes(user) || isEntreprise(user)) {
-        //   let decisionsAnnexesEtapeTypeIds: EtapeTypeId[] = []
-        //   if (titreDemande.typeId === 'axm') {
-        //     // si c’est une AXM, d’après l’arbre d’instructions il y a 2 décisions annexes
-        //     // - la décision du propriétaire du sol (asl)
-        //     // - la décision de la mission autorité environnementale (dae)
-        //     //FIXME
-        //     decisionsAnnexesEtapeTypeIds = ['asl', 'dae']
-        //   }
-        // }
         const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
         await titreEtapeUpdateTask(pool, updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
 

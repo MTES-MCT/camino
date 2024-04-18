@@ -6,7 +6,7 @@ import { EntrepriseDocumentsEdit } from './entreprises-documents-edit'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
 import { ApiClient } from '../../api/api-client'
 import { User } from 'camino-common/src/roles'
-import { DocumentComplementaireDaeEtapeDocumentModification, Etape, EtapeDocument, EtapeId, EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
+import { DocumentComplementaireAslEtapeDocumentModification, DocumentComplementaireDaeEtapeDocumentModification, Etape, EtapeDocument, EtapeId, EtapePropsFromHeritagePropName, EtapeWithHeritage, HeritageProp, TempEtapeDocument, flattenEtapeWithHeritage } from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitreSlug } from 'camino-common/src/validators/titres'
@@ -72,6 +72,7 @@ type EtapeEditFormDocuments = DeepReadonly<{
   etapeDocuments: (EtapeDocument | TempEtapeDocument)[]
   entrepriseDocuments: SelectedEntrepriseDocument[]
   daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null
+  aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
 }>
 
 type Heritage = DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'date' | 'typeId' | 'statutId'>>
@@ -83,7 +84,8 @@ export const EtapeEditForm = defineComponent<Props>(props => {
   const [documents, setDocuments] = useState<EtapeEditFormDocuments>({
     etapeDocuments: [],
     entrepriseDocuments: [],
-    daeDocument: null
+    daeDocument: null,
+  aslDocument: null
   })
   const heritageData = ref<AsyncData<Heritage>>({ status: 'LOADING' })
 
@@ -180,7 +182,7 @@ export const EtapeEditForm = defineComponent<Props>(props => {
         fondamentaleStepIsComplete(etapeFlattened, props.demarcheTypeId, props.titreTypeId) &&
         sectionsStepIsComplete(etapeFlattened, props.demarcheTypeId, props.titreTypeId) &&
         perimetreStepIsComplete(etapeFlattened) &&
-        etapeDocumentsStepIsComplete(etapeFlattened, props.demarcheTypeId, props.titreTypeId, documents.value.etapeDocuments, props.perimetre.sdomZoneIds, documents.value.daeDocument, props.user) &&
+        etapeDocumentsStepIsComplete(etapeFlattened, props.demarcheTypeId, props.titreTypeId, documents.value.etapeDocuments, props.perimetre.sdomZoneIds, documents.value.daeDocument, documents.value.aslDocument, props.user) &&
         entrepriseDocumentsStepIsComplete(etapeFlattened, props.demarcheTypeId, props.titreTypeId, documents.value.entrepriseDocuments)
       )
     }
@@ -294,11 +296,12 @@ const EtapeEditFormInternal = defineComponent<
     return flattenEtapeWithHeritage(props.titreTypeId, props.demarcheTypeId, props.etape, props.etape)
   })
 
-  const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null) => {
+  const documentsCompleteUpdate = (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null, aslDocument: DocumentComplementaireAslEtapeDocumentModification | null) => {
     props.setEtape(etapeFlattened.value, {
       ...props.documents,
       etapeDocuments,
-      daeDocument
+      daeDocument,
+      aslDocument,
     })
   }
 
@@ -407,8 +410,7 @@ const EtapeEditFormInternal = defineComponent<
       {etapeDocumentsStepIsVisible(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId) ? (
         <Bloc
           step={{ name: 'Liste des documents', help: null }}
-          // FIXME asl
-          complete={etapeDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.documents.etapeDocuments, props.perimetre.sdomZoneIds, props.documents.daeDocument, props.user)}
+          complete={etapeDocumentsStepIsComplete(etapeFlattened.value, props.demarcheTypeId, props.titreTypeId, props.documents.etapeDocuments, props.perimetre.sdomZoneIds, props.documents.daeDocument, props.documents.aslDocument, props.user)}
         >
           <EtapeDocumentsEdit
             apiClient={props.apiClient}

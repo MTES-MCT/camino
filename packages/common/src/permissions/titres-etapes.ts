@@ -182,10 +182,8 @@ export const isEtapeComplete = (
     }
   }
 
-  // FIXME les décisions annexes sont complètes
-  // if (titreEtape.decisionsAnnexesSections) {
-  //   errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
-  // }
+
+  //FIXME
 
   const dts: DocumentType[] = [...documentsTypes]
   if (isNotNullNorUndefined(sdomZones)) {

@@ -1,5 +1,5 @@
 import { EntrepriseDocumentId, EntrepriseId } from "../entreprise.js"
-import { DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, EtapeWithHeritage, TempEtapeDocument, needAslAndDae } from "../etape.js"
+import { DocumentComplementaireAslEtapeDocumentModification, DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, EtapeWithHeritage, TempEtapeDocument, needAslAndDae } from "../etape.js"
 import { User } from "../roles.js"
 import { DemarcheTypeId } from "../static/demarchesTypes.js"
 import { EntrepriseDocumentTypeId } from "../static/documentsTypes.js"
@@ -87,7 +87,7 @@ export const getDocumentsTypes = (etape: DeepReadonly<Pick<EtapeWithHeritage, 't
 export const etapeDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   return getDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
-export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'statutId'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, sdomZoneIds: DeepReadonly<SDOMZoneId[]>, daeDocument: DeepReadonly<DocumentComplementaireDaeEtapeDocumentModification> | null, user: User): boolean => {
+export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'statutId'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, etapeDocuments: DeepReadonly<(EtapeDocument | TempEtapeDocument)[]>, sdomZoneIds: DeepReadonly<SDOMZoneId[]>, daeDocument: DeepReadonly<DocumentComplementaireDaeEtapeDocumentModification> | null, aslDocument: DeepReadonly<DocumentComplementaireAslEtapeDocumentModification> | null, user: User): boolean => {
   if( !etapeDocumentsStepIsVisible(etape, demarcheTypeId, titreTypeId) ){
     return true
   }
@@ -98,8 +98,7 @@ export const etapeDocumentsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithH
 
     if(needAslAndDae({etapeTypeId: etape.typeId, demarcheTypeId, titreTypeId}, etape.statutId, user)){
 
-      return isNotNullNorUndefined(daeDocument)
-      //FIXME asl
+      return isNotNullNorUndefined(daeDocument) && isNotNullNorUndefined(aslDocument)
     }
   }
 

@@ -131,6 +131,9 @@ export type EtapeDocumentModification = z.infer<typeof etapeDocumentModification
 export const documentComplementaireDaeEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireDAEValidator)
 export type DocumentComplementaireDaeEtapeDocumentModification =  z.infer<typeof documentComplementaireDaeEtapeDocumentModificationValidator>
 
+export const documentComplementaireAslEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireASLValidator)
+export type DocumentComplementaireAslEtapeDocumentModification =  z.infer<typeof documentComplementaireAslEtapeDocumentModificationValidator>
+
 export const flattenEtapeWithHeritage = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etape: DeepReadonly<Etape>, heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>): DeepReadonly<EtapeWithHeritage> => {
 
 

@@ -207,7 +207,7 @@ const apiClient: Props['apiClient'] = {
       { etapeTypeId: 'mod', etapeStatutId: 'fai', mainStep: true },
     ])
   },
-  getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+  getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
     getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
     return Promise.resolve({
@@ -240,10 +240,10 @@ const apiClient: Props['apiClient'] = {
 
     return Promise.resolve(geojson)
   },
-  getEtapeDocumentsByEtapeId(etapeId: EtapeId): Promise<EtapeDocument[]> {
+  getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve([])
+    return Promise.resolve({etapeDocuments: [], dae: null, asl: null})
   },
   getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
     getEtapeEntrepriseDocumentsAction(etapeId)
@@ -292,6 +292,15 @@ const apiClient: Props['apiClient'] = {
           typeId: 'arm',
         },
       },
+      heritageContenu: {},
+      heritageProps: {            amodiataires: {actif: false},
+      dateDebut: {actif: false},
+      dateFin: {actif: false},
+      duree: {actif: false},
+      perimetre: {actif: false},
+      substances: {actif: false},
+      titulaires: {actif: false},
+    }
     })
   },
   getDemarcheByIdOrSlug(demarcheIdOrSlug) {
@@ -387,6 +396,14 @@ export const AffichageAide: StoryFn = () => (
               typeId: 'arm',
             },
           },
+          heritageContenu: {},
+          heritageProps: {            amodiataires: {actif: false},
+          dateDebut: {actif: false},
+          dateFin: {actif: false},
+          duree: {actif: false},
+          perimetre: {actif: false},
+          substances: {actif: false},
+          titulaires: {actif: false},},
         })
       },
     }}
@@ -403,7 +420,7 @@ export const DemandeArmComplete: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
         getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
         return Promise.resolve({
@@ -490,10 +507,10 @@ export const DemandeArmComplete: StoryFn = () => (
           },
         ])
       },
-      getEtapeDocumentsByEtapeId(etapeId: EtapeId): Promise<EtapeDocument[]> {
+      getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
         getEtapeDocumentsByEtapeIdAction(etapeId)
 
-        return Promise.resolve([
+        return Promise.resolve({ etapeDocuments: [
           {
             id: etapeDocumentIdValidator.parse('id1'),
             description: null,
@@ -536,7 +553,7 @@ export const DemandeArmComplete: StoryFn = () => (
             public_lecture: true,
             entreprises_lecture: true,
           },
-        ])
+        ], dae: null, asl: null})
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
@@ -574,6 +591,16 @@ export const DemandeArmComplete: StoryFn = () => (
               nom: 'Nom du titre',
               typeId: 'arm',
             },
+          },
+          heritageContenu: {},
+          heritageProps: {
+            amodiataires: {actif: false},
+            dateDebut: {actif: false},
+            dateFin: {actif: false},
+            duree: {actif: false},
+            perimetre: {actif: false},
+            substances: {actif: false},
+            titulaires: {actif: false},
           },
         })
       },
@@ -652,7 +679,7 @@ export const ModificationDemandeHeritee: StoryFn = () => (
     entreprises={entreprises}
     apiClient={{
       ...apiClient,
-      getEtapeHeritagePotentielPotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
         getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
 
         return Promise.resolve({
@@ -716,6 +743,27 @@ export const ModificationDemandeHeritee: StoryFn = () => (
               typeId: 'arm',
             },
           },
+          heritageContenu: {
+            arm: {
+              mecanise: {
+                actif: true,
+                etape: {
+                  date: toCaminoDate('2022-01-01'),
+                  typeId: 'mfr',
+                  contenu: { arm: { mecanise: true } },
+                },
+              },
+              franchissements: {
+                actif: true,
+                etape: {
+                  date: toCaminoDate('2022-01-01'),
+                  typeId: 'mfr',
+                  contenu: { arm: { franchissements: 2 } },
+                },
+              },
+            },
+          },
+          heritageProps: modHeritageProps,
         })
       },
     }}
@@ -731,4 +779,4 @@ export const ModificationDemandeHeritee: StoryFn = () => (
 // - étape en construction
 // - avec du sdom
 // - avec une arm mécanisé
-// - demande AXM d'une entreprise (avec les 3 étapes imbriquées)
+// - demande AXM d'une entreprise (avec les documents en plus (ASL, DAE))

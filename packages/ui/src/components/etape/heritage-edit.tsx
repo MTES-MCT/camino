@@ -33,7 +33,7 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 
   return () => (
     <div class={['mb-s', props.class]}>
-      {!props.prop.actif ? props.write() : <div>{props.hasHeritage ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
+      {!props.prop.actif ? props.write() : <div>{props.hasHeritage && isNotNullNorUndefined(props.prop.etape) ? props.read(props.prop.etape) : <div class="border p-s mb-s">Non renseigné</div>}</div>}
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div class="dsfr">

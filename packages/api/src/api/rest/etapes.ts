@@ -77,6 +77,7 @@ export const getEtapeDocuments =
         })
 
         let dae: null | GetEtapeDocumentsByEtapeId['dae'] = null
+        let asl: null | GetEtapeDocumentsByEtapeId['asl'] = null
         if( needAslAndDae({etapeTypeId: etapeData.etape_type_id, demarcheTypeId: etapeData.demarche_type_id, titreTypeId: etapeData.titre_type_id}, etapeData.etape_statut_id, user)){ 
         
             const daeEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'dae', etapeData.demarche_id)
@@ -89,7 +90,8 @@ export const getEtapeDocuments =
                 titre_public_lecture: etapeData.titre_public_lecture,
               })
 
-              const daeArreteDocument = daeEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === 'arp')
+              const daeEtapeDocumentTypeId = 'arp'
+              const daeArreteDocument = daeEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === daeEtapeDocumentTypeId)
               if( isNotNullNorUndefined(daeArreteDocument)){
 
                 const sectionsWithValue = getSectionsWithValue(getSections(etapeData.titre_type_id, etapeData.demarche_type_id, etapeData.etape_type_id), daeEtape.contenu)
@@ -104,7 +106,36 @@ export const getEtapeDocuments =
                   description: daeArreteDocument.description,
                   entreprises_lecture: daeArreteDocument.entreprises_lecture,
                   public_lecture: daeArreteDocument.public_lecture,
-                  etape_document_type_id: 'arp'
+                  etape_document_type_id: daeEtapeDocumentTypeId
+                }
+              }
+           
+            }
+
+
+            const aslEtape = await getEtapeByDemarcheIdAndEtapeTypeId(pool, 'asl', etapeData.demarche_id)
+            if( isNotNullNorUndefined(aslEtape)){
+
+              const aslEtapeDocuments = await getDocumentsByEtapeId(aslEtape.etape_id, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+                demarche_type_id: etapeData.demarche_type_id,
+                entreprises_lecture: etapeData.demarche_entreprises_lecture,
+                public_lecture: etapeData.demarche_public_lecture,
+                titre_public_lecture: etapeData.titre_public_lecture,
+              })
+
+              const aslEtapeDocumentTypeId = 'let'
+
+              const aslLettreDocument = aslEtapeDocuments.find(({etape_document_type_id}) => etape_document_type_id === aslEtapeDocumentTypeId)
+              if( isNotNullNorUndefined(aslLettreDocument)){
+
+                asl = {
+                  id: aslLettreDocument.id,
+                  date: aslEtape.date,
+                  etape_statut_id: aslEtape.etape_statut_id,
+                  description: aslLettreDocument.description,
+                  entreprises_lecture: aslLettreDocument.entreprises_lecture,
+                  public_lecture: aslLettreDocument.public_lecture,
+                  etape_document_type_id: aslEtapeDocumentTypeId
                 }
               }
            
@@ -113,7 +144,7 @@ export const getEtapeDocuments =
             
         }
 
-        res.json({etapeDocuments: result, asl: null, dae})
+        res.json({etapeDocuments: result, asl, dae})
       } catch (e) {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         console.error(e)
@@ -225,44 +256,6 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
       },
       user
     )
-
-    // FIXME transforme les etapeAvisDocuments en etapeDocuments, créer les étapes associées puis les supprimer
-
-    // Si il y a des décisions annexes, il faut générer une étape par décision
-    // if (decisionsAnnexesContenu) {
-    //   for (const etapeTypeId of Object.keys(decisionsAnnexesContenu!)) {
-    //     if (!isEtapeTypeId(etapeTypeId)) {
-    //       throw new Error(`l'étapeTypeId ${etapeTypeId} n'existe pas`)
-    //     }
-
-    //     let etapeDecisionAnnexe: Partial<ITitreEtape> = {
-    //       typeId: etapeTypeId,
-    //       titreDemarcheId: titreDemarche.id,
-    //       date: toCaminoDate(decisionContenu.date),
-    //       statutId: decisionContenu.statutId,
-    //     }
-
-    //       //Remplir le contenu (le numéro d’arrêté préfectoral de la dae)
-    //     if (isNotNullNorUndefined(contenu)) {
-    //       // etapeDecisionAnnexe.contenu =
-    //     }
-
-    //     etapeDecisionAnnexe = await titreEtapeCreate(etapeDecisionAnnexe as ITitreEtape, userSuper, titreDemarche.titreId)
-
-    //     const documentTypeIds = decisionAnnexesElements.filter(({ type }) => type === 'file').map(({ id }) => id) ?? []
-    //     for (const _documentTypeId of documentTypeIds) {
-    // const document: IDocument = {
-    //   id,
-    //   typeId: documentTypeId,
-    //   date: decisionContenu.date,
-    //   fichier: true,
-    //   entreprisesLecture: true,
-    //   titreEtapeId: etapeDecisionAnnexe.id,
-    // }
-    // }
-    //   }
-    // }
-    // }
 
     await titreEtapeUpdateTask(pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 

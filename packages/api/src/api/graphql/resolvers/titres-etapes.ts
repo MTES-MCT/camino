@@ -23,7 +23,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { EtapeId, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentModificationValidator, needAslAndDae, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
+import { EtapeId, documentComplementaireAslEtapeDocumentModificationValidator, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentModificationValidator, needAslAndDae, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import {
   deleteTitreEtapeEntrepriseDocument,
@@ -345,7 +345,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown, daeDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown, daeDocument: unknown, aslDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -421,8 +421,9 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
 
     const needToCreateAslAndDae = needAslAndDae({etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId}, etape.statutId, user)
     let daeDocument = null
+    let aslDocument = null
     if( needToCreateAslAndDae){
-      const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.safeParse(etape.daeDocument)
+      const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.nullable().safeParse(etape.daeDocument)
       if (!daeDocumentParsed.success) {
         console.warn(daeDocumentParsed.error)
         throw new Error('L’arrêté préfectoral n’est pas conforme')
@@ -430,10 +431,16 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
 
       daeDocument = daeDocumentParsed.data
 
-      //FIXME asl
+      const aslDocumentParsed = documentComplementaireAslEtapeDocumentModificationValidator.nullable().safeParse(etape.aslDocument)
+      if (!aslDocumentParsed.success) {
+        console.warn(aslDocumentParsed.error)
+        throw new Error('La lettre du propriétaire du sol n’est pas conforme')
+      }
+
+      aslDocument = aslDocumentParsed.data
     }
     delete etape.daeDocument
-
+    delete etape.aslDocument
 
     const sdomZones: SDOMZoneId[] = []
     if (isNotNullNorUndefined(etape.geojson4326Perimetre)) {
@@ -478,8 +485,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       throw new Error(rulesErrors.join(', '))
     }
 
-    // FIXME enregistrer les etape_avis_documents
-
     if (!canEditDuree(titreTypeId, titreDemarche.typeId)) {
       etape.duree = titreEtapeOld.duree
     }
@@ -497,7 +502,8 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
 
-    if(needToCreateAslAndDae && daeDocument !== null){
+    if(needToCreateAslAndDae){
+      if( daeDocument !== null){
 
       const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'dae', titreDemarche.id)
 
@@ -514,8 +520,24 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
 
         await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
 
-      //FIXME asl
     }
+
+    if( aslDocument !== null){
+
+      const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'asl', titreDemarche.id)
+
+      const aslEtape = await titreEtapeUpsert({
+        id: aslEtapeInDb?.etape_id ?? undefined,
+        typeId: 'asl',
+        statutId: aslDocument.etape_statut_id,
+        titreDemarcheId: titreDemarche.id,
+        date: aslDocument.date,
+      }, user!, titreDemarche.titreId)
+
+        await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.statutId, [aslDocument])
+
+    }
+  }
 
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)

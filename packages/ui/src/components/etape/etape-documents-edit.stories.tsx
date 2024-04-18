@@ -1,12 +1,13 @@
 import { Meta, StoryFn, StoryObj } from '@storybook/vue3'
 import { EtapeDocumentsEdit } from './etape-documents-edit'
-import { EtapeDocument, etapeDocumentIdValidator, etapeIdValidator } from 'camino-common/src/etape'
+import { EtapeDocument, GetEtapeDocumentsByEtapeId, etapeDocumentIdValidator, etapeIdValidator } from 'camino-common/src/etape'
 import { ApiClient } from '../../api/api-client'
 import { action } from '@storybook/addon-actions'
 import { tempDocumentNameValidator } from 'camino-common/src/document'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { useArgs } from '@storybook/preview-api'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { caminoDateValidator } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Etape/EtapeDocumentsEdit',
@@ -41,9 +42,13 @@ const documents: EtapeDocument[] = [
 ]
 
 const uploadTempDocumentAction = action('uploadTempDocument')
+const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 
 const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'> = {
-  getEtapeDocumentsByEtapeId: () => Promise.resolve({etapeDocuments: documents, asl: null, dae: null}),
+  getEtapeDocumentsByEtapeId: (etapeId) => {
+    getEtapeDocumentsByEtapeIdAction(etapeId)
+    return Promise.resolve({etapeDocuments: documents, asl: null, dae: null})
+  },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
 
@@ -184,7 +189,7 @@ export const EnConstruction: StoryFn = () => (
 export const OctroiAxmUtilisateurSuper: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
-    contenu={{ arm: { mecanise: true } }}
+    contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
@@ -198,7 +203,7 @@ export const OctroiAxmUtilisateurSuper: StoryFn = () => (
 export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
   <EtapeDocumentsEdit
     apiClient={apiClient}
-    contenu={{ arm: { mecanise: true } }}
+    contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
@@ -208,10 +213,68 @@ export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
   />
 )
 
-export const OctroiAxmUtilisateurEntrepriseRempli: StoryFn = () => (
+export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
   <EtapeDocumentsEdit
-    apiClient={apiClient}
-    contenu={{ arm: { mecanise: true } }}
+    apiClient={{...apiClient, getEtapeDocumentsByEtapeId(etapeId) {
+      getEtapeDocumentsByEtapeIdAction(etapeId)
+      return Promise.resolve<GetEtapeDocumentsByEtapeId>({  etapeDocuments: [
+        {
+          id: etapeDocumentIdValidator.parse('id'),
+          etape_document_type_id: 'dep',
+          description: 'Une description',
+          public_lecture: false,
+          entreprises_lecture: false,
+        },
+        {
+          id: etapeDocumentIdValidator.parse('id2'),
+          etape_document_type_id: 'dom',
+          description: 'Une autre description',
+          public_lecture: false,
+          entreprises_lecture: false,
+        },
+        {
+          id: etapeDocumentIdValidator.parse('id3'),
+          etape_document_type_id: 'for',
+          description: null,
+          public_lecture: false,
+          entreprises_lecture: false,
+        },
+        {
+          id: etapeDocumentIdValidator.parse('id4'),
+          etape_document_type_id: 'jpa',
+          description: null,
+          public_lecture: false,
+          entreprises_lecture: false,
+        },
+        {
+          id: etapeDocumentIdValidator.parse('id5'),
+          etape_document_type_id: 'car',
+          description: null,
+          public_lecture: false,
+          entreprises_lecture: false,
+        },
+      ],
+      dae: {
+        id: etapeDocumentIdValidator.parse('daeId'),
+        date: caminoDateValidator.parse('2023-01-23'),
+        description: 'description',
+        public_lecture: false,
+        entreprises_lecture: true,
+        etape_document_type_id: 'arp',
+etape_statut_id: 'exe',
+arrete_prefectoral: '1233232323'
+      },
+      asl: {
+        id: etapeDocumentIdValidator.parse('daeId'),
+        date: caminoDateValidator.parse('2023-01-23'),
+        description: 'description',
+        public_lecture: false,
+        entreprises_lecture: true,
+        etape_document_type_id: 'let',
+        etape_statut_id: 'fav'
+      }
+    })}}}
+    contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
