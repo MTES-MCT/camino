@@ -5,7 +5,7 @@ import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
-import { newDemarcheId, newEtapeDocumentId, newTitreId, newEtapeId } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newEtapeDocumentId, newTitreId, newEtapeId, idGenerate } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
@@ -20,6 +20,27 @@ import { TitreId } from 'camino-common/src/validators/titres.js'
 import TitresDemarches from '../../src/database/models/titres-demarches.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
+import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { copyFileSync, mkdirSync } from 'node:fs'
+import { TempEtapeDocument } from 'camino-common/src/etape.js'
+import { tempDocumentNameValidator } from 'camino-common/src/document.js'
+
+const dir = `${process.cwd()}/files/tmp/`
+
+export const testDocumentCreateTemp = (typeId: DocumentTypeId) => {
+
+  const fileName = `existing_temp_file_${idGenerate()}`
+  mkdirSync(dir, { recursive: true })
+  copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
+  const documentToInsert: TempEtapeDocument = {
+    etape_document_type_id: typeId,
+    entreprises_lecture: true,
+    public_lecture: true,
+    description: 'desc',
+    temp_document_name: tempDocumentNameValidator.parse(fileName),
+  }
+  return documentToInsert
+}
 export const visibleCheck = async (
   pool: Pool,
   administrationId: AdministrationId,
@@ -177,18 +198,10 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
     const documentTypesIds = getDocuments(titreTypeId, demarche?.typeId, etapeTypeId)
       .filter(({ optionnel }) => !optionnel)
       .map(({ id }) => id)
-    const documentIds = []
+    const etapeDocuments = []
 
     for (const documentTypeId of documentTypesIds) {
-      const id = newEtapeDocumentId(toCaminoDate('2020-01-01'), documentTypeId)
-      documentIds.push(id)
-      // FIXME
-      // await documentCreate({
-      //   id,
-      //   typeId: documentTypeId,
-      //   date: toCaminoDate('2020-01-01'),
-      //   fichier: true,
-      // })
+      etapeDocuments.push(testDocumentCreateTemp(documentTypeId))
     }
     const res = await graphQLCall(
       pool,
@@ -213,7 +226,7 @@ export const creationCheck = async (pool: Pool, administrationId: string, creer:
           heritageContenu,
           contenu,
           substances: ['auru'],
-          documentIds,
+          etapeDocuments,
           geojson4326Perimetre: {
             type: 'Feature',
             properties: {},

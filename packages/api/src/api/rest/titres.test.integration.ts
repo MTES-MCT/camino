@@ -469,8 +469,8 @@ describe('getTitre', () => {
             "etapes": [
               {
                 "date": "2022-01-01",
-                "etape_documents": [],
                 "entreprises_documents": [],
+                "etape_documents": [],
                 "etape_statut_id": "fai",
                 "etape_type_id": "mfr",
                 "fondamentale": {

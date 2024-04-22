@@ -20,6 +20,7 @@ import { EtapeDocumentModification, TempEtapeDocument } from 'camino-common/src/
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Knex } from 'knex'
+import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -159,18 +160,8 @@ describe('etapeModifier', () => {
 
   test('peut supprimer un document d\'une demande en construction (utilisateur super)', async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
-    const dir = `${process.cwd()}/files/tmp/`
 
-    const fileName = `existing_temp_file_${idGenerate()}`
-    mkdirSync(dir, { recursive: true })
-    copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
-    const documentToInsert: TempEtapeDocument = {
-      etape_document_type_id: 'aac',
-      entreprises_lecture: true,
-      public_lecture: true,
-      description: 'desc',
-      temp_document_name: tempDocumentNameValidator.parse(fileName),
-    }
+    const documentToInsert = testDocumentCreateTemp('aac')
 
     const etape = {
       id: titreEtapeId,

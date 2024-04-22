@@ -96,8 +96,3 @@ fragment utilisateur on Utilisateur {
   telephoneFixe
   role
 }
-
-fragment document on Document {
-  id
-  fichier
-}

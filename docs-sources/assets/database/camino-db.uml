@@ -31,19 +31,6 @@ entity "**communes_postgis**" {
   ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
-entity "**documents**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  *""type_id"": //character varying(3) //
-  *""date"": //character varying(10) //
-  ""titre_etape_id"": //character varying(128) [FK]//
-  *""description"": //character varying(1024) //
-  ""fichier"": //boolean //
-  ""fichier_type_id"": //character varying(3) //
-  *""public_lecture"": //boolean //
-  *""entreprises_lecture"": //boolean //
-}
-
 entity "**entreprises**" {
   + ""id"": //character varying(64) [PK]//
   --
@@ -82,6 +69,17 @@ entity "**entreprises_etablissements**" {
   ""legal_siret"": //character varying(255) //
   ""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
+}
+
+entity "**etapes_documents**" {
+  + ""id"": //character varying(255) [PK]//
+  --
+  *""etape_document_type_id"": //character varying(3) //
+  *""etape_id"": //character varying(255) [FK]//
+  ""description"": //character varying(1024) //
+  *""public_lecture"": //boolean //
+  *""entreprises_lecture"": //boolean //
+  ""largeobject_id"": //oid //
 }
 
 entity "**forets_postgis**" {
@@ -220,8 +218,6 @@ entity "**titres_etapes**" {
   ""heritage_props"": //jsonb //
   ""heritage_contenu"": //jsonb //
   ""slug"": //character varying(255) //
-  ""decisions_annexes_sections"": //jsonb[] //
-  ""decisions_annexes_contenu"": //json //
   *""archive"": //boolean //
   *""substances"": //jsonb //
   *""secteurs_maritime"": //jsonb //
@@ -232,8 +228,11 @@ entity "**titres_etapes**" {
   ""notes"": //text //
   ""geojson4326_perimetre"": //geometry(MultiPolygon,4326) //
   ""geojson4326_points"": //jsonb //
-  ""bbox"": //geometry(Geometry,4326) //
-  ""bbox2"": //geometry(Polygon,4326) //
+  ""geojson_origine_points"": //jsonb //
+  ""geojson_origine_perimetre"": //jsonb //
+  ""geojson_origine_geo_systeme_id"": //character varying //
+  ""geojson4326_forages"": //jsonb //
+  ""geojson_origine_forages"": //jsonb //
 }
 
 entity "**titres_etapes_entreprises_documents**" {
@@ -278,11 +277,11 @@ entity "**utilisateurs__titres**" {
 
 "**activites_documents**"   }--  "**titres_activites**"
 
-"**documents**"   }--  "**titres_etapes**"
-
 "**entreprises_documents**"   }--  "**entreprises**"
 
 "**entreprises_etablissements**"   }--  "**entreprises**"
+
+"**etapes_documents**"   }--  "**titres_etapes**"
 
 "**journaux**"   }--  "**titres**"
 

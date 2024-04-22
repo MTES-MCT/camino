@@ -8,10 +8,14 @@ import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
 import { userSuper } from '../../database/user-super'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
-import { toCaminoDate } from 'camino-common/src/date.js'
 import type { Pool } from 'pg'
-import { newEtapeDocumentId } from '../../database/models/_format/id-create.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
+import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
+import { tempDocumentNameValidator } from 'camino-common/src/document.js'
+import { TempEtapeDocument } from 'camino-common/src/etape.js'
+import { mkdirSync, copyFileSync } from 'node:fs'
+import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -86,6 +90,7 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          etapeDocuments: [],
         },
       },
       {
@@ -108,6 +113,7 @@ describe('etapeCreer', () => {
           statutId: 'fav',
           titreDemarcheId,
           date: '2018-01-01',
+          etapeDocuments: [],
         },
       },
       {
@@ -131,6 +137,7 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          etapeDocuments: [],
         },
       },
       userSuper
@@ -150,6 +157,7 @@ describe('etapeCreer', () => {
           statutId: 'fai',
           titreDemarcheId,
           date: '2018-01-01',
+          etapeDocuments: [],
         },
       },
       {
@@ -179,6 +187,7 @@ describe('etapeCreer', () => {
           contenu: {
             deal: { motifs: 'motif', agent: 'agent' },
           },
+          etapeDocuments: [],
         },
       },
       {
@@ -190,37 +199,15 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
   })
 
+
+  
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
-    const idDom = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'dom')
-    const idFor = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'for')
-    const idJpa = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'jpa')
-    const idCar = newEtapeDocumentId(toCaminoDate('2020-01-01'), 'car')
-    // FIXME
-    // await documentCreate({
-    //   id: idDom,
-    //   typeId: 'dom',
-    //   date: toCaminoDate('2020-01-01'),
-    //   fichier: true,
-    // })
-    // await documentCreate({
-    //   id: idFor,
-    //   typeId: 'for',
-    //   date: toCaminoDate('2020-01-01'),
-    //   fichier: true,
-    // })
-    // await documentCreate({
-    //   id: idJpa,
-    //   typeId: 'jpa',
-    //   date: toCaminoDate('2020-01-01'),
-    //   fichier: true,
-    // })
-    // await documentCreate({
-    //   id: idCar,
-    //   typeId: 'car',
-    //   date: toCaminoDate('2020-01-01'),
-    //   fichier: true,
-    // })
+    const dom = testDocumentCreateTemp('dom')
+    const forDoc = testDocumentCreateTemp('for')
+    const jpa = testDocumentCreateTemp('jpa')
+    const car = testDocumentCreateTemp('car')
+
     const res = await graphQLCall(
       dbPool,
       etapeCreerQuery,
@@ -248,8 +235,7 @@ describe('etapeCreer', () => {
             },
           },
           substances: ['auru'],
-          // FIXME
-          documentIds: [idDom, idFor, idJpa, idCar],
+          etapeDocuments: [dom, forDoc, jpa, car],
           geojson4326Perimetre: {
             type: 'Feature',
             properties: {},
@@ -302,6 +288,7 @@ describe('etapeCreer', () => {
               franchissements: { actif: true },
             },
           },
+          etapeDocuments: [],
         },
       },
       userSuper
