@@ -160,7 +160,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               </span>
             </div>
 
-            <h1>{etape.typeId !== null ? `Étapes - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
+            <h1 class="fr-mt-5w">{etape.typeId !== null ? `Étape - ${capitalize(EtapesTypes[etape.typeId].nom)}` : 'Création d’une étape'}</h1>
 
             {helpVisible(props.user, demarche.titre_type_id, etape.typeId) ? (
               <Alert
