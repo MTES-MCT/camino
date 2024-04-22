@@ -33,7 +33,7 @@ const selectElementWithValueValidator = selectElementWithOptionsValidator.extend
   value: z.string().nullable(),
 })
 
-export const elementWithValueValidator = z.union([
+const elementWithValueValidator = z.union([
   dateElementWithValueValidator,
   textElementWithValueValidator,
   urlElementWithValueValidator,

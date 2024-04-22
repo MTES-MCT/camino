@@ -194,7 +194,7 @@ from
 where
     tt.titre_etape_id = $ etapeId !
 `
-export const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
+const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
 
 const getDocumentsByEtapeIdQueryValidator = etapeDocumentValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator })
 type GetDocumentsByEtapeIdQuery = z.infer<typeof getDocumentsByEtapeIdQueryValidator>

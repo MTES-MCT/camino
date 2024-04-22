@@ -96,20 +96,20 @@ const documentComplementaireObligatoireCommon = z.object({
 })
 export const documentTypeIdComplementaireObligatoireDAE = DOCUMENTS_TYPES_IDS.arretePrefectoral
 
-export const documentComplementaireObligatoireDAEValidator = documentComplementaireObligatoireCommon.extend({
+const documentComplementaireObligatoireDAEValidator = documentComplementaireObligatoireCommon.extend({
   etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireDAE),
   arrete_prefectoral: z.string().nullable(),
 })
 
 export const documentTypeIdComplementaireObligatoireASL = DOCUMENTS_TYPES_IDS.lettre
-export const documentComplementaireObligatoireASLValidator = documentComplementaireObligatoireCommon.extend({
+const documentComplementaireObligatoireASLValidator = documentComplementaireObligatoireCommon.extend({
   etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireASL),
 })
 
-export const getEtapeDocumentsByEtapeIdDaeDocumentValidator = etapeDocumentValidator.and(documentComplementaireObligatoireDAEValidator)
+const getEtapeDocumentsByEtapeIdDaeDocumentValidator = etapeDocumentValidator.and(documentComplementaireObligatoireDAEValidator)
 export type GetEtapeDocumentsByEtapeIdDaeDocument = z.infer<typeof getEtapeDocumentsByEtapeIdDaeDocumentValidator>
 
-export const getEtapeDocumentsByEtapeIdAslDocumentValidator = z.intersection(etapeDocumentValidator, documentComplementaireObligatoireASLValidator)
+const getEtapeDocumentsByEtapeIdAslDocumentValidator = z.intersection(etapeDocumentValidator, documentComplementaireObligatoireASLValidator)
 export type GetEtapeDocumentsByEtapeIdAslDocument = z.infer<typeof getEtapeDocumentsByEtapeIdAslDocumentValidator>
 
 export const getEtapeDocumentsByEtapeIdValidator = z.object({
