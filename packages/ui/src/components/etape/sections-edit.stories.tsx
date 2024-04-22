@@ -8,85 +8,121 @@ const meta: Meta = {
   // @ts-ignore
   component: SectionsEdit,
   decorators: [() => ({ template: '<div class="dsfr"><story/></div>' })],
-
 }
 export default meta
 
 const completeUpdate = action('completeUpdate')
 
 export const SansHeritage: StoryFn = () => (
-  <SectionsEdit completeUpdate={completeUpdate} demarcheTypeId='oct' titreTypeId='arm' etape={{
-    typeId: 'mfr',
-    heritageContenu: {},
-    contenu: {arm: {mecanise: true}}
-  }} />
+  <SectionsEdit
+    completeUpdate={completeUpdate}
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    etape={{
+      typeId: 'mfr',
+      heritageContenu: {},
+      contenu: { arm: { mecanise: true } },
+    }}
+  />
 )
 
 export const AvecHeritageActif: StoryFn = () => (
-  <SectionsEdit completeUpdate={completeUpdate} demarcheTypeId='oct' titreTypeId='arm' etape={{
-    typeId: 'mod',
-    heritageContenu: {arm: {mecanise: {actif: true, etape: {
-      typeId: 'mfr',
-      date: toCaminoDate('2024-01-01'),
-      contenu: {arm: {mecanise: true}}
-    }},
-    franchissements: {actif: true, etape: {
-      typeId: 'mfr',
-      date: toCaminoDate('2024-01-01'),
-      contenu: {arm: {franchissements: 2}}
+  <SectionsEdit
+    completeUpdate={completeUpdate}
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    etape={{
+      typeId: 'mod',
+      heritageContenu: {
+        arm: {
+          mecanise: {
+            actif: true,
+            etape: {
+              typeId: 'mfr',
+              date: toCaminoDate('2024-01-01'),
+              contenu: { arm: { mecanise: true } },
+            },
+          },
+          franchissements: {
+            actif: true,
+            etape: {
+              typeId: 'mfr',
+              date: toCaminoDate('2024-01-01'),
+              contenu: { arm: { franchissements: 2 } },
+            },
+          },
+        },
+      },
+      contenu: {},
     }}
-  }},
-    contenu: {}
-  }} />
+  />
 )
 
 export const AvecHeritage: StoryFn = () => (
-  <SectionsEdit completeUpdate={completeUpdate} demarcheTypeId='oct' titreTypeId='arm' etape={{
-    typeId: 'mod',
-    heritageContenu: {arm: {mecanise: {actif: false, etape: {
-      typeId: 'mfr',
-      date: toCaminoDate('2024-01-01'),
-      contenu: {arm: {mecanise: true}}
-    }},
-    franchissements: {actif: false, etape: {
-      typeId: 'mfr',
-      date: toCaminoDate('2024-01-01'),
-      contenu: {arm: {franchissements: 2}}
+  <SectionsEdit
+    completeUpdate={completeUpdate}
+    demarcheTypeId="oct"
+    titreTypeId="arm"
+    etape={{
+      typeId: 'mod',
+      heritageContenu: {
+        arm: {
+          mecanise: {
+            actif: false,
+            etape: {
+              typeId: 'mfr',
+              date: toCaminoDate('2024-01-01'),
+              contenu: { arm: { mecanise: true } },
+            },
+          },
+          franchissements: {
+            actif: false,
+            etape: {
+              typeId: 'mfr',
+              date: toCaminoDate('2024-01-01'),
+              contenu: { arm: { franchissements: 2 } },
+            },
+          },
+        },
+      },
+      contenu: { arm: { mecanise: false } },
     }}
-  }},
-    contenu: {arm: {mecanise: false}}
-  }} />
+  />
 )
 
 export const DecisionJorf: StoryFn = () => (
-  <SectionsEdit completeUpdate={completeUpdate} demarcheTypeId='pro' titreTypeId='pcc' etape={{
-    typeId: 'dpu',
-    heritageContenu: {
-        "publication": {
-          "jorf": {
-            "actif": true,
-            "etape": {
-              "typeId": "dex",
-              "date": toCaminoDate("2000-05-16"),
-              "contenu": {},
-            }
+  <SectionsEdit
+    completeUpdate={completeUpdate}
+    demarcheTypeId="pro"
+    titreTypeId="pcc"
+    etape={{
+      typeId: 'dpu',
+      heritageContenu: {
+        publication: {
+          jorf: {
+            actif: true,
+            etape: {
+              typeId: 'dex',
+              date: toCaminoDate('2000-05-16'),
+              contenu: {},
+            },
           },
-          "nor": {
-            "actif": true,
-            "etape": {
-              "typeId": "dex",
-              "date": toCaminoDate("2000-05-16"),
-              "contenu": {},
-            }
-          }
-        }
+          nor: {
+            actif: true,
+            etape: {
+              typeId: 'dex',
+              date: toCaminoDate('2000-05-16'),
+              contenu: {},
+            },
+          },
+        },
       },
-      "contenu": {
-        "publication": {
-          "nor": "ECOI0000235A",
-          "jorf": "JORFTEXT000000399877"
-        }
-      }
-  }} />
+      contenu: {
+        publication: {
+          nor: 'ECOI0000235A',
+          jorf: 'JORFTEXT000000399877',
+        },
+      },
+    }}
+  />
 )
-

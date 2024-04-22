@@ -9,12 +9,7 @@ import { userSuper } from '../../database/user-super'
 
 import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
-import { idGenerate } from '../../database/models/_format/id-create.js'
 import { ETAPE_HERITAGE_PROPS } from 'camino-common/src/heritage.js'
-import { DocumentTypeId } from 'camino-common/src/static/documentsTypes.js'
-import { tempDocumentNameValidator } from 'camino-common/src/document.js'
-import { TempEtapeDocument } from 'camino-common/src/etape.js'
-import { mkdirSync, copyFileSync } from 'node:fs'
 import { testDocumentCreateTemp } from '../../../tests/_utils/administrations-permissions.js'
 
 vi.mock('../../tools/dir-create', () => ({
@@ -199,8 +194,6 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
   })
 
-
-  
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
     const dom = testDocumentCreateTemp('dom')

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-
 export type NotNullableKeys<T> = { [K in keyof T]: NonNullable<T[K]> }
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
@@ -8,15 +7,15 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
-export function isNotNullNorUndefinedNorEmpty<U>(value:  DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
-export function isNotNullNorUndefinedNorEmpty<U>(value:  U[] | null | undefined): value is NonEmptyArray<U>
+export function isNotNullNorUndefinedNorEmpty<U>(value: DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
+export function isNotNullNorUndefinedNorEmpty<U>(value: U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
-export function isNotNullNorUndefinedNorEmpty(value: string |  DeepReadonly<any[]> | null | undefined) {
+export function isNotNullNorUndefinedNorEmpty(value: string | DeepReadonly<any[]> | null | undefined) {
   if (Array.isArray(value)) {
     if (!isNullOrUndefined(value)) {
       return isNonEmptyArray(value)
     }
-  } else  if (typeof value === 'string') {
+  } else if (typeof value === 'string') {
     return value !== null && value !== undefined && value.trim() !== ''
   }
 
@@ -35,7 +34,8 @@ export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | n
   } else if (typeof value === 'string') {
     return value.trim() === ''
   }
-  return false
+  
+return false
 }
 
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {
@@ -168,7 +168,6 @@ export const memoize = <T>(fn: SimplePromiseFn<T>): Memoized<T> => {
   }) as Memoized<T>
 }
 
-
-export const stringArrayEquals = (array1: string[], array2: string[]): boolean  => {
+export const stringArrayEquals = (array1: string[], array2: string[]): boolean => {
   return array1.length === array2.length && array1.every((value, index) => array2[index] === value)
 }

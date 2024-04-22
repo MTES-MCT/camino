@@ -882,19 +882,42 @@ export const DemandeAvecGrosseNote: StoryFn = () => (
   />
 )
 
-
-// 11: "au moins une substance doit être renseignée"
-// ​
-// 12: "la durée doit être renseignée"
-
 export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
   <DemarcheEtape
     titre={{ titreStatutId: 'dmi', typeId: 'axm', nom: 'nom du titre', slug: titreSlug }}
-    demarche={{ demarche_type_id: 'oct', titulaires: [{id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise'}], administrationsLocales: [], sdom_zones: [], etapes: [
-      {date: toCaminoDate('2024-04-22'), id: etapeIdValidator.parse('idDae'), entreprises_documents: [],etape_documents: [], etape_statut_id: 'exe', etape_type_id: 'dae', notes: null, sections_with_values: [], ordre: 1, slug: etapeSlugValidator.parse('slug-dae')},
-      {date: toCaminoDate('2024-04-22'), id: etapeIdValidator.parse('idAsl'), entreprises_documents: [],etape_documents: [], etape_statut_id: 'exe', etape_type_id: 'asl', notes: null, sections_with_values: [], ordre: 2, slug: etapeSlugValidator.parse('slug-asl')}
-    ] }}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise'}] }}
+    demarche={{
+      demarche_type_id: 'oct',
+      titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise' }],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [
+        {
+          date: toCaminoDate('2024-04-22'),
+          id: etapeIdValidator.parse('idDae'),
+          entreprises_documents: [],
+          etape_documents: [],
+          etape_statut_id: 'exe',
+          etape_type_id: 'dae',
+          notes: null,
+          sections_with_values: [],
+          ordre: 1,
+          slug: etapeSlugValidator.parse('slug-dae'),
+        },
+        {
+          date: toCaminoDate('2024-04-22'),
+          id: etapeIdValidator.parse('idAsl'),
+          entreprises_documents: [],
+          etape_documents: [],
+          etape_statut_id: 'exe',
+          etape_type_id: 'asl',
+          notes: null,
+          sections_with_values: [],
+          ordre: 2,
+          slug: etapeSlugValidator.parse('slug-asl'),
+        },
+      ],
+    }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseId'), nom: 'nom entreprise' }] }}
     router={routerPushMock}
     apiClient={apiClient}
     initTab="points"
@@ -911,7 +934,7 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
         duree: 4,
         date_fin: null,
         substances: ['auru'],
-        titulaires: [{id: entrepriseIdValidator.parse('entrepriseId'), operateur: false, nom: 'nom entreprise'}],
+        titulaires: [{ id: entrepriseIdValidator.parse('entrepriseId'), operateur: false, nom: 'nom entreprise' }],
         amodiataires: [],
         perimetre: {
           geojson4326_points: null,
@@ -929,35 +952,53 @@ export const AxmDeposableAvecDaeEtAsl: StoryFn = () => (
         },
       },
       sections_with_values: [],
-      etape_documents: [...documentsDemande, 
-{id: etapeDocumentIdValidator.parse('idlem'), etape_document_type_id: 'lem', description: null, entreprises_lecture: true, public_lecture: true},
-{id: etapeDocumentIdValidator.parse('ididm'), etape_document_type_id: 'idm', description: null, entreprises_lecture: true, public_lecture: true},
-{id: etapeDocumentIdValidator.parse('idmes'), etape_document_type_id: 'mes', description: null, entreprises_lecture: true, public_lecture: true},
-{id: etapeDocumentIdValidator.parse('idmet'), etape_document_type_id: 'met', description: null, entreprises_lecture: true, public_lecture: true},
-{id: etapeDocumentIdValidator.parse('idprg'), etape_document_type_id: 'prg', description: null, entreprises_lecture: true, public_lecture: true},
-{id: etapeDocumentIdValidator.parse('idsch'), etape_document_type_id: 'sch', description: null, entreprises_lecture: true, public_lecture: true},
+      etape_documents: [
+        ...documentsDemande,
+        { id: etapeDocumentIdValidator.parse('idlem'), etape_document_type_id: 'lem', description: null, entreprises_lecture: true, public_lecture: true },
+        { id: etapeDocumentIdValidator.parse('ididm'), etape_document_type_id: 'idm', description: null, entreprises_lecture: true, public_lecture: true },
+        { id: etapeDocumentIdValidator.parse('idmes'), etape_document_type_id: 'mes', description: null, entreprises_lecture: true, public_lecture: true },
+        { id: etapeDocumentIdValidator.parse('idmet'), etape_document_type_id: 'met', description: null, entreprises_lecture: true, public_lecture: true },
+        { id: etapeDocumentIdValidator.parse('idprg'), etape_document_type_id: 'prg', description: null, entreprises_lecture: true, public_lecture: true },
+        { id: etapeDocumentIdValidator.parse('idsch'), etape_document_type_id: 'sch', description: null, entreprises_lecture: true, public_lecture: true },
       ],
-      entreprises_documents: [...entrepriseDocumentsDemande,
+      entreprises_documents: [
+        ...entrepriseDocumentsDemande,
 
-{entreprise_document_type_id: 'lis', date: toCaminoDate('2024-04-22'), description: null, entreprise_id:entrepriseIdValidator.parse('entrepriseId'), id: entrepriseDocumentIdValidator.parse('idlis')},
-{entreprise_document_type_id: 'jac', date: toCaminoDate('2024-04-22'), description: null, entreprise_id:entrepriseIdValidator.parse('entrepriseId'), id: entrepriseDocumentIdValidator.parse('idjac')},
-{entreprise_document_type_id: 'bil', date: toCaminoDate('2024-04-22'), description: null, entreprise_id:entrepriseIdValidator.parse('entrepriseId'), id: entrepriseDocumentIdValidator.parse('idbil')},
-{entreprise_document_type_id: 'ref', date: toCaminoDate('2024-04-22'), description: null, entreprise_id:entrepriseIdValidator.parse('entrepriseId'), id: entrepriseDocumentIdValidator.parse('idref')},
-{entreprise_document_type_id: 'deb', date: toCaminoDate('2024-04-22'), description: null, entreprise_id:entrepriseIdValidator.parse('entrepriseId'), id: entrepriseDocumentIdValidator.parse('iddeb')},
-
-
-// ​
-// 6: "le document d'entreprise « Liste des travaux antérieurs » obligatoire est manquant"
-// ​
-// 7: "le document d'entreprise « Justificatif d’adhésion à la charte des bonnes pratiques » obligatoire est manquant"
-// ​
-// 8: "le document d'entreprise « 3 derniers bilans et comptes de résultats » obligatoire est manquant"
-// ​
-// 9: "le document d'entreprise « Références professionnelles  » obligatoire est manquant"
-// ​
-// 10: "le document d'entreprise « Déclarations bancaires ou cautions appropriées » obligatoire est manquant"
-// ​
-
+        {
+          entreprise_document_type_id: 'lis',
+          date: toCaminoDate('2024-04-22'),
+          description: null,
+          entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+          id: entrepriseDocumentIdValidator.parse('idlis'),
+        },
+        {
+          entreprise_document_type_id: 'jac',
+          date: toCaminoDate('2024-04-22'),
+          description: null,
+          entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+          id: entrepriseDocumentIdValidator.parse('idjac'),
+        },
+        {
+          entreprise_document_type_id: 'bil',
+          date: toCaminoDate('2024-04-22'),
+          description: null,
+          entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+          id: entrepriseDocumentIdValidator.parse('idbil'),
+        },
+        {
+          entreprise_document_type_id: 'ref',
+          date: toCaminoDate('2024-04-22'),
+          description: null,
+          entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+          id: entrepriseDocumentIdValidator.parse('idref'),
+        },
+        {
+          entreprise_document_type_id: 'deb',
+          date: toCaminoDate('2024-04-22'),
+          description: null,
+          entreprise_id: entrepriseIdValidator.parse('entrepriseId'),
+          id: entrepriseDocumentIdValidator.parse('iddeb'),
+        },
       ],
     }}
   />

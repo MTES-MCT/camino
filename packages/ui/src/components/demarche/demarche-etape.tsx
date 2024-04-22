@@ -107,9 +107,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   )
 
   const daeDocument = computed<GetEtapeDocumentsByEtapeId['dae']>(() => {
-    if (needAslAndDae({etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId}, props.etape.etape_statut_id, props.user)) {
-      const daeEtape = props.demarche.etapes.find(({etape_type_id}) => etape_type_id === 'dae')
-      if(isNotNullNorUndefined(daeEtape)){
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+      const daeEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'dae')
+      if (isNotNullNorUndefined(daeEtape)) {
         return {
           id: etapeDocumentIdValidator.parse('daeId'),
           date: daeEtape.date,
@@ -118,7 +118,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           public_lecture: false,
           entreprises_lecture: true,
           etape_statut_id: daeEtape.etape_statut_id,
-          etape_document_type_id: documentTypeIdComplementaireObligatoireDAE
+          etape_document_type_id: documentTypeIdComplementaireObligatoireDAE,
         }
       }
     }
@@ -127,9 +127,9 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   })
 
   const aslDocument = computed<GetEtapeDocumentsByEtapeId['asl']>(() => {
-    if (needAslAndDae({etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId}, props.etape.etape_statut_id, props.user)) {
-      const aslEtape = props.demarche.etapes.find(({etape_type_id}) => etape_type_id === 'asl')
-      if(isNotNullNorUndefined(aslEtape)){
+    if (needAslAndDae({ etapeTypeId: props.etape.etape_type_id, demarcheTypeId: props.demarche.demarche_type_id, titreTypeId: props.titre.typeId }, props.etape.etape_statut_id, props.user)) {
+      const aslEtape = props.demarche.etapes.find(({ etape_type_id }) => etape_type_id === 'asl')
+      if (isNotNullNorUndefined(aslEtape)) {
         return {
           id: etapeDocumentIdValidator.parse('aslId'),
           date: aslEtape.date,
@@ -137,7 +137,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           public_lecture: false,
           entreprises_lecture: true,
           etape_statut_id: aslEtape.etape_statut_id,
-          etape_document_type_id: documentTypeIdComplementaireObligatoireASL
+          etape_document_type_id: documentTypeIdComplementaireObligatoireASL,
         }
       }
     }
@@ -312,13 +312,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           titreNom={props.titre.nom}
         />
       ) : null}
-      {deposePopupVisible.value ? (
-        <DeposeEtapePopup
-          close={closeDeposePopup}
-          apiClient={props.apiClient}
-          id={props.etape.id}
-        />
-      ) : null}
+      {deposePopupVisible.value ? <DeposeEtapePopup close={closeDeposePopup} apiClient={props.apiClient} id={props.etape.id} /> : null}
     </div>
   )
 })

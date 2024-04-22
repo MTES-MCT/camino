@@ -1,7 +1,7 @@
 import { dateFormat } from '@/utils'
-import { DeepReadonly, HTMLAttributes, computed, defineComponent } from 'vue'
+import { DeepReadonly, HTMLAttributes, defineComponent } from 'vue'
 import { EtapeWithHeritage, HeritageProp } from 'camino-common/src/etape'
-import { MappingHeritagePropsNameEtapePropsName, mappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
+import { MappingHeritagePropsNameEtapePropsName } from 'camino-common/src/heritage'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { DsfrToggle } from '../_ui/dsfr-toggle'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
@@ -20,7 +20,6 @@ type Props<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends Eta
 }
 
 export const HeritageEdit = defineComponent(<P extends keyof MappingHeritagePropsNameEtapePropsName, T extends EtapeHeritageEdit>(props: Props<P, T>) => {
-
   const updateHeritage = () => {
     const etape = props.prop.etape
     const newHeritage = !props.prop.actif
@@ -37,7 +36,11 @@ export const HeritageEdit = defineComponent(<P extends keyof MappingHeritageProp
 
       {isNotNullNorUndefined(props.prop.etape) ? (
         <div class="dsfr">
-          <DsfrToggle initialValue={props.prop.actif} valueChanged={updateHeritage} legendLabel={`Hériter de l’étape "${capitalize(EtapesTypes[props.prop.etape.typeId].nom)}" du ${dateFormat(props.prop.etape.date)}`} />
+          <DsfrToggle
+            initialValue={props.prop.actif}
+            valueChanged={updateHeritage}
+            legendLabel={`Hériter de l’étape "${capitalize(EtapesTypes[props.prop.etape.typeId].nom)}" du ${dateFormat(props.prop.etape.date)}`}
+          />
         </div>
       ) : null}
     </div>

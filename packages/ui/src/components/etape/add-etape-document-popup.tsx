@@ -1,4 +1,3 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { computed, defineComponent, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'

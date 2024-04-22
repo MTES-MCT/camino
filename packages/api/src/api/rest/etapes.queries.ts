@@ -29,7 +29,6 @@ import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typesc
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { contenuValidator } from './activites.queries.js'
-import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -149,7 +148,7 @@ const getEtapeDataForEditionValidator = z.object({
 
 export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
 
-const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, GetEtapeDataForEdition >>`
+const getEtapeDataForEditionDb = sql<Redefine<IGetEtapeDataForEditionDbQuery, { etapeId: EtapeId }, GetEtapeDataForEdition>>`
 select
     te.type_id as etape_type_id,
     te.statut_id as etape_statut_id,
@@ -220,18 +219,29 @@ const getEtapeByDemarcheIdAndEtapeTypeIdValidator = z.object({
   etape_id: etapeIdValidator,
   etape_statut_id: etapeStatutIdValidator,
   date: caminoDateValidator,
-  contenu: contenuValidator.nullable()
+  contenu: contenuValidator.nullable(),
 })
 type EtapeByDemarcheIdAndEtapeTypeId = z.infer<typeof getEtapeByDemarcheIdAndEtapeTypeIdValidator>
-export const  getEtapeByDemarcheIdAndEtapeTypeId = async (pool: Pool, etapeTypeId: EtapeTypeId, demarcheId: DemarcheId): Promise<EtapeByDemarcheIdAndEtapeTypeId | null> => {
-  const result = await dbQueryAndValidate(getEtapeByDemarcheIdAndEtapeTypeIdDb, {etapeTypeId, demarcheId}, pool, getEtapeByDemarcheIdAndEtapeTypeIdValidator)
+export const getEtapeByDemarcheIdAndEtapeTypeId = async (pool: Pool, etapeTypeId: EtapeTypeId, demarcheId: DemarcheId): Promise<EtapeByDemarcheIdAndEtapeTypeId | null> => {
+  const result = await dbQueryAndValidate(getEtapeByDemarcheIdAndEtapeTypeIdDb, { etapeTypeId, demarcheId }, pool, getEtapeByDemarcheIdAndEtapeTypeIdValidator)
 
-  if( isNotNullNorUndefinedNorEmpty(result)){
+  if (isNotNullNorUndefinedNorEmpty(result)) {
     return result[0]
   }
+
   return null
 }
 
-const getEtapeByDemarcheIdAndEtapeTypeIdDb = sql<Redefine<IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery, {etapeTypeId: EtapeTypeId, demarcheId: DemarcheId}, EtapeByDemarcheIdAndEtapeTypeId>>`
-select te.id as etape_id, te.statut_id as etape_statut_id, te.date, te.contenu from titres_etapes te where te.type_id = $etapeTypeId! and te.titre_demarche_id = $demarcheId! and te.archive is false
+const getEtapeByDemarcheIdAndEtapeTypeIdDb = sql<Redefine<IGetEtapeByDemarcheIdAndEtapeTypeIdDbQuery, { etapeTypeId: EtapeTypeId; demarcheId: DemarcheId }, EtapeByDemarcheIdAndEtapeTypeId>>`
+select
+    te.id as etape_id,
+    te.statut_id as etape_statut_id,
+    te.date,
+    te.contenu
+from
+    titres_etapes te
+where
+    te.type_id = $ etapeTypeId !
+    and te.titre_demarche_id = $ demarcheId !
+    and te.archive is false
 `

@@ -24,14 +24,21 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   },
 }
 
-export const SansDocumentInitial: StoryFn = () => (
-  <AddEtapeDaeDocumentPopup close={close} apiClient={apiClient} initialDocument={null} />
-)
+export const SansDocumentInitial: StoryFn = () => <AddEtapeDaeDocumentPopup close={close} apiClient={apiClient} initialDocument={null} />
 
 export const DocumentInitialTemporaire: StoryFn = () => (
   <AddEtapeDaeDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', temp_document_name: tempDocumentNameValidator.parse('value'), arrete_prefectoral: 'toto', date: toCaminoDate('2023-01-02'), etape_statut_id: 'exe' }}
+    initialDocument={{
+      description: 'description',
+      entreprises_lecture: true,
+      public_lecture: false,
+      etape_document_type_id: 'arp',
+      temp_document_name: tempDocumentNameValidator.parse('value'),
+      arrete_prefectoral: 'toto',
+      date: toCaminoDate('2023-01-02'),
+      etape_statut_id: 'exe',
+    }}
     apiClient={apiClient}
   />
 )
@@ -39,7 +46,16 @@ export const DocumentInitialTemporaire: StoryFn = () => (
 export const DocumentInitialDejaSauvegarde: StoryFn = () => (
   <AddEtapeDaeDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'arp', id: etapeDocumentIdValidator.parse('documentId'), arrete_prefectoral: 'toto', date: toCaminoDate('2023-01-02'), etape_statut_id: 'req' }}
+    initialDocument={{
+      description: 'description',
+      entreprises_lecture: true,
+      public_lecture: false,
+      etape_document_type_id: 'arp',
+      id: etapeDocumentIdValidator.parse('documentId'),
+      arrete_prefectoral: 'toto',
+      date: toCaminoDate('2023-01-02'),
+      etape_statut_id: 'req',
+    }}
     apiClient={apiClient}
   />
 )

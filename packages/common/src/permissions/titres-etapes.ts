@@ -154,7 +154,7 @@ type IsEtapeCompleteEtape = {
   duree?: number | null
 }
 
-// TODO 2024-04-17 utiliser toutes les stepIsComplete 
+// TODO 2024-04-17 utiliser toutes les stepIsComplete
 export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
@@ -182,17 +182,16 @@ export const isEtapeComplete = (
     }
   }
 
-  if(needAslAndDae({etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId}, titreEtape.statutId, user)){
-    if( isNullOrUndefined(daeDocument)){
+  if (needAslAndDae({ etapeTypeId: titreEtape.typeId, demarcheTypeId, titreTypeId }, titreEtape.statutId, user)) {
+    if (isNullOrUndefined(daeDocument)) {
       errors.push('L’arrêté préfectoral de la mission autorité environnementale est obligatoire')
     }
-    if( isNullOrUndefined(aslDocument)){
+    if (isNullOrUndefined(aslDocument)) {
       errors.push('La lettre de décision du propriétaire du sol est obligatoire')
     }
   }
 
-
-  const dts: DocumentType[] = getDocumentsTypes({...titreEtape, contenu: titreEtape.contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
+  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape, contenu: titreEtape.contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
 
   const documentsErrors = isDocumentsComplete(documents ?? [], dts)
   if (!documentsErrors.valid) {
@@ -257,7 +256,7 @@ export const isEtapeDeposable = (
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
   daeDocument: GetEtapeDocumentsByEtapeId['dae'],
-  aslDocument: GetEtapeDocumentsByEtapeId['asl'],
+  aslDocument: GetEtapeDocumentsByEtapeId['asl']
 ): boolean => {
   if (titreEtape.typeId === ETAPES_TYPES.demande && titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION) {
     if (

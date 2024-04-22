@@ -14,7 +14,6 @@ const getters = {
 const actions = {
   async get({ dispatch, commit, state }, id) {
     try {
-
       if (metasIndex[id]) {
         const definition = metasIndex[id]
         const elements = await definition.get()
@@ -30,7 +29,7 @@ const actions = {
       }
     } catch (e) {
       console.error(e)
-    } 
+    }
   },
 
   elementSelect({ commit }, { id, element }) {

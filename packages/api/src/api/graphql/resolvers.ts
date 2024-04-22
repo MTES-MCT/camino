@@ -5,7 +5,7 @@ import { titres, titreCreer, titre } from './resolvers/titres.js'
 
 import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer } from './resolvers/titres-etapes.js'
 
-import {  demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
+import { demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
 import { utilisateur, utilisateurs, newsletterInscrire } from './resolvers/utilisateurs.js'
 

@@ -13,16 +13,18 @@ import { CaminoDate } from 'camino-common/src/date.js'
 import { EtapeId } from 'camino-common/src/etape.js'
 
 const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes: ITitreEtape[] | null, etapeId: EtapeId | null) => {
-  const titreEtapesFiltered = titreEtapesSortAscByOrdre(titreEtapes?.filter(e => {
-    if (e.id === etapeId) {
+  const titreEtapesFiltered = titreEtapesSortAscByOrdre(
+    titreEtapes?.filter(e => {
+      if (e.id === etapeId) {
+        return false
+      }
+      if (EtapesTypes[e.typeId].fondamentale && e.date <= date) {
+        return true
+      }
+
       return false
-    }
-    if (EtapesTypes[e.typeId].fondamentale && e.date <= date) {
-      return true
-    }
-    return false
-  
-  } ) ?? [])
+    }) ?? []
+  )
 
   const heritageProps = ETAPE_HERITAGE_PROPS.reduce((acc: IHeritageProps, id) => {
     acc[id] = { actif: !!titreEtapesFiltered.length }
@@ -57,7 +59,14 @@ const titreEtapeHeritagePropsBuild = (date: CaminoDate, titreEtapes: ITitreEtape
   return newTitreEtape
 }
 
-const titreEtapeHeritageContenuBuild = (date: CaminoDate, etapeTypeId: EtapeTypeId, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, titreEtapes: ITitreEtape[] | null, etapeId: EtapeId | null) => {
+const titreEtapeHeritageContenuBuild = (
+  date: CaminoDate,
+  etapeTypeId: EtapeTypeId,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  titreEtapes: ITitreEtape[] | null,
+  etapeId: EtapeId | null
+) => {
   if (!titreEtapes) {
     titreEtapes = []
   }
@@ -116,7 +125,14 @@ const titreEtapeHeritageContenuBuild = (date: CaminoDate, etapeTypeId: EtapeType
   return { contenu, heritageContenu }
 }
 
-export const titreEtapeHeritageBuild = (date: CaminoDate, etapeTypeId: EtapeTypeId, titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeId: EtapeId | null) => {
+export const titreEtapeHeritageBuild = (
+  date: CaminoDate,
+  etapeTypeId: EtapeTypeId,
+  titreDemarche: ITitreDemarche,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etapeId: EtapeId | null
+) => {
   let titreEtape = {} as ITitreEtape
 
   const etapeType = EtapesTypes[etapeTypeId]

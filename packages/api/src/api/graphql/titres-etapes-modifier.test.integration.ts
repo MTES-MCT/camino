@@ -16,7 +16,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { copyFileSync, mkdirSync } from 'fs'
-import { EtapeDocumentModification, TempEtapeDocument } from 'camino-common/src/etape.js'
+import { TempEtapeDocument } from 'camino-common/src/etape.js'
 import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 import { HTTP_STATUS } from 'camino-common/src/http.js'
 import { Knex } from 'knex'
@@ -38,7 +38,7 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
-  await knexInstance.raw(`delete from etapes_documents`)
+  await knexInstance.raw('delete from etapes_documents')
   await Titres.query().delete()
 })
 
@@ -149,7 +149,6 @@ describe('etapeModifier', () => {
             arm: { mecanise: true, franchissements: 3 },
           },
           etapeDocuments: [],
-
         },
       },
       userSuper
@@ -158,7 +157,7 @@ describe('etapeModifier', () => {
     expect(res.body.errors).toBe(undefined)
   })
 
-  test('peut supprimer un document d\'une demande en construction (utilisateur super)', async () => {
+  test("peut supprimer un document d'une demande en construction (utilisateur super)", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate()
 
     const documentToInsert = testDocumentCreateTemp('aac')
@@ -191,12 +190,7 @@ describe('etapeModifier', () => {
       etapeDocuments: [documentToInsert],
     }
 
-    let res = await graphQLCall(
-      dbPool,
-      etapeModifierQuery,
-      { etape },
-      userSuper
-    )
+    let res = await graphQLCall(dbPool, etapeModifierQuery, { etape }, userSuper)
 
     expect(res.body.errors).toBe(undefined)
 
@@ -204,7 +198,8 @@ describe('etapeModifier', () => {
     expect(documents.statusCode).toBe(HTTP_STATUS.HTTP_STATUS_OK)
     expect(documents.body.etapeDocuments).toHaveLength(1)
     expect(documents.body.etapeDocuments[0]).toMatchInlineSnapshot(
-      {"id": expect.any(String)}, `
+      { id: expect.any(String) },
+      `
       {
         "description": "desc",
         "entreprises_lecture": true,
@@ -212,19 +207,14 @@ describe('etapeModifier', () => {
         "id": Any<String>,
         "public_lecture": true,
       }
-    `)
-    res = await graphQLCall(
-      dbPool,
-      etapeModifierQuery,
-      { etape: {...etape, etapeDocuments: []} },
-      userSuper
+    `
     )
+    res = await graphQLCall(dbPool, etapeModifierQuery, { etape: { ...etape, etapeDocuments: [] } }, userSuper)
 
     expect(res.body.errors).toBe(undefined)
   })
 
-
-  test('ne peut pas supprimer un document obligatoire d\'une étape qui n\'est pas en construction (utilisateur super)', async () => {
+  test("ne peut pas supprimer un document obligatoire d'une étape qui n'est pas en construction (utilisateur super)", async () => {
     const { titreDemarcheId, titreEtapeId } = await etapeCreate('dae')
     const dir = `${process.cwd()}/files/tmp/`
 
@@ -257,30 +247,20 @@ describe('etapeModifier', () => {
       ),
       heritageContenu: {
         mea: {
-          arrete: {actif: false}
-        }
+          arrete: { actif: false },
+        },
       },
       contenu: {
-        mea: {arrete: 'arrete'}
+        mea: { arrete: 'arrete' },
       },
       etapeDocuments: [documentToInsert],
     }
 
-    let res = await graphQLCall(
-      dbPool,
-      etapeModifierQuery,
-      { etape },
-      userSuper
-    )
+    let res = await graphQLCall(dbPool, etapeModifierQuery, { etape }, userSuper)
 
     expect(res.body.errors).toBe(undefined)
 
-    res = await graphQLCall(
-      dbPool,
-      etapeModifierQuery,
-      { etape: {...etape, etapeDocuments: []} },
-      userSuper
-    )
+    res = await graphQLCall(dbPool, etapeModifierQuery, { etape: { ...etape, etapeDocuments: [] } }, userSuper)
 
     expect(res.body.errors[0].message).toBe('Impossible de supprimer les documents')
   })

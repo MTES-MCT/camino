@@ -10,8 +10,6 @@ const state = {
 }
 
 const actions = {
-
-
   messageAdd({ commit }, message) {
     const id = Date.now()
     message.id = id
@@ -33,9 +31,6 @@ const mutations = {
     const index = state.messages.findIndex(m => m.id === id)
     state.messages.splice(index, 1)
   },
-
-
-
 }
 
 export { actions, mutations }

@@ -38,7 +38,6 @@ export const AvecHeritage: StoryFn = () => (
   <SubstancesEdit substances={[SubstancesLegale.auru.id]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{ ...heritageProps }} />
 )
 
-
 export const SansSubstance: StoryFn = () => (
-  <SubstancesEdit substances={[]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{actif: false}} />
+  <SubstancesEdit substances={[]} updateHeritage={updateHeritage} updateSubstances={updateSubstancesAction} domaineId="m" heritageSubstances={{ actif: false }} />
 )

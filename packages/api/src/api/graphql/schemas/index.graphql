@@ -78,7 +78,6 @@ type Query {
     travaux: Boolean
   ): Demarches
 
-
   "Étape d’une démarche en fonction de son id"
   etape(id: ID!): Etape
 

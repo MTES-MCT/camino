@@ -15,6 +15,7 @@ type Props<T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>> = {
 
 export const DsfrSelect = <T, Items extends DeepReadonly<NonEmptyArray<Item<T>>>>(props: Props<T, Items>): JSX.Element => {
   const id = props.id ?? `select_${(random() * 1000).toFixed()}`
+
   return (
     <div class={['fr-select-group', props.disabled ?? false ? 'fr-select-group--disabled' : null]}>
       {props.legend.visible ?? true ? (

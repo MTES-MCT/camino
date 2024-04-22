@@ -23,7 +23,6 @@ type Props = {
   demarcheId: DemarcheId
   apiClient: Pick<EtapeApiClient, 'getEtapesTypesEtapesStatuts'>
   onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
-
 } & Pick<HTMLAttributes, 'class'>
 
 interface SelectStatutProps {

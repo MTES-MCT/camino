@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-
 export const titres = apiGraphQLFetch(
   gql`
     query Titres(
@@ -42,44 +41,43 @@ export const titres = apiGraphQLFetch(
       ) {
         elements {
           id
-    slug
-    nom
-    typeId
-    titreStatutId
-    substances
-    activitesEnConstruction
-    activitesAbsentes
-    titulaires {
-      id
-    nom
-    adresse
-    codePostal
-    commune
-    legalSiren
-    legalEtranger
-    }
-    amodiataires {
-      id
-    nom
-    adresse
-    codePostal
-    commune
-    legalSiren
-    legalEtranger
-    }
-    communes {
-      id
-    }
-    secteursMaritime
-    references {
-      referenceTypeId
-      nom
-    }
+          slug
+          nom
+          typeId
+          titreStatutId
+          substances
+          activitesEnConstruction
+          activitesAbsentes
+          titulaires {
+            id
+            nom
+            adresse
+            codePostal
+            commune
+            legalSiren
+            legalEtranger
+          }
+          amodiataires {
+            id
+            nom
+            adresse
+            codePostal
+            commune
+            legalSiren
+            legalEtranger
+          }
+          communes {
+            id
+          }
+          secteursMaritime
+          references {
+            referenceTypeId
+            nom
+          }
         }
         total
       }
     }
-
   `
 )
 

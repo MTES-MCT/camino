@@ -5,7 +5,6 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('./meta', () => ({ default: { meta: vi.fn() } }))
 
-
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -27,7 +26,7 @@ describe("état général de l'application", () => {
     }
 
     state = {
-      messages: []
+      messages: [],
     }
 
     store = createStore({
@@ -57,9 +56,6 @@ describe("état général de l'application", () => {
 
     expect(state.messages).toEqual([])
   })
-
-
-
 })
 
 describe("état général de l'application", () => {

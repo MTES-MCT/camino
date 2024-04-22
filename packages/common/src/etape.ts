@@ -47,24 +47,24 @@ export type Etape = {
   administrations?: AdministrationId[]
   communes?: string[]
 
-  geojson4326Perimetre: FeatureMultiPolygon | null 
-  geojson4326Points: FeatureCollectionPoints | null 
-  geojsonOriginePerimetre: FeatureMultiPolygon | null 
-  geojsonOriginePoints: FeatureCollectionPoints | null 
-  geojsonOrigineGeoSystemeId: GeoSystemeId | null 
-  geojson4326Forages: FeatureCollectionForages | null 
-  geojsonOrigineForages: FeatureCollectionForages | null 
-  surface: KM2 | null 
+  geojson4326Perimetre: FeatureMultiPolygon | null
+  geojson4326Points: FeatureCollectionPoints | null
+  geojsonOriginePerimetre: FeatureMultiPolygon | null
+  geojsonOriginePoints: FeatureCollectionPoints | null
+  geojsonOrigineGeoSystemeId: GeoSystemeId | null
+  geojson4326Forages: FeatureCollectionForages | null
+  geojsonOrigineForages: FeatureCollectionForages | null
+  surface: KM2 | null
 
   notes: null | string
   duree: number | null
   dateDebut: CaminoDate | null
-  dateFin: CaminoDate  | null
+  dateFin: CaminoDate | null
 }
 
 export type EtapePropsFromHeritagePropName<key extends EtapeHeritageProps> = MappingHeritagePropsNameEtapePropsName[key][number]
 
-export type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId, date: CaminoDate, statutId: EtapeStatutId }>
+export type EtapeWithHeritage = InternalEtapeWithHeritage<EtapeHeritageProps, Omit<Etape, 'typeId' | 'date' | 'statutId'> & { typeId: EtapeTypeId; date: CaminoDate; statutId: EtapeStatutId }>
 
 export type HeritageContenu = Record<string, Record<string, HeritageProp<Pick<EtapeWithHeritage, 'contenu' | 'typeId' | 'date'>>>>
 type InternalEtapeWithHeritage<HeritagePropsKeys extends EtapeHeritageProps, T extends Pick<Etape, 'date' | EtapePropsFromHeritagePropName<HeritagePropsKeys>> & { typeId: EtapeTypeId }> = T & {
@@ -98,7 +98,7 @@ export const documentTypeIdComplementaireObligatoireDAE = DOCUMENTS_TYPES_IDS.ar
 
 export const documentComplementaireObligatoireDAEValidator = documentComplementaireObligatoireCommon.extend({
   etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireDAE),
-  arrete_prefectoral: z.string().nullable()
+  arrete_prefectoral: z.string().nullable(),
 })
 
 export const documentTypeIdComplementaireObligatoireASL = DOCUMENTS_TYPES_IDS.lettre
@@ -112,17 +112,23 @@ export type GetEtapeDocumentsByEtapeIdDaeDocument = z.infer<typeof getEtapeDocum
 export const getEtapeDocumentsByEtapeIdAslDocumentValidator = z.intersection(etapeDocumentValidator, documentComplementaireObligatoireASLValidator)
 export type GetEtapeDocumentsByEtapeIdAslDocument = z.infer<typeof getEtapeDocumentsByEtapeIdAslDocumentValidator>
 
-export const getEtapeDocumentsByEtapeIdValidator =  z.object({etapeDocuments: z.array(etapeDocumentValidator), dae: getEtapeDocumentsByEtapeIdDaeDocumentValidator.nullable(), asl: getEtapeDocumentsByEtapeIdAslDocumentValidator.nullable() })
+export const getEtapeDocumentsByEtapeIdValidator = z.object({
+  etapeDocuments: z.array(etapeDocumentValidator),
+  dae: getEtapeDocumentsByEtapeIdDaeDocumentValidator.nullable(),
+  asl: getEtapeDocumentsByEtapeIdAslDocumentValidator.nullable(),
+})
 
 export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
 
-
-export const needAslAndDae = (tde: {
-  etapeTypeId: EtapeTypeId
-  demarcheTypeId: DemarcheTypeId
-  titreTypeId: TitreTypeId
-},
-etapeStatutId: EtapeStatutId, user: User): boolean => {
+export const needAslAndDae = (
+  tde: {
+    etapeTypeId: EtapeTypeId
+    demarcheTypeId: DemarcheTypeId
+    titreTypeId: TitreTypeId
+  },
+  etapeStatutId: EtapeStatutId,
+  user: User
+): boolean => {
   return tde.etapeTypeId === 'mfr' && tde.demarcheTypeId === 'oct' && tde.titreTypeId === 'axm' && isEntrepriseOrBureauDEtude(user) && etapeStatutId === 'aco'
 }
 
@@ -135,20 +141,23 @@ export const etapeDocumentModificationValidator = z.union([etapeDocumentWithFile
 export type EtapeDocumentModification = z.infer<typeof etapeDocumentModificationValidator>
 
 export const documentComplementaireDaeEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireDAEValidator)
-export type DocumentComplementaireDaeEtapeDocumentModification =  z.infer<typeof documentComplementaireDaeEtapeDocumentModificationValidator>
+export type DocumentComplementaireDaeEtapeDocumentModification = z.infer<typeof documentComplementaireDaeEtapeDocumentModificationValidator>
 
 export const documentComplementaireAslEtapeDocumentModificationValidator = etapeDocumentModificationValidator.and(documentComplementaireObligatoireASLValidator)
-export type DocumentComplementaireAslEtapeDocumentModification =  z.infer<typeof documentComplementaireAslEtapeDocumentModificationValidator>
+export type DocumentComplementaireAslEtapeDocumentModification = z.infer<typeof documentComplementaireAslEtapeDocumentModificationValidator>
 
-export const flattenEtapeWithHeritage = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etape: DeepReadonly<Etape>, heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>): DeepReadonly<EtapeWithHeritage> => {
-
-
-  const substances: Readonly<SubstanceLegaleId[]> = heritage.heritageProps.substances.actif ?  (heritage.heritageProps.substances.etape?.substances ?? []) : etape.substances
-  const duree: number | null = heritage.heritageProps.duree.actif ?  heritage.heritageProps.duree.etape?.duree ?? null : etape.duree
-  const amodiataires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.amodiataires.actif ?  heritage.heritageProps.amodiataires.etape?.amodiataires ?? [] : etape.amodiataires
-  const titulaires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.titulaires.actif ?  heritage.heritageProps.titulaires.etape?.titulaires ?? [] : etape.titulaires
-  const dateDebut: CaminoDate | null = heritage.heritageProps.dateDebut.actif ?  heritage.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut
-  const dateFin: CaminoDate | null = heritage.heritageProps.dateFin.actif ?  heritage.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin
+export const flattenEtapeWithHeritage = (
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  etape: DeepReadonly<Etape>,
+  heritage: DeepReadonly<Pick<EtapeWithHeritage, 'heritageProps' | 'heritageContenu' | 'typeId' | 'date' | 'statutId'>>
+): DeepReadonly<EtapeWithHeritage> => {
+  const substances: Readonly<SubstanceLegaleId[]> = heritage.heritageProps.substances.actif ? heritage.heritageProps.substances.etape?.substances ?? [] : etape.substances
+  const duree: number | null = heritage.heritageProps.duree.actif ? heritage.heritageProps.duree.etape?.duree ?? null : etape.duree
+  const amodiataires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.amodiataires.actif ? heritage.heritageProps.amodiataires.etape?.amodiataires ?? [] : etape.amodiataires
+  const titulaires: DeepReadonly<EtapeEntreprise[]> = heritage.heritageProps.titulaires.actif ? heritage.heritageProps.titulaires.etape?.titulaires ?? [] : etape.titulaires
+  const dateDebut: CaminoDate | null = heritage.heritageProps.dateDebut.actif ? heritage.heritageProps.dateDebut.etape?.dateDebut ?? null : etape.dateDebut
+  const dateFin: CaminoDate | null = heritage.heritageProps.dateFin.actif ? heritage.heritageProps.dateFin.etape?.dateFin ?? null : etape.dateFin
 
   let perimetre: DeepReadonly<Pick<Etape, EtapePropsFromHeritagePropName<'perimetre'>>> = {
     geojson4326Perimetre: etape.geojson4326Perimetre,
@@ -158,31 +167,38 @@ export const flattenEtapeWithHeritage = (titreTypeId: TitreTypeId, demarcheTypeI
     geojsonOrigineGeoSystemeId: etape.geojsonOrigineGeoSystemeId,
     geojson4326Forages: etape.geojson4326Forages,
     geojsonOrigineForages: etape.geojsonOrigineForages,
-    surface: etape.surface
+    surface: etape.surface,
   }
   if (heritage.heritageProps.perimetre.actif) {
     perimetre = {
-    geojson4326Perimetre: heritage.heritageProps.perimetre.etape?.geojson4326Perimetre ?? null,
-    geojson4326Points: heritage.heritageProps.perimetre.etape?.geojson4326Points ?? null,
-    geojsonOriginePerimetre: heritage.heritageProps.perimetre.etape?.geojsonOriginePerimetre ?? null,
-    geojsonOriginePoints: heritage.heritageProps.perimetre.etape?.geojsonOriginePoints ?? null,
-    geojsonOrigineGeoSystemeId: heritage.heritageProps.perimetre.etape?.geojsonOrigineGeoSystemeId ?? null,
-    geojson4326Forages: heritage.heritageProps.perimetre.etape?.geojson4326Forages ?? null,
-    geojsonOrigineForages: heritage.heritageProps.perimetre.etape?.geojsonOrigineForages ?? null,
-    surface: heritage.heritageProps.perimetre.etape?.surface ?? null,
+      geojson4326Perimetre: heritage.heritageProps.perimetre.etape?.geojson4326Perimetre ?? null,
+      geojson4326Points: heritage.heritageProps.perimetre.etape?.geojson4326Points ?? null,
+      geojsonOriginePerimetre: heritage.heritageProps.perimetre.etape?.geojsonOriginePerimetre ?? null,
+      geojsonOriginePoints: heritage.heritageProps.perimetre.etape?.geojsonOriginePoints ?? null,
+      geojsonOrigineGeoSystemeId: heritage.heritageProps.perimetre.etape?.geojsonOrigineGeoSystemeId ?? null,
+      geojson4326Forages: heritage.heritageProps.perimetre.etape?.geojson4326Forages ?? null,
+      geojsonOrigineForages: heritage.heritageProps.perimetre.etape?.geojsonOrigineForages ?? null,
+      surface: heritage.heritageProps.perimetre.etape?.surface ?? null,
     }
   }
 
-  const sections =  getSections(titreTypeId, demarcheTypeId, heritage.typeId)
+  const sections = getSections(titreTypeId, demarcheTypeId, heritage.typeId)
 
   let newContenu: DeepReadonly<Etape['contenu']> = {}
-    for (const section of sections) {
-        newContenu = {...newContenu, [section.id]: {}}
-      for (const element of section.elements) {
-          newContenu = { ...newContenu, [section.id]: {...newContenu[section.id], [element.id]: heritage.heritageContenu[section.id]?.[element.id]?.actif ? heritage.heritageContenu[section.id][element.id].etape?.contenu[section.id]?.[element.id] ?? null : etape.contenu[section.id]?.[element.id] ?? null} }
+  for (const section of sections) {
+    newContenu = { ...newContenu, [section.id]: {} }
+    for (const element of section.elements) {
+      newContenu = {
+        ...newContenu,
+        [section.id]: {
+          ...newContenu[section.id],
+          [element.id]: heritage.heritageContenu[section.id]?.[element.id]?.actif
+            ? heritage.heritageContenu[section.id][element.id].etape?.contenu[section.id]?.[element.id] ?? null
+            : etape.contenu[section.id]?.[element.id] ?? null,
+        },
       }
     }
+  }
 
-
-  return {...etape, ...heritage, substances, duree, amodiataires, titulaires, dateDebut, dateFin, ...perimetre, contenu: newContenu}
+  return { ...etape, ...heritage, substances, duree, amodiataires, titulaires, dateDebut, dateFin, ...perimetre, contenu: newContenu }
 }

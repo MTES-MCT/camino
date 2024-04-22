@@ -22,7 +22,7 @@ export const SectionsEdit = defineComponent<Props>(props => {
   const updateElement = (sectionId: string) => (element: DeepReadonly<ElementWithValue>) => {
     setEditedEtape({ ...editedEtape.value, contenu: { ...editedEtape.value.contenu, [sectionId]: { ...editedEtape.value.contenu[sectionId], [element.id]: element.value } } })
   }
-  const updateHeritage = (sectionId: string, elementId: string ) => (heritage: ElementHeritage) => {
+  const updateHeritage = (sectionId: string, elementId: string) => (heritage: ElementHeritage) => {
     setEditedEtape({ ...editedEtape.value, heritageContenu: { ...editedEtape.value.heritageContenu, [sectionId]: { ...editedEtape.value.heritageContenu[sectionId], [elementId]: heritage } } })
   }
 
@@ -42,14 +42,14 @@ export const SectionsEdit = defineComponent<Props>(props => {
   )
 
   const heritageContenu = computed<DeepReadonly<HeritageContenu>>(() => {
-    let heritage: DeepReadonly<HeritageContenu> = {...editedEtape.value.heritageContenu}
+    let heritage: DeepReadonly<HeritageContenu> = { ...editedEtape.value.heritageContenu }
     for (const section of sectionsWithValue.value) {
       if (isNullOrUndefined(heritage[section.id])) {
-        heritage = {...heritage, [section.id]: {}}
+        heritage = { ...heritage, [section.id]: {} }
       }
       for (const element of section.elements) {
         if (isNullOrUndefined(heritage[section.id][element.id])) {
-          heritage = { ...heritage, [section.id]: {...heritage[section.id], [element.id]: {actif: false}} }
+          heritage = { ...heritage, [section.id]: { ...heritage[section.id], [element.id]: { actif: false } } }
         }
       }
     }
@@ -58,25 +58,25 @@ export const SectionsEdit = defineComponent<Props>(props => {
   })
 
   return () => (
-    <div class='fr-grid-row'>
-    <div class="fr-col-12 fr-col-xl-6">
-      {sectionsWithValue.value.map(sectionWithValue => (
-        <div key={sectionWithValue.id}>
-          {isNotNullNorUndefinedNorEmpty(sectionWithValue.nom) ? <h3>{sectionWithValue.nom}</h3> : null}
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-xl-6">
+        {sectionsWithValue.value.map(sectionWithValue => (
+          <div key={sectionWithValue.id}>
+            {isNotNullNorUndefinedNorEmpty(sectionWithValue.nom) ? <h3>{sectionWithValue.nom}</h3> : null}
 
-          {sectionWithValue.elements.map(elementWithValue => (
-            <SectionElementWithValueEdit
-              key={elementWithValue.id}
-              elementWithValue={elementWithValue}
-              elementHeritage={heritageContenu.value[sectionWithValue.id][elementWithValue.id]}
-              sectionId={sectionWithValue.id}
-              updateElement={updateElement(sectionWithValue.id)}
-              updateHeritage={updateHeritage(sectionWithValue.id, elementWithValue.id)}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
+            {sectionWithValue.elements.map(elementWithValue => (
+              <SectionElementWithValueEdit
+                key={elementWithValue.id}
+                elementWithValue={elementWithValue}
+                elementHeritage={heritageContenu.value[sectionWithValue.id][elementWithValue.id]}
+                sectionId={sectionWithValue.id}
+                updateElement={updateElement(sectionWithValue.id)}
+                updateHeritage={updateHeritage(sectionWithValue.id, elementWithValue.id)}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 })

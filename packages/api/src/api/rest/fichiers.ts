@@ -3,7 +3,7 @@ import { createWriteStream } from 'node:fs'
 import { User } from 'camino-common/src/roles'
 import { DOWNLOAD_FORMATS, contentTypes } from 'camino-common/src/rest.js'
 import { Pool } from 'pg'
-import { EtapeDocument, EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
+import { EtapeId, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
 import { getEntrepriseDocumentLargeObjectIdsByEtapeId, getEtapeDocumentLargeObjectIdsByEtapeId } from '../../database/queries/titres-etapes.queries.js'
 import { LargeObjectManager } from 'pg-large-object'
 
@@ -24,15 +24,18 @@ export const etapeTelecharger =
       throw new Error("id d'étape absent")
     }
 
-  
     const etapeData = await getEtapeDataForEdition(pool, etapeId)
 
     const titreTypeId = memoize(() => Promise.resolve(etapeData.titre_type_id))
     const administrationsLocales = memoize(() => administrationsLocalesByEtapeId(etapeId, pool))
     const entreprisesTitulairesOuAmodiataires = memoize(() => entreprisesTitulairesOuAmoditairesByEtapeId(etapeId, pool))
 
-
-    const documents = await getEtapeDocumentLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires,etapeData.etape_type_id, {demarche_type_id: etapeData.demarche_type_id, titre_public_lecture: etapeData.titre_public_lecture, entreprises_lecture: etapeData.demarche_entreprises_lecture, public_lecture: etapeData.demarche_public_lecture})
+    const documents = await getEtapeDocumentLargeObjectIdsByEtapeId(etapeId, pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, etapeData.etape_type_id, {
+      demarche_type_id: etapeData.demarche_type_id,
+      titre_public_lecture: etapeData.titre_public_lecture,
+      entreprises_lecture: etapeData.demarche_entreprises_lecture,
+      public_lecture: etapeData.demarche_public_lecture,
+    })
     const entrepriseDocuments = await getEntrepriseDocumentLargeObjectIdsByEtapeId({ titre_etape_id: etapeId }, pool, user)
 
     if (!documents.length && !entrepriseDocuments.length) {
@@ -41,7 +44,6 @@ export const etapeTelecharger =
 
     const zip = new JSZip()
 
-   
     const client = await pool.connect()
 
     try {

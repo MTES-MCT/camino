@@ -5,7 +5,7 @@ import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import options from '../../src/database/queries/_options.js'
-import { newDemarcheId, newEtapeDocumentId, newTitreId, newEtapeId, idGenerate } from '../../src/database/models/_format/id-create.js'
+import { newDemarcheId, newTitreId, newEtapeId, idGenerate } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
@@ -28,7 +28,6 @@ import { tempDocumentNameValidator } from 'camino-common/src/document.js'
 const dir = `${process.cwd()}/files/tmp/`
 
 export const testDocumentCreateTemp = (typeId: DocumentTypeId) => {
-
   const fileName = `existing_temp_file_${idGenerate()}`
   mkdirSync(dir, { recursive: true })
   copyFileSync(`./src/tools/small.pdf`, `${dir}/${fileName}`)
@@ -39,6 +38,7 @@ export const testDocumentCreateTemp = (typeId: DocumentTypeId) => {
     description: 'desc',
     temp_document_name: tempDocumentNameValidator.parse(fileName),
   }
+
   return documentToInsert
 }
 export const visibleCheck = async (

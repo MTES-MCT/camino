@@ -35,7 +35,7 @@ export const Meta = defineComponent(() => {
 
   const get = async () => {
     if (!canReadMetas(user)) {
-      //TODO 2024-04-16 afficher une jolie alerte dans la page
+      // TODO 2024-04-16 afficher une jolie alerte dans la page
       console.error('impossible d’accéder à cette page')
     } else {
       await store.dispatch('meta/get', id.value)

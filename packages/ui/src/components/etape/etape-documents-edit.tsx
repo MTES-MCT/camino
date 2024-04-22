@@ -1,11 +1,22 @@
-import { DocumentComplementaireAslEtapeDocumentModification, DocumentComplementaireDaeEtapeDocumentModification, EtapeDocument, EtapeDocumentModification, EtapeId, GetEtapeDocumentsByEtapeId, TempEtapeDocument, documentTypeIdComplementaireObligatoireASL, documentTypeIdComplementaireObligatoireDAE, needAslAndDae } from 'camino-common/src/etape'
+import {
+  DocumentComplementaireAslEtapeDocumentModification,
+  DocumentComplementaireDaeEtapeDocumentModification,
+  EtapeDocument,
+  EtapeDocumentModification,
+  EtapeId,
+  GetEtapeDocumentsByEtapeId,
+  TempEtapeDocument,
+  documentTypeIdComplementaireObligatoireASL,
+  documentTypeIdComplementaireObligatoireDAE,
+  needAslAndDae,
+} from 'camino-common/src/etape'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ApiClient } from '../../api/api-client'
 import { DeepReadonly, FunctionalComponent, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
-import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, isNullOrUndefinedOrEmpty, NonEmptyArray } from 'camino-common/src/typescript-tools'
+import { isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, NonEmptyArray } from 'camino-common/src/typescript-tools'
 import { DocumentType, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '../../api/client-rest'
@@ -28,7 +39,11 @@ interface Props {
   }
   etapeStatutId: EtapeStatutId
   sdomZoneIds: DeepReadonly<SDOMZoneId[]>
-  completeUpdate: (etapeDocuments: (EtapeDocument | TempEtapeDocument)[], daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null, aslDocument: DocumentComplementaireAslEtapeDocumentModification | null) => void
+  completeUpdate: (
+    etapeDocuments: (EtapeDocument | TempEtapeDocument)[],
+    daeDocument: DocumentComplementaireDaeEtapeDocumentModification | null,
+    aslDocument: DocumentComplementaireAslEtapeDocumentModification | null
+  ) => void
   etapeId: EtapeId | null
   apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'>
   contenu: DeepReadonly<{ arm?: { mecanise?: boolean } }>
@@ -37,9 +52,8 @@ interface Props {
 
 type WithIndex = { index: number }
 
-type EtapeDocumentModificationWithIndex = (EtapeDocumentModification & WithIndex)
+type EtapeDocumentModificationWithIndex = EtapeDocumentModification & WithIndex
 export const EtapeDocumentsEdit = defineComponent<Props>(props => {
-
   const etapeDocuments = ref<AsyncData<GetEtapeDocumentsByEtapeId>>({ status: 'LOADING' })
 
   onMounted(async () => {
@@ -48,7 +62,7 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
       try {
         const result = await props.apiClient.getEtapeDocumentsByEtapeId(props.etapeId)
 
-        etapeDocuments.value = { status: 'LOADED', value: result}
+        etapeDocuments.value = { status: 'LOADED', value: result }
       } catch (e: any) {
         console.error('error', e)
         etapeDocuments.value = {
@@ -57,24 +71,18 @@ export const EtapeDocumentsEdit = defineComponent<Props>(props => {
         }
       }
     } else {
-      etapeDocuments.value = { status: 'LOADED', value: {etapeDocuments: [], asl: null, dae: null} }
+      etapeDocuments.value = { status: 'LOADED', value: { etapeDocuments: [], asl: null, dae: null } }
     }
-    if( etapeDocuments.value.status === 'LOADED'){
+    if (etapeDocuments.value.status === 'LOADED') {
       props.completeUpdate(etapeDocuments.value.value.etapeDocuments, etapeDocuments.value.value.dae, etapeDocuments.value.value.asl)
     }
   })
 
-  return () => (
-    <LoadingElement
-      data={etapeDocuments.value}
-      renderItem={items => (<EtapeDocumentsLoaded {...items} {...props} />)}
-    />
-  )
+  return () => <LoadingElement data={etapeDocuments.value} renderItem={items => <EtapeDocumentsLoaded {...items} {...props} />} />
 })
 
 type EtapeDocumentsLoadedProps = GetEtapeDocumentsByEtapeId & Props
-const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) => {
-
+const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>(props => {
   const daeDocument = ref<DocumentComplementaireDaeEtapeDocumentModification | null>(props.dae)
   const aslDocument = ref<DocumentComplementaireAslEtapeDocumentModification | null>(props.asl)
   const etapeDocuments = ref<EtapeDocumentModificationWithIndex[]>(props.etapeDocuments.map((document, index) => ({ ...document, index })))
@@ -92,40 +100,47 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
   const addOrEditDaePopupOpen = ref<boolean>(false)
   const addOrEditAslPopupOpen = ref<boolean>(false)
 
-
   const documentTypes = computed<DocumentType[]>(() => {
-    return getDocumentsTypes({contenu: props.contenu, typeId: props.tde.etapeTypeId}, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
+    return getDocumentsTypes({ contenu: props.contenu, typeId: props.tde.etapeTypeId }, props.tde.demarcheTypeId, props.tde.titreTypeId, props.sdomZoneIds)
   })
 
   const needAslAndDaeCompute = computed<boolean>(() => {
     return needAslAndDae(props.tde, props.etapeStatutId, props.user)
   })
 
-
   const completeRequiredDocuments = computed<PropsTable['documents']>(() => {
     const documents: PropsTable['documents'] = etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && !dt.optionnel))
 
     if (needAslAndDaeCompute.value) {
       if (isNotNullNorUndefined(daeDocument.value)) {
-        documents.push({...daeDocument.value, index: 'dae', description: `${daeDocument.value.description}
+        documents.push({
+          ...daeDocument.value,
+          index: 'dae',
+          description: `${daeDocument.value.description}
 - Statut : ${EtapesStatuts[daeDocument.value.etape_statut_id].nom}
 - Date : ${dateFormat(daeDocument.value.date)}
 - Arrêté : ${daeDocument.value.arrete_prefectoral ?? ''}
 `,
-})
+        })
       }
       if (isNotNullNorUndefined(aslDocument.value)) {
-        documents.push({...aslDocument.value, index: 'asl', description: `${aslDocument.value.description}
+        documents.push({
+          ...aslDocument.value,
+          index: 'asl',
+          description: `${aslDocument.value.description}
         - Statut : ${EtapesStatuts[aslDocument.value.etape_statut_id].nom}
         - Date : ${dateFormat(aslDocument.value.date)}
-        `})
+        `,
+        })
       }
     }
-    return documents
 
+    return documents
   })
   const emptyRequiredDocuments = computed<DocumentTypeId[]>(() => {
-    const documents = documentTypes.value.filter(({ optionnel, id }) => !optionnel && !completeRequiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id)).map(({ id }) => id)
+    const documents = documentTypes.value
+      .filter(({ optionnel, id }) => !optionnel && !completeRequiredDocuments.value.some(({ etape_document_type_id }) => etape_document_type_id === id))
+      .map(({ id }) => id)
 
     if (needAslAndDaeCompute.value) {
       if (isNullOrUndefined(daeDocument.value)) {
@@ -143,8 +158,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
   })
 
   const additionnalDocuments = computed<PropsTable['documents']>(() => {
-      return etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && dt.optionnel))
-
+    return etapeDocuments.value.filter(({ etape_document_type_id }) => documentTypes.value.some(dt => dt.id === etape_document_type_id && dt.optionnel))
   })
   const openAddPopupAdditionnalDocument = () => {
     if (isNonEmptyArray(additionnalDocumentTypeIds.value)) {
@@ -183,7 +197,7 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
   const addDocument = (documentTypeId: DocumentTypeId) => {
     if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireDAE) {
       addOrEditDaePopupOpen.value = true
-    }else if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireASL) {
+    } else if (needAslAndDaeCompute.value && documentTypeId === documentTypeIdComplementaireObligatoireASL) {
       addOrEditAslPopupOpen.value = true
     } else {
       addOrEditPopupOpen.value = { open: true, documentTypeIds: [documentTypeId] }
@@ -197,12 +211,11 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
       case 'dae':
         addOrEditDaePopupOpen.value = true
         break
-      default:{
+      default: {
         const document = etapeDocuments.value[documentIndex]
         addOrEditPopupOpen.value = { open: true, documentTypeIds: [document.etape_document_type_id], document }
       }
     }
-
   }
   const removeDocument = (documentIndex: number) => {
     etapeDocuments.value.splice(documentIndex, 1)
@@ -218,75 +231,66 @@ const EtapeDocumentsLoaded = defineComponent<EtapeDocumentsLoadedProps>((props) 
 
     return DocumentsTypes[documentTypeId].nom
   }
-  return () => <>
-  {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(completeRequiredDocuments.value) ? (
-    <EtapeDocumentsTable
-      getNom={getNom}
-      add={addDocument}
-      edit={editDocument}
-      delete={removeDocument}
-      caption="Documents obligatoires"
-      emptyRequiredDocuments={emptyRequiredDocuments.value}
-      documents={completeRequiredDocuments.value}
-      etapeStatutId={props.etapeStatutId}
-    />
-  ) : null}
 
-  {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
+  return () => (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
+      {isNotNullNorUndefinedNorEmpty(emptyRequiredDocuments.value) || isNotNullNorUndefinedNorEmpty(completeRequiredDocuments.value) ? (
         <EtapeDocumentsTable
           getNom={getNom}
           add={addDocument}
           edit={editDocument}
           delete={removeDocument}
-          caption="Documents complémentaires"
-          emptyRequiredDocuments={[]}
-          documents={additionnalDocuments.value}
+          caption="Documents obligatoires"
+          emptyRequiredDocuments={emptyRequiredDocuments.value}
+          documents={completeRequiredDocuments.value}
           etapeStatutId={props.etapeStatutId}
-        />
-        <DsfrButtonIcon
-          style={{ alignSelf: 'end' }}
-          class="fr-mt-1w"
-          icon="fr-icon-add-line"
-          buttonType="secondary"
-          title="Ajouter un document complémentaire"
-          label="Ajouter"
-          onClick={openAddPopupAdditionnalDocument}
-        />
-      </div>
-      {addOrEditPopupOpen.value.open ? (
-        <AddEtapeDocumentPopup
-          documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
-          apiClient={props.apiClient}
-          close={closeAddPopup}
-          user={props.user}
-          initialDocument={addOrEditPopupOpen.value.document}
-        />
-      ) : null}
-      {addOrEditDaePopupOpen.value ? (
-        <AddEtapeDaeDocumentPopup
-          apiClient={props.apiClient}
-          close={closeAddDaePopup}
-          initialDocument={daeDocument.value}
         />
       ) : null}
 
-      {addOrEditAslPopupOpen.value ? (
-        <AddEtapeAslDocumentPopup
-          apiClient={props.apiClient}
-          close={closeAddAslPopup}
-          initialDocument={aslDocument.value}
-        />
+      {isNonEmptyArray(additionnalDocumentTypeIds.value) ? (
+        <>
+          <div style={{ display: 'flex', flexDirection: 'column' }} class="fr-mt-3w">
+            <EtapeDocumentsTable
+              getNom={getNom}
+              add={addDocument}
+              edit={editDocument}
+              delete={removeDocument}
+              caption="Documents complémentaires"
+              emptyRequiredDocuments={[]}
+              documents={additionnalDocuments.value}
+              etapeStatutId={props.etapeStatutId}
+            />
+            <DsfrButtonIcon
+              style={{ alignSelf: 'end' }}
+              class="fr-mt-1w"
+              icon="fr-icon-add-line"
+              buttonType="secondary"
+              title="Ajouter un document complémentaire"
+              label="Ajouter"
+              onClick={openAddPopupAdditionnalDocument}
+            />
+          </div>
+          {addOrEditPopupOpen.value.open ? (
+            <AddEtapeDocumentPopup
+              documentTypeIds={addOrEditPopupOpen.value.documentTypeIds}
+              apiClient={props.apiClient}
+              close={closeAddPopup}
+              user={props.user}
+              initialDocument={addOrEditPopupOpen.value.document}
+            />
+          ) : null}
+          {addOrEditDaePopupOpen.value ? <AddEtapeDaeDocumentPopup apiClient={props.apiClient} close={closeAddDaePopup} initialDocument={daeDocument.value} /> : null}
+
+          {addOrEditAslPopupOpen.value ? <AddEtapeAslDocumentPopup apiClient={props.apiClient} close={closeAddAslPopup} initialDocument={aslDocument.value} /> : null}
+        </>
       ) : null}
     </>
-  ) : null}
-</>
+  )
 })
 
 type PropsTable = {
   caption: string
-  documents: ((EtapeDocument | TempEtapeDocument) & {index: number | 'asl' | 'dae'})[]
+  documents: ((EtapeDocument | TempEtapeDocument) & { index: number | 'asl' | 'dae' })[]
   etapeStatutId: EtapeStatutId | null
   emptyRequiredDocuments: DocumentTypeId[]
   getNom: (documentTypeId: DocumentTypeId) => string
@@ -301,6 +305,7 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
   const editDocument = (index: number | 'asl' | 'dae') => () => {
     props.edit(index)
   }
+
   return (
     <div class="fr-table fr-mb-0">
       <table style={{ display: 'table' }}>
@@ -319,29 +324,28 @@ const EtapeDocumentsTable: FunctionalComponent<PropsTable> = (props: PropsTable)
           {props.documents.map(document => (
             <tr>
               <td>{props.getNom(document.etape_document_type_id)}</td>
-              <td style={{whiteSpace: 'pre-line'}}>{document.description}</td>
+              <td style={{ whiteSpace: 'pre-line' }}>{document.description}</td>
               <td>{getVisibilityLabel(document)}</td>
-              <td >
-                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center'}}>
-                <DsfrButtonIcon
-                  icon="fr-icon-edit-line"
-                  title={`Modifier le document de ${props.getNom(document.etape_document_type_id)}`}
-                  onClick={editDocument(document.index)}
-                  buttonType="secondary"
-                  buttonSize="sm"
-                />
-                {canDeleteEtapeDocument(props.etapeStatutId) && document.index !== 'asl' && document.index !== 'dae'? (
+              <td>
+                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                   <DsfrButtonIcon
-                    icon="fr-icon-delete-bin-line"
-                    class="fr-ml-1w"
-                    title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
-                    onClick={deleteDocument(document.index)}
+                    icon="fr-icon-edit-line"
+                    title={`Modifier le document de ${props.getNom(document.etape_document_type_id)}`}
+                    onClick={editDocument(document.index)}
                     buttonType="secondary"
                     buttonSize="sm"
                   />
-                ) : null}
+                  {canDeleteEtapeDocument(props.etapeStatutId) && document.index !== 'asl' && document.index !== 'dae' ? (
+                    <DsfrButtonIcon
+                      icon="fr-icon-delete-bin-line"
+                      class="fr-ml-1w"
+                      title={`Supprimer le document de ${props.getNom(document.etape_document_type_id)}`}
+                      onClick={deleteDocument(document.index)}
+                      buttonType="secondary"
+                      buttonSize="sm"
+                    />
+                  ) : null}
                 </div>
-
               </td>
             </tr>
           ))}

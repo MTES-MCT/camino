@@ -15,7 +15,6 @@ export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, 
     if (!demarcheIdOrSlugParsed.success) {
       res.sendStatus(HTTP_STATUS.HTTP_STATUS_BAD_REQUEST)
     } else {
-
       const demarche = await getDemarcheByIdOrSlugDb(pool, demarcheIdOrSlugParsed.data)
       const titre = await getTitreByIdOrSlug(pool, demarche.titre_id)
 
@@ -27,17 +26,13 @@ export const getDemarcheByIdOrSlug = (pool: Pool) => async (req: CaminoRequest, 
           user,
           memoize(() => Promise.resolve(titre.titre_type_id)),
           administrationsLocales,
-          memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id)),
+          memoize(() => getTitulairesAmodiatairesByTitreId(pool, demarche.titre_id))
         )
       ) {
-
-
-
         res.json(getDemarcheByIdOrSlugValidator.parse(demarche))
       } else {
         res.sendStatus(HTTP_STATUS.HTTP_STATUS_FORBIDDEN)
       }
-      
     }
   } catch (e) {
     console.error(e)

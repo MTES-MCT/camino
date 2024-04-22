@@ -14,7 +14,7 @@ import {
   IUpdateEtapeDocumentFileDbQuery,
   IUpdateEtapeDocumentInfoDbQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeDocument, EtapeDocumentId, etapeDocumentIdValidator, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
@@ -33,7 +33,6 @@ import { getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId } from '../largeobjects.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
-import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -236,8 +235,6 @@ export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
   return filteredDocuments
 }
 
-
-
 export const getDocumentsByEtapeId = async (
   titre_etape_id: EtapeId,
   pool: Pool,
@@ -248,7 +245,7 @@ export const getDocumentsByEtapeId = async (
   etapeTypeId: EtapeTypeId,
   demarche: CanReadDemarche
 ): Promise<EtapeDocument[]> => {
+  const result = await getEtapeDocumentLargeObjectIdsByEtapeId(titre_etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)
 
-const result = await getEtapeDocumentLargeObjectIdsByEtapeId(titre_etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)
   return z.array(etapeDocumentValidator).parse(result)
 }

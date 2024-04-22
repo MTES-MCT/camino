@@ -1,8 +1,6 @@
-import { expect, test } from "vitest"
-import { nullToDefault } from "./zod-tools"
-import { z } from "zod"
-
-
+import { expect, test } from 'vitest'
+import { nullToDefault } from './zod-tools'
+import { z } from 'zod'
 
 test('nullToDefault', () => {
   expect(z.string().nullable().transform(nullToDefault('inCaseOfNull')).parse(null)).toBe('inCaseOfNull')

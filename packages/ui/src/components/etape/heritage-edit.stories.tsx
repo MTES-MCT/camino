@@ -30,7 +30,6 @@ export const HeritageEnabled: StoryFn = () => (
     updateHeritage={updateHeritage}
     prop={{ actif: true, etape: { date: toCaminoDate('2024-01-01'), typeId: 'mfr', dateDebut: toCaminoDate('2022-01-01') } }}
     propId="dateDebut"
-
     hasHeritage={true}
     write={() => <InputDate dateChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.dateDebut !== undefined ? dateFormat(heritagePropEtape.dateDebut) : 'Pas de date'}</div>}

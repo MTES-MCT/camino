@@ -83,7 +83,9 @@ const helpVisible = (user: User, titreTypeId: TitreTypeId, etapeTypeId: EtapeTyp
 }
 
 export const PureEtapeEdition = defineComponent<Props>(props => {
-  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({ status: 'LOADING' })
+  const [asyncData, setAsyncData] = useState<AsyncData<DeepReadonly<{ etape: EtapeEditFormProps['etape']; demarche: GetDemarcheByIdOrSlugValidator; perimetre: PerimetreInformations }>>>({
+    status: 'LOADING',
+  })
 
   onMounted(async () => {
     try {
@@ -130,7 +132,7 @@ export const PureEtapeEdition = defineComponent<Props>(props => {
               dateDebut: null,
               dateFin: null,
               heritageContenu: null,
-              heritageProps: null
+              heritageProps: null,
             },
             demarche,
             perimetre,

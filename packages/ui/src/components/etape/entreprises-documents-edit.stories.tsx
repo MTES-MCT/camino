@@ -449,8 +449,6 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
   />
 )
 
-
-
 export const ArmDocumentOptionnel: StoryFn = () => (
   <EntrepriseDocumentsEdit
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mod' }}
@@ -484,8 +482,7 @@ export const ArmDocumentOptionnel: StoryFn = () => (
       getEtapeEntrepriseDocuments: etapeId => {
         getEtapeEntrepriseDocumentsAction(etapeId)
 
-        return Promise.resolve([
-        ])
+        return Promise.resolve([])
       },
     }}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'nom entreprise' }]}

@@ -29,7 +29,7 @@ export const SectionElementWithValueEdit: FunctionalComponent<Props> = props => 
   }
 
   const heritageValue = props.elementHeritage.etape?.contenu?.[props.sectionId]?.[props.elementWithValue.id]
-  const hasHeritageValue: boolean = (isNotNullNorUndefined(heritageValue) && (!Array.isArray(heritageValue) || heritageValue.length > 0))
+  const hasHeritageValue: boolean = isNotNullNorUndefined(heritageValue) && (!Array.isArray(heritageValue) || heritageValue.length > 0)
 
   return <HeritageEdit prop={props.elementHeritage} hasHeritage={hasHeritageValue} propId="contenu" read={read} write={write} updateHeritage={props.updateHeritage} />
 }

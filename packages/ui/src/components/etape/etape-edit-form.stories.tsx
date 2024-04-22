@@ -1,6 +1,6 @@
 import { EtapeEditForm, Props } from './etape-edit-form'
 import { Meta, StoryFn } from '@storybook/vue3'
-import { Etape, EtapeDocument, EtapeId, EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
+import { EtapeId, EtapeWithHeritage, etapeIdValidator } from 'camino-common/src/etape'
 import { Entreprise, EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, newEntrepriseId } from 'camino-common/src/entreprise'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { testBlankUser } from 'camino-common/src/tests-utils'
@@ -8,7 +8,6 @@ import { action } from '@storybook/addon-actions'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { DeepReadonly } from 'vue'
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { TempDocumentName, tempDocumentNameValidator } from 'camino-common/src/document'
 import { UiEntrepriseDocumentInput } from '../entreprise/entreprise-api-client'
@@ -112,7 +111,7 @@ const etape: Props['etape'] = {
   geojsonOrigineGeoSystemeId: null,
   geojsonOrigineForages: null,
   heritageContenu: null,
-  heritageProps: null
+  heritageProps: null,
 }
 
 const goToDemarcheAction = action('goToDemarche')
@@ -131,6 +130,7 @@ const creerEntrepriseDocumentAction = action('creerEntrepriseDocument')
 const etapeEditFormApiClient: Props['apiClient'] = {
   deposeEtape(etapeId) {
     deposeEtapeAction(etapeId)
+
     return Promise.resolve(undefined)
   },
   etapeCreer(etape) {
@@ -191,7 +191,7 @@ const etapeEditFormApiClient: Props['apiClient'] = {
   getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve({etapeDocuments:[], dae: null, asl: null})
+    return Promise.resolve({ etapeDocuments: [], dae: null, asl: null })
   },
   getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
     getEtapeEntrepriseDocumentsAction(etapeId)

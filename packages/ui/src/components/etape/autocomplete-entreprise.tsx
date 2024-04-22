@@ -18,8 +18,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
   watch(
     () => props.selectedEntities,
     (newEntities, oldEntities) => {
-      if (!stringArrayEquals(newEntities?.map(({id}) => id) ?? [], oldEntities?.map(({id}) => id) ?? [])) {
-
+      if (!stringArrayEquals(newEntities?.map(({ id }) => id) ?? [], oldEntities?.map(({ id }) => id) ?? [])) {
         setMySelectedEntities(newEntities?.map(entity => ({ ...entity })) ?? [])
       }
     }

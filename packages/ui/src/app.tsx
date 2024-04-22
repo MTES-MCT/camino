@@ -55,7 +55,6 @@ export const App = defineComponent(() => {
       <div class="messages">
         <Messages messages={messages.value} />
       </div>
-
     </div>
   )
 })

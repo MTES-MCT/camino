@@ -45,9 +45,10 @@ const uploadTempDocumentAction = action('uploadTempDocument')
 const getEtapeDocumentsByEtapeIdAction = action('getEtapeDocumentsByEtapeId')
 
 const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'getEtapeDocumentsByEtapeId'> = {
-  getEtapeDocumentsByEtapeId: (etapeId) => {
+  getEtapeDocumentsByEtapeId: etapeId => {
     getEtapeDocumentsByEtapeIdAction(etapeId)
-    return Promise.resolve({etapeDocuments: documents, asl: null, dae: null})
+
+    return Promise.resolve({ etapeDocuments: documents, asl: null, dae: null })
   },
   uploadTempDocument: document => {
     uploadTempDocumentAction(document)
@@ -60,7 +61,7 @@ const completeUpdateAction = action('completeUpdate')
 
 export const Empty: StoryFn = () => (
   <EtapeDocumentsEdit
-    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve({etapeDocuments: [], asl: null, dae: null}) }}
+    apiClient={{ ...apiClient, getEtapeDocumentsByEtapeId: () => Promise.resolve({ etapeDocuments: [], asl: null, dae: null }) }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
@@ -88,43 +89,47 @@ export const Complet: StoryFn = () => (
     apiClient={{
       ...apiClient,
       getEtapeDocumentsByEtapeId: () =>
-        Promise.resolve({etapeDocuments: [
-          {
-            id: etapeDocumentIdValidator.parse('id'),
-            etape_document_type_id: 'dep',
-            description: 'Une description',
-            public_lecture: false,
-            entreprises_lecture: false,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            etape_document_type_id: 'dom',
-            description: 'Une autre description',
-            public_lecture: false,
-            entreprises_lecture: false,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id3'),
-            etape_document_type_id: 'for',
-            description: null,
-            public_lecture: false,
-            entreprises_lecture: false,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id4'),
-            etape_document_type_id: 'jpa',
-            description: null,
-            public_lecture: false,
-            entreprises_lecture: false,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id5'),
-            etape_document_type_id: 'car',
-            description: null,
-            public_lecture: false,
-            entreprises_lecture: false,
-          },
-        ], asl: null, dae: null}),
+        Promise.resolve({
+          etapeDocuments: [
+            {
+              id: etapeDocumentIdValidator.parse('id'),
+              etape_document_type_id: 'dep',
+              description: 'Une description',
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              etape_document_type_id: 'dom',
+              description: 'Une autre description',
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id3'),
+              etape_document_type_id: 'for',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id4'),
+              etape_document_type_id: 'jpa',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id5'),
+              etape_document_type_id: 'car',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+          ],
+          asl: null,
+          dae: null,
+        }),
     }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
@@ -195,10 +200,9 @@ export const OctroiAxmUtilisateurSuper: StoryFn = () => (
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     etapeStatutId="aco"
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'super'}}
+    user={{ ...testBlankUser, role: 'super' }}
   />
 )
-
 
 export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
   <EtapeDocumentsEdit
@@ -209,78 +213,84 @@ export const OctroiAxmUtilisateurEntreprise: StoryFn = () => (
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     etapeStatutId="aco"
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1'}] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1' }] }}
   />
 )
 
 export const OctroiAxmUtilisateurEntrepriseComplet: StoryFn = () => (
   <EtapeDocumentsEdit
-    apiClient={{...apiClient, getEtapeDocumentsByEtapeId(etapeId) {
-      getEtapeDocumentsByEtapeIdAction(etapeId)
-      return Promise.resolve<GetEtapeDocumentsByEtapeId>({  etapeDocuments: [
-        {
-          id: etapeDocumentIdValidator.parse('id'),
-          etape_document_type_id: 'dep',
-          description: 'Une description',
-          public_lecture: false,
-          entreprises_lecture: false,
-        },
-        {
-          id: etapeDocumentIdValidator.parse('id2'),
-          etape_document_type_id: 'dom',
-          description: 'Une autre description',
-          public_lecture: false,
-          entreprises_lecture: false,
-        },
-        {
-          id: etapeDocumentIdValidator.parse('id3'),
-          etape_document_type_id: 'for',
-          description: null,
-          public_lecture: false,
-          entreprises_lecture: false,
-        },
-        {
-          id: etapeDocumentIdValidator.parse('id4'),
-          etape_document_type_id: 'jpa',
-          description: null,
-          public_lecture: false,
-          entreprises_lecture: false,
-        },
-        {
-          id: etapeDocumentIdValidator.parse('id5'),
-          etape_document_type_id: 'car',
-          description: null,
-          public_lecture: false,
-          entreprises_lecture: false,
-        },
-      ],
-      dae: {
-        id: etapeDocumentIdValidator.parse('daeId'),
-        date: caminoDateValidator.parse('2023-01-23'),
-        description: 'description',
-        public_lecture: false,
-        entreprises_lecture: true,
-        etape_document_type_id: 'arp',
-etape_statut_id: 'exe',
-arrete_prefectoral: '1233232323'
+    apiClient={{
+      ...apiClient,
+      getEtapeDocumentsByEtapeId(etapeId) {
+        getEtapeDocumentsByEtapeIdAction(etapeId)
+
+        return Promise.resolve<GetEtapeDocumentsByEtapeId>({
+          etapeDocuments: [
+            {
+              id: etapeDocumentIdValidator.parse('id'),
+              etape_document_type_id: 'dep',
+              description: 'Une description',
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              etape_document_type_id: 'dom',
+              description: 'Une autre description',
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id3'),
+              etape_document_type_id: 'for',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id4'),
+              etape_document_type_id: 'jpa',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id5'),
+              etape_document_type_id: 'car',
+              description: null,
+              public_lecture: false,
+              entreprises_lecture: false,
+            },
+          ],
+          dae: {
+            id: etapeDocumentIdValidator.parse('daeId'),
+            date: caminoDateValidator.parse('2023-01-23'),
+            description: 'description',
+            public_lecture: false,
+            entreprises_lecture: true,
+            etape_document_type_id: 'arp',
+            etape_statut_id: 'exe',
+            arrete_prefectoral: '1233232323',
+          },
+          asl: {
+            id: etapeDocumentIdValidator.parse('daeId'),
+            date: caminoDateValidator.parse('2023-01-23'),
+            description: 'description',
+            public_lecture: false,
+            entreprises_lecture: true,
+            etape_document_type_id: 'let',
+            etape_statut_id: 'fav',
+          },
+        })
       },
-      asl: {
-        id: etapeDocumentIdValidator.parse('daeId'),
-        date: caminoDateValidator.parse('2023-01-23'),
-        description: 'description',
-        public_lecture: false,
-        entreprises_lecture: true,
-        etape_document_type_id: 'let',
-        etape_statut_id: 'fav'
-      }
-    })}}}
+    }}
     contenu={{}}
     etapeId={etapeIdValidator.parse('etapeId')}
     sdomZoneIds={[]}
     tde={{ titreTypeId: 'axm', demarcheTypeId: 'oct', etapeTypeId: 'mfr' }}
     etapeStatutId="aco"
     completeUpdate={completeUpdateAction}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1'}] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('idEntreprise1'), nom: 'entreprise 1' }] }}
   />
 )
 

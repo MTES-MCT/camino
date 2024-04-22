@@ -73,7 +73,6 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument' | 'geojsonImport' | 'getGe
   },
 }
 
-
 const onEtapeChange = (geojsonInformations: GeojsonInformations) => {
   onEtapeChangeAction(geojsonInformations)
 }

@@ -6,7 +6,7 @@ import { titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../data
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { titreGet } from '../../../database/queries/titres.js'
 
-import {titreEtapeUpdateTask} from '../../../business/titre-etape-update.js'
+import { titreEtapeUpdateTask } from '../../../business/titre-etape-update.js'
 import { titreEtapeHeritageBuild } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
@@ -23,14 +23,16 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateEtape, canEditDates, canEditDuree, canEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
-import { EtapeId, documentComplementaireAslEtapeDocumentModificationValidator, documentComplementaireDaeEtapeDocumentModificationValidator, etapeDocumentModificationValidator, needAslAndDae, tempEtapeDocumentValidator } from 'camino-common/src/etape.js'
-import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
 import {
-  deleteTitreEtapeEntrepriseDocument,
-  insertEtapeDocuments,
-  insertTitreEtapeEntrepriseDocument,
-  updateEtapeDocuments,
-} from '../../../database/queries/titres-etapes.queries.js'
+  EtapeId,
+  documentComplementaireAslEtapeDocumentModificationValidator,
+  documentComplementaireDaeEtapeDocumentModificationValidator,
+  etapeDocumentModificationValidator,
+  needAslAndDae,
+  tempEtapeDocumentValidator,
+} from 'camino-common/src/etape.js'
+import { getEntrepriseDocuments } from '../../rest/entreprises.queries.js'
+import { deleteTitreEtapeEntrepriseDocument, insertEtapeDocuments, insertTitreEtapeEntrepriseDocument, updateEtapeDocuments } from '../../../database/queries/titres-etapes.queries.js'
 import { EntrepriseDocument, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { Pool } from 'pg'
 import { convertPoints, getGeojsonInformation } from '../../rest/perimetre.queries.js'
@@ -41,11 +43,9 @@ import { FieldsEtape } from '../../../database/queries/_options'
 import { canHaveForages } from 'camino-common/src/permissions/titres.js'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { z } from 'zod'
-import { DemarcheId } from 'camino-common/src/demarche.js'
-import { titre } from '../../rest/index.js'
-import { getEtapesByDemarcheId } from '../../rest/demarches.queries.js'
 import { getEtapeByDemarcheIdAndEtapeTypeId } from '../../rest/etapes.queries.js'
+import { DemarcheId } from 'camino-common/src/demarche.js'
+import { z } from 'zod'
 
 export const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
@@ -345,7 +345,7 @@ const validateAndGetEntrepriseDocuments = async (
   return entrepriseDocuments
 }
 
-const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown, daeDocument: unknown, aslDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments: unknown; daeDocument: unknown; aslDocument: unknown } }, context: Context, info: GraphQLResolveInfo) => {
   try {
     const user = context.user
     if (!user) {
@@ -418,11 +418,10 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     const etapeDocuments = etapeDocumentsParsed.data
     delete etape.etapeDocuments
 
-
-    const needToCreateAslAndDae = needAslAndDae({etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId}, etape.statutId, user)
+    const needToCreateAslAndDae = needAslAndDae({ etapeTypeId: etape.typeId, demarcheTypeId: titreDemarche.typeId, titreTypeId: titreDemarche.titre.typeId }, etape.statutId, user)
     let daeDocument = null
     let aslDocument = null
-    if( needToCreateAslAndDae){
+    if (needToCreateAslAndDae) {
       const daeDocumentParsed = documentComplementaireDaeEtapeDocumentModificationValidator.nullable().safeParse(etape.daeDocument)
       if (!daeDocumentParsed.success) {
         console.warn(daeDocumentParsed.error)
@@ -502,43 +501,46 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
       await insertTitreEtapeEntrepriseDocument(context.pool, { titre_etape_id: etapeUpdated.id, entreprise_document_id: document.id })
     }
 
-    if(needToCreateAslAndDae){
-      if( daeDocument !== null){
+    if (needToCreateAslAndDae) {
+      if (daeDocument !== null) {
+        const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'dae', titreDemarche.id)
 
-      const daeEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'dae', titreDemarche.id)
-
-      const daeEtape = await titreEtapeUpsert({
-        id: daeEtapeInDb?.etape_id ?? undefined,
-        typeId: 'dae',
-        statutId: daeDocument.etape_statut_id,
-        titreDemarcheId: titreDemarche.id,
-        date: daeDocument.date,
-        contenu: {
-          mea:{ arrete: daeDocument.arrete_prefectoral}
-        },
-      }, user!, titreDemarche.titreId)
+        const daeEtape = await titreEtapeUpsert(
+          {
+            id: daeEtapeInDb?.etape_id ?? undefined,
+            typeId: 'dae',
+            statutId: daeDocument.etape_statut_id,
+            titreDemarcheId: titreDemarche.id,
+            date: daeDocument.date,
+            contenu: {
+              mea: { arrete: daeDocument.arrete_prefectoral },
+            },
+          },
+          user!,
+          titreDemarche.titreId
+        )
 
         await updateEtapeDocuments(context.pool, user, daeEtape.id, etape.statutId, [daeDocument])
+      }
 
-    }
+      if (aslDocument !== null) {
+        const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'asl', titreDemarche.id)
 
-    if( aslDocument !== null){
-
-      const aslEtapeInDb = await getEtapeByDemarcheIdAndEtapeTypeId(context.pool, 'asl', titreDemarche.id)
-
-      const aslEtape = await titreEtapeUpsert({
-        id: aslEtapeInDb?.etape_id ?? undefined,
-        typeId: 'asl',
-        statutId: aslDocument.etape_statut_id,
-        titreDemarcheId: titreDemarche.id,
-        date: aslDocument.date,
-      }, user!, titreDemarche.titreId)
+        const aslEtape = await titreEtapeUpsert(
+          {
+            id: aslEtapeInDb?.etape_id ?? undefined,
+            typeId: 'asl',
+            statutId: aslDocument.etape_statut_id,
+            titreDemarcheId: titreDemarche.id,
+            date: aslDocument.date,
+          },
+          user!,
+          titreDemarche.titreId
+        )
 
         await updateEtapeDocuments(context.pool, user, aslEtape.id, etape.statutId, [aslDocument])
-
+      }
     }
-  }
-
 
     await titreEtapeUpdateTask(context.pool, etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
@@ -554,7 +556,6 @@ const etapeModifier = async ({ etape }: { etape: ITitreEtape & { etapeDocuments:
     throw e
   }
 }
-
 
 const etapeSupprimer = async ({ id }: { id: EtapeId }, { user, pool }: Context) => {
   try {

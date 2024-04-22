@@ -57,6 +57,10 @@ export const CompletudeDeLaDemandeComplete: StoryFn = () => (
 
 export const SansMessage: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} />
 
-export const WithError: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{status: 'ERROR', message: 'Une erreur sauvage apparait'}} />
+export const WithError: StoryFn = () => (
+  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{ status: 'ERROR', message: 'Une erreur sauvage apparait' }} />
+)
 
-export const EnregistrementEnCours: StoryFn = () => <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{status: 'LOADING'}} />
+export const EnregistrementEnCours: StoryFn = () => (
+  <PureFormSaveBtn alertes={[]} canSave={true} showDepose={true} canDepose={true} save={onSave} depose={onDepose} initialContext={{ status: 'LOADING' }} />
+)

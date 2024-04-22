@@ -1,9 +1,9 @@
 import { HeritageEdit } from './heritage-edit'
 import { PerimetreImportPopup } from './perimetre-import-popup'
-import { DeepReadonly, FunctionalComponent, HTMLAttributes, defineComponent, ref} from 'vue'
+import { DeepReadonly, FunctionalComponent, HTMLAttributes, defineComponent, ref } from 'vue'
 import { DsfrButton } from '../_ui/dsfr-button'
 import { ApiClient } from '@/api/api-client'
-import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonInformations } from 'camino-common/src/perimetre'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DsfrPerimetre } from '../_common/dsfr-perimetre'
@@ -151,7 +151,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
       <HeritageEdit
         prop={props.etape.heritageProps.perimetre}
         updateHeritage={updateHeritage}
-        hasHeritage={isNotNullNorUndefined( props.etape.heritageProps.perimetre.etape?.geojson4326Perimetre)}
+        hasHeritage={isNotNullNorUndefined(props.etape.heritageProps.perimetre.etape?.geojson4326Perimetre)}
         propId="perimetre"
         write={() => (
           <div>

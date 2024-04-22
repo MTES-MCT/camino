@@ -4,7 +4,7 @@ import { vueRouter } from 'storybook-vue3-router'
 import { Props, PureEtapeEdition } from './etape-edition'
 import { EntrepriseDocumentId, EntrepriseId, EtapeEntrepriseDocument, entrepriseDocumentIdValidator, entrepriseIdValidator, toEntrepriseDocumentId } from 'camino-common/src/entreprise'
 import { DemarcheId, demarcheIdOrSlugValidator, demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/demarche'
-import { EtapeDocument, EtapeId, EtapeWithHeritage, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
+import { EtapeId, EtapeWithHeritage, etapeDocumentIdValidator, etapeIdOrSlugValidator, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 import { titreIdValidator, titreSlugValidator } from 'camino-common/src/validators/titres'
 import { FeatureMultiPolygon, PerimetreInformations } from 'camino-common/src/perimetre'
 import { CaminoDate, caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
@@ -62,11 +62,9 @@ const heritagePropsAllFalse: EtapeWithHeritage['heritageProps'] = {
   },
   dateFin: {
     actif: false,
-   
   },
   duree: {
     actif: false,
-  
   },
   substances: {
     actif: false,
@@ -143,6 +141,7 @@ const perimetre: FeatureMultiPolygon = {
 const apiClient: Props['apiClient'] = {
   deposeEtape(etapeId) {
     deposeEtapeAction(etapeId)
+
     return Promise.resolve(undefined)
   },
   etapeCreer(etape) {
@@ -269,7 +268,7 @@ const apiClient: Props['apiClient'] = {
   getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
     getEtapeDocumentsByEtapeIdAction(etapeId)
 
-    return Promise.resolve({etapeDocuments: [], dae: null, asl: null})
+    return Promise.resolve({ etapeDocuments: [], dae: null, asl: null })
   },
   getEtapeEntrepriseDocuments(etapeId: EtapeId): Promise<EtapeEntrepriseDocument[]> {
     getEtapeEntrepriseDocumentsAction(etapeId)
@@ -319,14 +318,15 @@ const apiClient: Props['apiClient'] = {
         },
       },
       heritageContenu: {},
-      heritageProps: {            amodiataires: {actif: false},
-      dateDebut: {actif: false},
-      dateFin: {actif: false},
-      duree: {actif: false},
-      perimetre: {actif: false},
-      substances: {actif: false},
-      titulaires: {actif: false},
-    }
+      heritageProps: {
+        amodiataires: { actif: false },
+        dateDebut: { actif: false },
+        dateFin: { actif: false },
+        duree: { actif: false },
+        perimetre: { actif: false },
+        substances: { actif: false },
+        titulaires: { actif: false },
+      },
     })
   },
   getDemarcheByIdOrSlug(demarcheIdOrSlug) {
@@ -423,13 +423,15 @@ export const AffichageAide: StoryFn = () => (
             },
           },
           heritageContenu: {},
-          heritageProps: {            amodiataires: {actif: false},
-          dateDebut: {actif: false},
-          dateFin: {actif: false},
-          duree: {actif: false},
-          perimetre: {actif: false},
-          substances: {actif: false},
-          titulaires: {actif: false},},
+          heritageProps: {
+            amodiataires: { actif: false },
+            dateDebut: { actif: false },
+            dateFin: { actif: false },
+            duree: { actif: false },
+            perimetre: { actif: false },
+            substances: { actif: false },
+            titulaires: { actif: false },
+          },
         })
       },
     }}
@@ -536,50 +538,54 @@ export const DemandeArmComplete: StoryFn = () => (
       getEtapeDocumentsByEtapeId(etapeId: EtapeId) {
         getEtapeDocumentsByEtapeIdAction(etapeId)
 
-        return Promise.resolve({ etapeDocuments: [
-          {
-            id: etapeDocumentIdValidator.parse('id1'),
-            description: null,
-            etape_document_type_id: 'car',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            description: null,
-            etape_document_type_id: 'dep',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            description: null,
-            etape_document_type_id: 'doe',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            description: null,
-            etape_document_type_id: 'dom',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            description: null,
-            etape_document_type_id: 'for',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-          {
-            id: etapeDocumentIdValidator.parse('id2'),
-            description: null,
-            etape_document_type_id: 'jpa',
-            public_lecture: true,
-            entreprises_lecture: true,
-          },
-        ], dae: null, asl: null})
+        return Promise.resolve({
+          etapeDocuments: [
+            {
+              id: etapeDocumentIdValidator.parse('id1'),
+              description: null,
+              etape_document_type_id: 'car',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              description: null,
+              etape_document_type_id: 'dep',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              description: null,
+              etape_document_type_id: 'doe',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              description: null,
+              etape_document_type_id: 'dom',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              description: null,
+              etape_document_type_id: 'for',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+            {
+              id: etapeDocumentIdValidator.parse('id2'),
+              description: null,
+              etape_document_type_id: 'jpa',
+              public_lecture: true,
+              entreprises_lecture: true,
+            },
+          ],
+          dae: null,
+          asl: null,
+        })
       },
       getEtape(etapeIdOrSlug) {
         getEtapeAction(etapeIdOrSlug)
@@ -620,13 +626,13 @@ export const DemandeArmComplete: StoryFn = () => (
           },
           heritageContenu: {},
           heritageProps: {
-            amodiataires: {actif: false},
-            dateDebut: {actif: false},
-            dateFin: {actif: false},
-            duree: {actif: false},
-            perimetre: {actif: false},
-            substances: {actif: false},
-            titulaires: {actif: false},
+            amodiataires: { actif: false },
+            dateDebut: { actif: false },
+            dateFin: { actif: false },
+            duree: { actif: false },
+            perimetre: { actif: false },
+            substances: { actif: false },
+            titulaires: { actif: false },
           },
         })
       },
@@ -800,7 +806,6 @@ export const ModificationDemandeHeritee: StoryFn = () => (
   />
 )
 
-
 export const AxmEnZoneDuSdom: StoryFn = () => (
   <PureEtapeEdition
     goToDemarche={goToDemarcheAction}
@@ -812,7 +817,7 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
 
         return Promise.resolve({
           heritageContenu: {},
-          heritageProps: heritagePropsAllFalse
+          heritageProps: heritagePropsAllFalse,
         })
       },
       getEtape(etapeIdOrSlug) {
@@ -852,13 +857,12 @@ export const AxmEnZoneDuSdom: StoryFn = () => (
               typeId: 'axm',
             },
           },
-          heritageContenu: {
-          },
+          heritageContenu: {},
           heritageProps: heritagePropsAllFalse,
         })
       },
     }}
-    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('entrepriseID'), nom: 'Entreprise'}] }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{ id: entrepriseIdValidator.parse('entrepriseID'), nom: 'Entreprise' }] }}
     initTab="points"
     demarcheIdOrSlug={null}
     etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}

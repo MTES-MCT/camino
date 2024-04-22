@@ -24,14 +24,20 @@ const apiClient: Pick<ApiClient, 'uploadTempDocument'> = {
   },
 }
 
-export const SansDocumentInitial: StoryFn = () => (
-  <AddEtapeAslDocumentPopup close={close} apiClient={apiClient} initialDocument={null} />
-)
+export const SansDocumentInitial: StoryFn = () => <AddEtapeAslDocumentPopup close={close} apiClient={apiClient} initialDocument={null} />
 
 export const DocumentInitialTemporaire: StoryFn = () => (
   <AddEtapeAslDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'let', temp_document_name: tempDocumentNameValidator.parse('value'), date: toCaminoDate('2023-01-02'), etape_statut_id: 'exe' }}
+    initialDocument={{
+      description: 'description',
+      entreprises_lecture: true,
+      public_lecture: false,
+      etape_document_type_id: 'let',
+      temp_document_name: tempDocumentNameValidator.parse('value'),
+      date: toCaminoDate('2023-01-02'),
+      etape_statut_id: 'exe',
+    }}
     apiClient={apiClient}
   />
 )
@@ -39,7 +45,15 @@ export const DocumentInitialTemporaire: StoryFn = () => (
 export const DocumentInitialDejaSauvegarde: StoryFn = () => (
   <AddEtapeAslDocumentPopup
     close={close}
-    initialDocument={{ description: 'description', entreprises_lecture: true, public_lecture: false, etape_document_type_id: 'let', id: etapeDocumentIdValidator.parse('documentId'), date: toCaminoDate('2023-01-02'), etape_statut_id: 'req' }}
+    initialDocument={{
+      description: 'description',
+      entreprises_lecture: true,
+      public_lecture: false,
+      etape_document_type_id: 'let',
+      id: etapeDocumentIdValidator.parse('documentId'),
+      date: toCaminoDate('2023-01-02'),
+      etape_statut_id: 'req',
+    }}
     apiClient={apiClient}
   />
 )
