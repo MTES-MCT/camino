@@ -2,8 +2,8 @@ import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { dateFormat } from '@/utils'
 import { DeepReadonly, FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
-import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'
-import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, stringArrayEquals } from 'camino-common/src/typescript-tools'
+import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
+import { getEntries, getEntriesHardcore, getKeys, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, map, stringArrayEquals } from 'camino-common/src/typescript-tools'
 import { AddEntrepriseDocumentPopup } from '../entreprise/add-entreprise-document-popup'
 import { AsyncData, getDownloadRestRoute } from '@/api/client-rest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -209,6 +209,18 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
       await loadEntrepriseDocuments()
     })
 
+    const addEntrepriseDocumentType = (entrepriseId: EntrepriseId) => (entrepriseDocumentTypeId: EntrepriseDocumentTypeId | null) => {
+
+      const entrepriseDocumentType = tdeEntrepriseDocuments.value.find(({id}) => id === entrepriseDocumentTypeId)
+      if( isNotNullNorUndefined(entrepriseDocumentType)) {
+        const entrepriseDocumentsLoaded = entrepriseDocuments.value
+        if (entrepriseDocumentsLoaded.status === 'LOADED') {
+          const documents = entrepriseDocumentsLoaded.value[entrepriseId]?.filter(d => d.entreprise_document_type_id === entrepriseDocumentTypeId) ?? []
+
+          entreprisesEntrepriseDocumentsIndex.value[entrepriseId].push({id: '', documents, entrepriseDocumentType})
+        }
+      }
+    }
     return () => (
       <>
         {props.entreprises.length ? (
@@ -267,6 +279,15 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                         </td>
                       </tr>
                     ))}
+                    {isNotNullNorUndefinedNorEmpty(tdeEntrepriseDocuments.value) ? 
+                    <tr>
+                        <td>
+                          <DsfrSelect items={map(tdeEntrepriseDocuments.value, ({id, nom}) => ({id, label: nom}))} legend={{main: 'Ajouter un nouveau type de document', visible: false}} valueChanged={addEntrepriseDocumentType(eId)} initialValue={null} />
+                        </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      : null}
                   </tbody>
                 </table>
               </div>
@@ -287,8 +308,32 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                 const newDocumentId = await props.apiClient.creerEntrepriseDocument(entrepriseId, entrepriseDocumentInput, tempDocumentName)
 
                 etapeEntrepriseDocumentIds.value.push(newDocumentId)
-                await loadEntrepriseDocuments()
+                const documentsToUpdate = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({entrepriseDocumentType}) => entrepriseDocumentType.id === entrepriseDocumentInput.typeId)
 
+                if (isNotNullNorUndefinedNorEmpty(documentsToUpdate)) {
+                documentsToUpdate.forEach(({documents}) => documents.push({
+                  id: newDocumentId,
+                  description: entrepriseDocumentInput.description,
+                  date: entrepriseDocumentInput.date,
+                  entreprise_document_type_id: entrepriseDocumentInput.typeId,
+                  entreprise_id: entrepriseId,
+                  can_delete_document: true,
+                }))
+
+                if (documentsToUpdate.length === 1) {
+                  documentsToUpdate[0].id = newDocumentId
+                } else {
+                  const documentNotSet = documentsToUpdate.find(({id}) => id === '')
+                  if (isNotNullNorUndefined(documentNotSet)) {
+                    documentNotSet.id = newDocumentId
+                  } else {
+                    documentsToUpdate[0].id = newDocumentId
+                  }
+                }
+
+              }
+
+                completeUpdate()
                 return newDocumentId
               },
             }}

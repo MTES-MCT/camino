@@ -451,7 +451,6 @@ export const AxmDeuxEntreprisesDocumentDEntrepriseComplet: StoryFn = () => (
 
 
 
-// FIXME cette story devrait pouvoir ajouter un document optionnel
 export const ArmDocumentOptionnel: StoryFn = () => (
   <EntrepriseDocumentsEdit
     tde={{ titreTypeId: 'arm', demarcheTypeId: 'oct', etapeTypeId: 'mod' }}

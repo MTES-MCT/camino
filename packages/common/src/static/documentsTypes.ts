@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NonEmptyArray, map } from '../typescript-tools.js'
 
 export interface DocumentType {
   id: DocumentTypeId
@@ -143,7 +144,7 @@ export const EntrepriseDocumentTypeIds = [
   DOCUMENTS_TYPES_IDS.TroisDerniersBilansEtComptesDeResultats,
   DOCUMENTS_TYPES_IDS.referencesProfessionnelles,
   DOCUMENTS_TYPES_IDS.declarationsBancairesOuCautionsAppropriees,
-] as const satisfies readonly (typeof IDS)[number][]
+] as const satisfies Readonly<NonEmptyArray<Readonly<(typeof IDS)[number]>>>
 
 export const entrepriseDocumentTypeIdValidator = z.enum(EntrepriseDocumentTypeIds)
 export type EntrepriseDocumentTypeId = z.infer<typeof entrepriseDocumentTypeIdValidator>
@@ -263,7 +264,7 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' },
 }
 
-export const sortedEntrepriseDocumentTypes = EntrepriseDocumentTypeIds.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
+export const sortedEntrepriseDocumentTypes = map(EntrepriseDocumentTypeIds, id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 export const sortedDocumentTypes = IDS.map(id => DocumentsTypes[id]).sort((a, b) => a.nom.localeCompare(b.nom))
 
 const documentsTypesIds = Object.values(DOCUMENTS_TYPES_IDS)

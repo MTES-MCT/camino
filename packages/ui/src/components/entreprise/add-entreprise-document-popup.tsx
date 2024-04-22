@@ -16,6 +16,7 @@ interface Props {
   lockedEntrepriseDocumentTypeId?: EntrepriseDocumentTypeId
   apiClient: Pick<ApiClient, 'creerEntrepriseDocument' | 'uploadTempDocument'>
 }
+// TODO 2024-04-22 Utiliser un DsfrSelect
 export const AddEntrepriseDocumentPopup = caminoDefineComponent<Props>(['close', 'entrepriseId', 'apiClient', 'lockedEntrepriseDocumentTypeId'], props => {
   const entrepriseDocumentTypeId = ref<(typeof EntrepriseDocumentTypeIds)[number] | null>(props.lockedEntrepriseDocumentTypeId ?? null)
   const documentDate = ref<CaminoDate | null>(null)

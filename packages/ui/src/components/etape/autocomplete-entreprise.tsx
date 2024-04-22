@@ -36,7 +36,7 @@ export const AutocompleteEntreprise = caminoDefineComponent<Props>(['onEntrepris
   })
 
   const onSelectEntreprises = (entreprises: { id: EntrepriseId }[]) => {
-    // FIXME virer opérateur
+    // TODO 2024-04-22 virer opérateur
     setMySelectedEntities(entreprises.map(entity => ({ ...entity, operateur: false })) ?? [])
   }
 
