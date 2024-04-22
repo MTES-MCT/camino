@@ -46,14 +46,12 @@ export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritag
 export const perimetreStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>): boolean => {
   return EtapesTypes[etape.typeId].fondamentale
 }
-export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'geojson4326Perimetre' | 'heritageProps'>>): boolean => {
+export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'geojson4326Perimetre'>>): boolean => {
   if (!perimetreStepIsVisible(etape)) {
     return true
   }
 
-  const geojson4326Perimetre = etape.heritageProps.perimetre.actif ? etape.heritageProps.perimetre.etape?.geojson4326Perimetre : etape.geojson4326Perimetre
-
-  return etape.typeId !== 'mfr' || isNotNullNorUndefined(geojson4326Perimetre)
+  return etape.typeId !== 'mfr' || isNotNullNorUndefined(etape.geojson4326Perimetre)
 }
 
 export const getDocumentsTypes = (
@@ -116,7 +114,7 @@ export const etapeDocumentsStepIsComplete = (
 }
 
 export const entrepriseDocumentsStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
-  return isNotNullNorUndefined(etape.typeId) && getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
+  return getEntrepriseDocuments(titreTypeId, demarcheTypeId, etape.typeId).length > 0
 }
 export const entrepriseDocumentsStepIsComplete = (
   etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu' | 'titulaires' | 'amodiataires'>>,
