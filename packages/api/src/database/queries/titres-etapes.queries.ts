@@ -14,7 +14,7 @@ import {
   IUpdateEtapeDocumentFileDbQuery,
   IUpdateEtapeDocumentInfoDbQuery,
 } from './titres-etapes.queries.types.js'
-import { EtapeDocument, EtapeDocumentId, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
+import { EtapeDocument, EtapeDocumentId, etapeDocumentIdValidator, EtapeDocumentModification, etapeDocumentValidator, EtapeDocumentWithFileModification, EtapeId, TempEtapeDocument } from 'camino-common/src/etape.js'
 import { EntrepriseDocumentId, entrepriseDocumentValidator, EntrepriseId, EtapeEntrepriseDocument, etapeEntrepriseDocumentValidator } from 'camino-common/src/entreprise.js'
 import { EntreprisesByEtapeId, entreprisesByEtapeIdValidator } from 'camino-common/src/demarche.js'
 import { Pool } from 'pg'
@@ -33,6 +33,7 @@ import { getCurrent } from 'camino-common/src/date.js'
 import { createLargeObject, LargeObjectId } from '../largeobjects.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { canDeleteEtapeDocument } from 'camino-common/src/permissions/titres-etapes.js'
+import { documentTypeIdValidator } from 'camino-common/src/static/documentsTypes.js'
 
 export const insertTitreEtapeEntrepriseDocument = async (pool: Pool, params: { titre_etape_id: EtapeId; entreprise_document_id: EntrepriseDocumentId }) =>
   dbQueryAndValidate(insertTitreEtapeEntrepriseDocumentInternal, params, pool, z.void())
@@ -93,7 +94,7 @@ export const getEntrepriseDocumentLargeObjectIdsByEtapeId = async (params: { tit
 }
 
 export const updateEtapeDocuments = async (pool: Pool, _user: User, titre_etape_id: EtapeId, etapeStatutId: EtapeStatutId, etapeDocuments: EtapeDocumentModification[]) => {
-  const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
+  const documentsInDb = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
 
   const etapeDocumentToUpdate = etapeDocuments.filter((document): document is EtapeDocumentWithFileModification => 'id' in document)
   const etapeDocumentIdsToUpdate = etapeDocumentToUpdate.map(({ id }) => id)
@@ -194,19 +195,48 @@ from
 where
     tt.titre_etape_id = $ etapeId !
 `
+export const etapeDocumentLargeObjectIdValidator = z.number().brand('EtapeDocumentLargeObjectId')
 
-const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, EtapeDocument>>`
+const getDocumentsByEtapeIdQueryValidator = etapeDocumentValidator.extend({ largeobject_id: etapeDocumentLargeObjectIdValidator })
+type GetDocumentsByEtapeIdQuery = z.infer<typeof getDocumentsByEtapeIdQueryValidator>
+
+const getDocumentsByEtapeIdQuery = sql<Redefine<IGetDocumentsByEtapeIdQueryQuery, { titre_etape_id: EtapeId }, GetDocumentsByEtapeIdQuery>>`
 select
     d.id,
     d.etape_document_type_id,
     d.description,
-    public_lecture,
-    entreprises_lecture
+    d.public_lecture,
+    d.entreprises_lecture,
+    d.largeobject_id
 from
     etapes_documents d
 where
     d.etape_id = $ titre_etape_id !
 `
+export const getEtapeDocumentLargeObjectIdsByEtapeId = async (
+  titre_etape_id: EtapeId,
+  pool: Pool,
+  user: User,
+  titreTypeId: SimplePromiseFn<TitreTypeId>,
+  titresAdministrationsLocales: SimplePromiseFn<AdministrationId[]>,
+  entreprisesTitulairesOuAmodiataires: SimplePromiseFn<EntrepriseId[]>,
+  etapeTypeId: EtapeTypeId,
+  demarche: CanReadDemarche
+): Promise<GetDocumentsByEtapeIdQuery[]> => {
+  const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, getDocumentsByEtapeIdQueryValidator)
+
+  const filteredDocuments: GetDocumentsByEtapeIdQuery[] = []
+
+  for (const document of result) {
+    if (await canReadDocument(document, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
+      filteredDocuments.push(document)
+    }
+  }
+
+  return filteredDocuments
+}
+
+
 
 export const getDocumentsByEtapeId = async (
   titre_etape_id: EtapeId,
@@ -218,15 +248,7 @@ export const getDocumentsByEtapeId = async (
   etapeTypeId: EtapeTypeId,
   demarche: CanReadDemarche
 ): Promise<EtapeDocument[]> => {
-  const result = await dbQueryAndValidate(getDocumentsByEtapeIdQuery, { titre_etape_id }, pool, etapeDocumentValidator)
 
-  const filteredDocuments: EtapeDocument[] = []
-
-  for (const document of result) {
-    if (await canReadDocument(document, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)) {
-      filteredDocuments.push(document)
-    }
-  }
-
-  return filteredDocuments
+const result = await getEtapeDocumentLargeObjectIdsByEtapeId(titre_etape_id, pool, user, titreTypeId, titresAdministrationsLocales, entreprisesTitulairesOuAmodiataires, etapeTypeId, demarche)
+  return z.array(etapeDocumentValidator).parse(result)
 }

@@ -19,6 +19,7 @@ import { EtapeTypeId, EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { capitalize } from 'camino-common/src/strings'
 import { EtapeEditForm, Props as EtapeEditFormProps } from './etape/etape-edit-form'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { CaminoAccessError } from './error'
 
 export const EtapeEdition = defineComponent(() => {
   const router = useRouter()
@@ -41,8 +42,7 @@ export const EtapeEdition = defineComponent(() => {
       {isNotNullNorUndefined(demarcheIdOrSlug.value) || isNotNullNorUndefined(etapeIdOrSlug.value) ? (
         <PureEtapeEdition etapeIdOrSlug={etapeIdOrSlug.value} demarcheIdOrSlug={demarcheIdOrSlug.value} user={user} entreprises={entreprises.value} apiClient={apiClient} goToDemarche={goToDemarche} />
       ) : (
-        // FIXME utiliser CaminoAccessError
-        <Alert small={true} title="Erreur lors du chargement, la page est introuvable" type="error" />
+        <CaminoAccessError user={user} />
       )}
     </>
   )

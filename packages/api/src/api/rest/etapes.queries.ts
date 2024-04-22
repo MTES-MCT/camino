@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator } from 'camino-common/src/etape.js'
+import { EtapeDocumentId, EtapeId, EtapeIdOrSlug, etapeIdValidator, etapeDocumentIdValidator, etapeSlugValidator } from 'camino-common/src/etape.js'
 import { EtapeTypeId, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes.js'
 import { Pool } from 'pg'
 import { z } from 'zod'
@@ -29,6 +29,7 @@ import { isNotNullNorUndefinedNorEmpty, memoize } from 'camino-common/src/typesc
 import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts.js'
 import { caminoDateValidator } from 'camino-common/src/date.js'
 import { contenuValidator } from './activites.queries.js'
+import { titreSlugValidator } from 'camino-common/src/validators/titres.js'
 
 const getEtapeByIdValidator = z.object({
   etape_id: etapeIdValidator,
@@ -143,6 +144,7 @@ const getEtapeDataForEditionValidator = z.object({
   demarche_public_lecture: z.boolean(),
   demarche_entreprises_lecture: z.boolean(),
   titre_public_lecture: z.boolean(),
+  etape_slug: etapeSlugValidator,
 })
 
 export type GetEtapeDataForEdition = z.infer<typeof getEtapeDataForEditionValidator>
@@ -156,7 +158,8 @@ select
     t.type_id as titre_type_id,
     td.public_lecture as demarche_public_lecture,
     td.entreprises_lecture as demarche_entreprises_lecture,
-    t.public_lecture as titre_public_lecture
+    t.public_lecture as titre_public_lecture,
+    te.slug as etape_slug
 from
     titres_etapes te
     join titres_demarches td on td.id = te.titre_demarche_id
