@@ -133,7 +133,7 @@ const graphqlEtapeValidator = z.object({
   heritageContenu: heritageContenuValidator,
 })
 
-export type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
+type GraphqlEtape = z.infer<typeof graphqlEtapeValidator>
 
 const graphqlInputHeritagePropValidator = z.object({
   actif: z.boolean(),
@@ -177,14 +177,14 @@ const graphqlEtapeCreationValidator = graphqlEtapeValidator
     entrepriseDocumentIds: z.array(entrepriseDocumentIdValidator),
   })
 
-export type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
+type GraphqlEtapeCreation = z.infer<typeof graphqlEtapeCreationValidator>
 
 const graphqlEtapeModificationValidator = graphqlEtapeCreationValidator.extend({
   id: etapeIdValidator,
   daeDocument: documentComplementaireDaeEtapeDocumentModificationValidator.nullable(),
   aslDocument: documentComplementaireAslEtapeDocumentModificationValidator.nullable(),
 })
-export type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
+type GraphqlEtapeModification = z.infer<typeof graphqlEtapeModificationValidator>
 export interface EtapeApiClient {
   getEtapesTypesEtapesStatuts: (titreDemarcheId: DemarcheId, titreEtapeId: EtapeId | null, date: CaminoDate) => Promise<EtapeTypeEtapeStatutWithMainStep[]>
   deleteEtape: (titreEtapeId: EtapeId) => Promise<void>

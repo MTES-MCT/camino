@@ -222,6 +222,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
       if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
       if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
+      if (isNullOrUndefined(titreEtape.slug)) throw new Error('le slug de l\'étape est obligatoire')
 
       const sdomZones: SDOMZoneId[] = []
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
@@ -252,6 +253,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         etape_type_id: titreEtape.typeId,
         titre_public_lecture: titre.publicLecture ?? false,
         titre_type_id: titre.typeId,
+        etape_slug: titreEtape.slug,
       })
 
       const aslDocument = await getAslDocument(pool, user, titreTypeId, administrationsLocales, entreprisesTitulairesOuAmodiataires, {
@@ -263,6 +265,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         etape_type_id: titreEtape.typeId,
         titre_public_lecture: titre.publicLecture ?? false,
         titre_type_id: titre.typeId,
+        etape_slug: titreEtape.slug,
       })
 
       // TODO 2023-06-14 TS 5.1 n’arrive pas réduire le type de titre
@@ -270,7 +273,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         user,
         { ...titre, titulaires: titre.titulaires ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
-        titreEtape,
+        {...titreEtape, contenu: titreEtape.contenu ?? {}},
         etapeDocuments,
         entrepriseDocuments,
         sdomZones,

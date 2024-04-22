@@ -1,4 +1,3 @@
-import { FileUpload } from 'graphql-upload'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { CodePostal } from 'camino-common/src/static/departement.js'
 import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull, UtilisateurId } from 'camino-common/src/roles.js'
@@ -28,6 +27,7 @@ import { ActiviteId } from 'camino-common/src/activite.js'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre.js'
 import { EtapeHeritageProps } from 'camino-common/src/heritage'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
+import { ElementWithValue } from 'camino-common/src/sections'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -103,15 +103,9 @@ interface IContenuId {
   elementId: string
 }
 
-type IContenuValeur = string | number | string[] | boolean | IContenuElement[] | { file: FileUpload } | null
+type IContenuValeur = ElementWithValue['value'] | null
 
-interface IContenuElement {
-  [elementId: string]: IContenuValeur
-}
-
-interface IContenu {
-  [sectionId: string]: IContenuElement
-}
+type IContenu = Record<string, Record<string, ElementWithValue['value']>>
 
 type IPropsTitreEtapesIds = {
   [key in PropsTitreEtapeIdKeys]?: string
