@@ -127,8 +127,3 @@ export const etapeDocumentDownload: NewDownload = async (params, user, pool) => 
 
   return { loid: activiteDocumentLargeObjectId, fileName: etapeDocumentId }
 }
-
-// FIXME
-export const etapeAvisDocument: NewDownload = async (_params, _user, _pool) => {
-  return { loid: null, fileName: 'null' }
-}

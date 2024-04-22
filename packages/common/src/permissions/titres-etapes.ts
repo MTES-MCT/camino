@@ -23,7 +23,7 @@ import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/d
 import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
 import { SectionWithValue } from '../sections.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
-import { EtapeDocument, GetEtapeDocumentsByEtapeId, needAslAndDae } from '../etape.js'
+import { EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, needAslAndDae } from '../etape.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -146,7 +146,7 @@ type IsEtapeCompleteEtape = {
   typeId: EtapeTypeId
   statutId: EtapeStatutId
   /** 
-   @deprecated use sectionsWithValue
+   @deprecated use sectionsWithValue/
   */
   contenu?: Contenu
   sectionsWithValue?: SectionWithValue[]
@@ -155,8 +155,7 @@ type IsEtapeCompleteEtape = {
   duree?: number | null
 }
 
-
-    // TODO 2024-04-17 utiliser toutes les stepIsComplete 
+// TODO 2024-04-17 utiliser toutes les stepIsComplete 
 export const isEtapeComplete = (
   titreEtape: IsEtapeCompleteEtape,
   titreTypeId: TitreTypeId,
@@ -164,8 +163,8 @@ export const isEtapeComplete = (
   documents: Pick<EtapeDocument, 'etape_document_type_id'>[],
   entrepriseDocuments: Pick<EntrepriseDocument, 'entreprise_document_type_id'>[],
   sdomZones: SDOMZoneId[] | null | undefined,
-  daeDocument: Omit<GetEtapeDocumentsByEtapeId['dae'], 'id'> | null,
-  aslDocument: Omit<GetEtapeDocumentsByEtapeId['asl'], 'id'> | null,
+  daeDocument: Omit<GetEtapeDocumentsByEtapeIdDaeDocument, 'id'> | null,
+  aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
   const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
@@ -312,6 +311,3 @@ export const isEtapeDeposable = (
 }
 
 export const canDeleteEtapeDocument = (etapeStatutId: EtapeStatutId | null): boolean => etapeStatutId === null || etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION
-
-export const hasEtapeAvisDocuments = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, etapeStatutId: EtapeStatutId): boolean =>
-  titreTypeId === 'axm' && demarcheTypeId === 'oct' && etapeTypeId === 'mfr' && etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION

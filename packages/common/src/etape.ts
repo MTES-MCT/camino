@@ -106,7 +106,13 @@ export const documentComplementaireObligatoireASLValidator = documentComplementa
   etape_document_type_id: z.literal(documentTypeIdComplementaireObligatoireASL),
 })
 
-export const getEtapeDocumentsByEtapeIdValidator =  z.object({etapeDocuments: z.array(etapeDocumentValidator), dae: etapeDocumentValidator.and(documentComplementaireObligatoireDAEValidator).nullable(), asl: etapeDocumentValidator.and(documentComplementaireObligatoireASLValidator).nullable() })
+export const getEtapeDocumentsByEtapeIdDaeDocumentValidator = etapeDocumentValidator.and(documentComplementaireObligatoireDAEValidator)
+export type GetEtapeDocumentsByEtapeIdDaeDocument = z.infer<typeof getEtapeDocumentsByEtapeIdDaeDocumentValidator>
+
+export const getEtapeDocumentsByEtapeIdAslDocumentValidator = z.intersection(etapeDocumentValidator, documentComplementaireObligatoireASLValidator)
+export type GetEtapeDocumentsByEtapeIdAslDocument = z.infer<typeof getEtapeDocumentsByEtapeIdAslDocumentValidator>
+
+export const getEtapeDocumentsByEtapeIdValidator =  z.object({etapeDocuments: z.array(etapeDocumentValidator), dae: getEtapeDocumentsByEtapeIdDaeDocumentValidator.nullable(), asl: getEtapeDocumentsByEtapeIdAslDocumentValidator.nullable() })
 
 export type GetEtapeDocumentsByEtapeId = z.infer<typeof getEtapeDocumentsByEtapeIdValidator>
 
