@@ -39,8 +39,8 @@ export const sectionsStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHeritag
 
   const sections = getSections(titreTypeId, demarcheTypeId, etape.typeId)
   const sectionsWithValue = getSectionsWithValue(sections, etape.contenu)
-  
-return sectionsWithValueCompleteValidate(sectionsWithValue).length === 0
+
+  return sectionsWithValueCompleteValidate(sectionsWithValue).length === 0
 }
 
 export const perimetreStepIsVisible = (etape: Pick<EtapeWithHeritage, 'typeId'>): boolean => {
@@ -52,8 +52,8 @@ export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHerita
   }
 
   const geojson4326Perimetre = etape.heritageProps.perimetre.actif ? etape.heritageProps.perimetre.etape?.geojson4326Perimetre : etape.geojson4326Perimetre
-  
-return etape.typeId !== 'mfr' || isNotNullNorUndefined(geojson4326Perimetre)
+
+  return etape.typeId !== 'mfr' || isNotNullNorUndefined(geojson4326Perimetre)
 }
 
 export const getDocumentsTypes = (

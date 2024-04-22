@@ -191,7 +191,12 @@ export const isEtapeComplete = (
     }
   }
 
-  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape, contenu: titreEtape.contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
+
+  let contenu = titreEtape.contenu
+  if (isNullOrUndefined(contenu) && isNotNullNorUndefinedNorEmpty(titreEtape.sectionsWithValue)){
+    contenu = titreEtape.sectionsWithValue.reduce((accSection, section) => ({...accSection, [section.id]: section.elements.reduce((accElement, element) =>({...accElement, [element.id]: element.value}), {})}), {})
+  }
+  const dts: DocumentType[] = getDocumentsTypes({ ...titreEtape, contenu: contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
 
   const documentsErrors = isDocumentsComplete(documents ?? [], dts)
   if (!documentsErrors.valid) {

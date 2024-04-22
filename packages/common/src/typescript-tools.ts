@@ -34,8 +34,8 @@ export function isNullOrUndefinedOrEmpty(value: string | DeepReadonly<any[]> | n
   } else if (typeof value === 'string') {
     return value.trim() === ''
   }
-  
-return false
+
+  return false
 }
 
 export const isNullOrUndefined = <T>(value: T | null | undefined): value is null | undefined => {

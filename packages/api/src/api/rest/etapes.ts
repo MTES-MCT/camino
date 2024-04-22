@@ -222,7 +222,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
 
       if (isNullOrUndefined(titre.titulaires)) throw new Error('les titulaires du titre ne sont pas chargés')
       if (isNullOrUndefined(titre.amodiataires)) throw new Error('les amodiataires du titre ne sont pas chargés')
-      if (isNullOrUndefined(titreEtape.slug)) throw new Error('le slug de l\'étape est obligatoire')
+      if (isNullOrUndefined(titreEtape.slug)) throw new Error("le slug de l'étape est obligatoire")
 
       const sdomZones: SDOMZoneId[] = []
       if (isNotNullNorUndefined(titreEtape.geojson4326Perimetre)) {
@@ -273,7 +273,7 @@ export const deposeEtape = (pool: Pool) => async (req: CaminoRequest, res: Custo
         user,
         { ...titre, titulaires: titre.titulaires ?? [], administrationsLocales: titre.administrationsLocales ?? [] },
         titreDemarche.typeId,
-        {...titreEtape, contenu: titreEtape.contenu ?? {}},
+        { ...titreEtape, contenu: titreEtape.contenu ?? {} },
         etapeDocuments,
         entrepriseDocuments,
         sdomZones,

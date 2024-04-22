@@ -109,7 +109,17 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    const etapeComplete = isEtapeComplete({...titreEtape, contenu: titreEtape.contenu ?? {}}, titre.typeId, titreDemarche.typeId, documents, entrepriseDocuments, sdomZones, daeDocument, aslDocument, user)
+    const etapeComplete = isEtapeComplete(
+      { ...titreEtape, contenu: titreEtape.contenu ?? {} },
+      titre.typeId,
+      titreDemarche.typeId,
+      documents,
+      entrepriseDocuments,
+      sdomZones,
+      daeDocument,
+      aslDocument,
+      user
+    )
     if (!etapeComplete.valid) {
       errors.push(...etapeComplete.errors)
     }
