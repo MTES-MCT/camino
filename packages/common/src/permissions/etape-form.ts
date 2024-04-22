@@ -59,7 +59,6 @@ export const perimetreStepIsComplete = (etape: DeepReadonly<Pick<EtapeWithHerita
 
 
 
-// FIXME probablement utilisé quelque part dans le backend
 export const getDocumentsTypes = (etape: DeepReadonly<Pick<EtapeWithHeritage, 'typeId' | 'contenu'>>, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, sdomZoneIds: DeepReadonly<SDOMZoneId[]>) => {
   const dts = getDocuments(titreTypeId, demarcheTypeId, etape.typeId)
 

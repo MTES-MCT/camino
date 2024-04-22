@@ -294,7 +294,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
             ))}
           </div>
         ) : (
-          <Alert title="Aucun titulaire ou amodiataire associé à cette étape." type="warning" small />
+          <Alert class="fr-mt-2w" title="Aucun titulaire ou amodiataire associé à cette étape." type="warning" small />
         )}
         {addPopup.value.open ? (
           <AddEntrepriseDocumentPopup
@@ -310,7 +310,7 @@ const InternalEntrepriseDocumentsEdit = caminoDefineComponent<Props & { etapeEnt
                 etapeEntrepriseDocumentIds.value.push(newDocumentId)
                 const documentsToUpdate = entreprisesEntrepriseDocumentsIndex.value[entrepriseId].filter(({entrepriseDocumentType}) => entrepriseDocumentType.id === entrepriseDocumentInput.typeId)
 
-                if (isNotNullNorUndefinedNorEmpty(documentsToUpdate)) {
+                if (isNotNullNorUndefined(documentsToUpdate) && documentsToUpdate.length > 0) {
                 documentsToUpdate.forEach(({documents}) => documents.push({
                   id: newDocumentId,
                   description: entrepriseDocumentInput.description,

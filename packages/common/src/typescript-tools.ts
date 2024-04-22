@@ -8,8 +8,8 @@ export function isNotNullNorUndefined<T>(value: T | null | undefined): value is 
   return !isNullOrUndefined(value)
 }
 
+export function isNotNullNorUndefinedNorEmpty<U>(value:  DeepReadonly<U[]> | null | undefined): value is DeepReadonly<NonEmptyArray<U>>
 export function isNotNullNorUndefinedNorEmpty<U>(value:  U[] | null | undefined): value is NonEmptyArray<U>
-export function isNotNullNorUndefinedNorEmpty<T, U extends DeepReadonly<T>>(value:  U[] | null | undefined): value is NonEmptyArray<U>
 export function isNotNullNorUndefinedNorEmpty(value: string | null | undefined): value is string
 export function isNotNullNorUndefinedNorEmpty(value: string |  DeepReadonly<any[]> | null | undefined) {
   if (Array.isArray(value)) {

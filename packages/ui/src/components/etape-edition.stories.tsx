@@ -56,6 +56,32 @@ const perimetreInformations: PerimetreInformations = {
   superposition_alertes: [{ nom: 'Titre Tutu', slug: titreSlugValidator.parse('slug-tutu'), titre_statut_id: 'mod' }],
 }
 
+const heritagePropsAllFalse: EtapeWithHeritage['heritageProps'] = {
+  dateDebut: {
+    actif: false,
+  },
+  dateFin: {
+    actif: false,
+   
+  },
+  duree: {
+    actif: false,
+  
+  },
+  substances: {
+    actif: false,
+  },
+  titulaires: {
+    actif: false,
+  },
+  amodiataires: {
+    actif: false,
+  },
+  perimetre: {
+    actif: false,
+  },
+}
+
 const heritageProps: EtapeWithHeritage['heritageProps'] = {
   dateDebut: {
     actif: false,
@@ -774,9 +800,67 @@ export const ModificationDemandeHeritee: StoryFn = () => (
   />
 )
 
-// FIXME tests avec
-// - heritageContenu
-// - étape en construction
-// - avec du sdom
-// - avec une arm mécanisé
-// - demande AXM d'une entreprise (avec les documents en plus (ASL, DAE))
+
+export const AxmEnZoneDuSdom: StoryFn = () => (
+  <PureEtapeEdition
+    goToDemarche={goToDemarcheAction}
+    entreprises={entreprises}
+    apiClient={{
+      ...apiClient,
+      getEtapeHeritagePotentiel(titreDemarcheId: DemarcheId, date: CaminoDate, typeId: EtapeTypeId) {
+        getEtapeHeritagePotentielAction(titreDemarcheId, date, typeId)
+
+        return Promise.resolve({
+          heritageContenu: {},
+          heritageProps: heritagePropsAllFalse
+        })
+      },
+      getEtape(etapeIdOrSlug) {
+        getEtapeAction(etapeIdOrSlug)
+
+        return Promise.resolve({
+          id: etapeIdValidator.parse('etape-id'),
+          slug: etapeSlugValidator.parse('etape-slug'),
+          typeId: 'mfr',
+          statutId: 'aco',
+          titreDemarcheId: demarcheIdValidator.parse('demarche-id'),
+          date: caminoDateValidator.parse('2023-02-01'),
+          dateDebut: null,
+          dateFin: null,
+          duree: 6,
+          substances: [],
+          titulaires: [],
+          amodiataires: [],
+          contenu: {},
+          notes: null,
+          geojson4326Forages: null,
+          geojson4326Perimetre: null,
+          geojson4326Points: null,
+          geojsonOrigineForages: null,
+          geojsonOrigineGeoSystemeId: null,
+          geojsonOriginePerimetre: null,
+          geojsonOriginePoints: null,
+          surface: null,
+          demarche: {
+            slug: demarcheSlugValidator.parse('demarche-slug'),
+            typeId: 'oct',
+            description: 'Super description',
+            titre: {
+              id: titreIdValidator.parse('titre-id'),
+              slug: titreSlugValidator.parse('titre-slug'),
+              nom: 'Nom du titre',
+              typeId: 'axm',
+            },
+          },
+          heritageContenu: {
+          },
+          heritageProps: heritagePropsAllFalse,
+        })
+      },
+    }}
+    user={{ ...testBlankUser, role: 'entreprise', entreprises: [{id: entrepriseIdValidator.parse('entrepriseID'), nom: 'Entreprise'}] }}
+    initTab="points"
+    demarcheIdOrSlug={null}
+    etapeIdOrSlug={etapeIdOrSlugValidator.parse('etape-id')}
+  />
+)

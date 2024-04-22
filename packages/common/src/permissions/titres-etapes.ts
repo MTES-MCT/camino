@@ -14,16 +14,15 @@ import { EntrepriseDocument, EntrepriseId } from '../entreprise.js'
 import { getSections } from '../static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { getEntrepriseDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/entrepriseDocuments.js'
 import { SDOMZoneId } from '../static/sdom.js'
-import { documentTypeIdsBySdomZonesGet } from '../static/titresTypes_demarchesTypes_etapesTypes/sdom.js'
 import { NonEmptyArray, isNonEmptyArray, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from '../typescript-tools.js'
-import { DocumentsTypes, DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
+import { DocumentType, EntrepriseDocumentTypeId } from '../static/documentsTypes.js'
 import { SubstanceLegaleId } from '../static/substancesLegales.js'
 import { isDocumentsComplete } from './documents.js'
-import { getDocuments } from '../static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { Contenu, contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
-import { SectionWithValue } from '../sections.js'
+import { contenuCompleteValidate, sectionsWithValueCompleteValidate } from './sections.js'
+import { ElementWithValue, SectionWithValue } from '../sections.js'
 import { FeatureMultiPolygon } from '../perimetre.js'
 import { EtapeDocument, GetEtapeDocumentsByEtapeId, GetEtapeDocumentsByEtapeIdAslDocument, GetEtapeDocumentsByEtapeIdDaeDocument, needAslAndDae } from '../etape.js'
+import { getDocumentsTypes } from './etape-form.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -148,7 +147,7 @@ type IsEtapeCompleteEtape = {
   /** 
    @deprecated use sectionsWithValue/
   */
-  contenu?: Contenu
+  contenu?: Record<string, Record<string, ElementWithValue['value']>>
   sectionsWithValue?: SectionWithValue[]
   geojson4326Perimetre?: null | FeatureMultiPolygon
   substances?: null | SubstanceLegaleId[]
@@ -167,8 +166,6 @@ export const isEtapeComplete = (
   aslDocument: Omit<GetEtapeDocumentsByEtapeIdAslDocument, 'id'> | null,
   user: User
 ): { valid: true } | { valid: false; errors: NonEmptyArray<string> } => {
-  const documentsTypes = getDocuments(titreTypeId, demarcheTypeId, titreEtape.typeId)
-
   const errors: string[] = []
   const sections = getSections(titreTypeId, demarcheTypeId, titreEtape.typeId)
   // les éléments non optionnel des sections sont renseignés
@@ -195,32 +192,11 @@ export const isEtapeComplete = (
   }
 
 
-  const dts: DocumentType[] = [...documentsTypes]
-  if (isNotNullNorUndefined(sdomZones)) {
-    // Ajoute les documents obligatoires en fonction des zones du SDOM
-    const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
+  const dts: DocumentType[] = getDocumentsTypes({...titreEtape, contenu: titreEtape.contenu ?? {} }, demarcheTypeId, titreTypeId, sdomZones ?? [])
 
-    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false }))
-  }
-
-  // les fichiers obligatoires sont tous renseignés et complets
-  if (isNonEmptyArray(dts)) {
-    // ajoute des documents obligatoires pour les arm mécanisées
-    if (
-      (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm && titreEtape.contenu?.arm?.mecanise === true) ||
-      (titreEtape.sectionsWithValue &&
-        titreEtape.sectionsWithValue.some(section => section.id === 'arm' && section.elements.some(element => element.id === 'mecanise' && element.type === 'radio' && (element.value ?? false))))
-    ) {
-      dts
-        .filter(dt => ['doe', 'dep'].includes(dt.id))
-        .forEach(dt => {
-          dt.optionnel = false
-        })
-    }
-    const documentsErrors = isDocumentsComplete(documents ?? [], dts)
-    if (!documentsErrors.valid) {
-      errors.push(...documentsErrors.errors)
-    }
+  const documentsErrors = isDocumentsComplete(documents ?? [], dts)
+  if (!documentsErrors.valid) {
+    errors.push(...documentsErrors.errors)
   }
 
   // les documents d'entreprise obligatoires sont tous présents
