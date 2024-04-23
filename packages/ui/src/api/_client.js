@@ -5,6 +5,7 @@ import Cache from 'graphql-react/Cache.mjs'
 import Loading from 'graphql-react/Loading.mjs'
 import LoadingCacheValue from 'graphql-react/LoadingCacheValue.mjs'
 import { HTTP_STATUS } from 'camino-common/src/http'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 const apiUrl = '/apiUrl'
 const cache = new Cache()
@@ -13,7 +14,11 @@ const loading = new Loading()
 const errorThrow = e => {
   if (e.message === 'aborted' || e.message === 'Fetch error.' || e.message === 'Response JSON parse error.') throw new Error('aborted')
 
-  throw new Error(e.message || e.status)
+  let message = e.message
+  if (isNullOrUndefined(message)) {
+    message = e.status
+  }
+  throw new Error(message)
 }
 
 const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0].name.value) => {
@@ -25,7 +30,7 @@ const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0
 
   fetchOptions.signal = abortController.signal
 
-  if (loading.store[cacheKey]) {
+  if (isNotNullNorUndefined(loading.store[cacheKey])) {
     loading.store[cacheKey].forEach(a => {
       a.abortController.abort()
     })
@@ -37,9 +42,9 @@ const graphQLCall = async (url, query, variables, cacheKey = query.definitions[0
 
   const res = await loadingCacheValue.promise
 
-  if (res.errors?.length) {
+  if (isNotNullNorUndefinedNorEmpty(res.errors)) {
     res.errors.forEach(e => {
-      if (e.extensions && e.extensions.client && e.message === 'FETCH_ERROR') throw new Error('aborted')
+      if (isNotNullNorUndefined(e.extensions) && isNotNullNorUndefined(e.extensions.client) && e.message === 'FETCH_ERROR') throw new Error('aborted')
 
       throw new Error(e.message)
     })
