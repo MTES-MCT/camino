@@ -11,7 +11,7 @@ interface Props {
 
 export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
   <div id="indicateurs" class="mb-xxl">
-    {props.enConstruction ? <Alert class="fr-mb-2v" type="warning" title="Données en cours de collecte et consolidation." /> : null}
+    {props.enConstruction ?? false ? <Alert class="fr-mb-2v" type="warning" title="Données en cours de collecte et consolidation." /> : null}
 
     <div class="tablet-blobs">
       <div class="tablet-blob-1-2 mb-xl">
@@ -21,7 +21,7 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
             <p class={['fr-display--xs', styles['donnee-importante']]}>{numberFormat(props.statistiqueGranulatsMarins.volume)} m³</p>
           </div>
         ) : (
-          <div v-else>
+          <div>
             <p class={['fr-display--xs', styles['donnee-importante']]}>-</p>
           </div>
         )}

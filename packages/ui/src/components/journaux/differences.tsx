@@ -3,13 +3,16 @@ import { formatters } from 'jsondiffpatch-rc'
 import 'jsondiffpatch-rc/dist/formatters-styles/html.css'
 import { FunctionalComponent } from 'vue'
 import styles from './differences.module.css'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 interface Props {
   journal: { operation: Extract<Journal['operation'], 'create'>; elementId: Journal['elementId'] } | Pick<Journal, 'differences' | 'operation' | 'elementId'>
 }
 export const Differences: FunctionalComponent<Props> = props => {
   const differencesHtml =
-    props.journal.operation !== 'create' && props.journal.differences ? formatters.html.format(props.journal.differences, null).replaceAll('jsondiffpatch-child-node-type-object', '') : ''
+    props.journal.operation !== 'create' && isNotNullNorUndefined(props.journal.differences)
+      ? formatters.html.format(props.journal.differences, null).replaceAll('jsondiffpatch-child-node-type-object', '')
+      : ''
 
   return (
     <>

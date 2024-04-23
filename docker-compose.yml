@@ -101,7 +101,7 @@ services:
       # l’access token de keycloak a une durée de vie de 5min
       OAUTH2_PROXY_COOKIE_REFRESH: 4m
       OAUTH2_PROXY_COOKIE_SAMESITE: lax
-      # l'url de logout de keycloak, utilisé par utilisateur.vue pour se déconnect de oauth2_proxy ET keycloak
+      # l'url de logout de keycloak, utilisé par utilisateur.tsx pour se déconnect de oauth2_proxy ET keycloak
       OAUTH2_PROXY_WHITELIST_DOMAINS: ${KEYCLOAK_HOST},${OAUTH_HOST}
       OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: true
     expose:

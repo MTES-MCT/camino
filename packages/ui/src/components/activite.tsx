@@ -95,7 +95,7 @@ export const PureActivite = defineComponent<Props>(props => {
                   </router-link>
                 </h6>
 
-                <Preview key={activite.id} activite={activite} initialOpened={true} apiClient={apiClient} />
+                <Preview key={activite.id} activite={activite} apiClient={apiClient} />
               </div>
             )}
           />

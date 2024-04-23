@@ -1,5 +1,5 @@
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { dateFormat } from '@/utils'
+import { dateFormat } from 'camino-common/src/date'
 import { DeepReadonly, FunctionalComponent, computed, onMounted, ref, watch } from 'vue'
 import { EntrepriseDocument, EntrepriseDocumentId, EntrepriseId, entrepriseDocumentIdValidator, isEntrepriseId } from 'camino-common/src/entreprise'
 import { DocumentsTypes, EntrepriseDocumentType, EntrepriseDocumentTypeId } from 'camino-common/src/static/documentsTypes'

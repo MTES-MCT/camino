@@ -50,6 +50,7 @@ export const avisAXMChartConfiguration = (data: StatistiquesDGTM): ChartConfigur
   ]
 
   const chartData: ChartData = { labels: annees, datasets }
+
   return {
     type: 'bar',
     data: chartData,
@@ -84,6 +85,7 @@ export const producteursOrChartConfiguration = (data: StatistiquesDGTM): ChartCo
   ]
 
   const chartData: ChartData = { labels: annees, datasets }
+
   return {
     type: 'line',
     data: chartData,
@@ -132,6 +134,7 @@ export const delaiPerConcessionChartConfiguration = (data: StatistiquesDGTM): Ch
   ]
 
   const chartData: ChartData = { labels: annees, datasets }
+
   return {
     type: 'line',
     data: chartData,
@@ -269,6 +272,7 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
 
 export const depotChartConfiguration = (data: StatistiquesDGTM): ChartConfiguration => {
   const chartData: ChartData = graphDepoData(data)
+
   return {
     type: 'bar',
     data: chartData,
@@ -289,6 +293,7 @@ export const depotChartConfiguration = (data: StatistiquesDGTM): ChartConfigurat
                   sumDepot += tooltipItem.parsed.y
                 }
               })
+
               return `Total titres déposés: ${sumDepot} \nTotal titres octroyés: ${sumOctroi}`
             },
           },

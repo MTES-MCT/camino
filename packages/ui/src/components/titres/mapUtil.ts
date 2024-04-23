@@ -8,6 +8,7 @@ import { TitreId } from 'camino-common/src/validators/titres'
 import { dsfrVariableCouleurParDomaine } from '../_common/domaine'
 import { capitalize } from 'camino-common/src/strings'
 import { GeojsonPoint, MultiPolygon } from 'camino-common/src/perimetre'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 const leafletCoordinatesFind = (geojson: { coordinates: [number, number] }) => {
   const coordinates = geojson.coordinates
@@ -174,7 +175,7 @@ export const layersBuild = (titres: TitreWithPerimetre[], router: Pick<Router, '
           const titreStatutBaseElement = document.getElementById(`titre_statut_${titre.titreStatutId}`)
           const titreStatutElement = titreStatutBaseElement?.cloneNode(true) as unknown as HTMLElement
           titreStatutElement.removeAttribute('id')
-          const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
+          const popupHtmlTitulaires = isNotNullNorUndefinedNorEmpty(titre.titulaires) ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
 
           div.innerHTML = ''
           titleName.textContent = titre.nom ? titre.nom : ''

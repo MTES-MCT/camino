@@ -1,5 +1,4 @@
 import { HTMLAttributes, computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import Accordion from '../accordion.vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { InputAutocomplete, InputAutocompleteValues } from './filters-input-autocomplete'
@@ -30,6 +29,7 @@ import { AsyncData } from '../../../api/client-rest'
 import { LoadingElement } from '../functional-loader'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Entreprise } from 'camino-common/src/entreprise'
+import { DeprecatedAccordion } from '../accordion'
 
 type FormatedLabel = { id: CaminoFiltre; name: string; value: string | string[] | FilterEtapeValue; valueName?: string | string[] }
 
@@ -280,14 +280,7 @@ export const Filters = defineComponent((props: Props) => {
   }
 
   return () => (
-    <Accordion
-      ref="accordion"
-      opened={opened.value}
-      slotSub={loading.value.status === 'LOADING' || loading.value.status === 'ERROR' || labels.value?.length > 0}
-      slotDefault={true}
-      class="mb-s"
-      onToggle={props.toggle}
-    >
+    <DeprecatedAccordion opened={opened.value} slotSub={loading.value.status === 'LOADING' || loading.value.status === 'ERROR' || labels.value?.length > 0} class="mb-s" toggle={props.toggle}>
       {{
         title: () => (
           <div style="display: flex; align-items: center">
@@ -394,7 +387,7 @@ export const Filters = defineComponent((props: Props) => {
           </div>
         ),
       }}
-    </Accordion>
+    </DeprecatedAccordion>
   )
 })
 

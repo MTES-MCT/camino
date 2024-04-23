@@ -6,7 +6,9 @@ type CalculatePermutations<U extends string | number | symbol, ResultT extends a
   [k in U]: [Exclude<U, k>] extends [never] ? PushFront<ResultT, k> : CalculatePermutations<Exclude<U, k>, PushFront<ResultT, k>>
 }[U]
 
-// TODO 2023-03-08: supprimer ça le jour où https://github.com/vuejs/rfcs/discussions/282 est implémenté
+/**
+ * @deprecated use defineComponent
+ */
 export function caminoDefineComponent<T>(props: CalculatePermutations<keyof T>, setup: (props: Readonly<T>, ctx: SetupContext) => RenderFunction): DefineComponent<T> {
   const r = defineComponent(setup)
   // @ts-ignore
@@ -30,6 +32,7 @@ export const setSeed = (value: number): void => {
 }
 export const random = () => {
   const x = Math.sin(seed++) * 10000
+
   return x - Math.floor(x)
 }
 

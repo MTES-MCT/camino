@@ -1,3 +1,4 @@
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { FunctionalComponent, HTMLAttributes } from 'vue'
 
 interface Props {
@@ -13,7 +14,7 @@ export const Card: FunctionalComponent<Props & HTMLAttributes['class']> = props 
 
   return (
     <div class="flex flex-direction-column rnd-s border bg-bg">
-      {props.buttons ? (
+      {isNotNullNorUndefined(props.buttons) ? (
         <div class="accordion-header flex  border-b-s">
           <div class="py-s px-m">
             <Title />

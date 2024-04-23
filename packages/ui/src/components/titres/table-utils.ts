@@ -33,6 +33,7 @@ const ordreFromStatut = (entry: string) => {
   if (titreStatut) {
     return ordreStatut[titreStatut.id]
   }
+
   return -1
 }
 
@@ -71,6 +72,7 @@ export const statutAutoColumn: AutoColumn<'statut'> = {
     if (isTitreStatut(row1Statut) && isTitreStatut(row2Statut)) {
       return ordreFromStatut(row1Statut) - ordreFromStatut(row2Statut)
     }
+
     return 0
   },
 }
@@ -116,6 +118,7 @@ export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
 })
 export const statutCell = (titre: { titre_statut_id: TitreStatutId }): ComponentColumnData => {
   const statut = TitresStatuts[titre.titre_statut_id]
+
   return {
     component: markRaw(TitreStatut),
     props: {

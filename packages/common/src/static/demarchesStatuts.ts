@@ -23,7 +23,7 @@ export type DemarcheStatutId = z.infer<typeof demarcheStatutIdValidator>
 type DemarcheStatut<T = DemarcheStatutId> = Definition<T> & { couleur: Couleur }
 
 // TODO 2023-10-24 utiliser les couleurs de Sarah
-// Attention, impact dans titre/demarche.vue
+// Attention, impact dans titre/demarche.tsx
 export const DemarchesStatuts: {
   [key in DemarcheStatutId]: DemarcheStatut<key>
 } = {

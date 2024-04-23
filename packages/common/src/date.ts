@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isNullOrUndefined } from './typescript-tools.js'
+import { isNullOrUndefined, isNullOrUndefinedOrEmpty } from './typescript-tools.js'
 
 const datesDiffInDays = (a: Date, b: Date) => {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
@@ -70,8 +70,8 @@ export const getDay = (date: CaminoDate): number => {
   return Number(date.substring(8, 10))
 }
 
-export const dateFormat = (date: CaminoDate | null): CaminoDateFormated => {
-  return date === null ? ('' as CaminoDateFormated) : (`${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated)
+export const dateFormat = (date: CaminoDate | null | undefined): CaminoDateFormated => {
+  return isNullOrUndefinedOrEmpty(date) ? ('' as CaminoDateFormated) : (`${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated)
 }
 
 export const getCurrent = () => toCaminoDate(new Date())

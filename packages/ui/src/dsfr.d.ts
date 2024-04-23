@@ -6,8 +6,8 @@ declare global {
         members: { conceal: () => void }[]
       }
     }
-    start: () => {}
-    stop: () => {}
+    start: () => void
+    stop: () => void
   }
 }
 

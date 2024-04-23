@@ -172,6 +172,7 @@ export const Table = defineComponent(
 
 export const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const myComp = props.data.component
 
     if (props.data.value !== undefined) {

@@ -1,5 +1,5 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { Entreprise, EntrepriseId, Utilisateur } from 'camino-common/src/entreprise'
+import { EntrepriseId, Utilisateur } from 'camino-common/src/entreprise'
 import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
@@ -66,6 +66,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     `)({
       ...params,
     })
+
     return data
   },
   getUtilisateur: async (userId: string) => {
@@ -92,11 +93,10 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     `)({
       id: userId,
     })
+
     return data
   },
-  getUtilisateurNewsletter: async (userId: string) => {
-    return await getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId })
-  },
+  getUtilisateurNewsletter: async (userId: string) => getWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }),
   updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
     await postWithJson('/rest/utilisateurs/:id/newsletter', { id: userId }, { newsletter })
   },
@@ -107,11 +107,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
       }
     `)({ email })
   },
-  removeUtilisateur: async (userId: string) => {
-    return await getWithJson('/rest/utilisateurs/:id/delete', { id: userId })
-  },
-  updateUtilisateur: async (utilisateur: UtilisateurToEdit) => {
-    return await postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur)
-  },
+  removeUtilisateur: async (userId: string) => getWithJson('/rest/utilisateurs/:id/delete', { id: userId }),
+  updateUtilisateur: async (utilisateur: UtilisateurToEdit) => postWithJson('/rest/utilisateurs/:id/permission', { id: utilisateur.id }, utilisateur),
   getQGISToken: async () => postWithJson('/rest/utilisateur/generateQgisToken', {}, undefined),
 }

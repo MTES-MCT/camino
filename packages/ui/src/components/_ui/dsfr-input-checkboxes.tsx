@@ -1,6 +1,7 @@
 import { caminoDefineComponent, random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
 import { ref, watch } from 'vue'
+import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 type Props = {
   id?: string
@@ -44,7 +45,7 @@ export const DsfrInputCheckboxes = caminoDefineComponent<Props>(['id', 'valueCha
     <fieldset class="fr-fieldset" id={id} aria-labelledby={`${id}-legend`} disabled={props.disabled ?? false}>
       <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id={`${id}-legend`}>
         {props.legend.main}
-        {props.legend.description ? <span class="fr-hint-text">{props.legend.description}</span> : null}
+        {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
       </legend>
       {props.elements.map((element, index) => (
         <div key={index} class="fr-fieldset__element">
