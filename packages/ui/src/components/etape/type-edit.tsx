@@ -148,7 +148,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'apiClient', 'onE
               )}
             </div>
           ) : (
-            <Alert type="warning" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
+            <Alert type="warning" class="fr-mt-2w" title={noItemsText.value} description="Veuillez modifier la date pour pouvoir choisir une étape." />
           )}
         </>
       )}
