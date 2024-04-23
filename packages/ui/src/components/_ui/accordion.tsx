@@ -62,7 +62,9 @@ export const DeprecatedAccordion = defineComponent<Props>((props, context) => {
         <>{props.slotSub ? <>{context.slots.sub?.()}</> : null}</>
 
         <div class={{ 'overflow-hidden': isOverflowHidden.value }}>
-          <Transition name="slide">{props.opened ? <div>{context.slots.default?.()}</div> : null}</Transition>
+          <Transition name="slide">
+            <div style={{ display: props.opened ? 'block' : 'none' }}>{context.slots.default?.()}</div>
+          </Transition>
         </div>
       </div>
     </div>
